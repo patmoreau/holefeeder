@@ -1,0 +1,9 @@
+<div class="circle" [style.background]="color">
+  <span class="circle-month text-lowercase text-center"
+    ><small>{{ date | date: 'MMM' }}</small></span
+  >
+  <br />
+  <span class="circle-day font-weight-bold text-center">{{
+    date | date: 'dd'
+  }}</span>
+</div>

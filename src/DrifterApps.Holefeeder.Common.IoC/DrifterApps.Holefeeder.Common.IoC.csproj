@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SimpleInjector.Extensions.LifetimeScoping" Version="4.0.0" />
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.9.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Business.Contracts\DrifterApps.Holefeeder.Business.Contracts.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Services.API\DrifterApps.Holefeeder.Services.API.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,1 @@
+The `<root>\poc` folder is used to store all Proof of Concept.

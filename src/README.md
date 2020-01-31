@@ -1,0 +1,1 @@
+The `<root>\src` folder contains the source code of the application.

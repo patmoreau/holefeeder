@@ -1,0 +1,1 @@
+The `<root>\tools` folder contains all static tools used by the development team.

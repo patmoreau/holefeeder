@@ -1,0 +1,124 @@
+<ng-container *ngIf="isLoaded; else loader">
+  <div class="pt-3 pb-4 mb-3">
+    <div class="container">
+      <ng-container>
+        <div class="pb-3 mt-3">
+          <a routerLink="/cashflows" class="text-large line-height-1 btn-link">
+            <fa-icon class="pb-1" [icon]="['fas', 'arrow-left']" aria-hidden="true"></fa-icon>
+            Cashflows
+          </a>
+        </div>
+        <h1 class="display-3 mb-0 line-height-1 text-truncate">
+          Edit cashflow
+        </h1>
+      </ng-container>
+      <div class="container mb-5">
+        <form [formGroup]="cashflowForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input class="form-control" type="number" formControlName="amount" id="amount"
+              placeholder="cashflow amount..." required />
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" formControlName="category" [compareWith]="compareFn" id="category" required>
+              <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="account">Account</label>
+            <select class="form-control" formControlName="account" [compareWith]="compareFn" id="account" required>
+              <option *ngFor="let account of accounts" [ngValue]="account.id">{{
+                account.name
+              }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tags">Tags</label>
+            <dfta-tags-input formControlName="tags" id="tags" [label]="'Tags'"></dfta-tags-input>
+          </div>
+          <div class="form-group">
+            <label for="intervalType">Interval type</label>
+            <select class="form-control" formControlName="intervalType" [compareWith]="compareFn" id="interval"
+              required>
+              <option *ngFor="let interval of intervalTypesNames | keyvalue" [ngValue]="interval.key">
+                {{ interval.value }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="frequency">Frequency</label>
+            <input class="form-control" type="number" formControlName="frequency" id="frequency" required min="1" />
+          </div>
+          <div class="form-group">
+            <label for="datepicker">Effective date</label>
+            <div class="input-group mb-2">
+              <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="effectiveDate"
+                ngbDatepicker firstDayOfWeek="7" #date="ngbDatepicker" (click)="date.toggle()" />
+              <div class="input-group-append">
+                <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']" aria-hidden="true"></fa-icon>
+                </a>
+              </div>
+            </div>
+            <em *ngIf="
+                cashflowForm.get('effectiveDate').invalid &&
+                cashflowForm.get('effectiveDate').dirty
+              " class="form-text text-danger">Required</em>
+          </div>
+          <div class="form-group">
+            <label for="description">Note</label>
+            <input class="form-control" type="text" formControlName="description" id="description"
+              [placeholder]="'cashflow note...'" />
+          </div>
+
+          <div class="form-group col-6 custom-control custom-switch">
+            <input class="form-control custom-control-input" type="checkbox" formControlName="inactive" id="inactive" />
+            <label class="custom-control-label" for="inactive">Inactive cashflow</label>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button routerLink="../" class="btn btn-secondary mr-2">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!cashflowForm.valid">
+              Save
+            </button>
+          </div>
+
+          <em *ngIf="!cashflowForm.valid" class="form-text text-danger">{{
+            cashflowForm.errors
+          }}</em>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loader>
+  <div class="d-flex justify-content-center mt-5">
+    <div class="loader">Loading...</div>
+  </div>
+</ng-template>
+
+<ng-template #confirm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body">
+      <div *ngIf="confirmMessages" class="alert alert-warning" role="alert">
+        {{ confirmMessages }}
+      </div>
+      <strong>Are you sure you want to save this cashflow?</strong>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="modal.dismiss()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-danger" (click)="onConfirm()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>

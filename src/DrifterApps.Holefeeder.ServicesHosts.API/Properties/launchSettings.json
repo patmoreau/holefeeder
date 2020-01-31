@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Custom": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_URL": "mongodb://localhost:27017/holefeeder",
+        "DATABASE_NAME": "holefeeder"
+      },
+      "applicationUrl": "https://localhost:7001"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<div class="input-group mb-2">
+  <input
+    #newTag
+    class="form-control"
+    type="text"
+    [placeholder]="placeholder"
+    [attr.aria-label]="label"
+    (keyup.enter)="addTag(newTag.value)"
+    (blur)="addTag(newTag.value); newTag.value = ''"
+  />
+  <div class="input-group-append">
+    <a
+      class="btn btn-outline-secondary text-secondary"
+      (click)="addTag(newTag.value)"
+    >
+      <fa-icon [icon]="['fas', 'plus']" aria-hidden="true"></fa-icon>
+    </a>
+  </div>
+</div>
+<div>
+  <span class="text-lowercase" *ngFor="let tag of tags">
+    <small class="badge badge-pill badge-primary text-white font-weight-light"
+      >{{ tag }}
+      <a class="btn btn-sm p-0" (click)="removeTag(tag)">
+        <fa-icon [icon]="['fas', 'times']" aria-hidden="true"></fa-icon> </a
+    ></small>
+  </span>
+</div>

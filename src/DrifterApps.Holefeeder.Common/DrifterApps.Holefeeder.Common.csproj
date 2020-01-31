@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
+  </ItemGroup>
+</Project>
