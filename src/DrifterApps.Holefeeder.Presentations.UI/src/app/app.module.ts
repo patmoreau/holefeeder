@@ -21,8 +21,8 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { LoginComponent } from './auth/login/login.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { OAuthInterceptor } from './auth/oauth.interceptor';
-import { UserService } from './auth/services/user.service';
 import { environment } from '@env/environment';
+import { AuthenticationService } from './auth/services/authentication.service';
 
 const COMPONENTS = [
   AppComponent,
@@ -47,14 +47,14 @@ const COMPONENTS = [
     SingletonsModule,
     OAuthModule.forRoot({
       resourceServer: {
-          allowedUrls: [environment.api_url],
-          sendAccessToken: true
+        allowedUrls: [environment.api_url],
+        sendAccessToken: true
       }
-  }),
+    }),
     ToastNoAnimationModule.forRoot()
   ],
   providers: [
-    UserService,
+    AuthenticationService,
     { provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],

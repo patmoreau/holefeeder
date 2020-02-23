@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
-import { googleAuthConfig } from './google-auth.config';
+import { googleAuthConfig } from './auth/google-auth.config';
 
 @Component({
   selector: 'dfta-root',

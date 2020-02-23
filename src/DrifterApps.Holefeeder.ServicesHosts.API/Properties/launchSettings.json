@@ -4,11 +4,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE_URL": "mongodb://localhost:27017/holefeeder",
-        "DATABASE_NAME": "holefeeder"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:7001"
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

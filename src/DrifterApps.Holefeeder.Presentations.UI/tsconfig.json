@@ -18,8 +18,6 @@
     "target": "es2015",
     "types": [
       "node",
-      "gapi",
-      "gapi.auth2"
     ],
     "typeRoots": [
       "node_modules/@types"

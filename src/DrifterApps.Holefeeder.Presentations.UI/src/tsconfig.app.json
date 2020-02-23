@@ -2,10 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "types": [      "node",
-      "gapi",
-      "gapi.auth2"
-]
+    "types": [
+      "node",
+    ]
   },
   "exclude": [
     "src/test.ts",

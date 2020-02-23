@@ -5,7 +5,7 @@ export const googleAuthConfig: AuthConfig = {
     issuer: 'https://accounts.google.com',
 
     // URL of the SPA to redirect the user to after login
-    redirectUri: window.location.origin + '/index.html',
+    redirectUri: window.location.origin + '/oauthcallback',
 
     // URL of the SPA to redirect the user after silent refresh
     silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',

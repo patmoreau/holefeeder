@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using DrifterApps.Holefeeder.Business;
@@ -65,6 +66,11 @@ namespace DrifterApps.Holefeeder.Hosts.API
                             var usersServices = _container.GetService<IUsersService>();
 
                             var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email));
+                            if(user == null)
+                            {
+                                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                                context.Fail("User is not registered");
+                            }
                             if(user != null)
                             {
                                 context.Principal.AddIdentity(new ClaimsIdentity(new[]

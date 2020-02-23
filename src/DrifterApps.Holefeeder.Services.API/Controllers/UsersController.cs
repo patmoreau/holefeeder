@@ -58,7 +58,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+            return Ok(_mapper.Map<UserDTO>(result));
         }
 
         [HttpPost(Name = Routes.POST_USER), Authorize(Policy = Policies.AuthenticatedUser)]

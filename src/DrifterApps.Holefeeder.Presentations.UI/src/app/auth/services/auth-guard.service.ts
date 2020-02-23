@@ -6,17 +6,16 @@ import {
   RouterStateSnapshot,
   CanActivateChild
 } from '@angular/router';
-
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate, CanActivateChild {
+
   constructor(private oauthService: OAuthService, private router: Router) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-
     const redirectUrl = route['_routerState']['url'];
 
     if (this.oauthService.hasValidIdToken()) {

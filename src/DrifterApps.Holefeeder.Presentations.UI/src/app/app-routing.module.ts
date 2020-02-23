@@ -11,10 +11,6 @@ const appRoutes: Routes = [
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [AuthGuardService]
   },
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
     path: 'accounts',
     loadChildren: () => import('./accounts/accounts.module').then(m => m.AccountsModule), canActivate: [AuthGuardService]
   },
@@ -34,6 +30,8 @@ const appRoutes: Routes = [
     path: 'statistics',
     loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule), canActivate: [AuthGuardService]
   },
+  { path: 'oauthcallback', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   { path: '**', component: ErrorNotfoundComponent }
 ];
 

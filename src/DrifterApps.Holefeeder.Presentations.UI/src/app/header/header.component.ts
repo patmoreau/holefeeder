@@ -4,7 +4,7 @@ import { DateService } from '@app/singletons/services/date.service';
 import { addDays, startOfToday } from 'date-fns';
 import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '@app/auth/services/user.service';
+import { AuthenticationService } from '@app/auth/services/authentication.service';
 
 @Component({
   selector: 'dfta-header',
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private dateService: DateService,
-    private userService: UserService,
+    private authService: AuthenticationService,
     private router: Router
   ) {
     this.isNavbarCollapsed = true;
@@ -39,9 +39,13 @@ export class HeaderComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.userService.isAuthenticated$.subscribe(isAuthenticated => {
-      this.isAuthenticated = isAuthenticated;
-      this.givenName = this.userService.User;
+    this.authService.authenticatedUser$.subscribe(user => {
+      this.isAuthenticated = user !== null;
+      if (user) {
+        this.givenName = user.lastName;
+      } else {
+        this.givenName = '';
+      }
     });
   }
 
@@ -86,7 +90,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.userService.logOut();
+    this.authService.logOut();
     this.router.navigateByUrl('/login?redirectUrl=%2Fdashboard');
   }
 
