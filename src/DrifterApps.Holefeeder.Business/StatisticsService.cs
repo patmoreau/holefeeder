@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Business.Entities;
@@ -12,7 +13,7 @@ namespace DrifterApps.Holefeeder.Business
 {
     public class StatisticsService : IStatisticsService
     {
-        static readonly string[] noTag = new[] { "<untag>" };
+        static readonly string[] noTag = new[] { "<no tag>" };
 
         private readonly ITransactionsService _transactionsService;
         private readonly ICategoriesService _categoriesService;
@@ -25,14 +26,14 @@ namespace DrifterApps.Holefeeder.Business
             _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
-        public async Task<long> CountAsync(string userId, QueryParams query) => await _transactionsService.CountAsync(userId, query);
+        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.CountAsync(userId, query, cancellationToken);
 
-        public async Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query) => await _transactionsService.FindWithDetailsAsync(userId, query);
+        public Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.FindWithDetailsAsync(userId, query, cancellationToken);
 
-        public async Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(string userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency)
+        public async Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(string userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
         {
-            var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new HashSet<string>(new[] { "date" }), null));
-            var categories = (await _categoriesService.FindAsync(userId, null)).Where(c => !c.System).Select(_mapper.Map<CategoryInfoEntity>);
+            var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new HashSet<string>(new[] { "date" }), null), cancellationToken).ConfigureAwait(false);
+            var categories = (await _categoriesService.FindAsync(userId, null, cancellationToken).ConfigureAwait(false)).Where(c => !c.System).Select(_mapper.Map<CategoryInfoEntity>);
 
             var yearly = transactions
                             .GroupBy(t => new
@@ -119,10 +120,9 @@ namespace DrifterApps.Holefeeder.Business
             return statistics;
         }
 
-        public async Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(string userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency)
+        public async Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(string userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
         {
-            var transactions = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "date" }, new[] { $"category={categoryId}" })));
-            var categories = await _categoriesService.FindAsync(userId, null);
+            var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "date" }, new[] { $"category={categoryId}" }), cancellationToken).ConfigureAwait(false);
 
             var yearly = transactions
                             .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => new { transaction, tag })

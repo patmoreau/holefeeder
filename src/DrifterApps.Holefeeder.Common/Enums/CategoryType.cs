@@ -10,12 +10,6 @@ namespace DrifterApps.Holefeeder.Common.Enums
         Expense,
         [EnumMember(Value=CategoryTypes.GAIN)]
         [Description(CategoryTypes.GAIN)]
-        Gain,
-    }
-
-    public static class CategoryTypes
-    {
-        public const string EXPENSE = "expense";
-        public const string GAIN = "gain";
+        Gain
     }
 }

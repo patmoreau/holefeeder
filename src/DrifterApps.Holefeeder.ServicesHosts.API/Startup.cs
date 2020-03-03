@@ -1,11 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text.Json;
 using DrifterApps.Holefeeder.Business;
 using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
-using Holefeeder.Services.API.Authentication;
 using Holefeeder.Services.API.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SimpleInjector;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace DrifterApps.Holefeeder.Hosts.API
 {
@@ -65,13 +64,13 @@ namespace DrifterApps.Holefeeder.Hosts.API
                         {
                             var usersServices = _container.GetService<IUsersService>();
 
-                            var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email));
-                            if(user == null)
+                            var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)).ConfigureAwait(false);
+                            if (user == null)
                             {
-                                context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                 context.Fail("User is not registered");
                             }
-                            if(user != null)
+                            if (user != null)
                             {
                                 context.Principal.AddIdentity(new ClaimsIdentity(new[]
                                 {

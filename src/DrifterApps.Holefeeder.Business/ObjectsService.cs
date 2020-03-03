@@ -3,6 +3,7 @@ using AutoMapper;
 using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common.Extensions;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -17,6 +18,7 @@ namespace DrifterApps.Holefeeder.Business
             _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
-        public async Task<ObjectDataEntity> FindByCodeAsync(string userId, string code) => _mapper.Map<ObjectDataEntity>(await _repository.FindByCodeAsync(userId, code));
+        public async Task<ObjectDataEntity> FindByCodeAsync(string userId, string code, CancellationToken cancellationToken = default) =>
+            _mapper.Map<ObjectDataEntity>(await _repository.FindByCodeAsync(userId, code, cancellationToken).ConfigureAwait(false));
     }
 }

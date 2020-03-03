@@ -9,7 +9,8 @@ services:
   holefeeder-api:
     image: holefeeder-api:latest
     ports:
-      - "5001:80"
+      - "5000:80"
+      - "5001:443"
     environment:
       - DATABASE_URL=mongodb://mongodb:27017
       - DATABASE_NAME=holefeeder

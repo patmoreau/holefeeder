@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Business;
@@ -17,7 +18,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
     [Route("api/v1/[controller]"), Authorize(Policy = Policies.RegisteredUser)]
     public class CashflowsController : Controller
     {
-        private class Routes
+        private struct Routes
         {
             public const string GET_UPCOMING = "get_upcoming";
             public const string GET_CASHFLOWS = "get_cashflows";
@@ -29,20 +30,18 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
 
         private readonly ICashflowsService _service;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
 
-        public CashflowsController(ICashflowsService service, IMapper mapper, ILogger<CashflowsController> logger)
+        public CashflowsController(ICashflowsService service, IMapper mapper)
         {
             _service = service.ThrowIfNull(nameof(service));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
-            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet("upcoming", Name = Routes.GET_UPCOMING)]
         [ProducesResponseType(typeof(UpcomingDTO[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get([FromQuery]DateTime from, [FromQuery] DateTime to)
+        public async Task<IActionResult> GetAsync([FromQuery]DateTime from, [FromQuery] DateTime to, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
@@ -51,7 +50,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest();
             }
 
-            var result = await _service.GetUpcomingAsync(userId, (from, to));
+            var result = await _service.GetUpcomingAsync(userId, (from, to), cancellationToken).ConfigureAwait(false);
             return Ok(_mapper.Map<UpcomingDTO[]>(result));
         }
 
@@ -59,11 +58,11 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(CashflowDTO[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter)
+        public async Task<IActionResult> GetAsync([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
-            var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter));
+            var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter), cancellationToken).ConfigureAwait(false);
             return Ok(_mapper.Map<CashflowDTO[]>(result));
         }
 
@@ -71,15 +70,15 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(CashflowDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
 
-            var result = await _service.FindByIdAsync(id);
+            var result = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
             if (result == null)
             {
                 return NotFound();
@@ -91,7 +90,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(CashflowDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Post([FromBody] CashflowDTO model)
+        public async Task<IActionResult> PostAsync([FromBody] CashflowDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
@@ -100,7 +99,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _service.CreateAsync(userId, _mapper.Map<CashflowEntity>(model));
+            var result = await _service.CreateAsync(userId, _mapper.Map<CashflowEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return CreatedAtRoute(Routes.GET_CASHFLOW, new { id = result.Id }, _mapper.Map<CashflowDTO>(result));
         }
@@ -110,10 +109,10 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] CashflowDTO model)
+        public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] CashflowDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
@@ -123,7 +122,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.UpdateAsync(id, _mapper.Map<CashflowEntity>(model));
+            await _service.UpdateAsync(id, _mapper.Map<CashflowEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }
@@ -132,15 +131,15 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Delete([FromRoute] string id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
 
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }

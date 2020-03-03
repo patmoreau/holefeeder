@@ -6,6 +6,7 @@ using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common;
 using DrifterApps.Holefeeder.Common.Extensions;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -14,22 +15,20 @@ namespace DrifterApps.Holefeeder.Business
         private readonly ITransactionsRepository _transactionsRepository;
         private readonly IAccountsRepository _accountsRepository;
         private readonly ICategoriesRepository _categoriesRepository;
-        private readonly IMapper _mapper;
 
-        public TransactionsService(ITransactionsRepository transactionsRepository, IAccountsRepository accountsRepository, ICategoriesRepository categoriesReporitory, IMapper mapper) : base(transactionsRepository)
+        public TransactionsService(ITransactionsRepository transactionsRepository, IAccountsRepository accountsRepository, ICategoriesRepository categoriesRepository) : base(transactionsRepository)
         {
             _transactionsRepository = transactionsRepository.ThrowIfNull(nameof(transactionsRepository));
             _accountsRepository = accountsRepository.ThrowIfNull(nameof(accountsRepository));
-            _categoriesRepository = categoriesReporitory.ThrowIfNull(nameof(categoriesReporitory));
-            _mapper = mapper.ThrowIfNull(nameof(mapper));
+            _categoriesRepository = categoriesRepository.ThrowIfNull(nameof(categoriesRepository));
         }
 
-        public async Task<long> CountAsync(string userId, QueryParams query) => await _transactionsRepository.CountAsync(userId, query);
-        public async Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query)
+        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsRepository.CountAsync(userId, query, cancellationToken);
+        public async Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query, CancellationToken cancellationToken = default)
         {
-            var transactions = await _transactionsRepository.FindAsync(userId, query);
-            var accounts = (await _accountsRepository.FindAsync(userId, QueryParams.Empty)).Select(a => new AccountInfoEntity(a.Id, a.Name));
-            var categories = (await _categoriesRepository.FindAsync(userId, QueryParams.Empty)).Select(c => new CategoryInfoEntity(c.Id, c.Name, c.Type, c.Color));
+            var transactions = await _transactionsRepository.FindAsync(userId, query, cancellationToken).ConfigureAwait(false);
+            var accounts = (await _accountsRepository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false)).Select(a => new AccountInfoEntity(a.Id, a.Name));
+            var categories = (await _categoriesRepository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false)).Select(c => new CategoryInfoEntity(c.Id, c.Name, c.Type, c.Color));
 
             return transactions
                 .Join(accounts, t => t.Account, a => a.Id, (t, a) => new { t, AccountInfo = a })

@@ -9,6 +9,11 @@ namespace DrifterApps.Holefeeder.Common.Extensions
     {
         public static string ToPersistent(this Enum self)
         {
+            if (self == null)
+            {
+                return string.Empty;
+            }
+            
             return (self.GetType().GetRuntimeField(self.ToString())?.GetCustomAttributes()
                     ?.FirstOrDefault(a => a is DescriptionAttribute) as DescriptionAttribute)
                 ?.Description ?? self.ToString();

@@ -79,7 +79,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
             var property = Expression.Property(parameter, propertyInfo);
             var lambda = Expression.Lambda(property, parameter);
 
-            string methodName = isAscending ? method : (method + "Descending");
+            string methodName = isAscending ? method : ($"{method}Descending");
 
             MethodCallExpression methodCallExpression = Expression.Call(typeof(Queryable), methodName,
                 new Type[] { source.ElementType, property.Type }, source.Expression, Expression.Quote(lambda));

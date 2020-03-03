@@ -6,6 +6,7 @@ using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common;
 using DrifterApps.Holefeeder.Common.Extensions;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -24,9 +25,9 @@ namespace DrifterApps.Holefeeder.Business
             _categoriesService = categoriesService.ThrowIfNull(nameof(categoriesService));
         }
 
-        public async Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(string userId, (DateTime From, DateTime To) interval)
+        public async Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(string userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default)
         {
-            var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, sort: new[] { "-date" }, null)))
+            var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, sort: new[] { "-date" }, null), cancellationToken).ConfigureAwait(false))
                 .GroupBy(t => t.Cashflow)
                 .Select(g => new
                 {
@@ -35,9 +36,9 @@ namespace DrifterApps.Holefeeder.Business
                     LastCashflowDate = g.First().CashflowDate
                 });
 
-            var cashflows = await _repository.FindAsync(userId, QueryParams.Empty);
-            var accounts = await _accountsService.FindAsync(userId, QueryParams.Empty);
-            var categories = await _categoriesService.FindAsync(userId, QueryParams.Empty);
+            var cashflows = await _repository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
+            var accounts = await _accountsService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
+            var categories = await _categoriesService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
 
             var upcomingCashflows = from c in cashflows
                                     join a in accounts on c.Account equals a.Id

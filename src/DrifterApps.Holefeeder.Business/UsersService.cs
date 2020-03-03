@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common.Extensions;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -14,6 +15,6 @@ namespace DrifterApps.Holefeeder.Business
             _repository = repository.ThrowIfNull(nameof(repository));
         }
 
-        public async Task<UserEntity> FindByEmailAsync(string emailAddress) => await _repository.FindByEmailAsync(emailAddress);
+        public Task<UserEntity> FindByEmailAsync(string emailAddress, CancellationToken cancellationToken = default) => _repository.FindByEmailAsync(emailAddress, cancellationToken);
     }
 }

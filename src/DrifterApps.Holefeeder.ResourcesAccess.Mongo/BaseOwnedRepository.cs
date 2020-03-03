@@ -7,6 +7,7 @@ using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
 {
@@ -18,14 +19,14 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         {
         }
 
-        public async Task<bool> IsOwnerAsync(string userId, string id) => await Collection.AsQueryable().AnyAsync(x => x.Id == id && x.UserId == userId);
+        public Task<bool> IsOwnerAsync(string userId, string id, CancellationToken cancellationToken = default) => Collection.AsQueryable().AnyAsync(x => x.Id.Equals(id) && x.UserId.Equals(userId), cancellationToken);
 
-        public async Task<long> CountAsync(string userId, QueryParams query) => await Collection.AsQueryable().Where(x => x.UserId == userId).Filter(query?.Filter).CountAsync();
+        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => Collection.AsQueryable().Where(x => x.UserId.Equals(userId)).Filter(query?.Filter).CountAsync(cancellationToken);
 
-        public async Task<IEnumerable<TEntity>> FindAsync(string userId, QueryParams queryParams)
+        public async Task<IEnumerable<TEntity>> FindAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default)
         {
-            var query = Collection.AsQueryable().Where(x => x.UserId == userId).Filter(queryParams?.Filter).Sort(queryParams?.Sort).Offset(queryParams?.Offset).Limit(queryParams?.Limit);
-            return Mapper.Map<IEnumerable<TEntity>>(await query.ToListAsync());
+            var query = Collection.AsQueryable().Where(x => x.UserId.Equals(userId)).Filter(queryParams?.Filter).Sort(queryParams?.Sort).Offset(queryParams?.Offset).Limit(queryParams?.Limit);
+            return Mapper.Map<IEnumerable<TEntity>>(await query.ToListAsync(cancellationToken).ConfigureAwait(false));
         }
     }
 }

@@ -8,11 +8,11 @@ namespace DrifterApps.Holefeeder.Common.Enums
         [EnumMember(Value=AccountTypes.CHECKING)]
         [Description(AccountTypes.CHECKING)]
         Checking,
-        [EnumMember(Value=AccountTypes.CREDIT_CARD)]
-        [Description(AccountTypes.CREDIT_CARD)]
+        [EnumMember(Value=AccountTypes.CREDITCARD)]
+        [Description(AccountTypes.CREDITCARD)]
         CreditCard,
-        [EnumMember(Value=AccountTypes.CREDIT_LINE)]
-        [Description(AccountTypes.CREDIT_LINE)]
+        [EnumMember(Value=AccountTypes.CREDITLINE)]
+        [Description(AccountTypes.CREDITLINE)]
         CreditLine,
         [EnumMember(Value=AccountTypes.INVESTMENT)]
         [Description(AccountTypes.INVESTMENT)]
@@ -25,17 +25,6 @@ namespace DrifterApps.Holefeeder.Common.Enums
         Mortgage,
         [EnumMember(Value=AccountTypes.SAVINGS)]
         [Description(AccountTypes.SAVINGS)]
-        Savings,
-    }
-
-    public static class AccountTypes
-    {
-        public const string CHECKING = "checking";
-        public const string CREDIT_CARD = "credit_card";
-        public const string CREDIT_LINE = "credit_line";
-        public const string INVESTMENT = "investment";
-        public const string LOAN = "loan";
-        public const string MORTGAGE = "mortgage";
-        public const string SAVINGS = "savings";
+        Savings
     }
 }

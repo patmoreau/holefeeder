@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Business;
@@ -18,7 +19,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
     [Route("api/v1/[controller]"), Authorize(Policy = Policies.RegisteredUser)]
     public class UsersController : Controller
     {
-        private class Routes
+        private struct Routes
         {
             public const string GET_USERS = "get_users";
             public const string GET_USER = "get_user";
@@ -29,30 +30,28 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
 
         private readonly IUsersService _service;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
 
-        public UsersController(IUsersService service, IMapper mapper, ILogger<UsersController> logger)
+        public UsersController(IUsersService service, IMapper mapper)
         {
             _service = service.ThrowIfNull(nameof(service));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
-            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet(Name = Routes.GET_USERS)]
         [ProducesResponseType(typeof(UserDTO[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken = default)
         {
-            return Ok(await _service.FindAsync(new QueryParams()));
+            return Ok(await _service.FindAsync(new QueryParams(), cancellationToken).ConfigureAwait(false));
         }
 
         [HttpGet("{id}", Name = Routes.GET_USER)]
         [ProducesResponseType(typeof(UserDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get([FromRoute] string id)
+        public async Task<IActionResult> GetAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
-            var result = await _service.FindByIdAsync(id);
+            var result = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
             if (result == null)
             {
@@ -65,7 +64,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(ObjectDataDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> PostAsync(CancellationToken cancellationToken = default)
         {
             var model = new UserDTO(
                 null,
@@ -80,13 +79,13 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (await _service.FindByEmailAsync(model.EmailAddress) != null)
+            if (await _service.FindByEmailAsync(model.EmailAddress, cancellationToken).ConfigureAwait(false) != null)
             {
                 ModelState.AddModelError("duplicateKey", $"Email address '{model.EmailAddress}' is already registered");
                 return BadRequest(ModelState);
             }
 
-            var result = await _service.CreateAsync(_mapper.Map<UserEntity>(model));
+            var result = await _service.CreateAsync(_mapper.Map<UserEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return CreatedAtRoute(Routes.GET_USER, new { id = result.Id }, _mapper.Map<UserDTO>(result));
         }
@@ -96,11 +95,11 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] UserDTO model)
+        public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] UserDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
-            if (id != userId)
+            if (!id.Equals(userId, StringComparison.OrdinalIgnoreCase))
             {
                 return Unauthorized();
             }
@@ -110,7 +109,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.UpdateAsync(id, _mapper.Map<UserEntity>(model));
+            await _service.UpdateAsync(id, _mapper.Map<UserEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }
@@ -119,22 +118,22 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Delete([FromRoute] string id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
-            if (id != userId)
+            if (!id.Equals(userId, StringComparison.OrdinalIgnoreCase))
             {
                 return Unauthorized();
             }
 
-            var user = await _service.FindByIdAsync(id);
+            var user = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound();
             }
 
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }

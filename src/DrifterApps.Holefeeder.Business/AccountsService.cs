@@ -7,6 +7,7 @@ using DrifterApps.Holefeeder.Common.Enums;
 using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.ResourcesAccess;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -23,11 +24,11 @@ namespace DrifterApps.Holefeeder.Business
             _categoryService = categoryService.ThrowIfNull(nameof(categoryService));
         }
 
-        public async Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(string userId, QueryParams queryParams)
+        public async Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default)
         {
-            var accounts = await _repository.FindAsync(userId, queryParams);
-            var transactions = await _transactionService.FindAsync(userId, QueryParams.Empty);
-            var categories = await _categoryService.FindAsync(userId, QueryParams.Empty);
+            var accounts = await _repository.FindAsync(userId, queryParams, cancellationToken).ConfigureAwait(false);
+            var transactions = await _transactionService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
+            var categories = await _categoryService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
 
             return
                 (from a in accounts

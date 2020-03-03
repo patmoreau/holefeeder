@@ -4,6 +4,7 @@ using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common;
 using DrifterApps.Holefeeder.Common.Extensions;
+using System.Threading;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -16,21 +17,21 @@ namespace DrifterApps.Holefeeder.Business
             _repository = repository.ThrowIfNull(nameof(repository));
         }
 
-        public async Task DeleteAsync(string id) => await _repository.RemoveAsync(id);
+        public Task DeleteAsync(string id, CancellationToken cancellationToken = default) => _repository.RemoveAsync(id, cancellationToken);
 
-        public async Task<TEntity> FindByIdAsync(string id) => await _repository.FindByIdAsync(id);
+        public Task<TEntity> FindByIdAsync(string id, CancellationToken cancellationToken = default) => _repository.FindByIdAsync(id, cancellationToken);
 
-        public async Task<IEnumerable<TEntity>> FindAsync(QueryParams queryParams) => await _repository.FindAsync(queryParams);
+        public Task<IEnumerable<TEntity>> FindAsync(QueryParams queryParams, CancellationToken cancellationToken = default) => _repository.FindAsync(queryParams, cancellationToken);
 
-        public async Task<TEntity> CreateAsync(TEntity entity) => await _repository.CreateAsync(entity);
+        public Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default) => _repository.CreateAsync(entity, cancellationToken);
 
-        public async Task UpdateAsync(string id, TEntity entity)
+        public async Task UpdateAsync(string id, TEntity entity, CancellationToken cancellationToken = default)
         {
-            var oldEntity = await _repository.FindByIdAsync(id);
+            var oldEntity = await _repository.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
             entity.WithId(id);
 
-            await _repository.UpdateAsync(id, entity);
+            await _repository.UpdateAsync(id, entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }

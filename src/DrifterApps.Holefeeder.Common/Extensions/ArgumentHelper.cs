@@ -23,7 +23,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
             arg.ThrowIfNull(argName);
 
             if (string.IsNullOrWhiteSpace(arg))
-                throw new ArgumentException("Value cannot be empty.", nameof(argName));
+                throw new ArgumentException("Value cannot be empty.", argName);
 
             return arg;
         }
@@ -34,7 +34,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
             arg.ThrowIfNull(argName);
 
             if (!arg.Any())
-                throw new ArgumentException("Value cannot be empty.", nameof(argName));
+                throw new ArgumentException("Value cannot be empty.", argName);
 
             return arg;
         }
@@ -45,7 +45,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
             ValidateParameterName(argName);
 
             if (arg.Equals(default(T)))
-                throw new ArgumentException("Value cannot match type default value.", nameof(argName));
+                throw new ArgumentException("Value cannot match type default value.", argName);
 
             return arg;
         }
@@ -67,14 +67,14 @@ namespace DrifterApps.Holefeeder.Common.Extensions
         {
             ValidateParameterName(argName);
 
-            if ((arg.CompareTo(minValue) < 0) || (arg.CompareTo(maxValue) > 0))
+            if (arg.CompareTo(minValue) < 0 || arg.CompareTo(maxValue) > 0)
                 throw new ArgumentOutOfRangeException(argName);
 
             return arg;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ValidateParameterName(string parameterName)
+        private static void ValidateParameterName(string parameterName)
         {
             if (parameterName is null)
                 throw new ArgumentNullException(nameof(parameterName));

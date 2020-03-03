@@ -6,22 +6,23 @@ namespace DrifterApps.Holefeeder.Common.Extensions
 {
 	public static class DateHelper
 	{
-		public static string ToPersistent (this DateTime date) => date.ToString ("yyyy-MM-dd");
+		private const string DATE_FORMAT = "yyyy-MM-dd";
+		public static string ToPersistent (this DateTime date) => date.ToString (DATE_FORMAT, CultureInfo.InvariantCulture);
 
 		public static DateTime ParsePersistent(this string persistentDate)
-		=> DateTime.ParseExact(persistentDate, "yyyy-MM-dd", null, DateTimeStyles.None);
+		=> DateTime.ParseExact(persistentDate, DATE_FORMAT, null, DateTimeStyles.None);
 
-		public static DateTime AddWeeks (this DateTime date, int weeks) => date.AddDays (7 * weeks);
+		private static DateTime AddWeeks (this DateTime date, int weeks) => date.AddDays (7 * weeks);
 
-		public static Func<DateTime, int, DateTime> NextIterationMethod (DateIntervalType intervalType)
+		private static Func<DateTime, int, DateTime> NextIterationMethod (DateIntervalType intervalType)
 		{
-			if (intervalType == DateIntervalType.Weekly) {
-				return (date, intervalCount) => date.AddWeeks (intervalCount);
-			}
-			if (intervalType == DateIntervalType.Monthly) {
-				return (date, intervalCount) => date.AddMonths (intervalCount);
-			} 
-			return (date, intervalCount) => date.AddYears (intervalCount);
+			return intervalType switch
+			{
+				DateIntervalType.Weekly => (Func<DateTime, int, DateTime>) ((date, intervalCount) =>
+					date.AddWeeks(intervalCount)),
+				DateIntervalType.Monthly => ((date, intervalCount) => date.AddMonths(intervalCount)),
+				_ => ((date, intervalCount) => date.AddYears(intervalCount))
+			};
 		}
 
 		public static DateTime NextDate (this DateTime self, DateTime effectiveDate, DateIntervalType intervalType, int frequency)
@@ -35,7 +36,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
 			var start = self;
 			var next = effectiveDate;
 
-			int count = 0;
+			var count = 0;
 			while (start < next) {
 				start = nextIteration (self, frequency * count);
 				count++;
@@ -59,7 +60,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
 			var start = self;
 			var next = effectiveDate;
 
-			int count = 0;
+			var count = 0;
 			while (start < next)
 			{
 				count++;
@@ -104,6 +105,10 @@ namespace DrifterApps.Holefeeder.Common.Extensions
 						start = end.AddYears(-frequency);
 					}
 					break;
+				case DateIntervalType.OneTime:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(intervalType), intervalType, null);
 			}
 
 			return (start, end.AddDays (-1));

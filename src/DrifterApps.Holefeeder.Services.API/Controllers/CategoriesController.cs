@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Business;
@@ -18,7 +19,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
     [Route("api/v1/[controller]"), Authorize(Policy = Policies.RegisteredUser)]
     public class CategoriesController : Controller
     {
-        private class Routes
+        private struct Routes
         {
             public const string GET_CATEGORIES = "get_categories";
             public const string GET_CATEGORY = "get_category";
@@ -32,40 +33,38 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         private readonly ICategoriesService _service;
         private readonly IStatisticsService _statisticsService;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
 
-        public CategoriesController(ICategoriesService service, IStatisticsService statisticsService, IMapper mapper, ILogger<CategoriesController> logger)
+        public CategoriesController(ICategoriesService service, IStatisticsService statisticsService, IMapper mapper)
         {
             _service = service.ThrowIfNull(nameof(service));
             _statisticsService = statisticsService.ThrowIfNull(nameof(statisticsService));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
-            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet(Name = Routes.GET_CATEGORIES)]
         [ProducesResponseType(typeof(CategoryDTO[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter)
+        public async Task<IActionResult> GetAsync([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
-            var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter));
+            var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter), cancellationToken).ConfigureAwait(false);
             return Ok(_mapper.Map<CategoryDTO[]>(result));
         }
 
         [HttpGet("{id}", Name = Routes.GET_CATEGORY)]
         [ProducesResponseType(typeof(CategoryDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
 
-            var result = await _service.FindByIdAsync(id);
+            var result = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
             if (result == null)
             {
                 return NotFound();
@@ -77,7 +76,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(CategoryDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Post([FromBody] CategoryDTO model)
+        public async Task<IActionResult> PostAsync([FromBody] CategoryDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
@@ -86,7 +85,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _service.CreateAsync(userId, _mapper.Map<CategoryEntity>(model));
+            var result = await _service.CreateAsync(userId, _mapper.Map<CategoryEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return CreatedAtRoute(Routes.GET_CATEGORY, new { id = result.Id }, _mapper.Map<CategoryDTO>(result));
         }
@@ -96,10 +95,10 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Put([FromRoute] string id, [FromBody] CategoryDTO model)
+        public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] CategoryDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
@@ -109,7 +108,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.UpdateAsync(id, _mapper.Map<CategoryEntity>(model));
+            await _service.UpdateAsync(id, _mapper.Map<CategoryEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }
@@ -118,15 +117,15 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> Delete([FromRoute] string id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
-            if (!await _service.IsOwnerAsync(userId, id))
+            if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
             }
 
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }
@@ -134,7 +133,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [HttpGet("statistics", Name = Routes.GET_STATISTICS)]
         [ProducesResponseType(typeof(StatisticsDTO<CategoryInfoDTO>[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetStatistics([FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1)
+        public async Task<IActionResult> GetStatisticsAsync([FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1, CancellationToken cancellationToken = default)
         {
             if (intervalType == DateIntervalType.OneTime)
             {
@@ -145,7 +144,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
 
             var utc = effectiveDate.ToUniversalTime();
 
-            var result = await _statisticsService.StatisticsAsync(userId, new DateTime(utc.Year, utc.Month, utc.Day), intervalType, frequency);
+            var result = await _statisticsService.StatisticsAsync(userId, new DateTime(utc.Year, utc.Month, utc.Day), intervalType, frequency, cancellationToken).ConfigureAwait(false);
 
             return Ok(_mapper.Map<StatisticsDTO<CategoryInfoDTO>[]>(result));
         }
@@ -153,7 +152,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [HttpGet("{id}/statistics", Name = Routes.GET_STATISTICS_BY_TAGS)]
         [ProducesResponseType(typeof(StatisticsDTO<string>[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetByTags([FromRoute] string id, [FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1)
+        public async Task<IActionResult> GetByTagsAsync([FromRoute] string id, [FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1, CancellationToken cancellationToken = default)
         {
             if (intervalType == DateIntervalType.OneTime)
             {
@@ -164,7 +163,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
 
             var utc = effectiveDate.ToUniversalTime();
 
-            var result = await _statisticsService.StatisticsByTagsAsync(userId, id, new DateTime(utc.Year, utc.Month, utc.Day), intervalType, frequency);
+            var result = await _statisticsService.StatisticsByTagsAsync(userId, id, new DateTime(utc.Year, utc.Month, utc.Day), intervalType, frequency, cancellationToken).ConfigureAwait(false);
 
             return Ok(_mapper.Map<StatisticsDTO<string>[]>(result));
         }

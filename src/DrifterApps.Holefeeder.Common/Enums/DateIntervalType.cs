@@ -19,6 +19,6 @@ namespace DrifterApps.Holefeeder.Common.Enums
 
         [EnumMember(Value="one_time")]
 		[Description("one_time")]
-		OneTime,
+		OneTime
 	}
 }

@@ -4,9 +4,4 @@
     {
         string UserId { get; }
     }
-
-    public interface IOwnedEntity<TEntity> : IOwnedEntity
-    {
-        TEntity WithUser(string userId);
-    }
 }

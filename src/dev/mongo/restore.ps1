@@ -1,4 +1,4 @@
-uri='mongodb://localhost:27017/holefeeder'
+$uri='mongodb://localhost:27017/holefeeder'
 
 mongoimport --uri $uri --collection accounts --file accounts.json --drop
 mongoimport --uri $uri --collection cashflows --file cashflows.json --drop

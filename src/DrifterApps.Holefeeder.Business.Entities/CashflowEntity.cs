@@ -7,18 +7,18 @@ namespace DrifterApps.Holefeeder.Business.Entities
 {
     public class CashflowEntity : BaseEntity, IOwnedEntity<CashflowEntity>, IIdentityEntity<CashflowEntity>
     {
-        public DateTime EffectiveDate { get; set; }
-        public decimal Amount { get; set; }
-        public DateIntervalType IntervalType { get; set; }
-        public int Frequency { get; set; }
-        public int Recurrence { get; set; }
-        public string Description { get; set; }
-        public string Account { get; set; }
-        public string Category { get; set; }
-        public bool Inactive { get; set; }
-        public IReadOnlyList<string> Tags { get; set; }
-        public string Guid { get; set; }
-        public string UserId { get; set; }
+        public DateTime EffectiveDate { get; }
+        public decimal Amount { get; }
+        public DateIntervalType IntervalType { get; }
+        public int Frequency { get; }
+        public int Recurrence { get; }
+        public string Description { get; }
+        public string Account { get; }
+        public string Category { get; }
+        public bool Inactive { get; }
+        public IReadOnlyList<string> Tags { get; }
+        public string Guid { get; }
+        public string UserId { get; }
 
         public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string guid, string userId) : base(id)
         {
@@ -31,7 +31,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
             Account = account;
             Category = category;
             Inactive = inactive;
-            Tags = ImmutableList.CreateRange(tags ?? new string[0]);
+            Tags = ImmutableList.CreateRange(tags ?? Array.Empty<string>());
             Guid = guid;
             UserId = userId;
         }
