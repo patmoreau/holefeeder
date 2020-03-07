@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,13 +20,13 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         {
         }
 
-        public Task<bool> IsOwnerAsync(string userId, string id, CancellationToken cancellationToken = default) => Collection.AsQueryable().AnyAsync(x => x.Id.Equals(id) && x.UserId.Equals(userId), cancellationToken);
+        public Task<bool> IsOwnerAsync(string userId, string id, CancellationToken cancellationToken = default) => Collection.AsQueryable().AnyAsync(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase) && x.UserId.Equals(userId, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
 
-        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => Collection.AsQueryable().Where(x => x.UserId.Equals(userId)).Filter(query?.Filter).CountAsync(cancellationToken);
+        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => Collection.AsQueryable().Where(x => x.UserId.Equals(userId, StringComparison.InvariantCultureIgnoreCase)).Filter(query?.Filter).CountAsync(cancellationToken);
 
         public async Task<IEnumerable<TEntity>> FindAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default)
         {
-            var query = Collection.AsQueryable().Where(x => x.UserId.Equals(userId)).Filter(queryParams?.Filter).Sort(queryParams?.Sort).Offset(queryParams?.Offset).Limit(queryParams?.Limit);
+            var query = Collection.AsQueryable().Where(x => x.UserId.Equals(userId, StringComparison.InvariantCultureIgnoreCase)).Filter(queryParams?.Filter).Sort(queryParams?.Sort).Offset(queryParams?.Offset).Limit(queryParams?.Limit);
             return Mapper.Map<IEnumerable<TEntity>>(await query.ToListAsync(cancellationToken).ConfigureAwait(false));
         }
     }

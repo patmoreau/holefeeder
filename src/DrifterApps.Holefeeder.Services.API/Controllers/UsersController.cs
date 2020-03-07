@@ -51,6 +51,11 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest();
+            }
+
             var result = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
             if (result == null)
@@ -97,6 +102,11 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] UserDTO model, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest();
+            }
+
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
             if (!id.Equals(userId, StringComparison.OrdinalIgnoreCase))
@@ -120,9 +130,14 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest();
+            }
+
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
-            if (!id.Equals(userId, StringComparison.OrdinalIgnoreCase))
+            if (!id.Equals(userId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Unauthorized();
             }

@@ -27,7 +27,7 @@ namespace DrifterApps.Holefeeder.Business
 
         public async Task UpdateAsync(string id, TEntity entity, CancellationToken cancellationToken = default)
         {
-            var oldEntity = await _repository.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
+            _ = await _repository.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 
             entity.WithId(id);
 

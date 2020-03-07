@@ -17,10 +17,10 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string Category { get; }
         public bool Inactive { get; }
         public IReadOnlyList<string> Tags { get; }
-        public string Guid { get; }
+        public string UniqueId { get; }
         public string UserId { get; }
 
-        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string guid, string userId) : base(id)
+        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string uniqueId, string userId) : base(id)
         {
             EffectiveDate = effectiveDate;
             Amount = amount;
@@ -32,11 +32,11 @@ namespace DrifterApps.Holefeeder.Business.Entities
             Category = category;
             Inactive = inactive;
             Tags = ImmutableList.CreateRange(tags ?? Array.Empty<string>());
-            Guid = guid;
+            UniqueId = uniqueId;
             UserId = userId;
         }
 
-        public CashflowEntity With(string id = null, DateTime? effectiveDate = null, decimal? amount = null, DateIntervalType? intervalType = null, int? frequency = null, int? recurrence = null, string description = null, string account = null, string category = null, bool? inactive = null, IEnumerable<string> tags = null, string guid = null, string userId = null) =>
+        public CashflowEntity With(string id = null, DateTime? effectiveDate = null, decimal? amount = null, DateIntervalType? intervalType = null, int? frequency = null, int? recurrence = null, string description = null, string account = null, string category = null, bool? inactive = null, IEnumerable<string> tags = null, string uniqueId = null, string userId = null) =>
             new CashflowEntity(
                 id ?? Id,
                 effectiveDate ?? EffectiveDate,
@@ -49,7 +49,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 category ?? Category,
                 inactive ?? Inactive,
                 ImmutableList.CreateRange(tags ?? Tags),
-                guid ?? Guid,
+                uniqueId ?? UniqueId,
                 userId ?? UserId
             );
 

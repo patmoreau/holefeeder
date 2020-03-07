@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD45B216-6211-42CF-922B-7145CB050457}"
 	ProjectSection(SolutionItems) = preProject
-		RuleSet1.ruleset = RuleSet1.ruleset
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Global

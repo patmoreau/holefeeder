@@ -6,22 +6,24 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DrifterApps.Holefeeder.Common.Extensions;
 using MongoDB.Driver.Linq;
 
 namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
 {
-    public static class IMongoDbExtensions
+    public static class MongoDbExtensions
     {
-        const string FILTER_PATTERN = @"^(?<property>\w+)(?<operator>[=<>!]{1,2})(?<value>.*)$";
+        private const string FILTER_PATTERN = @"^(?<property>\w+)(?<operator>[=<>!]{1,2})(?<value>.*)$";
 
-        public static IMongoQueryable<T> Filter<T>(this IMongoQueryable<T> query, IEnumerable<string> filter)
+        public static IMongoQueryable<T> Filter<T>(this IMongoQueryable<T> query, IReadOnlyList<string> filter)
         {
+            var q = query.ThrowIfNull(nameof(query));
+
             if (filter is null || !filter.Any())
             {
                 return query;
             }
 
-            var q = query;
             foreach (var f in filter)
             {
                 var match = Regex.Match(f, FILTER_PATTERN);
@@ -34,24 +36,22 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
             return q;
         }
 
-        public static IMongoQueryable<T> Sort<T>(this IMongoQueryable<T> query, IEnumerable<string> sort)
+        public static IMongoQueryable<T> Sort<T>(this IMongoQueryable<T> query, IReadOnlyList<string> sort)
         {
             if (sort is null || !sort.Any())
-            {
                 return query;
-            }
 
             var q = query;
             var sortCount = 0;
             foreach (Match match in Regex.Matches(string.Join(";", sort), @"(?<desc>-{0,1})(?<field>\w+)"))
             {
-                if (match.Groups["field"] != null)
-                {
-                    var asc = string.IsNullOrWhiteSpace(match.Groups["desc"]?.Value);
-                    var field = match.Groups["field"].Value;
+                if (match.Groups["field"] == null)
+                    continue;
 
-                    q = (sortCount++ == 0) ? q.OrderBy(field, asc) : q.ThenBy(field, asc);
-                }
+                var asc = string.IsNullOrWhiteSpace(match.Groups["desc"]?.Value);
+                var field = match.Groups["field"].Value;
+
+                q = (sortCount++ == 0) ? q.OrderBy(field, asc) : q.ThenBy(field, asc);
             }
             return q;
         }

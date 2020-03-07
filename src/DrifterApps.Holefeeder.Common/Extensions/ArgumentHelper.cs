@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace DrifterApps.Holefeeder.Common.Extensions
 {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
     public static class ArgumentHelper
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -18,7 +19,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ThrowIfEmpty(this string arg, string argName)
+        public static string ThrowIfNullOrEmpty(this string arg, string argName)
         {
             arg.ThrowIfNull(argName);
 

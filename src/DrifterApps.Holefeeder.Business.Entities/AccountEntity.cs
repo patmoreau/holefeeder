@@ -12,10 +12,10 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public DateTime OpenDate { get; }
         public string Description { get; }
         public bool Inactive { get; }
-        public string Guid { get; }
+        public string UniqueId { get; }
         public string UserId { get; }
 
-        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string guid, string userId) : base(id)
+        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string uniqueId, string userId) : base(id)
         {
             Type = type;
             Name = name;
@@ -24,11 +24,11 @@ namespace DrifterApps.Holefeeder.Business.Entities
             OpenDate = openDate;
             Description = description;
             Inactive = inactive;
-            Guid = guid;
+            UniqueId = uniqueId;
             UserId = userId;
         }
 
-        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, string guid = null, string userId = null) =>
+        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, string uniqueId = null, string userId = null) =>
             new AccountEntity(
                 id ?? Id,
                 type ?? Type,
@@ -38,7 +38,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 openDate ?? OpenDate,
                 description ?? Description,
                 inactive ?? Inactive,
-                guid ?? Guid,
+                uniqueId ?? UniqueId,
                 userId ?? UserId);
 
         public AccountEntity WithUser(string userId) => this.With(userId: userId);

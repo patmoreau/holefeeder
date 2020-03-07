@@ -71,7 +71,7 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
         [ProducesResponseType(typeof(ObjectDataDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> PostAsync([FromBody, Required] ObjectDataDTO model, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PostAsync([FromBody] ObjectDataDTO model, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirst(HolefeederClaimTypes.HolefeederId)?.Value;
 
@@ -80,9 +80,9 @@ namespace DrifterApps.Holefeeder.Services.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (await _service.FindByCodeAsync(userId, model.Code, cancellationToken).ConfigureAwait(false) != null)
+            if (await _service.FindByCodeAsync(userId, model?.Code, cancellationToken).ConfigureAwait(false) != null)
             {
-                ModelState.AddModelError("duplicateKey", $"object code '{model.Code}' already exists");
+                ModelState.AddModelError("duplicateKey", $"object code '{model?.Code}' already exists");
                 return BadRequest(ModelState);
             }
 

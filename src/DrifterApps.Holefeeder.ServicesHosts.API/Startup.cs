@@ -1,7 +1,13 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Security.Claims;
+using System.Text.Json;
 using DrifterApps.Holefeeder.Business;
 using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
-using Holefeeder.Services.API.Authentication.Google;
+using DrifterApps.Holefeeder.ServicesHosts.API.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,19 +16,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.Win32.SafeHandles;
 using SimpleInjector;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text.Json;
 
-namespace DrifterApps.Holefeeder.Hosts.API
+namespace DrifterApps.Holefeeder.ServicesHosts.API
 {
-    public class Startup
+    public class Startup : IDisposable
     {
         private const string MY_ALLOW_SPECIFIC_ORIGINS = "_myAllowSpecificOrigins";
 
         private readonly Container _container;
+
+        // Flag: Has Dispose already been called?
+        private bool _disposed;
+
+        // Instantiate a SafeHandle instance.
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
 
         public Startup(IConfiguration configuration)
         {
@@ -159,6 +168,28 @@ namespace DrifterApps.Holefeeder.Hosts.API
                 });
 
             _container.Verify();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _handle.Dispose();
+                _container.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

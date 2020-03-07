@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Holefeeder.Services.API.Authentication.Google;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Holefeeder.Services.API.Authentication.Google
+namespace DrifterApps.Holefeeder.ServicesHosts.API.Authentication.Google
 {
     public class GoogleJwtSecurityTokenHandler : JwtSecurityTokenHandler
     {
@@ -14,7 +16,7 @@ namespace Holefeeder.Services.API.Authentication.Google
         }
 
         /// <inheritdoc />
-        /// <exception cref="SecurityTokenInvalidDomainException">token 'hd' claim did not match HostedDomain.</exception>
+        /// <exception cref="SecurityTokenValidationException">token 'hd' claim did not match HostedDomain.</exception>
         public override ClaimsPrincipal ValidateToken(string token, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
         {
             // The base class should already take care of validating signature, issuer,
@@ -40,20 +42,21 @@ namespace Holefeeder.Services.API.Authentication.Google
             return principal;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         private static void ValidateHostedDomain(string expectedDomain, ClaimsPrincipal principal)
         {
             var actualDomain = principal.FindFirst(GoogleClaimTypes.Domain)?.Value;
 
             if (string.IsNullOrEmpty(actualDomain))
             {
-                throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidDomainException(LogMessages.IDX10250) { InvalidDomain = null });
+                throw LogHelper.LogExceptionMessage(new SecurityTokenValidationException(LogMessages.IDX10250));
             }
 
             if (!actualDomain.Equals(expectedDomain, StringComparison.OrdinalIgnoreCase))
             {
-                var message = string.Format(LogMessages.IDX10251, actualDomain, expectedDomain);
+                var message = string.Format(CultureInfo.InvariantCulture, LogMessages.IDX10251, actualDomain, expectedDomain);
 
-                throw LogHelper.LogExceptionMessage(new SecurityTokenInvalidDomainException(message) { InvalidDomain = actualDomain });
+                throw LogHelper.LogExceptionMessage(new SecurityTokenValidationException(message));
             }
 
             LogHelper.LogInformation(LogMessages.IDX10252, actualDomain);

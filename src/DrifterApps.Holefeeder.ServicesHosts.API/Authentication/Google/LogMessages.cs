@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Services.API.Authentication.Google
+﻿namespace DrifterApps.Holefeeder.ServicesHosts.API.Authentication.Google
 {
     internal static class LogMessages
     {

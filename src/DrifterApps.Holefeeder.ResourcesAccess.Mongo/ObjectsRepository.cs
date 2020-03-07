@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Common.Extensions;
@@ -19,6 +20,6 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         }
 
         public async Task<ObjectDataEntity> FindByCodeAsync(string userId, string code, CancellationToken cancellationToken = default) =>
-            Mapper.Map<ObjectDataEntity>(await _objects.AsQueryable().Where(x => x.UserId.Equals(userId) && x.Code.Equals(code)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
+            Mapper.Map<ObjectDataEntity>(await _objects.AsQueryable().Where(x => x.UserId.Equals(userId, StringComparison.InvariantCultureIgnoreCase) && x.Code.Equals(code, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
     }
 }

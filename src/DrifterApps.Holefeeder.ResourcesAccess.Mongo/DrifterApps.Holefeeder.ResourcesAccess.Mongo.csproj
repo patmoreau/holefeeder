@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Schemas\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">

@@ -1,7 +1,9 @@
 ﻿using System;
+using DrifterApps.Holefeeder.Common.Extensions;
+using Holefeeder.Services.API.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace Holefeeder.Services.API.Authentication.Google
+namespace DrifterApps.Holefeeder.ServicesHosts.API.Authentication.Google
 {
     public static class JwtBearerOptionsExtensions
     {
@@ -29,15 +31,8 @@ namespace Holefeeder.Services.API.Authentication.Google
         /// <exception cref="ArgumentException">If the <paramref name="clientId"/> argument is empty.</exception>
         public static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId, string hostedDomain)
         {
-            if (clientId == null)
-            {
-                throw new ArgumentNullException(nameof(clientId));
-            }
-
-            if (clientId.Length == 0)
-            {
-                throw new ArgumentException("ClientId cannot be empty.", nameof(clientId));
-            }
+            clientId = clientId.ThrowIfNullOrEmpty(nameof(clientId));
+            options = options.ThrowIfNull(nameof(options));
 
             options.Audience = clientId;
             options.Authority = GoogleJwtBearerDefaults.Authority;
