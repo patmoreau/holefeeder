@@ -31,8 +31,8 @@ namespace DrifterApps.Holefeeder.Business
             var categories = (await _categoriesRepository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false)).Select(c => new CategoryInfoEntity(c.Id, c.Name, c.Type, c.Color));
 
             return transactions
-                .Join(accounts, t => t.Account, a => a.Id, (t, a) => new { t, AccountInfo = a })
-                .Join(categories, x => x.t.Category, c => c.Id, (x, c) => new { x.t, x.AccountInfo, CategoryInfo = c })
+                .Join(accounts, t => t.Account, a => a.Id, (t, a) => (t, AccountInfo: a))
+                .Join(categories, x => x.t.Category, c => c.Id, (x, c) => (x.t, x.AccountInfo, CategoryInfo: c))
                 .Select(x =>
                     new TransactionDetailEntity(
                         x.t.Id,

@@ -34,18 +34,17 @@ namespace DrifterApps.Holefeeder.Business
                 (from a in accounts
                 join t in transactions on a.Id equals t.Account
                 join c in categories on t.Category equals c.Id
-                select new
-                {
-                    Id = a.Id,
-                    Type = a.Type,
-                    Name = a.Name,
-                    OpenBalance = a.OpenBalance,
-                    Description = a.Description,
-                    Favorite = a.Favorite,
-                    Inactive = a.Inactive,
-                    Date = t.Date,
-                    Amount = t.Amount * (c.Type == CategoryType.Gain ? 1 : -1) * ((a.Type == AccountType.Checking || a.Type == AccountType.Investment || a.Type == AccountType.Savings) ? 1 : -1),
-                })
+                select (
+                    Id: a.Id,
+                    Type: a.Type,
+                    Name: a.Name,
+                    OpenBalance: a.OpenBalance,
+                    Description: a.Description,
+                    Favorite: a.Favorite,
+                    Inactive: a.Inactive,
+                    Date: t.Date,
+                    Amount: t.Amount * (c.Type == CategoryType.Gain ? 1 : -1) * ((a.Type == AccountType.Checking || a.Type == AccountType.Investment || a.Type == AccountType.Savings) ? 1 : -1)
+                ))
                 .GroupBy(t => t.Id)
                 .Select(t => new AccountDetailEntity
                 (

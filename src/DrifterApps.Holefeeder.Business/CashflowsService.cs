@@ -29,12 +29,11 @@ namespace DrifterApps.Holefeeder.Business
         {
             var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, sort: new[] { "-date" }, null), cancellationToken).ConfigureAwait(false))
                 .GroupBy(t => t.Cashflow)
-                .Select(g => new
-                {
-                    Cashflow = g.Key,
-                    LastPaidDate = g.First().Date,
-                    LastCashflowDate = g.First().CashflowDate
-                });
+                .Select(g => (
+                    Cashflow: g.Key,
+                    LastPaidDate: g.First().Date,
+                    LastCashflowDate: g.First().CashflowDate
+                ));
 
             var cashflows = await _repository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
             var accounts = await _accountsService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
@@ -45,7 +44,7 @@ namespace DrifterApps.Holefeeder.Business
                                     join cat in categories on c.Category equals cat.Id
                                     join t in pastCashflows on c.Id equals t.Cashflow into u
                                     from t in u.DefaultIfEmpty()
-                                    select new { Cashflow = c, Account = a, Category = cat, t?.LastPaidDate, t?.LastCashflowDate };
+                                    select (Cashflow: c, Account: a, Category: cat, t.LastPaidDate, t.LastCashflowDate);
 
             var results = upcomingCashflows.SelectMany(x =>
             {

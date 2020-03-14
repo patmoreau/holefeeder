@@ -18,8 +18,8 @@ namespace DrifterApps.Holefeeder.Common.Extensions
 		{
 			return intervalType switch
 			{
-				DateIntervalType.Weekly => (Func<DateTime, int, DateTime>) ((date, intervalCount) =>
-					date.AddWeeks(intervalCount)),
+				DateIntervalType.Weekly => ((date, intervalCount) =>
+                    date.AddWeeks(intervalCount)),
 				DateIntervalType.Monthly => ((date, intervalCount) => date.AddMonths(intervalCount)),
 				_ => ((date, intervalCount) => date.AddYears(intervalCount))
 			};

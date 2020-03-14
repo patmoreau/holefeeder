@@ -36,78 +36,68 @@ namespace DrifterApps.Holefeeder.Business
             var categories = (await _categoriesService.FindAsync(userId, null, cancellationToken).ConfigureAwait(false)).Where(c => !c.System).Select(_mapper.Map<CategoryInfoEntity>);
 
             var yearly = transactions
-                            .GroupBy(t => new
-                            {
-                                CategoryId = t.Category,
-                                From = new DateTime(t.Date.Year, 1, 1),
-                                To = new DateTime(t.Date.Year, 1, 1).AddYears(1).AddDays(-1),
-                            })
-                            .Select(g => new
-                            {
-                                CategoryId = g.Key.CategoryId,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.Amount),
-                            })
+                            .GroupBy(t => (
+                                CategoryId: t.Category,
+                                From: new DateTime(t.Date.Year, 1, 1),
+                                To: new DateTime(t.Date.Year, 1, 1).AddYears(1).AddDays(-1)
+                            ))
+                            .Select(g => (
+                                CategoryId: g.Key.CategoryId,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.Amount)
+                            ))
                             .GroupBy(p => p.CategoryId)
-                            .Select(p => new
-                            {
-                                CategoryId = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                CategoryId: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var monthly = transactions
-                            .GroupBy(t => new
-                            {
-                                CategoryId = t.Category,
-                                From = new DateTime(t.Date.Year, t.Date.Month, 1),
-                                To = new DateTime(t.Date.Year, t.Date.Month, 1).AddMonths(1).AddDays(-1),
-                            })
-                            .Select(g => new
-                            {
-                                CategoryId = g.Key.CategoryId,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.Amount)
-                            })
+                            .GroupBy(t => (
+                                CategoryId: t.Category,
+                                From: new DateTime(t.Date.Year, t.Date.Month, 1),
+                                To: new DateTime(t.Date.Year, t.Date.Month, 1).AddMonths(1).AddDays(-1)
+                            ))
+                            .Select(g => (
+                                CategoryId: g.Key.CategoryId,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.Amount)
+                            ))
                             .GroupBy(p => p.CategoryId)
-                            .Select(p => new
-                            {
-                                CategoryId = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                CategoryId: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var periods = transactions
-                            .Select(t => new
-                            {
-                                CategoryId = t.Category,
-                                Period = t.Date.Interval(effectiveDate, intervalType, frequency),
-                                Transaction = t,
-                            })
-                            .GroupBy(t => new
-                            {
-                                CategoryId = t.CategoryId,
-                                From = t.Period.from,
-                                To = t.Period.to,
-                            })
-                            .Select(g => new
-                            {
-                                CategoryId = g.Key.CategoryId,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.Transaction.Amount)
-                            })
+                            .Select(t => (
+                                CategoryId: t.Category,
+                                Period: t.Date.Interval(effectiveDate, intervalType, frequency),
+                                Transaction: t
+                            ))
+                            .GroupBy(t => (
+                                CategoryId: t.CategoryId,
+                                From: t.Period.from,
+                                To: t.Period.to
+                            ))
+                            .Select(g => (
+                                CategoryId: g.Key.CategoryId,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.Transaction.Amount)
+                            ))
                             .GroupBy(p => p.CategoryId)
-                            .Select(p => new
-                            {
-                                CategoryId = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                CategoryId: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var statistics =
@@ -125,81 +115,71 @@ namespace DrifterApps.Holefeeder.Business
             var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "date" }, new[] { $"category={categoryId}" }), cancellationToken).ConfigureAwait(false);
 
             var yearly = transactions
-                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => new { transaction, tag })
-                            .GroupBy(t => new
-                            {
-                                Tag = t.tag.Trim(),
-                                From = new DateTime(t.transaction.Date.Year, 1, 1),
-                                To = new DateTime(t.transaction.Date.Year, 1, 1).AddYears(1).AddDays(-1),
-                            })
-                            .Select(g => new
-                            {
-                                Tag = g.Key.Tag,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.transaction.Amount),
-                            })
+                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => (transaction, tag))
+                            .GroupBy(t => (
+                                Tag: t.tag.Trim(),
+                                From: new DateTime(t.transaction.Date.Year, 1, 1),
+                                To: new DateTime(t.transaction.Date.Year, 1, 1).AddYears(1).AddDays(-1)
+                            ))
+                            .Select(g => (
+                                Tag: g.Key.Tag,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.transaction.Amount)
+                            ))
                             .GroupBy(p => p.Tag)
-                            .Select(p => new
-                            {
-                                Tag = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                Tag: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var monthly = transactions
-                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => new { transaction, tag })
-                            .GroupBy(t => new
-                            {
-                                Tag = t.tag.Trim(),
-                                From = new DateTime(t.transaction.Date.Year, t.transaction.Date.Month, 1),
-                                To = new DateTime(t.transaction.Date.Year, t.transaction.Date.Month, 1).AddMonths(1).AddDays(-1),
-                            })
-                            .Select(g => new
-                            {
-                                Tag = g.Key.Tag,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.transaction.Amount)
-                            })
+                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => (transaction, tag))
+                            .GroupBy(t => (
+                                Tag: t.tag.Trim(),
+                                From: new DateTime(t.transaction.Date.Year, t.transaction.Date.Month, 1),
+                                To: new DateTime(t.transaction.Date.Year, t.transaction.Date.Month, 1).AddMonths(1).AddDays(-1)
+                            ))
+                            .Select(g => (
+                                Tag: g.Key.Tag,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.transaction.Amount)
+                            ))
                             .GroupBy(p => p.Tag)
-                            .Select(p => new
-                            {
-                                Tag = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                Tag: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var periods = transactions
-                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => new { transaction, tag })
-                            .Select(t => new
-                            {
-                                Tag = t.tag.Trim(),
-                                Period = t.transaction.Date.Interval(effectiveDate, intervalType, frequency),
-                                Transaction = t,
-                            })
-                            .GroupBy(t => new
-                            {
-                                Tag = t.Tag,
-                                From = t.Period.from,
-                                To = t.Period.to,
-                            })
-                            .Select(g => new
-                            {
-                                Tag = g.Key.Tag,
-                                From = g.Key.From,
-                                To = g.Key.To,
-                                Count = g.Count(),
-                                Amount = g.Sum(t => t.Transaction.transaction.Amount)
-                            })
+                            .SelectMany(t => (t.Tags?.Any() ?? false) ? t.Tags : noTag, (transaction, tag) => (transaction, tag))
+                            .Select(t => (
+                                Tag: t.tag.Trim(),
+                                Period: t.transaction.Date.Interval(effectiveDate, intervalType, frequency),
+                                Transaction: t
+                            ))
+                            .GroupBy(t => (
+                                Tag: t.Tag,
+                                From: t.Period.from,
+                                To: t.Period.to
+                            ))
+                            .Select(g => (
+                                Tag: g.Key.Tag,
+                                From: g.Key.From,
+                                To: g.Key.To,
+                                Count: g.Count(),
+                                Amount: g.Sum(t => t.Transaction.transaction.Amount)
+                            ))
                             .GroupBy(p => p.Tag)
-                            .Select(p => new
-                            {
-                                Tag = p.Key,
-                                Data = new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount))),
-                            })
+                            .Select(p => (
+                                Tag: p.Key,
+                                Data: new List<SeriesEntity>(p.Select(s => new SeriesEntity(s.From, s.To, s.Count, s.Amount)))
+                            ))
                             .ToList();
 
             var statistics =
