@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{CE219E8C-E8F8-4CF2-979F-081128262D2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ServicesHosts.API", "DrifterApps.Holefeeder.ServicesHosts.API\DrifterApps.Holefeeder.ServicesHosts.API.csproj", "{B17E3006-C306-4E58-B7D8-4B8A41C0421B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.API", "DrifterApps.Holefeeder.ServicesHosts.API\DrifterApps.Holefeeder.ServicesHosts.API.csproj", "{B17E3006-C306-4E58-B7D8-4B8A41C0421B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{8BF332C6-0E6A-4206-A4F3-D8088F2D3631}"
 EndProject
@@ -43,6 +43,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.Tests", "7.Tests", "{616114A7-4881-45E8-97FA-AF3B5558DD34}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{9E52206A-0415-4D56-8998-EA3FEFB2EF3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common.Tests", "DrifterApps.Holefeeder.Common.Tests\DrifterApps.Holefeeder.Common.Tests.csproj", "{14812875-9C02-44E1-BC79-D1FC7EE503E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,6 +190,18 @@ Global
 		{B17E3006-C306-4E58-B7D8-4B8A41C0421B}.Release|x64.Build.0 = Release|Any CPU
 		{B17E3006-C306-4E58-B7D8-4B8A41C0421B}.Release|x86.ActiveCfg = Release|Any CPU
 		{B17E3006-C306-4E58-B7D8-4B8A41C0421B}.Release|x86.Build.0 = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|x64.Build.0 = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Debug|x86.Build.0 = Debug|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|x64.ActiveCfg = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|x64.Build.0 = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +218,8 @@ Global
 		{7F8C91BE-BE26-4402-9301-4114F74B1024} = {8BF332C6-0E6A-4206-A4F3-D8088F2D3631}
 		{CE219E8C-E8F8-4CF2-979F-081128262D2A} = {C9A47346-602B-4E9E-B231-890037E9BC3C}
 		{B17E3006-C306-4E58-B7D8-4B8A41C0421B} = {0BFDAFBC-EC23-488F-9D7D-8E0B16091EE6}
+		{9E52206A-0415-4D56-8998-EA3FEFB2EF3B} = {616114A7-4881-45E8-97FA-AF3B5558DD34}
+		{14812875-9C02-44E1-BC79-D1FC7EE503E4} = {9E52206A-0415-4D56-8998-EA3FEFB2EF3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083F9D38-7496-44CA-B1E2-9C04BA3DD0A6}
