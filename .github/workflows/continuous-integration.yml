@@ -1,35 +1,35 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Continous Integration
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
+  push:
+    branches: [ develop ]
   pull_request:
     branches: [ develop ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.102
+
     - name: Install dependencies
       run: dotnet restore
       working-directory: ./src
+
     - name: Build
       run: dotnet build --no-restore
       working-directory: ./src
+
     - name: Test
       run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage"
       working-directory: ./src
+
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.5.6
       with:
@@ -41,6 +41,7 @@ jobs:
         filefilters: '+*'
         verbosity: 'Verbose'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
+
     - name: Upload coverage report
       uses: actions/upload-artifact@v1
       with:
