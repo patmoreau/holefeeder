@@ -7,7 +7,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,3 +43,16 @@ jobs:
       with:
         name: coverage-report
         path: coveragereport
+
+  ui:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '13.x'
+    - run: npm install
+      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
+    - run: npm build
+      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
