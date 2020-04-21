@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.DTO", "DrifterApps.Holefeeder.Services.DTO\DrifterApps.Holefeeder.Services.DTO.csproj", "{B21FCCC0-BF36-4356-8B98-91BD3137CBB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.Dto", "DrifterApps.Holefeeder.Services.Dto\DrifterApps.Holefeeder.Services.Dto.csproj", "{B21FCCC0-BF36-4356-8B98-91BD3137CBB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Common", "DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj", "{78145294-1174-4504-8014-B17A3B3F9224}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Reso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business.Entities", "DrifterApps.Holefeeder.Business.Entities\DrifterApps.Holefeeder.Business.Entities.csproj", "{C922B219-CEDD-40DA-884A-995DB4590E41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.API", "DrifterApps.Holefeeder.Services.API\DrifterApps.Holefeeder.Services.API.csproj", "{1BCFC743-EDE8-4B43-A71F-FED17CDC24DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.Api", "DrifterApps.Holefeeder.Services.Api\DrifterApps.Holefeeder.Services.Api.csproj", "{1BCFC743-EDE8-4B43-A71F-FED17CDC24DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Architecture", "0.Architecture", "{021329ED-4CB0-46EA-B3FD-BDDFE43EC359}"
 EndProject
@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{CE219E8C-E8F8-4CF2-979F-081128262D2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.API", "DrifterApps.Holefeeder.ServicesHosts.API\DrifterApps.Holefeeder.ServicesHosts.API.csproj", "{B17E3006-C306-4E58-B7D8-4B8A41C0421B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.Api", "DrifterApps.Holefeeder.ServicesHosts.Api\DrifterApps.Holefeeder.ServicesHosts.Api.csproj", "{B17E3006-C306-4E58-B7D8-4B8A41C0421B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{8BF332C6-0E6A-4206-A4F3-D8088F2D3631}"
 EndProject

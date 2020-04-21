@@ -8,11 +8,11 @@ namespace DrifterApps.Holefeeder.Common.Enums
         [EnumMember(Value=AccountTypes.CHECKING)]
         [Description(AccountTypes.CHECKING)]
         Checking,
-        [EnumMember(Value=AccountTypes.CREDITCARD)]
-        [Description(AccountTypes.CREDITCARD)]
+        [EnumMember(Value=AccountTypes.CREDIT_CARD)]
+        [Description(AccountTypes.CREDIT_CARD)]
         CreditCard,
-        [EnumMember(Value=AccountTypes.CREDITLINE)]
-        [Description(AccountTypes.CREDITLINE)]
+        [EnumMember(Value=AccountTypes.CREDIT_LINE)]
+        [Description(AccountTypes.CREDIT_LINE)]
         CreditLine,
         [EnumMember(Value=AccountTypes.INVESTMENT)]
         [Description(AccountTypes.INVESTMENT)]

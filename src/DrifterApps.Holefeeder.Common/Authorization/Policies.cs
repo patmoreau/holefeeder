@@ -2,8 +2,8 @@
 {
     public static class Policies
     {
-        public const string AuthenticatedUser = nameof(AuthenticatedUser);
+        public const string AUTHENTICATED_USER = nameof(AUTHENTICATED_USER);
 
-        public const string RegisteredUser = nameof(RegisteredUser);
+        public const string REGISTERED_USER = nameof(REGISTERED_USER);
     }
 }
