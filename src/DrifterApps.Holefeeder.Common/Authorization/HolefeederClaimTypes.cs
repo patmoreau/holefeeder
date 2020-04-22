@@ -2,6 +2,6 @@
 {
     public static class HolefeederClaimTypes
     {
-        public const string HolefeederId = nameof(HolefeederId);
+        public const string HOLEFEEDER_ID = nameof(HOLEFEEDER_ID);
     }
 }

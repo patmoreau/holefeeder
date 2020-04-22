@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo;
-using DrifterApps.Holefeeder.Services.API;
+using DrifterApps.Holefeeder.Services.Api;
 
 namespace DrifterApps.Holefeeder.Common.IoC
 {
