@@ -18,7 +18,7 @@
       <ProjectReference Include="..\DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj" />
       <ProjectReference Include="..\DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj" />
       <ProjectReference Include="..\DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj" />
-      <ProjectReference Include="..\DrifterApps.Holefeeder.Services.API\DrifterApps.Holefeeder.Services.API.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Services.BudgetApi\DrifterApps.Holefeeder.Services.BudgetApi.csproj" />
     </ItemGroup>
 
 </Project>
