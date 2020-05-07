@@ -1,4 +1,4 @@
-name: Continous Integration
+name: Continous integration
 
 on:
   push:
@@ -19,16 +19,13 @@ jobs:
         dotnet-version: 3.1.201
 
     - name: Install dependencies
-      run: dotnet restore
-      working-directory: ./src
+      run: dotnet restore ./src
 
     - name: Build
-      run: dotnet build --no-restore
-      working-directory: ./src
+      run: dotnet build --no-restore ./src
 
     - name: Test
-      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage"
-      working-directory: ./src
+      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage" ./src
 
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.5.7
@@ -52,7 +49,10 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '13.x'
-    - run: npm install
+    - name: Install dependencies
+      run: npm install
       working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
-    - run: npm build
+
+    - name: Build angular ui
+      run: npm build
       working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI

@@ -35,7 +35,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 
         public IReadOnlyList<string> Tags { get; }
 
-        public CashflowDto(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string category, string account, bool inactive, IReadOnlyList<string> tags)
+        public CashflowDto(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string category, string account, bool inactive, IEnumerable<string> tags)
         {
             Id = id;
             EffectiveDate = effectiveDate;

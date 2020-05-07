@@ -1,0 +1,4 @@
+docker/
+volumes/
+nginx-data/
+nginx.tmpl

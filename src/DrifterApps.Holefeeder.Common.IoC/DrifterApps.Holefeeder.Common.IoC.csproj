@@ -10,7 +10,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="SimpleInjector.Extensions.LifetimeScoping" Version="4.0.0" />
-      <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.9.2" />
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.10.3" />
     </ItemGroup>
 
     <ItemGroup>
