@@ -1,0 +1,53 @@
+name: Continous deployment BETA
+
+on:
+  push:
+    branches: [ release/* ]
+
+jobs:
+  Package-Budget-API:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+
+    - name: Install dependencies
+      run: dotnet restore ./src
+
+    - name: Build sources
+      run: dotnet publish --no-restore --output ./publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi ./src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
+
+    - name: Docker login
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+
+    - name: Package
+      run: |
+        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:beta -f docker/api.dockerfile .
+        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:beta
+
+  # package-budget-ui:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: actions/setup-node@v1
+  #     with:
+  #       node-version: '13.x'
+
+  #   - name: Install dependencies
+  #     run: npm install
+  #     working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
+
+  #   - name: Build
+  #     run: npm run-script build -- --aot=true --outputHashing=all --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI --sourceMap=false
+  #     working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
+
+  #   - name: Package
+  #     run: |
+  #       docker build -t holefeeder-web:beta -f docker/web.dockerfile . 
+  #       ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+  #       docker tag IMAGE_ID docker.pkg.github.com/drifterapps/repository-name/holefeeder-web:beta
+  #       docker push docker.pkg.github.com/drifterapps/repository-name/holefeeder-web:beta

@@ -33,8 +33,8 @@ fi
 docker network create $NETWORK $NETWORK_OPTIONS
 
 # 3. Verify if second network is configured
-if [ ! -z ${UAT_NETWORK+X} ]; then
-    docker network create $UAT_NETWORK $UAT_NETWORK_OPTIONS
+if [ ! -z ${BETA_NETWORK+X} ]; then
+    docker network create $BETA_NETWORK $BETA_NETWORK_OPTIONS
 fi
 
 # 4. Download the latest version of nginx.tmpl
@@ -75,7 +75,7 @@ fi
 # 7. Start proxy
 
 # Check if you have multiple network
-if [ -z ${UAT_NETWORK+X} ]; then
+if [ -z ${BETA_NETWORK+X} ]; then
     docker-compose up -d
 else
     docker-compose -f docker-compose-multiple-networks.yml up -d

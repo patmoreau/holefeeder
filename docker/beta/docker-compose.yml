@@ -1,35 +1,35 @@
 version: '3'
 
 services:
-  holefeeder-api-uat:
+  holefeeder-api-beta:
     image: holefeeder-api:beta
     restart: always
     ports:
       - 80
     environment:
-      - DEFAULT_HOST=holefeeder-api-uat.drifterapps.com
-      - VIRTUAL_HOST=holefeeder-api-uat.drifterapps.com
+      - DEFAULT_HOST=holefeeder-api-beta.drifterapps.com
+      - VIRTUAL_HOST=holefeeder-api-beta.drifterapps.com
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=holefeeder-api-uat.drifterapps.com
+      - LETSENCRYPT_HOST=holefeeder-api-beta.drifterapps.com
       - LETSENCRYPT_EMAIL=info@drifterapps.com
     env_file: 
       - ./environment.env
 
-  holefeeder-web-uat:
+  holefeeder-web-beta:
     image: holefeeder-web:beta
     restart: always
     ports:
       - 8080
     environment:
-      - DEFAULT_HOST=holefeeder-uat.drifterapps.com
-      - VIRTUAL_HOST=holefeeder-uat.drifterapps.com
+      - DEFAULT_HOST=holefeeder-beta.drifterapps.com
+      - VIRTUAL_HOST=holefeeder-beta.drifterapps.com
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=holefeeder-uat.drifterapps.com
+      - LETSENCRYPT_HOST=holefeeder-beta.drifterapps.com
       - LETSENCRYPT_EMAIL=info@drifterapps.com
     env_file: 
       - ./environment.env
 
-  mongodb_container-uat:
+  mongodb_container-beta:
     image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -37,12 +37,12 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongodb_data_container-uat:/data/db-uat
+      - mongodb_data_container-beta:/data/db-beta
 
 volumes:
-  mongodb_data_container-uat:
+  mongodb_data_container-beta:
 
 networks:
   default:
     external:
-      name: holefeeder-uat-proxy
+      name: holefeeder-beta-proxy
