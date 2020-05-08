@@ -6,10 +6,7 @@ on:
       - master
       - release/*
     paths:
-      - .github/workflows/**
       - proxy/**
-env:
-  TEST: test
 
 jobs:
   Deploy-Proxy:
@@ -39,11 +36,9 @@ jobs:
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
         script: |
-          echo Docker login
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           cd holefeeder-proxy
           echo Start container
           chmod +x start.sh
-          ./start.sh -e .env
+          ./start.sh -e .env -i ${{ secrets.PROD_WEB_SERVER_IP }}
           echo Cleanup previous images
           docker image prune -f
