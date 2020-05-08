@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Common;
-using DrifterApps.Holefeeder.Common.Enums;
-using DrifterApps.Holefeeder.Common.Extensions;
-using DrifterApps.Holefeeder.Business.Entities;
-using DrifterApps.Holefeeder.ResourcesAccess;
 using System.Threading;
+using System.Threading.Tasks;
+using DrifterApps.Holefeeder.Business.Entities;
+using DrifterApps.Holefeeder.Common;
+using DrifterApps.Holefeeder.Common.Extensions;
+using DrifterApps.Holefeeder.ResourcesAccess;
 
 namespace DrifterApps.Holefeeder.Business
 {
@@ -35,15 +33,15 @@ namespace DrifterApps.Holefeeder.Business
                 join t in transactions on a.Id equals t.Account
                 join c in categories on t.Category equals c.Id
                 select (
-                    Id: a.Id,
-                    Type: a.Type,
-                    Name: a.Name,
-                    OpenBalance: a.OpenBalance,
-                    Description: a.Description,
-                    Favorite: a.Favorite,
-                    Inactive: a.Inactive,
-                    Date: t.Date,
-                    Amount: t.Amount * (c.Type == CategoryType.Gain ? 1 : -1) * ((a.Type == AccountType.Checking || a.Type == AccountType.Investment || a.Type == AccountType.Savings) ? 1 : -1)
+                    a.Id,
+                    a.Type,
+                    a.Name,
+                    a.OpenBalance,
+                    a.Description,
+                    a.Favorite,
+                    a.Inactive,
+                    t.Date,
+                    Amount: t.Amount * c.Type.GetMultiplier() * a.Type.GetMultiplier()
                 ))
                 .GroupBy(t => t.Id)
                 .Select(t => new AccountDetailEntity

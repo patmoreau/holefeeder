@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using DrifterApps.Holefeeder.Common.Extensions;
+using DrifterApps.Holefeeder.ResourcesAccess.Mongo.Exceptions;
 using MongoDB.Driver.Linq;
 
 namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
@@ -76,13 +76,16 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
             var parameter = Expression.Parameter(source.ElementType, string.Empty);
 
             var propertyInfo = source.ElementType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (propertyInfo is null)
+                throw new QueryException(propertyName);
+
             var property = Expression.Property(parameter, propertyInfo);
             var lambda = Expression.Lambda(property, parameter);
 
             string methodName = isAscending ? method : ($"{method}Descending");
 
             MethodCallExpression methodCallExpression = Expression.Call(typeof(Queryable), methodName,
-                new Type[] { source.ElementType, property.Type }, source.Expression, Expression.Quote(lambda));
+                new[] { source.ElementType, property.Type }, source.Expression, Expression.Quote(lambda));
             return (IMongoQueryable<T>)source.Provider.CreateQuery<T>(methodCallExpression);
         }
 
@@ -91,10 +94,13 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Extensions
             var parameter = Expression.Parameter(source.ElementType, string.Empty);
 
             var propertyInfo = source.ElementType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (propertyInfo is null)
+                throw new QueryException(propertyName);
+            
             var left = Expression.Property(parameter, propertyInfo);
 
             var converter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
-            var v = converter.ConvertFromString(null, CultureInfo.InvariantCulture, value);
+            var v = converter.ConvertFromString(value);
 
             var right = Expression.Constant(v, propertyInfo.PropertyType);
             var comparison = OperatorExpression(left, op, right);

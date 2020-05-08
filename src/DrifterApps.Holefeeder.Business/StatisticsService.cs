@@ -13,7 +13,7 @@ namespace DrifterApps.Holefeeder.Business
 {
     public class StatisticsService : IStatisticsService
     {
-        static readonly string[] noTag = new[] { "<no tag>" };
+        static readonly string[] noTag = { "<no tag>" };
 
         private readonly ITransactionsService _transactionsService;
         private readonly ICategoriesService _categoriesService;
@@ -42,9 +42,9 @@ namespace DrifterApps.Holefeeder.Business
                                 To: new DateTime(t.Date.Year, 1, 1).AddYears(1).AddDays(-1)
                             ))
                             .Select(g => (
-                                CategoryId: g.Key.CategoryId,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.CategoryId,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.Amount)
                             ))
@@ -62,9 +62,9 @@ namespace DrifterApps.Holefeeder.Business
                                 To: new DateTime(t.Date.Year, t.Date.Month, 1).AddMonths(1).AddDays(-1)
                             ))
                             .Select(g => (
-                                CategoryId: g.Key.CategoryId,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.CategoryId,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.Amount)
                             ))
@@ -82,14 +82,14 @@ namespace DrifterApps.Holefeeder.Business
                                 Transaction: t
                             ))
                             .GroupBy(t => (
-                                CategoryId: t.CategoryId,
+                                t.CategoryId,
                                 From: t.Period.from,
                                 To: t.Period.to
                             ))
                             .Select(g => (
-                                CategoryId: g.Key.CategoryId,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.CategoryId,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.Transaction.Amount)
                             ))
@@ -122,9 +122,9 @@ namespace DrifterApps.Holefeeder.Business
                                 To: new DateTime(t.transaction.Date.Year, 1, 1).AddYears(1).AddDays(-1)
                             ))
                             .Select(g => (
-                                Tag: g.Key.Tag,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.Tag,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.transaction.Amount)
                             ))
@@ -143,9 +143,9 @@ namespace DrifterApps.Holefeeder.Business
                                 To: new DateTime(t.transaction.Date.Year, t.transaction.Date.Month, 1).AddMonths(1).AddDays(-1)
                             ))
                             .Select(g => (
-                                Tag: g.Key.Tag,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.Tag,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.transaction.Amount)
                             ))
@@ -164,14 +164,14 @@ namespace DrifterApps.Holefeeder.Business
                                 Transaction: t
                             ))
                             .GroupBy(t => (
-                                Tag: t.Tag,
+                                t.Tag,
                                 From: t.Period.from,
                                 To: t.Period.to
                             ))
                             .Select(g => (
-                                Tag: g.Key.Tag,
-                                From: g.Key.From,
-                                To: g.Key.To,
+                                g.Key.Tag,
+                                g.Key.From,
+                                g.Key.To,
                                 Count: g.Count(),
                                 Amount: g.Sum(t => t.Transaction.transaction.Amount)
                             ))

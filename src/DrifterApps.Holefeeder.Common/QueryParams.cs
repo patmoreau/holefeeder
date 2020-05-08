@@ -24,9 +24,6 @@ namespace DrifterApps.Holefeeder.Common
             Filter = filter is null ? ImmutableArray.Create<string>() : ImmutableArray.CreateRange(filter);
         }
 
-        public QueryParams With(int? offset = null, int? limit = null, IEnumerable<string> sort = null, IEnumerable<string> filter = null) =>
-            new QueryParams(offset ?? Offset, limit ?? Limit, sort ?? Sort, filter ?? Filter);
-
         public static QueryParams Empty => new QueryParams();
     }
 }
