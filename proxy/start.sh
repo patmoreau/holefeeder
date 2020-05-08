@@ -2,15 +2,16 @@
 
 ENV="local.env"
 IP="localhost"
+
 while getopts ":e:i:" opt; do
   case $opt in
-    e) ENV=$OPTARG ;;
-    i) IP=$OPTARG ;;
-    \?)
+    (e) ENV=$OPTARG ;;
+    (i) IP=$OPTARG ;;
+    (?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
       ;;
-    :)
+    (:)
       echo "Option -$OPTARG requires an argument." >&2
       exit 1
       ;;
