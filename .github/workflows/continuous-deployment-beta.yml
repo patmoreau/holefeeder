@@ -2,7 +2,16 @@ name: Continous deployment BETA
 
 on:
   push:
-    branches: [ release/* ]
+    branches: 
+      - release/*
+      - hotfix/*
+    
+    paths-ignore:
+      - proxy/**
+      - docs/**
+      - poc/**
+      - imports/**
+      - tools/**
 
 jobs:
   Package-Budget-API:
