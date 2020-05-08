@@ -74,4 +74,4 @@ networks:
       name: ${NETWORK:-prodproxy}
   outside:
     external:
-      name: ${UAT_NETWORK:-uatproxy}
+      name: ${BETA_NETWORK:-betaproxy}
