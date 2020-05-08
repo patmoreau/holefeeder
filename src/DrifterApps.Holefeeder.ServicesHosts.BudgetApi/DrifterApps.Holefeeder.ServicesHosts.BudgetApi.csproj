@@ -16,7 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.9.2" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.10.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.3" />
   </ItemGroup>
   <ItemGroup>
@@ -24,16 +24,16 @@
     <ProjectReference Include="..\DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="en-us.resx">
+    <EmbeddedResource Update="Resources\BudgetApiInternal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>en-us.Designer.cs</LastGenOutput>
+      <LastGenOutput>BudgetApiInternal.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="en-us.Designer.cs">
+    <Compile Update="Resources\BudgetApiInternal.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>en-us.resx</DependentUpon>
+      <DependentUpon>BudgetApiInternal.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using DrifterApps.Holefeeder.Common.Resources;
 
 namespace DrifterApps.Holefeeder.Common.Extensions
 {
@@ -20,7 +21,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
             arg.ThrowIfNull(argName);
 
             if (string.IsNullOrWhiteSpace(arg))
-                throw new ArgumentException(en_us.ValueCannotBeEmpty, argName);
+                throw new ArgumentException(CommonInternal.ValueCannotBeEmpty, argName);
 
             return arg;
         }

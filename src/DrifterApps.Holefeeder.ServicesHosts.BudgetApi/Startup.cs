@@ -8,6 +8,7 @@ using DrifterApps.Holefeeder.Business;
 using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google;
+using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +50,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         {
             var googleClientId = Configuration["Google:ClientId"];
             if(string.IsNullOrWhiteSpace(googleClientId))
-                throw new NullReferenceException(en_us.GoogleClientIdNotConfigured);
+                throw new NullReferenceException(BudgetApiInternal.GoogleClientIdNotConfigured);
             
             _ = services.AddControllers()
                 .AddJsonOptions(options =>

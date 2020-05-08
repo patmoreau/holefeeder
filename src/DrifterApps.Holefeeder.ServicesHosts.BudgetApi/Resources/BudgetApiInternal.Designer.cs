@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DrifterApps.Holefeeder.Common {
+namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class en_us {
+    internal class BudgetApiInternal {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal en_us() {
+        internal BudgetApiInternal() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("DrifterApps.Holefeeder.Common.en_us", typeof(en_us).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources.BudgetApiInternal", typeof(BudgetApiInternal).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,9 +45,9 @@ namespace DrifterApps.Holefeeder.Common {
             }
         }
         
-        internal static string ValueCannotBeEmpty {
+        internal static string GoogleClientIdNotConfigured {
             get {
-                return ResourceManager.GetString("ValueCannotBeEmpty", resourceCulture);
+                return ResourceManager.GetString("GoogleClientIdNotConfigured", resourceCulture);
             }
         }
     }
