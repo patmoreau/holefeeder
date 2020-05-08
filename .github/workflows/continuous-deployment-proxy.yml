@@ -6,6 +6,7 @@ on:
       - master
       - release/*
     paths:
+      - .github/workflows/**
       - proxy/**
 env:
   TEST: test
@@ -25,14 +26,24 @@ jobs:
         PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
-        source: "./proxy/docker-compose.yml ./proxy/docker-compose-multiple-networks.yml ./proxy/.env ./proxy/start.sh ./proxy/conf.d"
-        target: "/holefeeder-proxy"
+        source: "proxy/.env,proxy/docker-compose-multiple-networks.yml,proxy/docker-compose.yml,proxy/start.sh,proxy/conf.d/realip.conf,proxy/conf.d/servertokens.conf,proxy/conf.d/uploadsize.conf"
+        target: "holefeeder-proxy"
+        strip_components: 1
 
-    # - name: Executing remote  command
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     USERNAME: ${{ secrets.USERNAME }}
-    #     PORT: ${{ secrets.PORT }}
-    #     KEY: ${{ secrets.SSHKEY }}
-    #     script: cat /opt/app/README.md
+    - name: Starting proxy
+      uses: appleboy/ssh-action@master
+      env:
+        HOST: ${{ secrets.PROD_WEB_SERVER }}
+        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      with:
+        script: |
+          echo Docker login
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+          cd holefeeder-proxy
+          echo Start container
+          chmod +x start.sh
+          ./start.sh -e .env
+          echo Cleanup previous images
+          docker image prune -f
