@@ -78,9 +78,9 @@ fi
 
 # Check if you have multiple network
 if [ -z ${BETA_NETWORK+X} ]; then
-    docker-compose up -d
+    docker-compose up --force-recreate --build -d
 else
-    docker-compose -f docker-compose-multiple-networks.yml up -d
+    docker-compose -f docker-compose-multiple-networks.yml up --force-recreate --build -d
 fi
 
 exit 0
