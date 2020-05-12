@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ACTION="all"
+ACTION=""
 while getopts ":a:" opt; do
     case $opt in
     a)
@@ -20,12 +20,16 @@ while getopts ":a:" opt; do
     esac
 done
 
+VERSION=`date +%y.%m.00-alpha`
+echo building $VERSION
+echo $VERSION > docker/VERSION
+
 if [ $ACTION == "api" ] || [ $ACTION == "all" ]; then
     # build api
     dotnet restore src
-    dotnet publish --no-restore --output publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
+    dotnet publish /property:Version=$VERSION --no-restore --output publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
 
-    docker build -t holefeeder-api:latest -f docker/api.dockerfile .
+    docker build -t holefeeder-api:$VERSION -f docker/api.dockerfile .
 fi
 if [ $ACTION == "ui" ] || [ $ACTION == "all" ]; then
     # build ui
@@ -34,7 +38,7 @@ if [ $ACTION == "ui" ] || [ $ACTION == "all" ]; then
     npm run-script build -- --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI
     cd ../../
 
-    docker build -t holefeeder-web:latest -f docker/web.dockerfile .
+    docker build -t holefeeder-web:$VERSION -f docker/web.dockerfile .
 fi
 if [ $ACTION == "docker" ] || [ $ACTION == "all" ]; then
     docker-compose -f docker/dev/docker-compose.yml up --force-recreate --build -d
