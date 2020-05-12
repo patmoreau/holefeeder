@@ -2,8 +2,7 @@ name: Continous deployment PROD
 
 on:
   push:
-    branches: 
-      - master/*
+    branches: [ master ]
     
     paths-ignore:
       - proxy/**

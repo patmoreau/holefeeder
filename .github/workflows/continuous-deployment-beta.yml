@@ -2,16 +2,19 @@ name: Continous deployment BETA
 
 on:
   push:
-    branches: 
+    branches:
       - release/*
       - hotfix/*
-    
+
     paths-ignore:
       - proxy/**
       - docs/**
       - poc/**
       - imports/**
       - tools/**
+
+env:
+  VERSION: ${{`date +%y.%m.${github.run_number}-beta`}}
 
 jobs:
   Package-Budget-API:
@@ -27,15 +30,16 @@ jobs:
       run: dotnet restore ./src
 
     - name: Build sources
-      run: dotnet publish --no-restore --output ./publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi ./src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
+      run: |
+        dotnet publish /property:Version=${{ env.VERSION }} --no-restore --output ./publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi ./src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
 
     - name: Docker login
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: Package
       run: |
-        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:beta -f docker/api.dockerfile .
-        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:beta
+        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }} -f docker/api.dockerfile .
+        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }}
 
   Package-Budget-UI:
     runs-on: ubuntu-latest
@@ -59,8 +63,8 @@ jobs:
 
     - name: Package
       run: |
-        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:beta -f docker/web.dockerfile .
-        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:beta
+        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }} -f docker/web.dockerfile .
+        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }}
 
   Deploy:
     runs-on: ubuntu-latest
@@ -101,8 +105,8 @@ jobs:
           cd holefeeder-beta/beta
           echo Pull container
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:beta
-          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:beta
+          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }}
+          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }}
           echo Pull standard containers
           # echo ${{ secrets.GITHUB_TOKEN }} | docker login -u DrifterApps --password-stdin
           docker pull mongo:latest
