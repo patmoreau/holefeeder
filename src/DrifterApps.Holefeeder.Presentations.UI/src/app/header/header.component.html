@@ -13,28 +13,28 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
             (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="['fas', 'tachometer-alt']" aria-hidden="true"></fa-icon>
+            <fa-icon class="pb-1" [icon]="faTachometerAlt" aria-hidden="true"></fa-icon>
             Dashboard
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/accounts']" routerLinkActive="active"
             (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="['fas', 'university']" aria-hidden="true"></fa-icon>
+            <fa-icon class="pb-1" [icon]="faUniversity" aria-hidden="true"></fa-icon>
             Accounts
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/cashflows']" routerLinkActive="active"
             (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="['fas', 'file-invoice-dollar']" aria-hidden="true"></fa-icon>
+            <fa-icon class="pb-1" [icon]="faFileInvoiceDollar" aria-hidden="true"></fa-icon>
             Cashflows
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/statistics']" routerLinkActive="active"
             (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="['fas', 'chart-pie']" aria-hidden="true"></fa-icon>
+            <fa-icon class="pb-1" [icon]="faChartPie" aria-hidden="true"></fa-icon>
             Statistics
           </a>
         </li>
@@ -44,7 +44,7 @@
       <ng-container *ngIf="isAuthenticated">
         <button type="button" class="btn btn-outline-secondary mr-sm-2" (click)="open(datePicker)">
           {{ period.start | date }} - {{ period.end | date }}
-          <fa-icon [icon]="['fas', 'angle-down']" aria-hidden="true"></fa-icon>
+          <fa-icon [icon]="faAngleDown" aria-hidden="true"></fa-icon>
         </button>
         <div ngbDropdown class="nav-item dropdown my-2 my-sm-0" *ngIf="isAuthenticated">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
@@ -81,14 +81,14 @@
         </div>
         <div class="d-flex p-1 justify-content-center">
           <button type="button" class="btn btn-outline-lighter" (click)="previousPeriod()" ngbTooltip="Previous period">
-            <fa-icon [icon]="['fas', 'calendar-minus']" aria-hidden="true"></fa-icon>
+            <fa-icon [icon]="faCalendarMinus" aria-hidden="true"></fa-icon>
           </button>
           <button type="button" class="btn btn-outline-lighter ml-3" (click)="currentPeriod()"
             ngbTooltip="Current period">
-            <fa-icon [icon]="['fas', 'calendar-check']" aria-hidden="true"></fa-icon>
+            <fa-icon [icon]="faCalendarCheck" aria-hidden="true"></fa-icon>
           </button>
           <button type="button" class="btn btn-outline-lighter ml-3" (click)="nextPeriod()" ngbTooltip="Next period">
-            <fa-icon [icon]="['fas', 'calendar-plus']" aria-hidden="true"></fa-icon>
+            <fa-icon [icon]="faCalendarPlus" aria-hidden="true"></fa-icon>
           </button>
         </div>
       </div>

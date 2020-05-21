@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -22,9 +23,16 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
             return await Task.Run(() =>
             {
                 var assembly = Assembly.GetEntryAssembly();
-                var status = new StatusDto(assembly?.GetName()?.Version?.ToString() ?? "unknown",
-                    assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "unknown",
-                    assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unknown");
+                var status = new StatusDto
+                {
+                    Version = assembly?.GetName()?.Version?.ToString() ?? "unknown",
+                    AssemblyFileVersion =
+                        assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "unknown",
+                    AssemblyInformationalVersion =
+                        assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                            ?.InformationalVersion ?? "unknown",
+                    ServerDateTime = DateTime.Now
+                };
                 
                 return Ok(status);
             }, cancellationToken).ConfigureAwait(false);

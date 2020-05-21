@@ -41,6 +41,6 @@ if [ $ACTION == "ui" ] || [ $ACTION == "all" ]; then
     docker build -t holefeeder-web:$VERSION -f docker/web.dockerfile .
 fi
 if [ $ACTION == "docker" ] || [ $ACTION == "all" ]; then
-    docker-compose -f docker/dev/docker-compose.yml up --force-recreate --build -d
+    docker-compose --env-file=docker/dev/.env -f docker/dev/docker-compose.yml up --force-recreate --build -d
     docker image prune -f
 fi

@@ -3,7 +3,7 @@
     <a routerLink="/accounts" class="text-large line-height-1 btn-link">
       <fa-icon
         class="pb-1"
-        [icon]="['fas', 'arrow-left']"
+        [icon]="faArrowLeft"
         aria-hidden="true"
       ></fa-icon>
       Accounts
@@ -21,14 +21,14 @@
         <button type="button" class="btn btn-link" (click)="edit()">
           <fa-icon
             class="pb-1 text-secondary"
-            [icon]="['fas', 'edit']"
+            [icon]="faEdit"
             aria-hidden="true"
           ></fa-icon>
         </button>
         <button type="button" class="btn btn-link" (click)="addTransaction()">
           <fa-icon
             class="pb-1 text-secondary"
-            [icon]="['fas', 'plus']"
+            [icon]="faPlus"
             aria-hidden="true"
           ></fa-icon>
         </button>

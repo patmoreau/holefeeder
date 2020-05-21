@@ -7,6 +7,7 @@ import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
 import { categoryTypeMultiplier } from '@app/shared/enums/category-type.enum';
 import { Subject } from 'rxjs';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   templateUrl: './accounts-list.component.html',
@@ -18,6 +19,8 @@ export class AccountsListComponent implements OnInit {
   accountTypeNames: Map<string, string>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
+
+  faPlus = faPlus;
 
   constructor(
     private accountService: AccountsService,

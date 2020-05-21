@@ -12,6 +12,7 @@ import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { DateIntervalTypeNames } from '@app/shared/enums/date-interval-type.enum';
 import { ICashflow } from '@app/shared/interfaces/cashflow.interface';
 import { Cashflow } from '@app/shared/models/cashflow.model';
+import { faArrowLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-cashflow-edit',
@@ -35,6 +36,9 @@ export class CashflowEditComponent implements OnInit {
   isLoaded = false;
 
   intervalTypesNames = DateIntervalTypeNames;
+
+  faArrowLeft = faArrowLeft;
+  faCalendarAlt = faCalendarAlt;
 
   constructor(
     private activatedRoute: ActivatedRoute,

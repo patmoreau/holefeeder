@@ -67,13 +67,15 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PostAsync(CancellationToken cancellationToken = default)
         {
-            var model = new UserDto(
-                null,
-                User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
-                DateTime.Now.Date);
+            var model = new UserDto{
+                Id = null,
+                FirstName = User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
+                LastName = User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
+                EmailAddress = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
+                GoogleId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
+                DateJoined = DateTime.Now.Date
+                
+            };
 
             if (!ModelState.IsValid)
             {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-tags-input',
@@ -14,6 +15,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class TagsInputComponent implements OnInit, ControlValueAccessor {
+  faPlus = faPlus;
+  faTimes = faTimes;
+
   @Input() label = 'tags';
   // tslint:disable-next-line:no-input-rename
   @Input('value') _tags: string[];

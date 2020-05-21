@@ -4,20 +4,12 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class StatusDto
     {
-        public string Version { get; }
+        public string Version { get; set; }
 
-        public string AssemblyFileVersion { get; }
+        public string AssemblyFileVersion { get; set; }
 
-        public string AssemblyInformationalVersion { get; }
+        public string AssemblyInformationalVersion { get; set; }
         
-        public DateTime ServerDateTime { get; }
-
-        public StatusDto(string version, string assemblyFileVersion, string assemblyInformationalVersion)
-        {
-            Version = version;
-            AssemblyFileVersion = assemblyFileVersion;
-            AssemblyInformationalVersion = assemblyInformationalVersion;
-            ServerDateTime = DateTime.Now;
-        }
+        public DateTime ServerDateTime { get; set; }
     }
 }

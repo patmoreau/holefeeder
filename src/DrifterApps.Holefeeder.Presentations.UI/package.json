@@ -12,16 +12,16 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-extensions/model": "^8.1.0",
     "@angular/animations": "^9.1.7",
+    "@angular/cdk": "^9.2.3",
     "@angular/common": "^9.1.7",
     "@angular/compiler": "^9.1.7",
     "@angular/core": "^9.1.7",
     "@angular/forms": "^9.1.7",
+    "@angular/localize": "^9.1.7",
     "@angular/platform-browser": "^9.1.7",
     "@angular/platform-browser-dynamic": "^9.1.7",
     "@angular/router": "^9.1.7",
-    "@auth0/angular-jwt": "^4.0.0",
     "@fortawesome/angular-fontawesome": "^0.6.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
@@ -30,6 +30,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@swimlane/ngx-charts": "^14.0.0",
     "add": "^2.0.6",
+    "angular-auth-oidc-client": "^11.1.1",
     "angular-oauth2-oidc": "^9.2.2",
     "bootstrap": "^4.5.0",
     "core-js": "^3.6.5",
@@ -39,6 +40,7 @@
     "ngx-toastr": "^12.0.1",
     "node-sass": "^4.14.1",
     "rxjs": "^6.5.5",
+    "tslib": "^1.10.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
@@ -63,7 +65,7 @@
     "protractor": "^7.0.0",
     "ts-node": "~8.10.1",
     "tslint": "~6.1.2",
-    "typescript": "3.9.2"
+    "typescript": "3.8.3"
   },
   "jest": {
     "preset": "jest-preset-angular",

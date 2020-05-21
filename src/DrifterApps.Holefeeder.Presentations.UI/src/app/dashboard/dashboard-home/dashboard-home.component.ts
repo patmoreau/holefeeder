@@ -6,6 +6,7 @@ import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { Transaction } from '@app/shared/models/transaction.model';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-dashboard-home',
@@ -14,6 +15,8 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 })
 export class DashboardHomeComponent {
   upcomingCashflows$: Observable<IUpcoming[]>;
+
+  faPlus = faPlus;
 
   constructor(private upcomingService: UpcomingService,
     private cashflowsService: CashflowsService,

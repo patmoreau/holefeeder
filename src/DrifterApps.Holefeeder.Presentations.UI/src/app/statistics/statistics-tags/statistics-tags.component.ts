@@ -7,6 +7,7 @@ import { combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CategoriesService } from '@app/shared/services/categories.service';
 import { ICategory } from '@app/shared/interfaces/category.interface';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-statistics-tags',
@@ -19,6 +20,8 @@ export class StatisticsTagsComponent implements OnInit {
   category: ICategory;
 
   isLoaded = false;
+
+  faArrowLeft = faArrowLeft;
 
   constructor(
     private categoriesService: CategoriesService,

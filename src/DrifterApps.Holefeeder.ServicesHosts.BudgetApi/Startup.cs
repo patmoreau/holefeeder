@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text.Json;
 using DrifterApps.Holefeeder.Business;
+using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google;
@@ -94,7 +95,17 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                         {
                             var usersServices = _container.GetService<IUsersService>();
             
-                            var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)).ConfigureAwait(false);
+                            var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)).ConfigureAwait(false) ??
+                                       await usersServices.CreateAsync(new UserEntity(
+                                null,
+                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.GivenName),
+                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.FamilyName),
+                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email),
+                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
+                                DateTime.Now.Date
+
+                            )).ConfigureAwait(false);
+
                             if (user != null)
                             {
                                 context.Principal.AddIdentity(new ClaimsIdentity(new[]

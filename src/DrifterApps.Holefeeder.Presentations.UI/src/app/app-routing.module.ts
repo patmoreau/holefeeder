@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { ErrorNotfoundComponent } from './error-notfound/error-notfound.component';
 import { AuthGuardService } from './auth/services/auth-guard.service';
-import { LoginComponent } from './auth/login/login.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -30,8 +29,12 @@ const appRoutes: Routes = [
     path: 'statistics',
     loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule), canActivate: [AuthGuardService]
   },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(x => x.AuthModule) },
   { path: 'oauthcallback', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
   { path: '**', component: ErrorNotfoundComponent }
 ];
 

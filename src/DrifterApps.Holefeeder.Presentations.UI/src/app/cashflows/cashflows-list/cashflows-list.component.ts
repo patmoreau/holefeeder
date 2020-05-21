@@ -3,6 +3,7 @@ import { ICashflow } from '@app/shared/interfaces/cashflow.interface';
 import { CashflowsService } from '../../shared/services/cashflows.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-cashflows-list',
@@ -13,6 +14,8 @@ export class CashflowsListComponent implements OnInit {
   cashflows: ICashflow[];
   showInactive = false;
   $showInactive = new Subject<boolean>();
+
+  faPlus = faPlus;
 
   constructor(private cashflowsService: CashflowsService, private router: Router) { }
 
