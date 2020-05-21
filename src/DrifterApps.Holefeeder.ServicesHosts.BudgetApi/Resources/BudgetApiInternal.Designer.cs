@@ -50,5 +50,11 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources {
                 return ResourceManager.GetString("GoogleClientIdNotConfigured", resourceCulture);
             }
         }
+        
+        internal static string GoogleClientSecretNotConfigured {
+            get {
+                return ResourceManager.GetString("GoogleClientSecretNotConfigured", resourceCulture);
+            }
+        }
     }
 }

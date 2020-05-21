@@ -35,7 +35,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 userId ?? UserId
                 );
 
-        public CategoryEntity WithId(string id) => With(id: id);
+        public CategoryEntity WithId(string id) => With(id);
 
         public CategoryEntity WithUser(string userId) => With(userId: userId);
     }

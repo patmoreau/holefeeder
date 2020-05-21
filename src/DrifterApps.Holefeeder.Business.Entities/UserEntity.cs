@@ -32,6 +32,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 googleId ?? GoogleId,
                 dateJoined ?? DateJoined);
 
-        public UserEntity WithId(string id) => this.With(id: id ?? Id);
+        public UserEntity WithId(string id) => this.With(id ?? Id);
     }
 }

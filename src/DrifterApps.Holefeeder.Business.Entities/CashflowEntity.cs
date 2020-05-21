@@ -55,6 +55,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
 
         public CashflowEntity WithUser(string userId) => this.With(userId: userId);
 
-        public CashflowEntity WithId(string id) => this.With(id: id);
+        public CashflowEntity WithId(string id) => this.With(id);
     }
 }

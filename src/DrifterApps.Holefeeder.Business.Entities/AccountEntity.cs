@@ -43,6 +43,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
 
         public AccountEntity WithUser(string userId) => this.With(userId: userId);
 
-        public AccountEntity WithId(string id) => this.With(id: id);
+        public AccountEntity WithId(string id) => this.With(id);
     }
 }

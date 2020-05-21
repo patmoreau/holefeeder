@@ -1,17 +1,8 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using DrifterApps.Holefeeder.Business;
-using DrifterApps.Holefeeder.Business.Entities;
-using DrifterApps.Holefeeder.Common;
-using DrifterApps.Holefeeder.Common.Authorization;
-using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Services.BudgetDto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
@@ -22,10 +13,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         private struct Routes
         {
             public const string GET_STATUS = "get_status";
-        }
-
-        public StatusController()
-        {
         }
 
         [HttpGet(Name = Routes.GET_STATUS)]

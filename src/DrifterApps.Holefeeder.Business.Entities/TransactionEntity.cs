@@ -53,7 +53,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 tags ?? Tags);
 
 
-        public TransactionEntity WithId(string id) => With(id: id);
+        public TransactionEntity WithId(string id) => With(id);
 
         public TransactionEntity WithUser(string userId) => With(userId: userId);
     }
