@@ -6,7 +6,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string Data { get; }
         public string UserId { get; }
 
-        public ObjectDataEntity(string id, string code, string data, string userId) : base(id)
+        public ObjectDataEntity(string id, string code, string data, string userId = "") : base(id)
         {
             Code = code;
             Data = data;

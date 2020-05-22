@@ -123,7 +123,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
 
             var result = await _service.CreateAsync(userId, _mapper.Map<AccountEntity>(model), cancellationToken).ConfigureAwait(false);
 
-            return CreatedAtRoute(Routes.GET_ACCOUNT, new { id = result.Id }, _mapper.Map< AccountDto> (result));
+            return CreatedAtRoute(Routes.GET_ACCOUNT, new { id = result.Id }, _mapper.Map<AccountDto> (result));
         }
 
         [HttpPut("{id}", Name = Routes.PUT_ACCOUNT)]
@@ -144,7 +144,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _service.UpdateAsync(id, _mapper.Map<AccountEntity>(model), cancellationToken).ConfigureAwait(false);
+            await _service.UpdateAsync(userId, id, _mapper.Map<AccountEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }

@@ -112,7 +112,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
                 return NotFound();
             }
 
-            await _service.UpdateAsync(id, _mapper.Map<TransactionEntity>(model), cancellationToken).ConfigureAwait(false);
+            await _service.UpdateAsync(userId, id, _mapper.Map<TransactionEntity>(model), cancellationToken).ConfigureAwait(false);
 
             return NoContent();
         }

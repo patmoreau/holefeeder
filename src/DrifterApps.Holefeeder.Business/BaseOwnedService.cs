@@ -29,5 +29,14 @@ namespace DrifterApps.Holefeeder.Business
 
             return _repository.CreateAsync(newEntity, cancellationToken);
         }
+
+        public Task UpdateAsync(string userId, string id, TEntity entity, CancellationToken cancellationToken = default)
+        {
+            entity.ThrowIfNull(nameof(entity));
+
+            var newEntity = entity.WithUser(userId);
+
+            return _repository.UpdateAsync(id, newEntity, cancellationToken);
+        }
     }
 }

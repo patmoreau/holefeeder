@@ -13,7 +13,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
         
         public string Description { get; set; }
 
-        public IList<string> Tags { get; set; }
+        public IList<string> Tags { get; set;  }
         
         public CategoryInfoDto Category { get; set; }
         

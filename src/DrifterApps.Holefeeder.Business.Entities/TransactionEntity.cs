@@ -16,7 +16,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public IReadOnlyList<string> Tags { get; }
         public string UserId { get; }
 
-        public TransactionEntity(string id, DateTime date, decimal amount, string description, string category, string account, string cashflow, DateTime? cashflowDate, string userId, IEnumerable<string> tags) : base(id)
+        public TransactionEntity(string id, DateTime date, decimal amount, string description, string category, string account, string cashflow, DateTime? cashflowDate, IEnumerable<string> tags, string userId = "") : base(id)
         {
             Date = date;
             Amount = amount;
@@ -49,8 +49,8 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 account ?? Account,
                 cashflow ?? Cashflow,
                 cashflowDate ?? CashflowDate,
-                userId ?? UserId,
-                tags ?? Tags);
+                tags ?? Tags,
+                userId ?? UserId);
 
 
         public TransactionEntity WithId(string id) => With(id);

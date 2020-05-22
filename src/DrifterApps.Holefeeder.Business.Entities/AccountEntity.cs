@@ -15,7 +15,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string GlobalId { get; }
         public string UserId { get; }
 
-        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string globalId, string userId) : base(id)
+        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string globalId = "", string userId = "") : base(id)
         {
             Type = type;
             Name = name;

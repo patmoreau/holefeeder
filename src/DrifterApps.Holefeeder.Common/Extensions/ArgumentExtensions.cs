@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using DrifterApps.Holefeeder.Common.Resources;
+using Microsoft;
 
 namespace DrifterApps.Holefeeder.Common.Extensions
 {
     public static class ArgumentExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ThrowIfNull<T>(this T arg, string argName) where T : class
+        public static T ThrowIfNull<T>([ValidatedNotNull]this T arg, string argName) where T : class
         {
             if (string.IsNullOrWhiteSpace(argName))
                 throw new ArgumentNullException(nameof(argName));
@@ -16,7 +17,7 @@ namespace DrifterApps.Holefeeder.Common.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ThrowIfNullOrEmpty(this string arg, string argName)
+        public static string ThrowIfNullOrEmpty([ValidatedNotNull]this string arg, string argName)
         {
             arg.ThrowIfNull(argName);
 

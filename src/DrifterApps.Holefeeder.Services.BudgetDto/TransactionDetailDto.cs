@@ -19,6 +19,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 
         public CashflowInfoDto Cashflow { get; set; }
 
-        public IList<string> Tags { get; set; }
+        public IList<string> Tags { get; set;  }
     }
 }

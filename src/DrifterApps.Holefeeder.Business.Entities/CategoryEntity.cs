@@ -12,7 +12,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public bool System { get; }
         public string UserId { get; }
 
-        public CategoryEntity(string id, string name, CategoryType type, string color, decimal budgetAmount, bool favorite, bool system, string userId) : base(id)
+        public CategoryEntity(string id, string name, CategoryType type, string color, decimal budgetAmount, bool favorite, bool system, string userId = "") : base(id)
         {
             Name = name;
             Type = type;

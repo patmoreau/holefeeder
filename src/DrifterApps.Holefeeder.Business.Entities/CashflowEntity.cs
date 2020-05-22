@@ -20,7 +20,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string GlobalId { get; }
         public string UserId { get; }
 
-        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string globalId, string userId) : base(id)
+        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string globalId = "", string userId = "") : base(id)
         {
             EffectiveDate = effectiveDate;
             Amount = amount;

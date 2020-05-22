@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Services.BudgetDto;
 
@@ -9,7 +10,7 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi
         public ServicesApiProfile()
         {
             CreateMap<AccountEntity, AccountDto>().ReverseMap();
-            CreateMap<CashflowEntity, CashflowDto>();
+            CreateMap<CashflowEntity, CashflowDto>().ReverseMap();
             CreateMap<CashflowInfoEntity, CashflowInfoDto>();
             CreateMap<CategoryEntity, CategoryInfoEntity>();
             CreateMap<CategoryEntity, CategoryDto>().ReverseMap();
