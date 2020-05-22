@@ -17,9 +17,13 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         public UsersRepository(IMongoCollection<UserSchema> collection, IMapper mapper) : base(collection, mapper)
         {
             _collection = collection.ThrowIfNull(nameof(collection));
+            
+            var notificationLogBuilder = Builders<UserSchema>.IndexKeys;
+            var indexModel = new CreateIndexModel<UserSchema>(notificationLogBuilder.Ascending(x => x.EmailAddress));
+            _collection.Indexes.CreateOne(indexModel);
         }
 
         public async Task<UserEntity> FindByEmailAsync(string emailAddress, CancellationToken cancellationToken = default) =>
-            Mapper.Map<UserEntity>(await _collection.AsQueryable().Where(x => x.EmailAddress.Equals(emailAddress, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
+            Mapper.Map<UserEntity>(await _collection.AsQueryable().Where(x => x.EmailAddress == emailAddress).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
     }
 }

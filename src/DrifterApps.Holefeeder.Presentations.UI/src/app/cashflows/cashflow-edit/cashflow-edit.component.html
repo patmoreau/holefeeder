@@ -4,7 +4,7 @@
       <ng-container>
         <div class="pb-3 mt-3">
           <a routerLink="/cashflows" class="text-large line-height-1 btn-link">
-            <fa-icon class="pb-1" [icon]="['fas', 'arrow-left']" aria-hidden="true"></fa-icon>
+            <fa-icon class="pb-1" [icon]="faArrowLeft" aria-hidden="true"></fa-icon>
             Cashflows
           </a>
         </div>
@@ -56,7 +56,7 @@
                 ngbDatepicker firstDayOfWeek="7" #date="ngbDatepicker" (click)="date.toggle()" />
               <div class="input-group-append">
                 <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
-                  <fa-icon [icon]="['fas', 'calendar-alt']" aria-hidden="true"></fa-icon>
+                  <fa-icon [icon]="faCalendarAlt" aria-hidden="true"></fa-icon>
                 </a>
               </div>
             </div>

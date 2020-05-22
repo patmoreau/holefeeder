@@ -38,6 +38,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 favorite ?? Favorite,
                 inactive ?? Inactive);
 
-        public AccountDetailEntity WithId(string id) => this.With(id: id);
+        public AccountDetailEntity WithId(string id) => this.With(id);
     }
 }

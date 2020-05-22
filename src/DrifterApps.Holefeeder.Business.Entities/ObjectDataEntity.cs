@@ -6,7 +6,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string Data { get; }
         public string UserId { get; }
 
-        public ObjectDataEntity(string id, string code, string data, string userId) : base(id)
+        public ObjectDataEntity(string id, string code, string data, string userId = "") : base(id)
         {
             Code = code;
             Data = data;
@@ -16,7 +16,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public ObjectDataEntity With(string id = null, string code = null, string data = null, string userId = null) =>
             new ObjectDataEntity(id ?? Id, code ?? Code, data ?? Data, userId ?? UserId);
 
-        public ObjectDataEntity WithId(string id) => this.With(id: id);
+        public ObjectDataEntity WithId(string id) => this.With(id);
 
         public ObjectDataEntity WithUser(string userId) => this.With(userId: UserId);
     }

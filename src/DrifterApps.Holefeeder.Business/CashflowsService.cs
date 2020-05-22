@@ -27,7 +27,7 @@ namespace DrifterApps.Holefeeder.Business
 
         public async Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(string userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default)
         {
-            var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, sort: new[] { "-date" }, null), cancellationToken).ConfigureAwait(false))
+            var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "-date" }, null), cancellationToken).ConfigureAwait(false))
                 .GroupBy(t => t.Cashflow)
                 .Select(g => (
                     Cashflow: g.Key,
@@ -46,31 +46,33 @@ namespace DrifterApps.Holefeeder.Business
                                     from t in u.DefaultIfEmpty()
                                     select (Cashflow: c, Account: a, Category: cat, t.LastPaidDate, t.LastCashflowDate);
 
+            var (dateTime, to) = interval;
             var results = upcomingCashflows.SelectMany(x =>
             {
                 var dates = new List<DateTime>();
 
-                var nextDate = x.Cashflow.EffectiveDate.NextDate(interval.From, x.Cashflow.IntervalType, x.Cashflow.Frequency);
-                if (IsUnpaid(x.Cashflow.EffectiveDate, nextDate, x.LastPaidDate, x.LastCashflowDate))
+                var (cashflow, account, category, lastPaidDate, lastCashflowDate) = x;
+                var nextDate = cashflow.EffectiveDate.NextDate(dateTime, cashflow.IntervalType, cashflow.Frequency);
+                if (IsUnpaid(cashflow.EffectiveDate, nextDate, lastPaidDate, lastCashflowDate))
                 {
                     dates.Add(nextDate);
                 }
 
                 var date = nextDate;
-                while (IsUnpaid(x.Cashflow.EffectiveDate, date, x.LastPaidDate, x.LastCashflowDate) && date > x.Cashflow.EffectiveDate)
+                while (IsUnpaid(cashflow.EffectiveDate, date, lastPaidDate, lastCashflowDate) && date > cashflow.EffectiveDate)
                 {
-                    date = x.Cashflow.EffectiveDate.PreviousDate(date, x.Cashflow.IntervalType, x.Cashflow.Frequency);
-                    if (IsUnpaid(x.Cashflow.EffectiveDate, date, x.LastPaidDate, x.LastCashflowDate))
+                    date = cashflow.EffectiveDate.PreviousDate(date, cashflow.IntervalType, cashflow.Frequency);
+                    if (IsUnpaid(cashflow.EffectiveDate, date, lastPaidDate, lastCashflowDate))
                     {
                         dates.Add(date);
                     }
                 }
 
                 return dates.Select(d =>
-                    new UpcomingEntity(x.Cashflow.Id, d, x.LastPaidDate, x.LastCashflowDate, x.Cashflow.IntervalType, x.Cashflow.Frequency, x.Cashflow.Amount, x.Cashflow.Description, x.Cashflow.Tags,
-                        new CategoryInfoEntity(x.Category.Id, x.Category.Name, x.Category.Type, x.Category.Color),
-                        new AccountInfoEntity(x.Account.Id, x.Account.Name)));
-            }).Where(x => x.Date <= interval.To)
+                    new UpcomingEntity(cashflow.Id, d, lastPaidDate, lastCashflowDate, cashflow.IntervalType, cashflow.Frequency, cashflow.Amount, cashflow.Description, cashflow.Tags,
+                        new CategoryInfoEntity(category.Id, category.Name, category.Type, category.Color),
+                        new AccountInfoEntity(account.Id, account.Name)));
+            }).Where(x => x.Date <= to)
               .OrderBy(x => x.Date);
 
             return results;

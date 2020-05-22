@@ -4,7 +4,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_URL": "mongodb://holefeederApi:drifterapps123@localhost:27018?authSource=holefeeder",
+        "DATABASE_NAME": "holefeeder"
       },
       "applicationUrl": "http://localhost:5000"
     }

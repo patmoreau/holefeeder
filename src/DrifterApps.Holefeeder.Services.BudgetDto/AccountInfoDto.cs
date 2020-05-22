@@ -2,14 +2,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class AccountInfoDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
         
-        public string Name { get; }
-        
-        public AccountInfoDto(string id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+        public string Name { get; set; }
     }
 }

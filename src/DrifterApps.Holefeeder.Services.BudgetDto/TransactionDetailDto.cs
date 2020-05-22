@@ -5,32 +5,20 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class TransactionDetailDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public DateTime Date { get; }
+        public DateTime Date { get; set; }
 
-        public decimal Amount { get; }
+        public decimal Amount { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
-        public AccountInfoDto Account { get; }
+        public AccountInfoDto Account { get; set; }
 
-        public CategoryInfoDto Category { get; }
+        public CategoryInfoDto Category { get; set; }
 
-        public CashflowInfoDto Cashflow { get; }
+        public CashflowInfoDto Cashflow { get; set; }
 
-        public IList<string> Tags { get; }
-
-        public TransactionDetailDto(string id, DateTime date, decimal amount, string description, CategoryInfoDto category, AccountInfoDto account, CashflowInfoDto cashflow, IList<string> tags)
-        {
-            Id = id;
-            Date = date;
-            Amount = amount;
-            Description = description;
-            Category = category;
-            Account = account;
-            Cashflow = cashflow;
-            Tags = tags == null ? null : new List<string>(tags);
-        }
+        public IList<string> Tags { get; set;  }
     }
 }

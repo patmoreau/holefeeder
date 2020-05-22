@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   holefeeder-api:
@@ -10,9 +10,7 @@ services:
       - DEFAULT_HOST=holefeeder-api.localhost
       - VIRTUAL_HOST=holefeeder-api.localhost
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=holefeeder-api.localhost
-      - LETSENCRYPT_EMAIL=info@drifterapps.com
-      - DATABASE_URL=mongodb://localhost:27017
+      - DATABASE_URL=mongodb://${HOLEFEEDERAPI_LOGIN}:${HOLEFEEDERAPI_PASSWORD}@localhost:27017
       - DATABASE_NAME=holefeeder
       - Google:ClientId=890828371465-fdjn2okrids500dqcogjkogbca2i2929.apps.googleusercontent.com
 
@@ -25,21 +23,36 @@ services:
       - DEFAULT_HOST=holefeeder.localhost
       - VIRTUAL_HOST=holefeeder.localhost
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=holefeeder.localhost
-      - LETSENCRYPT_EMAIL=info@drifterapps.com
 
   mongodb_container:
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=holefeeder
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
-      - mongodb_data_container:/data/db
+      - './data:/data/db'
 
-volumes:
-  mongodb_data_container:
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      - DEFAULT_HOST=mongo-express.localhost
+      - VIRTUAL_HOST=mongo-express.localhost
+      - VIRTUAL_PORT=80
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27018
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+    depends_on:
+      - mongodb_container
+    ports:
+      - 8081
 
 networks:
   default:

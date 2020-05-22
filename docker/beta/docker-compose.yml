@@ -34,10 +34,7 @@ services:
     ports:
       - 27019:27017
     volumes:
-      - mongodb_data_container-beta:/data/db-beta
-
-volumes:
-  mongodb_data_container-beta:
+      - './data:/data/db-beta'
 
 networks:
   default:

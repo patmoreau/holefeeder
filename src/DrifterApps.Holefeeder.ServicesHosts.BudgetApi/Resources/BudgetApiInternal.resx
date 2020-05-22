@@ -21,4 +21,7 @@
     <data name="GoogleClientIdNotConfigured" xml:space="preserve">
         <value>Google ClientId not configured.</value>
     </data>
+    <data name="GoogleClientSecretNotConfigured" xml:space="preserve">
+        <value>Google ClientSecret not configured.</value>
+    </data>
 </root>

@@ -3,22 +3,30 @@ name: Continous deployment BETA
 on:
   push:
     branches:
-      - release/*
-      - hotfix/*
+      - 'release/*'
+      - 'hotfix/*'
 
     paths-ignore:
-      - proxy/**
-      - docs/**
-      - poc/**
-      - imports/**
-      - tools/**
-
-env:
-  VERSION: ${{`date +%y.%m.${github.run_number}-beta`}}
+      - 'proxy/**'
+      - 'docs/**'
+      - 'poc/**'
+      - 'imports/**'
+      - 'tools/**'
 
 jobs:
-  Package-Budget-API:
+  version:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+    - name: Set version
+      id: version
+      run: echo "##[set-output name=version;]$(date +'%y.%m').${{github.run_number}}-beta"
+
+  packageBudgetApi:
+    runs-on: ubuntu-latest
+    needs: version
 
     steps:
     - uses: actions/checkout@v2
@@ -31,18 +39,19 @@ jobs:
 
     - name: Build sources
       run: |
-        dotnet publish /property:Version=${{ env.VERSION }} --no-restore --output ./publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi ./src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
+        dotnet publish /property:Version=${{ needs.version.outputs.version }} --no-restore --output ./publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi ./src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
 
     - name: Docker login
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: Package
       run: |
-        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }} -f docker/api.dockerfile .
-        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }}
+        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }} -f docker/api.dockerfile .
+        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}
 
-  Package-Budget-UI:
+  packageBudgetUi:
     runs-on: ubuntu-latest
+    needs: version
 
     steps:
     - uses: actions/checkout@v2
@@ -63,14 +72,15 @@ jobs:
 
     - name: Package
       run: |
-        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }} -f docker/web.dockerfile .
-        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }}
+        docker build --pull -t docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ needs.version.outputs.version }} -f docker/web.dockerfile .
+        docker push docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ needs.version.outputs.version }}
 
-  Deploy:
+  deploy:
     runs-on: ubuntu-latest
     needs: 
-      - Package-Budget-API
-      - Package-Budget-UI
+      - version
+      - packageBudgetApi
+      - packageBudgetUi
 
     steps:
     - uses: actions/checkout@v2
@@ -105,10 +115,9 @@ jobs:
           cd holefeeder-beta/beta
           echo Pull container
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ env.VERSION }}
-          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }}
+          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}
+          docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ needs.version.outputs.version }}
           echo Pull standard containers
-          # echo ${{ secrets.GITHUB_TOKEN }} | docker login -u DrifterApps --password-stdin
           docker pull mongo:latest
           echo Start containers
           docker-compose up --force-recreate --build -d

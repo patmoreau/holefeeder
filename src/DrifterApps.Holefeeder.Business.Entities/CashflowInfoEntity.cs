@@ -14,6 +14,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public CashflowInfoEntity With(string id = null, DateTime? date = null) =>
             new CashflowInfoEntity(id ?? Id, date ?? Date);
 
-        public CashflowInfoEntity WithId(string id) => With(id: id);
+        public CashflowInfoEntity WithId(string id) => With(id);
     }
 }

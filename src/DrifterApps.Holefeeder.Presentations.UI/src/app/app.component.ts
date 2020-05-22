@@ -1,21 +1,14 @@
-import { Component } from '@angular/core';
-import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
-import { googleAuthConfig } from './auth/google-auth.config';
+import { Component, OnInit } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'dfta-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(public oidcSecurityService: OidcSecurityService) {}
 
-  constructor(private oauthService: OAuthService) {
-    this.configureImplicitFlow();
-  }
-
-  private configureImplicitFlow() {
-    this.oauthService.configure(googleAuthConfig);
-    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
-    this.oauthService.setupAutomaticSilentRefresh();
+  ngOnInit() {
+      this.oidcSecurityService.checkAuth().subscribe((auth) => console.log('is authenticated', auth));
   }
 }

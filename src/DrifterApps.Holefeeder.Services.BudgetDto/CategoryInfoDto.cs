@@ -5,21 +5,13 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class CategoryInfoDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public CategoryType Type { get; }
+        public CategoryType Type { get; set; }
 
-        public string Color { get; }
-
-        public CategoryInfoDto(string id, string name, CategoryType type, string color)
-        {
-            Id = id;
-            Name = name;
-            Type = type;
-            Color = color;
-        }
+        public string Color { get; set; }
     }
 }

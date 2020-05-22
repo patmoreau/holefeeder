@@ -6,36 +6,33 @@ import {
   RouterStateSnapshot,
   CanActivateChild
 } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AuthenticationService } from './authentication.service';
+import { UserAuthenticated } from '../enums/user-authenticated.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate, CanActivateChild {
 
-  constructor(private oauthService: OAuthService, private router: Router) { }
+  constructor(private router: Router, private authService: AuthenticationService) { }
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    const redirectUrl = route['_routerState']['url'];
-
-    if (this.oauthService.hasValidIdToken()) {
-      return true;
-    }
-
-    this.router.navigateByUrl(
-      this.router.createUrlTree(
-        ['/login'], {
-        queryParams: {
-          redirectUrl
-        }
-      }
-      )
-    );
-
-    return false;
+  canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.authService.isAuthenticated$
+      .pipe(
+        map((isAuth: boolean) => {
+          if (isAuth) {
+            return true;
+          }
+          this.router.navigate(['/auth/register'], { queryParams: { returnUrl: state.url } });
+          return false;
+        })
+      );
   }
 
-  async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.canActivate(route, state);
   }
 }

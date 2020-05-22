@@ -4,19 +4,12 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class ObjectDataDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
         [Required]
-        public string Code { get; }
+        public string Code { get; set; }
 
         [Required]
-        public string Data { get; }
-
-        public ObjectDataDto(string id, string code, string data)
-        {
-            Id = id;
-            Code = code;
-            Data = data;
-        }
+        public string Data { get; set; }
     }
 }

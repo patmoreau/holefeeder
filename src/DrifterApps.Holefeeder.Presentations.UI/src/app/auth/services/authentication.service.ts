@@ -1,86 +1,133 @@
 import { Injectable } from '@angular/core';
-import { map, catchError, filter, switchMap, tap } from 'rxjs/operators';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { map, filter, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import { ApiService } from '@app/shared/services/api.service';
 import { IUser, userFromServer } from '@app/shared/interfaces/user.interface';
-import { OAuthService, OAuthErrorEvent, OAuthEvent } from 'angular-oauth2-oidc';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { UserAuthenticated } from '../enums/user-authenticated.enum';
+import { User } from '@app/shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  private basePath = 'api/v1/auth';
+  private basePath = 'api/v1/users';
 
-  public userAuthenticated$ = new BehaviorSubject<boolean>(false);
   public authenticatedUser$ = new BehaviorSubject<IUser>(null);
 
   constructor(
-    private oauthService: OAuthService,
-    private apiService: ApiService
-  ) {
-    this.oauthService.events.subscribe(async event => {
-      if (event instanceof OAuthErrorEvent) {
-        console.log(event);
+    private oidcSecurityService: OidcSecurityService,
+    private apiService: ApiService) {
+
+    this.oidcSecurityService.isAuthenticated$.subscribe(async isAuth => {
+      if (!isAuth) {
+        this.authenticatedUser$.next(null);
+        return;
       } else {
-        if ((event.type === 'token_received' || event.type === 'token_refreshed')) {
-          const profile = await this.oauthService.loadUserProfile() as any;
-
-          console.log(profile);
-          const user = await this.findOneById(profile.sub).toPromise();
-          console.log(user);
-          this.userAuthenticated$.next(true);
-          this.authenticatedUser$.next(user);
-          return;
-        }
+        const user = await this.getUserFromServer();
+        this.authenticatedUser$.next(user);
       }
-      this.userAuthenticated$.next(false);
-      // if (validIdToken) {
-      //   const claims = this.oauthService.getIdentityClaims();
-      //   if (claims) {
-      //     const user = await this.apiService
-      //       .get(`${this.basePath}/${claims['sub']}`)
-      //       .pipe(
-
-      //         map(userFromServer)
-      //       ).toPromise();
-
-      //     console.log(user);
-      //     this.authenticatedUser$.next(user);
-      //   }
-      // }
-      // this.authenticatedUser$.next(null);
     });
   }
 
-  findOneById(id: number | string): Observable<IUser> {
-    return this.apiService
-      .get(`${this.basePath}/${id}`)
-      .pipe(
-        map(userFromServer)
-      );
+  get isAuthenticated$(): Observable<boolean> {
+    return this.oidcSecurityService.isAuthenticated$;
   }
 
-  public get User(): string {
-    const claims = this.oauthService.getIdentityClaims();
-    if (!claims) {
+  async getUserFromServer(): Promise<IUser> {
+    try {
+      const user = await this.apiService
+        .get(`${this.basePath}`)
+        .pipe(
+          map(userFromServer)
+        ).toPromise();
+      return user;
+    } catch (error) {
+      console.log('DrifterApps:err', error);
       return null;
     }
-    return claims['given_name'];
   }
 
+  // public get User(): string {
+  //   const claims = this.oauthService.getIdentityClaims();
+  //   if (!claims) {
+  //     return null;
+  //   }
+  //   return claims['given_name'];
+  // }
+
   public get Token(): string {
-    const token: string = this.oauthService.getIdToken();
+    const token: string = this.oidcSecurityService.getIdToken();
     if (!token) {
       throw new Error('no token set , authentication required');
     }
     return token;
   }
 
-  public async logIn(): Promise<boolean> {
-    return await this.oauthService.tryLoginImplicitFlow();
+  public login(): void {
+    return this.oidcSecurityService.authorize();
   }
 
-  public logOut(): void {
-    this.oauthService.logOut();
+  public logout(): void {
+    this.oidcSecurityService.logoff();
   }
+
+  //   public get userValue(): User {
+  //     return this.userSubject.value;
+  // }
+
+  // login(username, password) {
+  //     return this.http.post<User>(`${environment.apiUrl}/users/authenticate`, { username, password })
+  //         .pipe(map(user => {
+  //             // store user details and jwt token in local storage to keep user logged in between page refreshes
+  //             localStorage.setItem('user', JSON.stringify(user));
+  //             this.userSubject.next(user);
+  //             return user;
+  //         }));
+  // }
+
+  // logout() {
+  //     // remove user from local storage and set current user to null
+  //     localStorage.removeItem('user');
+  //     this.userSubject.next(null);
+  //     this.router.navigate(['/account/login']);
+  // }
+
+  register(user: IUser) {
+    return user;
+  }
+
+  // getAll() {
+  //     return this.http.get<User[]>(`${environment.apiUrl}/users`);
+  // }
+
+  // getById(id: string) {
+  //     return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
+  // }
+
+  // update(id, params) {
+  //     return this.http.put(`${environment.apiUrl}/users/${id}`, params)
+  //         .pipe(map(x => {
+  //             // update stored user if the logged in user updated their own record
+  //             if (id == this.userValue.id) {
+  //                 // update local storage
+  //                 const user = { ...this.userValue, ...params };
+  //                 localStorage.setItem('user', JSON.stringify(user));
+
+  //                 // publish updated user to subscribers
+  //                 this.userSubject.next(user);
+  //             }
+  //             return x;
+  //         }));
+  // }
+
+  // delete(id: string) {
+  //     return this.http.delete(`${environment.apiUrl}/users/${id}`)
+  //         .pipe(map(x => {
+  //             // auto logout if the logged in user deleted their own record
+  //             if (id == this.userValue.id) {
+  //                 this.logout();
+  //             }
+  //             return x;
+  //         }));
+  // }
 }
