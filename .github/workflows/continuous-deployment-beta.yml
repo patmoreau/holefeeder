@@ -88,7 +88,7 @@ jobs:
     - name: Create environment file
       run: |
         printf "DATABASE_URL=${{secrets.DATABASE_URL_BETA}}\nDATABASE_NAME=${{secrets.DATABASE_NAME_BETA}}\nGoogle:ClientId=${{secrets.GOOGLE_CLIENT_ID}}/n" > api.environment.env
-        printf "MONGO_INITDB_ROOT_USERNAME=${{secrets.MONGODB_ROOT_USER_BETA}}\nMONGO_INITDB_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_BETA}}\n" > mongo.environment.env
+        printf "MONGO_INITDB_ROOT_USERNAME=${{secrets.MONGODB_ROOT_USER_BETA}}\nMONGO_INITDB_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_BETA}}\nMONGO_INITDB_DATABASE=holefeeder\n" > mongo.environment.env
       working-directory: ./docker/beta
 
     - name: Copy file via scp

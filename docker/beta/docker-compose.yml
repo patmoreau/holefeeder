@@ -34,7 +34,7 @@ services:
     ports:
       - 27019:27017
     volumes:
-      - './data:/data/db-beta'
+      - '/var/lib/holefeeder/data/beta:/db-beta'
 
 networks:
   default:
