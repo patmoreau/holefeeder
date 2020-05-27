@@ -32,7 +32,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         }
 
         public async Task<TEntity> FindByIdAsync(string id, CancellationToken cancellationToken = default) =>
-            Mapper.Map<TEntity>(await Collection.Find(x => x.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase)).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false));
+            Mapper.Map<TEntity>(await Collection.Find(x => x.Id == id).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false));
 
         public async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
@@ -45,9 +45,9 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         {
             var schema = Mapper.Map<TSchema>(entity);
             schema.Id = id;
-            await Collection.ReplaceOneAsync(m => m.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase), schema, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await Collection.ReplaceOneAsync(m => m.Id == id, schema, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public Task RemoveAsync(string id, CancellationToken cancellationToken = default) => Collection.DeleteOneAsync(m => m.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
+        public Task RemoveAsync(string id, CancellationToken cancellationToken = default) => Collection.DeleteOneAsync(m => m.Id == id, cancellationToken);
     }
 }

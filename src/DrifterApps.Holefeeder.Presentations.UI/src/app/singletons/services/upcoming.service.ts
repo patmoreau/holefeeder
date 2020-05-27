@@ -30,8 +30,8 @@ export class UpcomingService {
       .get(
         this.basePath,
         new HttpParams()
-          .set('from', format(period.start, 'YYYY-MM-DD'))
-          .set('to', format(period.end, 'YYYY-MM-DD'))
+          .set('from', format(period.start, 'yyyy-MM-dd'))
+          .set('to', format(period.end, 'yyyy-MM-dd'))
       )
       .pipe(
         map(data =>

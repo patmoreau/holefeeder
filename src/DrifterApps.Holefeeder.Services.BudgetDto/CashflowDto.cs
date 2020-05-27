@@ -8,46 +8,31 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class CashflowDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime EffectiveDate { get; }
+        public DateTime EffectiveDate { get; set; }
 
-        public decimal Amount { get; }
+        public decimal Amount { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public DateIntervalType IntervalType { get; }
+        public DateIntervalType IntervalType { get; set; }
 
-        public int Frequency { get; }
+        public int Frequency { get; set; }
 
-        public int Recurrence { get; }
+        public int Recurrence { get; set; }
 
-        public string Description { get; }
-
-        [Required]
-        public string Account { get; }
+        public string Description { get; set; }
 
         [Required]
-        public string Category { get; }
+        public string Account { get; set; }
 
-        public bool Inactive { get; }
+        [Required]
+        public string Category { get; set; }
 
-        public IReadOnlyList<string> Tags { get; }
+        public bool Inactive { get; set; }
 
-        public CashflowDto(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string category, string account, bool inactive, IEnumerable<string> tags)
-        {
-            Id = id;
-            EffectiveDate = effectiveDate;
-            Amount = amount;
-            IntervalType = intervalType;
-            Frequency = frequency;
-            Recurrence = recurrence;
-            Description = description;
-            Category = category;
-            Account = account;
-            Inactive = inactive;
-            Tags = new List<string>(tags);
-        }
+        public IList<string> Tags { get; set; }
     }
 }

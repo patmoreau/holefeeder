@@ -7,38 +7,25 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class AccountDetailDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public AccountType Type { get; }
+        public AccountType Type { get; set; }
 
         [Required]
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public int TransactionCount { get; }
+        public int TransactionCount { get; set; }
 
-        public decimal Balance { get; }
+        public decimal Balance { get; set; }
 
-        public DateTime? Updated { get; }
+        public DateTime? Updated { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
-        public bool Favorite { get; }
+        public bool Favorite { get; set; }
 
-        public bool Inactive { get; }
-
-        public AccountDetailDto(string id, AccountType type, string name, int transactionCount, decimal balance, DateTime? updated, string description, bool favorite, bool inactive)
-        {
-            Id = id;
-            Type = type;
-            Name = name;
-            TransactionCount = transactionCount;
-            Balance = balance;
-            Updated = updated;
-            Description = description;
-            Favorite = favorite;
-            Inactive = inactive;
-        }
+        public bool Inactive { get; set; }
     }
 }

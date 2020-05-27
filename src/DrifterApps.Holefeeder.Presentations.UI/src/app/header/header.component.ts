@@ -5,6 +5,9 @@ import { addDays, startOfToday } from 'date-fns';
 import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
+import { faTachometerAlt, faUniversity, faFileInvoiceDollar, faChartPie, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarCheck, faCalendarMinus, faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
+import { SettingsService } from '@app/singletons/services/settings.service';
 
 @Component({
   selector: 'dfta-header',
@@ -25,20 +28,37 @@ export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   givenName: string;
 
+  faTachometerAlt = faTachometerAlt;
+  faUniversity = faUniversity;
+  faFileInvoiceDollar = faFileInvoiceDollar;
+  faChartPie = faChartPie;
+  faAngleDown = faAngleDown;
+  faCalendarMinus = faCalendarMinus;
+  faCalendarCheck = faCalendarCheck;
+  faCalendarPlus = faCalendarPlus;
+
   constructor(
     private modalService: NgbModal,
     private dateService: DateService,
     private authService: AuthenticationService,
+    private settingsService: SettingsService,
     private router: Router
   ) {
     this.isNavbarCollapsed = true;
+  }
+
+  async ngOnInit() {
+    this.authService.isAuthenticated$.subscribe((isAuthenticated: boolean) => {
+      this.isAuthenticated = isAuthenticated;
+      if (this.isAuthenticated) {
+        this.settingsService.loadUserSettings();
+      }
+    });
 
     this.dateService.period.subscribe(period => {
       this.period = period;
     });
-  }
 
-  async ngOnInit() {
     this.authService.authenticatedUser$.subscribe(user => {
       this.isAuthenticated = user !== null;
       if (user) {
@@ -90,7 +110,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logOut();
+    this.authService.logout();
     this.router.navigateByUrl('/login?redirectUrl=%2Fdashboard');
   }
 

@@ -25,7 +25,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/silent-refresh.html"
+              "src/silent-renew.html"
             ],
             "styles": [
               "src/styles.scss"
@@ -39,11 +39,19 @@
             }
           },
           "configurations": {
-            "beta": {
+            "docker": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.beta.ts"
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,

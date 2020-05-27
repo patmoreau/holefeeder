@@ -18,6 +18,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public CategoryInfoEntity With(string id = null, string name = null, CategoryType? type = null, string color = null) =>
             new CategoryInfoEntity(id ?? Id, name ?? Name, type ?? Type, color ?? Color);
 
-        public CategoryInfoEntity WithId(string id) => With(id: id);
+        public CategoryInfoEntity WithId(string id) => With(id);
     }
 }

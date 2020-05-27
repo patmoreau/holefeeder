@@ -1,14 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER} from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastNoAnimationModule } from 'ngx-toastr';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-library.add(fas, far, fab);
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -17,16 +11,16 @@ import { FooterComponent } from './footer/footer.component';
 import { ErrorNotfoundComponent } from './error-notfound/error-notfound.component';
 import { SingletonsModule } from './singletons/singletons.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { OAuthModule } from 'angular-oauth2-oidc';
-import { LoginComponent } from './auth/login/login.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { OAuthInterceptor } from './auth/oauth.interceptor';
-import { environment } from '@env/environment';
 import { AuthenticationService } from './auth/services/authentication.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthModule as OAuthModule, OidcConfigService } from 'angular-auth-oidc-client';
+import { OAuthInterceptor } from './auth/oauth.interceptor';
+import { configureGoogleAuth } from './auth/google-auth.config';
+import { AuthGuardService } from './auth/services/auth-guard.service';
 
 const COMPONENTS = [
   AppComponent,
-  LoginComponent,
   HeaderComponent,
   FooterComponent,
   ErrorNotfoundComponent
@@ -41,22 +35,26 @@ const COMPONENTS = [
     ReactiveFormsModule,
     FormsModule,
     AppRoutingModule,
+    OAuthModule.forRoot(),
     HttpClientModule,
     FontAwesomeModule,
     NgbModule,
     SingletonsModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-        allowedUrls: [environment.api_url],
-        sendAccessToken: true
-      }
-    }),
+    AuthModule,
     ToastNoAnimationModule.forRoot()
   ],
   providers: [
-    AuthenticationService,
+    OidcConfigService,
+    {
+        provide: APP_INITIALIZER,
+        useFactory: configureGoogleAuth,
+        deps: [OidcConfigService],
+        multi: true,
+    },
+    // AuthenticationService,
+    // AuthGuardService,
     { provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true }
-  ],
+],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

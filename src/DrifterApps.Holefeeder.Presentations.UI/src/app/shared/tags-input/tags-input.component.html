@@ -13,7 +13,7 @@
       class="btn btn-outline-secondary text-secondary"
       (click)="addTag(newTag.value)"
     >
-      <fa-icon [icon]="['fas', 'plus']" aria-hidden="true"></fa-icon>
+      <fa-icon [icon]="faPlus" aria-hidden="true"></fa-icon>
     </a>
   </div>
 </div>
@@ -22,7 +22,7 @@
     <small class="badge badge-pill badge-primary text-white font-weight-light"
       >{{ tag }}
       <a class="btn btn-sm p-0" (click)="removeTag(tag)">
-        <fa-icon [icon]="['fas', 'times']" aria-hidden="true"></fa-icon> </a
+        <fa-icon [icon]="faTimes" aria-hidden="true"></fa-icon> </a
     ></small>
   </span>
 </div>

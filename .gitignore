@@ -350,3 +350,6 @@ MigrationBackup/
 .ionide/
 .idea/
 src/.cr
+docker/VERSION
+docker/dev/data
+docker/data

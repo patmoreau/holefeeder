@@ -7,26 +7,17 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 {
     public class TransactionCashflowDto
     {
-        public string Id { get; }
+        public string Id { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime EffectiveDate { get; }
+        public DateTime EffectiveDate { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public DateIntervalType IntervalType { get; }
+        public DateIntervalType IntervalType { get; set; }
 
-        public int Frequency { get; }
+        public int Frequency { get; set; }
 
-        public int Recurrence { get; }
-
-        public TransactionCashflowDto(string id, DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence)
-        {
-            Id = id;
-            EffectiveDate = effectiveDate;
-            IntervalType = intervalType;
-            Frequency = frequency;
-            Recurrence = recurrence;
-        }
+        public int Recurrence { get; set; }
     }
 }

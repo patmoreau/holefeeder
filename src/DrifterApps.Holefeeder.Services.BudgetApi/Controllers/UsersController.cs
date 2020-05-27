@@ -36,26 +36,23 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
             _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
-        [HttpGet(Name = Routes.GET_USERS)]
+        [HttpGet("all", Name = Routes.GET_USERS)]
         [ProducesResponseType(typeof(UserDto[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return Ok(await _service.FindAsync(new QueryParams(), cancellationToken).ConfigureAwait(false));
         }
 
-        [HttpGet("{id}", Name = Routes.GET_USER)]
+        [HttpGet(Name = Routes.GET_USER)]
         [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetAsync([FromRoute] string id, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return BadRequest();
-            }
+            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
 
-            var result = await _service.FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
+            var result = await _service.FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
 
             if (result == null)
             {
@@ -70,13 +67,15 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PostAsync(CancellationToken cancellationToken = default)
         {
-            var model = new UserDto(
-                null,
-                User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
-                User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
-                DateTime.Now.Date);
+            var model = new UserDto{
+                Id = null,
+                FirstName = User.FindFirst(JwtRegisteredClaimNames.GivenName)?.Value,
+                LastName = User.FindFirst(JwtRegisteredClaimNames.FamilyName)?.Value,
+                EmailAddress = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value,
+                GoogleId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value,
+                DateJoined = DateTime.Now.Date
+                
+            };
 
             if (!ModelState.IsValid)
             {

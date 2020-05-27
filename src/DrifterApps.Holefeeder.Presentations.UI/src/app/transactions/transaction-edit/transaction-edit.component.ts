@@ -13,6 +13,7 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 import { IAccountDetail } from '@app/shared/interfaces/account-detail.interface';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { startOfToday } from 'date-fns';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-transaction-edit',
@@ -35,6 +36,8 @@ export class TransactionEditComponent implements OnInit {
 
   isLoaded = false;
   isNew = false;
+
+  faCalendarAlt = faCalendarAlt;
 
   constructor(
     private route: ActivatedRoute,

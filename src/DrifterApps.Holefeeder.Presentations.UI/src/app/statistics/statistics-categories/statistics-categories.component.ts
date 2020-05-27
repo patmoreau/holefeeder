@@ -8,6 +8,7 @@ import { combineLatest, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ICategory } from '@app/shared/interfaces/category.interface';
 import { CategoriesService } from '@app/shared/services/categories.service';
+import { faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-statistics-categories',
@@ -18,6 +19,8 @@ export class StatisticsCategoriesComponent implements OnInit {
   data: any[] = [];
 
   categories: ICategory[];
+
+  faDotCircle = faDotCircle;
 
   constructor(
     private dateService: DateService,

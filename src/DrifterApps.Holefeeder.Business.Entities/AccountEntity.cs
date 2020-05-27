@@ -12,10 +12,10 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public DateTime OpenDate { get; }
         public string Description { get; }
         public bool Inactive { get; }
-        public string UniqueId { get; }
+        public string GlobalId { get; }
         public string UserId { get; }
 
-        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string uniqueId, string userId) : base(id)
+        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string globalId = "", string userId = "") : base(id)
         {
             Type = type;
             Name = name;
@@ -24,11 +24,11 @@ namespace DrifterApps.Holefeeder.Business.Entities
             OpenDate = openDate;
             Description = description;
             Inactive = inactive;
-            UniqueId = uniqueId;
+            GlobalId = globalId;
             UserId = userId;
         }
 
-        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, string uniqueId = null, string userId = null) =>
+        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, string globalId = null, string userId = null) =>
             new AccountEntity(
                 id ?? Id,
                 type ?? Type,
@@ -38,11 +38,11 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 openDate ?? OpenDate,
                 description ?? Description,
                 inactive ?? Inactive,
-                uniqueId ?? UniqueId,
+                globalId ?? GlobalId,
                 userId ?? UserId);
 
         public AccountEntity WithUser(string userId) => this.With(userId: userId);
 
-        public AccountEntity WithId(string id) => this.With(id: id);
+        public AccountEntity WithId(string id) => this.With(id);
     }
 }

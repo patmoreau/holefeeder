@@ -7,6 +7,7 @@ import { Account } from '@app/shared/models/account.model';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
+import { faArrowLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-account-edit',
@@ -18,6 +19,8 @@ export class AccountEditComponent implements OnInit {
   isLoaded = false;
   account: IAccount;
   isDirty = true;
+  faArrowLeft = faArrowLeft;
+  faCalendarAlt = faCalendarAlt;
 
   accountForm: FormGroup;
 

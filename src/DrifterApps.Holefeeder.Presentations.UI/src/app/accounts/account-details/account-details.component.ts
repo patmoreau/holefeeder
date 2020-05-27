@@ -6,7 +6,7 @@ import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
 import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { categoryTypeMultiplier } from '@app/shared/enums/category-type.enum';
 import { accountTypeMultiplier } from '@app/shared/enums/account-type.enum';
-
+import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'dfta-account-details',
   templateUrl: './account-details.component.html',
@@ -17,6 +17,9 @@ export class AccountDetailsComponent implements OnInit {
   upcomingCashflows: IUpcoming[];
   upcomingBalance = 0;
   isLoaded = false;
+  faArrowLeft = faArrowLeft;
+  faEdit = faEdit;
+  faPlus = faPlus;
 
   constructor(
     private accountsService: AccountsService,
