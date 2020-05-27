@@ -74,4 +74,4 @@ networks:
       name: ${NETWORK:-prodproxy}
   outside:
     external:
-      name: ${BETA_NETWORK:-betaproxy}
+      name: ${STAGING_NETWORK:-stagingproxy}

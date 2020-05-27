@@ -84,9 +84,20 @@ jobs:
 
     - name: Create environment file
       run: |
-        printf "DATABASE_URL=${{secrets.DATABASE_URL_PROD}}\nDATABASE_NAME=${{secrets.DATABASE_NAME_PROD}}\nGoogle:ClientId=${{secrets.GOOGLE_CLIENT_ID}}/n" > api.environment.env
-        printf "MONGO_INITDB_ROOT_USERNAME=${{secrets.MONGODB_ROOT_USER_PROD}}\nMONGO_INITDB_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}\n" > mongo.environment.env
-      working-directory: ./docker/prod
+        printf "VERSION=${{needs.version.outputs.version}}
+        ENVIRONMENT=Production
+        ENVIRONMENT_PREFIX=
+        MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_PROD}}
+        MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}
+        MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_PROD}}
+        MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_PROD}}
+        MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_PROD}}
+        MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_PROD}}
+        MONGO_DATABASE_VOLUME=./data
+        GOOGLE_CLIENTID=${{secrets.GOOGLE_CLIENT_ID}}
+        GOOGLE_AUTHORITY=https://accounts.google.com
+        " > .env
+      working-directory: ./docker
 
     - name: Copy file via scp
       uses: appleboy/scp-action@master
@@ -96,7 +107,7 @@ jobs:
         PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
-        source: "docker/prod/docker-compose.yml,docker/prod/api.environment.env,docker/prod/mongo.environment.env"
+        source: "docker/docker-compose.yml,docker/.env"
         target: "holefeeder"
         strip_components: 1
      
@@ -109,7 +120,7 @@ jobs:
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
         script: |
-          cd holefeeder/prod
+          cd holefeeder
           echo Pull container
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}

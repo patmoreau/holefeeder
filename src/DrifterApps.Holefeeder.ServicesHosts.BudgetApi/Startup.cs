@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
@@ -7,6 +9,7 @@ using System.Text.Json;
 using DrifterApps.Holefeeder.Business;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common.Authorization;
+using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Common.IoC;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources;
@@ -46,23 +49,23 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
-            var googleClientId = googleAuthNSection["ClientId"];
+            var googleClientId = Configuration["Authentication:Google:ClientId"];
             if(string.IsNullOrWhiteSpace(googleClientId))
                 throw new NullReferenceException(BudgetApiInternal.GoogleClientIdNotConfigured);
-            var googleClientSecret = googleAuthNSection["ClientSecret"];
-            if(string.IsNullOrWhiteSpace(googleClientSecret))
-                throw new NullReferenceException(BudgetApiInternal.GoogleClientSecretNotConfigured);
+            var googleAuthority = Configuration["Authentication:Google:Authority"];
+            if(string.IsNullOrWhiteSpace(googleAuthority))
+                throw new NullReferenceException(BudgetApiInternal.GoogleAuthorityNotConfigured);
+
+            var allowedOrigins = Configuration.GetSection("AllowedOrigin")?.Get<string[]>();
+            if (allowedOrigins == null || !allowedOrigins.Any())
+                throw new NullReferenceException(BudgetApiInternal.AllowedOriginNotConfigured);
             
             _ = services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins(
-                            "https://holefeeder-beta.drifterapps.com",
-                            "https://holefeeder.drifterapps.com",
-                            "http://localhost:4200")
+                        .WithOrigins(allowedOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithExposedHeaders("X-Total-Count");
@@ -88,7 +91,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>
                 {
-                    x.UseGoogle(googleClientId);
+                    x.UseGoogle(googleClientId, googleAuthority);
                     x.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = async context =>
