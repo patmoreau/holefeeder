@@ -39,7 +39,7 @@ namespace DrifterApps.Holefeeder.Business
             var accounts = await _accountsService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
             var categories = await _categoriesService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);
 
-            var upcomingCashflows = from c in cashflows
+            var upcomingCashflows = from c in cashflows.Where(c => !c.Inactive)
                                     join a in accounts on c.Account equals a.Id
                                     join cat in categories on c.Category equals cat.Id
                                     join t in pastCashflows on c.Id equals t.Cashflow into u
