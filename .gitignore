@@ -352,3 +352,4 @@ MigrationBackup/
 src/.cr
 docker/VERSION
 docker/dev/data
+docker/data

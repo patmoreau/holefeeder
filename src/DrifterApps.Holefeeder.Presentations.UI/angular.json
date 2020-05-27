@@ -39,11 +39,19 @@
             }
           },
           "configurations": {
-            "beta": {
+            "docker": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.beta.ts"
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
