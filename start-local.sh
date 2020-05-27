@@ -20,12 +20,9 @@ while getopts ":a:" opt; do
     esac
 done
 
-VERSION=`date +%y.%m.00-alpha`
-echo building $VERSION
-echo $VERSION > docker/VERSION
-
 if [ $ACTION == "api" ] || [ $ACTION == "all" ]; then
     # build api
+    rm -r publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi
     dotnet restore src
     dotnet publish /property:Version=$VERSION --no-restore --output publish/DrifterApps.Holefeeder.ServicesHosts.BudgetApi src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj
 
@@ -33,14 +30,15 @@ if [ $ACTION == "api" ] || [ $ACTION == "all" ]; then
 fi
 if [ $ACTION == "ui" ] || [ $ACTION == "all" ]; then
     # build ui
+    rm -r publish/DrifterApps.Holefeeder.Presentations.UI
     cd src/DrifterApps.Holefeeder.Presentations.UI
     npm install
-    npm run-script build -- --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI
+    ng build --configuration=docker --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI
     cd ../../
 
     docker build -t holefeeder-web:$VERSION -f docker/web.dockerfile .
 fi
 if [ $ACTION == "docker" ] || [ $ACTION == "all" ]; then
-    docker-compose --env-file=docker/dev/.env -f docker/dev/docker-compose.yml up --force-recreate --build -d
+    docker-compose --env-file=docker/.env -f docker/docker-compose.yml up --force-recreate --build -d
     docker image prune -f
 fi

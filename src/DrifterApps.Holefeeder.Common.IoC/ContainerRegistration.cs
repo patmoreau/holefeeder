@@ -1,4 +1,5 @@
 ﻿using DrifterApps.Holefeeder.Business;
+using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas;
@@ -13,7 +14,8 @@ namespace DrifterApps.Holefeeder.Common.IoC
     {
         public static void Initialize(this Container container, IConfiguration configuration)
         {
-            if (container == null) return;
+            container.ThrowIfNull(nameof(container));
+            configuration.ThrowIfNull(nameof(configuration));
 
             // add singleton
             container.Register(typeof(ILogger<>), typeof(Logger<>), Lifestyle.Singleton);
@@ -22,11 +24,13 @@ namespace DrifterApps.Holefeeder.Common.IoC
             var mapperConfig = MapperRegistration.Initialize();
             container.Register(() => mapperConfig.CreateMapper(), Lifestyle.Scoped);
 
+            var mongoConfig = configuration.GetSection("MongoDB");
+            
             // add MongoDb components
             container.RegisterSingleton<IMongoClient>(() =>
-                new MongoClient(configuration.GetValue<string>("DATABASE_URL")));
+                new MongoClient(mongoConfig["ConnectionString"]));
             container.RegisterSingleton(() =>
-                container.GetInstance<IMongoClient>().GetDatabase(configuration.GetValue<string>("DATABASE_NAME")));
+                container.GetInstance<IMongoClient>().GetDatabase(mongoConfig["DatabaseName"]));
             container.Register(
                 () => container.GetInstance<IMongoDatabase>().GetCollection<AccountSchema>("accounts"),
                 Lifestyle.Scoped);

@@ -7,6 +7,7 @@ import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { faTachometerAlt, faUniversity, faFileInvoiceDollar, faChartPie, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarCheck, faCalendarMinus, faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
+import { SettingsService } from '@app/singletons/services/settings.service';
 
 @Component({
   selector: 'dfta-header',
@@ -40,16 +41,24 @@ export class HeaderComponent implements OnInit {
     private modalService: NgbModal,
     private dateService: DateService,
     private authService: AuthenticationService,
+    private settingsService: SettingsService,
     private router: Router
   ) {
     this.isNavbarCollapsed = true;
+  }
+
+  async ngOnInit() {
+    this.authService.isAuthenticated$.subscribe((isAuthenticated: boolean) => {
+      this.isAuthenticated = isAuthenticated;
+      if (this.isAuthenticated) {
+        this.settingsService.loadUserSettings();
+      }
+    });
 
     this.dateService.period.subscribe(period => {
       this.period = period;
     });
-  }
 
-  async ngOnInit() {
     this.authService.authenticatedUser$.subscribe(user => {
       this.isAuthenticated = user !== null;
       if (user) {

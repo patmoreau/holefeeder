@@ -1,4 +1,4 @@
-name: Continous deployment BETA
+name: Continous deployment STAGING
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
     steps:
     - name: Set version
       id: version
-      run: echo "##[set-output name=version;]$(date +'%y.%m').${{github.run_number}}-beta"
+      run: echo "##[set-output name=version;]$(date +'%y.%m').${{github.run_number}}-staging"
 
   packageBudgetApi:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
       working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
 
     - name: Build sources
-      run: npm run-script build -- --configuration=beta --aot=true --outputHashing=all --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI --sourceMap=false
+      run: npm run-script build -- --configuration=staging --aot=true --outputHashing=all --outputPath=../../publish/DrifterApps.Holefeeder.Presentations.UI --sourceMap=false
       working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
 
     - name: Docker login
@@ -87,9 +87,20 @@ jobs:
 
     - name: Create environment file
       run: |
-        printf "DATABASE_URL=${{secrets.DATABASE_URL_BETA}}\nDATABASE_NAME=${{secrets.DATABASE_NAME_BETA}}\nGoogle:ClientId=${{secrets.GOOGLE_CLIENT_ID}}/n" > api.environment.env
-        printf "MONGO_INITDB_ROOT_USERNAME=${{secrets.MONGODB_ROOT_USER_BETA}}\nMONGO_INITDB_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_BETA}}\n" > mongo.environment.env
-      working-directory: ./docker/beta
+        printf "VERSION=${{needs.version.outputs.version}}
+        ENVIRONMENT=Staging
+        ENVIRONMENT_PREFIX=-staging
+        MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_STAGING}}
+        MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_STAGING}}
+        MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_STAGING}}
+        MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_STAGING}}
+        MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_STAGING}}
+        MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_STAGING}}
+        MONGO_DATABASE_VOLUME=./data
+        GOOGLE_CLIENTID=${{secrets.GOOGLE_CLIENT_ID}}
+        GOOGLE_AUTHORITY=https://accounts.google.com
+        " > .env
+      working-directory: ./docker
 
     - name: Copy file via scp
       uses: appleboy/scp-action@master
@@ -99,8 +110,8 @@ jobs:
         PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
-        source: "docker/beta/docker-compose.yml,docker/beta/api.environment.env,docker/beta/mongo.environment.env"
-        target: "holefeeder-beta"
+        source: "docker/docker-compose.yml,docker/.env"
+        target: "holefeeder-staging"
         strip_components: 1
      
     - name: Starting containers
@@ -112,7 +123,7 @@ jobs:
         KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
         script: |
-          cd holefeeder-beta/beta
+          cd holefeeder-staging
           echo Pull container
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}

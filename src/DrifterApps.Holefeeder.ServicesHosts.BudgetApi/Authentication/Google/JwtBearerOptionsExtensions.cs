@@ -5,15 +5,16 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google
 {
     public static class JwtBearerOptionsExtensions
     {
-        public static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId) => options.UseGoogle(clientId, null);
+        public static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId, string authority) => options.UseGoogle(clientId, null, authority);
 
-        private static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId, string hostedDomain)
+        private static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId, string hostedDomain, string authority)
         {
-            clientId = clientId.ThrowIfNullOrEmpty(nameof(clientId));
-            options = options.ThrowIfNull(nameof(options));
+            clientId.ThrowIfNullOrEmpty(nameof(clientId));
+            options.ThrowIfNull(nameof(options));
+            authority.ThrowIfNullOrEmpty(nameof(authority));
 
             options.Audience = clientId;
-            options.Authority = GoogleJwtBearerDefaults.AUTHORITY;
+            options.Authority = authority;
 
             options.SecurityTokenValidators.Clear();
             options.SecurityTokenValidators.Add(new GoogleJwtSecurityTokenHandler());
@@ -26,7 +27,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google
                 ValidAudience = clientId,
 
                 ValidateIssuer = true,
-                ValidIssuers = new[] { GoogleJwtBearerDefaults.AUTHORITY, "" },
+                ValidIssuers = new[] { authority, "" },
 
                 ValidateLifetime = true,
 
