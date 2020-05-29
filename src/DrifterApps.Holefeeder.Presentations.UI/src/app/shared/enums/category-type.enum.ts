@@ -1,6 +1,6 @@
 export enum CategoryType {
-    expense = 'expense',
-    gain = 'gain',
+    expense = 'Expense',
+    gain = 'Gain',
 }
 
 export function categoryTypeMultiplier(type: CategoryType): number {

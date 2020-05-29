@@ -1,11 +1,11 @@
 export enum AccountType {
-  checking = 'checking',
-  creditCard = 'credit_card',
-  creditLine = 'credit_line',
-  investment = 'investment',
-  loan = 'loan',
-  mortgage = 'mortgage',
-  savings = 'savings'
+  checking = 'Checking',
+  creditCard = 'CreditCard',
+  creditLine = 'CreditLine',
+  investment = 'Investment',
+  loan = 'Loan',
+  mortgage = 'Mortgage',
+  savings = 'Savings'
 }
 
 export const AccountTypeNames = new Map<string, string>([

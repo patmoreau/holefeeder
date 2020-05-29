@@ -3,8 +3,6 @@
     #newTag
     class="form-control"
     type="text"
-    [placeholder]="placeholder"
-    [attr.aria-label]="label"
     (keyup.enter)="addTag(newTag.value)"
     (blur)="addTag(newTag.value); newTag.value = ''"
   />
@@ -18,11 +16,11 @@
   </div>
 </div>
 <div>
-  <span class="text-lowercase" *ngFor="let tag of tags">
+  <span class="text-lowercase" *ngFor="let tag of tagsArray.controls; index as i">
     <small class="badge badge-pill badge-primary text-white font-weight-light"
-      >{{ tag }}
-      <a class="btn btn-sm p-0" (click)="removeTag(tag)">
+      >{{ tag.value }}
+      <a class="btn btn-sm p-0" (click)="removeTag(i)">
         <fa-icon [icon]="faTimes" aria-hidden="true"></fa-icon> </a
-    ></small>
+    ></small>&nbsp;
   </span>
 </div>
