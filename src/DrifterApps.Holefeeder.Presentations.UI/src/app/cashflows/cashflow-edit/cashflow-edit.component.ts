@@ -121,8 +121,6 @@ export class CashflowEditComponent implements OnInit {
   onConfirm() {}
 
   compareFn(optionOne: any, optionTwo: any): boolean {
-    console.log('optionOne', optionOne);
-    console.log('optionTwo', optionTwo);
     if (optionOne && optionTwo) {
       const idOne = typeof optionOne === 'string' ? optionOne : optionOne.id;
       const idTwo = typeof optionTwo === 'string' ? optionTwo : optionTwo.id;
