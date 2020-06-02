@@ -34,13 +34,10 @@ export class UpcomingService {
           .set('to', format(period.end, 'yyyy-MM-dd'))
       )
       .pipe(
-        map(data =>{
-          console.log('upcomingService', data);
-          return Object.assign(
+        map(data => Object.assign(
             [],
             data.map(upcomingFromServer)
-          );
-        }
+          )
         )
       );
   }

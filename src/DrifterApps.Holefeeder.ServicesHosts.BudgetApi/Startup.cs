@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DrifterApps.Holefeeder.Business;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common.Authorization;
-using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Common.IoC;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources;
@@ -77,6 +75,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());                   
                 });
 
             _ = services.AddLogging();
