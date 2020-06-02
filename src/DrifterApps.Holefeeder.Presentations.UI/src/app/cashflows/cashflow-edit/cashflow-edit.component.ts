@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { NgbDateAdapter, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -9,10 +9,11 @@ import { ICategory } from '@app/shared/interfaces/category.interface';
 import { CategoriesService } from '@app/shared/services/categories.service';
 import { IAccountDetail } from '@app/shared/interfaces/account-detail.interface';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { DateIntervalTypeNames } from '@app/shared/enums/date-interval-type.enum';
+import { DateIntervalTypeNames, DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
 import { ICashflow } from '@app/shared/interfaces/cashflow.interface';
 import { Cashflow } from '@app/shared/models/cashflow.model';
 import { faArrowLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { startOfToday } from 'date-fns';
 
 @Component({
   selector: 'dfta-cashflow-edit',
@@ -50,14 +51,14 @@ export class CashflowEditComponent implements OnInit {
   ) {
     this.cashflowForm = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
-      intervalType: [''],
-      frequency: [''],
-      effectiveDate: [''],
+      intervalType: [],
+      frequency: [],
+      effectiveDate: [],
       account: ['', [Validators.required]],
       category: ['', [Validators.required]],
-      description: [''],
+      description: ['', [Validators.required]],
       inactive: [],
-      tags: ['']
+      tags: this.formBuilder.array([])
     });
   }
 
@@ -83,10 +84,17 @@ export class CashflowEditComponent implements OnInit {
     } else {
       this.cashflow = Object.assign(new Cashflow(), {
         account: this.account ? this.account : this.accounts[0].id,
-        category: this.categories[0].id
+        category: this.categories[0].id,
+        intervalType: DateIntervalType.monthly,
+        effectiveDate: startOfToday(),
+        inactive: false
       });
     }
     this.cashflowForm.patchValue(this.cashflow);
+    if (this.cashflow.tags) {
+      const tags = this.cashflowForm.get('tags') as FormArray;
+      this.cashflow.tags.forEach(t => tags.push(this.formBuilder.control(t)));
+    }
 
     this.isLoaded = true;
   }
@@ -110,7 +118,7 @@ export class CashflowEditComponent implements OnInit {
     this.location.back();
   }
 
-  onConfirm() {}
+  onConfirm() { }
 
   compareFn(optionOne: any, optionTwo: any): boolean {
     if (optionOne && optionTwo) {

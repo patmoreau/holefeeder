@@ -34,8 +34,7 @@ export class UpcomingService {
           .set('to', format(period.end, 'yyyy-MM-dd'))
       )
       .pipe(
-        map(data =>
-          Object.assign(
+        map(data => Object.assign(
             [],
             data.map(upcomingFromServer)
           )

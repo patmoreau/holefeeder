@@ -10,7 +10,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
         public string Id { get; set; }
 
         [Required]
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AccountType Type { get; set; }
 
         [Required]

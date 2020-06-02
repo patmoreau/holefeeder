@@ -9,7 +9,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 
         public string Name { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public CategoryType Type { get; set; }
 
         public string Color { get; set; }

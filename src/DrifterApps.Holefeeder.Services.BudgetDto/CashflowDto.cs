@@ -16,7 +16,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
 
         public decimal Amount { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public DateIntervalType IntervalType { get; set; }
 
         public int Frequency { get; set; }

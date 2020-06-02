@@ -16,7 +16,7 @@ export function configureGoogleAuth(oidcConfigService: OidcConfigService) {
           postLoginRoute: '/dashboard',
           forbiddenRoute: '/forbidden',
           unauthorizedRoute: '/unauthorized',
-          logLevel: LogLevel.Debug,
+          logLevel: LogLevel.Error,
           historyCleanupOff: true,
       });
   }

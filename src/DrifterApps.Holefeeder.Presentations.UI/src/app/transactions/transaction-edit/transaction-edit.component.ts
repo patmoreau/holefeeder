@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { NgbDateAdapter, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -55,7 +55,7 @@ export class TransactionEditComponent implements OnInit {
       account: ['', [Validators.required]],
       category: ['', [Validators.required]],
       description: [''],
-      tags: ['']
+      tags: this.formBuilder.array([])
     });
   }
 
@@ -105,7 +105,10 @@ export class TransactionEditComponent implements OnInit {
     }
 
     this.transactionForm.patchValue(this.transaction);
-
+    if (this.transaction.tags) {
+      const tags = this.transactionForm.get('tags') as FormArray;
+      this.transaction.tags.forEach(t => tags.push(this.formBuilder.control(t)));
+    }
     this.isLoaded = true;
   }
 
@@ -132,7 +135,7 @@ export class TransactionEditComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' }).result.then(async (_) => {
       await this.transactionsService.delete(this.transaction.id);
       this.location.back();
-    }, (_) => {});
+    }, (_) => { });
   }
 
   onConfirm() { }

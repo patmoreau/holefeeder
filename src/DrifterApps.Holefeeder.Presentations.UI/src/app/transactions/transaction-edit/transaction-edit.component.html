@@ -43,7 +43,7 @@
           </div>
           <div class="form-group">
             <label for="tags">Tags</label>
-            <dfta-tags-input formControlName="tags" id="tags" [label]="'Tags'"></dfta-tags-input>
+            <dfta-tags-input formArrayName="tags" id="tags" [tagsArray]="transactionForm.get('tags')"></dfta-tags-input>
           </div>
           <div class="form-group">
             <label for="description">Note</label>
