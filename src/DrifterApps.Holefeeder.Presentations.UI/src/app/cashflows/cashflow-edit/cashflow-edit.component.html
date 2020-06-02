@@ -38,10 +38,9 @@
             <dfta-tags-input formArrayName="tags" id="tags" [tagsArray]="cashflowForm.get('tags')"></dfta-tags-input>
           </div>
           <div class="form-group">
-            <label for="intervalType">Interval type</label>
-            <select class="form-control" formControlName="intervalType" [compareWith]="compareFn" id="intervalType"
-              required>
-              <option *ngFor="let interval of intervalTypesNames | keyvalue" [ngValue]="interval.key">
+            <label for="interval">Interval type</label>
+            <select class="form-control" formControlName="intervalType" [compareWith]="compareFn" id="interval" required>
+              <option *ngFor="let interval of intervalTypesNames | keyvalue : valueSort" [ngValue]="interval.key">
                 {{ interval.value }}</option>
             </select>
           </div>

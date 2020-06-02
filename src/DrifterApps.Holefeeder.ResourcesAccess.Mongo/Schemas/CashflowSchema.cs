@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using DrifterApps.Holefeeder.Common.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -14,8 +16,8 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [BsonElement("amount"), BsonRepresentation(BsonType.Decimal128)]
         public decimal Amount { get; set; }
 
-        [BsonElement("type")]
-        public string IntervalType { get; set; }
+        [BsonElement("type"), BsonRepresentation(BsonType.String), JsonConverter(typeof(JsonStringEnumConverter))]
+        public DateIntervalType IntervalType { get; set; }
 
         [BsonElement("frequency")]
         public int Frequency { get; set; }
@@ -42,7 +44,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [BsonElement("guid")]
         public string GlobalId { get; set; }
 
-        [BsonElement("userId")]
+        [BsonElement("userId"), BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
     }
 }

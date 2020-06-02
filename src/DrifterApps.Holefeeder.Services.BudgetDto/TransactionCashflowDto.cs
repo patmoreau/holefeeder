@@ -13,7 +13,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetDto
         [DataType(DataType.Date)]
         public DateTime EffectiveDate { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public DateIntervalType IntervalType { get; set; }
 
         public int Frequency { get; set; }

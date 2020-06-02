@@ -36,7 +36,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [BsonElement("guid")]
         public string GlobalId { get; set; }
 
-        [BsonElement("userId")]
+        [BsonElement("userId"), BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
     }
 }
