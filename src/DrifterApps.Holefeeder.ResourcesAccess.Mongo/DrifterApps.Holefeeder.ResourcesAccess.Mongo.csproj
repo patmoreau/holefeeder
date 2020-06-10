@@ -8,10 +8,6 @@
     <Folder Include="Schemas\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>

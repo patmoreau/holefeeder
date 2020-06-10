@@ -23,10 +23,13 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.WithProperty("Env", Configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production")
+                .Enrich.WithProperty("MicroServiceName", "DrifterApps.Holefeeder.ServicesHosts.BudgetApi")
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Seq(Configuration["SEQ_Url"] ?? "https://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
+                .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
+
+            Log.Logger.Information("DrifterApps.Holefeeder.ServicesHosts.BudgetApi started");
             try
             {
                 CreateHostBuilder(args).Build().Run();

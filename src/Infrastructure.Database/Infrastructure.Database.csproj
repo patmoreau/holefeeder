@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>DrifterApps.Holefeeder.Infrastructure.Database</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Application.Accounts\Application.Accounts.csproj" />
+      <ProjectReference Include="..\Application.Transactions\Application.Transactions.csproj" />
+      <ProjectReference Include="..\Application.Users\Application.Users.csproj" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.9" />
+      <PackageReference Include="MongoDB.Driver" Version="2.11.3" />
+    </ItemGroup>
+
+</Project>

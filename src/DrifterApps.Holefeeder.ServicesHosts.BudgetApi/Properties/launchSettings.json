@@ -1,14 +1,13 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Custom": {
+    "Legacy.Budget.API": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:6000;https://localhost:6001",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "SEQ_Url": "https://seq.drifterapps.com",
-        "SEQ_ApiKey": "kNbQxjGsGGpVF4XP042j"
-      },
-      "applicationUrl": "http://localhost:5000"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

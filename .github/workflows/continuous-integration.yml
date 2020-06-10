@@ -19,13 +19,13 @@ jobs:
         dotnet-version: 3.1.201
 
     - name: Install dependencies
-      run: dotnet restore ./src
+      run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore ./src
+      run: dotnet build --no-restore
 
     - name: Test
-      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage" ./src
+      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage"
 
     - name: ReportGenerator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.5.7

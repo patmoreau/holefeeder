@@ -1,0 +1,1 @@
+{"_id":{"$oid":"5ecdf491367f4e00016c87eb"},"firstName":"Patrick","lastName":"Moreau","emailAddress":"pk.moreau@gmail.com","googleId":"101461112749105878913","dateJoined":{"$date":"2020-05-27T00:00:00Z"}}
