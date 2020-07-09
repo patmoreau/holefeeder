@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.BudgetDto", "DrifterApps.Holefeeder.Services.BudgetDto\DrifterApps.Holefeeder.Services.BudgetDto.csproj", "{B21FCCC0-BF36-4356-8B98-91BD3137CBB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Services.BudgetDto", "src\DrifterApps.Holefeeder.Services.BudgetDto\DrifterApps.Holefeeder.Services.BudgetDto.csproj", "{B21FCCC0-BF36-4356-8B98-91BD3137CBB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Common", "DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj", "{78145294-1174-4504-8014-B17A3B3F9224}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Common", "src\DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj", "{78145294-1174-4504-8014-B17A3B3F9224}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business.Contracts", "DrifterApps.Holefeeder.Business.Contracts\DrifterApps.Holefeeder.Business.Contracts.csproj", "{44981CE2-8C12-4C5D-B74B-2C6B45EDF465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business.Contracts", "src\DrifterApps.Holefeeder.Business.Contracts\DrifterApps.Holefeeder.Business.Contracts.csproj", "{44981CE2-8C12-4C5D-B74B-2C6B45EDF465}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business", "DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj", "{3BAB90E8-0D22-46DB-9E1D-612D032A99D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business", "src\DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj", "{3BAB90E8-0D22-46DB-9E1D-612D032A99D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Contracts", "DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj", "{47D13989-6764-47D0-BCFA-ED405D770BCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Contracts", "src\DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj", "{47D13989-6764-47D0-BCFA-ED405D770BCB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business.Entities", "DrifterApps.Holefeeder.Business.Entities\DrifterApps.Holefeeder.Business.Entities.csproj", "{C922B219-CEDD-40DA-884A-995DB4590E41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Business.Entities", "src\DrifterApps.Holefeeder.Business.Entities\DrifterApps.Holefeeder.Business.Entities.csproj", "{C922B219-CEDD-40DA-884A-995DB4590E41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Architecture", "0.Architecture", "{021329ED-4CB0-46EA-B3FD-BDDFE43EC359}"
 EndProject
@@ -27,11 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Presentations", "2.Presen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Services Hosts", "3.Services Hosts", "{0BFDAFBC-EC23-488F-9D7D-8E0B16091EE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Presentations.UI", "DrifterApps.Holefeeder.Presentations.UI\DrifterApps.Holefeeder.Presentations.UI.csproj", "{46823F77-9A43-44A8-BB1A-5AA9CF884B06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Presentations.UI", "src\DrifterApps.Holefeeder.Presentations.UI\DrifterApps.Holefeeder.Presentations.UI.csproj", "{46823F77-9A43-44A8-BB1A-5AA9CF884B06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Common.IoC", "DrifterApps.Holefeeder.Common.IoC\DrifterApps.Holefeeder.Common.IoC.csproj", "{7F8C91BE-BE26-4402-9301-4114F74B1024}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Common.IoC", "src\DrifterApps.Holefeeder.Common.IoC\DrifterApps.Holefeeder.Common.IoC.csproj", "{7F8C91BE-BE26-4402-9301-4114F74B1024}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{CE219E8C-E8F8-4CF2-979F-081128262D2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "src\DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{CE219E8C-E8F8-4CF2-979F-081128262D2A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{8BF332C6-0E6A-4206-A4F3-D8088F2D3631}"
 EndProject
@@ -44,25 +44,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.Tests", "7.Tests", "{6161
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.1.Infrastructure", "7.1.Infrastructure", "{9E52206A-0415-4D56-8998-EA3FEFB2EF3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common.Tests", "DrifterApps.Holefeeder.Common.Tests\DrifterApps.Holefeeder.Common.Tests.csproj", "{14812875-9C02-44E1-BC79-D1FC7EE503E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common.Tests", "tests\DrifterApps.Holefeeder.Common.Tests\DrifterApps.Holefeeder.Common.Tests.csproj", "{14812875-9C02-44E1-BC79-D1FC7EE503E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetApi", "DrifterApps.Holefeeder.Services.BudgetApi\DrifterApps.Holefeeder.Services.BudgetApi.csproj", "{1370A5D7-7E1B-46E0-9D2C-D80242D96F41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetApi", "src\DrifterApps.Holefeeder.Services.BudgetApi\DrifterApps.Holefeeder.Services.BudgetApi.csproj", "{1370A5D7-7E1B-46E0-9D2C-D80242D96F41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.BudgetApi", "DrifterApps.Holefeeder.ServicesHosts.BudgetApi\DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj", "{DC718AE9-D59A-4A51-BD16-0A92A6854522}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.BudgetApi", "src\DrifterApps.Holefeeder.ServicesHosts.BudgetApi\DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj", "{DC718AE9-D59A-4A51-BD16-0A92A6854522}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.4.Services", "7.4.Services", "{37DCF34D-F108-4901-B3D3-EF5D0F326EB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetAPI.Tests", "DrifterApps.Holefeeder.Services.BudgetAPI.Tests\DrifterApps.Holefeeder.Services.BudgetAPI.Tests.csproj", "{7C132D90-DFF3-4C26-AFFA-4C07426373DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetAPI.Tests", "tests\DrifterApps.Holefeeder.Services.BudgetAPI.Tests\DrifterApps.Holefeeder.Services.BudgetAPI.Tests.csproj", "{7C132D90-DFF3-4C26-AFFA-4C07426373DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.6.ResourcesAccess", "7.6.ResourcesAccess", "{D7A8FC43-0799-4BB0-A92A-61B8FE06FD79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests", "DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests\DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests.csproj", "{DDB7BC2F-543A-4958-96E0-E51129B6A21C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests", "tests\DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests\DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests.csproj", "{DDB7BC2F-543A-4958-96E0-E51129B6A21C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.API", "Holefeeder.API\Holefeeder.API.csproj", "{1F823733-11EF-42F2-83F2-4C21EEB35C32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.API", "src\Holefeeder.API\Holefeeder.API.csproj", "{1F823733-11EF-42F2-83F2-4C21EEB35C32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Domain", "Holefeeder.Domain\Holefeeder.Domain.csproj", "{C4594336-451B-4A50-BC77-B0C9BA25B79F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Domain", "src\Holefeeder.Domain\Holefeeder.Domain.csproj", "{C4594336-451B-4A50-BC77-B0C9BA25B79F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Infrastructure", "Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj", "{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Infrastructure", "src\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj", "{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

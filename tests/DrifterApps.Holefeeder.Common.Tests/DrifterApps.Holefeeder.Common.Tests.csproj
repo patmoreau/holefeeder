@@ -9,10 +9,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="1.2.1"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PackageReference Include="coverlet.collector" Version="1.3.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
@@ -23,10 +23,10 @@
     <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj" />
+    <None Include="**/*" />
+    <None Include="**/*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="**/*" />
-    <None Include="**/*" />
+    <ProjectReference Include="..\..\src\DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj" />
   </ItemGroup>
 </Project>
