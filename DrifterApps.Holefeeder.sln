@@ -17,15 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Busi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Architecture", "0.Architecture", "{021329ED-4CB0-46EA-B3FD-BDDFE43EC359}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Business", "5.Business", "{7ABBE69F-6156-4D90-9149-19F2C9DDE6E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x5.Business", "x5.Business", "{7ABBE69F-6156-4D90-9149-19F2C9DDE6E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6.ResourcesAccess", "6.ResourcesAccess", "{C9A47346-602B-4E9E-B231-890037E9BC3C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x6.ResourcesAccess", "x6.ResourcesAccess", "{C9A47346-602B-4E9E-B231-890037E9BC3C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Services", "4.Services", "{9605B839-1F88-430F-9598-D0E2BC81A9A0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x4.Services", "x4.Services", "{9605B839-1F88-430F-9598-D0E2BC81A9A0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Presentations", "2.Presentations", "{FE8577B7-0970-4423-9459-9A2EF3FC123B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x2.Presentations", "x2.Presentations", "{FE8577B7-0970-4423-9459-9A2EF3FC123B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Services Hosts", "3.Services Hosts", "{0BFDAFBC-EC23-488F-9D7D-8E0B16091EE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x3.Services Hosts", "x3.Services Hosts", "{0BFDAFBC-EC23-488F-9D7D-8E0B16091EE6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Presentations.UI", "src\DrifterApps.Holefeeder.Presentations.UI\DrifterApps.Holefeeder.Presentations.UI.csproj", "{46823F77-9A43-44A8-BB1A-5AA9CF884B06}"
 EndProject
@@ -33,14 +33,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "src\DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{CE219E8C-E8F8-4CF2-979F-081128262D2A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{8BF332C6-0E6A-4206-A4F3-D8088F2D3631}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x1.Infrastructure", "x1.Infrastructure", "{8BF332C6-0E6A-4206-A4F3-D8088F2D3631}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD45B216-6211-42CF-922B-7145CB050457}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.Tests", "7.Tests", "{616114A7-4881-45E8-97FA-AF3B5558DD34}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x7.Tests", "x7.Tests", "{616114A7-4881-45E8-97FA-AF3B5558DD34}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.1.Infrastructure", "7.1.Infrastructure", "{9E52206A-0415-4D56-8998-EA3FEFB2EF3B}"
 EndProject
@@ -58,11 +58,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.6.ResourcesAccess", "7.6.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests", "tests\DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests\DrifterApps.Holefeeder.ResourcesAccess.Mongo.Tests.csproj", "{DDB7BC2F-543A-4958-96E0-E51129B6A21C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.API", "src\Holefeeder.API\Holefeeder.API.csproj", "{1F823733-11EF-42F2-83F2-4C21EEB35C32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.API", "src\DrifterApps.Holefeeder.API\DrifterApps.Holefeeder.API.csproj", "{1F823733-11EF-42F2-83F2-4C21EEB35C32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Domain", "src\Holefeeder.Domain\Holefeeder.Domain.csproj", "{C4594336-451B-4A50-BC77-B0C9BA25B79F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Domain", "src\DrifterApps.Holefeeder.Domain\DrifterApps.Holefeeder.Domain.csproj", "{C4594336-451B-4A50-BC77-B0C9BA25B79F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Infrastructure", "src\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj", "{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Infrastructure.MongoDB", "src\DrifterApps.Holefeeder.Infrastructure.MongoDB\DrifterApps.Holefeeder.Infrastructure.MongoDB.csproj", "{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Presentation", "1.Presentation", "{5BE1289E-0374-4C88-884B-DF17A878B3F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Infrastructure", "2.Infrastructure", "{0C5AFA2B-882E-4C03-A2D9-12F9612138C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Application", "3.Application", "{536BFBD5-C39A-473D-AA93-28DBA0A21265}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Domain", "4.Domain", "{62C8988F-0621-4B38-B046-CD32C83D6912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Application", "src\DrifterApps.Holefeeder.Application\DrifterApps.Holefeeder.Application.csproj", "{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FA0965D3-44E9-43DB-BD33-EE6A6EEDA889}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Infrastructure.MongoDB.Tests", "tests\DrifterApps.Holefeeder.Infrastructure.MongoDB.Tests\DrifterApps.Holefeeder.Infrastructure.MongoDB.Tests.csproj", "{A7572879-CEB7-4D7E-9199-D18E6637A8A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Application.Tests", "tests\DrifterApps.Holefeeder.Application.Tests\DrifterApps.Holefeeder.Application.Tests.csproj", "{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -276,6 +292,42 @@ Global
 		{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}.Release|x64.Build.0 = Release|Any CPU
 		{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}.Release|x86.ActiveCfg = Release|Any CPU
 		{35B3033C-3CB9-4E96-9615-ABE6F56C6E28}.Release|x86.Build.0 = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|x64.Build.0 = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Debug|x86.Build.0 = Debug|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|x64.ActiveCfg = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|x64.Build.0 = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|x86.ActiveCfg = Release|Any CPU
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F}.Release|x86.Build.0 = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|x64.Build.0 = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0}.Release|x86.Build.0 = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|x64.Build.0 = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Debug|x86.Build.0 = Debug|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|x64.ActiveCfg = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|x64.Build.0 = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|x86.ActiveCfg = Release|Any CPU
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -287,7 +339,6 @@ Global
 		{3BAB90E8-0D22-46DB-9E1D-612D032A99D9} = {7ABBE69F-6156-4D90-9149-19F2C9DDE6E8}
 		{47D13989-6764-47D0-BCFA-ED405D770BCB} = {C9A47346-602B-4E9E-B231-890037E9BC3C}
 		{C922B219-CEDD-40DA-884A-995DB4590E41} = {7ABBE69F-6156-4D90-9149-19F2C9DDE6E8}
-		{46823F77-9A43-44A8-BB1A-5AA9CF884B06} = {FE8577B7-0970-4423-9459-9A2EF3FC123B}
 		{7F8C91BE-BE26-4402-9301-4114F74B1024} = {8BF332C6-0E6A-4206-A4F3-D8088F2D3631}
 		{CE219E8C-E8F8-4CF2-979F-081128262D2A} = {C9A47346-602B-4E9E-B231-890037E9BC3C}
 		{9E52206A-0415-4D56-8998-EA3FEFB2EF3B} = {616114A7-4881-45E8-97FA-AF3B5558DD34}
@@ -298,6 +349,13 @@ Global
 		{7C132D90-DFF3-4C26-AFFA-4C07426373DE} = {37DCF34D-F108-4901-B3D3-EF5D0F326EB2}
 		{D7A8FC43-0799-4BB0-A92A-61B8FE06FD79} = {616114A7-4881-45E8-97FA-AF3B5558DD34}
 		{DDB7BC2F-543A-4958-96E0-E51129B6A21C} = {D7A8FC43-0799-4BB0-A92A-61B8FE06FD79}
+		{1F823733-11EF-42F2-83F2-4C21EEB35C32} = {5BE1289E-0374-4C88-884B-DF17A878B3F4}
+		{35B3033C-3CB9-4E96-9615-ABE6F56C6E28} = {0C5AFA2B-882E-4C03-A2D9-12F9612138C9}
+		{C4594336-451B-4A50-BC77-B0C9BA25B79F} = {62C8988F-0621-4B38-B046-CD32C83D6912}
+		{16ACE27C-0FDC-4739-A127-2DA83EEB4E5F} = {536BFBD5-C39A-473D-AA93-28DBA0A21265}
+		{46823F77-9A43-44A8-BB1A-5AA9CF884B06} = {5BE1289E-0374-4C88-884B-DF17A878B3F4}
+		{A7572879-CEB7-4D7E-9199-D18E6637A8A0} = {FA0965D3-44E9-43DB-BD33-EE6A6EEDA889}
+		{62238E8D-1A89-46F5-B48F-AB1F175F4BFD} = {FA0965D3-44E9-43DB-BD33-EE6A6EEDA889}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083F9D38-7496-44CA-B1E2-9C04BA3DD0A6}

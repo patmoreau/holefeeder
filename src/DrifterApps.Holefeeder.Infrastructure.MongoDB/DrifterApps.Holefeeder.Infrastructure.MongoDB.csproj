@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Application\DrifterApps.Holefeeder.Application.csproj" />
+      <ProjectReference Include="..\DrifterApps.Holefeeder.Domain\DrifterApps.Holefeeder.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.0.0" />
+      <PackageReference Include="MongoDB.Driver" Version="2.11.1" />
+    </ItemGroup>
+
+</Project>
