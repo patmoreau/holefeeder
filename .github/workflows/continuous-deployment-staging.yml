@@ -35,7 +35,7 @@ jobs:
         dotnet-version: 3.1.201
 
     - name: Install dependencies
-      run: dotnet restore ./src
+      run: dotnet restore
 
     - name: Build sources
       run: |
