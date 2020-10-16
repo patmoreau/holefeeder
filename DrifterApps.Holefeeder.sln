@@ -33,9 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tests", "tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests", "tests\Domain.Tests\Domain.Tests.csproj", "{90CC50B0-455E-48F7-A1A1-18AAF48C9A37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.OcelotGateway.API", "src\Hosting.OcelotGateway.API\Hosting.OcelotGateway.API.csproj", "{52CA02B0-CF1E-48A0-8405-949307C8FF88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Gateway.API", "src\Hosting.Gateway.API\Hosting.Gateway.API.csproj", "{52CA02B0-CF1E-48A0-8405-949307C8FF88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.UI", "src\Hosting.UI\Hosting.UI.csproj", "{F3C90296-41AD-4387-9268-49E98644D81D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Holefeeder.UI", "src\Hosting.Holefeeder.UI\Hosting.Holefeeder.UI.csproj", "{F3C90296-41AD-4387-9268-49E98644D81D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1.Hosting", "1.1.Hosting", "{A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}"
 EndProject

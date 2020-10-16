@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>DrifterApps.Holefeeder.Hosting.Holefeeder.UI</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
