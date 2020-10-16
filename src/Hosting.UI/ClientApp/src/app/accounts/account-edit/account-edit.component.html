@@ -1,0 +1,77 @@
+<ng-container *ngIf="isLoaded; else loader">
+  <div class="pt-3 pb-4 mb-3">
+    <div class="container">
+      <ng-container *ngIf="!account.Id; else selected">
+        <div class="pb-3 mt-3">
+          <a routerLink="../" class="text-large line-height-1 btn-link">
+            <fa-icon class="pb-1" [icon]="faArrowLeft" aria-hidden="true"></fa-icon>
+            Accounts
+          </a>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #selected>
+      <div class="pb-3 mt-3">
+        <a routerLink="../" class="text-large line-height-1 btn-link">
+          <i class="icon pb-1">arrow_back</i> Account</a>
+      </div>
+      <h1 class="display-3 mb-0 line-height-1 text-truncate">
+        Account {{ account.name }}
+      </h1>
+    </ng-template>
+  </div>
+  <div class="container mb-5">
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" type="text" formControlName="name" id="name" placeholder="account name..." />
+      </div>
+      <div class="form-group">
+        <label for="name">Type</label>
+        <select class="form-control" formControlName="type" [compareWith]="compareFn" id="interval" required>
+          <option *ngFor="let interval of (accountTypesNames | keyvalue)" [ngValue]="interval.key">{{ interval.value }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="openBalance">Opening balance</label>
+        <input class="form-control" type="number" formControlName="openBalance" id="openBalance" placeholder="amount..."
+          required />
+      </div>
+      <div class="form-group">
+        <label for="openDate">Opening date</label>
+        <div class="input-group mb-2">
+          <input class="form-control" placeholder="yyyy-mm-dd" id="openDate" formControlName="openDate" ngbDatepicker
+            firstDayOfWeek="7" #date="ngbDatepicker" (click)="date.toggle()" />
+          <div class="input-group-append">
+            <a class="btn btn-outline-secondary" (click)="date.toggle()">
+              <fa-icon [icon]="faCalendarAlt" aria-hidden="true"></fa-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input class="form-control" type="text" formControlName="description" id="description"
+          placeholder="description..." />
+      </div>
+      <div class="form-group col-6 custom-control custom-switch">
+        <input class="form-control custom-control-input" type="checkbox" formControlName="favorite" id="favorite" />
+        <label class="custom-control-label" for="favorite">Favorite</label>
+      </div>
+      <div class="form-group col-6 custom-control custom-switch">
+        <input class="form-control custom-control-input" type="checkbox" formControlName="inactive" id="inactive" />
+        <label class="custom-control-label" for="inactive">Inactive account</label>
+      </div>
+      <div class="d-flex justify-content-end mt-4">
+        <button routerLink="../" class="btn btn-primary mr-2">Cancel</button>
+        <button type="submit" [disabled]="!accountForm.valid" class="btn btn-danger">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-container>
+<ng-template #loader>
+  <dfta-loader></dfta-loader>
+</ng-template>

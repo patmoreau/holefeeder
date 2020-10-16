@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+LABEL author="Drifter Apps Inc."
+ARG BUILD_CONFIGURATION=Debug
+WORKDIR /app
+
+# copy csproj and restore as distinct layers
+WORKDIR /src
+COPY ["src/Hosting.OcelotGateway.API/Hosting.OcelotGateway.API.csproj", "Hosting.OcelotGateway.API/"]
+RUN dotnet restore Hosting.OcelotGateway.API/Hosting.OcelotGateway.API.csproj
+
+# copy everything else and build app
+COPY src/Hosting.OcelotGateway.API/. Hosting.OcelotGateway.API/.
+RUN dotnet publish Hosting.OcelotGateway.API/Hosting.OcelotGateway.API.csproj --no-restore -c $BUILD_CONFIGURATION -o /app/work
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+ENV ASPNETCORE_ENVIRONMENT=Development
+WORKDIR /app
+EXPOSE 80
+COPY --from=build /app/work .
+ENTRYPOINT ["dotnet", "Hosting.OcelotGateway.API.dll"]

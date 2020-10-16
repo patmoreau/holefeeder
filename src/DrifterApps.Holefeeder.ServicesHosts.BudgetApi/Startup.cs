@@ -121,7 +121,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 
             _ = services.AddSwaggerGen(opt =>
               {
-                  opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Holefeeder API", Version = "v1" });
+                  opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Holefeeder API.Accounts", Version = "v1" });
                   opt.DescribeAllParametersInCamelCase();
               });
 

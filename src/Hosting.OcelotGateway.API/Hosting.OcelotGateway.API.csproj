@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>DrifterApps.Holefeeder.Hosting.OcelotGateway.API</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+      <PackageReference Include="Ocelot" Version="16.0.1" />
+      <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+      <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ClientApp" />
+    </ItemGroup>
+
+
+</Project>
