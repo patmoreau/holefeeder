@@ -150,14 +150,6 @@ namespace DrifterApps.Holefeeder.API
 
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-            services.AddScoped<IAccountQueriesRepository, AccountQueriesRepository>();
-            services.AddScoped<IUserQueriesRepository, UserQueriesRepository>();
-            services.AddScoped<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
-
-            var mongoConfig = Configuration.GetSection("MongoDB");
-            services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConfig["ConnectionString"]));
-            services.AddScoped(provider => provider.GetService<IMongoClient>().GetDatabase(mongoConfig["DatabaseName"]));
-            services.AddTransient<IMongoDbContext, MongoDbContext>();
 
             return services;
         }

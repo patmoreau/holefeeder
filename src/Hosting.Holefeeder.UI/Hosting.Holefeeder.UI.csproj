@@ -14,5 +14,8 @@
       <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
     </ItemGroup>
 
-
+    <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+        <Exec Command="ng build" WorkingDirectory="ClientApp/" />
+    </Target>
+    
 </Project>

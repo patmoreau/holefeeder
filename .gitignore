@@ -354,3 +354,4 @@ docker/VERSION
 docker/dev/data
 docker/data
 src/Hosting.UI/ClientApp/dist
+src/Hosting.Holefeeder.UI/ClientApp/dist
