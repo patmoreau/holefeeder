@@ -8,7 +8,7 @@ namespace DrifterApps.Holefeeder.Application.Contracts
 {
     public interface IUpcomingQueriesRepository
     {
-        Task<IEnumerable<UpcomingViewModel>> GetUpcomingAsync(Guid userId, DateTime from, DateTime to,
+        Task<IEnumerable<UpcomingViewModel>> GetUpcomingAsync(Guid userId, DateTime startDate, DateTime endDate,
             CancellationToken cancellationToken = default);
     }
 }

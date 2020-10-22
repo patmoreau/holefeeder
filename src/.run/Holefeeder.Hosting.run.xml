@@ -1,0 +1,9 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Holefeeder.Hosting" type="CompoundRunConfigurationType">
+    <toRun name="Hosting.Accounts.API" type="LaunchSettings" />
+    <toRun name="Hosting.Users.API: Hosting.Users.AI" type="LaunchSettings" />
+    <toRun name="Hosting.Gateway.API" type="LaunchSettings" />
+    <toRun name="Hosting.Holefeeder.UI" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

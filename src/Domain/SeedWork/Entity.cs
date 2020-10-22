@@ -6,12 +6,7 @@ namespace DrifterApps.Holefeeder.Domain.SeedWork
     {
         private int? _requestedHashCode;
 
-        protected Entity(Guid id)
-        {
-            Id = id;
-        }
-
-        public Guid Id { get; }
+        public Guid Id { get; protected set; }
 
         public bool IsTransient()
         {

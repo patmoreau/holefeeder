@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.SeedWork;
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Application.Queries

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -48,15 +49,15 @@ namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API
                     {
                         OnAuthenticationFailed = async ctx =>
                         {
-                            _ = 0;
+                            await Task.Run(() => _ = 0);
                         },
                         OnTokenValidated = async ctx =>
                         {
-                            _ = 0;
+                            await Task.Run(() => _ = 0);
                         },
                         OnMessageReceived = async ctx =>
                         {
-                            _ = 0;
+                            await Task.Run(() => _ = 0);
                         }
                     };
                 });

@@ -19,7 +19,7 @@ namespace DrifterApps.Holefeeder.Domain.SeedWork
 
         public int CompareTo(object other)
         {
-            return Id.CompareTo(((Enumeration)other).Id);
+            return Id.CompareTo(((Enumeration)other)?.Id);
         }
 
         public override string ToString() => Name;
@@ -51,6 +51,9 @@ namespace DrifterApps.Holefeeder.Domain.SeedWork
 
         public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
         {
+            _ = firstValue ?? throw new ArgumentNullException(nameof(firstValue));
+            _ = secondValue ?? throw new ArgumentNullException(nameof(secondValue));
+            
             var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
             return absoluteDifference;
         }
@@ -77,6 +80,41 @@ namespace DrifterApps.Holefeeder.Domain.SeedWork
             }
 
             return matchingItem;
+        }
+
+        public static bool operator ==(Enumeration left, Enumeration right)
+        {
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Enumeration left, Enumeration right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator <(Enumeration left, Enumeration right)
+        {
+            return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(Enumeration left, Enumeration right)
+        {
+            return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >(Enumeration left, Enumeration right)
+        {
+            return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >=(Enumeration left, Enumeration right)
+        {
+            return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
         }
     }
 }

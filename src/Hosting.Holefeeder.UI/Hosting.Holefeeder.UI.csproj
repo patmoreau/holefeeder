@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>DrifterApps.Holefeeder.Hosting.Holefeeder.UI</RootNamespace>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,11 +11,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.8" />
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.9" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.9" />
     </ItemGroup>
 
     <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+        <Exec Command="npm install" WorkingDirectory="ClientApp/" />
         <Exec Command="ng build" WorkingDirectory="ClientApp/" />
     </Target>
     

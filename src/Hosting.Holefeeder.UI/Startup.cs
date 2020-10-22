@@ -10,11 +10,14 @@ namespace DrifterApps.Holefeeder.Hosting.Holefeeder.UI
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options =>
             {
@@ -27,7 +30,7 @@ namespace DrifterApps.Holefeeder.Hosting.Holefeeder.UI
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

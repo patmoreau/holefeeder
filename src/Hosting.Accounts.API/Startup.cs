@@ -10,9 +10,7 @@ using DrifterApps.Holefeeder.API.Authorization;
 using DrifterApps.Holefeeder.API.Authorization.Google;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Queries;
-using DrifterApps.Holefeeder.Infrastructure.MongoDB;
-using DrifterApps.Holefeeder.Infrastructure.MongoDB.Context;
-using DrifterApps.Holefeeder.Infrastructure.MongoDB.Repositories;
+using DrifterApps.Holefeeder.Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -124,7 +122,7 @@ namespace DrifterApps.Holefeeder.API
                 ;
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             _ = env.IsDevelopment() ? app.UseDeveloperExceptionPage() : app.UseHsts();
 
@@ -150,6 +148,7 @@ namespace DrifterApps.Holefeeder.API
 
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
+            services.AddHolefeederDatabase(Configuration);
 
             return services;
         }

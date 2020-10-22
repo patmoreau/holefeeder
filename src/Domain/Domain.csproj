@@ -3,11 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>DrifterApps.Holefeeder.Domain</RootNamespace>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="BoundedContext\SettingsAggregate" />
-      <Folder Include="BoundedContext\TransactionAggregate" />
+      <Folder Include="BoundedContext\CashflowContext" />
     </ItemGroup>
 
 </Project>

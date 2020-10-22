@@ -1,5 +1,5 @@
 ﻿using System;
-using DrifterApps.Holefeeder.Domain.AggregatesModel.AccountAggregate;
+using DrifterApps.Holefeeder.Domain.Enumerations;
 
 namespace DrifterApps.Holefeeder.Application.Models
 {

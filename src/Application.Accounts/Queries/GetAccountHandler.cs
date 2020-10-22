@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
-using DrifterApps.Holefeeder.Domain.AggregatesModel.AccountAggregate;
+using DrifterApps.Holefeeder.Domain.Enumerations;
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Application.Queries
