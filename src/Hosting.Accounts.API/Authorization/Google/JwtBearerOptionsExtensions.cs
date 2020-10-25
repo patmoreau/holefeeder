@@ -1,4 +1,5 @@
 ﻿using System;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace DrifterApps.Holefeeder.API.Authorization.Google
@@ -9,17 +10,9 @@ namespace DrifterApps.Holefeeder.API.Authorization.Google
 
         private static JwtBearerOptions UseGoogle(this JwtBearerOptions options, string clientId, string hostedDomain, string authority)
         {
-            if (string.IsNullOrWhiteSpace(clientId))
-            {
-                throw new ArgumentNullException(nameof(clientId));
-            }
-
-            if (string.IsNullOrWhiteSpace(authority))
-            {
-                throw new ArgumentNullException(nameof(authority));
-            }
-
-            _ = options ?? throw new ArgumentNullException(nameof(options));
+            options.ThrowIfNull(nameof(options));
+            clientId.ThrowIfNullOrEmpty(nameof(clientId));
+            authority.ThrowIfNullOrEmpty(nameof(authority));
 
             options.Audience = clientId;
             options.Authority = authority;

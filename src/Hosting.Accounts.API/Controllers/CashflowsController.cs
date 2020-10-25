@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.API.Authorization;
 using DrifterApps.Holefeeder.Application.Models;
 using DrifterApps.Holefeeder.Application.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,8 @@ namespace DrifterApps.Holefeeder.API.Controllers
 
         public CashflowsController(IMediator mediator, ILogger<CashflowsController> logger)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = mediator.ThrowIfNull(nameof(mediator));
+            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet("upcoming", Name = Routes.GET_UPCOMING)]

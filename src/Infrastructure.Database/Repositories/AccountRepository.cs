@@ -7,6 +7,7 @@ using DrifterApps.Holefeeder.Application.Queries;
 using DrifterApps.Holefeeder.Application.SeedWork;
 using DrifterApps.Holefeeder.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Domain.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using DrifterApps.Holefeeder.Infrastructure.Database.Extensions;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
@@ -23,14 +24,14 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
         
         public AccountRepository(IUnitOfWork unitOfWork, IMongoDbContext mongoDbContext, IMapper mapper)
         {
-            UnitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(mapper));
-            _mongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            UnitOfWork = unitOfWork.ThrowIfNull(nameof(mapper));
+            _mongoDbContext = mongoDbContext.ThrowIfNull(nameof(mongoDbContext));
+            _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
         public async Task<IEnumerable<Account>> FindAsync(QueryParams queryParams, CancellationToken cancellationToken = default)
         {
-            _ = queryParams ?? throw new ArgumentNullException(nameof(queryParams));
+            queryParams.ThrowIfNull(nameof(queryParams));
             
             var collection = await _mongoDbContext.GetAccountsAsync(cancellationToken);
 

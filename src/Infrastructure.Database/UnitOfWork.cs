@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Domain.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 
 namespace DrifterApps.Holefeeder.Infrastructure.Database
@@ -12,7 +13,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database
 
         public UnitOfWork(IMongoDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context.ThrowIfNull(nameof(context));
         }
 
         public async Task CommitAsync(CancellationToken cancellationToken)

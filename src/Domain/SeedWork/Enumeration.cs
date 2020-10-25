@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 
 namespace DrifterApps.Holefeeder.Domain.SeedWork
 {
@@ -51,8 +52,8 @@ namespace DrifterApps.Holefeeder.Domain.SeedWork
 
         public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
         {
-            _ = firstValue ?? throw new ArgumentNullException(nameof(firstValue));
-            _ = secondValue ?? throw new ArgumentNullException(nameof(secondValue));
+            firstValue.ThrowIfNull(nameof(firstValue));
+            secondValue.ThrowIfNull(nameof(secondValue));
             
             var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
             return absoluteDifference;

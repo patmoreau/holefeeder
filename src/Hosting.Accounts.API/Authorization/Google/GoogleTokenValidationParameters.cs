@@ -1,4 +1,5 @@
 ﻿using System;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DrifterApps.Holefeeder.API.Authorization.Google
@@ -11,7 +12,7 @@ namespace DrifterApps.Holefeeder.API.Authorization.Google
 
         private GoogleTokenValidationParameters(GoogleTokenValidationParameters other) : base(other)
         {
-            _ = other ?? throw new ArgumentNullException(nameof(other));
+            other.ThrowIfNull(nameof(other));
 
             HostedDomain = other.HostedDomain;
             ValidateHostedDomain = other.ValidateHostedDomain;

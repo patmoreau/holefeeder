@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.SeedWork;
 using DrifterApps.Holefeeder.Domain.Enumerations;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Application.Queries
@@ -15,13 +17,13 @@ namespace DrifterApps.Holefeeder.Application.Queries
 
         public GetAccountHandler(IAccountQueriesRepository repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repository = repository;
         }
 
         public async Task<AccountViewModel> Handle(GetAccountQuery query,
             CancellationToken cancellationToken = default)
         {
-            _ = query ?? throw new ArgumentNullException(nameof(query));
+            query.ThrowIfNull(nameof(query));
 
             return await Task.FromResult(new AccountViewModel(
                 query.Id,

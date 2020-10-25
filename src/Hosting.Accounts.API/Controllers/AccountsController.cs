@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.API.Authorization;
 using DrifterApps.Holefeeder.Application.Models;
 using DrifterApps.Holefeeder.Application.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +29,8 @@ namespace DrifterApps.Holefeeder.API.Controllers
 
         public AccountsController(IMediator mediator, ILogger<AccountsController> logger)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = mediator.ThrowIfNull(nameof(mediator));
+            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet(Name = Routes.GET_ACCOUNTS)]

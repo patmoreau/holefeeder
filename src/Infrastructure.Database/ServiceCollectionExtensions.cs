@@ -1,5 +1,6 @@
 ﻿using System;
 using DrifterApps.Holefeeder.Application.Contracts;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using DrifterApps.Holefeeder.Infrastructure.Database.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database
     {
         public static IServiceCollection AddHolefeederDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            configuration.ThrowIfNull(nameof(configuration));
 
             services.Configure<HolefeederDatabaseSettings>(configuration.GetSection(nameof(HolefeederDatabaseSettings)));
 

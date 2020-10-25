@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DrifterApps.Holefeeder.Domain.Enumerations;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using FluentAssertions;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace DrifterApps.Holefeeder.Domain.Tests.Enumerations
         [Theory, MemberData(nameof(NextDateTestCases))]
         public void NextDate_ValidDateTime_NewDateTime(DateTime originalDate, DateTime effectiveDate, DateIntervalType intervalType, int frequency, DateTime expected)
         {
-            _ = intervalType ?? throw new ArgumentNullException(nameof(intervalType));
+            _ = intervalType.ThrowIfNull(nameof(intervalType));
 
             intervalType.NextDate(originalDate, effectiveDate, frequency).Should().Be(expected);
         }
@@ -50,7 +51,7 @@ namespace DrifterApps.Holefeeder.Domain.Tests.Enumerations
         [Theory, MemberData(nameof(PreviousDateTestCases))]
         public void PreviousDate_ValidDateTime_NewDateTime(DateTime originalDate, DateTime effectiveDate, DateIntervalType intervalType, int frequency, DateTime expected)
         {
-            _ = intervalType ?? throw new ArgumentNullException(nameof(intervalType));
+            _ = intervalType.ThrowIfNull(nameof(intervalType));
             
             intervalType.PreviousDate(originalDate, effectiveDate, frequency).Should().Be(expected);
         }
@@ -89,7 +90,7 @@ namespace DrifterApps.Holefeeder.Domain.Tests.Enumerations
         [Theory, MemberData(nameof(IntervalTestCases))]
         public void TestInterval(DateTime originalDate, DateTime effectiveDate, DateIntervalType intervalType, int frequency, (DateTime From, DateTime To) expected)
         {
-            _ = intervalType ?? throw new ArgumentNullException(nameof(intervalType));
+            intervalType.ThrowIfNull(nameof(intervalType));
             
             intervalType.Interval(originalDate, effectiveDate, frequency).Should().BeEquivalentTo(expected);
         }

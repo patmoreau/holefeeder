@@ -1,6 +1,7 @@
 using System;
 using DrifterApps.Holefeeder.Domain.Enumerations;
 using DrifterApps.Holefeeder.Domain.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MongoDB.Bson.Serialization;
 
 namespace DrifterApps.Holefeeder.Infrastructure.Database.Serializers
@@ -14,14 +15,14 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Serializers
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, CategoryType value)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            context.ThrowIfNull(nameof(context));
 
             context.Writer.WriteString(value?.Name);
         }
 
         public CategoryType Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            context.ThrowIfNull(nameof(context));
 
             var type = context.Reader.ReadString();
             return Enumeration.FromName<CategoryType>(type);

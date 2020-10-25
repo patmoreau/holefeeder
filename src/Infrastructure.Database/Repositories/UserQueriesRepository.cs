@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -15,7 +16,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
 
         public UserQueriesRepository(IMongoDbContext context)
         {
-            _dbContext = context ?? throw new ArgumentNullException(nameof(context));
+            _dbContext = context.ThrowIfNull(nameof(context));
         }
 
         public async Task<UserViewModel> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)

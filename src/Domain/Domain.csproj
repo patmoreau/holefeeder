@@ -10,4 +10,8 @@
       <Folder Include="BoundedContext\CashflowContext" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Framework.SeedWork\Framework.SeedWork.csproj" />
+    </ItemGroup>
+
 </Project>

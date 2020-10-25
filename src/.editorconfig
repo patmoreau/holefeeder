@@ -133,3 +133,6 @@ dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA2007.severity = none # this is not relevant when in ASP.NET Core application
+
+[*.cs]
+dotnet_code_quality.null_check_validation_methods = ThrowIfNull

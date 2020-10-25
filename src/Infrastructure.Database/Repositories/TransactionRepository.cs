@@ -6,6 +6,7 @@ using AutoMapper;
 using DrifterApps.Holefeeder.Application.Queries;
 using DrifterApps.Holefeeder.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Domain.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using DrifterApps.Holefeeder.Infrastructure.Database.Extensions;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
@@ -24,9 +25,9 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
 
         public TransactionRepository(IUnitOfWork unitOfWork, IMongoDbContext mongoDbContext, IMapper mapper)
         {
-            UnitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(mapper));
-            _mongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            UnitOfWork = unitOfWork.ThrowIfNull(nameof(mapper));
+            _mongoDbContext = mongoDbContext.ThrowIfNull(nameof(mongoDbContext));
+            _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
         public async Task<Transaction> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)

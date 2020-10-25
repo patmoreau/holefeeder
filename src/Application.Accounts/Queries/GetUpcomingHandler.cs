@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Application.Queries
@@ -14,13 +15,13 @@ namespace DrifterApps.Holefeeder.Application.Queries
 
         public GetUpcomingHandler(IUpcomingQueriesRepository repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repository = repository;
         }
 
         public async Task<UpcomingViewModel[]> Handle(GetUpcomingQuery query,
             CancellationToken cancellationToken = default)
         {
-            _ = query ?? throw new ArgumentNullException(nameof(query));
+            query.ThrowIfNull(nameof(query));
 
             return (await _repository.GetUpcomingAsync(query.UserId, query.From, query.To, cancellationToken))
                 .ToArray();

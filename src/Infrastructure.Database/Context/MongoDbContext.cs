@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Domain.Enumerations;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
 using DrifterApps.Holefeeder.Infrastructure.Database.Serializers;
 using MongoDB.Bson.Serialization;
@@ -43,7 +44,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
 
         public MongoDbContext(IHolefeederDatabaseSettings settings)
         {
-            _ = settings ?? throw new ArgumentNullException(nameof(settings));
+            settings.ThrowIfNull(nameof(settings));
             
             _mongoClient = new MongoClient(settings.ConnectionString);
             _database = _mongoClient.GetDatabase(settings.Database);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using DrifterApps.Holefeeder.Domain.Enumerations;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
 using FluentAssertions;
@@ -14,7 +15,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             this IMongoDbContext context,
             string testName)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = context.ThrowIfNull(nameof(context));
 
             var mongoId = ObjectId.GenerateNewId();
             var id = Guid.NewGuid();
@@ -40,7 +41,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             bool favorite = false,
             bool inactive = false)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = context.ThrowIfNull(nameof(context));
 
             var mongoId = ObjectId.GenerateNewId();
             var id = Guid.NewGuid();
@@ -68,7 +69,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             (ObjectId MongoId, Guid Id) user,
             bool favorite = false)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = context.ThrowIfNull(nameof(context));
 
             var mongoId = ObjectId.GenerateNewId();
             var id = Guid.NewGuid();
@@ -96,7 +97,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             int frequency,
             (ObjectId MongoId, Guid Id) user)
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = context.ThrowIfNull(nameof(context));
 
             var mongoId = ObjectId.GenerateNewId();
             var id = Guid.NewGuid();
@@ -128,7 +129,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             (ObjectId MongoId, Guid Id) user
         )
         {
-            _ = context ?? throw new ArgumentNullException(nameof(context));
+            context.ThrowIfNull(nameof(context));
             
             var mongoId = ObjectId.GenerateNewId();
             var id = Guid.NewGuid();

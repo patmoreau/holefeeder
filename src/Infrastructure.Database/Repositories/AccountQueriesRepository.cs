@@ -7,6 +7,7 @@ using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
 using DrifterApps.Holefeeder.Application.Queries;
 using DrifterApps.Holefeeder.Application.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using DrifterApps.Holefeeder.Infrastructure.Database.Extensions;
 using MongoDB.Driver;
@@ -23,7 +24,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
         public async Task<IEnumerable<AccountViewModel>> GetAccountsAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken)
         {
-            _ = queryParams ?? throw new ArgumentNullException(nameof(queryParams));
+            queryParams.ThrowIfNull(nameof(queryParams));
             
             var accountCollection = await DbContext.GetAccountsAsync(cancellationToken);
             var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);

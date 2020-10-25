@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Domain.BoundedContext.TransactionContext;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +22,7 @@ namespace DrifterApps.Holefeeder.Application.Transactions.Commands
 
         public async Task<bool> Handle(PayCashflowCommand request, CancellationToken cancellationToken)
         {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
+            request.ThrowIfNull(nameof(request));
             
             var transaction = Transaction.Create(request.Date, request.Amount, request.Description, request.CategoryId,
                 request.AccountId, request.CashflowId, request.CashflowDate, request.UserId);

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.SeedWork.Models;
 using DrifterApps.Holefeeder.Domain.BoundedContext.TransactionContext;
+using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -24,7 +25,7 @@ namespace DrifterApps.Holefeeder.Application.Transactions.Commands
 
         public async Task<CommandResult<Guid>> Handle(TransferMoneyBetweenAccountsCommand request, CancellationToken cancellationToken)
         {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
+            request.ThrowIfNull(nameof(request));
             
             var errors = new List<string>();
             

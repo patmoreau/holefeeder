@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Application.SeedWork\Application.SeedWork.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\Framework.SeedWork\Framework.SeedWork.csproj" />
     </ItemGroup>
 
 </Project>
