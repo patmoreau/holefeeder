@@ -1,4 +1,4 @@
-﻿<component name="ProjectRunConfigurationManager">
+<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Hosting.Holefeeder.UI" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
     <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Hosting.Holefeeder.UI/Hosting.Holefeeder.UI.csproj" />
     <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v3.1" />

@@ -202,6 +202,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
 
             if (disposing)
             {
+                ClearCommands();
                 _session?.Dispose();
             }
 

@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Models;
 using DrifterApps.Holefeeder.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
 using Transaction = DrifterApps.Holefeeder.Domain.BoundedContext.TransactionContext.Transaction;
@@ -18,6 +19,8 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database
             CreateMap<TransactionSchema, Transaction>()
                 .ReverseMap()
                 .ForMember(schema => schema.MongoId, opts => opts.Ignore());
+
+            CreateMap<CategorySchema, CategoryViewModel>();
         }
     }
 }

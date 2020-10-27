@@ -70,8 +70,6 @@ namespace DrifterApps.Holefeeder.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddControllers();
-
             _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>
                 {
@@ -144,7 +142,6 @@ namespace DrifterApps.Holefeeder.API
         private IServiceCollection RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(typeof(GetAccountsHandler).Assembly);
-            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 

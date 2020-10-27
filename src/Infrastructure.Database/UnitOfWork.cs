@@ -41,6 +41,8 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database
             if (disposing)
             {
                 _context.ClearCommands();
+                _context.Dispose();
+                
             }
 
             _isDisposed = true;
