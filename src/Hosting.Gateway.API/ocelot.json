@@ -10,7 +10,15 @@
         }
       ],
       "UpstreamPathTemplate": "/api/{version}/categories/",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "claims_City": "Claims[HOLEFEEDER_ID] > value > |",
+        "claims_State": "Claims[HOLEFEEDER_ID] > value > |"
+      }
     }
   ],
   "GlobalConfiguration": {

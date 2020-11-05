@@ -2,6 +2,9 @@
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Users.Contracts;
+using DrifterApps.Holefeeder.Application.Users.Models;
+using DrifterApps.Holefeeder.Application.Users.Queries;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;

@@ -1,7 +1,7 @@
-﻿using DrifterApps.Holefeeder.Application.Models;
+﻿using DrifterApps.Holefeeder.Application.Users.Models;
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Application.Queries
+namespace DrifterApps.Holefeeder.Application.Users.Queries
 {
     public class GetUserQuery : IRequest<UserViewModel>
     {

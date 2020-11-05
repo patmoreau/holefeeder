@@ -1,8 +1,7 @@
-﻿using System;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+﻿using DrifterApps.Holefeeder.Framework.SeedWork;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DrifterApps.Holefeeder.API.Authorization.Google
+namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API.Authorization.Google
 {
     public class GoogleTokenValidationParameters : TokenValidationParameters
     {

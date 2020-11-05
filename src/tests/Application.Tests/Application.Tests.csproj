@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Application.Accounts\Application.Accounts.csproj" />
+      <ProjectReference Include="..\..\Application.Users\Application.Users.csproj" />
     </ItemGroup>
 
 </Project>

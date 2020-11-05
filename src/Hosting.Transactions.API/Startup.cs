@@ -5,8 +5,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Transactions.Queries;
+using DrifterApps.Holefeeder.Hosting.Security;
 using DrifterApps.Holefeeder.Infrastructure.Database;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Hosting.Transactions.API
 {
@@ -54,7 +57,27 @@ namespace Hosting.Transactions.API
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+                })
+                .AddMvcCore()
+                .AddAuthorization(options =>
+                {
+                    options.AddPolicy(Policies.AUTHENTICATED_USER, policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                            .RequireClaim(JwtRegisteredClaimNames.Email)
+                            .RequireClaim("email_verified", "true");
+                    });
+                    options.AddPolicy(Policies.REGISTERED_USER, policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                            .RequireClaim(JwtRegisteredClaimNames.Email)
+                            .RequireClaim("email_verified", "true")
+                            .RequireClaim(HolefeederClaimTypes.HOLEFEEDER_ID);
+                    });
+                })
+                ;
 
         }
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using DrifterApps.Holefeeder.API.Authorization;
+using DrifterApps.Holefeeder.Hosting.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.API.Controllers

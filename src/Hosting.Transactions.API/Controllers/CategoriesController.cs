@@ -3,13 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Transactions.Models;
 using DrifterApps.Holefeeder.Application.Transactions.Queries;
+using DrifterApps.Holefeeder.Hosting.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Hosting.Transactions.API.Controllers
 {
-    // [Authorize(Policy = Policies.REGISTERED_USER)]
+    [Authorize(Policy = Policies.REGISTERED_USER)]
     [ApiController]
     [Route("api/v2/[controller]")]
     public class CategoriesController : ControllerBase

@@ -23,8 +23,8 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
         {
             var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
 
-            var categories = categoryCollection.AsQueryable()
-                .Where(x => !x.System);
+            var categories = await categoryCollection.AsQueryable()
+                .Where(x => !x.System && x.UserId == "5ecdf491367f4e00016c87eb").ToListAsync(cancellationToken: cancellationToken);
 
             return _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
         }

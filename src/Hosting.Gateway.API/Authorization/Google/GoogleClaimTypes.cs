@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 
-namespace DrifterApps.Holefeeder.API.Authorization.Google
+namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API.Authorization.Google
 {
     public static class GoogleClaimTypes
     {

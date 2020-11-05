@@ -1,5 +1,6 @@
 using System;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Users.Models;
 using DrifterApps.Holefeeder.Infrastructure.Database.Repositories;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
 using FluentAssertions;

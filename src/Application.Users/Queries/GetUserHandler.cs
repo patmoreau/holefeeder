@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Application.Contracts;
-using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Users.Contracts;
+using DrifterApps.Holefeeder.Application.Users.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Application.Queries
+namespace DrifterApps.Holefeeder.Application.Users.Queries
 {
     public class GetUserHandler : IRequestHandler<GetUserQuery, UserViewModel>
     {

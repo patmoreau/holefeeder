@@ -1,15 +1,10 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AutoMapper;
-using DrifterApps.Holefeeder.API.Authorization;
-using DrifterApps.Holefeeder.API.Authorization.Google;
-using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Queries;
+using DrifterApps.Holefeeder.Hosting.Security;
 using DrifterApps.Holefeeder.Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,9 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
-using NJsonSchema.Generation;
-using NSwag.AspNetCore;
 
 namespace DrifterApps.Holefeeder.API
 {
@@ -39,12 +31,12 @@ namespace DrifterApps.Holefeeder.API
         {
             _ = RegisterServices(services);
             
-            var googleClientId = Configuration["Authentication:Google:ClientId"];
-            if (string.IsNullOrWhiteSpace(googleClientId))
-                throw new NullReferenceException(@"Google Client Id not configured");
-            var googleAuthority = Configuration["Authentication:Google:Authority"];
-            if (string.IsNullOrWhiteSpace(googleAuthority))
-                throw new NullReferenceException(@"Google Authority not configured");
+            // var googleClientId = Configuration["Authentication:Google:ClientId"];
+            // if (string.IsNullOrWhiteSpace(googleClientId))
+            //     throw new NullReferenceException(@"Google Client Id not configured");
+            // var googleAuthority = Configuration["Authentication:Google:Authority"];
+            // if (string.IsNullOrWhiteSpace(googleAuthority))
+            //     throw new NullReferenceException(@"Google Authority not configured");
 
             var allowedOrigins = Configuration.GetSection("AllowedHosts")?.Get<string[]>();
             if (allowedOrigins == null || !allowedOrigins.Any())
@@ -70,28 +62,28 @@ namespace DrifterApps.Holefeeder.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(x =>
-                {
-                    x.UseGoogle(googleClientId, googleAuthority);
-                    x.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = async context =>
-                        {
-                            var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
-
-                            var user = await mediator.Send(new GetUserQuery(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)));
-                            
-                            if (user != null)
-                            {
-                                context.Principal.AddIdentity(new ClaimsIdentity(new[]
-                                {
-                                    new Claim(HolefeederClaimTypes.HOLEFEEDER_ID, user.Id.ToString())
-                                }));
-                            }
-                        }
-                    };
-                });
+            // _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //     .AddJwtBearer(x =>
+            //     {
+            //         x.UseGoogle(googleClientId, googleAuthority);
+            //         x.Events = new JwtBearerEvents
+            //         {
+            //             OnTokenValidated = async context =>
+            //             {
+            //                 var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
+            //
+            //                 var user = await mediator.Send(new GetUserQuery(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)));
+            //                 
+            //                 if (user != null)
+            //                 {
+            //                     context.Principal.AddIdentity(new ClaimsIdentity(new[]
+            //                     {
+            //                         new Claim(HolefeederClaimTypes.HOLEFEEDER_ID, user.Id.ToString())
+            //                     }));
+            //                 }
+            //             }
+            //         };
+            //     });
 
             services.AddSwaggerDocument();
 

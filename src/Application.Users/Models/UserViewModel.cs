@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DrifterApps.Holefeeder.Application.Models
+namespace DrifterApps.Holefeeder.Application.Users.Models
 {
     public class UserViewModel
     {

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Users.Models;
 
-namespace DrifterApps.Holefeeder.Application.Contracts
+namespace DrifterApps.Holefeeder.Application.Users.Contracts
 {
     public interface IUserQueriesRepository
     {

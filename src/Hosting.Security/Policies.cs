@@ -1,4 +1,4 @@
-﻿namespace DrifterApps.Holefeeder.API.Authorization
+﻿namespace DrifterApps.Holefeeder.Hosting.Security
 {
     public static class Policies
     {

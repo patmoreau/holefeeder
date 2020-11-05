@@ -5,7 +5,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DrifterApps.Holefeeder.API.Authorization.Google
+namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API.Authorization.Google
 {
     public class GoogleJwtSecurityTokenHandler : JwtSecurityTokenHandler
     {

@@ -7,10 +7,22 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="IdentityModel.AspNetCore.AccessTokenValidation" Version="1.0.0-preview.3" />
+      <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="4.0.1" />
+      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.9" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
       <PackageReference Include="Ocelot" Version="16.0.1" />
       <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
       <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Application.Users\Application.Users.csproj" />
+      <ProjectReference Include="..\Hosting.Security\Hosting.Security.csproj" />
+      <ProjectReference Include="..\Infrastructure.Database\Infrastructure.Database.csproj" />
     </ItemGroup>
 
 </Project>

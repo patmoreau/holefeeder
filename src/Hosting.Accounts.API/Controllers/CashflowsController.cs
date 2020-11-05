@@ -2,10 +2,10 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.API.Authorization;
 using DrifterApps.Holefeeder.Application.Models;
 using DrifterApps.Holefeeder.Application.Queries;
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Hosting.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

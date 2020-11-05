@@ -1,4 +1,4 @@
-﻿namespace DrifterApps.Holefeeder.API.Authorization.Google
+﻿namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API.Authorization.Google
 {
     internal static class LogMessages
     {

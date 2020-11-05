@@ -1,7 +1,7 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Transactions.Contracts;
+using DrifterApps.Holefeeder.Application.Users.Contracts;
 using DrifterApps.Holefeeder.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Domain.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;

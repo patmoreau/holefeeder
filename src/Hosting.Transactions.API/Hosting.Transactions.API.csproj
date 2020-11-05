@@ -7,10 +7,13 @@
     <ItemGroup>
       <PackageReference Include="MediatR" Version="9.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="5.5.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Application.Transactions\Application.Transactions.csproj" />
+      <ProjectReference Include="..\Hosting.Security\Hosting.Security.csproj" />
       <ProjectReference Include="..\Infrastructure.Database\Infrastructure.Database.csproj" />
     </ItemGroup>
 
