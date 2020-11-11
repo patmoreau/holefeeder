@@ -51,7 +51,7 @@
         </button>
         <div ngbDropdown class="nav-item dropdown my-2 my-sm-0">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">{{profile?.displayName}}</a>
+            aria-haspopup="true" aria-expanded="false">{{profile?.name}}</a>
           <div ngbDropdownMenu class="downdown-menu" aria-labelledby="dropdownUser">
             <a class="dropdown-item" [routerLink]="['/settings']"
               (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>

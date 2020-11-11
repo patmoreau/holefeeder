@@ -65,6 +65,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isIframe = window !== window.parent && !window.opener;
     this.checkAccount();
 
+    this.dateService.period.subscribe(period => {
+      this.period = period;
+    });
+
     // event listeners for authentication status
     loginSuccessSubscription = this.broadcastService.subscribe('msal:loginSuccess', (success) => {
 
@@ -75,9 +79,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         window.alert('Password has been reset successfully. \nPlease sign-in with your new password');
         return this.authService.logout();
       }
-
-      console.log('login succeeded. id token acquired at: ' + new Date().toString());
-      console.log(success);
 
       this.checkAccount();
     });
@@ -105,8 +106,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         console.error('Redirect Error: ', authError.errorMessage);
         return;
       }
-
-      console.log('Redirect Success: ', response);
     });
 
     this.authService.setLogger(new Logger((logLevel, message, piiEnabled) => {
@@ -127,6 +126,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   checkAccount() {
     this.profile = this.authService.getAccount();
     this.loggedIn = !!this.profile;
+    if (this.loggedIn) {
+      this.settingsService.loadUserSettings();
+    }
   }
 
   login() {
@@ -219,7 +221,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (period === null) {
       return;
     }
-    console.log(period);
     this.fromDate = new NgbDate(
       period.start.getFullYear(),
       period.start.getMonth() + 1,
