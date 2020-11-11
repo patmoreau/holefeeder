@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,10 +12,11 @@ using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Services.BudgetDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 
 namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
 {
-    [Route("api/v1/[controller]"), Authorize(Policy = Policies.REGISTERED_USER)]
+    [Route("api/v1/[controller]"), Authorize(Policy = "registered_users")]
     public class CashflowsController : Controller
     {
         private struct Routes
@@ -42,7 +44,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync([FromQuery]DateTime from, [FromQuery] DateTime to, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
 
             if (from > to)
             {
@@ -59,7 +62,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
 
             var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter), cancellationToken).ConfigureAwait(false);
             return Ok(_mapper.Map<CashflowDto[]>(result));
@@ -71,7 +75,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
@@ -91,7 +96,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PostAsync([FromBody] CashflowDto model, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
 
             if (!ModelState.IsValid)
             {
@@ -110,7 +116,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] CashflowDto model, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
@@ -132,7 +139,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();

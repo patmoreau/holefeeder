@@ -1,3 +1,4 @@
+using System;
 using DrifterApps.Holefeeder.Common.Enums;
 
 namespace DrifterApps.Holefeeder.Business.Entities
@@ -10,9 +11,9 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public decimal BudgetAmount { get; }
         public bool Favorite { get; }
         public bool System { get; }
-        public string UserId { get; }
+        public Guid UserId { get; }
 
-        public CategoryEntity(string id, string name, CategoryType type, string color, decimal budgetAmount, bool favorite, bool system, string userId = "") : base(id)
+        public CategoryEntity(string id, string name, CategoryType type, string color, decimal budgetAmount, bool favorite, bool system, Guid userId = default) : base(id)
         {
             Name = name;
             Type = type;
@@ -23,7 +24,7 @@ namespace DrifterApps.Holefeeder.Business.Entities
             UserId = userId;
         }
 
-        public CategoryEntity With(string id = null, string name = null, CategoryType? type = null, string color = null, decimal? budgetAmount = null, bool? favorite = null, bool? system = null, string userId = null) =>
+        public CategoryEntity With(string id = null, string name = null, CategoryType? type = null, string color = null, decimal? budgetAmount = null, bool? favorite = null, bool? system = null, Guid userId = default) =>
             new CategoryEntity(
                 id ?? Id,
                 name ?? Name,
@@ -32,11 +33,11 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 budgetAmount ?? BudgetAmount,
                 favorite ?? Favorite,
                 system ?? System,
-                userId ?? UserId
+                userId == default ? UserId : userId
                 );
 
         public CategoryEntity WithId(string id) => With(id);
 
-        public CategoryEntity WithUser(string userId) => With(userId: userId);
+        public CategoryEntity WithUser(Guid userId) => With(userId: userId);
     }
 }

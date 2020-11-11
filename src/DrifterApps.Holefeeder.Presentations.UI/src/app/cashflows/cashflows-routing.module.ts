@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService } from '@app/auth/services/auth-guard.service';
 import { CashflowsListComponent } from './cashflows-list/cashflows-list.component';
 import { CashflowEditComponent } from './cashflow-edit/cashflow-edit.component';
 import { CashflowsComponent } from './cashflows/cashflows.component';
-
+import { MsalGuard } from '@azure/msal-angular';
 const routes: Routes = [
   {
     path: '',
@@ -13,17 +12,17 @@ const routes: Routes = [
       {
         path: '',
         component: CashflowsListComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
       },
       {
         path: 'create',
         component: CashflowEditComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
       },
       {
         path: ':cashflowId',
         component: CashflowEditComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
       },
     ]
   },

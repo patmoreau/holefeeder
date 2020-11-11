@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,6 @@ namespace DrifterApps.Holefeeder.Business
 {
     public interface IAccountsService : IBaseOwnedService<AccountEntity>
     {
-        Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default);
+        Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(Guid userId, QueryParams queryParams, CancellationToken cancellationToken = default);
     }
 }

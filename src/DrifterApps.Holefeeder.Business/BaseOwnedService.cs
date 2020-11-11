@@ -1,3 +1,4 @@
+using System;
 using DrifterApps.Holefeeder.Business.Entities;
 using DrifterApps.Holefeeder.Common;
 using DrifterApps.Holefeeder.Common.Extensions;
@@ -17,11 +18,11 @@ namespace DrifterApps.Holefeeder.Business
             _repository = repository.ThrowIfNull(nameof(repository));
         }
 
-        public Task<bool> IsOwnerAsync(string userId, string id, CancellationToken cancellationToken = default) => _repository.IsOwnerAsync(userId, id, cancellationToken);
+        public Task<bool> IsOwnerAsync(Guid userId, string id, CancellationToken cancellationToken = default) => _repository.IsOwnerAsync(userId, id, cancellationToken);
 
-        public Task<IEnumerable<TEntity>> FindAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default) => _repository.FindAsync(userId, queryParams, cancellationToken);
+        public Task<IEnumerable<TEntity>> FindAsync(Guid userId, QueryParams queryParams, CancellationToken cancellationToken = default) => _repository.FindAsync(userId, queryParams, cancellationToken);
 
-        public Task<TEntity> CreateAsync(string userId, TEntity entity, CancellationToken cancellationToken = default)
+        public Task<TEntity> CreateAsync(Guid userId, TEntity entity, CancellationToken cancellationToken = default)
         {
             entity.ThrowIfNull(nameof(entity));
 
@@ -30,7 +31,7 @@ namespace DrifterApps.Holefeeder.Business
             return _repository.CreateAsync(newEntity, cancellationToken);
         }
 
-        public Task UpdateAsync(string userId, string id, TEntity entity, CancellationToken cancellationToken = default)
+        public Task UpdateAsync(Guid userId, string id, TEntity entity, CancellationToken cancellationToken = default)
         {
             entity.ThrowIfNull(nameof(entity));
 

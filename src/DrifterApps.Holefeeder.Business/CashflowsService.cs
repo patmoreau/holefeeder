@@ -25,7 +25,7 @@ namespace DrifterApps.Holefeeder.Business
             _categoriesService = categoriesService.ThrowIfNull(nameof(categoriesService));
         }
 
-        public async Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(string userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(Guid userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default)
         {
             var pastCashflows = (await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "-date" }, null), cancellationToken).ConfigureAwait(false))
                 .GroupBy(t => t.Cashflow)

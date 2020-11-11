@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,9 +9,9 @@ namespace DrifterApps.Holefeeder.Business
 {
     public interface IBaseOwnedService<TEntity> : IBaseService<TEntity> where TEntity : IIdentityEntity, IOwnedEntity<TEntity>
     {
-        Task<bool> IsOwnerAsync(string userId, string id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<TEntity>> FindAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default);
-        Task<TEntity> CreateAsync(string userId, TEntity entity, CancellationToken cancellationToken = default);
-        Task UpdateAsync(string userId, string id, TEntity entity, CancellationToken cancellationToken = default);
+        Task<bool> IsOwnerAsync(Guid userId, string id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<TEntity>> FindAsync(Guid userId, QueryParams queryParams, CancellationToken cancellationToken = default);
+        Task<TEntity> CreateAsync(Guid userId, TEntity entity, CancellationToken cancellationToken = default);
+        Task UpdateAsync(Guid userId, string id, TEntity entity, CancellationToken cancellationToken = default);
     }
 }
