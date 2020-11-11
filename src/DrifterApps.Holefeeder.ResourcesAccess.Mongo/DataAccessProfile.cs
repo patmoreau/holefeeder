@@ -22,9 +22,6 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
             CreateMap<ObjectDataSchema, ObjectDataEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
                 .ReverseMap();
-            CreateMap<UserSchema, UserEntity>()
-                .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
-                .ReverseMap();
             CreateMap<TransactionSchema, TransactionEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
                 .ReverseMap()

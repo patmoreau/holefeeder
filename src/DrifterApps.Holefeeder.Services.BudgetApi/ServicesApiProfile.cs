@@ -16,7 +16,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi
             CreateMap<CategoryEntity, CategoryDto>().ReverseMap();
             CreateMap<CategoryInfoEntity, CategoryInfoDto>();
             CreateMap<ObjectDataEntity, ObjectDataDto>().ReverseMap();
-            CreateMap<UserEntity, UserDto>().ReverseMap();
             CreateMap<UpcomingEntity, UpcomingDto>().ReverseMap();
             CreateMap<TransactionEntity, TransactionDto>().ReverseMap();
             CreateMap<TransactionDetailEntity, TransactionDetailDto>();

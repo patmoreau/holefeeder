@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,8 +23,8 @@ namespace DrifterApps.Holefeeder.Business
             _categoriesRepository = categoriesRepository.ThrowIfNull(nameof(categoriesRepository));
         }
 
-        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsRepository.CountAsync(userId, query, cancellationToken);
-        public async Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query, CancellationToken cancellationToken = default)
+        public Task<int> CountAsync(Guid userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsRepository.CountAsync(userId, query, cancellationToken);
+        public async Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(Guid userId, QueryParams query, CancellationToken cancellationToken = default)
         {
             var transactions = await _transactionsRepository.FindAsync(userId, query, cancellationToken).ConfigureAwait(false);
             var accounts = (await _accountsRepository.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false)).Select(a => new AccountInfoEntity(a.Id, a.Name));
