@@ -5,6 +5,7 @@ using DrifterApps.Holefeeder.ResourcesAccess.Mongo;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using SimpleInjector;
 
@@ -27,6 +28,7 @@ namespace DrifterApps.Holefeeder.Common.IoC
             var mongoConfig = configuration.GetSection("MongoDB");
             
             // add MongoDb components
+            BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
             container.RegisterSingleton<IMongoClient>(() =>
                 new MongoClient(mongoConfig["ConnectionString"]));
             container.RegisterSingleton(() =>
@@ -43,8 +45,6 @@ namespace DrifterApps.Holefeeder.Common.IoC
             container.Register(
                 () => container.GetInstance<IMongoDatabase>().GetCollection<ObjectDataSchema>("objectsData"),
                 Lifestyle.Scoped);
-            container.Register(() => container.GetInstance<IMongoDatabase>().GetCollection<UserSchema>("users"),
-                Lifestyle.Scoped);
             container.Register(
                 () => container.GetInstance<IMongoDatabase>().GetCollection<TransactionSchema>("transactions"),
                 Lifestyle.Scoped);
@@ -54,7 +54,6 @@ namespace DrifterApps.Holefeeder.Common.IoC
             container.Register<ICashflowsService, CashflowsService>(Lifestyle.Scoped);
             container.Register<ICategoriesService, CategoriesService>(Lifestyle.Scoped);
             container.Register<IObjectsService, ObjectsService>(Lifestyle.Scoped);
-            container.Register<IUsersService, UsersService>(Lifestyle.Scoped);
             container.Register<IStatisticsService, StatisticsService>(Lifestyle.Scoped);
             container.Register<ITransactionsService, TransactionsService>(Lifestyle.Scoped);
 
@@ -63,7 +62,6 @@ namespace DrifterApps.Holefeeder.Common.IoC
             container.Register<ICashflowsRepository, CashflowsRepository>(Lifestyle.Scoped);
             container.Register<ICategoriesRepository, CategoriesRepository>(Lifestyle.Scoped);
             container.Register<IObjectsRepository, ObjectsRepository>(Lifestyle.Scoped);
-            container.Register<IUsersRepository, UsersRepository>(Lifestyle.Scoped);
             container.Register<ITransactionsRepository, TransactionsRepository>(Lifestyle.Scoped);
         }
     }

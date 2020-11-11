@@ -9,7 +9,7 @@ namespace DrifterApps.Holefeeder.Business
 {
     public interface IStatisticsService
     {
-        Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(string userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default);
-        Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(string userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default);
+        Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(Guid userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default);
+        Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(Guid userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default);
     }
 }

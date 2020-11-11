@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.ResourcesAccess;
@@ -18,7 +19,7 @@ namespace DrifterApps.Holefeeder.Business
             _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
-        public async Task<ObjectDataEntity> FindByCodeAsync(string userId, string code, CancellationToken cancellationToken = default) =>
+        public async Task<ObjectDataEntity> FindByCodeAsync(Guid userId, string code, CancellationToken cancellationToken = default) =>
             _mapper.Map<ObjectDataEntity>(await _repository.FindByCodeAsync(userId, code, cancellationToken).ConfigureAwait(false));
     }
 }

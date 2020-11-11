@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DrifterApps.Holefeeder.Common.Authorization;
@@ -14,7 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.Win32.SafeHandles;
 using SimpleInjector;
@@ -78,11 +81,20 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(jwtOptions =>
+                
+                .AddMicrosoftIdentityWebApi(options =>
                 {
-                    jwtOptions.Authority =
-                        $"{Configuration["AzureAd:Instance"]}/{Configuration["AzureAd:Domain"]}/{Configuration["AzureAd:SignUpSignInPolicyId"]}/v2.0/";
-                    jwtOptions.Audience = Configuration["AzureAd:ClientId"];
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false
+                    };
+                }, options =>
+                {
+                    Configuration.Bind("AzureAd", options);
+                    // options.Instance = Configuration["AzureAd:Instance"];
+                    // options.Domain = Configuration["AzureAd:Domain"];
+                    // options.SignUpSignInPolicyId = Configuration["AzureAd:SignUpSignInPolicyId"];
+                    // options.ClientId = Configuration["AzureAd:ClientId"];
                 });
 
             _ = services.AddSwaggerGen(opt =>
@@ -97,24 +109,12 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 .AddMvcCore()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddApiExplorer()
-                .AddAuthorization(options =>
+                .AddAuthorization(options => 
                 {
-                    options.AddPolicy(Policies.AUTHENTICATED_USER, policyBuilder =>
+                    options.AddPolicy("registered_users", policyBuilder =>
                     {
                         policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            // .RequireClaim(JwtRegisteredClaimNames.Email)
-                            .RequireClaim("email_verified", "true");
-                    });
-                    options.AddPolicy(Policies.REGISTERED_USER, policyBuilder =>
-                    {
-                        policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            // .RequireClaim(JwtRegisteredClaimNames.Email)
-                            // JwtRegisteredClaimNames.Sub
-                            // .RequireClaim("email_verified", "true")
-                            // .RequireClaim("http://schemas.microsoft.com/identity/claims/scope", "holefeeder.user")
-                            ;
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
                     });
                 });
         }
@@ -126,8 +126,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 
             if (env.IsDevelopment())
             {
-                IdentityModelEventSource.ShowPII = true;
-
                 _ = app.UseDeveloperExceptionPage()
                     .UseSwagger()
                     .UseSwaggerUI(c =>

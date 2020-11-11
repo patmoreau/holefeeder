@@ -1,7 +1,9 @@
-﻿namespace DrifterApps.Holefeeder.Business.Entities
+﻿using System;
+
+namespace DrifterApps.Holefeeder.Business.Entities
 {
     public interface IOwnedEntity
     {
-        string UserId { get; }
+        Guid UserId { get; }
     }
 }
