@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService } from '@app/auth/services/auth-guard.service';
 import { AccountsListComponent } from './accounts-list/accounts-list.component';
 import { AccountEditComponent } from './account-edit/account-edit.component';
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
 import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
+import { MsalGuard } from '@azure/msal-angular';
 
 const routes: Routes = [
   {
@@ -16,35 +16,35 @@ const routes: Routes = [
       {
         path: '',
         component: AccountsListComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
         runGuardsAndResolvers: 'always',
         pathMatch: 'full'
       },
       {
         path: 'create',
         component: AccountEditComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
       },
       {
         path: ':accountId',
         component: AccountDetailsComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
         children: [
           { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
           {
             path: 'edit',
             component: AccountEditComponent,
-            canActivate: [AuthGuardService],
+            canActivate: [MsalGuard],
           },
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,
-            canActivate: [AuthGuardService],
+            canActivate: [MsalGuard],
           },
           {
             path: 'transactions',
             component: AccountTransactionsComponent,
-            canActivate: [AuthGuardService],
+            canActivate: [MsalGuard],
           },
           // {
           //   path: 'transactions',
