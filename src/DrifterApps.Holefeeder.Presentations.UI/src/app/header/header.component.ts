@@ -8,7 +8,7 @@ import { faTachometerAlt, faUniversity, faFileInvoiceDollar, faChartPie, faAngle
 import { faCalendarCheck, faCalendarMinus, faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
 import { SettingsService } from '@app/singletons/services/settings.service';
 import { BroadcastService, MsalService } from '@azure/msal-angular';
-import { CryptoUtils, Logger } from 'msal';
+import { Account, CryptoUtils, Logger } from 'msal';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { b2cPolicies, isIE } from '@app/app-config';
@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toDate: NgbDate;
 
   isNavbarCollapsed = false;
-  profile;
+  profile: Account;
 
   faTachometerAlt = faTachometerAlt;
   faUniversity = faUniversity;
