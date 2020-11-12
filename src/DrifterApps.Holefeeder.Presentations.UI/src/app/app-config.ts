@@ -63,8 +63,8 @@ export const msalConfig: Configuration = {
     auth: {
         clientId: '9814ecda-b8db-4775-a361-714af29fe486',
         authority: b2cPolicies.authorities.signUpSignIn.authority,
-        redirectUri: window.location.origin,
-        postLogoutRedirectUri: window.location.origin,
+        redirectUri: environment.redirect_url,
+        postLogoutRedirectUri: environment.redirect_url,
         navigateToLoginRequestUrl: true,
         validateAuthority: false,
     },
