@@ -8,6 +8,7 @@ services:
       - 80
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - SEQ_Url=https://seq.drifterapps.com
       - MongoDB__ConnectionString=mongodb://${MONGO_HOLEFEEDERAPI_USER}:${MONGO_HOLEFEEDERAPI_PASSWORD}@mongodb:27017/?authSource=${MONGO_DATABASE_AUTH}
       - MongoDB__DatabaseName=${MONGO_DATABASE_NAME}
       - Authentication__Google__ClientId=${GOOGLE_CLIENTID}  
