@@ -117,7 +117,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 _ = app.UseHsts();
             }
             
-            // Add this line; you'll need `using Serilog;` up the top, too
             app.UseSerilogRequestLogging();
             
             _ = app.UseRouting()

@@ -3,7 +3,7 @@ version: "3"
 services:
   holefeeder-api:
     image: docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${VERSION}
-    restart: always
+    restart: unless-stopped
     ports:
       - 80
     environment:
@@ -22,7 +22,7 @@ services:
 
   holefeeder-web:
     image: docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${VERSION}
-    restart: always
+    restart: unless-stopped
     depends_on:
       - holefeeder-api
     ports:
@@ -36,6 +36,7 @@ services:
 
   mongodb:
     image: mongo:latest
+    restart: unless-stopped
     ports:
       - 27017
     volumes:

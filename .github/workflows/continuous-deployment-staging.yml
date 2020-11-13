@@ -97,6 +97,7 @@ jobs:
         MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_STAGING}}
         MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_STAGING}}
         MONGO_DATABASE_VOLUME=./data
+        SEQ_Url=https://seq.drifterapps.com
         GOOGLE_CLIENTID=${{secrets.GOOGLE_CLIENT_ID}}
         GOOGLE_AUTHORITY=https://accounts.google.com
         " > .env
