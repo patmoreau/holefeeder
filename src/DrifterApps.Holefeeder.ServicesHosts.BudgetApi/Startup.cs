@@ -100,7 +100,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

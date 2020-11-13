@@ -47,7 +47,6 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync([FromQuery]DateTime from, [FromQuery] DateTime to, CancellationToken cancellationToken = default)
         {
-            _logger.LogTrace("{0} invoked", Routes.GET_UPCOMING);
             HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
             var userId = User.GetUniqueId();
 
