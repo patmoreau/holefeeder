@@ -27,7 +27,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 .WriteTo.Console()
                 .WriteTo.Seq(Configuration["SEQ_Url"] ?? "https://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
-            
+            Log.Information($"{Configuration["SEQ_Url"]} - {Configuration["SEQ_ApiKey"]}");
             try
             {
                 Log.Information("Starting up");
