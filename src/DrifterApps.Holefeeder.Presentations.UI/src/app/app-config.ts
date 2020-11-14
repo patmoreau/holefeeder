@@ -97,8 +97,8 @@ export const tokenRequest: { scopes: string[] } = {
 // ];
 
 export const protectedResourceMap: [string, string[]][] = [
-    [environment.api_url, ['openid', 'offline_access','https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user']],
-    ['https://graph.microsoft.com/v1.0/me', ['user.read']]
+    [environment.api_url, apiConfig.b2cScopes]
+    // ['https://graph.microsoft.com/v1.0/me', ['user.read']]
 ];
 
 /**

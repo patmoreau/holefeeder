@@ -41,9 +41,6 @@
       </ul>
     </ng-container>
     <form class="form-inline my-2 my-lg-0">
-      <ng-container *ngIf="!loggedIn">
-        <button (click)="login()">Login</button>
-      </ng-container>
       <ng-container *ngIf="loggedIn">
         <button type="button" class="btn btn-outline-secondary mr-sm-2" (click)="open(datePicker)">
           {{ period?.start | date }} - {{ period?.end | date }}
