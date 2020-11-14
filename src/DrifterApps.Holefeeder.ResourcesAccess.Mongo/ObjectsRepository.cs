@@ -19,7 +19,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
             _objects = collection.ThrowIfNull(nameof(collection));
         }
 
-        public async Task<ObjectDataEntity> FindByCodeAsync(string userId, string code, CancellationToken cancellationToken = default) =>
+        public async Task<ObjectDataEntity> FindByCodeAsync(Guid userId, string code, CancellationToken cancellationToken = default) =>
             Mapper.Map<ObjectDataEntity>(await _objects.AsQueryable().Where(x => x.UserId == userId && x.Code == code).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false));
     }
 }

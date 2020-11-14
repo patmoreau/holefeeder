@@ -1,7 +1,9 @@
+using System;
+
 namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
 {
     public interface IOwnedSchema
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

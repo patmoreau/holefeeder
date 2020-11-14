@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastNoAnimationModule } from 'ngx-toastr';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,50 +12,58 @@ import { ErrorNotfoundComponent } from './error-notfound/error-notfound.componen
 import { SingletonsModule } from './singletons/singletons.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AuthenticationService } from './auth/services/authentication.service';
-import { AuthModule } from './auth/auth.module';
-import { AuthModule as OAuthModule, OidcConfigService } from 'angular-auth-oidc-client';
-import { OAuthInterceptor } from './auth/oauth.interceptor';
-import { configureGoogleAuth } from './auth/google-auth.config';
-import { AuthGuardService } from './auth/services/auth-guard.service';
+import { MsalModule, MsalInterceptor, MsalAngularConfiguration, MSAL_CONFIG, MSAL_CONFIG_ANGULAR, MsalService } from '@azure/msal-angular';
+import { Configuration } from 'msal';
+import { msalAngularConfig, msalConfig } from './app-config';
 
 const COMPONENTS = [
-  AppComponent,
-  HeaderComponent,
-  FooterComponent,
-  ErrorNotfoundComponent
+    AppComponent,
+    HeaderComponent,
+    FooterComponent,
+    ErrorNotfoundComponent
 ];
 
+function MSALConfigFactory(): Configuration {
+    return msalConfig;
+}
+
+function MSALAngularConfigFactory(): MsalAngularConfiguration {
+    return msalAngularConfig;
+}
 
 @NgModule({
-  declarations: [COMPONENTS],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    FormsModule,
-    AppRoutingModule,
-    OAuthModule.forRoot(),
-    HttpClientModule,
-    FontAwesomeModule,
-    NgbModule,
-    SingletonsModule,
-    AuthModule,
-    ToastNoAnimationModule.forRoot()
-  ],
-  providers: [
-    OidcConfigService,
-    {
-        provide: APP_INITIALIZER,
-        useFactory: configureGoogleAuth,
-        deps: [OidcConfigService],
-        multi: true,
-    },
-    // AuthenticationService,
-    // AuthGuardService,
-    { provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true }
-],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [COMPONENTS],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MsalModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FontAwesomeModule,
+        NgbModule,
+        SingletonsModule,
+        ToastNoAnimationModule.forRoot()
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: MsalInterceptor,
+            multi: true
+        },
+        {
+            provide: MSAL_CONFIG,
+            useFactory: MSALConfigFactory
+        },
+        {
+            provide: MSAL_CONFIG_ANGULAR,
+            useFactory: MSALAngularConfigFactory
+        },
+        MsalService
+    ],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {
+}

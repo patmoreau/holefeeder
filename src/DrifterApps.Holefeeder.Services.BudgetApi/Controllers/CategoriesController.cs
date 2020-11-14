@@ -12,10 +12,11 @@ using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Services.BudgetDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 
 namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
 {
-    [Route("api/v1/[controller]"), Authorize(Policy = Policies.REGISTERED_USER)]
+    [Route("api/v1/[controller]"), Authorize(Policy = "registered_users")]
     public class CategoriesController : Controller
     {
         private struct Routes
@@ -46,7 +47,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort, [FromQuery] string[] filter, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
 
             var result = await _service.FindAsync(userId, new QueryParams(offset, limit, sort, filter), cancellationToken).ConfigureAwait(false);
             return Ok(_mapper.Map<CategoryDto[]>(result));
@@ -57,7 +59,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
@@ -77,7 +80,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PostAsync([FromBody] CategoryDto model, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
 
             if (!ModelState.IsValid)
             {
@@ -96,7 +100,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] CategoryDto model, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
@@ -118,7 +123,8 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> DeleteAsync([FromRoute] string id, CancellationToken cancellationToken = default)
         {
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+            var userId = User.GetUniqueId();
             if (!await _service.IsOwnerAsync(userId, id, cancellationToken).ConfigureAwait(false))
             {
                 return NotFound();
@@ -134,12 +140,13 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetStatisticsAsync([FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1, CancellationToken cancellationToken = default)
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
             if (intervalType == DateIntervalType.OneTime)
             {
                 return BadRequest();
             }
 
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            var userId = User.GetUniqueId();
 
             var utc = effectiveDate.ToUniversalTime();
 
@@ -153,12 +160,13 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetByTagsAsync([FromRoute] string id, [FromQuery] DateTime effectiveDate, [FromQuery] DateIntervalType intervalType = DateIntervalType.Monthly, [FromQuery] int frequency = 1, CancellationToken cancellationToken = default)
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
             if (intervalType == DateIntervalType.OneTime)
             {
                 return BadRequest();
             }
 
-            var userId = User.FindFirst(HolefeederClaimTypes.HOLEFEEDER_ID)?.Value;
+            var userId = User.GetUniqueId();
 
             var utc = effectiveDate.ToUniversalTime();
 

@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateService } from '@app/singletons/services/date.service';
 import { addDays, startOfToday } from 'date-fns';
 import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthenticationService } from '@app/auth/services/authentication.service';
 import { faTachometerAlt, faUniversity, faFileInvoiceDollar, faChartPie, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarCheck, faCalendarMinus, faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
-import { SettingsService } from '@app/singletons/services/settings.service';
+import { BroadcastService, MsalService } from '@azure/msal-angular';
+import { Account } from 'msal';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'dfta-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   period: IDateInterval;
 
   closeResult: string;
@@ -25,8 +27,7 @@ export class HeaderComponent implements OnInit {
   toDate: NgbDate;
 
   isNavbarCollapsed = false;
-  isAuthenticated = false;
-  givenName: string;
+  profile: Account;
 
   faTachometerAlt = faTachometerAlt;
   faUniversity = faUniversity;
@@ -37,36 +38,41 @@ export class HeaderComponent implements OnInit {
   faCalendarCheck = faCalendarCheck;
   faCalendarPlus = faCalendarPlus;
 
+  loggedIn = false;
+
+  subscriptions = new Array<Subscription>();
+
   constructor(
     private modalService: NgbModal,
     private dateService: DateService,
-    private authService: AuthenticationService,
-    private settingsService: SettingsService,
-    private router: Router
+    private authService: MsalService,
+    private broadcastService: BroadcastService,
+    private router: Router,
   ) {
     this.isNavbarCollapsed = true;
   }
 
-  async ngOnInit() {
-    this.authService.isAuthenticated$.subscribe((isAuthenticated: boolean) => {
-      this.isAuthenticated = isAuthenticated;
-      if (this.isAuthenticated) {
-        this.settingsService.loadUserSettings();
-      }
-    });
+  ngOnInit() {
+
+    this.profile = this.authService.getAccount();
+    this.loggedIn = !!this.profile;
 
     this.dateService.period.subscribe(period => {
       this.period = period;
     });
 
-    this.authService.authenticatedUser$.subscribe(user => {
-      this.isAuthenticated = user !== null;
-      if (user) {
-        this.givenName = user.lastName;
-      } else {
-        this.givenName = '';
-      }
-    });
+    this.subscriptions.push(this.broadcastService.subscribe('msal:loginSuccess', (success) => {
+      this.profile = this.authService.getAccount();
+      this.loggedIn = !!this.profile;
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   open(content) {
@@ -109,11 +115,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([routeLink]);
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigateByUrl('/login?redirectUrl=%2Fdashboard');
-  }
-
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
@@ -149,6 +150,9 @@ export class HeaderComponent implements OnInit {
   }
 
   private setCalendar(period: IDateInterval) {
+    if (period === null) {
+      return;
+    }
     this.fromDate = new NgbDate(
       period.start.getFullYear(),
       period.start.getMonth() + 1,

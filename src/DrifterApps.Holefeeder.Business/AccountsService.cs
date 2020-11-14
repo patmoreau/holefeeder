@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,7 +23,7 @@ namespace DrifterApps.Holefeeder.Business
             _categoryService = categoryService.ThrowIfNull(nameof(categoryService));
         }
 
-        public async Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(string userId, QueryParams queryParams, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AccountDetailEntity>> FindWithDetailsAsync(Guid userId, QueryParams queryParams, CancellationToken cancellationToken = default)
         {
             var accounts = await _repository.FindAsync(userId, queryParams, cancellationToken).ConfigureAwait(false);
             var transactions = await _transactionService.FindAsync(userId, QueryParams.Empty, cancellationToken).ConfigureAwait(false);

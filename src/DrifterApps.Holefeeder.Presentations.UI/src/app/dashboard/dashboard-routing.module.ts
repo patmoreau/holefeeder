@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from '@app/auth/services/auth-guard.service';
+import { MsalGuard } from '@azure/msal-angular';
 import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
@@ -8,12 +8,12 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [AuthGuardService],
+    canActivate: [MsalGuard],
     children: [
       {
         path: '',
         component: DashboardHomeComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [MsalGuard],
       },
     ]
   },

@@ -1,3 +1,4 @@
+using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -12,7 +13,7 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [BsonElement("data")]
         public string Data { get; set; }
 
-        [BsonElement("userId"), BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; }
+        [BsonElement("userId")]
+        public Guid UserId { get; set; }
     }
 }

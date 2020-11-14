@@ -1,0 +1,19 @@
+<mxfile host="app.diagrams.net" modified="2020-08-13T00:30:41.394Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36" etag="dKlGn0fpczZ4WfF9dA-L" version="13.6.2" type="github">
+  <diagram id="E3Oz5BAlB7OUA_MRvelR" name="Page-1">
+    <mxGraphModel dx="946" dy="572" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="yHpnDH9HKAlDhW8giofW-1" value="" style="shape=cylinder2;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="280" y="130" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="yHpnDH9HKAlDhW8giofW-2" value="" style="shape=xor;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="220" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="yHpnDH9HKAlDhW8giofW-3" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="220" width="30" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

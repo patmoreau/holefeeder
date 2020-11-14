@@ -97,8 +97,7 @@ jobs:
         MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_STAGING}}
         MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_STAGING}}
         MONGO_DATABASE_VOLUME=./data
-        GOOGLE_CLIENTID=${{secrets.GOOGLE_CLIENT_ID}}
-        GOOGLE_AUTHORITY=https://accounts.google.com
+        SEQ_ApiKey=${{secrets.SEQ_APIKEY}}
         " > .env
       working-directory: ./docker
 

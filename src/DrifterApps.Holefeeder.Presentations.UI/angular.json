@@ -30,8 +30,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules"
@@ -110,8 +109,7 @@
             "styles": [
               "styles.scss"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -155,5 +153,8 @@
       }
     }
   },
-  "defaultProject": "holefeeder-web"
+  "defaultProject": "holefeeder-web",
+  "cli": {
+    "analytics": "c2f337f6-cc78-47bf-81b7-2e0c9ce87efa"
+  }
 }

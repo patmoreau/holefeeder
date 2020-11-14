@@ -4,67 +4,60 @@ using DrifterApps.Holefeeder.ResourcesAccess;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo;
 using DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using SimpleInjector;
 
 namespace DrifterApps.Holefeeder.Common.IoC
 {
     public static class ContainerRegistration
     {
-        public static void Initialize(this Container container, IConfiguration configuration)
+        public static void Initialize(this IServiceCollection container, IConfiguration configuration)
         {
             container.ThrowIfNull(nameof(container));
             configuration.ThrowIfNull(nameof(configuration));
 
             // add singleton
-            container.Register(typeof(ILogger<>), typeof(Logger<>), Lifestyle.Singleton);
+            container.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
             // add AutoMapper
             var mapperConfig = MapperRegistration.Initialize();
-            container.Register(() => mapperConfig.CreateMapper(), Lifestyle.Scoped);
+            container.AddScoped(provider => mapperConfig.CreateMapper());
 
             var mongoConfig = configuration.GetSection("MongoDB");
             
             // add MongoDb components
-            container.RegisterSingleton<IMongoClient>(() =>
+            BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
+            container.AddSingleton<IMongoClient>(provider =>
                 new MongoClient(mongoConfig["ConnectionString"]));
-            container.RegisterSingleton(() =>
-                container.GetInstance<IMongoClient>().GetDatabase(mongoConfig["DatabaseName"]));
-            container.Register(
-                () => container.GetInstance<IMongoDatabase>().GetCollection<AccountSchema>("accounts"),
-                Lifestyle.Scoped);
-            container.Register(
-                () => container.GetInstance<IMongoDatabase>().GetCollection<CashflowSchema>("cashflows"),
-                Lifestyle.Scoped);
-            container.Register(
-                () => container.GetInstance<IMongoDatabase>().GetCollection<CategorySchema>("categories"),
-                Lifestyle.Scoped);
-            container.Register(
-                () => container.GetInstance<IMongoDatabase>().GetCollection<ObjectDataSchema>("objectsData"),
-                Lifestyle.Scoped);
-            container.Register(() => container.GetInstance<IMongoDatabase>().GetCollection<UserSchema>("users"),
-                Lifestyle.Scoped);
-            container.Register(
-                () => container.GetInstance<IMongoDatabase>().GetCollection<TransactionSchema>("transactions"),
-                Lifestyle.Scoped);
+            container.AddSingleton(provider =>
+                provider.GetService<IMongoClient>().GetDatabase(mongoConfig["DatabaseName"]));
+            container.AddScoped(
+                provider => provider.GetService<IMongoDatabase>().GetCollection<AccountSchema>("accounts"));
+            container.AddScoped(
+                provider => provider.GetService<IMongoDatabase>().GetCollection<CashflowSchema>("cashflows"));
+            container.AddScoped(
+                provider => provider.GetService<IMongoDatabase>().GetCollection<CategorySchema>("categories"));
+            container.AddScoped(
+                provider => provider.GetService<IMongoDatabase>().GetCollection<ObjectDataSchema>("objectsData"));
+            container.AddScoped(
+                provider => provider.GetService<IMongoDatabase>().GetCollection<TransactionSchema>("transactions"));
 
             // add application services
-            container.Register<IAccountsService, AccountsService>(Lifestyle.Scoped);
-            container.Register<ICashflowsService, CashflowsService>(Lifestyle.Scoped);
-            container.Register<ICategoriesService, CategoriesService>(Lifestyle.Scoped);
-            container.Register<IObjectsService, ObjectsService>(Lifestyle.Scoped);
-            container.Register<IUsersService, UsersService>(Lifestyle.Scoped);
-            container.Register<IStatisticsService, StatisticsService>(Lifestyle.Scoped);
-            container.Register<ITransactionsService, TransactionsService>(Lifestyle.Scoped);
+            container.AddScoped<IAccountsService, AccountsService>();
+            container.AddScoped<ICashflowsService, CashflowsService>();
+            container.AddScoped<ICategoriesService, CategoriesService>();
+            container.AddScoped<IObjectsService, ObjectsService>();
+            container.AddScoped<IStatisticsService, StatisticsService>();
+            container.AddScoped<ITransactionsService, TransactionsService>();
 
             // add application repositories
-            container.Register<IAccountsRepository, AccountsRepository>(Lifestyle.Scoped);
-            container.Register<ICashflowsRepository, CashflowsRepository>(Lifestyle.Scoped);
-            container.Register<ICategoriesRepository, CategoriesRepository>(Lifestyle.Scoped);
-            container.Register<IObjectsRepository, ObjectsRepository>(Lifestyle.Scoped);
-            container.Register<IUsersRepository, UsersRepository>(Lifestyle.Scoped);
-            container.Register<ITransactionsRepository, TransactionsRepository>(Lifestyle.Scoped);
+            container.AddScoped<IAccountsRepository, AccountsRepository>();
+            container.AddScoped<ICashflowsRepository, CashflowsRepository>();
+            container.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            container.AddScoped<IObjectsRepository, ObjectsRepository>();
+            container.AddScoped<ITransactionsRepository, TransactionsRepository>();
         }
     }
 }

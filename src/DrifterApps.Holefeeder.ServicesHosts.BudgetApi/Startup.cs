@@ -1,15 +1,9 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DrifterApps.Holefeeder.Business;
-using DrifterApps.Holefeeder.Business.Entities;
-using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
-using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Authentication.Google;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,16 +12,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.Win32.SafeHandles;
-using SimpleInjector;
+using Serilog;
 
 namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 {
     public sealed class Startup : IDisposable
     {
-        private readonly Container _container;
-
         // Flag: Has Dispose already been called?
         private bool _disposed;
 
@@ -36,9 +30,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 
         public Startup(IConfiguration configuration)
         {
-            _container = new Container();
-            _container.Options.ResolveUnregisteredConcreteTypes = false;
-
             Configuration = configuration;
         }
 
@@ -47,17 +38,10 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var googleClientId = Configuration["Authentication:Google:ClientId"];
-            if(string.IsNullOrWhiteSpace(googleClientId))
-                throw new NullReferenceException(BudgetApiInternal.GoogleClientIdNotConfigured);
-            var googleAuthority = Configuration["Authentication:Google:Authority"];
-            if(string.IsNullOrWhiteSpace(googleAuthority))
-                throw new NullReferenceException(BudgetApiInternal.GoogleAuthorityNotConfigured);
-
             var allowedOrigins = Configuration.GetSection("AllowedOrigin")?.Get<string[]>();
             if (allowedOrigins == null || !allowedOrigins.Any())
                 throw new NullReferenceException(BudgetApiInternal.AllowedOriginNotConfigured);
-            
+
             _ = services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -75,87 +59,49 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());                   
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             _ = services.AddLogging();
 
-            _ = services.AddSimpleInjector(_container, options =>
-              {
-                  options.AddLogging()
-                      .AddAspNetCore()
-                      .AddControllerActivation();
-              });
-
-            _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(x =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                
+                .AddMicrosoftIdentityWebApi(options =>
                 {
-                    x.UseGoogle(googleClientId, googleAuthority);
-                    x.Events = new JwtBearerEvents
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        OnTokenValidated = async context =>
-                        {
-                            var usersServices = _container.GetService<IUsersService>();
-            
-                            var user = await usersServices.FindByEmailAsync(context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email)).ConfigureAwait(false) ??
-                                       await usersServices.CreateAsync(new UserEntity(
-                                null,
-                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.GivenName),
-                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.FamilyName),
-                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.Email),
-                                context.Principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
-                                DateTime.Now.Date
-
-                            )).ConfigureAwait(false);
-
-                            if (user != null)
-                            {
-                                context.Principal.AddIdentity(new ClaimsIdentity(new[]
-                                {
-                                    new Claim(HolefeederClaimTypes.HOLEFEEDER_ID, user.Id)
-                                }));
-                            }
-                        }
+                        ValidateIssuer = false
                     };
+                }, options =>
+                {
+                    Configuration.Bind("AzureAd", options);
                 });
 
             _ = services.AddSwaggerGen(opt =>
-              {
-                  opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Holefeeder API", Version = "v1" });
-                  opt.DescribeAllParametersInCamelCase();
-              });
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo {Title = "Holefeeder API", Version = "v1"});
+                opt.DescribeAllParametersInCamelCase();
+            });
 
-            _container.Initialize(Configuration);
+            services.Initialize(Configuration);
 
             _ = services
                 .AddMvcCore()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddApiExplorer()
-                .AddAuthorization(options =>
+                .AddAuthorization(options => 
                 {
-                    options.AddPolicy(Policies.AUTHENTICATED_USER, policyBuilder =>
+                    options.AddPolicy("registered_users", policyBuilder =>
                     {
                         policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            .RequireClaim(JwtRegisteredClaimNames.Email)
-                            .RequireClaim("email_verified", "true");
-                    });
-                    options.AddPolicy(Policies.REGISTERED_USER, policyBuilder =>
-                    {
-                        policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            .RequireClaim(JwtRegisteredClaimNames.Email)
-                            .RequireClaim("email_verified", "true")
-                            .RequireClaim(HolefeederClaimTypes.HOLEFEEDER_ID);
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
                     });
                 });
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            _ = app.UseSimpleInjector(_container);
-
             if (env.IsDevelopment())
             {
                 _ = app.UseDeveloperExceptionPage()
@@ -170,7 +116,9 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             {
                 _ = app.UseHsts();
             }
-
+            
+            app.UseSerilogRequestLogging();
+            
             _ = app.UseRouting()
                 .UseCors()
                 .UseAuthorization()
@@ -179,8 +127,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 {
                     endpoints.MapControllers();
                 });
-
-            _container.Verify();
         }
 
         public void Dispose()
@@ -198,7 +144,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             if (disposing)
             {
                 _handle.Dispose();
-                _container.Dispose();
             }
 
             _disposed = true;

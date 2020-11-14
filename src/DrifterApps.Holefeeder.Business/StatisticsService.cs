@@ -26,11 +26,11 @@ namespace DrifterApps.Holefeeder.Business
             _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
-        public Task<int> CountAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.CountAsync(userId, query, cancellationToken);
+        public Task<int> CountAsync(Guid userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.CountAsync(userId, query, cancellationToken);
 
-        public Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(string userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.FindWithDetailsAsync(userId, query, cancellationToken);
+        public Task<IEnumerable<TransactionDetailEntity>> FindWithDetailsAsync(Guid userId, QueryParams query, CancellationToken cancellationToken = default) => _transactionsService.FindWithDetailsAsync(userId, query, cancellationToken);
 
-        public async Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(string userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<StatisticsEntity<CategoryInfoEntity>>> StatisticsAsync(Guid userId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
         {
             var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new HashSet<string>(new[] { "date" }), null), cancellationToken).ConfigureAwait(false);
             var categories = (await _categoriesService.FindAsync(userId, null, cancellationToken).ConfigureAwait(false)).Where(c => !c.System).Select(_mapper.Map<CategoryInfoEntity>);
@@ -110,7 +110,7 @@ namespace DrifterApps.Holefeeder.Business
             return statistics;
         }
 
-        public async Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(string userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<StatisticsEntity<string>>> StatisticsByTagsAsync(Guid userId, string categoryId, DateTime effectiveDate, DateIntervalType intervalType, int frequency, CancellationToken cancellationToken = default)
         {
             var transactions = await _transactionsService.FindAsync(userId, new QueryParams(null, null, new[] { "date" }, new[] { $"category={categoryId}" }), cancellationToken).ConfigureAwait(false);
 

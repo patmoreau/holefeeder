@@ -8,6 +8,6 @@ namespace DrifterApps.Holefeeder.Business
 {
     public interface ICashflowsService : IBaseOwnedService<CashflowEntity>
     {
-        Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(string userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UpcomingEntity>> GetUpcomingAsync(Guid userId, (DateTime From, DateTime To) interval, CancellationToken cancellationToken = default);
     }
 }

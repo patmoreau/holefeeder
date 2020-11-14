@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api_url: 'http://localhost:5000/'
+  api_url: 'http://localhost:5000/',
+  redirect_url: 'http://localhost:4200/'
 };
 
 /*

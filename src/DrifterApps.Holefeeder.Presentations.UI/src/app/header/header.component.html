@@ -8,7 +8,7 @@
   </button>
 
   <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault" [class.open]="!isNavbarCollapsed">
-    <ng-container *ngIf="isAuthenticated">
+    <ng-container *ngIf="loggedIn">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
@@ -41,14 +41,14 @@
       </ul>
     </ng-container>
     <form class="form-inline my-2 my-lg-0">
-      <ng-container *ngIf="isAuthenticated">
+      <ng-container *ngIf="loggedIn">
         <button type="button" class="btn btn-outline-secondary mr-sm-2" (click)="open(datePicker)">
-          {{ period.start | date }} - {{ period.end | date }}
+          {{ period?.start | date }} - {{ period?.end | date }}
           <fa-icon [icon]="faAngleDown" aria-hidden="true"></fa-icon>
         </button>
-        <div ngbDropdown class="nav-item dropdown my-2 my-sm-0" *ngIf="isAuthenticated">
+        <div ngbDropdown class="nav-item dropdown my-2 my-sm-0">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">{{givenName}}</a>
+            aria-haspopup="true" aria-expanded="false">{{profile?.name}}</a>
           <div ngbDropdownMenu class="downdown-menu" aria-labelledby="dropdownUser">
             <a class="dropdown-item" [routerLink]="['/settings']"
               (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>
