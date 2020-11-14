@@ -12,6 +12,7 @@ using DrifterApps.Holefeeder.Common.Extensions;
 using DrifterApps.Holefeeder.Services.BudgetDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web.Resource;
 
 namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
@@ -31,11 +32,13 @@ namespace DrifterApps.Holefeeder.Services.BudgetApi.Controllers
 
         private readonly ICashflowsService _service;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public CashflowsController(ICashflowsService service, IMapper mapper)
+        public CashflowsController(ICashflowsService service, IMapper mapper, ILogger<CashflowsController> logger)
         {
             _service = service.ThrowIfNull(nameof(service));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
+            _logger = logger.ThrowIfNull(nameof(logger));
         }
 
         [HttpGet("upcoming", Name = Routes.GET_UPCOMING)]

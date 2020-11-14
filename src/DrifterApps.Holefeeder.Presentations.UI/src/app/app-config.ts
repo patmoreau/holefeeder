@@ -1,6 +1,8 @@
 ﻿import { Configuration } from 'msal';
 import { MsalAngularConfiguration } from '@azure/msal-angular';
 
+import { environment } from '@env/environment';
+
 // this checks if the app is running on IE
 export const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -61,8 +63,8 @@ export const msalConfig: Configuration = {
     auth: {
         clientId: '9814ecda-b8db-4775-a361-714af29fe486',
         authority: b2cPolicies.authorities.signUpSignIn.authority,
-        redirectUri: 'http://localhost:4200/',
-        postLogoutRedirectUri: 'http://localhost:4200/',
+        redirectUri: environment.redirect_url,
+        postLogoutRedirectUri: environment.redirect_url,
         navigateToLoginRequestUrl: true,
         validateAuthority: false,
     },
@@ -95,8 +97,8 @@ export const tokenRequest: { scopes: string[] } = {
 // ];
 
 export const protectedResourceMap: [string, string[]][] = [
-    ['http://localhost:5000/api/v1', ['openid', 'offline_access','https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user']],
-    ['https://graph.microsoft.com/v1.0/me', ['user.read']]
+    [environment.api_url, apiConfig.b2cScopes]
+    // ['https://graph.microsoft.com/v1.0/me', ['user.read']]
 ];
 
 /**
@@ -104,7 +106,7 @@ export const protectedResourceMap: [string, string[]][] = [
  * visit https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-angular#config-options-for-msal-initialization
  */
 export const msalAngularConfig: MsalAngularConfiguration = {
-    popUp: !isIE,
+    popUp: false,
     consentScopes: [
         ...loginRequest.scopes,
         ...tokenRequest.scopes,

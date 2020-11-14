@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DrifterApps.Holefeeder.Common.Authorization;
 using DrifterApps.Holefeeder.Common.IoC;
 using DrifterApps.Holefeeder.ServicesHosts.BudgetApi.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,19 +13,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.Win32.SafeHandles;
-using SimpleInjector;
+using Serilog;
 
 namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 {
     public sealed class Startup : IDisposable
     {
-        private readonly Container _container;
-
         // Flag: Has Dispose already been called?
         private bool _disposed;
 
@@ -36,9 +30,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 
         public Startup(IConfiguration configuration)
         {
-            _container = new Container();
-            _container.Options.ResolveUnregisteredConcreteTypes = false;
-
             Configuration = configuration;
         }
 
@@ -73,13 +64,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
 
             _ = services.AddLogging();
 
-            _ = services.AddSimpleInjector(_container, options =>
-            {
-                options.AddLogging()
-                    .AddAspNetCore()
-                    .AddControllerActivation();
-            });
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 
                 .AddMicrosoftIdentityWebApi(options =>
@@ -91,10 +75,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 }, options =>
                 {
                     Configuration.Bind("AzureAd", options);
-                    // options.Instance = Configuration["AzureAd:Instance"];
-                    // options.Domain = Configuration["AzureAd:Domain"];
-                    // options.SignUpSignInPolicyId = Configuration["AzureAd:SignUpSignInPolicyId"];
-                    // options.ClientId = Configuration["AzureAd:ClientId"];
                 });
 
             _ = services.AddSwaggerGen(opt =>
@@ -103,7 +83,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 opt.DescribeAllParametersInCamelCase();
             });
 
-            _container.Initialize(Configuration);
+            services.Initialize(Configuration);
 
             _ = services
                 .AddMvcCore()
@@ -120,10 +100,8 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            _ = app.UseSimpleInjector(_container);
-
             if (env.IsDevelopment())
             {
                 _ = app.UseDeveloperExceptionPage()
@@ -138,7 +116,9 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             {
                 _ = app.UseHsts();
             }
-
+            
+            app.UseSerilogRequestLogging();
+            
             _ = app.UseRouting()
                 .UseCors()
                 .UseAuthorization()
@@ -147,8 +127,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
                 {
                     endpoints.MapControllers();
                 });
-
-            _container.Verify();
         }
 
         public void Dispose()
@@ -166,7 +144,6 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
             if (disposing)
             {
                 _handle.Dispose();
-                _container.Dispose();
             }
 
             _disposed = true;

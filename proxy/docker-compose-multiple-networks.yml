@@ -18,6 +18,7 @@ services:
     networks:
       - default
       - outside
+      - shared
     logging:
       driver: ${NGINX_WEB_LOG_DRIVER:-json-file}
       options:
@@ -40,6 +41,7 @@ services:
     networks:
       - default
       - outside
+      - shared
     logging:
       driver: ${NGINX_GEN_LOG_DRIVER:-json-file}
       options:
@@ -62,6 +64,7 @@ services:
     networks:
       - default
       - outside
+      - shared
     logging:
       driver: ${NGINX_LETSENCRYPT_LOG_DRIVER:-json-file}
       options:
@@ -75,3 +78,6 @@ networks:
   outside:
     external:
       name: ${STAGING_NETWORK:-stagingproxy}
+  shared:
+    external:
+      name: ${SHARED_NETWORK:-sharedproxy}

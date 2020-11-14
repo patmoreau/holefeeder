@@ -6,14 +6,10 @@ import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faTachometerAlt, faUniversity, faFileInvoiceDollar, faChartPie, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarCheck, faCalendarMinus, faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
-import { SettingsService } from '@app/singletons/services/settings.service';
 import { BroadcastService, MsalService } from '@azure/msal-angular';
-import { CryptoUtils, Logger } from 'msal';
-import { HttpClient } from '@angular/common/http';
+import { Account } from 'msal';
 import { Subscription } from 'rxjs';
-import { b2cPolicies, isIE } from '@app/app-config';
 
-const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 
 @Component({
   selector: 'dfta-header',
@@ -31,7 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toDate: NgbDate;
 
   isNavbarCollapsed = false;
-  profile;
+  profile: Account;
 
   faTachometerAlt = faTachometerAlt;
   faUniversity = faUniversity;
@@ -41,102 +37,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
   faCalendarMinus = faCalendarMinus;
   faCalendarCheck = faCalendarCheck;
   faCalendarPlus = faCalendarPlus;
-  isIframe = false;
+
   loggedIn = false;
 
-  subscriptions: Subscription[] = [];
+  subscriptions = new Array<Subscription>();
 
   constructor(
     private modalService: NgbModal,
     private dateService: DateService,
-    private settingsService: SettingsService,
-    private broadcastService: BroadcastService,
     private authService: MsalService,
+    private broadcastService: BroadcastService,
     private router: Router,
-    private http: HttpClient
   ) {
     this.isNavbarCollapsed = true;
   }
 
-  async ngOnInit() {
-    let loginSuccessSubscription: Subscription;
-    let loginFailureSubscription: Subscription;
+  ngOnInit() {
 
-    this.isIframe = window !== window.parent && !window.opener;
-    this.checkAccount();
+    this.profile = this.authService.getAccount();
+    this.loggedIn = !!this.profile;
 
     this.dateService.period.subscribe(period => {
       this.period = period;
     });
 
-    // event listeners for authentication status
-    loginSuccessSubscription = this.broadcastService.subscribe('msal:loginSuccess', (success) => {
-
-      // We need to reject id tokens that were not issued with the default sign-in policy.
-      // "acr" claim in the token tells us what policy is used (NOTE: for new policies (v2.0), use "tfp" instead of "acr")
-      // To learn more about b2c tokens, visit https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
-      if (success.idToken.claims.acr === b2cPolicies.names.resetPassword) {
-        window.alert('Password has been reset successfully. \nPlease sign-in with your new password');
-        return this.authService.logout();
-      }
-
-      this.checkAccount();
-    });
-
-    loginFailureSubscription = this.broadcastService.subscribe('msal:loginFailure', (error) => {
-      console.log('login failed');
-      console.log(error);
-
-      if (error.errorMessage) {
-        // Check for forgot password error
-        // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
-        if (error.errorMessage.indexOf('AADB2C90118') > -1) {
-          if (isIE) {
-            this.authService.loginRedirect(b2cPolicies.authorities.resetPassword);
-          } else {
-            this.authService.loginPopup(b2cPolicies.authorities.resetPassword);
-          }
-        }
-      }
-    });
-
-    // redirect callback for redirect flow (IE)
-    this.authService.handleRedirectCallback((authError, response) => {
-      if (authError) {
-        console.error('Redirect Error: ', authError.errorMessage);
-        return;
-      }
-    });
-
-    this.authService.setLogger(new Logger((logLevel, message, piiEnabled) => {
-      console.log('MSAL Logging: ', message);
-    }, {
-      correlationId: CryptoUtils.createNewGuid(),
-      piiLoggingEnabled: false
+    this.subscriptions.push(this.broadcastService.subscribe('msal:loginSuccess', (success) => {
+      this.profile = this.authService.getAccount();
+      this.loggedIn = !!this.profile;
     }));
-
-    this.subscriptions.push(loginSuccessSubscription);
-    this.subscriptions.push(loginFailureSubscription);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
-
-  checkAccount() {
-    this.profile = this.authService.getAccount();
-    this.loggedIn = !!this.profile;
-    if (this.loggedIn) {
-      this.settingsService.loadUserSettings();
-    }
-  }
-
-  login() {
-    if (isIE) {
-      this.authService.loginRedirect();
-    } else {
-      this.authService.loginPopup();
-    }
   }
 
   logout() {
