@@ -14,14 +14,6 @@ namespace DrifterApps.Holefeeder.Application.Queries
     public class GetAccountsHandlerTests
     {
         [Fact]
-        public void GivenConstructor_WhenRepositoryIsNull_ThenThrowArgumentNullException()
-        {
-            Action action = () => _ = new GetAccountsHandler(null);
-
-            action.Should().Throw<ArgumentNullException>();
-        }
-
-        [Fact]
         public async void GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
         {
             var handler = new GetAccountsHandler(Substitute.For<IAccountQueriesRepository>());

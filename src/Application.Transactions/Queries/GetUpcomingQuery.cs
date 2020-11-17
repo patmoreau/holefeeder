@@ -1,8 +1,8 @@
 ﻿using System;
-using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Models;
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Application.Queries
+namespace DrifterApps.Holefeeder.Application.Transactions.Queries
 {
     public class GetUpcomingQuery : IRequest<UpcomingViewModel[]>
     {

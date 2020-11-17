@@ -1,7 +1,7 @@
 ﻿using System;
 using DrifterApps.Holefeeder.Domain.Enumerations;
 
-namespace DrifterApps.Holefeeder.Application.Models
+namespace DrifterApps.Holefeeder.Application.Transactions.Models
 {
     public class CategoryInfoViewModel
     {

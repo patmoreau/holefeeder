@@ -16,14 +16,5 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
         {
             DbContext = context.ThrowIfNull(nameof(context));
         }
-
-        protected async Task<string> GetUserMongoId(Guid id, CancellationToken cancellationToken)
-        {
-            var users = await DbContext.GetUsersAsync(cancellationToken);
-
-            var user = await users.AsQueryable().SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
-
-            return user?.MongoId;
-        }
     }
 }

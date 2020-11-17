@@ -1,23 +1,21 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Transactions.Queries;
-using DrifterApps.Holefeeder.Hosting.Security;
+using DrifterApps.Holefeeder.Hosting.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace Hosting.Transactions.API
 {
@@ -34,7 +32,7 @@ namespace Hosting.Transactions.API
         public void ConfigureServices(IServiceCollection services)
         {
             _ = RegisterServices(services);
-            
+
             var allowedOrigins = Configuration.GetSection("AllowedHosts")?.Get<string[]>();
             if (allowedOrigins == null || !allowedOrigins.Any())
                 throw new NullReferenceException(@"Allowed origin values not configured");
@@ -51,6 +49,14 @@ namespace Hosting.Transactions.API
                 });
             });
 
+            _ = services.AddLogging();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(
+                    options => options.TokenValidationParameters =
+                        new TokenValidationParameters {ValidateIssuer = false},
+                    options => Configuration.Bind("AzureAd", options));
+
             _ = services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -58,41 +64,40 @@ namespace Hosting.Transactions.API
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-                
-                
-            _ = services.AddMvcCore()
-                .AddAuthorization(options =>
-                {
-                    options.AddPolicy(Policies.AUTHENTICATED_USER, policyBuilder =>
-                    {
-                        policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            .RequireClaim(JwtRegisteredClaimNames.Email)
-                            .RequireClaim("email_verified", "true");
-                    });
-                    options.AddPolicy(Policies.REGISTERED_USER, policyBuilder =>
-                    {
-                        policyBuilder.RequireAuthenticatedUser()
-                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                            .RequireClaim(JwtRegisteredClaimNames.Email)
-                            .RequireClaim("email_verified", "true")
-                            .RequireClaim(HolefeederClaimTypes.HOLEFEEDER_ID);
-                    });
-                })
-                ;
 
+
+            _ = services.AddMvcCore()
+                    .AddAuthorization(options =>
+                    {
+                        options.AddPolicy(Policies.REGISTERED_USER, policyBuilder =>
+                        {
+                            policyBuilder.RequireAuthenticatedUser()
+                                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                        });
+                    })
+                ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            _ = env.IsDevelopment() ? app.UseDeveloperExceptionPage() : app.UseHsts();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
 
-            app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
 
-            app.UseRouting().UseCors();
+            app.UseRouting();
+            app.UseCors();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -4,6 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Contracts;
+using DrifterApps.Holefeeder.Application.Transactions.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Queries;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -12,14 +15,6 @@ namespace DrifterApps.Holefeeder.Application.Queries
 {
     public class GetUpcomingHandlerTests
     {
-        [Fact]
-        public void GivenConstructor_WhenRepositoryIsNull_ThenThrowArgumentNullException()
-        {
-            Action action = () => _ = new GetUpcomingHandler(null);
-
-            action.Should().Throw<ArgumentNullException>();
-        }
-
         [Fact]
         public async void GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
         {

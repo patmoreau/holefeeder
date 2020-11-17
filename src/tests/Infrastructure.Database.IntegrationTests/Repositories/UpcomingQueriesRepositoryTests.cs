@@ -16,13 +16,13 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
             _fixture = fixture;
         }
 
-        private void InitBaseData(string testName)
+        private void InitBaseData()
         {
             _testUsers ??= new[]
             {
-                _fixture.DatabaseContext.CreateTestUserSchema($"{testName}#1"),
-                _fixture.DatabaseContext.CreateTestUserSchema($"{testName}#2"),
-                _fixture.DatabaseContext.CreateTestUserSchema($"{testName}#3")
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid()
             };
             _accounts ??= new[]
             {
@@ -56,7 +56,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
             };
         }
 
-        private (ObjectId MongoId, Guid Id)[] _testUsers;
+        private Guid[] _testUsers;
         private (ObjectId MongoId, Guid Id)[] _accounts;
         private (ObjectId MongoId, Guid Id)[] _categories;
         private (ObjectId MongoId, Guid Id)[] _cashflows;
@@ -66,7 +66,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetUpcoming_WhenUserNotExists_ThenReturnEmptyList()
         {
-            InitBaseData(nameof(GivenGetUpcoming_WhenUserNotExists_ThenReturnEmptyList));
+            InitBaseData();
 
             var repository = new UpcomingQueriesRepository(_fixture.DatabaseContext);
             var result =
@@ -78,11 +78,11 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetUpcoming_WhenNoCashflowActive_ThenReturnEmptyList()
         {
-            InitBaseData(nameof(GivenGetUpcoming_WhenNoCashflowActive_ThenReturnEmptyList));
+            InitBaseData();
 
             var repository = new UpcomingQueriesRepository(_fixture.DatabaseContext);
             var result =
-                await repository.GetUpcomingAsync(_testUsers[2].Id, DateTime.Today, DateTime.Today);
+                await repository.GetUpcomingAsync(_testUsers[2], DateTime.Today, DateTime.Today);
 
             result.Should().BeEmpty();
         }

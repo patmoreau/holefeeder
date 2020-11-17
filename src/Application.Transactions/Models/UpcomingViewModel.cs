@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace DrifterApps.Holefeeder.Application.Models
+namespace DrifterApps.Holefeeder.Application.Transactions.Models
 {
     public class UpcomingViewModel
     {

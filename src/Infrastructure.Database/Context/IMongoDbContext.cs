@@ -12,7 +12,6 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
         Task<IMongoCollection<CashflowSchema>> GetCashflowsAsync(CancellationToken cancellationToken = default);
         Task<IMongoCollection<CategorySchema>> GetCategoriesAsync(CancellationToken cancellationToken = default);
         Task<IMongoCollection<TransactionSchema>> GetTransactionsAsync(CancellationToken cancellationToken = default);
-        Task<IMongoCollection<UserSchema>> GetUsersAsync(CancellationToken cancellationToken = default);
         void AddCommand(Func<Task> func);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         void ClearCommands();

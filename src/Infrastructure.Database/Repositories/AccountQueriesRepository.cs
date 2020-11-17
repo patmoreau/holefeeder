@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
-using DrifterApps.Holefeeder.Application.Queries;
 using DrifterApps.Holefeeder.Application.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
@@ -30,15 +29,13 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
             var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);
             var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
 
-            var userMongoId = await GetUserMongoId(userId, cancellationToken);
-
             var accounts = await accountCollection
                 .AsQueryable()
-                .Where(t => t.UserId == userMongoId)
+                .Where(t => t.UserId == userId)
                 .Filter(queryParams.Filter).ToListAsync(cancellationToken);
 
             var summaries = await accountCollection.AsQueryable()
-                .Where(t => t.UserId == userMongoId)
+                .Where(t => t.UserId == userId)
                 .Filter(queryParams.Filter)
                 .Join(transactionCollection.AsQueryable(),
                     a => a.MongoId,

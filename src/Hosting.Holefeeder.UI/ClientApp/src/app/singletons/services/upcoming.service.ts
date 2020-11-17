@@ -10,7 +10,7 @@ import { DateService } from './date.service';
 
 @Injectable({ providedIn: 'root' })
 export class UpcomingService {
-  private basePath = 'api/v1/cashflows/upcoming';
+  private basePath = 'api/v2/cashflows/upcoming';
 
   private period: IDateInterval;
 

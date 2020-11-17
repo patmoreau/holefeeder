@@ -7,7 +7,9 @@ using DrifterApps.Holefeeder.Domain.Enumerations;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Infrastructure.Database.Schemas;
 using DrifterApps.Holefeeder.Infrastructure.Database.Serializers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
@@ -23,6 +25,10 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
 
         static MongoDbContext()
         {
+#pragma warning disable 618
+            MongoDefaults.GuidRepresentation = GuidRepresentation.Standard;
+#pragma warning restore 618
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             BsonSerializer.RegisterSerializer(typeof(AccountType), new AccountTypeSerializer());
             BsonSerializer.RegisterSerializer(typeof(CategoryType), new CategoryTypeSerializer());
             BsonClassMap.RegisterClassMap<AccountSchema>(cm =>
@@ -131,30 +137,6 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
             var keys = indexBuilder.Ascending(t => t.Id);
             var options = new CreateIndexOptions {Background = true, Unique = true};
             var indexModel = new CreateIndexModel<TransactionSchema>(keys, options);
-            await collection.Indexes.CreateOneAsync(indexModel, cancellationToken: cancellationToken);
-
-            return collection;
-        }
-
-        public async Task<IMongoCollection<UserSchema>> GetUsersAsync(CancellationToken cancellationToken = default)
-        {
-            var collection = _database.GetCollection<UserSchema>(UserSchema.SCHEMA);
-
-            var indexes = await collection.Indexes.ListAsync(cancellationToken);
-            var hasIndexes = await indexes.AnyAsync(cancellationToken);
-            if (hasIndexes)
-            {
-                return collection;
-            }
-
-            var indexBuilder = Builders<UserSchema>.IndexKeys;
-            var keys = indexBuilder.Ascending(t => t.Id);
-            var options = new CreateIndexOptions {Background = true, Unique = true};
-            var indexModel = new CreateIndexModel<UserSchema>(keys, options);
-            await collection.Indexes.CreateOneAsync(indexModel, cancellationToken: cancellationToken);
-
-            keys = indexBuilder.Ascending(t => t.EmailAddress);
-            indexModel = new CreateIndexModel<UserSchema>(keys, options);
             await collection.Indexes.CreateOneAsync(indexModel, cancellationToken: cancellationToken);
 
             return collection;

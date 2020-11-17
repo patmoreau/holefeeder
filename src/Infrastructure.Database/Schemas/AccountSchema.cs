@@ -2,6 +2,7 @@ using System;
 using DrifterApps.Holefeeder.Domain.Enumerations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace DrifterApps.Holefeeder.Infrastructure.Database.Schemas
 {
@@ -31,7 +32,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Schemas
         [BsonElement("inactive")]
         public bool Inactive { get; set; }
 
-        [BsonElement("userId"), BsonRepresentation(BsonType.ObjectId)]
-        public string UserId { get; set; }
+        [BsonElement("userId")]
+        public Guid UserId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,12 +20,12 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
 
             var categories = await categoryCollection.AsQueryable()
-                .Where(x => !x.System && x.UserId == "5ecdf491367f4e00016c87eb").ToListAsync(cancellationToken: cancellationToken);
+                .Where(x => !x.System && x.UserId == userId).ToListAsync(cancellationToken: cancellationToken);
 
             return _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
         }

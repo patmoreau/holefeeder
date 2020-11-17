@@ -21,7 +21,7 @@ namespace DrifterApps.Holefeeder.Application.Transactions.Queries
         {
             request.ThrowIfNull(nameof(request));
 
-            return (await _categoryQueries.GetCategoriesAsync(cancellationToken)).ToArray();
+            return (await _categoryQueries.GetCategoriesAsync(request.UserId, cancellationToken)).ToArray();
         }
     }
 }

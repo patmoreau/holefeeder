@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DrifterApps.Holefeeder.Application.Models
+namespace DrifterApps.Holefeeder.Application.Transactions.Models
 {
     public class AccountInfoViewModel
     {

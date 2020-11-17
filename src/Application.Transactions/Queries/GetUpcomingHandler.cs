@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Application.Contracts;
-using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Contracts;
+using DrifterApps.Holefeeder.Application.Transactions.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Application.Queries
+namespace DrifterApps.Holefeeder.Application.Transactions.Queries
 {
     public class GetUpcomingHandler : IRequestHandler<GetUpcomingQuery, UpcomingViewModel[]>
     {

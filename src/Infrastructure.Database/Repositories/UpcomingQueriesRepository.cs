@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Application.Contracts;
 using DrifterApps.Holefeeder.Application.Models;
+using DrifterApps.Holefeeder.Application.Transactions.Contracts;
+using DrifterApps.Holefeeder.Application.Transactions.Models;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -25,13 +27,8 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
             var accountCollection = await DbContext.GetAccountsAsync(cancellationToken);
             var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
 
-            var mongoUserId = await GetUserMongoId(userId, cancellationToken);
-
-            if (string.IsNullOrWhiteSpace(mongoUserId))
-                return new List<UpcomingViewModel>();
-
             var pastCashflows = await transactionCollection.AsQueryable()
-                .Where(x => x.UserId == mongoUserId && !string.IsNullOrEmpty(x.Cashflow))
+                .Where(x => x.UserId == userId && !string.IsNullOrEmpty(x.Cashflow))
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Cashflow)
                 .Select(g => new
@@ -41,15 +38,15 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
 
             var cashflows = await cashflowCollection
                 .AsQueryable()
-                .Where(x => x.UserId == mongoUserId)
+                .Where(x => x.UserId == userId)
                 .ToListAsync(cancellationToken);
             var accounts = await accountCollection
                 .AsQueryable()
-                .Where(x => x.UserId == mongoUserId)
+                .Where(x => x.UserId == userId)
                 .ToListAsync(cancellationToken);
             var categories = await categoryCollection
                 .AsQueryable()
-                .Where(x => x.UserId == mongoUserId)
+                .Where(x => x.UserId == userId)
                 .ToListAsync(cancellationToken);
 
             var upcomingCashflows = cashflows

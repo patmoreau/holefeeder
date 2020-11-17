@@ -11,33 +11,11 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
 {
     public static class GenerateTestData
     {
-        public static (ObjectId MongoId, Guid Id) CreateTestUserSchema(
-            this IMongoDbContext context,
-            string testName)
-        {
-            _ = context.ThrowIfNull(nameof(context));
-
-            var mongoId = ObjectId.GenerateNewId();
-            var id = Guid.NewGuid();
-
-            context.GetUsersAsync().Result.InsertOne(new UserSchema
-            {
-                MongoId = mongoId.ToString(),
-                FirstName = "TestUser",
-                LastName = testName,
-                EmailAddress = $"{id.ToString()}@email.com",
-                DateJoined = DateTime.Today,
-                GoogleId = $"GoogleId{id.ToString()}",
-                Id = id
-            });
-            return (mongoId, id);
-        }
-
         public static (ObjectId MongoId, Guid Id) CreateAccountSchema(
             this IMongoDbContext context,
             int index,
             AccountType type,
-            (ObjectId MongoId, Guid Id) user,
+            Guid userId,
             bool favorite = false,
             bool inactive = false)
         {
@@ -57,7 +35,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
                 Inactive = inactive,
                 OpenBalance = (Convert.ToDecimal(index) * 100m) + (Convert.ToDecimal(index) / 100m),
                 OpenDate = (new DateTime(2019, 1, 1)).AddDays(index),
-                UserId = user.MongoId.ToString()
+                UserId = userId
             });
             return (mongoId, id);
         }
@@ -66,7 +44,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             this IMongoDbContext context,
             int index,
             CategoryType type,
-            (ObjectId MongoId, Guid Id) user,
+            Guid userId,
             bool favorite = false)
         {
             _ = context.ThrowIfNull(nameof(context));
@@ -81,7 +59,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
                 Type = type,
                 Id = id,
                 Favorite = favorite,
-                UserId = user.MongoId.ToString()
+                UserId = userId
             });
 
             return (mongoId, id);
@@ -95,7 +73,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             decimal amount,
             DateIntervalType intervalType,
             int frequency,
-            (ObjectId MongoId, Guid Id) user)
+            Guid userId)
         {
             _ = context.ThrowIfNull(nameof(context));
 
@@ -114,7 +92,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
                 Account = account.MongoId.ToString(),
                 Category = category.MongoId.ToString(),
                 Id = id,
-                UserId = user.MongoId.ToString()
+                UserId = userId
             });
 
             return (mongoId, id);
@@ -126,7 +104,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
             (ObjectId MongoId, Guid Id) account,
             (ObjectId MongoId, Guid Id) category,
             decimal amount,
-            (ObjectId MongoId, Guid Id) user
+            Guid userId
         )
         {
             context.ThrowIfNull(nameof(context));
@@ -143,7 +121,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests
                 Account = account.MongoId.ToString(),
                 Category = category.MongoId.ToString(),
                 Id = id,
-                UserId = user.MongoId.ToString()
+                UserId = userId
             });
 
             return (mongoId, id);

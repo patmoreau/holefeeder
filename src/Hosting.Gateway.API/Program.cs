@@ -3,24 +3,24 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 
-namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API
+namespace DrifterApps.Holefeeder.Hosting.Gateway.API
 {
     public static class Program
     {
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+        private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddJsonFile(
+                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
+                optional: true)
             .AddEnvironmentVariables()
             .Build();
 
         public static void Main(string[] args)
         {
-            
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.WithProperty("Env", Configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production")
@@ -29,7 +29,7 @@ namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API
                 .WriteTo.Console()
                 .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
-            
+
             Log.Logger.Information("Hosting.Gateway.API started");
             try
             {
@@ -48,14 +48,14 @@ namespace DrifterApps.Holefeeder.Hosting.OcelotGateway.API
             }
         }
 
-        private static IWebHostBuilder CreateHostBuilder(string[] args)
-        {
-            IWebHostBuilder builder = WebHost.CreateDefaultBuilder(args);
-            builder.ConfigureServices(s => s.AddSingleton(builder))
-                .ConfigureAppConfiguration(ic => ic.AddJsonFile($"ocelot.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json"))
+        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .ConfigureAppConfiguration((host, config) =>
+                {
+                    config.AddJsonFile($"ocelot.json", false, true);
+                    config.AddJsonFile($"ocelot.{host.HostingEnvironment.EnvironmentName}.json", false, true);
+                })
                 .UseStartup<Startup>();
-            return builder;
-        }
     }
 }

@@ -20,12 +20,12 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
             _fixture = fixture;
         }
 
-        private void InitBaseData(string testName)
+        private void InitBaseData()
         {
             _testUsers ??= new[]
             {
-                _fixture.DatabaseContext.CreateTestUserSchema($"{testName}#1"),
-                _fixture.DatabaseContext.CreateTestUserSchema($"{testName}#2")
+                Guid.NewGuid(),
+                Guid.NewGuid()
             };
             _accounts ??= new[]
             {
@@ -52,7 +52,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
             };
         }
 
-        private (ObjectId MongoId, Guid Id)[] _testUsers;
+        private Guid[] _testUsers;
         private (ObjectId MongoId, Guid Id)[] _accounts;
         private (ObjectId MongoId, Guid Id)[] _categories;
         // ReSharper disable once NotAccessedField.Local
@@ -61,10 +61,10 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetAccounts_WhenNoFilter_ThenReturnResultsForUser()
         {
-            InitBaseData(nameof(GivenGetAccounts_WhenNoFilter_ThenReturnResultsForUser));
+            InitBaseData();
 
             var repository = new AccountQueriesRepository(_fixture.DatabaseContext);
-            var result = await repository.GetAccountsAsync(_testUsers[0].Id, QueryParams.Empty, default);
+            var result = await repository.GetAccountsAsync(_testUsers[0], QueryParams.Empty, default);
 
             result.Should().BeEquivalentTo(
                 new AccountViewModel(_accounts[0].Id, AccountType.Checking, "Account1",
@@ -79,11 +79,11 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetAccounts_WhenFilteredOnAccount1_ThenReturnAccount1()
         {
-            InitBaseData(nameof(GivenGetAccounts_WhenFilteredOnAccount1_ThenReturnAccount1));
+            InitBaseData();
 
             var repository = new AccountQueriesRepository(_fixture.DatabaseContext);
             var result =
-                await repository.GetAccountsAsync(_testUsers[0].Id,
+                await repository.GetAccountsAsync(_testUsers[0],
                     new QueryParams(0, int.MaxValue, null, new[] {"name=Account1"}),
                     default);
 
@@ -96,7 +96,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetAccounts_WhenUserNotExists_ThenReturnEmptyList()
         {
-            InitBaseData(nameof(GivenGetAccounts_WhenUserNotExists_ThenReturnEmptyList));
+            InitBaseData();
 
             var repository = new AccountQueriesRepository(_fixture.DatabaseContext);
             var result =
@@ -108,11 +108,11 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetAccounts_WhenOffsetAndLimitSet_ThenReturnSelectedResults()
         {
-            InitBaseData(nameof(GivenGetAccounts_WhenOffsetAndLimitSet_ThenReturnSelectedResults));
+            InitBaseData();
 
             var repository = new AccountQueriesRepository(_fixture.DatabaseContext);
             var result =
-                await repository.GetAccountsAsync(_testUsers[0].Id, new QueryParams(1, 2, null, null), default);
+                await repository.GetAccountsAsync(_testUsers[0], new QueryParams(1, 2, null, null), default);
 
             result.Should().BeEquivalentTo(
                 new AccountViewModel(_accounts[1].Id, AccountType.CreditCard,
@@ -125,10 +125,10 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
         [Fact]
         public async void GivenGetAccounts_WhenSorted_ThenReturnSortedResults()
         {
-            InitBaseData(nameof(GivenGetAccounts_WhenSorted_ThenReturnSortedResults));
+            InitBaseData();
 
             var repository = new AccountQueriesRepository(_fixture.DatabaseContext);
-            var result = await repository.GetAccountsAsync(_testUsers[0].Id,
+            var result = await repository.GetAccountsAsync(_testUsers[0],
                 new QueryParams(0, int.MaxValue, new[] {"-favorite", "balance"}, null), default);
 
             result.Select(x => x.Id).Should().ContainInOrder(_accounts[1].Id, _accounts[0].Id, _accounts[2].Id);
