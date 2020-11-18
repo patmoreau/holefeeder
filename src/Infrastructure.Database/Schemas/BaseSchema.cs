@@ -10,7 +10,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Schemas
         [BsonId, BsonRepresentation(BsonType.ObjectId)]
         public string MongoId { get; set; }
         
-        [BsonElement("guid")]
+        [BsonElement("globalId")]
         public Guid Id { get; set; }
 
         [BsonExtraElements]

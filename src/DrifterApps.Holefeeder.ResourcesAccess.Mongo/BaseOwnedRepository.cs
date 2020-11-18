@@ -9,6 +9,7 @@ using DrifterApps.Holefeeder.Common;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Threading;
+using MongoDB.Bson;
 
 namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
 {
@@ -20,7 +21,19 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
         {
         }
 
-        public Task<bool> IsOwnerAsync(Guid userId, string id, CancellationToken cancellationToken = default) => Collection.AsQueryable().AnyAsync(x => x.Id == id && x.UserId == userId, cancellationToken);
+        public async Task<bool> IsOwnerAsync(Guid userId, string id, CancellationToken cancellationToken = default)
+        {
+            if (ObjectId.TryParse(id, out _))
+            {
+                return await Collection.AsQueryable().AnyAsync(x => x.Id == id && x.UserId == userId, cancellationToken);
+            }
+            if (Guid.TryParse(id, out var globalId))
+            {
+                return await Collection.AsQueryable().AnyAsync(x => x.GlobalId == globalId && x.UserId == userId, cancellationToken);
+            }
+
+            return false;
+        }
 
         public Task<int> CountAsync(Guid userId, QueryParams query, CancellationToken cancellationToken = default) => Collection.AsQueryable().Where(x => x.UserId == userId).Filter(query?.Filter).CountAsync(cancellationToken);
 

@@ -41,9 +41,6 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "MongoDB needs to assign it")]
         public IList<string> Tags { get; set; }
 
-        [BsonElement("guid")]
-        public string GlobalId { get; set; }
-
         [BsonElement("userId")]
         public Guid UserId { get; set; }
     }

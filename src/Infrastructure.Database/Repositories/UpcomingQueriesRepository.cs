@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Application.Contracts;
-using DrifterApps.Holefeeder.Application.Models;
 using DrifterApps.Holefeeder.Application.Transactions.Contracts;
 using DrifterApps.Holefeeder.Application.Transactions.Models;
 using DrifterApps.Holefeeder.Infrastructure.Database.Context;
@@ -69,9 +67,10 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
                         c.Cashflow,
                         c.Account,
                         c.Category,
-                        t.LastPaidDate,
-                        t.LastCashflowDate
-                    }).SelectMany(x =>
+                        t?.LastPaidDate,
+                        t?.LastCashflowDate
+                    })
+                .SelectMany(x =>
                 {
                     var dates = new List<DateTime>();
 
@@ -98,7 +97,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Repositories
                         new UpcomingViewModel(x.Cashflow.Id, d, x.Cashflow.Amount, x.Cashflow.Description,
                             new CategoryInfoViewModel(x.Category.Id, x.Category.Name, x.Category.Type,
                                 x.Category.Color),
-                            new AccountInfoViewModel(x.Account.Id, x.Account.Name), x.Cashflow.Tags));
+                            new AccountInfoViewModel(x.Account.Id, x.Account.Name, x.Account.MongoId), x.Cashflow.Tags));
                 }).Where(x => x.Date <= endDate)
                 .OrderBy(x => x.Date);
 

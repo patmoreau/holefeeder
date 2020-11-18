@@ -28,7 +28,7 @@ export class UpcomingListComponent implements OnInit {
 
   ngOnInit() {
     this.upcomingCashflows$ = this.upcomingService.cashflows.pipe(
-      map(upcomingCashflows => upcomingCashflows.filter(upcomingCashflow => upcomingCashflow.account.id === this.accountId)),
+      map(upcomingCashflows => upcomingCashflows.filter(upcomingCashflow => upcomingCashflow.account.mongoId === this.accountId)),
     );
   }
 

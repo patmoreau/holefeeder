@@ -30,9 +30,6 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo.Schemas
         [BsonElement("inactive")]
         public bool Inactive { get; set; }
 
-        [BsonElement("guid")]
-        public string GlobalId { get; set; }
-
         [BsonElement("userId")]
         public Guid UserId { get; set; }
     }

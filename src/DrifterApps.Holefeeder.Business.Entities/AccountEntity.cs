@@ -12,10 +12,9 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public DateTime OpenDate { get; }
         public string Description { get; }
         public bool Inactive { get; }
-        public string GlobalId { get; }
         public Guid UserId { get; }
 
-        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, string globalId = "", Guid userId = default) : base(id)
+        public AccountEntity(string id, AccountType type, string name, bool favorite, decimal openBalance, DateTime openDate, string description, bool inactive, Guid userId = default) : base(id)
         {
             Type = type;
             Name = name;
@@ -24,11 +23,10 @@ namespace DrifterApps.Holefeeder.Business.Entities
             OpenDate = openDate;
             Description = description;
             Inactive = inactive;
-            GlobalId = globalId;
             UserId = userId;
         }
 
-        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, string globalId = null, Guid userId = default) =>
+        public AccountEntity With(string id = null, AccountType? type = null, string name = null, bool? favorite = null, decimal? openBalance = null, DateTime? openDate = null, string description = null, bool? inactive = null, Guid userId = default) =>
             new AccountEntity(
                 id ?? Id,
                 type ?? Type,
@@ -38,7 +36,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 openDate ?? OpenDate,
                 description ?? Description,
                 inactive ?? Inactive,
-                globalId ?? GlobalId,
                 userId == default ? UserId : userId);
 
         public AccountEntity WithUser(Guid userId) => this.With(userId: userId);

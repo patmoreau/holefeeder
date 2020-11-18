@@ -31,6 +31,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Context
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             BsonSerializer.RegisterSerializer(typeof(AccountType), new AccountTypeSerializer());
             BsonSerializer.RegisterSerializer(typeof(CategoryType), new CategoryTypeSerializer());
+            BsonSerializer.RegisterSerializer(typeof(DateIntervalType), new DateIntervalTypeSerializer());
             BsonClassMap.RegisterClassMap<AccountSchema>(cm =>
             {
                 cm.AutoMap();

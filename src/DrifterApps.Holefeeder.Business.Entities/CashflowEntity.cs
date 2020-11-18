@@ -17,10 +17,9 @@ namespace DrifterApps.Holefeeder.Business.Entities
         public string Category { get; }
         public bool Inactive { get; }
         public IReadOnlyList<string> Tags { get; }
-        public string GlobalId { get; }
         public Guid UserId { get; }
 
-        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, string globalId = "", Guid userId = default) : base(id)
+        public CashflowEntity(string id, DateTime effectiveDate, decimal amount, DateIntervalType intervalType, int frequency, int recurrence, string description, string account, string category, bool inactive, IEnumerable<string> tags, Guid userId = default) : base(id)
         {
             EffectiveDate = effectiveDate;
             Amount = amount;
@@ -32,11 +31,10 @@ namespace DrifterApps.Holefeeder.Business.Entities
             Category = category;
             Inactive = inactive;
             Tags = ImmutableList.CreateRange(tags ?? Array.Empty<string>());
-            GlobalId = globalId;
             UserId = userId;
         }
 
-        public CashflowEntity With(string id = null, DateTime? effectiveDate = null, decimal? amount = null, DateIntervalType? intervalType = null, int? frequency = null, int? recurrence = null, string description = null, string account = null, string category = null, bool? inactive = null, IEnumerable<string> tags = null, string globalId = null, Guid userId = default) =>
+        public CashflowEntity With(string id = null, DateTime? effectiveDate = null, decimal? amount = null, DateIntervalType? intervalType = null, int? frequency = null, int? recurrence = null, string description = null, string account = null, string category = null, bool? inactive = null, IEnumerable<string> tags = null, Guid userId = default) =>
             new CashflowEntity(
                 id ?? Id,
                 effectiveDate ?? EffectiveDate,
@@ -49,7 +47,6 @@ namespace DrifterApps.Holefeeder.Business.Entities
                 category ?? Category,
                 inactive ?? Inactive,
                 ImmutableList.CreateRange(tags ?? Tags),
-                globalId ?? GlobalId,
                 userId == default ? UserId : userId
             );
 

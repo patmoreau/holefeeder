@@ -41,8 +41,7 @@ namespace DrifterApps.Holefeeder.Infrastructure.Database.Tests.Repositories
             };
             _cashflows = new[]
             {
-                _fixture.DatabaseContext.CreateCashflowSchema(1, _accounts[0], _categories[0], 111,
-                    DateIntervalType.Weekly, 2, _testUsers[0]),
+                _fixture.DatabaseContext.CreateCashflowSchema(1, _accounts[0], _categories[0], 111, DateIntervalType.Weekly, 2, _testUsers[0]),
             };
             _transactions = new[]
             {

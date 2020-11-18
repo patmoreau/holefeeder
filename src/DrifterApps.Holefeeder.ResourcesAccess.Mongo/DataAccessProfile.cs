@@ -11,20 +11,25 @@ namespace DrifterApps.Holefeeder.ResourcesAccess.Mongo
             CreateMap<AccountSchema, AccountEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
                 .ReverseMap()
+                .ForMember(x => x.GlobalId, opt => opt.Ignore())
                 .ForMember(x => x.OpenDate, opt => opt.MapFrom(y => y.OpenDate.Date));
             CreateMap<CashflowSchema, CashflowEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
                 .ReverseMap()
+                .ForMember(x => x.GlobalId, opt => opt.Ignore())
                 .ForMember(x => x.EffectiveDate, opt => opt.MapFrom(y => y.EffectiveDate.Date));
             CreateMap<CategorySchema, CategoryEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(x => x.GlobalId, opt => opt.Ignore());
             CreateMap<ObjectDataSchema, ObjectDataEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(x => x.GlobalId, opt => opt.Ignore());
             CreateMap<TransactionSchema, TransactionEntity>()
                 .ForSourceMember(x => x.CatchAll, opt => opt.DoNotValidate())
                 .ReverseMap()
+                .ForMember(x => x.GlobalId, opt => opt.Ignore())
                 .ForMember(x => x.Date, opt => opt.MapFrom(y => y.Date.Date));
         }
     }
