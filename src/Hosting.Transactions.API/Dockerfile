@@ -43,7 +43,7 @@ RUN dotnet restore DrifterApps.Holefeeder.sln
 ### for caching purposes, everything above this line should be the same in all dockerfiles of the solution
 
 COPY ./src/. ./
-WORKDIR /src/Hosting.Gateway.API/
+WORKDIR /src/Hosting.Transactions.API/
 RUN dotnet build --no-restore --configuration Release --output /app
 
 FROM build AS testrunner
@@ -56,10 +56,10 @@ RUN dotnet test --no-restore --results-directory /out/testresults --collect:"XPl
 RUN /dotnetglobaltools/reportgenerator "-reports:/out/testresults/*/coverage.cobertura.xml" "-targetdir:/out/coverage/reports" "-reporttypes:HTMLInline;Badges"
  
 FROM testrunner AS publish
-WORKDIR /src/Hosting.Gateway.API/
+WORKDIR /src/Hosting.Transactions.API/
 RUN dotnet publish --no-restore --configuration Release --output /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Hosting.Gateway.API.dll"]
+ENTRYPOINT ["dotnet", "Hosting.Transactions.API.dll"]
