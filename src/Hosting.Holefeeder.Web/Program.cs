@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace DrifterApps.Holefeeder.Hosting.Holefeeder.UI
+namespace DrifterApps.Holefeeder.Hosting.Holefeeder.Web
 {
     public static class Program
     {

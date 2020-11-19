@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Gateway.API", "Hosting.Gateway.API\Hosting.Gateway.API.csproj", "{5944C370-C514-4C05-B765-7473DD654678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Holefeeder.UI", "Hosting.Holefeeder.UI\Hosting.Holefeeder.UI.csproj", "{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Holefeeder.Web", "Hosting.Holefeeder.Web\Hosting.Holefeeder.Web.csproj", "{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database.Tests", "tests\Infrastructure.Database.Tests\Infrastructure.Database.Tests.csproj", "{AC5C6353-80CE-4B12-98F0-287E76E68A87}"
 EndProject

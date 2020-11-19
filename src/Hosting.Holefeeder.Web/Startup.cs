@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DrifterApps.Holefeeder.Hosting.Holefeeder.UI
+namespace DrifterApps.Holefeeder.Hosting.Holefeeder.Web
 {
     public class Startup
     {

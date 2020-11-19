@@ -11,7 +11,7 @@ COPY src/DrifterApps.Holefeeder.sln ./
 COPY src/Directory.Build.props ./
 
 COPY src/Hosting.Gateway.API/*.csproj ./Hosting.Gateway.API/
-COPY src/Hosting.Holefeeder.UI/*.csproj ./Hosting.Holefeeder.UI/
+COPY src/Hosting.Holefeeder.Web/*.csproj ./Hosting.Holefeeder.Web/
 COPY src/Hosting.SeedWork/*.csproj ./Hosting.SeedWork/
 COPY src/Hosting.Transactions.API/*.csproj ./Hosting.Transactions.API/
 COPY src/Infrastructure.Database/*.csproj ./Infrastructure.Database/
