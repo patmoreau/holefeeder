@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --prod",
+    "start": "echo Starting... && ng serve",
+    "build": "ng build",
+    "build:ssr": "ng run holefeeder-web:server:dev",
     "test": "jest",
-    "jest:watch": "jest --watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

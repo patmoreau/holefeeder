@@ -2,38 +2,30 @@
 <!--    https://referbruv.com/blog/posts/setting-up-and-serving-angular-code-in-an-aspnet-core-project-->
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>DrifterApps.Holefeeder.Hosting.Holefeeder.Web</RootNamespace>
-        <LangVersion>default</LangVersion>
-        
         <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
         <IsPackable>false</IsPackable>
-
-        <!-- the path picked up by all the processing -->
         <SpaRoot>ClientApp\</SpaRoot>
         <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+
         <!-- Set this to true if you enable server-side prerendering -->
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
+        <RootNamespace>DrifterApps.Holefeeder.Hosting.Holefeeder.Web</RootNamespace>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="ClientApp" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.9" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.9" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <!-- Don't publish the SPA source files, but do show them in the project files list -->
         <Content Remove="$(SpaRoot)**" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.9" />
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.9" />
-    </ItemGroup>
-    
-    <!-- Debug run configuration -->
-    <!-- Check for Nodejs installation, install in the ClientApp -->
+
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
         <!-- Ensure Node.js is installed -->
         <Exec Command="node --version" ContinueOnError="true">
@@ -43,8 +35,7 @@
         <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     </Target>
-    
-    <!-- Publish time tasks: run npm build along with project publish -->
+
     <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
         <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
@@ -62,4 +53,5 @@
             </ResolvedFileToPublish>
         </ItemGroup>
     </Target>
+
 </Project>
