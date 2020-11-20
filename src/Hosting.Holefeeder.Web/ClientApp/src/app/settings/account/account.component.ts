@@ -20,7 +20,7 @@ export class AccountComponent implements OnInit {
   }
 
   saveProfile(formValues) {
-    console.log(formValues);
+    console.debug(formValues);
   }
 
   cancel() {

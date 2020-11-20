@@ -35,7 +35,7 @@ export class TransactionsService {
       });
     }
     return this.api
-      .get(this.basePath, params)
+      .getList(this.basePath, params)
       .pipe(
         map(data =>
           Object.assign(

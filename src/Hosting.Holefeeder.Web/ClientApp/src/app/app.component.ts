@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BroadcastService, MsalService} from '@azure/msal-angular';
 import {CryptoUtils, Logger} from 'msal';
 import {Subscription} from 'rxjs';
-import {b2cPolicies} from "@app/app-config.service";
+import {b2cPolicies} from "@app/config/config.service";
 
 @Component({
   selector: 'dfta-root',
@@ -36,8 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     loginFailureSubscription = this.broadcastService.subscribe('msal:loginFailure', (error) => {
-      console.log('login failed');
-      console.log(error);
+      console.debug('login failed');
+      console.debug(error);
 
       if (error.errorMessage) {
         // Check for forgot password error
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.authService.setLogger(new Logger((logLevel, message, piiEnabled) => {
-      console.log('MSAL Logging: ', message);
+      console.debug('MSAL Logging: ', message);
     }, {
       correlationId: CryptoUtils.createNewGuid(),
       piiLoggingEnabled: false

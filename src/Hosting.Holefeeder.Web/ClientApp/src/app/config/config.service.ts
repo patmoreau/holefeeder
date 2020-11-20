@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {IAppConfig} from "@app/interfaces/app-config.interface";
+import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
 import {Configuration} from "msal";
 import {MsalAngularConfiguration} from "@azure/msal-angular";
-import {Observable} from "rxjs";
-import {tap} from "rxjs/operators";
+import {BehaviorSubject, Observable} from "rxjs";
+import {map, tap} from "rxjs/operators";
+import {IConfig} from "@app/config/config.interface";
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -36,36 +36,43 @@ const loginRequest: { scopes: string[] } = {scopes: ['openid', 'profile']};
 
 const tokenRequest: { scopes: string[] } = {scopes: apiConfig.b2cScopes};
 
-@Injectable()
-export class AppConfigService {
-  private appConfig: IAppConfig;
+@Injectable({
+    providedIn: 'root'
+  }
+)
+export class ConfigService {
+  private configData: IConfig;
 
-  constructor(private http: HttpClient) {
+  private http: HttpClient;
+
+  constructor(private readonly httpHandler: HttpBackend) {
+    this.http = new HttpClient(httpHandler);
   }
 
-  loadAppConfig(): Observable<IAppConfig> {
-    console.log('getting settings');
-    const headers = new HttpHeaders({'Anonymous': ''})
-    return this.http.get<IAppConfig>('/assets/Settings', {headers: headers})
-      .pipe(
-        tap(data => {
-          console.log(data);
-          this.appConfig = data;
-        })
-      );
+  init(endpoint: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.http.get<IConfig>(endpoint).pipe(map(res => res))
+        .subscribe(value => {
+            this.configData = Object.assign(value);
+            resolve(true);
+          },
+          (error) => {
+            reject(error);
+          })
+    });
   }
 
-  getConfig(): IAppConfig {
-    return this.appConfig;
+  get config(): IConfig {
+    return this.configData;
   }
 
   getMsalConfig(): Configuration {
-    return {
+    return Object.assign({
       auth: {
         clientId: '9814ecda-b8db-4775-a361-714af29fe486',
         authority: b2cPolicies.authorities.signUpSignIn.authority,
-        redirectUri: this.appConfig.RedirectUrl,
-        postLogoutRedirectUri: this.appConfig.RedirectUrl,
+        redirectUri: this.configData.redirectUrl,
+        postLogoutRedirectUri: this.configData.redirectUrl,
         navigateToLoginRequestUrl: true,
         validateAuthority: false,
       },
@@ -73,19 +80,19 @@ export class AppConfigService {
         cacheLocation: 'localStorage',
         storeAuthStateInCookie: isIE,
       },
-    };
+    });
   }
 
   getMsalAngularConfig(): MsalAngularConfiguration {
-    return {
-      popUp: false,
+    return Object.assign({
+      popUp: !isIE,
       consentScopes: [
         ...loginRequest.scopes,
         ...tokenRequest.scopes,
       ],
       unprotectedResources: [],
-      protectedResourceMap: [[this.appConfig.ApiUrl, apiConfig.b2cScopes]],
+      protectedResourceMap: [[this.configData.apiUrl, apiConfig.b2cScopes]],
       extraQueryParameters: {}
-    };
+    });
   }
 }

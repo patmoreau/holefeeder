@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -66,7 +67,8 @@ namespace DrifterApps.Holefeeder.Hosting.Holefeeder.Web
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
-
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");

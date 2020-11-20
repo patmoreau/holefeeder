@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ISettings } from '../../shared/interfaces/settings.interface';
-import { IDateInterval } from '../../shared/interfaces/date-interval.interface';
+import { ISettings } from '@app/shared/interfaces/settings.interface';
+import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import {
   addYears,
   addMonths,
@@ -12,7 +12,7 @@ import {
 } from 'date-fns';
 import { SettingsService } from '@app/singletons/services/settings.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DateIntervalType } from '../../shared/enums/date-interval-type.enum';
+import { DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class DateService {

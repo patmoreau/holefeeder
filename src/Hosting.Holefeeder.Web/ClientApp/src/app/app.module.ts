@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER} from '@angular/core';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER, InjectionToken} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ToastNoAnimationModule} from 'ngx-toastr';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
@@ -12,9 +12,16 @@ import {ErrorNotfoundComponent} from './error-notfound/error-notfound.component'
 import {SingletonsModule} from './singletons/singletons.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {MsalModule, MSAL_CONFIG, MSAL_CONFIG_ANGULAR, MsalService} from '@azure/msal-angular';
-import {AppConfigService} from "@app/app-config.service";
-import {AnonymousMsalInterceptor} from "@app/interceptors/anonymous-msal.interceptor";
+import {
+  MsalModule,
+  MSAL_CONFIG,
+  MSAL_CONFIG_ANGULAR,
+  MsalService,
+  MsalAngularConfiguration,
+  MsalInterceptor
+} from '@azure/msal-angular';
+import {Configuration} from "msal";
+import {ConfigService} from "@app/config/config.service";
 
 const COMPONENTS = [
   AppComponent,
@@ -23,25 +30,24 @@ const COMPONENTS = [
   ErrorNotfoundComponent
 ];
 
-const MSALConfigFactory = (appConfig: AppConfigService) => {
-  return () => {
-    console.log('MSALConfigFactory')
-    return appConfig.getMsalConfig();
-  };
+const AUTH_CONFIG_URL_TOKEN = new InjectionToken<string>('/assets/Settings');
+
+export function initializerFactory(env: ConfigService, configUrl: string): any {
+  // APP_INITIALIZER, except a function return which will return a promise
+  // APP_INITIALIZER, angular doesnt starts application until it completes
+  const promise = env.init(configUrl).then((value) => {
+    console.debug('Configuration initialized.');
+  });
+  return () => promise;
 }
 
-const MSALAngularConfigFactory = (appConfig: AppConfigService) => {
-  return () => {
-    console.log('MSALAngularConfigFactory')
-    return appConfig.getMsalAngularConfig();
-  };
+export function msalConfigFactory(config: ConfigService): Configuration {
+  return config.getMsalConfig();
 }
 
-const appInitializerFn = (appConfig: AppConfigService) => {
-  return () => {
-    return appConfig.loadAppConfig().toPromise();
-  };
-};
+export function msalAngularConfigFactory(config: ConfigService): MsalAngularConfiguration {
+  return config.getMsalAngularConfig();
+}
 
 @NgModule({
   declarations: [COMPONENTS],
@@ -59,29 +65,28 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ToastNoAnimationModule.forRoot()
   ],
   providers: [
-    AppConfigService,
+    ConfigService,
+    {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/Settings'},
     {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializerFn,
-      multi: true,
-      deps: [AppConfigService]
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AnonymousMsalInterceptor,
-      multi: true
+      provide: APP_INITIALIZER, useFactory: initializerFactory,
+      deps: [ConfigService, AUTH_CONFIG_URL_TOKEN], multi: true
     },
     {
       provide: MSAL_CONFIG,
-      useFactory: MSALConfigFactory,
-      deps: [AppConfigService]
+      useFactory: msalConfigFactory,
+      deps: [ConfigService]
     },
     {
       provide: MSAL_CONFIG_ANGULAR,
-      useFactory: MSALAngularConfigFactory,
-      deps: [AppConfigService]
+      useFactory: msalAngularConfigFactory,
+      deps: [ConfigService]
     },
-    MsalService
+    MsalService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MsalInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -4,11 +4,11 @@
     "Hosting.Holefeeder.Web": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5100",
+      "applicationUrl": "http://localhost:4200",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "HolefeederWeb__ApiUrl": "https://localhost:5001",
-        "HolefeederWeb__RedirectUrl": "http://localhost:5100"
+        "HolefeederWeb__RedirectUrl": "http://localhost:4200"
       }
     }
   }
