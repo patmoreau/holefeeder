@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 	.editorconfig = .editorconfig
+	.dockerignore = .dockerignore
+	docker-compose.debug.yml = docker-compose.debug.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Periphery", "1.Periphery", "{5BE1289E-0374-4C88-884B-DF17A878B3F4}"

@@ -1,48 +1,56 @@
-FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:3.1-buster-slim AS base
 LABEL author="Drifter Apps Inc."
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:3.1-buster AS build
 WORKDIR /src
 
-COPY src/DrifterApps.Holefeeder.sln ./
-COPY src/Directory.Build.props ./
+COPY DrifterApps.Holefeeder.sln ./
+COPY Directory.Build.props ./
 
-COPY src/Hosting.Gateway.API/*.csproj ./Hosting.Gateway.API/
-COPY src/Hosting.Holefeeder.Web/*.csproj ./Hosting.Holefeeder.Web/
-COPY src/Hosting.SeedWork/*.csproj ./Hosting.SeedWork/
-COPY src/Hosting.Transactions.API/*.csproj ./Hosting.Transactions.API/
-COPY src/Infrastructure.Database/*.csproj ./Infrastructure.Database/
-COPY src/Application.Accounts/*.csproj ./Application.Accounts/
-COPY src/Application.SeedWork/*.csproj ./Application.SeedWork/
-COPY src/Application.Transactions/*.csproj ./Application.Transactions/
-COPY src/Domain/*.csproj ./Domain/
-COPY src/Framework.SeedWork/*.csproj ./Framework.SeedWork/
+COPY Hosting.Gateway.API/*.csproj ./Hosting.Gateway.API/
+COPY Hosting.Holefeeder.Web/*.csproj ./Hosting.Holefeeder.Web/
+COPY Hosting.SeedWork/*.csproj ./Hosting.SeedWork/
+COPY Hosting.Transactions.API/*.csproj ./Hosting.Transactions.API/
+COPY Infrastructure.Database/*.csproj ./Infrastructure.Database/
+COPY Application.Accounts/*.csproj ./Application.Accounts/
+COPY Application.SeedWork/*.csproj ./Application.SeedWork/
+COPY Application.Transactions/*.csproj ./Application.Transactions/
+COPY Domain/*.csproj ./Domain/
+COPY Framework.SeedWork/*.csproj ./Framework.SeedWork/
 
-COPY src/tests/Directory.Build.props ./tests/
-COPY src/tests/Application.Tests/*.csproj ./tests/Application.Tests/
-COPY src/tests/Domain.Tests/*.csproj ./tests/Domain.Tests/
-COPY src/tests/Infrastructure.Database.IntegrationTests/*.csproj ./tests/Infrastructure.Database.IntegrationTests/
-COPY src/tests/Infrastructure.Database.Tests/*.csproj ./tests/Infrastructure.Database.Tests/
+COPY tests/Directory.Build.props ./tests/
+COPY tests/Application.Tests/*.csproj ./tests/Application.Tests/
+COPY tests/Domain.Tests/*.csproj ./tests/Domain.Tests/
+COPY tests/Infrastructure.Database.IntegrationTests/*.csproj ./tests/Infrastructure.Database.IntegrationTests/
+COPY tests/Infrastructure.Database.Tests/*.csproj ./tests/Infrastructure.Database.Tests/
 
-COPY src/DrifterApps.Holefeeder.Business/*.csproj ./DrifterApps.Holefeeder.Business/
-COPY src/DrifterApps.Holefeeder.Business.Contracts/*.csproj ./DrifterApps.Holefeeder.Business.Contracts/
-COPY src/DrifterApps.Holefeeder.Business.Entities/*.csproj ./DrifterApps.Holefeeder.Business.Entities/
-COPY src/DrifterApps.Holefeeder.Common/*.csproj ./DrifterApps.Holefeeder.Common/
-COPY src/DrifterApps.Holefeeder.Common.IoC/*.csproj ./DrifterApps.Holefeeder.Common.IoC/
-COPY src/DrifterApps.Holefeeder.ResourcesAccess.Contracts/*.csproj ./DrifterApps.Holefeeder.ResourcesAccess.Contracts/
-COPY src/DrifterApps.Holefeeder.ResourcesAccess.Mongo/*.csproj ./DrifterApps.Holefeeder.ResourcesAccess.Mongo/
-COPY src/DrifterApps.Holefeeder.Services.BudgetApi/*.csproj ./DrifterApps.Holefeeder.Services.BudgetApi/
-COPY src/DrifterApps.Holefeeder.Services.BudgetDto/*.csproj ./DrifterApps.Holefeeder.Services.BudgetDto/
-COPY src/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/*.csproj ./DrifterApps.Holefeeder.ServicesHosts.BudgetApi/
+COPY DrifterApps.Holefeeder.Business/*.csproj ./DrifterApps.Holefeeder.Business/
+COPY DrifterApps.Holefeeder.Business.Contracts/*.csproj ./DrifterApps.Holefeeder.Business.Contracts/
+COPY DrifterApps.Holefeeder.Business.Entities/*.csproj ./DrifterApps.Holefeeder.Business.Entities/
+COPY DrifterApps.Holefeeder.Common/*.csproj ./DrifterApps.Holefeeder.Common/
+COPY DrifterApps.Holefeeder.Common.IoC/*.csproj ./DrifterApps.Holefeeder.Common.IoC/
+COPY DrifterApps.Holefeeder.ResourcesAccess.Contracts/*.csproj ./DrifterApps.Holefeeder.ResourcesAccess.Contracts/
+COPY DrifterApps.Holefeeder.ResourcesAccess.Mongo/*.csproj ./DrifterApps.Holefeeder.ResourcesAccess.Mongo/
+COPY DrifterApps.Holefeeder.Services.BudgetApi/*.csproj ./DrifterApps.Holefeeder.Services.BudgetApi/
+COPY DrifterApps.Holefeeder.Services.BudgetDto/*.csproj ./DrifterApps.Holefeeder.Services.BudgetDto/
+COPY DrifterApps.Holefeeder.ServicesHosts.BudgetApi/*.csproj ./DrifterApps.Holefeeder.ServicesHosts.BudgetApi/
 
 RUN dotnet restore DrifterApps.Holefeeder.sln
 
 ### for caching purposes, everything above this line should be the same in all dockerfiles of the solution
 
-COPY ./src/. ./
+COPY . .
+
+RUN apt-get update -yq \
+    && apt-get install curl gnupg -yq \
+    && curl -sL https://deb.nodesource.com/setup_15.x | bash \
+    && apt-get install nodejs -yq \
+    && npm install -g npm \
+    && npm install -g @angular/cli
+
 WORKDIR /src/Hosting.Holefeeder.Web/
 RUN dotnet build --no-restore --configuration Release --output /app
 
@@ -60,6 +68,12 @@ WORKDIR /src/Hosting.Holefeeder.Web/
 RUN dotnet publish --no-restore --configuration Release --output /app
 
 FROM base AS final
+
+RUN apt-get update -yq \
+    && apt-get install curl gnupg -yq \
+    && curl -sL https://deb.nodesource.com/setup_15.x | bash \
+    && apt-get install nodejs -yq
+
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Hosting.Holefeeder.Web.dll"]

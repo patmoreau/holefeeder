@@ -54,7 +54,6 @@ namespace DrifterApps.Holefeeder.Hosting.Gateway.API
                 .ConfigureAppConfiguration((host, config) =>
                 {
                     config.AddJsonFile($"ocelot.json", false, true);
-                    config.AddJsonFile($"ocelot.{host.HostingEnvironment.EnvironmentName}.json", false, true);
                 })
                 .UseStartup<Startup>();
     }

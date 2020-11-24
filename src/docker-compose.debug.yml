@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  holefeeder.web:
+    container_name: holefeeder_web
+    image: ${DOCKER_REGISTRY-}holefeeder-web
+    build:
+      context: .
+      dockerfile: Hosting.Holefeeder.Web/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - HolefeederWeb__ApiUrl=https://localhost:5001
+      - HolefeederWeb__RedirectUrl=https://localhost
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=drifterapps123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/holefeeder.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      - holefeeder.gateway.api
+
+  holefeeder.gateway.api:
+    container_name: holefeeder_gateway_api
+    image: ${DOCKER_REGISTRY-}holefeeder-gateway-api
+    build:
+      context: .
+      dockerfile: Hosting.Gateway.API/Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=drifterapps123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/holefeeder.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      - holefeeder.budget.api
+      - holefeeder.transactions.api
+
+  holefeeder.transactions.api:
+    container_name: holefeeder_transactions_api
+    image: ${DOCKER_REGISTRY-}holefeeder-transactions-api
+    build:
+      context: .
+      dockerfile: Hosting.Transactions.API/Dockerfile
+    ports:
+      - 80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  holefeeder.budget.api:
+    container_name: holefeeder_budget_api
+    image: ${DOCKER_REGISTRY-}holefeeder-legacy-budget-api
+    build:
+      context: .
+      dockerfile: DrifterApps.Holefeeder.ServicesHosts.BudgetApi/Dockerfile
+    ports:
+      - 80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

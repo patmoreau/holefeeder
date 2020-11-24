@@ -9,3 +9,5 @@
 **/Dockerfile
 **/Dockerfile.develop
 **/obj
+**/node_modules
+**/dist
