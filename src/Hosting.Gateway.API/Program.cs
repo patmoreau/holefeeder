@@ -13,8 +13,7 @@ namespace DrifterApps.Holefeeder.Hosting.Gateway.API
         private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile(
-                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
                 optional: true)
             .AddEnvironmentVariables()
             .Build();
@@ -23,11 +22,11 @@ namespace DrifterApps.Holefeeder.Hosting.Gateway.API
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .Enrich.WithProperty("Env", Configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production")
+                .Enrich.WithProperty("Env", Configuration["ASPNETCORE_ENVIRONMENT"])
                 .Enrich.WithProperty("MicroServiceName", "Hosting.Gateway.API")
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
+                .WriteTo.Seq(Configuration["SEQ_Url"], apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
 
             Log.Logger.Information("Hosting.Gateway.API started");

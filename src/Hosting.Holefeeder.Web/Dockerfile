@@ -68,12 +68,6 @@ WORKDIR /src/Hosting.Holefeeder.Web/
 RUN dotnet publish --no-restore --configuration Release --output /app
 
 FROM base AS final
-
-RUN apt-get update -yq \
-    && apt-get install curl gnupg -yq \
-    && curl -sL https://deb.nodesource.com/setup_15.x | bash \
-    && apt-get install nodejs -yq
-
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Hosting.Holefeeder.Web.dll"]

@@ -38,7 +38,7 @@ namespace DrifterApps.Holefeeder.ServicesHosts.BudgetApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var allowedOrigins = Configuration.GetSection("AllowedOrigin")?.Get<string[]>();
+            var allowedOrigins = Configuration.GetSection("AllowedHosts")?.Get<string[]>();
             if (allowedOrigins == null || !allowedOrigins.Any())
                 throw new NullReferenceException(BudgetApiInternal.AllowedOriginNotConfigured);
 

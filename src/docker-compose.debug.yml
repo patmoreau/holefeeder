@@ -11,8 +11,8 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=https://+;http://+
       - HolefeederWeb__ApiUrl=https://localhost:5001
       - HolefeederWeb__RedirectUrl=https://localhost
       - ASPNETCORE_Kestrel__Certificates__Default__Password=drifterapps123
@@ -29,18 +29,20 @@ services:
       context: .
       dockerfile: Hosting.Gateway.API/Dockerfile
     ports:
-      - "5000:80"
       - "5001:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=https://+:443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=drifterapps123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/holefeeder.pfx
+      - SEQ_Url=http://seq:5341
     volumes:
       - ~/.aspnet/https:/https:ro
     depends_on:
       - holefeeder.budget.api
       - holefeeder.transactions.api
+    networks:
+      - development-network
 
   holefeeder.transactions.api:
     container_name: holefeeder_transactions_api
@@ -51,7 +53,11 @@ services:
     ports:
       - 80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
+      - HolefeederDatabaseSettings__ConnectionString=mongodb://root:drifterapps123@mongo:27017
+      - HolefeederDatabaseSettings__Database=holefeeder
+    networks:
+      - development-network
 
   holefeeder.budget.api:
     container_name: holefeeder_budget_api
@@ -62,4 +68,17 @@ services:
     ports:
       - 80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
+      - MongoDB__ConnectionString=mongodb://root:drifterapps123@mongo:27017
+      - MongoDB__DatabaseName=holefeeder
+    networks:
+      - development-network
+
+networks:
+  default:
+    name: holefeeder-network
+    driver: bridge
+
+  development-network:
+    external:
+      name: development-network
