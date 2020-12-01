@@ -356,3 +356,4 @@ docker/data
 **/dist
 docker/development/data
 tools/fixGuid.sh
+src/tests-results

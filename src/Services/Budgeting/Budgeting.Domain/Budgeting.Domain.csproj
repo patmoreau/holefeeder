@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>DrifterApps.Holefeeder.Budgeting.Domain</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="BoundedContext\CashflowContext" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj" />
+    </ItemGroup>
+
+</Project>

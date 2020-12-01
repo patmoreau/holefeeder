@@ -3,82 +3,72 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Architecture", "0.Architecture", "{021329ED-4CB0-46EA-B3FD-BDDFE43EC359}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD45B216-6211-42CF-922B-7145CB050457}"
 ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 	.editorconfig = .editorconfig
 	.dockerignore = .dockerignore
 	docker-compose.debug.yml = docker-compose.debug.yml
+	docker-compose.yml = docker-compose.yml
+	docker-compose-tests.yml = docker-compose-tests.yml
+	docker-compose-tests.override.yml = docker-compose-tests.override.yml
 EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Periphery", "1.Periphery", "{5BE1289E-0374-4C88-884B-DF17A878B3F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.Domain", "Services\Budgeting\Budgeting.Domain\Budgeting.Domain.csproj", "{B8905A6D-15E6-458A-89F6-63C7795792F1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Application", "2.Application", "{536BFBD5-C39A-473D-AA93-28DBA0A21265}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.UnitTests", "Services\Budgeting\Budgeting.UnitTests\Budgeting.UnitTests.csproj", "{5343E86C-A6D9-4161-8D96-307AEB9D8986}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Domain", "3.Domain", "{62C8988F-0621-4B38-B046-CD32C83D6912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.FunctionalTests", "Services\Budgeting\Budgeting.FunctionalTests\Budgeting.FunctionalTests.csproj", "{4B6D6015-E492-4042-BCAF-3426184B034D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1.Hosting", "1.1.Hosting", "{A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.Infrastructure", "Services\Budgeting\Budgeting.Infrastructure\Budgeting.Infrastructure.csproj", "{6D5E8F88-6580-42EF-AD7E-478D2BECB724}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.2.Infrastructure", "1.2.Infrastructure", "{EE442EA7-EB69-4695-8F21-4D3F79228E50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Gateway", "ApiGateways\Web.Gateway\Web.Gateway.csproj", "{5944C370-C514-4C05-B765-7473DD654678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{B8905A6D-15E6-458A-89F6-63C7795792F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Web", "Web\Holefeeder.Web\Holefeeder.Web.csproj", "{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Accounts", "Application.Accounts\Application.Accounts.csproj", "{377C2769-FE20-4D37-846A-10D9CA71C4CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.Application", "Services\Budgeting\Budgeting.Application\Budgeting.Application.csproj", "{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Tests", "5.Tests", "{1D475453-64AC-4F3B-ADC0-70794B35F900}"
-ProjectSection(SolutionItems) = preProject
-	tests\Directory.Build.props = tests\Directory.Build.props
-EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.SeedWork", "BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj", "{D9F1BF2F-2787-4474-A772-BA1F0208FB7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tests", "tests\Application.Tests\Application.Tests.csproj", "{5343E86C-A6D9-4161-8D96-307AEB9D8986}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests", "tests\Domain.Tests\Domain.Tests.csproj", "{57695F53-376C-4696-86C7-06FD3BDDCA7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business", "Legacy\DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj", "{D17438D7-A41D-4D16-B3BE-C0C20A18093C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database.IntegrationTests", "tests\Infrastructure.Database.IntegrationTests\Infrastructure.Database.IntegrationTests.csproj", "{4B6D6015-E492-4042-BCAF-3426184B034D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business.Contracts", "Legacy\DrifterApps.Holefeeder.Business.Contracts\DrifterApps.Holefeeder.Business.Contracts.csproj", "{5C9BFC72-6B4A-45B1-906C-AC8B34C8DDEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database", "Infrastructure.Database\Infrastructure.Database.csproj", "{6D5E8F88-6580-42EF-AD7E-478D2BECB724}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business.Entities", "Legacy\DrifterApps.Holefeeder.Business.Entities\DrifterApps.Holefeeder.Business.Entities.csproj", "{9B074D2F-776F-42F7-A16E-1F9C7515F5CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Gateway.API", "Hosting.Gateway.API\Hosting.Gateway.API.csproj", "{5944C370-C514-4C05-B765-7473DD654678}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common", "Legacy\DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj", "{7652F634-B614-4786-9DDF-E86CA8EA3956}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Holefeeder.Web", "Hosting.Holefeeder.Web\Hosting.Holefeeder.Web.csproj", "{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common.IoC", "Legacy\DrifterApps.Holefeeder.Common.IoC\DrifterApps.Holefeeder.Common.IoC.csproj", "{4C87D754-7440-4770-87F8-BEF00DEC9409}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Database.Tests", "tests\Infrastructure.Database.Tests\Infrastructure.Database.Tests.csproj", "{AC5C6353-80CE-4B12-98F0-287E76E68A87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Contracts", "Legacy\DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj", "{97CD4DB4-329C-430B-B8B9-E4F5F90A6B2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Transactions", "Application.Transactions\Application.Transactions.csproj", "{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "Legacy\DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{842CABE7-8003-476F-93CF-B1DD00272AFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.SeedWork", "Application.SeedWork\Application.SeedWork.csproj", "{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetApi", "Legacy\DrifterApps.Holefeeder.Services.BudgetApi\DrifterApps.Holefeeder.Services.BudgetApi.csproj", "{87BCE71A-2275-41E8-83FC-4A2A27BAE0C8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Framework", "4.Framework", "{73415BD3-058B-495A-9726-7279BF670451}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetDto", "Legacy\DrifterApps.Holefeeder.Services.BudgetDto\DrifterApps.Holefeeder.Services.BudgetDto.csproj", "{ABADE85C-8B3D-4D60-B338-373D5A7D1EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.SeedWork", "Framework.SeedWork\Framework.SeedWork.csproj", "{D9F1BF2F-2787-4474-A772-BA1F0208FB7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.BudgetApi", "Legacy\DrifterApps.Holefeeder.ServicesHosts.BudgetApi\DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj", "{D5025608-A5C1-430D-BD48-25F0FE98BBA6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9.Legacy", "9.Legacy", "{25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.API", "Services\Budgeting\Budgeting.API\Budgeting.API.csproj", "{9D85B750-3B14-447B-A180-EE48ACB0578C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business", "DrifterApps.Holefeeder.Business\DrifterApps.Holefeeder.Business.csproj", "{D17438D7-A41D-4D16-B3BE-C0C20A18093C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D656D1B9-4F13-4BAB-9117-60F22C30F331}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business.Contracts", "DrifterApps.Holefeeder.Business.Contracts\DrifterApps.Holefeeder.Business.Contracts.csproj", "{5C9BFC72-6B4A-45B1-906C-AC8B34C8DDEC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{183493E3-26C7-4917-B2F4-967AAE99AC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Business.Entities", "DrifterApps.Holefeeder.Business.Entities\DrifterApps.Holefeeder.Business.Entities.csproj", "{9B074D2F-776F-42F7-A16E-1F9C7515F5CB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{42EDE4F6-F2C1-443B-B3BD-9AC0108635B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common", "DrifterApps.Holefeeder.Common\DrifterApps.Holefeeder.Common.csproj", "{7652F634-B614-4786-9DDF-E86CA8EA3956}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{DA66D2E5-2B59-456D-AA54-2AA9D7A5A490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Common.IoC", "DrifterApps.Holefeeder.Common.IoC\DrifterApps.Holefeeder.Common.IoC.csproj", "{4C87D754-7440-4770-87F8-BEF00DEC9409}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Budgeting", "Budgeting", "{FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Contracts", "DrifterApps.Holefeeder.ResourcesAccess.Contracts\DrifterApps.Holefeeder.ResourcesAccess.Contracts.csproj", "{97CD4DB4-329C-430B-B8B9-E4F5F90A6B2A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{22F067DA-DB97-4384-BE3B-888DF0312DAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ResourcesAccess.Mongo", "DrifterApps.Holefeeder.ResourcesAccess.Mongo\DrifterApps.Holefeeder.ResourcesAccess.Mongo.csproj", "{842CABE7-8003-476F-93CF-B1DD00272AFB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{BC1AAE8B-FDB2-4017-B565-81125E6D4E12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetApi", "DrifterApps.Holefeeder.Services.BudgetApi\DrifterApps.Holefeeder.Services.BudgetApi.csproj", "{87BCE71A-2275-41E8-83FC-4A2A27BAE0C8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.Services.BudgetDto", "DrifterApps.Holefeeder.Services.BudgetDto\DrifterApps.Holefeeder.Services.BudgetDto.csproj", "{ABADE85C-8B3D-4D60-B338-373D5A7D1EF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrifterApps.Holefeeder.ServicesHosts.BudgetApi", "DrifterApps.Holefeeder.ServicesHosts.BudgetApi\DrifterApps.Holefeeder.ServicesHosts.BudgetApi.csproj", "{D5025608-A5C1-430D-BD48-25F0FE98BBA6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Transactions.API", "Hosting.Transactions.API\Hosting.Transactions.API.csproj", "{9D85B750-3B14-447B-A180-EE48ACB0578C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.SeedWork", "Hosting.SeedWork\Hosting.SeedWork.csproj", "{3B3931CC-16BE-498F-B251-B04B940309A6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{639C95A6-923B-4626-BCC0-A8C4D70C89A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,18 +92,6 @@ Global
 		{B8905A6D-15E6-458A-89F6-63C7795792F1}.Release|x64.Build.0 = Release|Any CPU
 		{B8905A6D-15E6-458A-89F6-63C7795792F1}.Release|x86.ActiveCfg = Release|Any CPU
 		{B8905A6D-15E6-458A-89F6-63C7795792F1}.Release|x86.Build.0 = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|x64.Build.0 = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Debug|x86.Build.0 = Debug|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|x64.ActiveCfg = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|x64.Build.0 = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|x86.ActiveCfg = Release|Any CPU
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF}.Release|x86.Build.0 = Release|Any CPU
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -126,18 +104,6 @@ Global
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Release|x64.Build.0 = Release|Any CPU
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Release|x86.ActiveCfg = Release|Any CPU
 		{5343E86C-A6D9-4161-8D96-307AEB9D8986}.Release|x86.Build.0 = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|x64.Build.0 = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Debug|x86.Build.0 = Debug|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|x64.ActiveCfg = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|x64.Build.0 = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|x86.ActiveCfg = Release|Any CPU
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A}.Release|x86.Build.0 = Release|Any CPU
 		{4B6D6015-E492-4042-BCAF-3426184B034D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4B6D6015-E492-4042-BCAF-3426184B034D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6D6015-E492-4042-BCAF-3426184B034D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -186,18 +152,6 @@ Global
 		{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}.Release|x64.Build.0 = Release|Any CPU
 		{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}.Release|x86.ActiveCfg = Release|Any CPU
 		{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0}.Release|x86.Build.0 = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|x64.Build.0 = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Debug|x86.Build.0 = Debug|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|x64.ActiveCfg = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|x64.Build.0 = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|x86.ActiveCfg = Release|Any CPU
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87}.Release|x86.Build.0 = Release|Any CPU
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -210,18 +164,6 @@ Global
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Release|x64.Build.0 = Release|Any CPU
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Release|x86.ActiveCfg = Release|Any CPU
 		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166}.Release|x86.Build.0 = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|x64.Build.0 = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Debug|x86.Build.0 = Debug|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|x64.ActiveCfg = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|x64.Build.0 = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|x86.ActiveCfg = Release|Any CPU
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE}.Release|x86.Build.0 = Release|Any CPU
 		{D9F1BF2F-2787-4474-A772-BA1F0208FB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9F1BF2F-2787-4474-A772-BA1F0208FB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9F1BF2F-2787-4474-A772-BA1F0208FB7D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -366,37 +308,11 @@ Global
 		{9D85B750-3B14-447B-A180-EE48ACB0578C}.Release|x64.Build.0 = Release|Any CPU
 		{9D85B750-3B14-447B-A180-EE48ACB0578C}.Release|x86.ActiveCfg = Release|Any CPU
 		{9D85B750-3B14-447B-A180-EE48ACB0578C}.Release|x86.Build.0 = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|x64.Build.0 = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Debug|x86.Build.0 = Debug|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|x64.ActiveCfg = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|x64.Build.0 = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|x86.ActiveCfg = Release|Any CPU
-		{3B3931CC-16BE-498F-B251-B04B940309A6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A2D099C3-AA77-4D48-ABA0-BDAF49EB339C} = {5BE1289E-0374-4C88-884B-DF17A878B3F4}
-		{EE442EA7-EB69-4695-8F21-4D3F79228E50} = {5BE1289E-0374-4C88-884B-DF17A878B3F4}
-		{B8905A6D-15E6-458A-89F6-63C7795792F1} = {62C8988F-0621-4B38-B046-CD32C83D6912}
-		{377C2769-FE20-4D37-846A-10D9CA71C4CF} = {536BFBD5-C39A-473D-AA93-28DBA0A21265}
-		{5343E86C-A6D9-4161-8D96-307AEB9D8986} = {1D475453-64AC-4F3B-ADC0-70794B35F900}
-		{57695F53-376C-4696-86C7-06FD3BDDCA7A} = {1D475453-64AC-4F3B-ADC0-70794B35F900}
-		{4B6D6015-E492-4042-BCAF-3426184B034D} = {1D475453-64AC-4F3B-ADC0-70794B35F900}
-		{6D5E8F88-6580-42EF-AD7E-478D2BECB724} = {EE442EA7-EB69-4695-8F21-4D3F79228E50}
-		{5944C370-C514-4C05-B765-7473DD654678} = {A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}
-		{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0} = {A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}
-		{AC5C6353-80CE-4B12-98F0-287E76E68A87} = {1D475453-64AC-4F3B-ADC0-70794B35F900}
-		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166} = {536BFBD5-C39A-473D-AA93-28DBA0A21265}
-		{4FFC6550-1B7A-439F-9EAE-80D303A0A6DE} = {536BFBD5-C39A-473D-AA93-28DBA0A21265}
-		{D9F1BF2F-2787-4474-A772-BA1F0208FB7D} = {73415BD3-058B-495A-9726-7279BF670451}
 		{D17438D7-A41D-4D16-B3BE-C0C20A18093C} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
 		{5C9BFC72-6B4A-45B1-906C-AC8B34C8DDEC} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
 		{9B074D2F-776F-42F7-A16E-1F9C7515F5CB} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
@@ -407,8 +323,23 @@ Global
 		{87BCE71A-2275-41E8-83FC-4A2A27BAE0C8} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
 		{ABADE85C-8B3D-4D60-B338-373D5A7D1EF3} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
 		{D5025608-A5C1-430D-BD48-25F0FE98BBA6} = {25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC}
-		{9D85B750-3B14-447B-A180-EE48ACB0578C} = {A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}
-		{3B3931CC-16BE-498F-B251-B04B940309A6} = {A2D099C3-AA77-4D48-ABA0-BDAF49EB339C}
+		{183493E3-26C7-4917-B2F4-967AAE99AC8E} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
+		{25AE5A14-81B1-4B5A-A9F3-8EB86CD468BC} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
+		{ED91C979-4E19-4C22-B5DE-AEC89BF52FA0} = {183493E3-26C7-4917-B2F4-967AAE99AC8E}
+		{5944C370-C514-4C05-B765-7473DD654678} = {42EDE4F6-F2C1-443B-B3BD-9AC0108635B7}
+		{42EDE4F6-F2C1-443B-B3BD-9AC0108635B7} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
+		{DA66D2E5-2B59-456D-AA54-2AA9D7A5A490} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
+		{FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9} = {DA66D2E5-2B59-456D-AA54-2AA9D7A5A490}
+		{22F067DA-DB97-4384-BE3B-888DF0312DAE} = {FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}
+		{9D85B750-3B14-447B-A180-EE48ACB0578C} = {FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}
+		{6D5E8F88-6580-42EF-AD7E-478D2BECB724} = {FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}
+		{91FDBA4C-C0E8-4ADE-96D4-C6ED33073166} = {FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}
+		{B8905A6D-15E6-458A-89F6-63C7795792F1} = {FE4F367A-F8F3-4DF5-800E-9EBEAA0F53F9}
+		{BC1AAE8B-FDB2-4017-B565-81125E6D4E12} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
+		{D9F1BF2F-2787-4474-A772-BA1F0208FB7D} = {BC1AAE8B-FDB2-4017-B565-81125E6D4E12}
+		{5343E86C-A6D9-4161-8D96-307AEB9D8986} = {22F067DA-DB97-4384-BE3B-888DF0312DAE}
+		{4B6D6015-E492-4042-BCAF-3426184B034D} = {22F067DA-DB97-4384-BE3B-888DF0312DAE}
+		{639C95A6-923B-4626-BCC0-A8C4D70C89A3} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083F9D38-7496-44CA-B1E2-9C04BA3DD0A6}

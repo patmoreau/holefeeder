@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+
+  nosql-data-test:
+    image: mongo
+
+  budgeting-api-functional-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      target: functionaltest
+    depends_on:
+      - nosql-data-test
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+
+  budgeting-api-unit-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      target: unittest
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
