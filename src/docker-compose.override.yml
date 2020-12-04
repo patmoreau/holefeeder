@@ -1,26 +1,26 @@
 version: '3.4'
 
 services:
-  
+
   seq:
     environment:
       - ACCEPT_EULA=Y
     ports:
-      - "5341:80"
+      - '5341:80'
   
   nosql-data:
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - holefeeder-nosql-data:/data/db
 
   gateway-web:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - ASPNETCORE_URLS=http://+
       - SEQ_Url=http://seq:5341
     ports:
-      - "5200:80"
+      - '5200:80'
   
   budgeting-api:
     environment:
@@ -29,7 +29,7 @@ services:
       - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
       - HolefeederDatabaseSettings__Database=holefeeder
     ports:
-      - "5100:80"
+      - '5100:80'
 
   legacy-api:
     environment:
@@ -38,16 +38,16 @@ services:
       - MongoDB__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
       - MongoDB__DatabaseName=holefeeder
     ports:
-      - "5101:80"
+      - '5101:80'
 
   webspa:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederWeb__ApiUrl=http://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP:-localhost}:5200
-      - HolefeederWeb__RedirectUrl=http://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP:-localhost}
+      - ASPNETCORE_URLS=http://+
+      - HolefeederWeb__ApiUrl=http://localhost:5200
+      - HolefeederWeb__RedirectUrl=http://localhost
     ports:
-      - "80:80"
+      - '80:80'
 
 volumes:
   holefeeder-nosql-data:

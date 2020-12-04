@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,8 @@ namespace DrifterApps.Holefeeder.Web.Gateway
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        
         private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -25,16 +28,13 @@ namespace DrifterApps.Holefeeder.Web.Gateway
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var allowedOrigin = Configuration["AllowedHosts"];
-            if (string.IsNullOrWhiteSpace(allowedOrigin))
-                throw new NullReferenceException(@"Allowed origin values not configured");
-
+            var allowedOrigins = Configuration.GetSection("AllowedHosts")?.Get<string[]>() ?? Array.Empty<string>();
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
+                options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
                     builder
-                        .WithOrigins(allowedOrigin)
+                        .WithOrigins(allowedOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithExposedHeaders("X-Total-Count");
@@ -65,7 +65,7 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             app.UseHttpsRedirection();
 
             app.UseMvc();
-            app.UseCors();
+            app.UseCors(MyAllowSpecificOrigins);
             
             app.UseSerilogRequestLogging()
                 // .UseRouting()
