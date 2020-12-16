@@ -33,7 +33,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             Log.Logger.Information("Web.Gateway started");
             try
             {
-                CreateHostBuilder(args).Build().Run();
+                CreateWebHostBuilder(args).Build().Run();
             }
             // ReSharper disable once CA1031
 #pragma warning disable CA1031
@@ -48,7 +48,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             }
         }
 
-        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .UseStartup<Startup>();

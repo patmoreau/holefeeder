@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Contracts
 {

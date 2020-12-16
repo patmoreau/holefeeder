@@ -14,12 +14,13 @@ using Microsoft.Identity.Web.Resource;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
 {
-    [Route("api/v2/[controller]"), Authorize(Policy = Policies.REGISTERED_USER)]
+    [Authorize]
+    [Route("api/v2/[controller]")]
     public class CashflowsController : ControllerBase
     {
         private struct Routes
         {
-            public const string GET_UPCOMING = "get_upcoming";
+            public const string GET_UPCOMING = "get-upcoming";
         }
 
         private readonly IMediator _mediator;
@@ -31,11 +32,11 @@ namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
             _logger = logger.ThrowIfNull(nameof(logger));
         }
 
-        [HttpGet("upcoming", Name = Routes.GET_UPCOMING)]
+        [HttpGet(Routes.GET_UPCOMING, Name = Routes.GET_UPCOMING)]
         [ProducesResponseType(typeof(UpcomingViewModel[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetAsync([FromQuery] DateTime from, [FromQuery] DateTime to,
+        public async Task<IActionResult> GetUpcoming([FromQuery] DateTime from, [FromQuery] DateTime to,
             CancellationToken cancellationToken = default)
         {
             HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);

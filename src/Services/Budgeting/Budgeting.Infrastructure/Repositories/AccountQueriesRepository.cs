@@ -5,10 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
-using DrifterApps.Holefeeder.Budgeting.Application.Queries;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Extensions;
+using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+using DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -32,7 +33,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
             var accounts = await accountCollection
                 .AsQueryable()
                 .Where(t => t.UserId == userId)
-                .Filter(queryParams.Filter).ToListAsync(cancellationToken);
+                .Filter(queryParams.Filter)
+                .ToListAsync(cancellationToken);
 
             var summaries = await accountCollection.AsQueryable()
                 .Where(t => t.UserId == userId)

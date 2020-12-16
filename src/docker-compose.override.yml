@@ -9,10 +9,17 @@ services:
       - '5341:80'
   
   nosql-data:
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
     ports:
       - '27017:27017'
     volumes:
       - holefeeder-nosql-data:/data/db
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.slaveOk().ok || rs.status().ok" | mongo --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
 
   gateway-web:
     environment:
@@ -30,6 +37,15 @@ services:
       - HolefeederDatabaseSettings__Database=holefeeder
     ports:
       - '5100:80'
+
+  object-store-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__Database=holefeeder
+    ports:
+      - '5102:80'
 
   legacy-api:
     environment:

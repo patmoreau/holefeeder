@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -34,7 +35,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Queries
             
 
             Func<Task> action = async () =>
-                await handler.Handle(new GetAccountsQuery(Guid.NewGuid(), 0, int.MaxValue, null, null));
+                await handler.Handle(new GetAccountsQuery(Guid.NewGuid(), null, null, null, null));
 
             await action.Should().NotThrowAsync();
         }

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>DrifterApps.Holefeeder.ObjectStore.Infrastructure</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+      <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.Mongo.SeedWork\Framework.Mongo.SeedWork.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj" />
+      <ProjectReference Include="..\ObjectStore.Application\ObjectStore.Application.csproj" />
+      <ProjectReference Include="..\ObjectStore.Domain\ObjectStore.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

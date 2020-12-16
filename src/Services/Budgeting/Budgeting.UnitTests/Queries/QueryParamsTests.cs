@@ -1,5 +1,6 @@
 using System;
 using DrifterApps.Holefeeder.Budgeting.Application.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using FluentAssertions;
 using Xunit;
 

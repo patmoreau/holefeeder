@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 {
@@ -15,7 +16,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         
         public string Description { get; }
 
-        public IReadOnlyList<string> Tags { get; }
+        public ImmutableArray<string> Tags { get; }
         
         public CategoryInfoViewModel Category { get; }
         
@@ -30,7 +31,13 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
             Description = description;
             Category = category;
             Account = account;
-            Tags = ImmutableList.Create(tags.ToArray());
+            Tags = tags == null ? ImmutableArray<string>.Empty : ImmutableArray.Create(tags.ToArray());
         }
+
+        [JsonConstructor]
+        public UpcomingViewModel(Guid id, DateTime date, decimal amount, string description,
+            CategoryInfoViewModel category, AccountInfoViewModel account, ImmutableArray<string> tags) =>
+            (Id, Date, Amount, Description, Category, Account, Tags) =
+            (id, date, amount, description, category, account, tags);
     }
 }

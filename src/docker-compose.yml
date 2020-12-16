@@ -15,12 +15,21 @@ services:
       dockerfile: ApiGateways/Web.Gateway/Dockerfile
     depends_on:
       - seq
-  
+
   budgeting-api:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-budgeting-api:${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+    depends_on:
+      - seq
+      - nosql-data
+
+  object-store-api:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-object-store-api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
     depends_on:
       - seq
       - nosql-data

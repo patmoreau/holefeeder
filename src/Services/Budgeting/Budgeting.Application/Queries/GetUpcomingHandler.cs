@@ -22,8 +22,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Queries
         {
             query.ThrowIfNull(nameof(query));
 
-            return (await _repository.GetUpcomingAsync(query.UserId, query.From, query.To, cancellationToken))
-                .ToArray();
+            var results = await _repository.GetUpcomingAsync(query.UserId, query.From, query.To, cancellationToken);
+            return results.ToArray();
         }
     }
 }

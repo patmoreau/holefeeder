@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 LABEL author="Drifter Apps Inc."
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 
 # It's important to keep lines from here down to "COPY . ." identical in all Dockerfiles
@@ -13,15 +13,22 @@ COPY DrifterApps.Holefeeder.sln ./
 COPY Directory.Build.props ./
 
 COPY ApiGateways/Web.Gateway/*.csproj ApiGateways/Web.Gateway/
+COPY BuildingBlocks/Framework.Mongo.SeedWork/*.csproj BuildingBlocks/Framework.Mongo.SeedWork/
 COPY BuildingBlocks/Framework.SeedWork/*.csproj BuildingBlocks/Framework.SeedWork/
 COPY Services/Budgeting/Budgeting.API/*.csproj Services/Budgeting/Budgeting.API/
 COPY Services/Budgeting/Budgeting.Application/*.csproj Services/Budgeting/Budgeting.Application/
 COPY Services/Budgeting/Budgeting.Domain/*.csproj Services/Budgeting/Budgeting.Domain/
 COPY Services/Budgeting/Budgeting.Infrastructure/*.csproj Services/Budgeting/Budgeting.Infrastructure/
+COPY Services/ObjectStore/ObjectStore.API/*.csproj Services/ObjectStore/ObjectStore.API/
+COPY Services/ObjectStore/ObjectStore.Application/*.csproj Services/ObjectStore/ObjectStore.Application/
+COPY Services/ObjectStore/ObjectStore.Domain/*.csproj Services/ObjectStore/ObjectStore.Domain/
+COPY Services/ObjectStore/ObjectStore.Infrastructure/*.csproj Services/ObjectStore/ObjectStore.Infrastructure/
 COPY Web/Holefeeder.Web/*.csproj Web/Holefeeder.Web/
 
 COPY Services/Budgeting/Budgeting.UnitTests/*.csproj Services/Budgeting/Budgeting.UnitTests/
 COPY Services/Budgeting/Budgeting.FunctionalTests/*.csproj Services/Budgeting/Budgeting.FunctionalTests/
+COPY Services/ObjectStore/ObjectStore.UnitTests/*.csproj Services/ObjectStore/ObjectStore.UnitTests/
+COPY Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj Services/ObjectStore/ObjectStore.FunctionalTests/
 
 COPY Legacy/DrifterApps.Holefeeder.Business/*.csproj Legacy/DrifterApps.Holefeeder.Business/
 COPY Legacy/DrifterApps.Holefeeder.Business.Contracts/*.csproj Legacy/DrifterApps.Holefeeder.Business.Contracts/

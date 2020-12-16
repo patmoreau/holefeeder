@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using DrifterApps.Holefeeder.Budgeting.Application.Queries;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Extensions;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
+using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using MongoDB.Driver;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
@@ -34,7 +34,13 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
             
             var collection = await _mongoDbContext.GetAccountsAsync(cancellationToken);
 
-            var accounts = await collection.FindAsync(queryParams, cancellationToken);
+            var accounts = await collection
+                .AsQueryable()
+                .Filter(queryParams.Filter)
+                .Sort(queryParams.Sort)
+                .Offset(queryParams.Offset)
+                .Limit(queryParams.Limit)
+                .ToListAsync(cancellationToken);
             
             return _mapper.Map<IEnumerable<Account>>(accounts);
         }

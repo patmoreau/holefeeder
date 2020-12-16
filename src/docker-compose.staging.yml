@@ -1,14 +1,6 @@
 version: '3.4'
 
 services:
-  
-  https-portal:
-    ports:
-    - '80:80'
-    - '443:443'
-    environment:
-    - DOMAINS=holefeeder-staging.drifterapps.com -> http://webspa, holefeeder-api-staging.drifterapps.com -> http://gateway-web
-    - STAGE=staging
 
   seq:
     environment:
@@ -31,6 +23,15 @@ services:
       - 80
   
   budgeting-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__Database=holefeeder
+    ports:
+      - 80
+
+  object-store-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
