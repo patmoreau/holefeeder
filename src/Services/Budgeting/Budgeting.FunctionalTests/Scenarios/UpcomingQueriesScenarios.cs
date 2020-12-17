@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Budgeting.API;
 using DrifterApps.Holefeeder.Budgeting.Application.Converters;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
+using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.Domain.Extensions;
 using DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure;
 
@@ -50,7 +52,12 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             jsonOptions.Converters.Add(new CategoryTypeConverter());
             var result = await response.Content.ReadFromJsonAsync<UpcomingViewModel[]>(jsonOptions);
 
-            result.Should().HaveCount(1);
+            result.Single().Should().BeEquivalentTo(
+                new UpcomingViewModel(BudgetingContextSeed.CashflowGuid1,
+                new DateTime(2020, 1, 2), 111, "Cashflow1",
+                new CategoryInfoViewModel(BudgetingContextSeed.CategoryGuid1, "Category1", CategoryType.Expense, String.Empty),
+                new AccountInfoViewModel(BudgetingContextSeed.AccountGuid1, "Account1", String.Empty),
+                null), options => options.Excluding(x => x.Account.MongoId));
         }
     }
 }

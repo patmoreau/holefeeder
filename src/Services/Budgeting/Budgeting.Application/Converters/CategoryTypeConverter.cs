@@ -18,40 +18,35 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Converters
             CategoryType type = CategoryType.Expense;
             while (reader.Read())
             {
-                if (reader.TokenType == JsonTokenType.EndObject)
+                switch (reader.TokenType)
                 {
-                    return type;
-                }
-
-                if (reader.TokenType == JsonTokenType.PropertyName)
-                {
-                    string propertyName = reader.GetString();
-                    if (propertyName.Equals("Id", StringComparison.InvariantCultureIgnoreCase))
+                    case JsonTokenType.EndObject:
+                        return type;
+                    case JsonTokenType.PropertyName:
                     {
-                        reader.Read();
-                        if (reader.TokenType != JsonTokenType.Number)
+                        var propertyName = reader.GetString();
+                        if (propertyName?.Equals("Id", StringComparison.InvariantCultureIgnoreCase)??false)
                         {
-                            throw new JsonException();
+                            reader.Read();
+                            if (reader.TokenType != JsonTokenType.Number)
+                            {
+                                throw new JsonException();
+                            }
+                            var typeId = reader.GetInt32();
+                            type = typeId switch
+                            {
+                                1 => CategoryType.Expense,
+                                2 => CategoryType.Gain,
+                                _ => throw new JsonException()
+                            };
                         }
-                        var typeDiscriminator = reader.GetInt32();
-                        type = typeDiscriminator switch
-                        {
-                            1 => CategoryType.Expense,
-                            2 => CategoryType.Gain,
-                            _ => throw new JsonException()
-                        };
+
+                        break;
                     }
                 }
             }
 
             throw new JsonException();
-            // TypeDiscriminator typeDiscriminator = (TypeDiscriminator)reader.GetInt32();
-            // Person person = typeDiscriminator switch
-            // {
-            //     TypeDiscriminator.Customer => new Customer(),
-            //     TypeDiscriminator.Employee => new Employee(),
-            //     _ => throw new JsonException()
-            // };
         }
 
         public override void Write(Utf8JsonWriter writer, CategoryType value, JsonSerializerOptions options)

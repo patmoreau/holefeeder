@@ -12,5 +12,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Contracts
         Task<IEnumerable<StoreItemViewModel>> GetItemsAsync(Guid userId, QueryParams queryParams, CancellationToken cancellationToken = default);
         
         Task<StoreItemViewModel> GetItemAsync(Guid userId, Guid id, CancellationToken cancellationToken = default);
+
+        Task<bool> CodeExistsAsync(Guid userId, string code, CancellationToken cancellationToken = default);
     }
 }

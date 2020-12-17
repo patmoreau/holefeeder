@@ -54,6 +54,23 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/v2/StoreItems/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "object-store-api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v2/StoreItems/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/v2/version/transactions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

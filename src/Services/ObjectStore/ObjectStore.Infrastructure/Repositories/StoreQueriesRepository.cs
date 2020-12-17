@@ -57,5 +57,19 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
 
             return _mapper.Map<StoreItemViewModel>(item);
         }
+
+        public async Task<bool> CodeExistsAsync(Guid userId, string code,
+            CancellationToken cancellationToken)
+        {
+            code.ThrowIfNullOrEmpty(nameof(code));
+
+            var collection = await _context.GetStoreItemsAsync(cancellationToken);
+
+            return await collection
+                .AsQueryable()
+                .AnyAsync(
+                    t => t.UserId == userId && t.Code.ToLowerInvariant() == code.ToLowerInvariant(),
+                    cancellationToken: cancellationToken);
+        }
     }
 }

@@ -44,7 +44,10 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             _ = services.AddLogging();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAdB2C"));
+                .AddMicrosoftIdentityWebApi(
+                    options => options.TokenValidationParameters =
+                        new TokenValidationParameters {ValidateIssuer = false},
+                    options => Configuration.Bind("AzureAdB2C", options));
 
             _ = services.AddControllers()
                 .AddJsonOptions(options =>

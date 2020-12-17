@@ -17,6 +17,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 
         [JsonConstructor]
         public CategoryInfoViewModel(Guid id, string name, CategoryType type, string color) => 
-            (Id, Name, Type, Color) = (id, name, type, color);
+            (Id, Name, Type, Color) = (id, name, type, color ?? String.Empty);
     }
 }

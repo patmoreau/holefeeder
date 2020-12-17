@@ -76,7 +76,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
             var schema = new AccountSchema
             {
                 Id = id,
-                Name = $"Name{index}",
+                Name = $"Account{index}",
                 Description = $"Description{index}",
                 Type = type,
                 UserId = userId,

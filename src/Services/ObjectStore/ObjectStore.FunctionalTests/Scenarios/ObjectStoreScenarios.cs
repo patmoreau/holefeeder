@@ -9,6 +9,8 @@ using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 using FluentAssertions;
 
+using MediatR;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -146,7 +148,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             var response = await client.PostAsJsonAsync(request, command);
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            response.StatusCodeShouldBeSuccess();
             var result = await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
 
             result.Should().NotBeNull();
@@ -156,7 +158,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
         }
 
         [Fact]
-        public async Task GivenCreateObjectCommand_WhenCommandInvalid_ThenObjectCreated()
+        public async Task GivenCreateObjectCommand_WhenCommandInvalid_ThenReturnError()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -167,6 +169,24 @@ namespace ObjectStore.FunctionalTests.Scenarios
 
             // Assert
             response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        }
+
+        [Fact]
+        public async Task GivenCreateObjectCommand_WhenCodeAlreadyExist_ThenReturnError()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var request = $"/api/v2/StoreItems/create-store-item";
+
+            // Act
+            var command = new CreateStoreItemCommand("Code1", "Data1");
+            var response = await client.PostAsJsonAsync(request, command);
+
+            // Assert
+            var result = await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+
+            result.Should().BeEquivalentTo(
+                new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, $"Code 'Code1' already exists."));
         }
     }
 }
