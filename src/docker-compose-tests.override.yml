@@ -1,0 +1,82 @@
+version: '3.4'
+
+services:
+
+  nosql-data-test:
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
+    ports:
+      - "27018:27017"
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.slaveOk().ok || rs.status().ok" | mongo --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+  budgeting-api-functional-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data-test}
+      - HolefeederDatabaseSettings__Database=holefeeder_integration_test
+    ports:
+      - "5105:80"
+    entrypoint:
+        - dotnet
+        - test
+        - --logger
+        - trx;LogFileName=/tests/budgeting-funtional-test-results.xml
+        - --results-directory
+        - /tests
+        - --collect
+        - "XPlat Code Coverage"
+
+  budgeting-api-unit-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "5112:80"
+    entrypoint:
+        - dotnet
+        - test
+        - --logger
+        - trx;LogFileName=/tests/budgeting-unit-test-results.xml
+        - --results-directory
+        - /tests
+        - --collect
+        - "XPlat Code Coverage"
+
+  object-store-api-functional-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data-test}
+      - HolefeederDatabaseSettings__Database=holefeeder_integration_test
+    ports:
+      - "5106:80"
+    entrypoint:
+      - dotnet
+      - test
+      - --logger
+      - trx;LogFileName=/tests/object-store-funtional-test-results.xml
+      - --results-directory
+      - /tests
+      - --collect
+      - "XPlat Code Coverage"
+
+  object-store-api-unit-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "5113:80"
+    entrypoint:
+      - dotnet
+      - test
+      - --logger
+      - trx;LogFileName=/tests/object-store-unit-test-results.xml
+      - --results-directory
+      - /tests
+      - --collect
+      - "XPlat Code Coverage"

@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+
+  seq:
+    image: datalust/seq:latest
+  
+  nosql-data:
+    image: mongo
+
+  gateway-web:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-gateway-web:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/Web.Gateway/Dockerfile
+    depends_on:
+      - seq
+
+  budgeting-api:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-budgeting-api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+    depends_on:
+      - seq
+      - nosql-data
+
+  object-store-api:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-object-store-api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+    depends_on:
+      - seq
+      - nosql-data
+
+  legacy-api:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-legacy-api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Legacy/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/Dockerfile
+    depends_on:
+      - nosql-data
+
+  webspa:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Web/Holefeeder.Web/Dockerfile
+    depends_on:
+      - gateway-web
+      - nosql-data

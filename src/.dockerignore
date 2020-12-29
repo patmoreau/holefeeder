@@ -1,0 +1,13 @@
+.dockerignore
+.git
+.gitignore
+.vs
+.vscode
+**/*.*proj.user
+**/bin
+**/charts
+**/Dockerfile
+**/Dockerfile.develop
+**/obj
+**/node_modules
+**/dist

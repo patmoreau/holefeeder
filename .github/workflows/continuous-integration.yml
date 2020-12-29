@@ -7,30 +7,23 @@ on:
     branches: [ develop ]
 
 jobs:
-  backend:
+  test:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+    - name: build containers
+      run: docker-compose build
+      working-directory: ./src
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.201
+    - name: test
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up budgeting-api-unit-test budgeting-api-functional-test object-store-api-unit-test object-store-api-functional-test
+      working-directory: ./src
 
-    - name: Install dependencies
-      run: dotnet restore ./src
-
-    - name: Build
-      run: dotnet build --no-restore ./src
-
-    - name: Test
-      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage" ./src
-
-    - name: ReportGenerator
+    - name: report-generator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.5.7
       with:
-        reports: '**/*Tests/TestResults/*/coverage.cobertura.xml'
+        reports: 'src/tests-results/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         reporttypes: 'HtmlInline;Cobertura'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
@@ -40,19 +33,3 @@ jobs:
       with:
         name: coverage-report
         path: coveragereport
-
-  ui:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '13.x'
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
-
-    - name: Build angular ui
-      run: npm build
-      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI

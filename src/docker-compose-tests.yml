@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+
+  nosql-data-test:
+    image: mongo
+
+  budgeting-api-functional-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      target: functionaltest
+    depends_on:
+      - nosql-data-test
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+
+  budgeting-api-unit-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      target: unittest
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+
+  object-store-api-functional-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-functional-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+      target: functionaltest
+    depends_on:
+      - nosql-data-test
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+
+  object-store-api-unit-test:
+    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-unit-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+      target: unittest
+    volumes:
+      - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests

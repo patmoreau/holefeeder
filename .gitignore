@@ -353,4 +353,9 @@ src/.cr
 docker/VERSION
 docker/dev/data
 docker/data
+**/dist
 docker/development/data
+tools/fixGuid.sh
+src/tests-results
+src/data
+proxy
