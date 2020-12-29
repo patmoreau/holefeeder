@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Validators
 {
-    public class CreateStoreItemCommandValidator : AbstractValidator<CreateStoreItemCommand>
+    public class ModifyStoreItemCommandValidator : AbstractValidator<ModifyStoreItemCommand>
     {
-        public CreateStoreItemCommandValidator(ILogger<CreateStoreItemCommandValidator> logger)
+        public ModifyStoreItemCommandValidator(ILogger<ModifyStoreItemCommandValidator> logger)
         {
-            RuleFor(x => x.Code).NotEmpty();
+            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Data).NotEmpty();
 
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);

@@ -188,5 +188,34 @@ namespace ObjectStore.FunctionalTests.Scenarios
             result.Should().BeEquivalentTo(
                 new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, $"Code 'Code1' already exists."));
         }
+
+        [Fact]
+        public async Task GivenModifyObjectCommand_WhenCommandValid_ThenObjectModified()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER, Guid.NewGuid().ToString());
+            var createRequest = $"/api/v2/StoreItems/create-store-item";
+            var modifyRequest = $"/api/v2/StoreItems/modify-store-item";
+
+            var code = Guid.NewGuid();
+            var data = Guid.NewGuid();
+
+            // Act
+            var createCommand = new CreateStoreItemCommand(code.ToString(), data.ToString());
+            var createResponse = await client.PostAsJsonAsync(createRequest, createCommand);
+
+            var createResult = await createResponse.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+
+            var modifyCommand = new ModifyStoreItemCommand(createResult?.Result ?? Guid.Empty, $"{data.ToString()}-modified");
+            var modifyResponse = await client.PutAsJsonAsync(modifyRequest, modifyCommand);
+
+            // Assert
+            modifyResponse.StatusCodeShouldBeSuccess();
+            var result = await modifyResponse.Content.ReadFromJsonAsync<CommandResult<Unit>>(_jsonSerializerOptions);
+
+            result.Should().NotBeNull();
+            result.Status.Should().Be(CommandStatus.Ok);
+        }
     }
 }

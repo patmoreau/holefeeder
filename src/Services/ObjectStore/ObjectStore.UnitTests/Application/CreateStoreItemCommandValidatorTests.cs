@@ -8,6 +8,8 @@ using DrifterApps.Holefeeder.ObjectStore.Application.Validators;
 
 using FluentValidation.TestHelper;
 
+using Microsoft.Extensions.Logging;
+
 using NSubstitute;
 
 using Xunit;
@@ -16,36 +18,24 @@ namespace ObjectStore.UnitTests.Application
 {
     public class CreateStoreItemCommandValidatorTests
     {
-        private readonly IStoreQueriesRepository _repository;
-        private readonly ItemsCache _cache;
+        private readonly ILogger<CreateStoreItemCommandValidator> _logger;
         
         public CreateStoreItemCommandValidatorTests()
         {
-            _repository = Substitute.For<IStoreQueriesRepository>();
-            _cache = new ItemsCache {{"UserId", Guid.NewGuid()}};
+            _logger = Substitute.For<ILogger<CreateStoreItemCommandValidator>>();
         }
         
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenCodeIsEmpty_ThenShouldHaveError()
         {
-            _repository.CodeExistsAsync(Arg.Any<Guid>(), Arg.Any<string>()).Returns(Task.FromResult(false));
-            var validator = new CreateStoreItemCommandValidator(_repository, _cache);
+            var validator = new CreateStoreItemCommandValidator(_logger);
             validator.ShouldHaveValidationErrorFor(m => m.Code, null as string);
-        }
-        
-        [Fact]
-        public void GivenCreateStoreItemCommandValidator_WhenCodeAlreadyExists_ThenShouldHaveError()
-        {
-            _repository.CodeExistsAsync(Arg.Any<Guid>(), Arg.Any<string>()).Returns(Task.FromResult(true));
-            var validator = new CreateStoreItemCommandValidator(_repository, _cache);
-            validator.ShouldHaveValidationErrorFor(m => m.Code, "Code");
         }
 
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenDataIsEmpty_ThenShouldHaveError()
         {
-            _repository.CodeExistsAsync(Arg.Any<Guid>(), Arg.Any<string>()).Returns(Task.FromResult(false));
-            var validator = new CreateStoreItemCommandValidator(_repository, _cache);
+            var validator = new CreateStoreItemCommandValidator(_logger);
             validator.ShouldHaveValidationErrorFor(m => m.Data, null as string);
         }
     }

@@ -15,14 +15,14 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Models
 
         public ImmutableArray<string> Messages { get; }
 
-        public CommandResult(CommandStatus status, TResult result) => 
+        public CommandResult(CommandStatus status, TResult result = default) =>
             (Status, Result, Messages) = (status, result, ImmutableArray<string>.Empty);
-        
+
         public CommandResult(CommandStatus status, TResult result, params string[] messages) : this(status, result)
         {
             Messages = messages.ToImmutableArray();
         }
-        
+
         public CommandResult(CommandStatus status, TResult result, ValidationException exception) : this(status, result)
         {
             Messages = exception.Errors.Select(x => x.ToString()).ToImmutableArray();

@@ -19,7 +19,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context
         private readonly IMongoClient _mongoClient;
         private readonly List<Func<Task>> _commands;
 
-        private IClientSessionHandle session;
+        private IClientSessionHandle _session;
 
         static MongoDbContext()
         {
@@ -30,6 +30,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context
             BsonClassMap.RegisterClassMap<StoreItemSchema>(cm =>
             {
                 cm.AutoMap();
+                cm.GetMemberMap(m => m.MongoId).SetIgnoreIfDefault(true);
                 cm.SetIgnoreExtraElements(true);
             });
         }
@@ -72,14 +73,14 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            using (session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken))
+            using (_session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken))
             {
                 var transactionOptions = new TransactionOptions(
                     readPreference: ReadPreference.Primary,
                     readConcern: ReadConcern.Local,
                     writeConcern: WriteConcern.WMajority);
 
-                var result = await session.WithTransaction(
+                var result = await _session.WithTransaction(
                     async (s, ct) =>
                     {
                         var commandTasks = _commands.Select(c => c()).ToList();
@@ -116,7 +117,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context
             if (disposing)
             {
                 ClearCommands();
-                session?.Dispose();
+                _session?.Dispose();
             }
 
             _isDisposed = true;

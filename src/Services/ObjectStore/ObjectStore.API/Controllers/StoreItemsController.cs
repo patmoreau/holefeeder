@@ -28,6 +28,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
             public const string GET_STORE_ITEMS = "get-store-items";
             public const string GET_STORE_ITEM = "get-store-item";
             public const string CREATE_STORE_ITEM = "create-store-item";
+            public const string MODIFY_STORE_ITEM = "modify-store-item";
         }
 
         private readonly IMediator _mediator;
@@ -80,7 +81,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
         }
 
         [HttpPost(Routes.CREATE_STORE_ITEM, Name = Routes.CREATE_STORE_ITEM)]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(CommandResult<Guid>), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> CreateStoreItem([FromBody] CreateStoreItemCommand command,
@@ -102,6 +103,32 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
             catch (ValidationException e)
             {
                 return BadRequest(new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, e));
+            }
+        }
+
+        [HttpPut(Routes.MODIFY_STORE_ITEM, Name = Routes.MODIFY_STORE_ITEM)]
+        [ProducesResponseType(typeof(CommandResult<Unit>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        public async Task<IActionResult> ModifyStoreItem([FromBody] ModifyStoreItemCommand command,
+            CancellationToken cancellationToken = default)
+        {
+            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new CommandResult<Unit>(CommandStatus.BadRequest, Unit.Value, ModelState.Values.Select(x => x.ToString()).ToArray()));
+            }
+
+            try
+            {
+                var result = await _mediator.Send(command, cancellationToken);
+                
+                return Ok(result);
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(new CommandResult<Unit>(CommandStatus.BadRequest, Unit.Value, e));
             }
         }
     }

@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 {
-    public class CreateStoreItemCommandHandler : IRequestHandler<CreateStoreItemCommand, CommandResult<Guid>>
+    public class ModifyStoreItemCommandHandler : IRequestHandler<ModifyStoreItemCommand, CommandResult<Unit>>
     {
         private readonly IStoreRepository _repository;
         private readonly ItemsCache _cache;
         private readonly ILogger _logger;
 
-        public CreateStoreItemCommandHandler(IStoreRepository repository, ItemsCache cache,
+        public ModifyStoreItemCommandHandler(IStoreRepository repository, ItemsCache cache,
             ILogger<CreateStoreItemCommandHandler> logger)
         {
             _repository = repository;
@@ -26,26 +26,25 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
             _logger = logger;
         }
 
-        public async Task<CommandResult<Guid>> Handle(CreateStoreItemCommand request,
-            CancellationToken cancellationToken)
+        public async Task<CommandResult<Unit>> Handle(ModifyStoreItemCommand request, CancellationToken cancellationToken)
         {
             request.ThrowIfNull(nameof(request));
 
-            if (await _repository.FindByCodeAsync((Guid)_cache["UserId"], request.Code, cancellationToken) != null)
+            var storeItem = await _repository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
+            if (storeItem == null)
             {
-                return new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty,
-                    $"Code '{request.Code}' already exists.");
+                return new CommandResult<Unit>(CommandStatus.NotFound);
             }
 
-            var storeItem = StoreItem.Create(request.Code, request.Data, (Guid)_cache["UserId"]);
-
-            _logger.LogInformation("----- Create Store Item - StoreItem: {@StoreItem}", storeItem);
+            storeItem = storeItem.SetData(request.Data);
+            
+            _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
 
             await _repository.SaveAsync(storeItem, cancellationToken);
 
             await _repository.UnitOfWork.CommitAsync(cancellationToken);
 
-            return new CommandResult<Guid>(CommandStatus.Created, storeItem.Id);
+            return new CommandResult<Unit>(CommandStatus.Ok);
         }
     }
 }
