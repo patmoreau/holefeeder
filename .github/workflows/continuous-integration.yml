@@ -20,11 +20,17 @@ jobs:
       run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up budgeting-api-unit-test budgeting-api-functional-test object-store-api-unit-test object-store-api-functional-test
       working-directory: ./src
 
+    - name: Setup .NET Core # Required to execute ReportGenerator
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.101
+
     - name: report-generator
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.5.7
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
       with:
         reports: 'src/tests-results/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
+        sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
 
