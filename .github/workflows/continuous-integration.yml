@@ -43,6 +43,7 @@ jobs:
 
   generateTestReports:
     runs-on: ubuntu-latest
+    needs: test
     name: Generate Test Reports
     env:
         RESULTS_PATH: src/tests-results
