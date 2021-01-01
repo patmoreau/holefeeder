@@ -26,6 +26,8 @@ services:
         - test
         - --logger
         - trx;LogFileName=/tests/budgeting-funtional-test-results.xml
+        - --logger
+        - junit;LogFileName=/tests/budgeting-funtional-test-results.junit.xml
         - --results-directory
         - /tests
         - --collect
@@ -42,6 +44,8 @@ services:
         - test
         - --logger
         - trx;LogFileName=/tests/budgeting-unit-test-results.xml
+        - --logger
+        - junit;LogFileName=/tests/budgeting-unit-test-results.junit.xml
         - --results-directory
         - /tests
         - --collect
@@ -60,6 +64,8 @@ services:
       - test
       - --logger
       - trx;LogFileName=/tests/object-store-funtional-test-results.xml
+      - --logger
+      - junit;LogFileName=/tests/object-store-funtional-test-results.junit.xml
       - --results-directory
       - /tests
       - --collect
@@ -76,6 +82,8 @@ services:
       - test
       - --logger
       - trx;LogFileName=/tests/object-store-unit-test-results.xml
+      - --logger
+      - junit;LogFileName=/tests/object-store-unit-test-results.junit.xml
       - --results-directory
       - /tests
       - --collect
