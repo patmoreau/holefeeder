@@ -19,24 +19,28 @@ jobs:
       working-directory: ./src
 
     - name: test
-      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up budgeting-api-unit-test budgeting-api-functional-test object-store-api-unit-test object-store-api-functional-test
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-unit-test
       working-directory: ./src
 
-    # - name: functional test budgeting api
-    #   run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-functional-test
-    #   working-directory: ./src
+    - name: functional test budgeting api
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-functional-test
+      working-directory: ./src
 
-    # - name: unit test object-store api
-    #   run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-unit-test
-    #   working-directory: ./src
+    - name: unit test object-store api
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-unit-test
+      working-directory: ./src
 
-    # - name: functional test object-store api
-    #   run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-functional-test
-    #   working-directory: ./src
+    - name: functional test object-store api
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-functional-test
+      working-directory: ./src
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1.6
-      if: always()
+      if: ${{ always() }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         files: src/tests-results/*.junit.xml
