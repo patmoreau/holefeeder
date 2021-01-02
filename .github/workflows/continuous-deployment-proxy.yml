@@ -1,0 +1,43 @@
+name: continous deployment proxy
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - proxy/**
+
+jobs:
+  deploy-proxy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: copy file via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.PROD_WEB_SERVER }}
+        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      with:
+        source: "proxy/.env,proxy/docker-compose-multiple-networks.yml,proxy/docker-compose.yml,proxy/start.sh,proxy/conf.d/realip.conf,proxy/conf.d/servertokens.conf,proxy/conf.d/uploadsize.conf"
+        target: "holefeeder-proxy"
+        strip_components: 1
+
+    - name: starting proxy
+      uses: appleboy/ssh-action@master
+      env:
+        HOST: ${{ secrets.PROD_WEB_SERVER }}
+        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      with:
+        script: |
+          cd holefeeder-proxy
+          echo Start container
+          chmod +x start.sh
+          ./start.sh -e .env -i ${{ secrets.PROD_WEB_SERVER_IP }}
+          echo Cleanup previous images
+          docker image prune -f
