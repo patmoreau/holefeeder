@@ -1,16 +1,20 @@
-name: Continous integration
+name: continous integration
 
 on:
   push:
-    branches: [ develop ]
+    branches:
+    - main
+    - master
+    - develop
   pull_request:
-    branches: [ develop ]
+    branches:
+    - main
+    - master
+    - develop
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
-    env:
-      RESULTS_PATH: src/tests-results
 
     steps:
     - uses: actions/checkout@v2
@@ -18,22 +22,22 @@ jobs:
       run: docker-compose build
       working-directory: ./src
 
-    - name: test
+    - name: budget api unit tests
       if: ${{ success() }}
       run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-unit-test
       working-directory: ./src
 
-    - name: functional test budgeting api
+    - name: budgeting api functional tests
       if: ${{ always() }}
       run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-functional-test
       working-directory: ./src
 
-    - name: unit test object-store api
+    - name: object-store api unit tests
       if: ${{ always() }}
       run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-unit-test
       working-directory: ./src
 
-    - name: functional test object-store api
+    - name: object-store api functional tests
       if: ${{ always() }}
       run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-functional-test
       working-directory: ./src
@@ -45,12 +49,12 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         files: src/tests-results/*.junit.xml
 
-    - name: Setup .NET Core # Required to execute ReportGenerator
+    - name: setup .NET core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.101
 
-    - name: report-generator
+    - name: report generator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
       with:
         reports: 'src/tests-results/*/coverage.cobertura.xml'
@@ -59,7 +63,7 @@ jobs:
         reporttypes: 'HtmlInline;Cobertura'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
 
-    - name: Upload coverage report
+    - name: upload coverage report artifacts
       uses: actions/upload-artifact@v1
       with:
         name: coverage-report
