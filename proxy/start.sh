@@ -38,9 +38,6 @@ docker network create $NETWORK $NETWORK_OPTIONS
 if [ ! -z ${STAGING_NETWORK+X} ]; then
     docker network create $STAGING_NETWORK $STAGING_NETWORK_OPTIONS
 fi
-if [ ! -z ${SHARED_NETWORK+X} ]; then
-    docker network create $SHARED_NETWORK $SHARED_NETWORK_OPTIONS
-fi
 
 # 4. Download the latest version of nginx.tmpl
 curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
@@ -80,7 +77,7 @@ fi
 # 7. Start proxy
 
 # Check if you have multiple network
-if [ -z ${STAGING_NETWORK+X} ] && [ -z ${SHARED_NETWORK+X} ]; then
+if [ -z ${STAGING_NETWORK+X} ]; then
     docker-compose up --force-recreate --build -d
 else
     docker-compose -f docker-compose-multiple-networks.yml up --force-recreate --build -d
