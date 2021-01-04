@@ -8,6 +8,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="JunitXml.TestLogger" Version="2.1.78" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />

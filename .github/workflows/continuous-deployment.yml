@@ -1,0 +1,128 @@
+name: continous deployment
+
+on:
+  push:
+    branches:
+      - develop
+
+    paths-ignore:
+      - 'proxy/**'
+      - 'docs/**'
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+    - name: set version
+      id: version
+      run: echo "VERSION=$(date +'%y.%m').${{github.run_number}}" >> $GITHUB_ENV
+
+  build-and-package:
+    runs-on: ubuntu-latest
+    needs: version
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - run: docker-compose pull
+      working-directory: ./src
+
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
+
+    - name: docker login
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+
+    - name: build containers
+      run: docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
+      working-directory: ./src
+
+    - name: push containers
+      run: docker-compose push
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: 
+      - version
+      - build-and-package
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: set staging env values
+      if: github.ref == 'refs/heads/develop'
+      run: |
+        echo "TARGET=holefeeder-staging-test" >> $GITHUB_ENV
+        echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
+        echo "ENVIRONMENT_PREFIX=-staging" >> $GITHUB_ENV
+        echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_STAGING}}" >> $GITHUB_ENV
+        echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_STAGING}}" >> $GITHUB_ENV
+        echo "MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_STAGING}}" >> $GITHUB_ENV
+        echo "MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_STAGING}}" >> $GITHUB_ENV
+        echo "MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_STAGING}}" >> $GITHUB_ENV
+        echo "MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_STAGING}}" >> $GITHUB_ENV
+
+    - name: set production env values
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "TARGET=holefeeder-test" >> $GITHUB_ENV
+        echo "ENVIRONMENT=Production" >> $GITHUB_ENV
+        echo "ENVIRONMENT_PREFIX=" >> $GITHUB_ENV
+        echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_PROD}}" >> $GITHUB_ENV
+        echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}" >> $GITHUB_ENV
+        echo "MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_PROD}}" >> $GITHUB_ENV
+        echo "MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_PROD}}" >> $GITHUB_ENV
+        echo "MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_PROD}}" >> $GITHUB_ENV
+        echo "MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_PROD}}" >> $GITHUB_ENV
+
+    - name: create environment file
+      run: |
+        printf "VERSION=${{ env.VERSION }}
+        ENVIRONMENT=${{ env.ENVIRONMENT }}
+        ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
+        MONGO_ROOT_USER=${{ env.MONGO_ROOT_USER }}
+        MONGO_ROOT_PASSWORD=${{ env.MONGO_ROOT_PASSWORD }}
+        MONGO_HOLEFEEDERAPI_USER=${{ env.MONGO_HOLEFEEDERAPI_USER }}
+        MONGO_HOLEFEEDERAPI_PASSWORD=${{ env.MONGO_HOLEFEEDERAPI_PASSWORD }}
+        MONGO_DATABASE_NAME=${{ env.MONGO_DATABASE_NAME }}
+        MONGO_DATABASE_AUTH=${{ env.MONGO_DATABASE_AUTH }}
+        MONGO_DATABASE_VOLUME=./data
+        SEQ_ApiKey=${{ secrets.SEQ_APIKEY }}
+        " > .env
+      working-directory: ./src
+
+    - name: Copy file via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.PROD_WEB_SERVER }}
+        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      with:
+        source: "src/docker-compose.yml,src/docker-compose.prod.yml,src/.env"
+        target: ${{ env.TARGET }}
+        strip_components: 1
+     
+    # - name: Starting containers
+    #   uses: appleboy/ssh-action@master
+    #   env:
+    #     HOST: ${{ secrets.PROD_WEB_SERVER }}
+    #     USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+    #     PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+    #     KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    #   with:
+    #     script: |
+    #       cd holefeeder-staging
+    #       echo Pull container
+    #       echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+    #       docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}
+    #       docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ needs.version.outputs.version }}
+    #       echo Pull standard containers
+    #       docker pull mongo:latest
+    #       echo Start containers
+    #       docker-compose up --force-recreate --build -d
+    #       echo Cleanup previous images
+    #       docker image prune -f
