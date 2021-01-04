@@ -34,13 +34,15 @@ jobs:
       continue-on-error: true
 
     - name: echo version
-      run: echo ${{ needs.version.outputs.version }}
+      run: |
+        echo ${{ needs.version.outputs.version }}
 
     - name: docker login
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: build containers
-      run: docker-compose build --build-arg holefeeder_version=${{ needs.version.outputs.version }}
+      run: |
+        docker-compose build --build-arg holefeeder_version=${{ needs.version.outputs.version }}
       working-directory: ./src
 
     - name: push containers
