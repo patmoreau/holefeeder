@@ -10,14 +10,14 @@ on:
       - 'docs/**'
 
 jobs:
-  version:
+  set-version:
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.set-version.outputs.VERSION }}
+      VERSION: ${{ steps.build-version.outputs.VERSION }}
 
     steps:
     - name: set version
-      id: set-version
+      id: build-version
       run: "##[set-output name=VERSION;]$(date +'%y.%m').${{github.run_number}}" 
 
   build-and-package:
