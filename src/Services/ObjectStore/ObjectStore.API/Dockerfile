@@ -5,6 +5,7 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+ARG holefeeder_version=99.99.99
 WORKDIR /src
 
 # It's important to keep lines from here down to "COPY . ." identical in all Dockerfiles
@@ -45,7 +46,7 @@ RUN dotnet restore DrifterApps.Holefeeder.sln
 
 COPY . .
 WORKDIR /src/Services/ObjectStore/ObjectStore.API
-RUN dotnet publish --no-restore -c Release -o /app
+RUN dotnet publish /property:Version=${holefeeder_version} --no-restore -c Release -o /app
 
 FROM build as unittest
 WORKDIR /src/Services/ObjectStore/ObjectStore.UnitTests
