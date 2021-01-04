@@ -42,6 +42,7 @@ jobs:
 
     - name: push containers
       run: docker-compose push
+      working-directory: ./src
 
   deploy:
     runs-on: ubuntu-latest
