@@ -13,12 +13,12 @@ jobs:
   set-version:
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.build-version.outputs.VERSION }}
+      version: ${{ steps.version.outputs.version }}
 
     steps:
     - name: set version
-      id: build-version
-      run: "##[set-output name=VERSION;]$(date +'%y.%m').${{github.run_number}}" 
+      id: version
+      run: "##[set-output name=version;]$(date +'%y.%m').${{github.run_number}}" 
 
   build-and-package:
     runs-on: ubuntu-latest
@@ -33,11 +33,14 @@ jobs:
     - uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
 
+    - name: echo version
+      run: echo ${{ needs.set-version.outputs.version }}
+
     - name: docker login
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: build containers
-      run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.VERSION }}
+      run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.version }}
       working-directory: ./src
 
     - name: push containers
