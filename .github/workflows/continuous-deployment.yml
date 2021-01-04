@@ -41,6 +41,9 @@ jobs:
       working-directory: ./src
 
     - name: push containers
+      env:
+        DOCKER_REGISTRY: docker.pkg.github.com/drifterapps/holefeeder
+        TAG: ${{ needs.set-version.outputs.version }}
       run: docker-compose push
       working-directory: ./src
 
@@ -82,6 +85,8 @@ jobs:
     - name: create environment file
       run: |
         printf "VERSION=${{ needs.set-version.outputs.version }}
+        DOCKER_REGISTRY=docker.pkg.github.com/drifterapps/holefeeder
+        TAG=${{ needs.set-version.outputs.version }}
         ENVIRONMENT=${{ env.ENVIRONMENT }}
         ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
         MONGO_ROOT_USER=${{ env.MONGO_ROOT_USER }}
