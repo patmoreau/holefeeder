@@ -13,7 +13,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.version.outputs.version }}
+      VERSION: ${{ steps.set-version.outputs.VERSION }}
 
     steps:
     - name: set version
