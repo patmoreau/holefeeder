@@ -1,10 +1,10 @@
 # Holefeeder
 
-![continous integration](https://github.com/DrifterApps/Holefeeder/workflows/continous%20integration/badge.svg)
+![continuous integration](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20integration/badge.svg)
 
-![continous deployment](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment/badge.svg)
+![continuous deployment](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20deployment/badge.svg)
 
-![continous deployment proxy](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment%20proxy/badge.svg)
+![continuous deployment proxy](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20deployment%20proxy/badge.svg)
 
 ## Introduction
 
