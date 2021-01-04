@@ -13,16 +13,16 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.version.outputs.version }}
+      VERSION: ${{ steps.version.outputs.version }}
 
     steps:
     - name: set version
-      id: version
-      run: echo "VERSION=$(date +'%y.%m').${{github.run_number}}" >> $GITHUB_ENV
+      id: set-version
+      run: "##[set-output name=VERSION;]$(date +'%y.%m').${{github.run_number}" 
 
   build-and-package:
     runs-on: ubuntu-latest
-    needs: version
+    needs: set-version
 
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: build containers
-      run: docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
+      run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.VERSION }}
       working-directory: ./src
 
     - name: push containers
@@ -46,7 +46,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: 
-      - version
+      - set-version
       - build-and-package
 
     steps:
@@ -80,7 +80,7 @@ jobs:
 
     - name: create environment file
       run: |
-        printf "VERSION=${{ env.VERSION }}
+        printf "VERSION=${{ needs.set-version.outputs.VERSION }}
         ENVIRONMENT=${{ env.ENVIRONMENT }}
         ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
         MONGO_ROOT_USER=${{ env.MONGO_ROOT_USER }}
