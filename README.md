@@ -2,11 +2,9 @@
 
 ![continous integration](https://github.com/DrifterApps/Holefeeder/workflows/continous%20integration/badge.svg)
 
+![continous deployment](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment/badge.svg)
+
 ![continous deployment proxy](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment%20proxy/badge.svg)
-
-![continous deployment staging](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment%20staging/badge.svg)
-
-![continous deployment prod](https://github.com/DrifterApps/Holefeeder/workflows/continous%20deployment%20prod/badge.svg) 
 
 ## Introduction
 

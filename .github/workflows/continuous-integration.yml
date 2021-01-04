@@ -1,11 +1,6 @@
 name: continous integration
 
 on:
-  push:
-    branches:
-    - main
-    - master
-    - develop
   pull_request:
     branches:
     - main
@@ -53,6 +48,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v1.6
       if: ${{ always() }}
       with:
+        check_name: unit-test-results
         github_token: ${{ secrets.GITHUB_TOKEN }}
         files: src/tests-results/*.junit.xml
 

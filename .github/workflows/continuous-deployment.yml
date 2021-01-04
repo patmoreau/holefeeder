@@ -38,9 +38,6 @@ jobs:
     - run: docker-compose pull
       working-directory: ./src
 
-    - uses: satackey/action-docker-layer-caching@v0.0.11
-      continue-on-error: true
-
     - name: build containers
       run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.version }}
       working-directory: ./src
