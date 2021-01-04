@@ -32,14 +32,14 @@ jobs:
         echo "DOCKER_REGISTRY=docker.pkg.github.com/drifterapps/holefeeder" >> $GITHUB_ENV
         echo "TAG=${{ needs.set-version.outputs.version }}" >> $GITHUB_ENV
 
+    - name: docker login
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+
     - run: docker-compose pull
       working-directory: ./src
 
     - uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
-
-    - name: docker login
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
 
     - name: build containers
       run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.version }}
