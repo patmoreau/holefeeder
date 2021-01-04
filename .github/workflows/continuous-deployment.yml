@@ -27,6 +27,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: set env values
+      run: |
+        echo "DOCKER_REGISTRY=docker.pkg.github.com/drifterapps/holefeeder" >> $GITHUB_ENV
+        echo "TAG=${{ needs.set-version.outputs.version }}" >> $GITHUB_ENV
+
     - run: docker-compose pull
       working-directory: ./src
 
@@ -41,9 +46,6 @@ jobs:
       working-directory: ./src
 
     - name: push containers
-      env:
-        DOCKER_REGISTRY: docker.pkg.github.com/drifterapps/holefeeder
-        TAG: ${{ needs.set-version.outputs.version }}
       run: docker-compose push
       working-directory: ./src
 
