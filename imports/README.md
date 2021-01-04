@@ -1,1 +1,0 @@
-The `<root>\imports` folder contains all imported files (NuGet packages, etc.).

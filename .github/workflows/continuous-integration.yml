@@ -1,58 +1,73 @@
-name: Continous integration
+name: continous integration
 
 on:
-  push:
-    branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches:
+    - main
+    - master
+    - develop
 
 jobs:
-  backend:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup .NET Core
+    - run: docker-compose pull
+      working-directory: ./src
+
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
+
+    - name: build containers
+      run: docker-compose build
+      working-directory: ./src
+
+    - name: budget api unit tests
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-unit-test
+      working-directory: ./src
+
+    - name: budgeting api functional tests
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-functional-test
+      working-directory: ./src
+
+    - name: object-store api unit tests
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-unit-test
+      working-directory: ./src
+
+    - name: object-store api functional tests
+      if: ${{ always() }}
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-functional-test
+      working-directory: ./src
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.6
+      if: ${{ always() }}
+      with:
+        check_name: unit-test-results
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: src/tests-results/*.junit.xml
+
+    - name: setup .NET core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.201
+        dotnet-version: 5.0.101
 
-    - name: Install dependencies
-      run: dotnet restore ./src
-
-    - name: Build
-      run: dotnet build --no-restore ./src
-
-    - name: Test
-      run: dotnet test --no-restore --no-build --collect:"XPlat Code Coverage" ./src
-
-    - name: ReportGenerator
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.5.7
+    - name: report generator
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
       with:
-        reports: '**/*Tests/TestResults/*/coverage.cobertura.xml'
+        reports: 'src/tests-results/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
+        sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
 
-    - name: Upload coverage report
+    - name: upload coverage report artifacts
       uses: actions/upload-artifact@v1
       with:
         name: coverage-report
         path: coveragereport
-
-  ui:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '13.x'
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI
-
-    - name: Build angular ui
-      run: npm build
-      working-directory: ./src/DrifterApps.Holefeeder.Presentations.UI

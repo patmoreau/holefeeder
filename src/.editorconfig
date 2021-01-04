@@ -128,4 +128,11 @@ visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public
 
 [*.{cs,vb}]
 # CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1040.severity = none
+dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CA2007.severity = none # this is not relevant when in ASP.NET Core application
+
+[*.cs]
+dotnet_code_quality.null_check_validation_methods = ThrowIfNull|ThrowIfNullOrEmpty
