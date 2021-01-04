@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: set version
       id: set-version
-      run: "##[set-output name=VERSION;]$(date +'%y.%m').${{github.run_number}" 
+      run: "##[set-output name=VERSION;]$(date +'%y.%m').${{github.run_number}}" 
 
   build-and-package:
     runs-on: ubuntu-latest
