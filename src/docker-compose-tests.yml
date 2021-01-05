@@ -6,7 +6,7 @@ services:
     image: mongo
 
   budgeting-api-functional-test:
-    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${TAG:-latest}
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${VERSION:-latest}
     build:
       context: .
       dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
@@ -17,7 +17,7 @@ services:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
 
   budgeting-api-unit-test:
-    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${TAG:-latest}
+    image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${VERSION:-latest}
     build:
       context: .
       dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
@@ -26,7 +26,7 @@ services:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
 
   object-store-api-functional-test:
-    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-functional-test:${TAG:-latest}
+    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-functional-test:${VERSION:-latest}
     build:
       context: .
       dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
@@ -37,7 +37,7 @@ services:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
 
   object-store-api-unit-test:
-    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-unit-test:${TAG:-latest}
+    image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-unit-test:${VERSION:-latest}
     build:
       context: .
       dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
