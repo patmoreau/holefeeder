@@ -3,8 +3,9 @@ name: continuous deployment
 on:
   pull_request:
     branches:
-    - main
-    - master
+    - develop
+    # - main
+    # - master
 
     paths-ignore:
     - 'proxy/**'
@@ -118,9 +119,12 @@ jobs:
         username: ${{ secrets.PROD_WEB_SERVER_USER }}
         port: ${{ secrets.PROD_WEB_SERVER_PORT }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script_stop: true
         script: |
           cd ${{ env.TARGET }}
-          echo registry login
+          echo dockerhub registry login
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+          echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           echo pull containers
           docker-compose pull
