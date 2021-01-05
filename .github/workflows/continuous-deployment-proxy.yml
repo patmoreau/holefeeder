@@ -3,9 +3,11 @@ name: continuous deployment proxy
 on:
   push:
     branches:
-      - master
+    - main
+    - master
+
     paths:
-      - proxy/**
+    - proxy/**
 
 jobs:
   deploy-proxy:
