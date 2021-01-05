@@ -33,14 +33,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: docker login
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-
     - run: docker-compose pull
       working-directory: ./src
 
     - uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
+      with:
+        key: holefeeder-docker-cache-{hash}
+        restore-keys: |
+          holefeeder-docker-cache-
 
     - name: build containers
       run: docker-compose build --build-arg holefeeder_version=${{ needs.set-version.outputs.version }}
@@ -57,27 +58,34 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - run: docker-compose pull
+      working-directory: ./src
+
     - uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
+      with:
+        key: holefeeder-docker-cache-{hash}
+        restore-keys: |
+          holefeeder-docker-cache-
 
     - name: budget api unit tests
       if: ${{ always() }}
-      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-unit-test
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up --no-build budgeting-api-unit-test
       working-directory: ./src
 
     - name: budgeting api functional tests
       if: ${{ always() }}
-      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-functional-test
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up --no-build budgeting-api-functional-test
       working-directory: ./src
 
     - name: object-store api unit tests
       if: ${{ always() }}
-      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-unit-test
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up --no-build object-store-api-unit-test
       working-directory: ./src
 
     - name: object-store api functional tests
       if: ${{ always() }}
-      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run object-store-api-functional-test
+      run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml up --no-build object-store-api-functional-test
       working-directory: ./src
 
     - name: publish unit test results
