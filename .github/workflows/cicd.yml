@@ -48,7 +48,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: set-version
+    needs:
+    - set-version
+    - build
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
 
