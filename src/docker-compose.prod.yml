@@ -3,63 +3,88 @@ version: '3.4'
 services:
   
   seq:
+    restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
+      - DEFAULT_HOST=seq${ENVIRONMENT_PREFIX}.drifterapps.com
+      - VIRTUAL_HOST=seq${ENVIRONMENT_PREFIX}.drifterapps.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=seq${ENVIRONMENT_PREFIX}.drifterapps.com
+      - LETSENCRYPT_EMAIL=info@drifterapps.com
     ports:
-      - '5341:80'
-  
+      - 80
+
   nosql-data:
+    restart: unless-stopped
     ports:
       - 27017
     volumes:
-      - holefeeder-nosql-data:/data/db
+      - ${MONGO_DATABASE_VOLUME:-./data}/db:/data/db
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE_NAME}
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.slaveOk().ok || rs.status().ok" | mongo --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
 
   gateway-web:
+    restart: unless-stopped
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - SEQ_Url=http://seq:5341
+      - SEQ_Url=http://seq
       - AllowedHosts__0=https://web.holefeeder.internal
       - AllowedHosts__1=web.holefeeder.internal
       - AllowedHosts__2=http://localhost
+      - DEFAULT_HOST=holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
+      - VIRTUAL_HOST=holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
+      - LETSENCRYPT_EMAIL=info@drifterapps.com
     ports:
       - 80
 
   budgeting-api:
+    restart: unless-stopped
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
-      - HolefeederDatabaseSettings__Database=holefeeder
+      - HolefeederDatabaseSettings__ConnectionString=${MONGO_CONNECTION_STRING:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__Database=${MONGO_DATABASE_NAME}
     ports:
       - 80
 
   object-store-api:
+    restart: unless-stopped
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
-      - HolefeederDatabaseSettings__Database=holefeeder
+      - HolefeederDatabaseSettings__ConnectionString=${MONGO_CONNECTION_STRING:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__Database=${MONGO_DATABASE_NAME}
     ports:
       - 80
 
   legacy-api:
+    restart: unless-stopped
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - MongoDB__ConnectionString=mongodb://${MONGO_HOLEFEEDERAPI_USER}:${MONGO_HOLEFEEDERAPI_PASSWORD}@mongodb:27017/?authSource=${MONGO_DATABASE_AUTH}
+      - MongoDB__ConnectionString=${MONGO_CONNECTION_STRING:-mongodb://nosql-data}
       - MongoDB__DatabaseName=${MONGO_DATABASE_NAME}
-      - MongoDB__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
-      - MongoDB__DatabaseName=holefeeder
     ports:
       - 80
 
   webspa:
+    restart: unless-stopped
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederWeb__ApiUrl=https://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP:-localhost}
-      - HolefeederWeb__RedirectUrl=https://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP:-localhost}
+      - HolefeederWeb__ApiUrl=https://holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
+      - HolefeederWeb__RedirectUrl=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
       - DEFAULT_HOST=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
       - VIRTUAL_HOST=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
       - VIRTUAL_PORT=80
@@ -68,6 +93,7 @@ services:
     ports:
       - 80
 
-volumes:
-  holefeeder-nosql-data:
-    external: false
+networks:
+  default:
+    external:
+      name: holefeeder${ENVIRONMENT_PREFIX}-proxy

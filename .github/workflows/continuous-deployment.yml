@@ -3,7 +3,12 @@ name: continuous deployment
 on:
   push:
     branches:
-      - develop
+      - master
+
+  pull_request:
+    branches:
+    - main
+    - master
 
     paths-ignore:
       - 'proxy/**'
@@ -56,30 +61,28 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: set staging env values
-      if: github.ref == 'refs/heads/develop'
-      run: |
-        echo "TARGET=holefeeder-staging-test" >> $GITHUB_ENV
-        echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
-        echo "ENVIRONMENT_PREFIX=-staging" >> $GITHUB_ENV
-        echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_STAGING}}" >> $GITHUB_ENV
-        echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_STAGING}}" >> $GITHUB_ENV
-        echo "MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_STAGING}}" >> $GITHUB_ENV
-        echo "MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_STAGING}}" >> $GITHUB_ENV
-        echo "MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_STAGING}}" >> $GITHUB_ENV
-        echo "MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_STAGING}}" >> $GITHUB_ENV
-
-    - name: set production env values
       if: github.ref == 'refs/heads/master'
       run: |
-        echo "TARGET=holefeeder-test" >> $GITHUB_ENV
-        echo "ENVIRONMENT=Production" >> $GITHUB_ENV
-        echo "ENVIRONMENT_PREFIX=" >> $GITHUB_ENV
-        echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_PROD}}" >> $GITHUB_ENV
-        echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}" >> $GITHUB_ENV
-        echo "MONGO_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_PROD}}" >> $GITHUB_ENV
-        echo "MONGO_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_PROD}}" >> $GITHUB_ENV
-        echo "MONGO_DATABASE_NAME=${{secrets.DATABASE_NAME_PROD}}" >> $GITHUB_ENV
-        echo "MONGO_DATABASE_AUTH=${{secrets.DATABASE_NAME_PROD}}" >> $GITHUB_ENV
+        echo "TARGET=holefeeder-staging" >> $GITHUB_ENV
+        echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
+        echo "ENVIRONMENT_PREFIX=-staging" >> $GITHUB_ENV
+        echo "HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=holefeeder-staging.drifterapps.com" >> $GITHUB_ENV
+        echo "MONGO_ROOT_USER=${{ secrets.MONGODB_ROOT_USER_STAGING }}" >> $GITHUB_ENV
+        echo "MONGO_ROOT_PASSWORD=${{ secrets.MONGODB_ROOT_PASSWORD_STAGING }}" >> $GITHUB_ENV
+        echo "MONGODB_HOLEFEEDERAPI_USER=${{ secrets.MONGODB_HOLEFEEDERAPI_STAGING }}" >> $GITHUB_ENV
+        echo "MONGODB_HOLEFEEDERAPI_PASSWORD=${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_STAGING }}" >> $GITHUB_ENV
+
+    # - name: set production env values
+    #   if: github.ref == 'refs/heads/master'
+    #   run: |
+    #     echo "TARGET=holefeeder-test" >> $GITHUB_ENV
+    #     echo "ENVIRONMENT=Production" >> $GITHUB_ENV
+    #     echo "ENVIRONMENT_PREFIX=" >> $GITHUB_ENV
+    #     echo "HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=holefeeder.drifterapps.com" >> $GITHUB_ENV
+    #     echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_PROD}}" >> $GITHUB_ENV
+    #     echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}" >> $GITHUB_ENV
+    #     echo "MONGODB_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_PROD}}" >> $GITHUB_ENV
+    #     echo "MONGODB_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_PROD}}" >> $GITHUB_ENV
 
     - name: create environment file
       run: |
@@ -88,18 +91,17 @@ jobs:
         TAG=${{ needs.set-version.outputs.version }}
         ENVIRONMENT=${{ env.ENVIRONMENT }}
         ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
+        HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=${{ env.HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP }}
+        MONGO_CONNECTION_STRING=mongodb://${{ env.MONGODB_HOLEFEEDERAPI_USER }}:${{ env.MONGODB_HOLEFEEDERAPI_PASSWORD }}@nosql-data/?authSource=holefeeder
         MONGO_ROOT_USER=${{ env.MONGO_ROOT_USER }}
         MONGO_ROOT_PASSWORD=${{ env.MONGO_ROOT_PASSWORD }}
-        MONGO_HOLEFEEDERAPI_USER=${{ env.MONGO_HOLEFEEDERAPI_USER }}
-        MONGO_HOLEFEEDERAPI_PASSWORD=${{ env.MONGO_HOLEFEEDERAPI_PASSWORD }}
-        MONGO_DATABASE_NAME=${{ env.MONGO_DATABASE_NAME }}
-        MONGO_DATABASE_AUTH=${{ env.MONGO_DATABASE_AUTH }}
+        MONGO_DATABASE_NAME=holefeeder
         MONGO_DATABASE_VOLUME=./data
         SEQ_ApiKey=${{ secrets.SEQ_APIKEY }}
         " > .env
       working-directory: ./src
 
-    - name: Copy file via scp
+    - name: copy file
       uses: appleboy/scp-action@master
       env:
         HOST: ${{ secrets.PROD_WEB_SERVER }}
@@ -111,23 +113,19 @@ jobs:
         target: ${{ env.TARGET }}
         strip_components: 1
      
-    # - name: Starting containers
-    #   uses: appleboy/ssh-action@master
-    #   env:
-    #     HOST: ${{ secrets.PROD_WEB_SERVER }}
-    #     USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
-    #     PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
-    #     KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    #   with:
-    #     script: |
-    #       cd holefeeder-staging
-    #       echo Pull container
-    #       echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-    #       docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-api:${{ needs.version.outputs.version }}
-    #       docker pull docker.pkg.github.com/drifterapps/holefeeder/holefeeder-web:${{ needs.version.outputs.version }}
-    #       echo Pull standard containers
-    #       docker pull mongo:latest
-    #       echo Start containers
-    #       docker-compose up --force-recreate --build -d
-    #       echo Cleanup previous images
-    #       docker image prune -f
+    - name: starting containers
+      uses: appleboy/ssh-action@master
+      env:
+        HOST: ${{ secrets.PROD_WEB_SERVER }}
+        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
+        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      with:
+        script: |
+          cd ${{ env.TARGET }}
+          echo registry login
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+          echo start containers
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+          echo cleanup previous images
+          docker image prune -f
