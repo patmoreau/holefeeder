@@ -56,8 +56,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: echo  ref
+      run: echo ${{ github.ref }}
+      
     - name: set staging env values
-      if: github.ref == 'refs/heads/master'
+      if: github.ref != 'refs/heads/master'
       run: |
         echo "TARGET=holefeeder-staging" >> $GITHUB_ENV
         echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
@@ -99,24 +102,22 @@ jobs:
 
     - name: copy file
       uses: appleboy/scp-action@master
-      env:
-        HOST: ${{ secrets.PROD_WEB_SERVER }}
-        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
-        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
-        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
+        host: ${{ secrets.PROD_WEB_SERVER }}
+        username: ${{ secrets.PROD_WEB_SERVER_USER }}
+        port: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "src/docker-compose.yml,src/docker-compose.prod.yml,src/.env"
-        target: "${{ env.TARGET }}"
+        target: ${{ env.TARGET }}
         strip_components: 1
      
     - name: starting containers
       uses: appleboy/ssh-action@master
-      env:
-        HOST: ${{ secrets.PROD_WEB_SERVER }}
-        USERNAME: ${{ secrets.PROD_WEB_SERVER_USER }}
-        PORT: ${{ secrets.PROD_WEB_SERVER_PORT }}
-        KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       with:
+        host: ${{ secrets.PROD_WEB_SERVER }}
+        username: ${{ secrets.PROD_WEB_SERVER_USER }}
+        port: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ${{ env.TARGET }}
           echo registry login
