@@ -158,9 +158,11 @@ jobs:
         script_stop: true
         script: |
           cd ${{ env.TARGET }}
+          echo pull containers
+          docker-compose pull seq
+          docker-compose pull nosql-data
           echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-          echo pull containers
           docker-compose pull
           # echo start containers
           # docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach --force-recreate
