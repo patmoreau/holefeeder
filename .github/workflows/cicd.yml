@@ -57,9 +57,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: docker-compose pull
-      working-directory: ./src
-
     - uses: satackey/action-docker-layer-caching@v0.0.11
       continue-on-error: true
 
