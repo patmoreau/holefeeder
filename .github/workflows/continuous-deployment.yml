@@ -68,7 +68,7 @@ jobs:
         echo "HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=holefeeder-staging.drifterapps.com" >> $GITHUB_ENV
         echo "MONGO_ROOT_USER=${{ secrets.MONGODB_ROOT_USER_STAGING }}" >> $GITHUB_ENV
         echo "MONGO_ROOT_PASSWORD=${{ secrets.MONGODB_ROOT_PASSWORD_STAGING }}" >> $GITHUB_ENV
-        echo "MONGODB_HOLEFEEDERAPI_USER=${{ secrets.MONGODB_HOLEFEEDERAPI_STAGING }}" >> $GITHUB_ENV
+        echo "MONGODB_HOLEFEEDERAPI_USER=${{ secrets.MONGODB_HOLEFEEDERAPI_USER_STAGING }}" >> $GITHUB_ENV
         echo "MONGODB_HOLEFEEDERAPI_PASSWORD=${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_STAGING }}" >> $GITHUB_ENV
 
     # - name: set production env values
@@ -80,7 +80,7 @@ jobs:
     #     echo "HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=holefeeder.drifterapps.com" >> $GITHUB_ENV
     #     echo "MONGO_ROOT_USER=${{secrets.MONGODB_ROOT_USER_PROD}}" >> $GITHUB_ENV
     #     echo "MONGO_ROOT_PASSWORD=${{secrets.MONGODB_ROOT_PASSWORD_PROD}}" >> $GITHUB_ENV
-    #     echo "MONGODB_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_PROD}}" >> $GITHUB_ENV
+    #     echo "MONGODB_HOLEFEEDERAPI_USER=${{secrets.MONGODB_HOLEFEEDERAPI_USER_PROD}}" >> $GITHUB_ENV
     #     echo "MONGODB_HOLEFEEDERAPI_PASSWORD=${{secrets.MONGODB_HOLEFEEDERAPI_PASSWORD_PROD}}" >> $GITHUB_ENV
 
     - name: create environment file
@@ -122,7 +122,9 @@ jobs:
           cd ${{ env.TARGET }}
           echo registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+          echo pull containers
+          docker-compose pull
           echo start containers
-          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --no-build --detach --force-recreate
           echo cleanup previous images
           docker image prune -f
