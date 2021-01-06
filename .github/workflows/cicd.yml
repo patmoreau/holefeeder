@@ -157,6 +157,8 @@ jobs:
           cd ${{ env.TARGET }}
           echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
+          echo pull containers
+          docker-compose pull
           echo start containers
           docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
           echo cleanup previous images
