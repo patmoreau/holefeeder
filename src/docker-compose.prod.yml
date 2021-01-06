@@ -37,9 +37,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
       - SEQ_Url=http://seq
-      - AllowedHosts__0=https://web.holefeeder.internal
-      - AllowedHosts__1=web.holefeeder.internal
-      - AllowedHosts__2=http://localhost
+      - AllowedHosts__0=https://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP}
       - DEFAULT_HOST=holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
       - VIRTUAL_HOST=holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
       - VIRTUAL_PORT=80
@@ -84,11 +82,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=http://0.0.0.0:80
       - HolefeederWeb__ApiUrl=https://holefeeder-api${ENVIRONMENT_PREFIX}.drifterapps.com
-      - HolefeederWeb__RedirectUrl=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
-      - DEFAULT_HOST=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
-      - VIRTUAL_HOST=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
+      - HolefeederWeb__RedirectUrl=https://${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP}
+      - DEFAULT_HOST=${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP}
+      - VIRTUAL_HOST=${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP}
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=holefeeder${ENVIRONMENT_PREFIX}.drifterapps.com
+      - LETSENCRYPT_HOST=${HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP}
       - LETSENCRYPT_EMAIL=info@drifterapps.com
     ports:
       - 80
