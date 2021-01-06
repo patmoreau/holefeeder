@@ -6,7 +6,7 @@ services:
     image: datalust/seq:latest
   
   nosql-data:
-    image: mongo
+    image: mongo:latest
 
   gateway-web:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-gateway-web:${VERSION:-latest}
