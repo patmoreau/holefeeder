@@ -41,9 +41,6 @@ jobs:
     - run: docker-compose pull
       working-directory: ./src
 
-    # - uses: satackey/action-docker-layer-caching@v0.0.11
-    #   continue-on-error: true
-
     - name: build containers
       run: docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
       working-directory: ./src
@@ -158,14 +155,10 @@ jobs:
         script_stop: true
         script: |
           cd ${{ env.TARGET }}
-          echo pull containers
-          docker-compose pull seq
-          docker-compose pull nosql-data
           echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-          docker-compose pull
-          # echo start containers
-          # docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach --force-recreate
+          echo start containers
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
           echo cleanup previous images
           docker image prune -f
 
