@@ -105,10 +105,10 @@ jobs:
       with:
         name: deployables
         path: |
-          src/*/docker-compose.yml
-          src/*/docker-compose.prod.yml
-          src/*/mongo/mongod.conf
-          src/*/mongo/initdb.d/create-app-user.sh
+          src/docker-compose.yml
+          src/docker-compose.prod.yml
+          src/mongo/mongod.conf
+          src/mongo/initdb.d/create-app-user.sh
 
   staging:
     name: deploy to staging
