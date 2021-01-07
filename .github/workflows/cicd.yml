@@ -179,9 +179,9 @@ jobs:
           echo pull containers
           docker-compose pull
           echo start containers
-          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
           echo cleanup previous images
-          docker image prune -f
+          docker image prune -f -a
 
   deploy:
     name: deploy to production
@@ -245,6 +245,6 @@ jobs:
           echo pull containers
           docker-compose pull
           echo start containers
-          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
           echo cleanup previous images
-          docker image prune -f
+          docker image prune -f -a
