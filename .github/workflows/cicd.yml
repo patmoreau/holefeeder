@@ -200,6 +200,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+
+    - name: download deployables artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: deployables
+        path: ./artifacts/.
+
     - name: create environment file
       run: |
         printf "VERSION=${{ env.VERSION }}
@@ -217,7 +224,7 @@ jobs:
         MONGO_DATABASE_VOLUME=./mongo
         SEQ_ApiKey=${{ secrets.SEQ_APIKEY }}
         " > .env
-      working-directory: ./src
+      working-directory: ./artifacts
 
     - name: copy file
       uses: appleboy/scp-action@master

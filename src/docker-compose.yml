@@ -3,7 +3,7 @@ version: '3.4'
 services:
 
   seq:
-    image: datalust/seq:latest
+    image: datalust/seq:2020.5
   
   nosql-data:
     image: mongo:4.4.3
