@@ -1,11 +1,13 @@
-name: continous deployment proxy
+name: proxy ci/cd
 
 on:
   push:
     branches:
-      - master
+    - main
+    - master
+
     paths:
-      - proxy/**
+    - proxy/**
 
 jobs:
   deploy-proxy:

@@ -10,22 +10,29 @@ services:
   
   nosql-data:
     environment:
-      - MONGO_REPLICA_SET_NAME=rs0
+      MONGO_REPLICA_SET_NAME: rs0
+      MONGO_INITDB_ROOT_USERNAME: drifterapps
+      MONGO_INITDB_ROOT_PASSWORD: drifterapps
+      MONGO_INITDB_USERNAME: holefeederApi
+      MONGO_INITDB_PASSWORD: holefeederApi
+      MONGO_INITDB_DATABASE: holefeeder
     ports:
       - '27017:27017'
     volumes:
-      - holefeeder-nosql-data:/data/db
+      - ./mongo/mongod.conf:/etc/mongod.conf
+      - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/
+      - ./mongo/data/db/:/data/db/
     healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.slaveOk().ok || rs.status().ok" | mongo --quiet) -eq 1
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u drifterapps -p drifterapps --quiet) -eq 1
       interval: 10s
       start_period: 30s
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    command: [ "-f", "/etc/mongod.conf", "--replSet", "rs0", "--bind_ip_all" ]
 
   gateway-web:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+
-      - SEQ_Url=http://seq:5341
+      - SEQ_Url=http://seq
     ports:
       - '5200:80'
   
@@ -33,7 +40,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
       - HolefeederDatabaseSettings__Database=holefeeder
     ports:
       - '5100:80'
@@ -42,7 +49,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
+      - HolefeederDatabaseSettings__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
       - HolefeederDatabaseSettings__Database=holefeeder
     ports:
       - '5102:80'
@@ -51,7 +58,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
-      - MongoDB__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data}
+      - MongoDB__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
       - MongoDB__DatabaseName=holefeeder
     ports:
       - '5101:80'
@@ -64,7 +71,3 @@ services:
       - HolefeederWeb__RedirectUrl=http://localhost
     ports:
       - '80:80'
-
-volumes:
-  holefeeder-nosql-data:
-    external: false
