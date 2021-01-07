@@ -19,9 +19,9 @@ services:
     ports:
       - 27017
     volumes:
-      - ${MONGO_DATABASE_VOLUME:-./data}/mongod.conf:/etc/mongod.conf
-      - ${MONGO_DATABASE_VOLUME:-./data}/initdb.d/:/docker-entrypoint-initdb.d/
-      - ${MONGO_DATABASE_VOLUME:-./data}/db:/data/db
+      - ${MONGO_DATABASE_VOLUME:-./mongo}/mongod.conf:/etc/mongod.conf
+      - ${MONGO_DATABASE_VOLUME:-./mongo}/initdb.d/:/docker-entrypoint-initdb.d/
+      - ${MONGO_DATABASE_VOLUME:-./mongo}/db:/data/db
     environment:
       - MONGO_REPLICA_SET_NAME=${MONGO_REPLICA_SET_NAME}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
