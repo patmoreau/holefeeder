@@ -1,4 +1,4 @@
-name: continuous deployment proxy
+name: proxy ci/cd
 
 on:
   push:
