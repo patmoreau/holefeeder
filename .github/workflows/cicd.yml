@@ -162,6 +162,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "./artifacts/."
         target: ${{ env.TARGET }}
+        strip_components: 1
    
     - name: starting containers
       uses: appleboy/ssh-action@master
@@ -227,3 +228,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "./artifacts/."
         target: ${{ env.TARGET }}
+        strip_components: 1
