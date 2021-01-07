@@ -155,8 +155,19 @@ jobs:
         username: ${{ secrets.PROD_WEB_SERVER_USER }}
         port: ${{ secrets.PROD_WEB_SERVER_PORT }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "src/mongo/."
-        target: ${{ env.TARGET }}/data/
+        source: "src/mongo/mongod.conf"
+        target: ${{ env.TARGET }}/data
+        strip_components: 1
+
+    - name: copy mongo scripts
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.PROD_WEB_SERVER }}
+        username: ${{ secrets.PROD_WEB_SERVER_USER }}
+        port: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "src/mongo/initdb.d/create-app-user.sh"
+        target: ${{ env.TARGET }}/data/initdb.d
         strip_components: 1
    
     - name: starting containers
@@ -202,10 +213,13 @@ jobs:
         ENVIRONMENT=${{ env.ENVIRONMENT }}
         ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
         HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=${{ env.HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP }}
-        MONGO_CONNECTION_STRING=mongodb://${{ secrets.MONGODB_HOLEFEEDERAPI_USER }}:${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD }}@nosql-data/?authSource=holefeeder
+        MONGO_REPLICA_SET_NAME=${{ secrets.MONGO_REPLICA_SET_NAME }}
+        MONGO_CONNECTION_STRING=mongodb://${{ secrets.MONGODB_HOLEFEEDERAPI_USER }}:${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD }}@nosql-data/?authSource=${{ secrets.MONGO_DATABASE_NAME }}
         MONGO_ROOT_USER=${{ secrets.MONGODB_ROOT_USER }}
         MONGO_ROOT_PASSWORD=${{ secrets.MONGODB_ROOT_PASSWORD }}
-        MONGO_DATABASE_NAME=holefeeder
+        MONGO_USER=${{ secrets.MONGODB_HOLEFEEDERAPI_USER }}
+        MONGO_PASSWORD=${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD }}
+        MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
         MONGO_DATABASE_VOLUME=./data
         SEQ_ApiKey=${{ secrets.SEQ_APIKEY }}
         " > .env
@@ -220,4 +234,26 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "src/docker-compose.yml,src/docker-compose.prod.yml,src/.env"
         target: ${{ env.TARGET }}
+        strip_components: 1
+
+    - name: copy mongo config
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.PROD_WEB_SERVER }}
+        username: ${{ secrets.PROD_WEB_SERVER_USER }}
+        port: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "src/mongo/mongod.conf"
+        target: ${{ env.TARGET }}/data
+        strip_components: 1
+
+    - name: copy mongo scripts
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.PROD_WEB_SERVER }}
+        username: ${{ secrets.PROD_WEB_SERVER_USER }}
+        port: ${{ secrets.PROD_WEB_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "src/mongo/initdb.d/create-app-user.sh"
+        target: ${{ env.TARGET }}/data/initdb.d
         strip_components: 1
