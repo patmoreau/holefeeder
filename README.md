@@ -1,7 +1,6 @@
 # Holefeeder
 
-![continuous integration](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20integration/badge.svg)
-![continuous deployment](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20deployment/badge.svg)
+![holefeeder ci/cd](https://github.com/DrifterApps/Holefeeder/workflows/holefeeder%20ci/cd/badge.svg)
 ![continuous deployment proxy](https://github.com/DrifterApps/Holefeeder/workflows/continuous%20deployment%20proxy/badge.svg)
 
 ## Introduction
