@@ -191,7 +191,7 @@ jobs:
     - staging
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
-      TARGET: holefeeder-production
+      TARGET: holefeeder
       ENVIRONMENT: Production
       HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP: holefeeder.drifterapps.com
     environment:
