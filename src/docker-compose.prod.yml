@@ -21,16 +21,16 @@ services:
     volumes:
       - ${MONGO_DATABASE_VOLUME:-./mongo}/mongod.conf:/etc/mongod.conf
       - ${MONGO_DATABASE_VOLUME:-./mongo}/initdb.d/:/docker-entrypoint-initdb.d/
-      - ${MONGO_DATABASE_VOLUME:-./mongo}/db:/data/db
+      - ${MONGO_DATABASE_VOLUME:-./mongo}/data/db:/data/db
     environment:
       - MONGO_REPLICA_SET_NAME=${MONGO_REPLICA_SET_NAME}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-      - MONGO_INITDB_USERNAME=${MONGO_USER}
-      - MONGO_INITDB_PASSWORD=${MONGO_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_DATABASE_NAME}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_USERNAME=${MONGO_INITDB_USERNAME}
+      - MONGO_INITDB_PASSWORD=${MONGO_INITDB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo  -u $${MONGO_ROOT_USERNAME} -p $${MONGO_ROOT_PASSWORD} --quiet) -eq 1
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo  -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
       interval: 10s
       start_period: 30s
     command: [ "-f", "/etc/mongod.conf", "--replSet", "${MONGO_REPLICA_SET_NAME}", "--bind_ip_all" ]
