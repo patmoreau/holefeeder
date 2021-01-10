@@ -85,7 +85,7 @@ export class ConfigService {
 
   getMsalAngularConfig(): MsalAngularConfiguration {
     return Object.assign({
-      popUp: !isIE,
+      popUp: false,
       consentScopes: [
         ...loginRequest.scopes,
         ...tokenRequest.scopes,

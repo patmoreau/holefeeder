@@ -14,7 +14,6 @@ ProjectSection(SolutionItems) = preProject
 	docker-compose-tests.override.yml = docker-compose-tests.override.yml
 	docker-compose.override.yml = docker-compose.override.yml
 	docker-compose.prod.yml = docker-compose.prod.yml
-	docker-compose.staging.yml = docker-compose.staging.yml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.Domain", "Services\Budgeting\Budgeting.Domain\Budgeting.Domain.csproj", "{B8905A6D-15E6-458A-89F6-63C7795792F1}"
