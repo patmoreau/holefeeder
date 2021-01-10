@@ -118,7 +118,6 @@ jobs:
     - build
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
-      TARGET: holefeeder-staging
       ENVIRONMENT: Staging
       ENVIRONMENT_PREFIX: -staging
       HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP: holefeeder-staging.drifterapps.com
@@ -161,7 +160,7 @@ jobs:
         port: ${{ secrets.PROD_WEB_SERVER_PORT }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "artifacts/docker-compose.yml,artifacts/docker-compose.prod.yml,artifacts/.env,artifacts/mongo/mongod.conf,artifacts/mongo/initdb.d/create-app-user.sh"
-        target: ${{ env.TARGET }}
+        target: holefeeder-staging
         strip_components: 1
    
     - name: starting containers
@@ -173,15 +172,13 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script_stop: true
         script: |
-          cd ${{ env.TARGET }}
+          cd ~/holefeeder-staging
           echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           echo pull containers
           docker-compose pull
           echo start containers
           docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-          echo cleanup previous images
-          docker image prune -f
 
   deploy:
     name: deploy to production
@@ -191,7 +188,6 @@ jobs:
     - staging
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
-      TARGET: holefeeder
       ENVIRONMENT: Production
       HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP: holefeeder.drifterapps.com
     environment:
@@ -234,7 +230,7 @@ jobs:
         port: ${{ secrets.PROD_WEB_SERVER_PORT }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "artifacts/docker-compose.yml,artifacts/docker-compose.prod.yml,artifacts/.env,artifacts/mongo/mongod.conf,artifacts/mongo/initdb.d/create-app-user.sh"
-        target: ${{ env.TARGET }}
+        target: holefeeder
         strip_components: 1
    
     - name: starting containers
@@ -246,12 +242,15 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script_stop: true
         script: |
-          cd ${{ env.TARGET }}
+          cd ~/holefeeder
           echo github registry login
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
           echo pull containers
           docker-compose pull
           echo start containers
           docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+          echo stop staging
+          cd ~/holefeeder-staging
+          docker-compose down
           echo cleanup previous images
           docker image prune -f

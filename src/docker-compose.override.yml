@@ -9,6 +9,7 @@ services:
       - '5341:80'
   
   nosql-data:
+    hostname: nosql-data
     environment:
       MONGO_REPLICA_SET_NAME: rs0
       MONGO_INITDB_ROOT_USERNAME: drifterapps
