@@ -16,6 +16,7 @@ services:
 
   nosql-data:
     restart: unless-stopped
+    hostname: nosql-data
     ports:
       - 27017
     volumes:
