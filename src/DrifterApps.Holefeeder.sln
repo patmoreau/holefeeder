@@ -8,7 +8,6 @@ ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 	.editorconfig = .editorconfig
 	.dockerignore = .dockerignore
-	docker-compose.debug.yml = docker-compose.debug.yml
 	docker-compose.yml = docker-compose.yml
 	docker-compose-tests.yml = docker-compose-tests.yml
 	docker-compose-tests.override.yml = docker-compose-tests.override.yml

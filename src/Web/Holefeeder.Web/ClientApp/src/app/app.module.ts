@@ -14,14 +14,20 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {
   MsalModule,
-  MSAL_CONFIG,
-  MSAL_CONFIG_ANGULAR,
   MsalService,
-  MsalAngularConfiguration,
-  MsalInterceptor
+  MsalInterceptor,
+  MsalGuardConfiguration,
+  MsalInterceptorConfiguration,
+  MSAL_INSTANCE,
+  MsalBroadcastService,
+  MsalGuard,
+  MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG
 } from '@azure/msal-angular';
-import {Configuration} from "msal";
 import {ConfigService} from "@app/config/config.service";
+import {
+  IPublicClientApplication,
+  PublicClientApplication
+} from "@azure/msal-browser";
 
 const COMPONENTS = [
   AppComponent,
@@ -32,21 +38,23 @@ const COMPONENTS = [
 
 const AUTH_CONFIG_URL_TOKEN = new InjectionToken<string>('/assets/Settings');
 
-export function initializerFactory(env: ConfigService, configUrl: string): any {
-  // APP_INITIALIZER, except a function return which will return a promise
-  // APP_INITIALIZER, angular doesnt starts application until it completes
-  const promise = env.init(configUrl).then((value) => {
+export function initializerFactory(config: ConfigService, configUrl: string): any {
+  const promise = config.init(configUrl).then(_ => {
     console.debug('Configuration initialized.');
   });
   return () => promise;
 }
 
-export function msalConfigFactory(config: ConfigService): Configuration {
-  return config.getMsalConfig();
+export function MSALInstanceFactory(config: ConfigService): IPublicClientApplication {
+  return new PublicClientApplication(config.msalConfiguration);
 }
 
-export function msalAngularConfigFactory(config: ConfigService): MsalAngularConfiguration {
-  return config.getMsalAngularConfig();
+export function MSALInterceptorConfigFactory(config: ConfigService): MsalInterceptorConfiguration {
+  return config.msalInterceptorConfiguration;
+}
+
+export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfiguration {
+  return config.msalGuardConfiguration;
 }
 
 @NgModule({
@@ -72,21 +80,28 @@ export function msalAngularConfigFactory(config: ConfigService): MsalAngularConf
       deps: [ConfigService, AUTH_CONFIG_URL_TOKEN], multi: true
     },
     {
-      provide: MSAL_CONFIG,
-      useFactory: msalConfigFactory,
-      deps: [ConfigService]
-    },
-    {
-      provide: MSAL_CONFIG_ANGULAR,
-      useFactory: msalAngularConfigFactory,
-      deps: [ConfigService]
-    },
-    MsalService,
-    {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,
       multi: true
-    }
+    },
+    {
+      provide: MSAL_INSTANCE,
+      useFactory: MSALInstanceFactory,
+      deps: [ConfigService]
+    },
+    {
+      provide: MSAL_GUARD_CONFIG,
+      useFactory: MSALGuardConfigFactory,
+      deps: [ConfigService]
+    },
+    {
+      provide: MSAL_INTERCEPTOR_CONFIG,
+      useFactory: MSALInterceptorConfigFactory,
+      deps: [ConfigService]
+    },
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

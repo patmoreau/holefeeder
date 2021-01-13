@@ -1,45 +1,44 @@
 import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
-import {Configuration} from "msal";
-import {MsalAngularConfiguration} from "@azure/msal-angular";
-import {BehaviorSubject, Observable} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {IConfig} from "@app/config/config.interface";
+import {BrowserCacheLocation, Configuration, InteractionType} from "@azure/msal-browser";
+import {MsalGuardConfiguration, MsalInterceptorConfiguration} from "@azure/msal-angular";
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
 export const b2cPolicies = {
   names: {
     signUpSignIn: 'B2C_1A_signup_signin_drifterapps',
-    resetPassword: 'B2C_1A_PasswordReset',
+    forgotPassword: 'B2C_1A_PasswordReset',
     editProfile: 'B2C_1A_ProfileEdit'
   },
   authorities: {
     signUpSignIn: {
       authority: 'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_signup_signin_drifterapps'
     },
-    resetPassword: {
+    forgotPassword: {
       authority: 'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_PasswordReset'
     },
     editProfile: {
       authority: 'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_ProfileEdit'
     }
-  }
+  },
+  authorityDomain: "holefeeder.b2clogin.com"
 };
 
-const apiConfig: { b2cScopes: string[]; webApi: string } = {
-  b2cScopes: ['https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user'],
-  webApi: 'https://holefeeder.onmicrosoft.com/holefeeder.api'
+const apiConfig: { scopes: string[]; uri: string } = {
+  scopes: ['https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user'],
+  uri: 'https://holefeeder.onmicrosoft.com/holefeeder.api'
 };
 
 const loginRequest: { scopes: string[] } = {scopes: ['openid', 'profile']};
 
-const tokenRequest: { scopes: string[] } = {scopes: apiConfig.b2cScopes};
+const tokenRequest: { scopes: string[] } = {scopes: apiConfig.scopes};
 
 @Injectable({
-    providedIn: 'root'
-  }
-)
+  providedIn: 'root'
+})
 export class ConfigService {
   private configData: IConfig;
 
@@ -66,33 +65,38 @@ export class ConfigService {
     return this.configData;
   }
 
-  getMsalConfig(): Configuration {
+  get msalConfiguration(): Configuration {
     return Object.assign({
       auth: {
         clientId: '9814ecda-b8db-4775-a361-714af29fe486',
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         redirectUri: this.configData.redirectUrl,
         postLogoutRedirectUri: this.configData.redirectUrl,
-        navigateToLoginRequestUrl: true,
-        validateAuthority: false,
+        knownAuthorities: [b2cPolicies.authorityDomain]
       },
       cache: {
-        cacheLocation: 'localStorage',
-        storeAuthStateInCookie: isIE,
+        cacheLocation: BrowserCacheLocation.LocalStorage,
+        storeAuthStateInCookie: isIE, // set to true for IE 11
       },
     });
   }
 
-  getMsalAngularConfig(): MsalAngularConfiguration {
+  get msalInterceptorConfiguration(): MsalInterceptorConfiguration {
+    const protectedResourceMap = new Map<string, Array<string>>();
+    protectedResourceMap.set(this.configData.apiUrl, apiConfig.scopes);
+
     return Object.assign({
-      popUp: false,
-      consentScopes: [
-        ...loginRequest.scopes,
-        ...tokenRequest.scopes,
-      ],
-      unprotectedResources: [],
-      protectedResourceMap: [[this.configData.apiUrl, apiConfig.b2cScopes]],
-      extraQueryParameters: {}
+      interactionType: InteractionType.Redirect,
+      protectedResourceMap,
+    });
+  }
+
+  get msalGuardConfiguration(): MsalGuardConfiguration {
+    return Object.assign({
+      interactionType: InteractionType.Redirect,
+      authRequest: {
+        scopes: [...apiConfig.scopes],
+      },
     });
   }
 }
