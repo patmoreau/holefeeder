@@ -57,7 +57,7 @@ export class AccountsListComponent implements OnInit {
       account.balance +
       (this.upcomingCashflows ?
         this.upcomingCashflows
-          .filter(cashflow => cashflow.account.id === account.id)
+          .filter(cashflow => cashflow.account.mongoId === account.id)
           .map(
             cashflow =>
               cashflow.amount *

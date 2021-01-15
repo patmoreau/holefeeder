@@ -41,7 +41,7 @@ export class AccountDetailsComponent implements OnInit {
       this.upcomingBalance =
       this.account.balance +
       cashflows
-        .filter(cashflow => cashflow.account.id === this.account.id)
+        .filter(cashflow => cashflow.account.mongoId === this.account.id)
         .map(cashflow =>
           cashflow.amount *
           categoryTypeMultiplier(cashflow.category.type) *
