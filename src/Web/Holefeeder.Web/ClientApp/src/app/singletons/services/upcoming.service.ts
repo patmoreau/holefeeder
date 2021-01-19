@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
-import { format } from 'date-fns';
-import { IUpcoming, upcomingFromServer } from '../../shared/interfaces/upcoming.interface';
-import { ApiService } from '@app/shared/services/api.service';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable, BehaviorSubject, Subject, merge } from 'rxjs';
-import { IDateInterval } from '../../shared/interfaces/date-interval.interface';
-import { DateService } from './date.service';
+import {Injectable} from '@angular/core';
+import {HttpParams} from '@angular/common/http';
+import {format} from 'date-fns';
+import {ApiService} from '@app/shared/services/api.service';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {Observable, BehaviorSubject, Subject, merge} from 'rxjs';
+import {DateService} from './date.service';
+import {IDateInterval} from "@app/shared/interfaces/date-interval.interface";
+import {IUpcoming, upcomingFromServer} from "@app/shared/interfaces/v2/upcoming.interface";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class UpcomingService {
   private basePath = 'api/v2/cashflows/get-upcoming';
 
@@ -35,8 +35,8 @@ export class UpcomingService {
       )
       .pipe(
         map(data => Object.assign(
-            [],
-            data.map(upcomingFromServer)
+          [],
+          data.map(upcomingFromServer)
           )
         )
       );

@@ -1,6 +1,6 @@
-import { ICategoryInfo } from './category-info.interface';
-import { IAccountInfo } from './account-info.interface';
-import { dateToUtc, dateFromUtc } from '../date-parser.helper';
+import {ICategoryInfo} from './category-info.interface';
+import {IAccountInfo} from './account-info.interface';
+import {dateFromUtc, dateToUtc} from "@app/shared/date-parser.helper";
 
 export interface IUpcoming {
   id: string;
@@ -13,12 +13,12 @@ export interface IUpcoming {
 
 export function upcomingToServer(item: IUpcoming): IUpcoming {
   return Object.assign({} as IUpcoming, item, {
-      date: dateToUtc(item.date)
+    date: dateToUtc(item.date)
   });
 }
 
 export function upcomingFromServer(item: IUpcoming): IUpcoming {
   return Object.assign({} as IUpcoming, item, {
-      date: dateFromUtc(item.date)
+    date: dateFromUtc(item.date)
   });
 }

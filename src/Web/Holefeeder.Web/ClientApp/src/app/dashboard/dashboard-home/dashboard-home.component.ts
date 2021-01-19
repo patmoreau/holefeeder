@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
 import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { Transaction } from '@app/shared/models/transaction.model';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {IUpcoming} from "@app/shared/interfaces/v2/upcoming.interface";
 
 @Component({
   selector: 'dfta-dashboard-home',

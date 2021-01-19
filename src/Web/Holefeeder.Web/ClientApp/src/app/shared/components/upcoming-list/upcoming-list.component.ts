@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
 import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Transaction } from '@app/shared/models/transaction.model';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
+import {IUpcoming} from "@app/shared/interfaces/v2/upcoming.interface";
 
 @Component({
   selector: 'dfta-upcoming-list',
