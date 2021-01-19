@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccountsService } from '@app/shared/services/accounts.service';
-import { IAccountDetail } from '@app/shared/interfaces/account-detail.interface';
-import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
-import { UpcomingService } from '@app/singletons/services/upcoming.service';
-import { categoryTypeMultiplier } from '@app/shared/enums/category-type.enum';
-import { accountTypeMultiplier } from '@app/shared/enums/account-type.enum';
-import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AccountsService} from '@app/shared/services/accounts.service';
+import {IAccountDetail} from '@app/shared/interfaces/account-detail.interface';
+import {UpcomingService} from '@app/singletons/services/upcoming.service';
+import {accountTypeMultiplier} from '@app/shared/enums/account-type.enum';
+import {faArrowLeft, faEdit, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {IUpcoming} from "@app/shared/interfaces/v2/upcoming.interface";
+
 @Component({
   selector: 'dfta-account-details',
   templateUrl: './account-details.component.html',
@@ -26,7 +26,8 @@ export class AccountDetailsComponent implements OnInit {
     private upcomingService: UpcomingService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {
+  }
 
   async ngOnInit() {
     if (this.route.snapshot.paramMap.has('accountId')) {
@@ -39,26 +40,26 @@ export class AccountDetailsComponent implements OnInit {
 
     this.upcomingService.cashflows.subscribe(cashflows =>
       this.upcomingBalance =
-      this.account.balance +
-      cashflows
-        .filter(cashflow => cashflow.account.mongoId === this.account.id)
-        .map(cashflow =>
-          cashflow.amount *
-          categoryTypeMultiplier(cashflow.category.type) *
-          accountTypeMultiplier(this.account.type)
-        )
-        .reduce((sum, current) => sum + current, 0)
+        this.account.balance +
+        cashflows
+          .filter(cashflow => cashflow.account.mongoId === this.account.id)
+          .map(cashflow =>
+            cashflow.amount *
+            cashflow.category.type.multiplier *
+            accountTypeMultiplier(this.account.type)
+          )
+          .reduce((sum, current) => sum + current, 0)
     );
 
     this.isLoaded = true;
   }
 
   edit() {
-    this.router.navigate(['edit'], { relativeTo: this.route });
+    this.router.navigate(['edit'], {relativeTo: this.route});
   }
 
   addTransaction() {
-    this.router.navigate(['transactions', 'create'], { queryParams: { accountId: this.account.id } });
+    this.router.navigate(['transactions', 'create'], {queryParams: {accountId: this.account.id}});
   }
 
   balanceClass(): string {

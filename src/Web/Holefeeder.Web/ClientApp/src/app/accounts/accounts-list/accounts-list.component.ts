@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AccountsService } from '../../shared/services/accounts.service';
-import { IAccountDetail } from '@app/shared/interfaces/account-detail.interface';
-import { AccountTypeNames, accountTypeMultiplier } from '@app/shared/enums/account-type.enum';
-import { UpcomingService } from '@app/singletons/services/upcoming.service';
-import { IUpcoming } from '@app/shared/interfaces/upcoming.interface';
-import { categoryTypeMultiplier } from '@app/shared/enums/category-type.enum';
-import { Subject } from 'rxjs';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AccountsService} from '../../shared/services/accounts.service';
+import {IAccountDetail} from '@app/shared/interfaces/account-detail.interface';
+import {AccountTypeNames, accountTypeMultiplier} from '@app/shared/enums/account-type.enum';
+import {UpcomingService} from '@app/singletons/services/upcoming.service';
+import {Subject} from 'rxjs';
+import {faPlus} from '@fortawesome/free-solid-svg-icons';
+import {IUpcoming} from "@app/shared/interfaces/v2/upcoming.interface";
 
 @Component({
   templateUrl: './accounts-list.component.html',
@@ -61,7 +60,7 @@ export class AccountsListComponent implements OnInit {
           .map(
             cashflow =>
               cashflow.amount *
-              categoryTypeMultiplier(cashflow.category.type) *
+              cashflow.category.type.multiplier *
               accountTypeMultiplier(account.type)
           )
           .reduce((sum, current) => sum + current, 0) : 0)
