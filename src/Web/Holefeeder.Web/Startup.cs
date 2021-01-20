@@ -26,6 +26,10 @@ namespace DrifterApps.Holefeeder.Web
 
             services.AddControllersWithViews();
             
+            services
+                .AddHealthChecksUI()
+                .AddInMemoryStorage();
+            
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -59,6 +63,7 @@ namespace DrifterApps.Holefeeder.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHealthChecksUI();
             });
 
             app.UseSpa(spa =>

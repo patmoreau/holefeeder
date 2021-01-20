@@ -1,4 +1,5 @@
 using System;
+
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.Behaviors;
@@ -6,14 +7,21 @@ using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
 using DrifterApps.Holefeeder.ObjectStore.Application.Queries;
 using DrifterApps.Holefeeder.ObjectStore.Application.Validators;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure;
+
 using FluentValidation;
+
+using HealthChecks.UI.Client;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
@@ -36,6 +44,13 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
             _ = RegisterServices(services);
 
             _ = services.AddLogging();
+
+            // Registers required services for health checks
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddMongoDb(Configuration["HolefeederDatabaseSettings:ConnectionString"],
+                    name: "HolefeederDB-check",
+                    tags: new string[] {"holefeederdb"});
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAdB2C"));
@@ -60,12 +75,16 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             ConfigureAuth(app);
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+                {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
             });
         }
 
@@ -89,11 +108,11 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
                 var httpContext = provider.GetService<IHttpContextAccessor>();
                 return () => new RequestUserContext(httpContext?.HttpContext.User.GetUniqueId() ?? Guid.Empty);
             });
-            
+
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
             services.AddScoped<ItemsCache>();
-            
+
             services.AddObjectStoreDatabase(Configuration);
 
             return services;
