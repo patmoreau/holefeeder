@@ -28,12 +28,16 @@ import {
   IPublicClientApplication,
   PublicClientApplication
 } from "@azure/msal-browser";
+import {RedirectComponent} from "@app/redirect.component";
+import {ExternalUrlDirective} from "@app/directives/external-url.directive";
 
 const COMPONENTS = [
   AppComponent,
   HeaderComponent,
   FooterComponent,
-  ErrorNotfoundComponent
+  ErrorNotfoundComponent,
+  RedirectComponent,
+  ExternalUrlDirective
 ];
 
 const AUTH_CONFIG_URL_TOKEN = new InjectionToken<string>('/assets/Settings');

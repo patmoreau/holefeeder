@@ -28,7 +28,9 @@ namespace DrifterApps.Holefeeder.Common.IoC
             var mongoConfig = configuration.GetSection("MongoDB");
             
             // add MongoDb components
+#pragma warning disable 618
             BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
+#pragma warning restore 618
             container.AddSingleton<IMongoClient>(provider =>
                 new MongoClient(mongoConfig["ConnectionString"]));
             container.AddSingleton(provider =>

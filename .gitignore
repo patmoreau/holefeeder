@@ -357,4 +357,4 @@ docker/data
 docker/development/data
 tools/fixGuid.sh
 tests-results
-mongo/data
+data/
