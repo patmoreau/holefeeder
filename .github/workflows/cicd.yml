@@ -31,6 +31,7 @@ jobs:
     needs: set-version
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
+      BUILD_CONTEXT: ./src
 
     steps:
     - uses: actions/checkout@v2
