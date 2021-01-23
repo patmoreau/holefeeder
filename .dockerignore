@@ -1,0 +1,9 @@
+.dockerignore
+.git/
+.github/
+.vscode/
+data/
+docs/
+proxy/
+
+.gitignore

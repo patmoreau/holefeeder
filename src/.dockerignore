@@ -1,7 +1,6 @@
 .dockerignore
-.git/
-.github/
-.gitignore
+.idea/
+.run/
 .cache/
 .vs/
 .vscode/
@@ -9,9 +8,6 @@
 **/bin/
 **/charts/
 **/Dockerfile
-**/Dockerfile.develop
 **/obj/
 **/node_modules/
 **/dist/
-**/.idea/
-**/.run/
