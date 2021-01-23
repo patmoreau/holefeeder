@@ -46,12 +46,14 @@
           {{ period?.start | date }} - {{ period?.end | date }}
           <fa-icon [icon]="faAngleDown" aria-hidden="true"></fa-icon>
         </button>
-        <div ngbDropdown class="nav-item dropdown my-2 my-sm-0">
+        <div ngbDropdown display="dynamic" class="nav-item dropdown my-2 my-sm-0">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">{{profile?.name}}</a>
           <div ngbDropdownMenu class="downdown-menu" aria-labelledby="dropdownUser">
             <a class="dropdown-item" [routerLink]="['/settings']"
-              (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>
+               (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>
+            <a class="dropdown-item" [href]="'/healthchecks-ui'" appExternalUrl
+               (click)="isNavbarCollapsed = !isNavbarCollapsed">Health Checks</a>
             <a class="dropdown-item" (click)="logout()">Log out</a>
           </div>
         </div>

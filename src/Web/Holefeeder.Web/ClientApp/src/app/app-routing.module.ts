@@ -1,6 +1,9 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {InjectionToken, NgModule} from '@angular/core';
+import {Routes, RouterModule, ActivatedRouteSnapshot} from '@angular/router';
 import {ErrorNotfoundComponent} from './error-notfound/error-notfound.component';
+import {RedirectComponent} from "@app/redirect.component";
+
+const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -22,10 +25,26 @@ const appRoutes: Routes = [
     path: 'statistics',
     loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule)
   },
+  {
+    path: 'externalRedirect',
+    resolve: {
+      url: externalUrlProvider,
+    },
+    component: RedirectComponent
+  },
   {path: '**', component: ErrorNotfoundComponent}
 ];
 
 @NgModule({
+  providers: [
+    {
+      provide: externalUrlProvider,
+      useValue: (route: ActivatedRouteSnapshot) => {
+        const externalUrl = route.paramMap.get('externalUrl');
+        window.open(externalUrl, '_self');
+      },
+    },
+  ],
   imports: [
     RouterModule.forRoot(appRoutes)
   ],

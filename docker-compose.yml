@@ -11,16 +11,16 @@ services:
   gateway-web:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-gateway-web:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: ApiGateways/Web.Gateway/Dockerfile
+      context: ./src
+      dockerfile: ./ApiGateways/Web.Gateway/Dockerfile
     depends_on:
       - seq
 
   budgeting-api:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-budgeting-api:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/Budgeting/Budgeting.API/Dockerfile
     depends_on:
       - seq
       - nosql-data
@@ -28,8 +28,8 @@ services:
   object-store-api:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-object-store-api:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/ObjectStore/ObjectStore.API/Dockerfile
     depends_on:
       - seq
       - nosql-data
@@ -37,16 +37,16 @@ services:
   legacy-api:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-legacy-api:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Legacy/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/Dockerfile
+      context: ./src
+      dockerfile: ./Legacy/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/Dockerfile
     depends_on:
       - nosql-data
 
   webspa:
     image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Web/Holefeeder.Web/Dockerfile
+      context: ./src
+      dockerfile: ./Web/Holefeeder.Web/Dockerfile
     depends_on:
       - gateway-web
       - nosql-data

@@ -8,8 +8,8 @@ services:
   budgeting-api-functional-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/Budgeting/Budgeting.API/Dockerfile
       target: functionaltest
     depends_on:
       - nosql-data-test
@@ -19,8 +19,8 @@ services:
   budgeting-api-unit-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/Budgeting/Budgeting.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/Budgeting/Budgeting.API/Dockerfile
       target: unittest
     volumes:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
@@ -28,8 +28,8 @@ services:
   object-store-api-functional-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-functional-test:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/ObjectStore/ObjectStore.API/Dockerfile
       target: functionaltest
     depends_on:
       - nosql-data-test
@@ -39,8 +39,8 @@ services:
   object-store-api-unit-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-unit-test:${VERSION:-latest}
     build:
-      context: .
-      dockerfile: Services/ObjectStore/ObjectStore.API/Dockerfile
+      context: ./src
+      dockerfile: ./Services/ObjectStore/ObjectStore.API/Dockerfile
       target: unittest
     volumes:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
