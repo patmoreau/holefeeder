@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
-using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
 using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
+
 using MongoDB.Driver;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories

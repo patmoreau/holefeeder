@@ -1,7 +1,8 @@
 using System;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
-using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
+
 using MongoDB.Bson.Serialization;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Serializers

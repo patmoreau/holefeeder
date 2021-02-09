@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DrifterApps.Holefeeder.Budgeting.API.Authorization;
@@ -93,7 +94,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ObjectStore.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Budgeting.API v2"));
             }
             else
             {
@@ -128,7 +129,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
 
         private IServiceCollection RegisterServices(IServiceCollection services)
         {
-            services.AddMediatR(typeof(GetCategoriesHandler).Assembly)
+            services.AddMediatR(typeof(GetAccountsHandler).Assembly)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 

@@ -32,7 +32,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
             Filter = ImmutableArray.CreateRange(filter);
         }
 
-        public static QueryParams Empty => new QueryParams(0, int.MaxValue, null, null);
+        public static QueryParams Empty => new QueryParams(DefaultOffset, DefaultLimit, DefaultSort, DefaultFilter);
 
         public static readonly int DefaultOffset = 0;
         public static readonly int DefaultLimit = int.MaxValue;

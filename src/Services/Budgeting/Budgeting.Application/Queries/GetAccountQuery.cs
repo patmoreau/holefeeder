@@ -11,6 +11,16 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Queries
 
         public GetAccountQuery(Guid userId, Guid id)
         {
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+            
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
             UserId = userId;
             Id = id;
         }

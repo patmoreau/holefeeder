@@ -22,7 +22,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Queries
         {
             query.ThrowIfNull(nameof(query));
 
-            return (await _repository.GetAccountsAsync(query.UserId, query.Query, cancellationToken)).ToArray();
+            return (await _repository.FindAsync(query.UserId, query.Query, cancellationToken)).ToArray();
         }
     }
 }

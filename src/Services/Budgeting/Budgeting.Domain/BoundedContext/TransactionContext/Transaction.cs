@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
+
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext
 {

@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json.Serialization;
+
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Models
@@ -21,6 +23,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 
         public bool Favorite { get; }
 
+        [JsonConstructor]
         public AccountViewModel(Guid id, AccountType type, string name,
             int transactionCount, decimal balance, DateTime? updated, string description,
             bool favorite)

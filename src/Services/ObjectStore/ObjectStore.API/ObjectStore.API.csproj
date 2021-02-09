@@ -5,6 +5,8 @@
         <UserSecretsId>aspnet-ObjectStore.API-D560EAA9-99AB-4C46-8CAF-3F60DBEADB03</UserSecretsId>
         <RootNamespace>DrifterApps.Holefeeder.ObjectStore.API</RootNamespace>
         <LangVersion>default</LangVersion>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..\..</DockerfileContext>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,7 +18,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Identity.Web" Version="1.5.0" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.5.1" />
         <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.8.0" />
         <PackageReference Include="Serilog" Version="2.10.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
@@ -25,7 +27,7 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.2" />
     </ItemGroup>
 
     <ItemGroup>
