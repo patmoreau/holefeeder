@@ -3,7 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
@@ -12,6 +14,7 @@ using DrifterApps.Holefeeder.ObjectStore.Application.Queries;
 using FluentValidation;
 
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -91,23 +94,25 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, ModelState.Values.Select(x => x.ToString()).ToArray()));
+                return BadRequest(CommandResult<Guid>.Create(CommandStatus.BadRequest, Guid.Empty,
+                    ModelState.Values.Select(x => x.ToString())));
             }
 
             try
             {
                 var result = await _mediator.Send(command, cancellationToken);
-                
+
                 return CreatedAtRoute(Routes.CREATE_STORE_ITEM, result);
             }
-            catch (ValidationException e)
+            catch (ValidationException ex)
             {
-                return BadRequest(new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, e));
+                return BadRequest(CommandResult<Guid>.Create(CommandStatus.BadRequest, Guid.Empty,
+                    ex.Errors.Select(e => e.ToString())));
             }
         }
 
         [HttpPut(Routes.MODIFY_STORE_ITEM, Name = Routes.MODIFY_STORE_ITEM)]
-        [ProducesResponseType(typeof(CommandResult<Unit>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CommandResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> ModifyStoreItem([FromBody] ModifyStoreItemCommand command,
@@ -117,18 +122,20 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new CommandResult<Unit>(CommandStatus.BadRequest, Unit.Value, ModelState.Values.Select(x => x.ToString()).ToArray()));
+                return BadRequest(CommandResult.Create(CommandStatus.BadRequest,
+                    ModelState.Values.Select(x => x.ToString())));
             }
 
             try
             {
                 var result = await _mediator.Send(command, cancellationToken);
-                
+
                 return Ok(result);
             }
-            catch (ValidationException e)
+            catch (ValidationException ex)
             {
-                return BadRequest(new CommandResult<Unit>(CommandStatus.BadRequest, Unit.Value, e));
+                return BadRequest(CommandResult.Create(CommandStatus.BadRequest,
+                    ex.Errors.Select(e => e.ToString())));
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
-using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
+
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 namespace DrifterApps.Holefeeder.Budgeting.Domain.Enumerations
 {

@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
 using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure;
+
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -21,23 +25,46 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<AccountViewModel>> GetAccountsAsync(Guid userId, QueryParams queryParams,
+        public async Task<IEnumerable<AccountViewModel>> FindAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken)
         {
             queryParams.ThrowIfNull(nameof(queryParams));
-            
+
+            var results = (await GetEnrichAccountsData(t => t.UserId == userId, queryParams, cancellationToken))
+                .Sort(queryParams.Sort)
+                .Skip(queryParams.Offset)
+                .Take(queryParams.Limit)
+                .ToList();
+
+            return results;
+        }
+
+        public async Task<AccountViewModel> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+        {
+            var results = (await GetEnrichAccountsData(t => t.UserId == userId && t.Id == id, QueryParams.Empty,
+                    cancellationToken))
+                .SingleOrDefault();
+
+            return results;
+        }
+
+        private async Task<IQueryable<AccountViewModel>> GetEnrichAccountsData(
+            Expression<Func<AccountSchema, bool>> accountsPredicate, QueryParams queryParams,
+            CancellationToken cancellationToken)
+        {
             var accountCollection = await DbContext.GetAccountsAsync(cancellationToken);
-            var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);
-            var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
 
             var accounts = await accountCollection
                 .AsQueryable()
-                .Where(t => t.UserId == userId)
+                .Where(accountsPredicate)
                 .Filter(queryParams.Filter)
                 .ToListAsync(cancellationToken);
 
+            var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);
+            var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
+
             var summaries = await accountCollection.AsQueryable()
-                .Where(t => t.UserId == userId)
+                .Where(accountsPredicate)
                 .Filter(queryParams.Filter)
                 .Join(transactionCollection.AsQueryable(),
                     a => a.MongoId,
@@ -83,12 +110,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
                         x.Summary.Any() ? x.Summary.Max(s => s.LastTransactionDate) : x.Account.OpenDate,
                         x.Account.Description,
                         x.Account.Favorite
-                    ))
-                .Sort(queryParams.Sort)
-                .Skip(queryParams.Offset)
-                .Take(queryParams.Limit)
-                .ToList();
-
+                    ));
             return results;
         }
     }

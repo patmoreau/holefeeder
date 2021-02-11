@@ -22,7 +22,6 @@ services:
     volumes:
       - ./mongo/mongod.conf:/etc/mongod.conf
       - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/
-      - ./data/db/:/data/db/
     healthcheck:
       test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u drifterapps -p drifterapps --quiet) -eq 1
       interval: 10s

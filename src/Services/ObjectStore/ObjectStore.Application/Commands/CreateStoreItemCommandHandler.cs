@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 
@@ -34,7 +36,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
             if (await _repository.FindByCodeAsync((Guid)_cache["UserId"], request.Code, cancellationToken) != null)
             {
                 return new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty,
-                    $"Code '{request.Code}' already exists.");
+                    ImmutableArray.Create($"Code '{request.Code}' already exists."));
             }
 
             var storeItem = StoreItem.Create(request.Code, request.Data, (Guid)_cache["UserId"]);
@@ -45,7 +47,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 
             await _repository.UnitOfWork.CommitAsync(cancellationToken);
 
-            return new CommandResult<Guid>(CommandStatus.Created, storeItem.Id);
+            return new CommandResult<Guid>(CommandStatus.Created, storeItem.Id, ImmutableArray<string>.Empty);
         }
     }
 }

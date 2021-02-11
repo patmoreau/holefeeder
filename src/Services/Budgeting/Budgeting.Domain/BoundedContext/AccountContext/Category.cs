@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
-using DrifterApps.Holefeeder.Budgeting.Domain.SeedWork;
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext
 {

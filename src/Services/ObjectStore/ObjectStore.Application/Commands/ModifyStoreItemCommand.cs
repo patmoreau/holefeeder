@@ -2,24 +2,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 {
-    public class ModifyStoreItemCommand : IRequest<CommandResult<Unit>>
+    public class ModifyStoreItemCommand : IRequest<CommandResult>
     {
-        [DataMember, Required] public Guid Id { get; set; }
+        [DataMember, Required] public Guid Id { get; init; }
 
-        [DataMember, Required] public string Data { get; set; }
-
-        public ModifyStoreItemCommand() { }
-
-        public ModifyStoreItemCommand(Guid id, string data)
-        {
-            Id = id;
-            Data = data;
-        }
+        [DataMember, Required] public string Data { get; init; }
     }
 }

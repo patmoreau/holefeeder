@@ -23,11 +23,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Queries
         {
             query.ThrowIfNull(nameof(query));
 
-            return await Task.FromResult(new AccountViewModel(
-                query.Id,
-                AccountType.Checking,
-                "Test Account",
-                99, 123.45m, DateTime.Today, "This is a test account", true));
+            var results = await _repository.FindByIdAsync(query.UserId, query.Id, cancellationToken);
+            return results;
         }
     }
 }

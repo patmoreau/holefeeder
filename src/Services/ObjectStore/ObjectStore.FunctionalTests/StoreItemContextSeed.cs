@@ -9,13 +9,13 @@ namespace ObjectStore.FunctionalTests
 {
     public static class StoreItemContextSeed
     {
-        public static readonly Guid TestUserGuid1 = Guid.NewGuid();//.Parse("5fb92a48-cfb1-4508-b943-cada9f833f0e");
-        public static readonly Guid TestUserGuid2 = Guid.NewGuid();//.Parse("14e5d3a2-ca8a-4061-99b2-40aa957cc5db");
+        public static readonly Guid TestUserGuid1 = Guid.NewGuid();
+        public static readonly Guid TestUserGuid2 = Guid.NewGuid();
 
-        public static readonly Guid Guid1 = Guid.NewGuid();//.Parse("50c21a9e-3d66-4a87-b533-2dc1a1f0d2d8");
-        public static readonly Guid Guid2 = Guid.NewGuid();//.Parse("633f12e1-a558-42da-8a48-612401adb41c");
-        public static readonly Guid Guid3 = Guid.NewGuid();//.Parse("9bb1d83a-cf26-40f5-95f6-f2fb6a20a94e");
-        public static readonly Guid Guid4 = Guid.NewGuid();//.Parse("e8df8e7f-9341-4e61-8457-2c9b012dd7f3");
+        public static readonly Guid Guid1 = Guid.NewGuid();
+        public static readonly Guid Guid2 = Guid.NewGuid();
+        public static readonly Guid Guid3 = Guid.NewGuid();
+        public static readonly Guid Guid4 = Guid.NewGuid();
 
         public static void SeedData(IHolefeederDatabaseSettings settings)
         {

@@ -26,7 +26,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="3.0.1">
+        <PackageReference Include="coverlet.collector" Version="3.0.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -36,10 +36,6 @@
         <ProjectReference Include="..\Budgeting.Application\Budgeting.Application.csproj" />
         <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj" />
         <ProjectReference Include="..\Budgeting.Infrastructure\Budgeting.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Application" />
     </ItemGroup>
 
 </Project>

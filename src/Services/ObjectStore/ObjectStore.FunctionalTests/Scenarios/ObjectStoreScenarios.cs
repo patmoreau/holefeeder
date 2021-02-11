@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure;
 using DrifterApps.Holefeeder.ObjectStore.API;
 using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
-using FluentAssertions;
 
-using MediatR;
+using FluentAssertions;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
+
+using Xbehave;
 
 using Xunit;
 
@@ -22,117 +25,230 @@ namespace ObjectStore.FunctionalTests.Scenarios
     {
         private readonly WebApplicationFactory<Startup> _factory;
 
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
-        {
-            PropertyNameCaseInsensitive = true,
-        };
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new() {PropertyNameCaseInsensitive = true,};
 
         public ObjectStoreScenarios(ObjectStoreWebApplicationFactory factory)
         {
             _factory = factory;
         }
 
-        [Fact]
-        public async Task GivenGetStoreItems_WhenNoFilterApplied_ThenReturnAllItems()
+        [Scenario]
+        public void GetStoreItems(HttpClient client, HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateDefaultClient();
-            const string request = "/api/v2/StoreItems/";
+            "Given get store items"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCodeShouldBeSuccess();
+            "When I get call the API"
+                .x(async () =>
+                {
+                    const string requestUri = "/api/v2/StoreItems/";
 
-            var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+                    response = await client.GetAsync(requestUri);
+                });
 
-            result.Should().HaveCount(3);
+            "Then the status code should indicate success"
+                .x(() => response.StatusCodeShouldBeSuccess());
+
+            "And the result contain the store items of the user"
+                .x(async () =>
+                {
+                    var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+
+                    result.Should().BeEquivalentTo(
+                        new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code1", "Data1"),
+                        new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code2", "Data2"),
+                        new StoreItemViewModel(StoreItemContextSeed.Guid3, "Code3", "Data3")
+                    );
+                });
         }
 
-        [Fact]
-        public async Task GivenGetStoreItems_WhenFilterCode2Applied_ThenReturnItem()
+        [Scenario]
+        public void GetStoreItems_WithFilter(HttpClient client, string filter, HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateDefaultClient();
-            const string request = "/api/v2/StoreItems?filter=code=Code2";
+            "Given get store items"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCodeShouldBeSuccess();
+            "With filter code=Code2"
+                .x(() => filter = "code=Code2");
 
-            var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems?filter={filter}";
 
-            result.Should().BeEquivalentTo(new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code2", "Data2"));
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate success"
+                .x(() => response.StatusCodeShouldBeSuccess());
+
+            "And the result contain the store item Code2 of the user"
+                .x(async () =>
+                {
+                    var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+
+                    result.Should()
+                        .BeEquivalentTo(new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code2", "Data2"));
+                });
         }
 
-        [Fact]
-        public async Task GivenGetStoreItems_WhenQueryParamsApplied_ThenReturnItemsInProperOrder()
+        [Scenario]
+        public void GetStoreItems_WithQueryParams(HttpClient client, string sort, int offset, int limit,
+            HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateDefaultClient();
-            const string request = "/api/v2/StoreItems?sort=-code&offset=1&limit=2";
+            "Given get store items"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCodeShouldBeSuccess();
+            "Sorted on code descending"
+                .x(() => sort = "-code");
 
-            var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+            "With an offset of 1"
+                .x(() => offset = 1);
 
-            result.Should()
-                .BeEquivalentTo(new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code2", "Data2"),
-                    new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code1", "Data1"));
+            "And a limit of 2"
+                .x(() => limit = 2);
+
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems?sort={sort}&offset={offset}&limit={limit}";
+
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate success"
+                .x(() => response.StatusCodeShouldBeSuccess());
+
+            "And the result contain the store item Code2 of the user"
+                .x(async () =>
+                {
+                    var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel[]>(_jsonSerializerOptions);
+
+                    result.Should().BeEquivalentTo(
+                        new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code2", "Data2"),
+                        new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code1", "Data1"));
+                });
         }
 
-        [Fact]
-        public async Task GivenGetStoreItem_WhenValidId_ThenReturnItem()
+        [Scenario]
+        public void GetStoreItem(HttpClient client, Guid id, HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateClient();
-            var request = $"/api/v2/StoreItems/{StoreItemContextSeed.Guid1.ToString()}";
+            "Given get store item"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCodeShouldBeSuccess();
+            "With Id #1"
+                .x(() => id = StoreItemContextSeed.Guid3);
 
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<StoreItemViewModel>(json, _jsonSerializerOptions);
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
 
-            result.Should().BeEquivalentTo(new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code1", "Data1"));
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate success"
+                .x(() => response.StatusCodeShouldBeSuccess());
+
+            "And the result contain the store item Code2 of the user"
+                .x(async () =>
+                {
+                    var result = await response.Content.ReadFromJsonAsync<StoreItemViewModel>(_jsonSerializerOptions);
+
+                    result.Should().BeEquivalentTo(
+                        new StoreItemViewModel(StoreItemContextSeed.Guid3, "Code3", "Data3"));
+                });
         }
 
-        [Fact]
-        public async Task GivenGetStoreItem_WhenInvalidId_ThenReturnBadRequest()
+        [Scenario]
+        public void GetStoreItem_WithInvalidId(HttpClient client, Guid id, HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateClient();
-            var request = $"/api/v2/StoreItems/{Guid.Empty}";
+            "Given get store item"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+            "With invalid Id"
+                .x(() => id = Guid.Empty);
+
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate BadRequest"
+                .x(() => response.StatusCode.Should().Be(StatusCodes.Status400BadRequest));
         }
 
-        [Fact]
-        public async Task GivenGetStoreItem_WhenIdDoesntExist_ThenReturnNotFound()
+        [Scenario]
+        public void GetStoreItem_WhenIdDoesntExists(HttpClient client, Guid id, HttpResponseMessage response)
         {
-            // Arrange
-            var client = _factory.CreateClient();
-            var request = $"/api/v2/StoreItems/{Guid.NewGuid()}";
+            "Given get store item"
+                .x(() => client = _factory.CreateDefaultClient());
 
-            // Act
-            var response = await client.GetAsync(request);
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
 
-            // Assert
-            response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+            "With non existent Id"
+                .x(() => id = Guid.NewGuid());
+
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate NotFound"
+                .x(() => response.StatusCode.Should().Be(StatusCodes.Status404NotFound));
+        }
+
+        [Scenario]
+        public void GetStoreItem_WithIdFromAnotherUser(HttpClient client, Guid id, HttpResponseMessage response)
+        {
+            "Given get store item"
+                .x(() => client = _factory.CreateDefaultClient());
+
+            "For user TestUser #1"
+                .x(() => client.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
+                    StoreItemContextSeed.TestUserGuid1.ToString()));
+
+            "With item Id for TestUser #2"
+                .x(() => id = StoreItemContextSeed.Guid4);
+
+            "When I get call the API"
+                .x(async () =>
+                {
+                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+
+                    response = await client.GetAsync(requestUri);
+                });
+
+            "Then the status code should indicate NotFound"
+                .x(() => response.StatusCode.Should().Be(StatusCodes.Status404NotFound));
         }
 
         [Fact]
@@ -144,7 +260,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             var request = $"/api/v2/StoreItems/create-store-item";
 
             // Act
-            var command = new CreateStoreItemCommand("New Code", "New Data");
+            var command = new CreateStoreItemCommand {Code = "New Code", Data = "New Data"};
             var response = await client.PostAsJsonAsync(request, command);
 
             // Assert
@@ -165,7 +281,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             var request = $"/api/v2/StoreItems/create-store-item";
 
             // Act
-            var response = await client.PostAsJsonAsync(request, new {});
+            var response = await client.PostAsJsonAsync(request, new { });
 
             // Assert
             response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
@@ -179,14 +295,15 @@ namespace ObjectStore.FunctionalTests.Scenarios
             var request = $"/api/v2/StoreItems/create-store-item";
 
             // Act
-            var command = new CreateStoreItemCommand("Code1", "Data1");
+            var command = new CreateStoreItemCommand {Code = "Code1", Data = "Data1"};
             var response = await client.PostAsJsonAsync(request, command);
 
-            // Assert
-            var result = await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+            var result = await response.Content.ReadFromJsonAsync<CommandResult>(_jsonSerializerOptions);
 
+            // Assert
             result.Should().BeEquivalentTo(
-                new CommandResult<Guid>(CommandStatus.BadRequest, Guid.Empty, $"Code 'Code1' already exists."));
+                CommandResult.Create(CommandStatus.BadRequest, "Code 'Code1' already exists."),
+                options => options.ComparingByMembers<CommandResult>());
         }
 
         [Fact]
@@ -202,17 +319,22 @@ namespace ObjectStore.FunctionalTests.Scenarios
             var data = Guid.NewGuid();
 
             // Act
-            var createCommand = new CreateStoreItemCommand(code.ToString(), data.ToString());
+            var createCommand = new CreateStoreItemCommand {Code = code.ToString(), Data = data.ToString()};
             var createResponse = await client.PostAsJsonAsync(createRequest, createCommand);
 
-            var createResult = await createResponse.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+            var createResult =
+                await createResponse.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
 
-            var modifyCommand = new ModifyStoreItemCommand(createResult?.Result ?? Guid.Empty, $"{data.ToString()}-modified");
+            var modifyCommand =
+                new ModifyStoreItemCommand
+                {
+                    Id = createResult?.Result ?? Guid.Empty, Data = $"{data.ToString()}-modified"
+                };
             var modifyResponse = await client.PutAsJsonAsync(modifyRequest, modifyCommand);
 
             // Assert
             modifyResponse.StatusCodeShouldBeSuccess();
-            var result = await modifyResponse.Content.ReadFromJsonAsync<CommandResult<Unit>>(_jsonSerializerOptions);
+            var result = await modifyResponse.Content.ReadFromJsonAsync<CommandResult>(_jsonSerializerOptions);
 
             result.Should().NotBeNull();
             result.Status.Should().Be(CommandStatus.Ok);

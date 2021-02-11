@@ -10,7 +10,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Contracts
 {
     public interface IAccountQueriesRepository
     {
-        Task<IEnumerable<AccountViewModel>> GetAccountsAsync(Guid userId, QueryParams queryParams,
+        Task<IEnumerable<AccountViewModel>> FindAsync(Guid userId, QueryParams queryParams,
+            CancellationToken cancellationToken = default);
+        Task<AccountViewModel> FindByIdAsync(Guid userId, Guid id,
             CancellationToken cancellationToken = default);
     }
 }

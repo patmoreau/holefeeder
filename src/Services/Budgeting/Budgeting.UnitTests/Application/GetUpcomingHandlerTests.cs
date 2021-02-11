@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Queries;
+
 using FluentAssertions;
+
 using NSubstitute;
+
 using Xunit;
 
-namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Queries
+namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application
 {
     public class GetUpcomingHandlerTests
     {
