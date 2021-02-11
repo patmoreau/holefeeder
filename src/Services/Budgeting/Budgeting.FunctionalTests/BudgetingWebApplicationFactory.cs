@@ -19,7 +19,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
 {
     public class BudgetingWebApplicationFactory : WebApplicationFactory<Startup>
     {
-        private bool _dataSeeded;
+        private static readonly object Locker = new();
+        private static bool _dataSeeded;
 
         protected override void ConfigureClient(HttpClient client)
         {
@@ -54,10 +55,18 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
                             return context;
                         }
 
-                        BudgetingContextSeed.SeedData(settings);
-                        _dataSeeded = true;
+                        lock (Locker)
+                        {
+                            if (_dataSeeded)
+                            {
+                                return context;
+                            }
 
-                        return context;
+                            BudgetingContextSeed.SeedData(settings);
+                            _dataSeeded = true;
+
+                            return context;
+                        }
                     });
 
                     services.AddAuthentication("Test")

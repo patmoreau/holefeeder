@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace ObjectStore.FunctionalTests
 {
     public class ObjectStoreWebApplicationFactory : WebApplicationFactory<Startup>
     {
-        private bool _dataSeeded;
+        private static readonly object Locker = new();
+        private static bool _dataSeeded;
 
         protected override void ConfigureClient(HttpClient client)
         {
@@ -52,11 +52,19 @@ namespace ObjectStore.FunctionalTests
                         {
                             return context;
                         }
+                        
+                        lock (Locker)
+                        {
+                            if (_dataSeeded)
+                            {
+                                return context;
+                            }
 
-                        StoreItemContextSeed.SeedData(settings);
-                        _dataSeeded = true;
+                            StoreItemContextSeed.SeedData(settings);
+                            _dataSeeded = true;
 
-                        return context;
+                            return context;
+                        }
                     });
 
                     services.AddAuthentication("Test")
