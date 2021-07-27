@@ -1,0 +1,19 @@
+<ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loading">
+  <ng-container *ngIf="upcomingCashflows.length; else noItems">
+    <dfta-transaction-list-item
+      [description]="
+      upcomingCashflow.description
+          ? upcomingCashflow.description
+          : upcomingCashflow.category.name
+      "
+      [amount]="upcomingCashflow.amount"
+      [date]="upcomingCashflow.date"
+      [tags]="upcomingCashflow.tags"
+      [allowSave]="true"
+      (action)="action($event, upcomingCashflow)"
+      *ngFor="let upcomingCashflow of upcomingCashflows"
+    ></dfta-transaction-list-item>
+  </ng-container>
+  <ng-template #noItems>Nothing to show!</ng-template>
+</ng-container>
+<ng-template #loading>Loading upcoming cashflows...</ng-template>

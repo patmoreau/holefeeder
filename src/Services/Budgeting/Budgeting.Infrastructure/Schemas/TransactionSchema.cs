@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.Serializers;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas
 {
@@ -36,7 +35,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "MongoDB needs to assign it")]
         public IList<string> Tags { get; set; }
 
-        [BsonElement("userId"), BsonSerializer(typeof(GuidSerializer))]
+        [BsonElement("userId")]
         public Guid UserId { get; set; }
     }
 }

@@ -1,13 +1,17 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+
 using Serilog;
 using Serilog.Events;
 
 namespace DrifterApps.Holefeeder.ObjectStore.API
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
@@ -18,7 +22,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
                 optional: true)
             .AddEnvironmentVariables()
             .Build();
-        
+
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -27,7 +31,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
                 .Enrich.WithProperty("MicroServiceName", "Budgeting.API")
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
+                .WriteTo.Seq(Configuration["SEQ_Url"], apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
 
             Log.Logger.Information("Web.Gateway started");

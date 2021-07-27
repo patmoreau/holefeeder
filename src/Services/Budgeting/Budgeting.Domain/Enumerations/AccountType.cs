@@ -1,7 +1,11 @@
+using System.Text.Json.Serialization;
+
+using DrifterApps.Holefeeder.Framework.SeedWork.Converters;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 namespace DrifterApps.Holefeeder.Budgeting.Domain.Enumerations
 {
+    [JsonConverter(typeof(EnumerationJsonConverter<AccountType>))]
     public abstract class AccountType : Enumeration
     {
         public static readonly AccountType Checking = new DebitAccountType(1, nameof(Checking));

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DrifterApps.Holefeeder.Budgeting.Application.Queries;
+
+using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
+
 using FluentAssertions;
 using MediatR;
 using Xunit;

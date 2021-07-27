@@ -12,42 +12,31 @@ WORKDIR /src
 COPY DrifterApps.Holefeeder.sln ./
 COPY Directory.Build.props ./
 
-COPY ApiGateways/Web.Gateway/*.csproj ApiGateways/Web.Gateway/
-COPY BuildingBlocks/Framework.Mongo.SeedWork/*.csproj BuildingBlocks/Framework.Mongo.SeedWork/
-COPY BuildingBlocks/Framework.SeedWork/*.csproj BuildingBlocks/Framework.SeedWork/
-COPY Services/Budgeting/Budgeting.API/*.csproj Services/Budgeting/Budgeting.API/
-COPY Services/Budgeting/Budgeting.Application/*.csproj Services/Budgeting/Budgeting.Application/
-COPY Services/Budgeting/Budgeting.Domain/*.csproj Services/Budgeting/Budgeting.Domain/
-COPY Services/Budgeting/Budgeting.Infrastructure/*.csproj Services/Budgeting/Budgeting.Infrastructure/
-COPY Services/ObjectStore/ObjectStore.API/*.csproj Services/ObjectStore/ObjectStore.API/
-COPY Services/ObjectStore/ObjectStore.Application/*.csproj Services/ObjectStore/ObjectStore.Application/
-COPY Services/ObjectStore/ObjectStore.Domain/*.csproj Services/ObjectStore/ObjectStore.Domain/
-COPY Services/ObjectStore/ObjectStore.Infrastructure/*.csproj Services/ObjectStore/ObjectStore.Infrastructure/
-COPY Web/Holefeeder.Web/*.csproj Web/Holefeeder.Web/
+COPY src/ApiGateways/Web.Gateway/*.csproj src/ApiGateways/Web.Gateway/
+COPY src/BuildingBlocks/Framework.Dapper.SeedWork/*.csproj src/BuildingBlocks/Framework.Dapper.SeedWork/
+COPY src/BuildingBlocks/Framework.Mongo.SeedWork/*.csproj src/BuildingBlocks/Framework.Mongo.SeedWork/
+COPY src/BuildingBlocks/Framework.SeedWork/*.csproj src/BuildingBlocks/Framework.SeedWork/
+COPY src/Services/Budgeting/Budgeting.API/*.csproj src/Services/Budgeting/Budgeting.API/
+COPY src/Services/Budgeting/Budgeting.Application/*.csproj src/Services/Budgeting/Budgeting.Application/
+COPY src/Services/Budgeting/Budgeting.Domain/*.csproj src/Services/Budgeting/Budgeting.Domain/
+COPY src/Services/Budgeting/Budgeting.Infrastructure/*.csproj src/Services/Budgeting/Budgeting.Infrastructure/
+COPY src/Services/ObjectStore/ObjectStore.API/*.csproj src/Services/ObjectStore/ObjectStore.API/
+COPY src/Services/ObjectStore/ObjectStore.Application/*.csproj src/Services/ObjectStore/ObjectStore.Application/
+COPY src/Services/ObjectStore/ObjectStore.Domain/*.csproj src/Services/ObjectStore/ObjectStore.Domain/
+COPY src/Services/ObjectStore/ObjectStore.Infrastructure/*.csproj src/Services/ObjectStore/ObjectStore.Infrastructure/
 
-COPY Services/Budgeting/Budgeting.UnitTests/*.csproj Services/Budgeting/Budgeting.UnitTests/
-COPY Services/Budgeting/Budgeting.FunctionalTests/*.csproj Services/Budgeting/Budgeting.FunctionalTests/
-COPY Services/ObjectStore/ObjectStore.UnitTests/*.csproj Services/ObjectStore/ObjectStore.UnitTests/
-COPY Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj Services/ObjectStore/ObjectStore.FunctionalTests/
-
-COPY Legacy/DrifterApps.Holefeeder.Business/*.csproj Legacy/DrifterApps.Holefeeder.Business/
-COPY Legacy/DrifterApps.Holefeeder.Business.Contracts/*.csproj Legacy/DrifterApps.Holefeeder.Business.Contracts/
-COPY Legacy/DrifterApps.Holefeeder.Business.Entities/*.csproj Legacy/DrifterApps.Holefeeder.Business.Entities/
-COPY Legacy/DrifterApps.Holefeeder.Common/*.csproj Legacy/DrifterApps.Holefeeder.Common/
-COPY Legacy/DrifterApps.Holefeeder.Common.IoC/*.csproj Legacy/DrifterApps.Holefeeder.Common.IoC/
-COPY Legacy/DrifterApps.Holefeeder.ResourcesAccess.Contracts/*.csproj Legacy/DrifterApps.Holefeeder.ResourcesAccess.Contracts/
-COPY Legacy/DrifterApps.Holefeeder.ResourcesAccess.Mongo/*.csproj Legacy/DrifterApps.Holefeeder.ResourcesAccess.Mongo/
-COPY Legacy/DrifterApps.Holefeeder.Services.BudgetApi/*.csproj Legacy/DrifterApps.Holefeeder.Services.BudgetApi/
-COPY Legacy/DrifterApps.Holefeeder.Services.BudgetDto/*.csproj Legacy/DrifterApps.Holefeeder.Services.BudgetDto/
-COPY Legacy/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/*.csproj Legacy/DrifterApps.Holefeeder.ServicesHosts.BudgetApi/
+COPY src/Services/Budgeting/Budgeting.UnitTests/*.csproj src/Services/Budgeting/Budgeting.UnitTests/
+COPY src/Services/Budgeting/Budgeting.FunctionalTests/*.csproj src/Services/Budgeting/Budgeting.FunctionalTests/
+COPY src/Services/ObjectStore/ObjectStore.UnitTests/*.csproj src/Services/ObjectStore/ObjectStore.UnitTests/
+COPY src/Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj src/Services/ObjectStore/ObjectStore.FunctionalTests/
 
 RUN dotnet restore DrifterApps.Holefeeder.sln
 
 FROM restore as build
 ARG holefeeder_version=99.99.99
 WORKDIR /src
-COPY . .
-WORKDIR /src/ApiGateways/Web.Gateway/
+COPY src/. src/.
+WORKDIR /src/src/ApiGateways/Web.Gateway/
 RUN dotnet publish /property:Version=${holefeeder_version} --no-restore -c Release -o /app
 
 FROM build AS publish

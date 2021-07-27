@@ -1,0 +1,4 @@
+{
+  "NGX_API_URL": "http://localhost:5200",
+  "NGX_REDIRECT_URL": "http://localhost:4200"
+}

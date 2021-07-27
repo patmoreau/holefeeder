@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
@@ -15,35 +14,44 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 {
     public class ModifyStoreItemCommandHandler : IRequestHandler<ModifyStoreItemCommand, CommandResult>
     {
-        private readonly IStoreRepository _repository;
+        private readonly IStoreItemsRepository _itemsRepository;
         private readonly ItemsCache _cache;
         private readonly ILogger _logger;
 
-        public ModifyStoreItemCommandHandler(IStoreRepository repository, ItemsCache cache,
+        public ModifyStoreItemCommandHandler(IStoreItemsRepository itemsRepository, ItemsCache cache,
             ILogger<ModifyStoreItemCommandHandler> logger)
         {
-            _repository = repository;
+            _itemsRepository = itemsRepository;
             _cache = cache;
             _logger = logger;
         }
 
-        public async Task<CommandResult> Handle(ModifyStoreItemCommand request, CancellationToken cancellationToken)
+        public Task<CommandResult> Handle(ModifyStoreItemCommand request, CancellationToken cancellationToken)
         {
-            request.ThrowIfNull(nameof(request));
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
 
-            var storeItem = await _repository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
-            if (storeItem == null)
+            return HandleInternal(request, cancellationToken);
+        }
+
+        private async Task<CommandResult> HandleInternal(ModifyStoreItemCommand request,
+            CancellationToken cancellationToken)
+        {
+            var storeItem = await _itemsRepository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
+            if (storeItem is null)
             {
                 return CommandResult.Create(CommandStatus.NotFound);
             }
 
-            storeItem = storeItem.SetData(request.Data);
-            
+            storeItem = storeItem with { Data = request.Data };
+
             _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
 
-            await _repository.SaveAsync(storeItem, cancellationToken);
+            await _itemsRepository.SaveAsync(storeItem, cancellationToken);
 
-            await _repository.UnitOfWork.CommitAsync(cancellationToken);
+            await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
 
             return CommandResult.Create(CommandStatus.Ok);
         }

@@ -1,117 +1,148 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
+using AutoMapper;
+
+using Dapper;
+
+using DrifterApps.Holefeeder.Budgeting.Application.Accounts;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
-using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure;
 
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Framework.Dapper.SeedWork.Extensions;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
 {
-    public class AccountQueriesRepository : RepositoryRoot, IAccountQueriesRepository
+    public class AccountQueriesRepository : IAccountQueriesRepository
     {
-        public AccountQueriesRepository(IMongoDbContext context) : base(context)
+        private readonly IHolefeederContext _context;
+        private readonly IMapper _mapper;
+
+        public AccountQueriesRepository(IHolefeederContext context, IMapper mapper)
         {
+            _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AccountViewModel>> FindAsync(Guid userId, QueryParams queryParams,
+        public Task<QueryResult<AccountViewModel>> FindAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken)
         {
-            queryParams.ThrowIfNull(nameof(queryParams));
+            if (queryParams is null)
+            {
+                throw new ArgumentNullException(nameof(queryParams));
+            }
 
-            var results = (await GetEnrichAccountsData(t => t.UserId == userId, queryParams, cancellationToken))
-                .Sort(queryParams.Sort)
-                .Skip(queryParams.Offset)
-                .Take(queryParams.Limit)
+            return FindInternalAsync(userId, queryParams);
+        }
+
+        private async Task<QueryResult<AccountViewModel>> FindInternalAsync(Guid userId, QueryParams queryParams)
+        {
+            const string queryTemplate = @"
+SELECT X.* FROM (
+    SELECT A.*, ROW_NUMBER() OVER (/**orderby**/) AS row_nb 
+    FROM accounts A
+    /**where**/
+    GROUP BY A.Id
+) AS X 
+WHERE row_nb BETWEEN @Offset AND @Limit;
+";
+            const string queryCountTemplate = @"SELECT COUNT(*) FROM accounts /**where**/";
+
+            var builder = new SqlBuilder();
+            var selectTemplate =
+                builder.AddTemplate(queryTemplate,
+                    new { Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit });
+            var countTemplate = builder.AddTemplate(queryCountTemplate);
+
+            builder.Where($"user_id = @{nameof(userId)}", new { userId })
+                .Filter(queryParams.Filter)
+                .Sort(queryParams.Sort);
+
+            var connection = _context.Connection;
+
+            var accounts = (await connection.QueryAsync<AccountEntity>(selectTemplate.RawSql,
+                        selectTemplate.Parameters)
+                    .ConfigureAwait(false))
                 .ToList();
 
-            return results;
+            var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
+
+            var transactions = await GetTransactions(connection, accounts);
+
+            var accountList = accounts.Select(account =>
+                    BuildAccountViewModel(account, transactions.Where(t => t.AccountId == account.Id).ToList()))
+                .ToList();
+
+            return new QueryResult<AccountViewModel>(count, accountList);
         }
 
         public async Task<AccountViewModel> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
         {
-            var results = (await GetEnrichAccountsData(t => t.UserId == userId && t.Id == id, QueryParams.Empty,
-                    cancellationToken))
-                .SingleOrDefault();
+            var connection = _context.Connection;
 
-            return results;
+            var account = await connection.QuerySingleAsync<AccountEntity>(
+                    @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new { Id = id, UserId = userId })
+                .ConfigureAwait(false);
+
+            var transactions = await GetTransactions(connection, new[] { account });
+
+            return BuildAccountViewModel(account, transactions);
         }
 
-        private async Task<IQueryable<AccountViewModel>> GetEnrichAccountsData(
-            Expression<Func<AccountSchema, bool>> accountsPredicate, QueryParams queryParams,
-            CancellationToken cancellationToken)
+        public async Task<bool> IsAccountActive(Guid id, Guid userId, CancellationToken cancellationToken)
         {
-            var accountCollection = await DbContext.GetAccountsAsync(cancellationToken);
+            const string selectIsActive = @"
+SELECT COUNT(*)
+FROM accounts
+WHERE id = @Id AND user_id = @UserId AND inactive = 0;
+";
 
-            var accounts = await accountCollection
-                .AsQueryable()
-                .Where(accountsPredicate)
-                .Filter(queryParams.Filter)
-                .ToListAsync(cancellationToken);
+            var isActive = await _context.Connection
+                .ExecuteScalarAsync<int>(selectIsActive, new { Id = id, UserId = userId })
+                .ConfigureAwait(false);
+            return isActive > 0;
+        }
 
-            var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);
-            var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
+        private static AccountViewModel BuildAccountViewModel(AccountEntity account,
+            IList<TransactionEntity> transactions) =>
+            new()
+            {
+                Id = account.Id,
+                OpenBalance = account.OpenBalance,
+                OpenDate = account.OpenDate,
+                Balance = account.OpenBalance +
+                          transactions.Sum(t => t.Amount * t.Category.Type.Multiplier * account.Type.Multiplier),
+                Description = account.Description,
+                Favorite = account.Favorite,
+                Name = account.Name,
+                TransactionCount = transactions.Count,
+                Updated = transactions.Any() ? transactions.Max(t => t.Date) : account.OpenDate,
+                Type = account.Type
+            };
 
-            var summaries = await accountCollection.AsQueryable()
-                .Where(accountsPredicate)
-                .Filter(queryParams.Filter)
-                .Join(transactionCollection.AsQueryable(),
-                    a => a.MongoId,
-                    t => t.Account,
-                    (a, t) => new {a.Id, t.Category, t.Amount, t.Date})
-                .GroupBy(t => new {t.Id, t.Category})
-                .Select(g => new
-                {
-                    g.Key.Id,
-                    g.Key.Category,
-                    TransactionCount = g.Count(),
-                    TransactionAmount = g.Sum(x => x.Amount),
-                    LastTransactionDate = g.Max(x => x.Date)
-                })
-                .Join(categoryCollection.AsQueryable(),
-                    s => s.Category,
-                    c => c.MongoId,
-                    (s, c) => new
-                    {
-                        s.Id,
-                        CategoryType = c.Type,
-                        s.TransactionCount,
-                        s.TransactionAmount,
-                        s.LastTransactionDate
-                    })
-                .ToListAsync(cancellationToken);
+        private static async Task<IList<TransactionEntity>> GetTransactions(IDbConnection connection,
+            IEnumerable<AccountEntity> accounts)
+        {
+            const string sql = @"
+SELECT t.*, ca.*
+FROM transactions t
+LEFT OUTER JOIN categories ca ON ca.id = t.category_id
+WHERE t.account_id IN @Ids";
 
-            var results = accounts.AsQueryable()
-                .GroupJoin(summaries,
-                    a => a.Id,
-                    s => s.Id,
-                    (a, s) => new {Account = a, Summary = s})
-                .Select(
-                    x => new AccountViewModel
-                    (
-                        x.Account.Id,
-                        x.Account.Type,
-                        x.Account.Name,
-                        x.Summary.Sum(s => s.TransactionCount),
-                        x.Account.OpenBalance + (
-                            x.Summary.Sum(s => s.TransactionAmount * s.CategoryType.Multiplier) *
-                            x.Account.Type.Multiplier),
-                        x.Summary.Any() ? x.Summary.Max(s => s.LastTransactionDate) : x.Account.OpenDate,
-                        x.Account.Description,
-                        x.Account.Favorite
-                    ));
-            return results;
+            var transactions = await connection
+                .QueryAsync<TransactionEntity, CategoryEntity, TransactionEntity>(sql,
+                    (t, c) => t with { Category = c },
+                    new { Ids = accounts.Select(a => a.Id) },
+                    splitOn: "id")
+                .ConfigureAwait(false);
+
+            return transactions.ToList();
         }
     }
 }

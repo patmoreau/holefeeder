@@ -2,8 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
-
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Behaviors

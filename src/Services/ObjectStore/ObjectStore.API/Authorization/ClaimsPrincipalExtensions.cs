@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Security.Claims;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+
 using Microsoft.Identity.Web;
 
 namespace DrifterApps.Holefeeder.ObjectStore.API.Authorization
@@ -9,7 +9,10 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Authorization
     {
         public static Guid GetUniqueId(this ClaimsPrincipal self)
         {
-            self.ThrowIfNull(nameof(self));
+            if (self is null)
+            {
+                throw new ArgumentNullException(nameof(self));
+            }
 
             var value = self.FindFirstValue(ClaimTypes.NameIdentifier);
 

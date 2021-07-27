@@ -22,7 +22,8 @@ namespace ObjectStore.UnitTests.Domain
         [Fact]
         public void GivenNewStoreItem_WhenIdEmpty_ThenThrowsException()
         {
-            Action action = () => new StoreItem(Guid.Empty, "code", "data", Guid.NewGuid());
+            Action action = () =>
+                _ = new StoreItem { Id = Guid.Empty, Code = "code", Data = "data", UserId = Guid.NewGuid() };
 
             action.Should().Throw<ObjectStoreDomainException>();
         }
@@ -30,7 +31,8 @@ namespace ObjectStore.UnitTests.Domain
         [Fact]
         public void GivenNewStoreItem_WhenUserIdEmpty_ThenThrowsException()
         {
-            Action action = () => new StoreItem(Guid.NewGuid(), "code", "data", Guid.Empty);
+            Action action = () =>
+                _ = new StoreItem { Id = Guid.NewGuid(), Code = "code", Data = "data", UserId = Guid.Empty };
 
             action.Should().Throw<ObjectStoreDomainException>();
         }

@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using FluentValidation;
+
 using MediatR;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application.Behaviors
+namespace DrifterApps.Holefeeder.Budgeting.Application.Behaviors
 {
     public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

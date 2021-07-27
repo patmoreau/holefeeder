@@ -2,6 +2,6 @@
 {
     public static class Scopes
     {
-        public static readonly string[] ScopeRequiredByApi = {"holefeeder.user"};
+        public const string REGISTERED_USER = "holefeeder.user";
     }
 }

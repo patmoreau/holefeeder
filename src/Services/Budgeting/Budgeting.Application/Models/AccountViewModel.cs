@@ -1,41 +1,29 @@
 using System;
-using System.Text.Json.Serialization;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 {
-    public class AccountViewModel
+    public record AccountViewModel
     {
-        public Guid Id { get; }
+        public Guid Id { get; init; }
 
-        public AccountType Type { get; }
+        public AccountType Type { get; init; }
 
-        public string Name { get; }
+        public string Name { get; init; }
 
-        public int TransactionCount { get; }
+        public decimal OpenBalance { get; init; }
 
-        public decimal Balance { get; }
+        public DateTime OpenDate { get; init; }
 
-        public DateTime? Updated { get; }
+        public int TransactionCount { get; init; }
 
-        public string Description { get; }
+        public decimal Balance { get; init; }
 
-        public bool Favorite { get; }
+        public DateTime? Updated { get; init; }
 
-        [JsonConstructor]
-        public AccountViewModel(Guid id, AccountType type, string name,
-            int transactionCount, decimal balance, DateTime? updated, string description,
-            bool favorite)
-        {
-            Id = id;
-            Type = type;
-            Name = name;
-            TransactionCount = transactionCount;
-            Balance = balance;
-            Updated = updated;
-            Description = description;
-            Favorite = favorite;
-        }
+        public string Description { get; init; }
+
+        public bool Favorite { get; init; }
     }
 }

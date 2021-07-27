@@ -6,13 +6,6 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
 {
     public class GetStoreItemQuery : IRequest<StoreItemViewModel>
     {
-        public Guid UserId { get; }
-        public Guid Id { get; }
-
-        public GetStoreItemQuery(Guid userId, Guid id)
-        {
-            UserId = userId;
-            Id = id;
-        }
+        public Guid Id { get; init; }
     }
 }

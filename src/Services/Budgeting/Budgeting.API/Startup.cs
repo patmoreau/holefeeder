@@ -1,16 +1,11 @@
 using System;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DrifterApps.Holefeeder.Budgeting.API.Authorization;
 using DrifterApps.Holefeeder.Budgeting.Application;
+using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 using DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
-using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
-using DrifterApps.Holefeeder.Budgeting.Application.Queries;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure;
-using DrifterApps.Holefeeder.ObjectStore.Application.Behaviors;
-
-using FluentValidation;
 
 using HealthChecks.UI.Client;
 
@@ -52,9 +47,9 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             // Registers required services for health checks
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddMongoDb(Configuration["HolefeederDatabaseSettings:ConnectionString"],
-                    name: "HolefeederDB-check",
-                    tags: new string[] {"holefeederdb"});
+                .AddMySql(Configuration["HolefeederDatabaseSettings:ConnectionString"],
+                    "HolefeederDB-check",
+                    tags: new[] {"holefeeder-db"});
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(
@@ -90,24 +85,19 @@ namespace DrifterApps.Holefeeder.Budgeting.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.MigrateDb();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Budgeting.API v2"));
             }
-            else
-            {
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
 
             app.UseSerilogRequestLogging();
 
             app.UseRouting();
-
-                        
+            
             ConfigureAuth(app);
             
             app.UseEndpoints(endpoints =>
@@ -132,9 +122,6 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             services.AddMediatR(typeof(GetAccountsHandler).Assembly)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-
-            // AssemblyScanner.FindValidatorsInAssembly(typeof(CreateStoreItemCommandValidator).Assembly)
-            //     .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
 
             services.AddTransient<Func<IRequestUser>>(provider =>
             {

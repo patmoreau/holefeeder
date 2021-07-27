@@ -25,6 +25,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace DrifterApps.Holefeeder.ObjectStore.API
@@ -48,31 +49,35 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
             // Registers required services for health checks
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddMongoDb(Configuration["HolefeederDatabaseSettings:ConnectionString"],
-                    name: "HolefeederDB-check",
-                    tags: new string[] {"holefeederdb"});
+                .AddMySql(Configuration["ObjectStoreDatabaseSettings:ConnectionString"],
+                    "ObjectStoreDB-check",
+                    tags: new[] {"object-store-db"});
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAdB2C"));
+                .AddMicrosoftIdentityWebApi(
+                    options => options.TokenValidationParameters =
+                        new TokenValidationParameters {ValidateIssuer = false},
+                    options => Configuration.Bind("AzureAdB2C", options));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ObjectStore.API", Version = "v1"});
+                c.SwaggerDoc("v2", new OpenApiInfo {Title = "ObjectStore.API", Version = "v2"});
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.MigrateDb();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ObjectStore.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "ObjectStore.API v2"));
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

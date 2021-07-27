@@ -1,66 +1,146 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 
+using DrifterApps.Holefeeder.Budgeting.Domain.Exceptions;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext
 {
-    public class Transaction : Entity, IAggregateRoot
+    public record Transaction : IAggregateRoot
     {
-        public DateTime Date { get; }
-        
-        public decimal Amount { get; }
-        
-        public string Description { get; }
-        
-        public Guid AccountId { get; }
-        
-        public Guid CategoryId { get; }
-        
-        public Guid? CashflowId { get; }
-        
-        public DateTime? CashflowDate { get; }
+        private readonly Guid _id;
+        private readonly DateTime _date;
+        private readonly decimal _amount;
+        private readonly Guid _userId;
 
-        private readonly List<string> _tags;
-        public IReadOnlyCollection<string> Tags => _tags;
-        
-        public Guid UserId { get; }
-
-        public Transaction()
+        public Guid Id
         {
-            _tags = new List<string>();
-        }
-
-        public static Transaction Create(DateTime date, decimal amount, string description, Guid categoryId, Guid accountId, Guid? cashflowId, DateTime? cashflowDate, Guid userId)
-        => new Transaction(Guid.NewGuid(), date, amount, description, categoryId, accountId, cashflowId, cashflowDate, userId);
-        
-        public Transaction(Guid id, DateTime date, decimal amount, string description, Guid categoryId, Guid accountId, Guid? cashflowId, DateTime? cashflowDate, Guid userId) : this()
-        {
-            Id = id;
-            Date = date;
-            Amount = amount;
-            Description = description;
-            CategoryId = categoryId;
-            AccountId = accountId;
-            CashflowId = cashflowId;
-            CashflowDate = cashflowDate;
-            UserId = userId;
-        }
-        
-        public void AddTag(string tag)
-        {
-            if (string.IsNullOrWhiteSpace(tag))
+            get => _id;
+            init
             {
-                return;
+                if (value.Equals(default))
+                {
+                    throw new HolefeederDomainException($"{nameof(Id)} is required");
+                }
+
+                _id = value;
             }
+        }
+
+        public DateTime Date
+        {
+            get => _date;
+            init
+            {
+                if (value.Equals(default))
+                {
+                    throw new HolefeederDomainException($"{nameof(Date)} is required");
+                }
+
+                _date = value;
+            }
+        }
+
+        public decimal Amount
+        {
+            get => _amount;
+            init
+            {
+                if (value < 0m)
+                {
+                    throw new HolefeederDomainException($"{nameof(Amount)} cannot be negative");
+                }
+
+                _amount = value;
+            }
+        }
+
+        public string Description { get; init; }
+
+        public Guid AccountId { get; init; }
+
+        public Guid CategoryId { get; init; }
+
+        public Guid? CashflowId { get; private init; }
+
+        public DateTime? CashflowDate { get; private init; }
+
+        public IReadOnlyCollection<string> Tags { get; private init; }
+
+        public Guid UserId
+        {
+            get => _userId;
+            init
+            {
+                if (value.Equals(default))
+                {
+                    throw new HolefeederDomainException($"{nameof(UserId)} is required");
+                }
+
+                _userId = value;
+            }
+        }
+
+        private Transaction()
+        {
+            Tags = ImmutableList<string>.Empty;
+        }
+
+        public static Transaction Create(DateTime date, decimal amount, string description, Guid categoryId,
+            Guid accountId, Guid userId)
+            => new()
+            {
+                Id = Guid.NewGuid(),
+                Date = date,
+                Amount = amount,
+                Description = description,
+                CategoryId = categoryId,
+                AccountId = accountId,
+                UserId = userId
+            };
+
+        public static Transaction Create(DateTime date, decimal amount, string description, Guid categoryId,
+            Guid accountId, Guid cashflowId, DateTime cashflowDate, Guid userId)
+        {
+            if (cashflowId.Equals(default))
+            {
+                throw new HolefeederDomainException($"{nameof(CashflowId)} is required");
+            }
+
+            if (cashflowDate.Equals(default))
+            {
+                throw new HolefeederDomainException($"{nameof(CashflowDate)} is required");
+            }
+
+            return new Transaction
+            {
+                Id = Guid.NewGuid(),
+                Date = date,
+                Amount = amount,
+                Description = description,
+                CategoryId = categoryId,
+                AccountId = accountId,
+                UserId = userId
+            };
+        }
+
+        public Transaction AddTags(params string[] tags)
+        {
+            var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t) &&
+                                          !Tags.Contains(t,
+                                              StringComparer.Create(CultureInfo.InvariantCulture,
+                                                  CompareOptions.IgnoreCase)))
+                .ToList();
             
-            var existingTag = _tags.SingleOrDefault(o => string.Equals(o, tag, StringComparison.InvariantCultureIgnoreCase));
-
-            if (!string.IsNullOrWhiteSpace(existingTag))
+            if (!newTags.Any())
             {
-                _tags.Add(tag.ToLowerInvariant());
+                return this;
             }
+
+            return this with { Tags = newTags.ToImmutableList() };
         }
     }
 }

@@ -6,6 +6,9 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
 {
     public class QueryParams
     {
+        public const string FILTER_PATTERN = @"(?<property>\w+)(?<operator>:(eq|ne|lt|le|gt|ge):)(?<value>.*)";
+        public const string SORT_PATTERN = @"(?<desc>-{0,1})(?<field>\w+)";
+
         public int Offset { get; }
         public int Limit { get; }
         public IReadOnlyList<string> Sort { get; }
@@ -23,8 +26,15 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
                 throw new ArgumentOutOfRangeException(nameof(limit), @"limit must be positive");
             }
 
-            sort.ThrowIfNull(nameof(sort));
-            filter.ThrowIfNull(nameof(filter));
+            if (sort is null)
+            {
+                throw new ArgumentNullException(nameof(sort));
+            }
+
+            if (filter is null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
 
             Offset = offset;
             Limit = limit;
@@ -32,12 +42,11 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
             Filter = ImmutableArray.CreateRange(filter);
         }
 
-        public static QueryParams Empty => new QueryParams(DefaultOffset, DefaultLimit, DefaultSort, DefaultFilter);
+        public static QueryParams Empty => new QueryParams(DEFAULT_OFFSET, DEFAULT_LIMIT, DefaultSort, DefaultFilter);
 
-        public static readonly int DefaultOffset = 0;
-        public static readonly int DefaultLimit = int.MaxValue;
-        public static readonly IReadOnlyList<string> DefaultSort = ImmutableArray.Create<string>(); 
-        public static readonly IReadOnlyList<string> DefaultFilter = ImmutableArray.Create<string>(); 
-        
+        public const int DEFAULT_OFFSET = 0;
+        public const int DEFAULT_LIMIT = int.MaxValue;
+        public static readonly IReadOnlyList<string> DefaultSort = ImmutableArray.Create<string>();
+        public static readonly IReadOnlyList<string> DefaultFilter = ImmutableArray.Create<string>();
     }
 }

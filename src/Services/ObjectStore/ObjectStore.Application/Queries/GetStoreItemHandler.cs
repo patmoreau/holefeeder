@@ -1,26 +1,38 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+
 using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+
 using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
 {
     public class GetStoreItemHandler : IRequestHandler<GetStoreItemQuery, StoreItemViewModel>
     {
-        private readonly IStoreQueriesRepository _queriesRepository;
+        private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
+        private readonly ItemsCache _cache;
 
-        public GetStoreItemHandler(IStoreQueriesRepository queriesRepository)
+        public GetStoreItemHandler(IStoreItemsQueriesRepository itemsQueriesRepository, ItemsCache cache)
         {
-            _queriesRepository = queriesRepository;
+            _itemsQueriesRepository = itemsQueriesRepository;
+            _cache = cache;
         }
 
-        public async Task<StoreItemViewModel> Handle(GetStoreItemQuery query, CancellationToken cancellationToken = default)
+        public Task<StoreItemViewModel> Handle(GetStoreItemQuery query, CancellationToken cancellationToken)
         {
-            query.ThrowIfNull(nameof(query));
+            if (query is null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
 
-            return await _queriesRepository.GetItemAsync(query.UserId, query.Id, cancellationToken);
+            return HandleInternal(query, cancellationToken);
+        }
+
+        private async Task<StoreItemViewModel> HandleInternal(GetStoreItemQuery query, CancellationToken cancellationToken)
+        {
+            return await _itemsQueriesRepository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken);
         }
     }
 }

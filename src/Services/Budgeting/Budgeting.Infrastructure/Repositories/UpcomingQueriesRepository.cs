@@ -1,103 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
+
+using Dapper;
+
+using DrifterApps.Holefeeder.Budgeting.Application.Cashflows;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
 {
-    public class UpcomingQueriesRepository : RepositoryRoot, IUpcomingQueriesRepository
+    public class UpcomingQueriesRepository : IUpcomingQueriesRepository
     {
-        public UpcomingQueriesRepository(IMongoDbContext context) : base(context)
+        private readonly IHolefeederContext _context;
+
+        public UpcomingQueriesRepository(IHolefeederContext context)
         {
+            _context = context;
         }
 
-        public async Task<IEnumerable<UpcomingViewModel>> GetUpcomingAsync(Guid userId, DateTime startDate, DateTime endDate,
+        public async Task<IEnumerable<UpcomingViewModel>> GetUpcomingAsync(Guid userId, DateTime startDate,
+            DateTime endDate,
             CancellationToken cancellationToken = default)
         {
-            var transactionCollection = await DbContext.GetTransactionsAsync(cancellationToken);
-            var cashflowCollection = await DbContext.GetCashflowsAsync(cancellationToken);
-            var accountCollection = await DbContext.GetAccountsAsync(cancellationToken);
-            var categoryCollection = await DbContext.GetCategoriesAsync(cancellationToken);
+            var connection = _context.Connection;
 
-            var pastCashflows = await transactionCollection.AsQueryable()
-                .Where(x => x.UserId == userId && !string.IsNullOrEmpty(x.Cashflow))
-                .OrderByDescending(x => x.Date)
-                .GroupBy(x => x.Cashflow)
-                .Select(g => new
-                {
-                    Cashflow = g.Key, LastPaidDate = g.First().Date, LastCashflowDate = g.First().CashflowDate
-                }).ToListAsync(cancellationToken);
+            var cashflows = await connection
+                .QueryAsync<CashflowEntity, AccountEntity, CategoryEntity, CashflowEntity>(@"
+SELECT 
+    c.*, MAX(t.date) AS last_paid_date, MAX(t.cashflow_date) AS last_cashflow_date,
+    a.*, 
+    ca.*
+FROM cashflows c
+INNER JOIN accounts a on a.id = c.account_id
+INNER JOIN categories ca on ca.id = c.category_id
+LEFT OUTER JOIN transactions t on t.cashflow_id = c.id
+WHERE c.user_id = @UserId AND c.inactive = 0
+GROUP BY c.id;",
+                    (entity, accountEntity, categoryEntity) =>
+                        entity with { Account = accountEntity, Category = categoryEntity }, new { UserId = userId },
+                    splitOn: "id,id")
+                .ConfigureAwait(false);
 
-            var cashflows = await cashflowCollection
-                .AsQueryable()
-                .Where(x => x.UserId == userId)
-                .ToListAsync(cancellationToken);
-            var accounts = await accountCollection
-                .AsQueryable()
-                .Where(x => x.UserId == userId)
-                .ToListAsync(cancellationToken);
-            var categories = await categoryCollection
-                .AsQueryable()
-                .Where(x => x.UserId == userId)
-                .ToListAsync(cancellationToken);
-
-            var upcomingCashflows = cashflows
-                .Where(x => !x.Inactive)
-                .Join(accounts,
-                    c => c.Account,
-                    a => a.MongoId,
-                    (c, a) => new {Cashflow = c, Account = a})
-                .Join(categories,
-                    j => j.Cashflow.Category,
-                    c => c.MongoId,
-                    (j, c) => new {j.Cashflow, j.Account, Category = c});
-
-            var results =
-                (from c in upcomingCashflows
-                    join t in pastCashflows on c.Cashflow.MongoId equals t.Cashflow into u
-                    from t in u.DefaultIfEmpty()
-                    select new
-                    {
-                        c.Cashflow,
-                        c.Account,
-                        c.Category,
-                        t?.LastPaidDate,
-                        t?.LastCashflowDate
-                    })
+            var results = cashflows
                 .SelectMany(x =>
                 {
                     var dates = new List<DateTime>();
 
-                    var nextDate =
-                        x.Cashflow.IntervalType.NextDate(x.Cashflow.EffectiveDate, startDate, x.Cashflow.Frequency);
-                    if (IsUnpaid(x.Cashflow.EffectiveDate, nextDate, x.LastPaidDate, x.LastCashflowDate))
-                    {
-                        dates.Add(nextDate);
-                    }
+                    dates.AddRange(x.IntervalType
+                        .DatesInRange(x.EffectiveDate, startDate, endDate, x.Frequency)
+                        .Where(futureDate =>
+                            IsUnpaid(x.EffectiveDate, futureDate, x.LastPaidDate, x.LastCashflowDate)));
 
-                    var date = nextDate;
-                    while (IsUnpaid(x.Cashflow.EffectiveDate, date, x.LastPaidDate, x.LastCashflowDate) &&
-                           date > x.Cashflow.EffectiveDate)
+                    var date = x.IntervalType.PreviousDate(x.EffectiveDate, startDate,
+                        x.Frequency);
+                    while (IsUnpaid(x.EffectiveDate, date, x.LastPaidDate, x.LastCashflowDate) &&
+                           date > x.EffectiveDate)
                     {
-                        date = x.Cashflow.IntervalType.PreviousDate(x.Cashflow.EffectiveDate, date,
-                            x.Cashflow.Frequency);
-                        if (IsUnpaid(x.Cashflow.EffectiveDate, date, x.LastPaidDate, x.LastCashflowDate))
-                        {
-                            dates.Add(date);
-                        }
+                        dates.Add(date);
+                        date = x.IntervalType.PreviousDate(x.EffectiveDate, date,
+                            x.Frequency);
                     }
 
                     return dates.Select(d =>
-                        new UpcomingViewModel(x.Cashflow.Id, d, x.Cashflow.Amount, x.Cashflow.Description,
-                            new CategoryInfoViewModel(x.Category.Id, x.Category.Name, x.Category.Type,
+                        new UpcomingViewModel
+                        {
+                            Id = x.Id,
+                            Date = d,
+                            Amount = x.Amount,
+                            Description = x.Description,
+                            Tags = x.Tags?.ToImmutableArray() ?? ImmutableArray<string>.Empty,
+                            Category = new CategoryInfoViewModel(x.Category.Id, x.Category.Name, x.Category.Type,
                                 x.Category.Color),
-                            new AccountInfoViewModel(x.Account.Id, x.Account.Name, x.Account.MongoId), x.Cashflow.Tags));
+                            Account = new AccountInfoViewModel(x.Account.Id, x.Account.Name)
+                        });
                 }).Where(x => x.Date <= endDate)
                 .OrderBy(x => x.Date);
 

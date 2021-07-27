@@ -3,10 +3,10 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>DrifterApps.Holefeeder.Budgeting.Infrastructure</RootNamespace>
-        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.Dapper.SeedWork\Framework.Dapper.SeedWork.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Framework.Mongo.SeedWork\Framework.Mongo.SeedWork.csproj" />
       <ProjectReference Include="..\Budgeting.Application\Budgeting.Application.csproj" />
       <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj" />
@@ -15,11 +15,26 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="10.1.1" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+      <PackageReference Include="Dapper" Version="2.0.90" />
+      <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
+      <PackageReference Include="Dapper.Transaction" Version="2.0.35.2" />
+      <PackageReference Include="dbup-core" Version="4.5.0" />
+      <PackageReference Include="dbup-mysql" Version="4.5.0" />
+      <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-      <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
+      <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql" />
+      <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql" />
+      <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql" />
+      <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Serilog.Events;
 
 namespace DrifterApps.Holefeeder.Budgeting.API
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         private static IConfiguration Configuration { get; } = new ConfigurationBuilder()

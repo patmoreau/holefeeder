@@ -358,3 +358,5 @@ docker/development/data
 tools/fixGuid.sh
 tests-results
 data/
+.run/Docker compose.run.xml
+.run/Holefeeder.run.xml
