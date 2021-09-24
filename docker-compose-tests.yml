@@ -2,6 +2,9 @@ version: '3.4'
 
 services:
 
+  mysql-data-test:
+    image: mysql
+
   budgeting-api-functional-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-functional-test:${VERSION:-latest}
     build:
@@ -10,6 +13,8 @@ services:
       target: functionaltest
     volumes:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+    depends_on:
+      - mysql-data-test
 
   budgeting-api-unit-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/budgeting-api-unit-test:${VERSION:-latest}
@@ -28,6 +33,8 @@ services:
       target: functionaltest
     volumes:
       - ${BUILD_ARTIFACTSTAGINGDIRECTORY:-./tests-results/}:/tests
+    depends_on:
+      - mysql-data-test
 
   object-store-api-unit-test:
     image: ${DOCKER_REGISTRY:-holefeeder}/object-store-api-unit-test:${VERSION:-latest}

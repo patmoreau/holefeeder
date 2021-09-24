@@ -2,13 +2,23 @@ version: '3.4'
 
 services:
 
+  mysql-data-test:
+    environment:
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - 3306
+    volumes:
+      - ./mysql-init-scripts:/docker-entrypoint-initdb.d
+
   budgeting-api-functional-test:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      MongoDatabaseSettings__ConnectionString: mongodb://holefeeder:drifterapps123@mongo/?authSource=holefeeder
+      MongoDatabaseSettings__ConnectionString: mongodb://mongo
       MongoDatabaseSettings__Database: holefeeder
-      HolefeederDatabaseSettings__ConnectionString: Server=${MYSQL_SERVER};Port=${MYSQL_PORT};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=holefeeder_int;
+      HolefeederDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=test_user;Password=test_password;AllowPublicKeyRetrieval=True;SslMode=none;Database=holefeeder_test;
     ports:
       - "5105:80"
     entrypoint:
@@ -49,7 +59,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      ObjectStoreDatabaseSettings__ConnectionString: Server=${MYSQL_SERVER};Port=${MYSQL_PORT};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=object_store_int;
+      ObjectStoreDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=test_user;Password=test_password;AllowPublicKeyRetrieval=True;SslMode=none;Database=object_store_test;
     ports:
       - "5106:80"
     entrypoint:
@@ -85,9 +95,3 @@ services:
       - /tests
       - --collect
       - "XPlat Code Coverage"
-
-networks:
-  default:
-    external:
-      name: backend-network
-      
