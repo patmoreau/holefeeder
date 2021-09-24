@@ -3,7 +3,7 @@ RUN apk update && apk add jq
 
 FROM node as restore
 WORKDIR /app
-COPY src/Web/Holefeeder.Web/package*.json .
+COPY src/Web/Holefeeder.Web/package*.json ./
 RUN npm install
 
 FROM restore as build
