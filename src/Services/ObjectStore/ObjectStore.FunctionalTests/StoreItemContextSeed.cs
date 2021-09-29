@@ -30,16 +30,11 @@ namespace ObjectStore.FunctionalTests
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            var connectionStringBuilder = new MySqlConnectionStringBuilder(settings.ConnectionString);
-            var database = connectionStringBuilder.Database;
-
-            connectionStringBuilder.Database = String.Empty;
-
-            using var connection = new MySqlConnection(connectionStringBuilder.ConnectionString);
+            using var connection = new MySqlConnection(settings.ConnectionString);
 
             connection.Open();
 
-            RefreshDb(connection, database);
+            RefreshDb(connection);
 
             connection.Close();
         }
@@ -68,9 +63,10 @@ namespace ObjectStore.FunctionalTests
             }
         }
 
-        private static void RefreshDb(IDbConnection connection, string database)
+        private static void RefreshDb(IDbConnection connection)
         {
-            connection.Execute($"DROP DATABASE IF EXISTS {database};");
+            connection.Execute($"DROP TABLE IF EXISTS store_items;");
+            connection.Execute($"DROP TABLE IF EXISTS schema_versions;");
         }
 
         private static void CreateStoreItem(IDbConnection connection, Guid id, int index, Guid userId)

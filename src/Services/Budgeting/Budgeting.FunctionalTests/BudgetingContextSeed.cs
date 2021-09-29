@@ -57,16 +57,11 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            var connectionStringBuilder = settings.GetBuilder();
-            var databaseName = connectionStringBuilder.Database;
-            
-            connectionStringBuilder.Database = String.Empty;
-
-            using var connection = new MySqlConnection(connectionStringBuilder.ConnectionString);
+            using var connection = new MySqlConnection(settings.ConnectionString);
 
             connection.Open();
 
-            RefreshDb(connection, databaseName);
+            RefreshDb(connection);
 
             connection.Close();
         }
@@ -149,9 +144,13 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
             }
         }
 
-        private static void RefreshDb(IDbConnection connection, string database)
+        private static void RefreshDb(IDbConnection connection)
         {
-            connection.Execute($"DROP DATABASE IF EXISTS {database};");
+            connection.Execute($"DROP TABLE IF EXISTS transactions;");
+            connection.Execute($"DROP TABLE IF EXISTS cashflows;");
+            connection.Execute($"DROP TABLE IF EXISTS categories;");
+            connection.Execute($"DROP TABLE IF EXISTS accounts;");
+            connection.Execute($"DROP TABLE IF EXISTS schema_versions;");
         }
     }
 }

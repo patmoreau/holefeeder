@@ -4,9 +4,11 @@ services:
 
   mysql-data-test:
     environment:
-      MYSQL_USER: test_user
-      MYSQL_PASSWORD: test_password
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: ${MYSQL_TEST_USER}
+      MYSQL_PASSWORD: ${MYSQL_TEST_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_TEST_ROOT_PASSWORD}
+      MYSQL_BUDGETING_DATABASE: ${MYSQL_TEST_BUDGETING_DATABASE}
+      MYSQL_OBJECT_STORE_DATABASE: ${MYSQL_TEST_OBJECT_STORE_DATABASE}
     ports:
       - 3306
     volumes:
@@ -18,7 +20,7 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:80
       MongoDatabaseSettings__ConnectionString: mongodb://mongo
       MongoDatabaseSettings__Database: holefeeder
-      HolefeederDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=test_user;Password=test_password;AllowPublicKeyRetrieval=True;SslMode=none;Database=holefeeder_test;
+      HolefeederDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=${MYSQL_TEST_USER};Password=${MYSQL_TEST_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=${MYSQL_TEST_BUDGETING_DATABASE};
     ports:
       - "5105:80"
     entrypoint:
@@ -59,7 +61,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      ObjectStoreDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=test_user;Password=test_password;AllowPublicKeyRetrieval=True;SslMode=none;Database=object_store_test;
+      ObjectStoreDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=${MYSQL_TEST_USER};Password=${MYSQL_TEST_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=${MYSQL_TEST_OBJECT_STORE_DATABASE};
     ports:
       - "5106:80"
     entrypoint:

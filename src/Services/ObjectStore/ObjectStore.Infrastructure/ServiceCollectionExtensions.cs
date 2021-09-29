@@ -68,12 +68,12 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
-                    .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
+                    // .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
                         () => connectionManager,
                         () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database,
-                        "schemaversions"))
+                        "schema_versions"))
                     .LogToConsole()
                     .Build();
 
