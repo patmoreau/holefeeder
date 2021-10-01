@@ -93,7 +93,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
-                    // .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
+                    .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
                     .WithScript(Script005MongoDbMigration.ScriptName, mongoDbMigration)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
