@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: holefeeder
+build:
+  artifacts:
+  - image: holefeeder-gateway-web
+    context: .
+    docker:
+      dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
+  - image: holefeeder-web
+    context: .
+    docker:
+      dockerfile: src/Web/Holefeeder.Web/Dockerfile
+  - image: holefeeder-budgeting-api
+    context: .
+    docker:
+      dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
+  - image: holefeeder-object-store-api
+    context: .
+    docker:
+      dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+deploy:
+  kustomize:
+    paths:
+    - kubernetes

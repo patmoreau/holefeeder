@@ -15,7 +15,6 @@ using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Scripts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using MySqlConnectionManager = Framework.Dapper.SeedWork.MySqlConnectionManager;
@@ -59,8 +58,6 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure
 
             var databaseSettings = scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseSettings>();
             var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
-            var logger = scope.ServiceProvider.GetService<ILogger<ObjectStoreDatabaseSettings>>();
-            logger.LogError(databaseSettings.ConnectionString);
 
             lock (Locker)
             {

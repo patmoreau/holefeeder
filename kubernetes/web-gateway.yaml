@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hf-gateway
+  labels:
+    app: holefeeder
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: holefeeder
+    tier: gateway
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hf-gateway
+  labels:
+    app: holefeeder
+spec:
+  selector:
+    matchLabels:
+      app: holefeeder
+      tier: gateway
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: holefeeder
+        tier: gateway
+    spec:
+      containers:
+      - image: holefeeder-gateway-web
+        name: hf-gateway
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: http://+
+        - name: SEQ_Url
+          value: http://seq
+        ports:
+        - containerPort: 80
+          name: hf-gateway
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: config
+          mountPath: /app/ocelot.json
+          subPath: ocelot.json
+      volumes:
+      - name: config
+        configMap:
+          name: hf-gateway-config

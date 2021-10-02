@@ -1,0 +1,40 @@
+{
+    "Routes": [
+      {
+        "DownstreamPathTemplate": "/api/v2/{everything}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "hf-budgeting",
+            "Port": 80
+          }
+        ],
+        "UpstreamPathTemplate": "/api/v2/budgeting-api/{everything}",
+        "UpstreamHttpMethod": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ]
+      },
+      {
+        "DownstreamPathTemplate": "/api/v2/{everything}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "hf-object-store",
+            "Port": 80
+          }
+        ],
+        "UpstreamPathTemplate": "/api/v2/object-store/{everything}",
+        "UpstreamHttpMethod": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ]
+      }
+    ],
+    "GlobalConfiguration": {
+    }
+  }

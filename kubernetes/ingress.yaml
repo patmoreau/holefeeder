@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: holefeeder
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+spec:
+  rules:
+    - host: holefeeder.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /api
+            backend:
+              service:
+                name: hf-gateway
+                port:
+                  number: 80
+    - host: holefeeder.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: hf-ui
+                port:
+                  number: 80
+  tls: 
+  - hosts: 
+    - test-app.com 
+    secretName: test-app-cert-tls
