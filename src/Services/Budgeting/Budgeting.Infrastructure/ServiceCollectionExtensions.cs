@@ -44,12 +44,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
                 configuration.GetSection(nameof(HolefeederDatabaseSettings)));
             services.AddSingleton(sp => sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
-            services.Configure<MongoDatabaseSettings>(
-                configuration.GetSection(nameof(MongoDatabaseSettings)));
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
-
             services.AddScoped<IHolefeederContext, HolefeederContext>();
-            services.AddScoped<IMongoDbContext, MongoDbContext>();
             services.AddScoped<Script000InitDatabase>();
             services.AddScoped<Script005MongoDbMigration>();
 

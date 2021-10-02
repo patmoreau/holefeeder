@@ -15,9 +15,6 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
       SEQ_Url: ${SEQ_URL}
-      MongoDatabaseSettings:ConnectionString: mongodb://holefeeder:drifterapps123@mongo/?authSource=holefeeder
-      MongoDatabaseSettings:Database: holefeeder
-      MongoDatabaseSettings:Migrate: 'true'
       HolefeederDatabaseSettings:ConnectionString: Server=${MYSQL_SERVER};Port=${MYSQL_PORT};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=holefeeder;
     ports:
       - '5100:80'

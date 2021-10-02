@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
-
-using MongoDB.Bson;
 
 namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Builders
 {

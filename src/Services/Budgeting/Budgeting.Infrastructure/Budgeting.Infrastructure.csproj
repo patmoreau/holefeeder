@@ -7,7 +7,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\Framework.Dapper.SeedWork\Framework.Dapper.SeedWork.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.Mongo.SeedWork\Framework.Mongo.SeedWork.csproj" />
       <ProjectReference Include="..\Budgeting.Application\Budgeting.Application.csproj" />
       <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj" />
     </ItemGroup>
@@ -27,7 +26,6 @@
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-      <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
     </ItemGroup>
 
     <ItemGroup>

@@ -18,8 +18,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      MongoDatabaseSettings__ConnectionString: mongodb://mongo
-      MongoDatabaseSettings__Database: holefeeder
       HolefeederDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=${MYSQL_TEST_USER};Password=${MYSQL_TEST_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=${MYSQL_TEST_BUDGETING_DATABASE};
     ports:
       - "5105:80"
