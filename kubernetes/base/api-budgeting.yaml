@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hf-object-store
+  name: budgeting
   labels:
     app: holefeeder
 spec:
@@ -15,7 +15,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hf-object-store
+  name: budgeting
   labels:
     app: holefeeder
 spec:
@@ -32,23 +32,26 @@ spec:
         tier: backend
     spec:
       containers:
-      - image: holefeeder-object-store-api
-        name: hf-object-store
+      - image: holefeeder-budgeting-api
+        name: budgeting
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: Development
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: ASPNETCORE_ENVIRONMENT
         - name: ASPNETCORE_URLS
           value: http://+
         - name: SEQ_Url
           value: http://seq
-        - name: ObjectStoreDatabaseSettings__ConnectionString
+        - name: HolefeederDatabaseSettings__ConnectionString
           valueFrom:
             secretKeyRef:
-              name: hf-object-store
+              name: budgeting
               key: connection-string
         ports:
         - containerPort: 80
-          name: hf-object-store
+          name: budgeting
         resources:
           requests:
             memory: "64Mi"

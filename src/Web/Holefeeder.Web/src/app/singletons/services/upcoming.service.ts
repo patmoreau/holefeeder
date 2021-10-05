@@ -10,7 +10,7 @@ import {IUpcoming, upcomingFromServer} from "@app/shared/interfaces/upcoming.int
 
 @Injectable({providedIn: 'root'})
 export class UpcomingService {
-  private basePath = 'api/v2/budgeting-api/cashflows/get-upcoming';
+  private basePath = 'budgeting/api/v2/cashflows/get-upcoming';
 
   private period: IDateInterval;
 

@@ -4,10 +4,6 @@ metadata:
   name: holefeeder
 build:
   artifacts:
-  - image: holefeeder-gateway-web
-    context: .
-    docker:
-      dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
   - image: holefeeder-web
     context: .
     docker:
@@ -20,7 +16,19 @@ build:
     context: .
     docker:
       dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+profiles:
+  - name: dev
+    deploy:
+      kustomize:
+        paths: ["kubernetes/dev"]
+  - name: stg
+    deploy:
+      kustomize:
+        paths: ["kubernetes/stg"]
+  - name: prd
+    deploy:
+      kustomize:
+        paths: ["kubernetes/prd"]
 deploy:
   kustomize:
-    paths:
-    - kubernetes
+    paths: ["kubernetes/dev"]

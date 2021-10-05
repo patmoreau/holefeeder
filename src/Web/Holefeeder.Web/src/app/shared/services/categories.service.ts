@@ -6,7 +6,7 @@ import { HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class CategoriesService {
-  private basePath = 'api/v2/budgeting-api/categories';
+  private basePath = 'budgeting/api/v2/categories';
 
   constructor(private api: ApiService) {}
 

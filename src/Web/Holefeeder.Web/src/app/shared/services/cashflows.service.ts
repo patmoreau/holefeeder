@@ -8,7 +8,7 @@ import { IPagingInfo } from '../interfaces/paging-info.interface';
 
 @Injectable()
 export class CashflowsService {
-  private basePath = 'api/v2/budgeting-api/cashflows';
+  private basePath = 'budgeting/api/v2/cashflows';
 
   constructor(private api: ApiService) { }
 

@@ -9,7 +9,7 @@ import { OpenAccountCommand } from '../accounts/open-account-command.model';
 
 @Injectable()
 export class AccountsService {
-  private basePath = 'api/v2/budgeting-api/accounts';
+  private basePath = 'budgeting/api/v2/accounts';
 
   constructor(private api: ApiService) {}
 

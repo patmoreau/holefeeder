@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hf-gateway
+  name: object-store
   labels:
     app: holefeeder
 spec:
@@ -9,41 +9,49 @@ spec:
     - port: 80
   selector:
     app: holefeeder
-    tier: gateway
+    tier: backend
   type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hf-gateway
+  name: object-store
   labels:
     app: holefeeder
 spec:
   selector:
     matchLabels:
       app: holefeeder
-      tier: gateway
+      tier: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: holefeeder
-        tier: gateway
+        tier: backend
     spec:
       containers:
-      - image: holefeeder-gateway-web
-        name: hf-gateway
+      - image: holefeeder-object-store-api
+        name: object-store
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: Development
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: ASPNETCORE_ENVIRONMENT
         - name: ASPNETCORE_URLS
           value: http://+
         - name: SEQ_Url
           value: http://seq
+        - name: ObjectStoreDatabaseSettings__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: object-store
+              key: connection-string
         ports:
         - containerPort: 80
-          name: hf-gateway
+          name: object-store
         resources:
           requests:
             memory: "64Mi"
@@ -51,11 +59,3 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
-        volumeMounts:
-        - name: config
-          mountPath: /app/ocelot.json
-          subPath: ocelot.json
-      volumes:
-      - name: config
-        configMap:
-          name: hf-gateway-config
