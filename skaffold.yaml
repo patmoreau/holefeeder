@@ -3,21 +3,38 @@ kind: Config
 metadata:
   name: holefeeder
 build:
+  tagPolicy:
+    envTemplate:
+      template: '{{.VERSION}}'
   artifacts:
   - image: holefeeder-web
     context: .
     docker:
       dockerfile: src/Web/Holefeeder.Web/Dockerfile
+      buildArgs: 
+        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
   - image: holefeeder-budgeting-api
     context: .
     docker:
       dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
+      buildArgs: 
+        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
   - image: holefeeder-object-store-api
     context: .
     docker:
       dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+      buildArgs: 
+        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
 profiles:
+  - name: cicd
+    build:
+      local:
+        push: false
+    deploy: {}
   - name: dev
+    build:
+      local:
+        push: false
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]
