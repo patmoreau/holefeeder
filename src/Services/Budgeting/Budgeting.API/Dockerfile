@@ -32,11 +32,14 @@ COPY src/Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj src/Services/
 RUN dotnet restore DrifterApps.Holefeeder.sln
 
 FROM restore as build
-ARG holefeeder_version=99.99.99
+ARG BUILD_VERSION=99.99.99
+RUN echo $BUILD_VERSION & echo ${BUILD_VERSION}
+ARG VERSION=${BUILD_VERSION:-99.99.99}
+RUN echo $VERSION & echo ${VERSION}
 WORKDIR /src
 COPY src/. src/.
 WORKDIR /src/src/Services/Budgeting/Budgeting.API
-RUN dotnet publish /property:Version=${holefeeder_version} --no-restore -c Release -o /app
+RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM build as unittest
 WORKDIR /src/src/Services/Budgeting/Budgeting.UnitTests

@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namePrefix: holefeeder-stg-
 bases:
 - ../base
 patchesJson6902:
@@ -7,20 +8,25 @@ patchesJson6902:
     group: networking.k8s.io
     version: v1
     kind: Ingress
-    name: holefeeder
+    name: ui
   path: ingress_patch.yaml
-namePrefix: holefeeder-stg-
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: api
+  path: ingress_patch.yaml
 secretGenerator:
 - name: budgeting
   literals:
-  - connection-string=Server=mysql;Port=3306;User Id=holefeeder_user;Password=drifterapps123;AllowPublicKeyRetrieval=True;Database=budgeting_stg;
+  - connection-string=Server=mysql;Port=3306;User Id=holefeeder-stg-user;Password=g_PMJEkm8r2-gGZ3Vq.MNp@e;AllowPublicKeyRetrieval=True;Database=budgeting_stg;
 - name: object-store
   literals:
-  - connection-string=Server=mysql;Port=3306;User Id=holefeeder_user;Password=drifterapps123;AllowPublicKeyRetrieval=True;Database=object_store_stg;
+  - connection-string=Server=mysql;Port=3306;User Id=holefeeder-stg-user;Password=g_PMJEkm8r2-gGZ3Vq.MNp@e;AllowPublicKeyRetrieval=True;Database=object_store_stg;
 configMapGenerator:
 - name: config-env
   behavior: merge
   literals:
   - ASPNETCORE_ENVIRONMENT=Staging
-  - NGX_API_URL=https://holefeeder-staging.drifterapps.com
-  - NGX_REDIRECT_URL=https://holefeeder-staging.drifterapps.com
+  - NGX_API_URL=https://holefeeder-staging.drifterapps.app
+  - NGX_REDIRECT_URL=https://holefeeder-staging.drifterapps.app

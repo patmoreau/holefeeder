@@ -22,5 +22,5 @@ configMapGenerator:
   behavior: merge
   literals:
   - ASPNETCORE_ENVIRONMENT=Production
-  - NGX_API_URL=https://holefeeder.drifterapps.com
-  - NGX_REDIRECT_URL=https://holefeeder.drifterapps.com
+  - NGX_API_URL=https://holefeeder.drifterapps.app
+  - NGX_REDIRECT_URL=https://holefeeder.drifterapps.app

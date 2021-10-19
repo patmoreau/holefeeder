@@ -34,7 +34,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API
                 .WriteTo.Seq(Configuration["SEQ_Url"], apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
 
-            Log.Logger.Information("Web.Gateway started");
+            Log.Logger.Information("ObjectStore.API started");
             try
             {
                 CreateWebHostBuilder(args).Build().Run();

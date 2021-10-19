@@ -1,3 +1,6 @@
 - op: replace
+  path: /metadata/annotations/cert-manager.io/cluster-issuer
+  value: letsencrypt-prd
+- op: replace
   path: /spec/rules/0/host
-  value: holefeeder.drifterapps.com
+  value: holefeeder.drifterapps.app

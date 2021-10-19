@@ -10,7 +10,7 @@ spec:
   selector:
     app: holefeeder
     tier: ui
-  type: ClusterIP
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,8 +31,10 @@ spec:
         app: holefeeder
         tier: ui
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: holefeeder-web
+      - image: ghcr.io/drifterapps/holefeeder/holefeeder-web
         name: ui
         env:
         - name: NGX_API_URL
@@ -52,11 +54,11 @@ spec:
           name: ui
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "250m"
+            memory: 64Mi
+            cpu: 100m
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: 128Mi
+            cpu: 250m
         volumeMounts:
         - name: templates
           mountPath: /etc/nginx/templates

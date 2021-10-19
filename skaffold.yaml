@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta23
+apiVersion: skaffold/v2beta24
 kind: Config
 metadata:
   name: holefeeder
@@ -7,24 +7,24 @@ build:
     envTemplate:
       template: '{{.VERSION}}'
   artifacts:
-  - image: holefeeder-web
+  - image: ghcr.io/drifterapps/holefeeder/holefeeder-web
     context: .
     docker:
       dockerfile: src/Web/Holefeeder.Web/Dockerfile
-      buildArgs: 
-        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
-  - image: holefeeder-budgeting-api
+      buildArgs:
+        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+  - image: ghcr.io/drifterapps/holefeeder/holefeeder-budgeting-api
     context: .
     docker:
       dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
-      buildArgs: 
-        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
-  - image: holefeeder-object-store-api
+      buildArgs:
+        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+  - image: ghcr.io/drifterapps/holefeeder/holefeeder-object-store-api
     context: .
     docker:
       dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
-      buildArgs: 
-        holefeeder_version: '{{.ASSEMBLY_VERSION}}'
+      buildArgs:
+        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
 profiles:
   - name: cicd
     build:
@@ -32,9 +32,18 @@ profiles:
         push: false
     deploy: {}
   - name: dev
-    build:
-      local:
-        push: false
+    activation:
+      - kubeContext: minikube
+    patches:
+      - op: replace
+        path: /build/artifacts/0/docker/buildArgs/BUILD_VERSION
+        value: '99.99.99'
+      - op: replace
+        path: /build/artifacts/1/docker/buildArgs/BUILD_VERSION
+        value: '99.99.99'
+      - op: replace
+        path: /build/artifacts/2/docker/buildArgs/BUILD_VERSION
+        value: '99.99.99'
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]
@@ -46,6 +55,3 @@ profiles:
     deploy:
       kustomize:
         paths: ["kubernetes/prd"]
-deploy:
-  kustomize:
-    paths: ["kubernetes/dev"]

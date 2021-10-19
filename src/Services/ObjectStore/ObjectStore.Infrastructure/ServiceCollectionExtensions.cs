@@ -57,18 +57,18 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure
             using var scope = app.ApplicationServices.CreateScope();
 
             var databaseSettings = scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseSettings>();
-            var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
+            // var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
 
             lock (Locker)
             {
                 var connectionManager =
                     new MySqlConnectionManager(databaseSettings.ConnectionString);
 
-                EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
+                // EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
-                    .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
+                    // .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
                         () => connectionManager,

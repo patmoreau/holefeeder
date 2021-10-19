@@ -32,7 +32,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
                 .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
 
-            Log.Logger.Information("Web.Gateway started");
+            Log.Logger.Information("Budgeting.API started");
             try
             {
                 CreateWebHostBuilder(args).Build().Run();

@@ -75,8 +75,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
             var databaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
 
-            var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
-            var mongoDbMigration = scope.ServiceProvider.GetRequiredService<Script005MongoDbMigration>();
+            // var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
+            // var mongoDbMigration = scope.ServiceProvider.GetRequiredService<Script005MongoDbMigration>();
 
             lock (Locker)
             {
@@ -84,12 +84,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
                 var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
 
-                EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
+                // EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
-                    .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
-                    .WithScript(Script005MongoDbMigration.ScriptName, mongoDbMigration)
+                    // .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
+                    // .WithScript(Script005MongoDbMigration.ScriptName, mongoDbMigration)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
                         () => connectionManager,
