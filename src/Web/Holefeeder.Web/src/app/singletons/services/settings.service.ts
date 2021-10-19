@@ -13,7 +13,7 @@ import { startOfToday } from 'date-fns';
   providedIn: 'root'
 })
 export class SettingsService {
-  private basePath = 'object-store/api/v2/StoreItems';
+  private basePath = 'api/v2/object-store/StoreItems';
   private objectData: IObjectData;
   private settings$ = new BehaviorSubject<ISettings>(Object.assign(
     new Settings(),

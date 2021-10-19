@@ -10,7 +10,7 @@ import { TransferMoneyCommand } from '../transactions/transfer-money-command.mod
 
 @Injectable()
 export class TransactionsService {
-  private basePath = 'budgeting/api/v2/transactions';
+  private basePath = 'api/v2/budgeting-api/transactions';
 
   constructor(private upcomingService: UpcomingService, private api: ApiService) { }
 
