@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Kubernetes;
+
 using Serilog;
 
 namespace DrifterApps.Holefeeder.Web.Gateway
@@ -47,10 +51,13 @@ namespace DrifterApps.Holefeeder.Web.Gateway
                     options => Configuration.Bind("AzureAd", options));
             
             services.AddMvcCore(options => options.EnableEndpointRouting = false);
-            services.AddOcelot().AddCacheManager(x => x.WithDictionaryHandle());
+            
+            services.AddOcelot()
+                .AddKubernetesFixed()
+                .AddCacheManager(x => x.WithDictionaryHandle());
         }
 
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -62,7 +69,8 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             app.UseCors(MY_ALLOW_SPECIFIC_ORIGINS);
             
             app.UseSerilogRequestLogging();
-            await app.UseOcelot();
+            
+            app.UseOcelot().GetAwaiter().GetResult();
         }
     }
 }

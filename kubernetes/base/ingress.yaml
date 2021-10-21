@@ -11,6 +11,13 @@ spec:
       http:
         paths:
           - pathType: Prefix
+            path: /api
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+          - pathType: Prefix
             path: /
             backend:
               service:
@@ -19,5 +26,5 @@ spec:
                   number: 80
   tls: 
   - hosts: 
-    - test-app.com 
-    secretName: holefeeder-ui-tls
+    - holefeeder.test 
+    secretName: holefeeder-tls

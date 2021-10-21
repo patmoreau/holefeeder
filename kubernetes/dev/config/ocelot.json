@@ -3,12 +3,7 @@
       {
         "DownstreamPathTemplate": "/api/v2/{everything}",
         "DownstreamScheme": "http",
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "hf-budgeting",
-            "Port": 80
-          }
-        ],
+        "ServiceName": "budgeting-dev",
         "UpstreamPathTemplate": "/api/v2/budgeting-api/{everything}",
         "UpstreamHttpMethod": [
           "GET",
@@ -20,12 +15,7 @@
       {
         "DownstreamPathTemplate": "/api/v2/{everything}",
         "DownstreamScheme": "http",
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "hf-object-store",
-            "Port": 80
-          }
-        ],
+        "ServiceName": "object-store-dev",
         "UpstreamPathTemplate": "/api/v2/object-store/{everything}",
         "UpstreamHttpMethod": [
           "GET",
@@ -36,5 +26,9 @@
       }
     ],
     "GlobalConfiguration": {
+      "ServiceDiscoveryProvider": {
+        "Namespace": "holefeeder-dev",
+        "Type": "pollkube"
+      }
     }
   }

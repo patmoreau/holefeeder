@@ -50,10 +50,8 @@ namespace DrifterApps.Holefeeder.Web.Gateway
         private static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
-                .ConfigureAppConfiguration((host, config) =>
-                {
-                    config.AddJsonFile($"ocelot.json", false, true);
-                })
+                .ConfigureAppConfiguration((host, config) => config.AddJsonFile($"ocelot.json", false, true))
+                .UseDefaultServiceProvider(options => options.ValidateScopes = false)
                 .UseStartup<Startup>();
     }
 }

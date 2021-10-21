@@ -7,6 +7,12 @@ build:
     envTemplate:
       template: '{{.VERSION}}'
   artifacts:
+  - image: ghcr.io/drifterapps/holefeeder/holefeeder-gateway-web
+    context: .
+    docker:
+      dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
+      buildArgs:
+        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
   - image: ghcr.io/drifterapps/holefeeder/holefeeder-web
     context: .
     docker:
@@ -43,6 +49,9 @@ profiles:
         value: '99.99.99'
       - op: replace
         path: /build/artifacts/2/docker/buildArgs/BUILD_VERSION
+        value: '99.99.99'
+      - op: replace
+        path: /build/artifacts/3/docker/buildArgs/BUILD_VERSION
         value: '99.99.99'
     deploy:
       kustomize:
