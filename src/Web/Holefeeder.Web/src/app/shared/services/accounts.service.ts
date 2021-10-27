@@ -9,7 +9,7 @@ import { OpenAccountCommand } from '../accounts/open-account-command.model';
 
 @Injectable()
 export class AccountsService {
-  private basePath = 'api/v2/budgeting-api/accounts';
+  private basePath = 'accounts';
 
   constructor(private api: ApiService) {}
 
@@ -37,7 +37,7 @@ export class AccountsService {
       });
     }
     return this.api
-      .get(`${this.basePath}/get-accounts`, params)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-accounts`, params)
       .pipe(
         map(data =>
           Object.assign(
@@ -57,7 +57,7 @@ export class AccountsService {
 
   findOneByIdWithDetails(id: number | string): Promise<IAccount> {
     return this.api
-      .get(`${this.basePath}/${id}`)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/${id}`)
       .pipe(
         map(accountDetailFromServer)
       )
@@ -65,12 +65,12 @@ export class AccountsService {
   }
 
   open(account: OpenAccountCommand): Promise<void> {
-    return this.api.post(`${this.basePath}/open-account`, account)
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/open-account`, account)
          .toPromise();
   }
 
   modify(account: ModifyAccountCommand): Promise<void> {
-    return this.api.post(`${this.basePath}/modify-account`, account)
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/modify-account`, account)
          .toPromise();
   }
 }

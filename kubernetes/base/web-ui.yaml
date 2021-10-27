@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: ui
   labels:
-    app: holefeeder
+    app: ui
 spec:
   ports:
     - port: 80
   selector:
-    app: holefeeder
+    app: ui
     tier: ui
   type: NodePort
 ---
@@ -17,18 +17,18 @@ kind: Deployment
 metadata:
   name: ui
   labels:
-    app: holefeeder
+    app: ui
 spec:
   selector:
     matchLabels:
-      app: holefeeder
+      app: ui
       tier: ui
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: holefeeder
+        app: ui
         tier: ui
     spec:
       imagePullSecrets:

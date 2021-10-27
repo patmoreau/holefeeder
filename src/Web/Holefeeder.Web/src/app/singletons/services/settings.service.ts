@@ -13,7 +13,7 @@ import { startOfToday } from 'date-fns';
   providedIn: 'root'
 })
 export class SettingsService {
-  private basePath = 'api/v2/object-store/StoreItems';
+  private basePath = 'StoreItems';
   private objectData: IObjectData;
   private settings$ = new BehaviorSubject<ISettings>(Object.assign(
     new Settings(),
@@ -28,7 +28,7 @@ export class SettingsService {
 
   loadUserSettings() {
     this.api
-      .get(`${this.basePath}?filter=code:eq:settings`)
+      .get(`${this.api.objectStoreBasePath}/${this.basePath}?filter=code:eq:settings`)
       .pipe(
         filter(data => data.totalCount !== 0),
         map(data => Object.assign(new ObjectData(), data.items[0]) as IObjectData)
@@ -62,14 +62,14 @@ export class SettingsService {
         data: JSON.stringify(settingsToServer(settings))
       });
       await this.api
-        .post(`${this.basePath}/modify-store-item`, this.objectData)
+        .post(`${this.api.objectStoreBasePath}/${this.basePath}/modify-store-item`, this.objectData)
         .toPromise();
     } else {
       this.objectData = Object.assign(
         new ObjectData(),
         await this.api
           .post(
-            `${this.basePath}/create-store-item`,
+            `${this.api.objectStoreBasePath}/${this.basePath}/create-store-item`,
             Object.assign(new ObjectData(), {
               code: 'settings',
               data: JSON.stringify(settings)

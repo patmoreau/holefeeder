@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: gateway
   labels:
-    app: holefeeder
+    app: gateway
 spec:
   ports:
     - port: 80
   selector:
-    app: holefeeder
+    app: gateway
     tier: backend
   type: NodePort
 ---
@@ -17,18 +17,18 @@ kind: Deployment
 metadata:
   name: gateway
   labels:
-    app: holefeeder
+    app: gateway
 spec:
   selector:
     matchLabels:
-      app: holefeeder
+      app: gateway
       tier: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: holefeeder
+        app: gateway
         tier: backend
     spec:
       imagePullSecrets:
@@ -45,7 +45,20 @@ spec:
         - name: ASPNETCORE_URLS
           value: http://+
         - name: SEQ_Url
-          value: http://seq
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: SEQ_URL
+        - name: GlobalConfiguration__Hosts__BudgetingUrl
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: BUDGETING_URL
+        - name: GlobalConfiguration__Hosts__ObjectStoreUrl
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: OBJECT_STORE_URL
         ports:
         - containerPort: 80
           name: gateway
@@ -56,11 +69,3 @@ spec:
           limits:
             memory: 128Mi
             cpu: 250m
-        volumeMounts:
-        - name: ocelot-volume
-          mountPath: /app/ocelot.json
-          subPath: ocelot.json
-      volumes:
-      - name: ocelot-volume
-        configMap:
-          name: ocelot-config

@@ -1,18 +1,22 @@
 using System.Linq;
-using System.Threading.Tasks;
+
+using DrifterApps.Holefeeder.Web.Gateway.Ocelot;
+
+using HealthChecks.UI.Client;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Provider.Kubernetes;
 
 using Serilog;
 
@@ -44,6 +48,9 @@ namespace DrifterApps.Holefeeder.Web.Gateway
                 });
             });
             
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy());
+ 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(
                     options => options.TokenValidationParameters =
@@ -53,8 +60,9 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             services.AddMvcCore(options => options.EnableEndpointRouting = false);
             
             services.AddOcelot()
-                .AddKubernetesFixed()
                 .AddCacheManager(x => x.WithDictionaryHandle());
+            
+            services.ConfigureDownstreamHostAndPortsPlaceholders(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,9 +75,19 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             app.UseMvc();
             
             app.UseCors(MY_ALLOW_SPECIFIC_ORIGINS);
-            
+
+            app.UseRouting();
+
             app.UseSerilogRequestLogging();
-            
+                        
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+                {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+            });
+
             app.UseOcelot().GetAwaiter().GetResult();
         }
     }

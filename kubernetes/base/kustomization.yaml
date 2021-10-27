@@ -6,7 +6,8 @@ resources:
 - api-budgeting.yaml
 - api-object-store.yaml
 - web-gateway.yaml
-- ingress.yaml
+- api-ingress.yaml
+- ui-ingress.yaml
 configMapGenerator:
 - name: config-env
 - name: ui-config

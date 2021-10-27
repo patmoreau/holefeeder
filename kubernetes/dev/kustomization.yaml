@@ -24,6 +24,6 @@ configMapGenerator:
   - ASPNETCORE_ENVIRONMENT=Development
   - NGX_API_URL=https://holefeeder.test
   - NGX_REDIRECT_URL=https://holefeeder.test
-- name: ocelot-config
-  files:
-    - config/ocelot.json
+  - SEQ_URL=http://seq.default
+  - BUDGETING_URL=http://budgeting-dev
+  - OBJECT_STORE_URL=http://object-store-dev

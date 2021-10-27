@@ -3,32 +3,32 @@ kind: Service
 metadata:
   name: object-store
   labels:
-    app: holefeeder
+    app: object-store
 spec:
   ports:
     - port: 80
   selector:
-    app: holefeeder
+    app: object-store
     tier: backend
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: object-store
   labels:
-    app: holefeeder
+    app: object-store
 spec:
   selector:
     matchLabels:
-      app: holefeeder
+      app: object-store
       tier: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: holefeeder
+        app: object-store
         tier: backend
     spec:
       imagePullSecrets:

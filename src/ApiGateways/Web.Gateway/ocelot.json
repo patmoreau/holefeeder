@@ -1,54 +1,30 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v1/version/legacy",
+      "DownstreamPathTemplate": "/api/v2/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "legacy-api",
-          "Port": 80
+          "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/api/version/legacy",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "legacycaching"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "legacy-api",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/api/v1/{everything}",
+      "UpstreamPathTemplate": "/budgeting/api/v2/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "legacyeverythingcaching"
-      }
+      ]
     },
     {
-      "DownstreamPathTemplate": "/api/v2/{everything}",
+      "DownstreamPathTemplate": "/hc",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "budgeting-api",
-          "Port": 80
+          "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/api/v2/budgeting-api/{everything}",
+      "UpstreamPathTemplate": "/budgeting/hc",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -61,11 +37,26 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "object-store-api",
-          "Port": 80
+          "Host": "{ObjectStoreUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/api/v2/object-store/{everything}",
+      "UpstreamPathTemplate": "/object-store/api/v2/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/hc",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{ObjectStoreUrl}"
+        }
+      ],
+      "UpstreamPathTemplate": "/object-store/hc",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -75,5 +66,9 @@
     }
   ],
   "GlobalConfiguration": {
+    "Hosts": {
+      "BudgetingUrl": "http://localhost:5010",
+      "ObjectStoreUrl": "http://localhost:5020"
+    }
   }
 }

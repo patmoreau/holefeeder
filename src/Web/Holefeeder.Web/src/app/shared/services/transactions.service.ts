@@ -10,7 +10,7 @@ import { TransferMoneyCommand } from '../transactions/transfer-money-command.mod
 
 @Injectable()
 export class TransactionsService {
-  private basePath = 'api/v2/budgeting-api/transactions';
+  private basePath = 'transactions';
 
   constructor(private upcomingService: UpcomingService, private api: ApiService) { }
 
@@ -36,7 +36,7 @@ export class TransactionsService {
       });
     }
     return this.api
-      .get(`${this.basePath}/get-transactions`, params)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-transactions`, params)
       .pipe(
         map(data =>
           Object.assign(
@@ -56,7 +56,7 @@ export class TransactionsService {
 
   findOneById(id: number | string): Promise<ITransactionDetail> {
     return this.api
-      .get(`${this.basePath}/${id}`)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/${id}`)
       .pipe(
         map(transactionDetailFromServer)
       )
@@ -64,12 +64,12 @@ export class TransactionsService {
   }
 
   makePurchase(transaction: MakePurchaseCommand): Promise<void> {
-    return this.api.post(`${this.basePath}/make-purchase`, transaction)
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/make-purchase`, transaction)
          .toPromise();
   }
 
   transferMoney(transaction: TransferMoneyCommand): Promise<void> {
-    return this.api.post(`${this.basePath}/transfer-money`, transaction)
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/transfer-money`, transaction)
          .toPromise();
   }
 }

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+spec:
+  rules:
+    - host: holefeeder.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /gateway(/|$)(.*)
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+  ingressClassName: nginx
+  tls: 
+  - hosts: 
+    - holefeeder.test 
+    secretName: holefeeder-tls

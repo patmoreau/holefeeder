@@ -10,7 +10,7 @@ import {IUpcoming, upcomingFromServer} from "@app/shared/interfaces/upcoming.int
 
 @Injectable({providedIn: 'root'})
 export class UpcomingService {
-  private basePath = 'api/v2/budgeting-api/cashflows/get-upcoming';
+  private basePath = 'cashflows/get-upcoming';
 
   private period: IDateInterval;
 
@@ -28,7 +28,7 @@ export class UpcomingService {
   findUpcoming(period: IDateInterval): Observable<IUpcoming[]> {
     return this.api
       .get(
-        this.basePath,
+        `${this.api.budgetingBasePath}/${this.basePath}`,
         new HttpParams()
           .set('from', format(period.start, 'yyyy-MM-dd'))
           .set('to', format(period.end, 'yyyy-MM-dd'))

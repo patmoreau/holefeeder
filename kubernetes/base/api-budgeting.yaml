@@ -3,32 +3,32 @@ kind: Service
 metadata:
   name: budgeting
   labels:
-    app: holefeeder
+    app: budgeting
 spec:
   ports:
     - port: 80
   selector:
-    app: holefeeder
+    app: budgeting
     tier: backend
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: budgeting
   labels:
-    app: holefeeder
+    app: budgeting
 spec:
   selector:
     matchLabels:
-      app: holefeeder
+      app: budgeting
       tier: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: holefeeder
+        app: budgeting
         tier: backend
     spec:
       imagePullSecrets:

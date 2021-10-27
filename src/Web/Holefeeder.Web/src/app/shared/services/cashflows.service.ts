@@ -8,7 +8,7 @@ import { IPagingInfo } from '../interfaces/paging-info.interface';
 
 @Injectable()
 export class CashflowsService {
-  private basePath = 'api/v2/budgeting-api/cashflows';
+  private basePath = 'cashflows';
 
   constructor(private api: ApiService) { }
 
@@ -36,7 +36,7 @@ export class CashflowsService {
       });
     }
     return this.api
-      .get(`${this.basePath}/get-cashflows`, params)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-cashflows`, params)
       .pipe(
         map(data =>
           Object.assign(
@@ -56,7 +56,7 @@ export class CashflowsService {
 
   findOneById(id: number | string): Promise<ICashflowDetail> {
     return this.api
-      .get(`${this.basePath}/${id}`)
+      .get(`${this.api.budgetingBasePath}/${this.basePath}/${id}`)
       .pipe(
         map(cashflowDetailFromServer)
       )
@@ -65,7 +65,7 @@ export class CashflowsService {
 
   create(cashflow: ICashflow): Promise<ICashflow> {
     return this.api
-      .post(`${this.basePath}`, cashflowToServer(cashflow))
+      .post(`${this.api.budgetingBasePath}/${this.basePath}`, cashflowToServer(cashflow))
       .pipe(
         map(cashflowFromServer)
       )
@@ -77,7 +77,7 @@ export class CashflowsService {
     cashflow: ICashflow
   ): Promise<void> {
     return this.api
-      .put(`${this.basePath}/${id}`, cashflowToServer(cashflow))
+      .put(`${this.api.budgetingBasePath}/${this.basePath}/${id}`, cashflowToServer(cashflow))
       .toPromise();
   }
 }
