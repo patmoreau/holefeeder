@@ -49,8 +49,8 @@ spec:
         - name: HolefeederDatabaseSettings__ConnectionString
           valueFrom:
             secretKeyRef:
-              name: budgeting
-              key: connection-string
+              name: holefeeder-secrets
+              key: BUDGETING_CONNECTION_STRING
         ports:
         - containerPort: 80
           name: budgeting

@@ -11,12 +11,10 @@ patchesJson6902:
    name: holefeeder
   path: namespace-patch.yaml
 secretGenerator:
-- name: budgeting
-  literals:
-  - connection-string=Server=mysql.default;Port=3306;User Id=holefeeder_user;Password=drifterapps123;AllowPublicKeyRetrieval=True;Database=budgeting_dev;
-- name: object-store
-  literals:
-  - connection-string=Server=mysql.default;Port=3306;User Id=holefeeder_user;Password=drifterapps123;AllowPublicKeyRetrieval=True;Database=object_store_dev;
+- name: holefeeder-secrets
+  behavior: replace
+  envs:
+  - .env.secrets
 configMapGenerator:
 - name: config-env
   behavior: merge

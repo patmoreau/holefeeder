@@ -49,8 +49,8 @@ spec:
         - name: ObjectStoreDatabaseSettings__ConnectionString
           valueFrom:
             secretKeyRef:
-              name: object-store
-              key: connection-string
+              name: holefeeder-secrets
+              key: OBJECT_STORE_CONNECTION_STRING
         ports:
         - containerPort: 80
           name: object-store

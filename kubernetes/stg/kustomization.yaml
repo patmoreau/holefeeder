@@ -16,13 +16,17 @@ patchesJson6902:
     kind: Ingress
     name: ui
   path: ingress_patch.yaml
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: api
+  path: ingress_patch.yaml
 secretGenerator:
-- name: budgeting
-  literals:
-  - connection-string=Server=mysql.default;Port=3306;User Id=holefeeder-stg-user;Password=g_PMJEkm8r2-gGZ3Vq.MNp@e;AllowPublicKeyRetrieval=True;Database=budgeting_stg;
-- name: object-store
-  literals:
-  - connection-string=Server=mysql.default;Port=3306;User Id=holefeeder-stg-user;Password=g_PMJEkm8r2-gGZ3Vq.MNp@e;AllowPublicKeyRetrieval=True;Database=object_store_stg;
+- name: holefeeder-secrets
+  behavior: replace
+  envs:
+  - .env.secrets
 configMapGenerator:
 - name: config-env
   behavior: merge
