@@ -4,9 +4,9 @@ on:
   workflow_run:
     workflows: 
     - continuous_integration
-    branches:
-    - main
-    - master
+    # branches:
+    # - main
+    # - master
     types: 
       - completed
 
