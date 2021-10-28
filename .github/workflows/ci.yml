@@ -110,7 +110,7 @@ jobs:
       run: |
         docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/src/WebApplication1.UnitTests/TestResults/ $(Build.ArtifactStagingDirectory)/testresults 
+        docker cp testcontainer:/tests/ $(Build.ArtifactStagingDirectory)/testresults 
         docker rm -fv testcontainer
 
     # - name: budgeting api functional tests
