@@ -1,14 +1,14 @@
-name: holefeeder ci/cd
+name: continuous_integration
 
-# on:
-#   pull_request:
-#     branches:
-#     - main
-#     - master
+on:
+  pull_request:
+    branches:
+    - main
+    - master
 
-#     paths-ignore:
-#     - 'proxy/**'
-#     - 'docs/**'
+    paths-ignore:
+    - 'proxy/**'
+    - 'docs/**'
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
@@ -72,11 +72,13 @@ jobs:
         kustomize: '4.4.0'
         skaffold: '1.32.0'
     
-    - name: Build
-      run: |
-        skaffold build -p cicd --default-repo ${{ env.DOCKER_REGISTRY }}
+    # - name: Build
+    #   run: |
+    #     skaffold build -p cicd --default-repo ${{ env.DOCKER_REGISTRY }}
+
     # - name: build containers
-    #   run: docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
+    #   run: docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile -t /holefeeder-gateway-web .
+    #   docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
 
     # - name: budget api unit tests
     #   if: ${{ success() }}
