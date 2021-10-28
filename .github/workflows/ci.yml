@@ -109,23 +109,23 @@ jobs:
       run: |
         docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/tests/ ./testresults 
+        docker cp testcontainer:/testresults/ ./testresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
         docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/tests/ ./testresults 
+        docker cp testcontainer:/testresults/ ./testresults 
         docker rm -fv testcontainer
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1.6
-      # if: ${{ success() }}
+      if: ${{ always() }}
       with:
         check_name: unit-test-results
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: tests-results/*.junit.xml
+        files: ./testsresults/*.junit.xml
 
     - name: setup .NET core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v1
@@ -137,7 +137,7 @@ jobs:
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
       if: ${{ always() }}
       with:
-        reports: 'testsresults/*/coverage.cobertura.xml'
+        reports: './testsresults/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'

@@ -42,11 +42,11 @@ RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM build as unittests
 WORKDIR /src/src/Services/Budgeting/Budgeting.UnitTests
-RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/budgeting-unit-tests-results.xml" --logger "html;LogFileName=/tests/budgeting-unit-tests-results.html" --logger "junit;LogFileName=/tests/budgeting-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
+RUN dotnet test --no-restore -c Release --results-directory /testresults --logger "trx;LogFileName=/testresults/budgeting-unit-tests-results.xml" --logger "html;LogFileName=/testresults/budgeting-unit-tests-results.html" --logger "junit;LogFileName=/testresults/budgeting-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build as functionaltests
 WORKDIR /src/src/Services/Budgeting/Budgeting.FunctionalTests
-RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/budgeting-functional-tests-results.xml" --logger "html;LogFileName=/tests/budgeting-functional-tests-results.html" --logger "junit;LogFileName=/tests/budgeting-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
+RUN dotnet test --no-restore -c Release --results-directory /testresults --logger "trx;LogFileName=/testresults/budgeting-functional-tests-results.xml" --logger "html;LogFileName=/testresults/budgeting-functional-tests-results.html" --logger "junit;LogFileName=/testresults/budgeting-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build AS publish
 
