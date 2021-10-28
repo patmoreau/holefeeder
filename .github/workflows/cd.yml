@@ -2,8 +2,11 @@ name: continuous_deployment
 
 on:
   workflow_run:
-    workflows: [continuous_integration]
-    # branches: [main, master]
+    workflows: 
+    - continuous_integration
+    branches:
+    - main
+    - master
     types: 
       - completed
 
