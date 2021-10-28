@@ -1,7 +1,7 @@
 FROM nginx:alpine as base
 RUN apk update && apk add jq
 
-FROM node as restore
+FROM node:16.12 as restore
 WORKDIR /app
 COPY src/Web/Holefeeder.Web/package*.json ./
 RUN npm install
