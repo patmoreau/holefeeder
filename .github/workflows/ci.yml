@@ -52,7 +52,7 @@ jobs:
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
   build:
-    name: build, test and package
+    name: build
     runs-on: ubuntu-latest
     needs: set-version
     env:
@@ -76,13 +76,42 @@ jobs:
     #   run: |
     #     skaffold build -p cicd --default-repo ${{ env.DOCKER_REGISTRY }}
 
-    - name: build containers
+    - name: build Web.Gateway container
       run: |
         docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
 
-    # - name: budget api unit tests
-    #   if: ${{ success() }}
-    #   run: docker-compose -f docker-compose-tests.yml -f docker-compose-tests.override.yml run budgeting-api-unit-test
+    - name: build Budgeting.API container
+      run: |
+        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }} .
+
+    - name: build ObjectStore.API container
+      run: |
+        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }} .
+
+    - name: build Holefeeder.Web container
+      run: |
+        docker build -f ./src/Web/Holefeeder.Web/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }} .
+
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    needs:
+    - set-version
+    - build
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Budgetin.API unit tests
+      if: ${{ success() }}
+      run: |
+        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unitests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
+        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        docker cp testcontainer:/src/WebApplication1.UnitTests/TestResults/ $(Build.ArtifactStagingDirectory)/testresults 
+        docker rm -fv testcontainer
 
     # - name: budgeting api functional tests
     #   if: ${{ success() }}
