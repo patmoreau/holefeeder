@@ -42,11 +42,11 @@ RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM build as unittests
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.UnitTests
-RUN dotnet test --no-restore -c Release --results-directory /testresults --logger "trx;LogFileName=/testresults/object-store-unit-tests-results.xml" --logger "html;LogFileName=/testresults/object-store-unit-tests-results.html" --logger "junit;LogFileName=/testresults/object-store-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
+RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/object-store-unit-tests-results.xml" --logger "html;LogFileName=/testsresults/object-store-unit-tests-results.html" --logger "junit;LogFileName=/testsresults/object-store-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build as functionaltests
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.FunctionalTests
-RUN dotnet test --no-restore -c Release --results-directory /testresults --logger "trx;LogFileName=/testresults/object-store-functional-tests-results.xml" --logger "html;LogFileName=/testresults/object-store-functional-tests-results.html" --logger "junit;LogFileName=/testresults/object-store-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
+RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/object-store-functional-tests-results.xml" --logger "html;LogFileName=/testsresults/object-store-functional-tests-results.html" --logger "junit;LogFileName=/testsresults/object-store-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build AS publish
 

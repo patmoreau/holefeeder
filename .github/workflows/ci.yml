@@ -14,7 +14,7 @@ env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
 
 jobs:
-  
+
   set-version:
     name: Set version
     runs-on: ubuntu-latest
@@ -53,7 +53,7 @@ jobs:
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
   build:
-    name: Build
+    name: Build and unit tests
     runs-on: ubuntu-latest
     needs: set-version
     env:
@@ -97,14 +97,14 @@ jobs:
       run: |
         docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/testresults/ ./testresults 
+        docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
         docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/testresults/ ./testresults 
+        docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: Publish Unit Test Results
@@ -125,7 +125,7 @@ jobs:
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
       if: ${{ always() }}
       with:
-        reports: './testsresults/*/coverage.cobertura.xml'
+        reports: 'testsresults/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'
