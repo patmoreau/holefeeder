@@ -42,7 +42,7 @@ RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM build as unittests
 WORKDIR /src/src/Services/Budgeting/Budgeting.UnitTests
-RUN dotnet test --no-restore --no-build --configuration=Release --results-directory=/tests --logger=trx;LogFileName=/tests/object-store-unit-test-results.xml --logger=html;LogFileName=/tests/object-store-unit-test-results.html --logger=junit;LogFileName=/tests/object-store-unit-test-results.junit.xml --collect='XPlat Code Coverage'
+RUN dotnet test --no-restore --no-build --configuration Release --results-directory /tests --logger "trx;LogFileName=/tests/object-store-unit-test-results.xml" --logger "html;LogFileName=/tests/object-store-unit-test-results.html" --logger "junit;LogFileName=/tests/object-store-unit-test-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build as functionaltests
 WORKDIR /src/src/Services/Budgeting/Budgeting.FunctionalTests

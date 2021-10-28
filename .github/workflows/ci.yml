@@ -78,19 +78,19 @@ jobs:
 
     - name: build Web.Gateway container
       run: |
-        docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
+        docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
 
     - name: build Budgeting.API container
       run: |
-        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }} .
+        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }} .
 
     - name: build ObjectStore.API container
       run: |
-        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }} .
+        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }} .
 
     - name: build Holefeeder.Web container
       run: |
-        docker build -f ./src/Web/Holefeeder.Web/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }} .
+        docker build -f ./src/Web/Holefeeder.Web/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }} .
 
   tests:
     name: tests
