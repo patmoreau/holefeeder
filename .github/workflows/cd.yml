@@ -6,3 +6,18 @@ on:
     branches: [main, master]
     types: 
       - completed
+
+env:
+  DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: test
+      run: echo test
