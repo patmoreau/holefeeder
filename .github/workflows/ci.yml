@@ -15,7 +15,7 @@ env:
 
 jobs:
   set-version:
-    name: build version
+    name: set version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.gitversion.outputs.majorMinorPatch }}
@@ -76,9 +76,9 @@ jobs:
     #   run: |
     #     skaffold build -p cicd --default-repo ${{ env.DOCKER_REGISTRY }}
 
-    # - name: build containers
-    #   run: docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile -t /holefeeder-gateway-web .
-    #   docker-compose build --build-arg holefeeder_version=${{ env.VERSION }}
+    - name: build containers
+      run: |
+        docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
 
     # - name: budget api unit tests
     #   if: ${{ success() }}
