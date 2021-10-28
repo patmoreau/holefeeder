@@ -38,20 +38,17 @@ ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /src
 COPY src/. src/.
 WORKDIR /src/src/Services/Budgeting/Budgeting.API
-RUN dotnet build /property:Version=${VERSION} --no-restore -c Release -o /app
+RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM build as unittests
 WORKDIR /src/src/Services/Budgeting/Budgeting.UnitTests
-RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/object-store-unit-test-results.xml" --logger "html;LogFileName=/tests/object-store-unit-test-results.html" --logger "junit;LogFileName=/tests/object-store-unit-test-results.junit.xml" --collect "XPlat Code Coverage"
+RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/budgeting-unit-tests-results.xml" --logger "html;LogFileName=/tests/budgeting-unit-tests-results.html" --logger "junit;LogFileName=/tests/budgeting-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build as functionaltests
 WORKDIR /src/src/Services/Budgeting/Budgeting.FunctionalTests
+RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/budgeting-functional-tests-results.xml" --logger "html;LogFileName=/tests/budgeting-functional-tests-results.html" --logger "junit;LogFileName=/tests/budgeting-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build AS publish
-ARG BUILD_VERSION=99.99.99
-ARG VERSION=${BUILD_VERSION:-99.99.99}
-WORKDIR /src/src/Services/Budgeting/Budgeting.API
-RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

@@ -40,11 +40,13 @@ COPY src/. src/.
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.API
 RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
-FROM build as unittest
+FROM build as unittests
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.UnitTests
+RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/object-store-unit-tests-results.xml" --logger "html;LogFileName=/tests/object-store-unit-tests-results.html" --logger "junit;LogFileName=/tests/object-store-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
-FROM build as functionaltest
+FROM build as functionaltests
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.FunctionalTests
+RUN dotnet test --no-restore -c Release --results-directory /tests --logger "trx;LogFileName=/tests/object-store-functional-tests-results.xml" --logger "html;LogFileName=/tests/object-store-functional-tests-results.html" --logger "junit;LogFileName=/tests/object-store-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
 
 FROM build AS publish
 
