@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>DrifterApps.Holefeeder.Budgeting.Domain</RootNamespace>
-        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

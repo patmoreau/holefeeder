@@ -1,68 +1,14 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v1/version/legacy",
+      "DownstreamPathTemplate": "/api/v2/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "legacy-api",
-          "Port": 80
+          "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/api/version/legacy",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "legacycaching"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "legacy-api",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/api/v1/{everything}",
-      "UpstreamHttpMethod": [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE"
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "legacyeverythingcaching"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/v2/cashflows/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "budgeting-api",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/api/v2/cashflows/{everything}",
-      "UpstreamHttpMethod": [
-        "GET"
-      ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v2/StoreItems/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "object-store-api",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/api/v2/StoreItems/{everything}",
+      "UpstreamPathTemplate": "/budgeting/api/v2/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -71,24 +17,58 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/api/v2/version/transactions",
+      "DownstreamPathTemplate": "/hc",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "budgeting-api",
-          "Port": 80
+          "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/api/version/transactions",
+      "UpstreamPathTemplate": "/budgeting/hc",
       "UpstreamHttpMethod": [
-        "GET"
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v2/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{ObjectStoreUrl}"
+        }
       ],
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "transactionscaching"
-      }
+      "UpstreamPathTemplate": "/object-store/api/v2/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/hc",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{ObjectStoreUrl}"
+        }
+      ],
+      "UpstreamPathTemplate": "/object-store/hc",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
     }
   ],
   "GlobalConfiguration": {
+    "Hosts": {
+      "BudgetingUrl": "http://localhost:5010",
+      "ObjectStoreUrl": "http://localhost:5020"
+    }
   }
 }

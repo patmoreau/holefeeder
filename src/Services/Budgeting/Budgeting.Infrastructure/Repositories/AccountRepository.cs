@@ -1,72 +1,106 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using AutoMapper;
+
+using Dapper;
+
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
-using DrifterApps.Holefeeder.Framework.Mongo.SeedWork;
-using DrifterApps.Holefeeder.Framework.SeedWork;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
-using MongoDB.Driver;
+using Framework.Dapper.SeedWork.Extensions;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        public IUnitOfWork UnitOfWork { get; }
-        private readonly IMongoDbContext _mongoDbContext;
+        private readonly IHolefeederContext _context;
         private readonly IMapper _mapper;
 
-        
-        public AccountRepository(IUnitOfWork unitOfWork, IMongoDbContext mongoDbContext, IMapper mapper)
+        public IUnitOfWork UnitOfWork => _context;
+
+        public AccountRepository(IHolefeederContext context, IMapper mapper)
         {
-            UnitOfWork = unitOfWork.ThrowIfNull(nameof(mapper));
-            _mongoDbContext = mongoDbContext.ThrowIfNull(nameof(mongoDbContext));
-            _mapper = mapper.ThrowIfNull(nameof(mapper));
+            _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Account>> FindAsync(QueryParams queryParams, CancellationToken cancellationToken = default)
+        public async Task<Account> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
         {
-            queryParams.ThrowIfNull(nameof(queryParams));
-            
-            var collection = await _mongoDbContext.GetAccountsAsync(cancellationToken);
+            var connection = _context.Connection;
 
-            var accounts = await collection
-                .AsQueryable()
-                .Filter(queryParams.Filter)
-                .Sort(queryParams.Sort)
-                .Offset(queryParams.Offset)
-                .Limit(queryParams.Limit)
-                .ToListAsync(cancellationToken);
-            
-            return _mapper.Map<IEnumerable<Account>>(accounts);
+            var cashflows = new List<Guid>();
+
+            var account = (await connection
+                .QueryAsync<AccountEntity, Guid?, AccountEntity>(@"
+SELECT 
+    a.*, c.id
+FROM accounts a
+LEFT OUTER JOIN cashflows c on c.account_id = a.id
+WHERE a.id = @Id AND a.user_id = @UserId;
+",
+                    (account, cashflowId) =>
+                    {
+                        if (cashflowId is not null)
+                        {
+                            cashflows.Add(cashflowId.Value);
+                        }
+
+                        return account;
+                    },
+                    new { Id = id, UserId = userId },
+                    splitOn: "id")
+                .ConfigureAwait(false))
+                .Distinct()
+                .Single();
+
+            return _mapper.Map<Account>(account) with { Cashflows = cashflows.ToImmutableList()};
         }
 
-        public Task<Account> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Account> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var connection = _context.Connection;
+
+            var schema = await connection
+                .FindAsync<AccountEntity>(new {Name = name, UserId = userId})
+                .ConfigureAwait(false);
+
+            return _mapper.Map<Account>(schema.FirstOrDefault());
         }
 
-        public async Task CreateAsync(Account account, CancellationToken cancellationToken = default)
+        public async Task SaveAsync(Account account, CancellationToken cancellationToken)
         {
-            var schema = _mapper.Map<AccountSchema>(account);
+            var transaction = _context.Transaction;
 
-            var collection = await _mongoDbContext.GetAccountsAsync(cancellationToken);
+            var id = account.Id;
+            var userId = account.UserId;
 
-            _mongoDbContext.AddCommand(async () =>
+            var entity = await FindAsync(transaction.Connection, id, userId);
+
+            if (entity is null)
             {
-                await collection.InsertOneAsync(schema, new InsertOneOptions {BypassDocumentValidation = false},
-                    cancellationToken);
-            });
+                await transaction.InsertAsync(_mapper.Map<AccountEntity>(account))
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await transaction.UpdateAsync(_mapper.Map(account, entity)).ConfigureAwait(false);
+            }
         }
 
-        public Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
+        private static async Task<AccountEntity> FindAsync(IDbConnection connection, Guid id, Guid userId)
         {
-            throw new NotImplementedException();
+            var schema = await connection
+                .FindByIdAsync<AccountEntity>(new {Id = id, UserId = userId})
+                .ConfigureAwait(false);
+            return schema;
         }
     }
 }

@@ -1,0 +1,111 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+  <a class="navbar-brand mr-auto mr-lg-0" routerLink="/"><img src="../../../assets/images/favicon.png" width="40"
+      height="40" class="d-inline-block align-top" alt="" /></a>
+
+  <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas"
+    (click)="isNavbarCollapsed = !isNavbarCollapsed" [attr.aria-expanded]="!isNavbarCollapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault" [class.open]="!isNavbarCollapsed">
+    <ng-container *ngIf="loggedIn">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
+            (click)="isNavbarCollapsed = !isNavbarCollapsed">
+            <fa-icon class="pb-1" [icon]="faTachometerAlt" aria-hidden="true"></fa-icon>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/accounts']" routerLinkActive="active"
+            (click)="isNavbarCollapsed = !isNavbarCollapsed">
+            <fa-icon class="pb-1" [icon]="faUniversity" aria-hidden="true"></fa-icon>
+            Accounts
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/cashflows']" routerLinkActive="active"
+            (click)="isNavbarCollapsed = !isNavbarCollapsed">
+            <fa-icon class="pb-1" [icon]="faFileInvoiceDollar" aria-hidden="true"></fa-icon>
+            Cashflows
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/statistics']" routerLinkActive="active"
+            (click)="isNavbarCollapsed = !isNavbarCollapsed">
+            <fa-icon class="pb-1" [icon]="faChartPie" aria-hidden="true"></fa-icon>
+            Statistics
+          </a>
+        </li>
+      </ul>
+    </ng-container>
+    <form class="form-inline my-2 my-lg-0">
+      <ng-container *ngIf="loggedIn">
+        <button type="button" class="btn btn-outline-secondary mr-sm-2" (click)="open(datePicker)">
+          {{ period?.start | date }} - {{ period?.end | date }}
+          <fa-icon [icon]="faAngleDown" aria-hidden="true"></fa-icon>
+        </button>
+        <div ngbDropdown display="dynamic" class="nav-item dropdown my-2 my-sm-0">
+          <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">{{profile?.name}}</a>
+          <div ngbDropdownMenu class="downdown-menu" aria-labelledby="dropdownUser">
+            <a class="dropdown-item" [routerLink]="['/settings']"
+               (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>
+            <a class="dropdown-item" [href]="'/healthchecks-ui'" appExternalUrl
+               (click)="isNavbarCollapsed = !isNavbarCollapsed">Health Checks</a>
+            <a class="dropdown-item" (click)="logout()">Log out</a>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</nav>
+<ng-template #datePicker let-modal>
+  <div class="modal-header bg-light">
+    <h4 class="modal-title" id="modal-basic-title">Period selection</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body bg-light">
+    <form>
+      <div class="form-group">
+        <div class="d-md-none d-flex bd-highlight justify-content-center">
+          <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="t"
+            [firstDayOfWeek]=7 outsideDays="hidden">
+          </ngb-datepicker>
+        </div>
+        <div class="d-none d-md-block">
+          <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+            [firstDayOfWeek]=7 outsideDays="hidden">
+          </ngb-datepicker>
+        </div>
+        <div class="d-flex p-1 justify-content-center">
+          <button type="button" class="btn btn-outline-lighter" (click)="previousPeriod()" ngbTooltip="Previous period">
+            <fa-icon [icon]="faCalendarMinus" aria-hidden="true"></fa-icon>
+          </button>
+          <button type="button" class="btn btn-outline-lighter ml-3" (click)="currentPeriod()"
+            ngbTooltip="Current period">
+            <fa-icon [icon]="faCalendarCheck" aria-hidden="true"></fa-icon>
+          </button>
+          <button type="button" class="btn btn-outline-lighter ml-3" (click)="nextPeriod()" ngbTooltip="Next period">
+            <fa-icon [icon]="faCalendarPlus" aria-hidden="true"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer bg-light">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Set click')">
+      Set
+    </button>
+  </div>
+</ng-template>
+<ng-template #t let-date let-focused="focused">
+  <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+    (mouseleave)="hoveredDate = null">
+    {{ date.day }}
+  </span>
+</ng-template>

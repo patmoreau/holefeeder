@@ -1,65 +1,60 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+
 using AutoMapper;
+
+using Dapper;
+using Dapper.Transaction;
+
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Transaction = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext.Transaction;
+using Framework.Dapper.SeedWork.Extensions;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        public IUnitOfWork UnitOfWork { get; }
-        private readonly IMongoDbContext _mongoDbContext;
+        private readonly IHolefeederContext _context;
         private readonly IMapper _mapper;
 
+        public IUnitOfWork UnitOfWork => _context;
 
-        public TransactionRepository(IUnitOfWork unitOfWork, IMongoDbContext mongoDbContext, IMapper mapper)
+        public TransactionRepository(IHolefeederContext context, IMapper mapper)
         {
-            UnitOfWork = unitOfWork.ThrowIfNull(nameof(mapper));
-            _mongoDbContext = mongoDbContext.ThrowIfNull(nameof(mongoDbContext));
-            _mapper = mapper.ThrowIfNull(nameof(mapper));
+            _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<Transaction> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Transaction> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
+            _mapper.Map<Transaction>(await _context.Connection
+                .FindByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+                .ConfigureAwait(false));
+
+        public async Task SaveAsync(Transaction transaction, CancellationToken cancellationToken)
         {
-            var collection = await _mongoDbContext.GetTransactionsAsync(cancellationToken);
-            var schema = collection.AsQueryable().Where(t => t.Id == id).SingleOrDefaultAsync(cancellationToken);
+            var id = transaction.Id;
+            var userId = transaction.UserId;
 
-            return _mapper.Map<Transaction>(schema);
-        }
+            var connection = _context.Transaction;
 
-        public async Task CreateAsync(Transaction transaction, CancellationToken cancellationToken = default)
-        {
-            var schema = _mapper.Map<TransactionSchema>(transaction);
+            var entity = await connection.FindByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+                .ConfigureAwait(false);
 
-            var collection = await _mongoDbContext.GetTransactionsAsync(cancellationToken);
-
-            _mongoDbContext.AddCommand(async () =>
+            if (entity is null)
             {
-                await collection.InsertOneAsync(schema, new InsertOneOptions {BypassDocumentValidation = false},
-                    cancellationToken);
-            });
-        }
-
-        public Task UpdateAsync(Transaction account, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> IsAccountActive(Guid id, CancellationToken cancellationToken)
-        {
-            var collection = await _mongoDbContext.GetAccountsAsync(cancellationToken);
-
-            return await collection.AsQueryable()
-                .AnyAsync(a => a.Id == id && !a.Inactive, cancellationToken: cancellationToken);
+                entity = _mapper.Map<TransactionEntity>(transaction);
+                await _context.Transaction.InsertAsync(entity).ConfigureAwait(false);
+            }
+            else
+            {
+                entity = _mapper.Map(transaction, entity);
+                await _context.Transaction.UpdateAsync(entity).ConfigureAwait(false);
+            }
         }
     }
 }

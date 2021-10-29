@@ -1,7 +1,7 @@
 using AutoMapper;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
-using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Schemas;
+using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure
 {
@@ -9,8 +9,8 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure
     {
         public MappingProfile()
         {
-            CreateMap<StoreItemSchema, StoreItemViewModel>().ReverseMap();
-            CreateMap<StoreItemSchema, StoreItem>().ReverseMap();
+            CreateMap<StoreItemEntity, StoreItem>().ReverseMap();
+            CreateMap<StoreItemEntity, StoreItemViewModel>();
         }
     }
 }

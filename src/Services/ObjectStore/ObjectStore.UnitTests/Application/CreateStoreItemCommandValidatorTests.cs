@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using DrifterApps.Holefeeder.ObjectStore.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+﻿using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
 using DrifterApps.Holefeeder.ObjectStore.Application.Validators;
 
 using FluentValidation.TestHelper;
@@ -18,25 +13,26 @@ namespace ObjectStore.UnitTests.Application
 {
     public class CreateStoreItemCommandValidatorTests
     {
-        private readonly ILogger<CreateStoreItemCommandValidator> _logger;
-        
+        private readonly CreateStoreItemCommandValidator _validator;
+
         public CreateStoreItemCommandValidatorTests()
         {
-            _logger = Substitute.For<ILogger<CreateStoreItemCommandValidator>>();
+            var logger = Substitute.For<ILogger<CreateStoreItemCommandValidator>>();
+            _validator = new CreateStoreItemCommandValidator(logger);
         }
-        
+
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenCodeIsEmpty_ThenShouldHaveError()
         {
-            var validator = new CreateStoreItemCommandValidator(_logger);
-            validator.ShouldHaveValidationErrorFor(m => m.Code, null as string);
+            var result = _validator.TestValidate(new CreateStoreItemCommand { Code = null });
+            result.ShouldHaveValidationErrorFor(m => m.Code);
         }
 
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenDataIsEmpty_ThenShouldHaveError()
         {
-            var validator = new CreateStoreItemCommandValidator(_logger);
-            validator.ShouldHaveValidationErrorFor(m => m.Data, null as string);
+            var result = _validator.TestValidate(new CreateStoreItemCommand { Data = null });
+            result.ShouldHaveValidationErrorFor(m => m.Data);
         }
     }
 }

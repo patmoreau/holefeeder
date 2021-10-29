@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
@@ -9,7 +10,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
     [Route("api/v2/[controller]")]
     public class VersionController : ControllerBase
     {
-        [HttpGet("transactions")]
+        [HttpGet]
         public async Task<IActionResult> GetAsync(CancellationToken cancellationToken = default)
         {
             return await Task.Run(() =>
@@ -26,9 +27,8 @@ namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
                     Version = assembly.GetName().Version?.ToString() ?? "unknown",
                     AssemblyFileVersion =
                         assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "unknown",
-                    AssemblyInformationalVersion =
-                        assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                            ?.InformationalVersion ?? "unknown",
+                    AssemblyInformationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                        ?.InformationalVersion ?? "unknown",
                     ServerDateTime = DateTime.Now
                 };
 

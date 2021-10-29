@@ -1,0 +1,136 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, closed]
+
+    paths-ignore:
+    - 'proxy/**'
+    - 'docs/**'
+
+env:
+  DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
+
+jobs:
+
+  set-version:
+    name: Set version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.gitversion.outputs.majorMinorPatch }}
+      assembly-version: ${{ steps.gitversion.outputs.semVer }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Disable workflow commands
+        run: |
+          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.10
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.10
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+
+      - name: Enable workflow commands
+        run: |
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
+
+  build:
+    name: Build and unit tests
+    runs-on: ubuntu-latest
+    needs: set-version
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+    steps:
+
+    - uses: actions/checkout@v2
+    
+    - name: Build Web.Gateway container
+      run: |
+        docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
+
+    - name: Build Budgeting.API container
+      run: |
+        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }} .
+
+    - name: Build ObjectStore.API container
+      run: |
+        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }} .
+
+    - name: Build Holefeeder.Web container
+      run: |
+        docker build -f ./src/Web/Holefeeder.Web/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }} .
+
+    - name: Budgeting.API unit tests
+      run: |
+        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
+        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        docker cp testcontainer:/testsresults/ ./testsresults 
+        docker rm -fv testcontainer
+
+    - name: ObjectStore.API unit tests
+      run: |
+        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }} .
+        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        docker cp testcontainer:/testsresults/ ./testsresults 
+        docker rm -fv testcontainer
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: ${{ always() }}
+      with:
+        check_name: unit-test-results
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: ./testsresults/**/*.junit.xml
+
+    - name: Setup .NET core
+      uses: actions/setup-dotnet@v1
+      if: ${{ always() }}
+      with:
+        dotnet-version: 5.0.301
+
+    - name: Report generator
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
+      if: ${{ always() }}
+      with:
+        reports: 'testsresults/*/coverage.cobertura.xml'
+        targetdir: 'coveragereport'
+        sourcedirs: 'src/'
+        reporttypes: 'HtmlInline;Cobertura'
+        tag: '${{ github.run_number }}_${{ github.run_id }}'
+
+    - name: Upload coverage report artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: coverage-report
+        path: coveragereport
+
+    - name: Docker login
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.DOCKER_REGISTRY }} -u DrifterApps --password-stdin
+
+    - name: push containers
+      if: ${{ github.event.pull_request.merged == true && success() }}
+      run: |
+        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
+        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
+        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}

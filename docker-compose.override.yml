@@ -2,72 +2,44 @@ version: '3.4'
 
 services:
 
-  seq:
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - '5341:80'
-  
-  nosql-data:
-    hostname: nosql-data
-    environment:
-      MONGO_REPLICA_SET_NAME: rs0
-      MONGO_INITDB_ROOT_USERNAME: drifterapps
-      MONGO_INITDB_ROOT_PASSWORD: drifterapps
-      MONGO_INITDB_USERNAME: holefeederApi
-      MONGO_INITDB_PASSWORD: holefeederApi
-      MONGO_INITDB_DATABASE: holefeeder
-    ports:
-      - '27017:27017'
-    volumes:
-      - ./mongo/mongod.conf:/etc/mongod.conf
-      - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u drifterapps -p drifterapps --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: [ "-f", "/etc/mongod.conf", "--replSet", "rs0", "--bind_ip_all" ]
-
   gateway-web:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+
-      - SEQ_Url=http://seq
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+
+      SEQ_Url: ${SEQ_URL}
     ports:
       - '5200:80'
   
   budgeting-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
-      - HolefeederDatabaseSettings__Database=holefeeder
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      SEQ_Url: ${SEQ_URL}
+      HolefeederDatabaseSettings:ConnectionString: Server=${MYSQL_SERVER};Port=${MYSQL_PORT};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=holefeeder;
     ports:
       - '5100:80'
 
   object-store-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
-      - HolefeederDatabaseSettings__Database=holefeeder
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      SEQ_Url: ${SEQ_URL}
+      ObjectStoreDatabaseSettings__ConnectionString: Server=${MYSQL_SERVER};Port=${MYSQL_PORT};User Id=${MYSQL_USER};Password=${MYSQL_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=object_store;
     ports:
       - '5102:80'
 
-  legacy-api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - MongoDB__ConnectionString=mongodb://holefeederApi:holefeederApi@nosql-data/?authSource=holefeeder
-      - MongoDB__DatabaseName=holefeeder
-    ports:
-      - '5101:80'
-
   webspa:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+
-      - HolefeederWeb__ApiUrl=http://localhost:5200
-      - HolefeederWeb__RedirectUrl=http://localhost
+      NGX_API_URL: http://localhost:5200
+      NGX_REDIRECT_URL: http://localhost
+      NGINX_PORT: 80
+    volumes:
+      - ./templates:/etc/nginx/templates
     ports:
       - '80:80'
+
+networks:
+  default:
+    external: true
+    name: backend-network
+      

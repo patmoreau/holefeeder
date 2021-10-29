@@ -2,19 +2,15 @@
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 {
-    public class AccountInfoViewModel
+    public record AccountInfoViewModel
     {
-        public Guid Id { get; }
+        public Guid Id { get; init; }
+        public string Name { get; init; }
 
-        public string Name { get; }
-
-        public string MongoId { get; }
-
-        public AccountInfoViewModel(Guid id, string name, string mongoId)
+        public AccountInfoViewModel(Guid id, string name)
         {
             Id = id;
             Name = name;
-            MongoId = mongoId;
         }
     }
 }

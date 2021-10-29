@@ -1,6 +1,6 @@
 ﻿using System;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Contracts;
+using DrifterApps.Holefeeder.Budgeting.Application;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Authorization
 {

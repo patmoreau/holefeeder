@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
+
 using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Behaviors

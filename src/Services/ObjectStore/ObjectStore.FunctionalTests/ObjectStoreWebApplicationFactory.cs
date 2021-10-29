@@ -3,9 +3,10 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+
 using DrifterApps.Holefeeder.ObjectStore.API;
-using DrifterApps.Holefeeder.ObjectStore.Infrastructure;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,6 +20,7 @@ namespace ObjectStore.FunctionalTests
     {
         private static readonly object Locker = new();
         private static bool _dataSeeded;
+        private static bool _dataPrepared;
 
         protected override void ConfigureClient(HttpClient client)
         {
@@ -33,43 +35,61 @@ namespace ObjectStore.FunctionalTests
                 .ConfigureAppConfiguration((context, conf) =>
                 {
                     conf.AddJsonFile(Path.Combine(
-                        GetProjectPath(String.Empty, typeof(ObjectStoreWebApplicationFactory).Assembly),
-                        "appsettings.json"))
+                            GetProjectPath(String.Empty, typeof(ObjectStoreWebApplicationFactory).Assembly),
+                            "appsettings.json"))
                         .AddEnvironmentVariables();
+
+                    var c = conf.Build();
+                    var settings = c.GetSection(nameof(ObjectStoreDatabaseSettings))
+                        .Get<ObjectStoreDatabaseSettings>();
+
+                    PrepareData(settings);
                 })
                 .ConfigureTestServices(services =>
                 {
-                    services.Remove(new ServiceDescriptor(typeof(IMongoDbContext),
-                        a => a.GetService(typeof(IMongoDbContext)), ServiceLifetime.Singleton));
-
-                    services.AddSingleton<IMongoDbContext, MongoDbContext>(provider =>
-                    {
-                        var settings = provider.GetService<IHolefeederDatabaseSettings>();
-
-                        var context = new MongoDbContext(settings);
-
-                        if (_dataSeeded)
-                        {
-                            return context;
-                        }
-                        
-                        lock (Locker)
-                        {
-                            if (_dataSeeded)
-                            {
-                                return context;
-                            }
-
-                            StoreItemContextSeed.SeedData(settings);
-                            _dataSeeded = true;
-
-                            return context;
-                        }
-                    });
-
                     services.AddAuthentication("Test")
                         .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
                 });
+        }
+
+        public void SeedData()
+        {
+            var settings = Services.GetService<ObjectStoreDatabaseSettings>();
+
+            if (_dataSeeded)
+            {
+                return;
+            }
+
+            lock (Locker)
+            {
+                if (_dataSeeded)
+                {
+                    return;
+                }
+
+                StoreItemContextSeed.SeedData(settings);
+                _dataSeeded = true;
+            }
+        }
+
+        private static void PrepareData(ObjectStoreDatabaseSettings settings)
+        {
+            if (_dataPrepared)
+            {
+                return;
+            }
+
+            lock (Locker)
+            {
+                if (_dataPrepared)
+                {
+                    return;
+                }
+
+                StoreItemContextSeed.PrepareData(settings);
+                _dataPrepared = true;
+            }
         }
 
         private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
@@ -86,10 +106,10 @@ namespace ObjectStore.FunctionalTests
 
                 var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, projectRelativePath));
 
-                if (projectDirectoryInfo.Exists)
-                    if (new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName, $"{projectName}.csproj"))
+                if (projectDirectoryInfo.Exists &&
+                    new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName, $"{projectName}.csproj"))
                         .Exists)
-                        return Path.Combine(projectDirectoryInfo.FullName, projectName);
+                    return Path.Combine(projectDirectoryInfo.FullName, projectName);
             } while (directoryInfo.Parent != null);
 
             throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");

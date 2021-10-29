@@ -1,43 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 {
-    public class UpcomingViewModel
+    public record UpcomingViewModel
     {
-        public Guid Id { get; }
+        private readonly ImmutableArray<string> _tags = ImmutableArray<string>.Empty;
         
-        public DateTime Date { get;  }
+        public Guid Id { get; init; }
         
-        public decimal Amount { get; }
+        public DateTime Date { get; init; }
         
-        public string Description { get; }
+        public decimal Amount { get; init; }
+        
+        public string Description { get; init; }
 
-        public ImmutableArray<string> Tags { get; }
-        
-        public CategoryInfoViewModel Category { get; }
-        
-        public AccountInfoViewModel Account { get; }
-
-        public UpcomingViewModel(Guid id, DateTime date, decimal amount, string description,
-            CategoryInfoViewModel category, AccountInfoViewModel account, IEnumerable<string> tags)
+        public ImmutableArray<string> Tags
         {
-            Id = id;
-            Date = date;
-            Amount = amount;
-            Description = description;
-            Category = category;
-            Account = account;
-            Tags = tags == null ? ImmutableArray<string>.Empty : ImmutableArray.Create(tags.ToArray());
+            get => _tags;
+            init
+            {
+                _tags = value == null ? ImmutableArray<string>.Empty : ImmutableArray.Create(value.ToArray());
+            }
         }
-
-        [JsonConstructor]
-        public UpcomingViewModel(Guid id, DateTime date, decimal amount, string description,
-            CategoryInfoViewModel category, AccountInfoViewModel account, ImmutableArray<string> tags) =>
-            (Id, Date, Amount, Description, Category, Account, Tags) =
-            (id, date, amount, description, category, account, tags);
+        
+        public CategoryInfoViewModel Category { get; init; }
+        
+        public AccountInfoViewModel Account { get; init; }
     }
 }

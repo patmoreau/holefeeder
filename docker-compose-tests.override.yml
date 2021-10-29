@@ -2,23 +2,23 @@ version: '3.4'
 
 services:
 
-  nosql-data-test:
+  mysql-data-test:
     environment:
-      - MONGO_REPLICA_SET_NAME=rs0
+      MYSQL_USER: ${MYSQL_TEST_USER}
+      MYSQL_PASSWORD: ${MYSQL_TEST_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_TEST_ROOT_PASSWORD}
+      MYSQL_BUDGETING_DATABASE: ${MYSQL_TEST_BUDGETING_DATABASE}
+      MYSQL_OBJECT_STORE_DATABASE: ${MYSQL_TEST_OBJECT_STORE_DATABASE}
     ports:
-      - "27018:27017"
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.slaveOk().ok || rs.status().ok" | mongo --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+      - 3306
+    volumes:
+      - ./mysql-init-scripts:/docker-entrypoint-initdb.d
 
   budgeting-api-functional-test:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data-test}
-      - HolefeederDatabaseSettings__Database=holefeeder_integration_test
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      HolefeederDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=${MYSQL_TEST_USER};Password=${MYSQL_TEST_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=${MYSQL_TEST_BUDGETING_DATABASE};
     ports:
       - "5105:80"
     entrypoint:
@@ -26,6 +26,8 @@ services:
         - test
         - --logger
         - trx;LogFileName=/tests/budgeting-funtional-test-results.xml
+        - --logger
+        - html;LogFileName=/tests/budgeting-funtional-test-results.html
         - --logger
         - junit;LogFileName=/tests/budgeting-funtional-test-results.junit.xml
         - --results-directory
@@ -35,8 +37,8 @@ services:
 
   budgeting-api-unit-test:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
     ports:
       - "5112:80"
     entrypoint:
@@ -44,6 +46,8 @@ services:
         - test
         - --logger
         - trx;LogFileName=/tests/budgeting-unit-test-results.xml
+        - --logger
+        - html;LogFileName=/tests/budgeting-unit-test-results.html
         - --logger
         - junit;LogFileName=/tests/budgeting-unit-test-results.junit.xml
         - --results-directory
@@ -53,10 +57,9 @@ services:
 
   object-store-api-functional-test:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - HolefeederDatabaseSettings__ConnectionString=${HOLEFEEDER_MONGODB:-mongodb://nosql-data-test}
-      - HolefeederDatabaseSettings__Database=holefeeder_integration_test
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      ObjectStoreDatabaseSettings__ConnectionString: Server=mysql-data-test;Port=3306;User Id=${MYSQL_TEST_USER};Password=${MYSQL_TEST_PASSWORD};AllowPublicKeyRetrieval=True;SslMode=none;Database=${MYSQL_TEST_OBJECT_STORE_DATABASE};
     ports:
       - "5106:80"
     entrypoint:
@@ -64,6 +67,8 @@ services:
       - test
       - --logger
       - trx;LogFileName=/tests/object-store-funtional-test-results.xml
+      - --logger
+      - html;LogFileName=/tests/object-store-funtional-test-results.html
       - --logger
       - junit;LogFileName=/tests/object-store-funtional-test-results.junit.xml
       - --results-directory
@@ -73,8 +78,8 @@ services:
 
   object-store-api-unit-test:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
     ports:
       - "5113:80"
     entrypoint:
@@ -82,6 +87,8 @@ services:
       - test
       - --logger
       - trx;LogFileName=/tests/object-store-unit-test-results.xml
+      - --logger
+      - html;LogFileName=/tests/object-store-unit-test-results.html
       - --logger
       - junit;LogFileName=/tests/object-store-unit-test-results.junit.xml
       - --results-directory

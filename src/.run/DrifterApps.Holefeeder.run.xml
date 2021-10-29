@@ -1,8 +1,0 @@
-﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="DrifterApps.Holefeeder" type="CompoundRunConfigurationType">
-    <toRun name="Transactions.API" type="LaunchSettings" />
-    <toRun name="Budget.API" type="LaunchSettings" />
-    <toRun name="Gateway.API" type="LaunchSettings" />
-    <method v="2" />
-  </configuration>
-</component>

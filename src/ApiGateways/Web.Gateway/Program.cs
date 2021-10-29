@@ -3,6 +3,8 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
 using Serilog;
 using Serilog.Events;
 
@@ -32,7 +34,7 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             Log.Logger.Information("Web.Gateway started");
             try
             {
-                CreateHostBuilder(args).Build().Run();
+                BuildWebHost(args).Run();
             }
             // ReSharper disable once CA1031
 #pragma warning disable CA1031
@@ -47,13 +49,19 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             }
         }
 
-        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureAppConfiguration((host, config) =>
+        private static IWebHost BuildWebHost(string[] args) =>
+            new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .ConfigureAppConfiguration((_, config) =>
                 {
-                    config.AddJsonFile($"ocelot.json", false, true);
+                    config.AddJsonFile("appsettings.json", true)
+                        .AddJsonFile($"ocelot.json", false, true)
+                        .AddEnvironmentVariables();
                 })
-                .UseStartup<Startup>();
+                .UseSerilog()
+                .UseDefaultServiceProvider((ctx, opts) => { /* elided for brevity */ })
+                .UseStartup<Startup>()
+                .Build();
     }
 }

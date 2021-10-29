@@ -1,21 +1,13 @@
-﻿namespace DrifterApps.Holefeeder.Budgeting.Application.Models
+﻿using System;
+
+namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 {
-    public class CategoryViewModel
+    public record CategoryViewModel
     {
-        public string Name { get; }
-
-        public string Color { get; }
-
-        public decimal BudgetAmount { get; }
-
-        public bool Favorite { get; }
-
-        public CategoryViewModel(string name, string color, decimal budgetAmount, bool favorite)
-        {
-            Name = name;
-            Color = color;
-            BudgetAmount = budgetAmount;
-            Favorite = favorite;
-        }
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+        public string Color { get; init; }
+        public decimal BudgetAmount { get; init; }
+        public bool Favorite { get; init; }
     }
 }

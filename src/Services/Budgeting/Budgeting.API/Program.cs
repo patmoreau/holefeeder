@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Serilog.Events;
 
 namespace DrifterApps.Holefeeder.Budgeting.API
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
@@ -30,7 +32,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
                 .WriteTo.Seq(Configuration["SEQ_Url"] ?? "http://localhost:5341", apiKey: Configuration["SEQ_ApiKey"])
                 .CreateLogger();
 
-            Log.Logger.Information("Web.Gateway started");
+            Log.Logger.Information("Budgeting.API started");
             try
             {
                 CreateWebHostBuilder(args).Build().Run();

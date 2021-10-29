@@ -71,16 +71,6 @@ services:
     ports:
       - 80
 
-  legacy-api:
-    restart: unless-stopped
-    environment:
-      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - MongoDB__ConnectionString=${MONGO_CONNECTION_STRING:-mongodb://nosql-data}
-      - MongoDB__DatabaseName=${MONGO_INITDB_DATABASE}
-    ports:
-      - 80
-
   webspa:
     restart: unless-stopped
     environment:
@@ -98,5 +88,5 @@ services:
 
 networks:
   default:
-    external:
-      name: holefeeder${ENVIRONMENT_PREFIX}-proxy
+    external: true
+    name: holefeeder${ENVIRONMENT_PREFIX}-proxy

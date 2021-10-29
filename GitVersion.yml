@@ -1,0 +1,7 @@
+assembly-versioning-scheme: MajorMinorPatch
+mode: Mainline
+ignore:
+  sha: []
+  commits-before: 2021-03-01T00:00:00
+merge-message-formats: {}
+next-version: 2.0

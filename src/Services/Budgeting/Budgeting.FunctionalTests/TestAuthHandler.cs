@@ -35,7 +35,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
                 new Claim(ClaimConstants.Sub, testUserId)
             };
             var identity = new ClaimsIdentity(claims, "Test");
-            identity.AddClaims(Scopes.ScopeRequiredByApi.Select(scope=> new Claim(ClaimConstants.Scp, scope)));
+            identity.AddClaim(new Claim(ClaimConstants.Scp, Scopes.REGISTERED_USER));
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, "Test");
 

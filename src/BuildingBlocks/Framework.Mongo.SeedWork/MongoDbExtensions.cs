@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+
 using MongoDB.Driver.Linq;
 
 namespace DrifterApps.Holefeeder.Framework.Mongo.SeedWork
@@ -16,7 +16,7 @@ namespace DrifterApps.Holefeeder.Framework.Mongo.SeedWork
 
         public static IMongoQueryable<T> Filter<T>(this IMongoQueryable<T> query, IReadOnlyList<string> filter)
         {
-            var q = query.ThrowIfNull(nameof(query));
+            var q = query ?? throw new ArgumentNullException(nameof(query));
 
             if (filter is null || !filter.Any())
             {

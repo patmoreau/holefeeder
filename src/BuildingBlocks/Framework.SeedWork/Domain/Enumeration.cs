@@ -17,9 +17,9 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             Name = name;
         }
 
-        public int CompareTo(object other)
+        public int CompareTo(object obj)
         {
-            return Id.CompareTo(((Enumeration)other)?.Id);
+            return Id.CompareTo(((Enumeration)obj)?.Id);
         }
 
         public override string ToString() => Name;
@@ -33,7 +33,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Enumeration otherValue))
+            if (obj is not Enumeration otherValue)
             {
                 return false;
             }
@@ -51,8 +51,15 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
 
         public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
         {
-            firstValue.ThrowIfNull(nameof(firstValue));
-            secondValue.ThrowIfNull(nameof(secondValue));
+            if (firstValue is null)
+            {
+                throw new ArgumentNullException(nameof(firstValue));
+            }
+
+            if (secondValue is null)
+            {
+                throw new ArgumentNullException(nameof(secondValue));
+            }
             
             var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
             return absoluteDifference;
@@ -84,12 +91,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
 
         public static bool operator ==(Enumeration left, Enumeration right)
         {
-            if (ReferenceEquals(left, null))
-            {
-                return ReferenceEquals(right, null);
-            }
-
-            return left.Equals(right);
+            return left?.Equals(right) ?? ReferenceEquals(right, null);
         }
 
         public static bool operator !=(Enumeration left, Enumeration right)

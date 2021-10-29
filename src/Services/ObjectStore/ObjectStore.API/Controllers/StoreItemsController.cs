@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Framework.SeedWork;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
@@ -17,13 +16,13 @@ using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web.Resource;
 
 namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
 {
     [Authorize]
     [Route("api/v2/[controller]")]
+    [RequiredScope(Scopes.REGISTERED_USER)]
     public class StoreItemsController : ControllerBase
     {
         private struct Routes
@@ -35,45 +34,39 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
         }
 
         private readonly IMediator _mediator;
-        private readonly ILogger<StoreItemsController> _logger;
 
-        public StoreItemsController(IMediator mediator, ILogger<StoreItemsController> logger)
+        public StoreItemsController(IMediator mediator)
         {
-            _mediator = mediator.ThrowIfNull(nameof(mediator));
-            _logger = logger.ThrowIfNull(nameof(logger));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpGet(Name = Routes.GET_STORE_ITEMS)]
-        [ProducesResponseType(typeof(StoreItemViewModel[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(QueryResult<StoreItemViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetStoreItems([FromQuery] int? offset, [FromQuery] int? limit,
-            [FromQuery] string[] sort, [FromQuery] string[] filter, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetStoreItems([FromQuery] GetStoreItemsQuery queryParams,
+            CancellationToken cancellationToken = default)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
-            var userId = User.GetUniqueId();
+            var result = await _mediator.Send(queryParams, cancellationToken);
 
-            var response = await _mediator.Send(new GetStoreItemsQuery(userId, offset, limit, sort, filter),
-                cancellationToken);
+            Response?.Headers.Add("X-Total-Count", $"{result.TotalCount}");
 
-            return Ok(response);
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}", Name = Routes.GET_STORE_ITEM)]
         [ProducesResponseType(typeof(StoreItemViewModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetStoreItem(Guid id, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetStoreItem(Guid id,
+            CancellationToken cancellationToken = default)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
-            var userId = User.GetUniqueId();
-
             if (id == default)
             {
                 return BadRequest();
             }
 
-            var response = await _mediator.Send(new GetStoreItemQuery(userId, id), cancellationToken);
+            var response = await _mediator.Send(new GetStoreItemQuery { Id = id }, cancellationToken);
 
             if (response is null)
             {
@@ -90,8 +83,6 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
         public async Task<IActionResult> CreateStoreItem([FromBody] CreateStoreItemCommand command,
             CancellationToken cancellationToken = default)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(CommandResult<Guid>.Create(CommandStatus.BadRequest, Guid.Empty,
@@ -102,7 +93,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
             {
                 var result = await _mediator.Send(command, cancellationToken);
 
-                return CreatedAtRoute(Routes.CREATE_STORE_ITEM, result);
+                return CreatedAtRoute(Routes.GET_STORE_ITEM, new { Id = result.Result }, result);
             }
             catch (ValidationException ex)
             {
@@ -111,15 +102,13 @@ namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers
             }
         }
 
-        [HttpPut(Routes.MODIFY_STORE_ITEM, Name = Routes.MODIFY_STORE_ITEM)]
+        [HttpPost(Routes.MODIFY_STORE_ITEM, Name = Routes.MODIFY_STORE_ITEM)]
         [ProducesResponseType(typeof(CommandResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> ModifyStoreItem([FromBody] ModifyStoreItemCommand command,
             CancellationToken cancellationToken = default)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(Scopes.ScopeRequiredByApi);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(CommandResult.Create(CommandStatus.BadRequest,

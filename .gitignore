@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# environment file
+.env
+
 # User-specific files
 *.rsuser
 *.suo
@@ -358,3 +361,6 @@ docker/development/data
 tools/fixGuid.sh
 tests-results
 data/
+.run/Docker compose.run.xml
+.run/Holefeeder.run.xml
+tags.json

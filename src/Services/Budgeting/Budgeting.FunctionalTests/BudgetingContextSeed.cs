@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Data;
+
+using Dapper;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Schemas;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+using DrifterApps.Holefeeder.Budgeting.FunctionalTests.Builders;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 
-using MongoDB.Driver;
+using Framework.Dapper.SeedWork.Extensions;
+
+using MySqlConnector;
 
 namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
 {
@@ -15,147 +17,140 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
     {
         public static readonly Guid TestUserGuid1 = Guid.NewGuid();
         public static readonly Guid TestUserGuid2 = Guid.NewGuid();
+        public static readonly Guid TestUserForCommands = Guid.NewGuid();
 
-        public static readonly Guid AccountGuid1 = Guid.NewGuid();
-        public static readonly Guid AccountGuid2 = Guid.NewGuid();
-        public static readonly Guid AccountGuid3 = Guid.NewGuid();
-        public static readonly Guid AccountGuid4 = Guid.NewGuid();
+        public static readonly Guid Account1 = Guid.NewGuid();
+        public static readonly Guid Account2 = Guid.NewGuid();
+        public static readonly Guid Account3 = Guid.NewGuid();
+        public static readonly Guid Account4 = Guid.NewGuid();
+        public static readonly Guid OpenAccountNoCashflows = Guid.NewGuid();
+        public static readonly Guid OpenAccountWithCashflows = Guid.NewGuid();
+        public static readonly Guid CloseAccount = Guid.NewGuid();
+        public static readonly Guid TargetAccount1 = Guid.NewGuid();
+        public static readonly Guid TargetAccount2 = Guid.NewGuid();
 
-        public static readonly Guid CategoryGuid1 = Guid.NewGuid();
-        public static readonly Guid CategoryGuid2 = Guid.NewGuid();
-        public static readonly Guid CategoryGuid3 = Guid.NewGuid();
+        public static readonly Guid Category1 = Guid.NewGuid();
+        public static readonly Guid Category2 = Guid.NewGuid();
+        public static readonly Guid Category3 = Guid.NewGuid();
+        public static readonly Guid Category4 = Guid.NewGuid();
+        public static readonly Guid CategoryIn = Guid.NewGuid();
+        public static readonly Guid CategoryOut = Guid.NewGuid();
 
-        public static readonly Guid CashflowGuid1 = Guid.NewGuid();
+        public static readonly Guid Cashflow1 = Guid.NewGuid();
+        public static readonly Guid Cashflow2 = Guid.NewGuid();
+        public static readonly Guid Cashflow3 = Guid.NewGuid();
+        public static readonly Guid Cashflow4 = Guid.NewGuid();
 
-        public static readonly Guid TransactionGuid1 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid2 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid3 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid4 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid5 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid6 = Guid.NewGuid();
-        public static readonly Guid TransactionGuid7 = Guid.NewGuid();
+        public static readonly Guid Transaction1 = Guid.NewGuid();
+        public static readonly Guid Transaction2 = Guid.NewGuid();
+        public static readonly Guid Transaction3 = Guid.NewGuid();
+        public static readonly Guid Transaction4 = Guid.NewGuid();
+        public static readonly Guid Transaction5 = Guid.NewGuid();
+        public static readonly Guid Transaction6 = Guid.NewGuid();
+        public static readonly Guid Transaction7 = Guid.NewGuid();
+        public static readonly Guid Transaction8 = Guid.NewGuid();
 
-        private static readonly Dictionary<Guid, string> MongoIds = new Dictionary<Guid, string>();
-        public static void SeedData(IHolefeederDatabaseSettings settings)
+        public static void PrepareData(HolefeederDatabaseSettings settings)
         {
-            settings.ThrowIfNull(nameof(settings));
-
-            var client = new MongoClient(settings.ConnectionString);
-
-            CleanupData(client, settings);
-
-            var database = client.GetDatabase(settings.Database);
-
-            var accounts = database.GetCollection<AccountSchema>(AccountSchema.SCHEMA);
-            CreateAccount(accounts, AccountGuid1, 1, TestUserGuid1, AccountType.Checking, false, false);
-            CreateAccount(accounts, AccountGuid2, 2, TestUserGuid1, AccountType.CreditCard, true, false);
-            CreateAccount(accounts, AccountGuid3, 3, TestUserGuid1, AccountType.Loan, false, true);
-            CreateAccount(accounts, AccountGuid4, 4, TestUserGuid2, AccountType.Checking, false, false);
-            
-            var categories = database.GetCollection<CategorySchema>(CategorySchema.SCHEMA);
-            CreateCategory(categories, CategoryGuid1, 1, TestUserGuid1, CategoryType.Expense, false);
-            CreateCategory(categories, CategoryGuid2, 2, TestUserGuid1, CategoryType.Gain, true);
-            CreateCategory(categories, CategoryGuid3, 3, TestUserGuid2, CategoryType.Expense, false);
-            
-            var cashflows = database.GetCollection<CashflowSchema>(CashflowSchema.SCHEMA);
-            CreateCashflow(cashflows, CashflowGuid1, 1, AccountGuid1, CategoryGuid1, TestUserGuid1, 111, DateIntervalType.Weekly, 2);
-
-            var transactions = database.GetCollection<TransactionSchema>(TransactionSchema.SCHEMA);
-            CreateTransaction(transactions, TransactionGuid1, 1, AccountGuid1, CategoryGuid1, TestUserGuid1, 10);
-            CreateTransaction(transactions, TransactionGuid2, 2, AccountGuid1, CategoryGuid1, TestUserGuid1, 20);
-            CreateTransaction(transactions, TransactionGuid3, 3, AccountGuid1, CategoryGuid1, TestUserGuid1, 30);
-            CreateTransaction(transactions, TransactionGuid4, 4, AccountGuid1, CategoryGuid2, TestUserGuid1, 40);
-            CreateTransaction(transactions, TransactionGuid5, 5, AccountGuid1, CategoryGuid2, TestUserGuid1, 50);
-            CreateTransaction(transactions, TransactionGuid6, 6, AccountGuid1, CategoryGuid3, TestUserGuid2, 10);
-            CreateTransaction(transactions, TransactionGuid7, 7, AccountGuid1, CategoryGuid3, TestUserGuid2, 20);
-        }
-
-        private static void CreateAccount(IMongoCollection<AccountSchema> collection, Guid id, int index,
-            Guid userId, AccountType type, bool favorite, bool inactive)
-        {
-            var schema = new AccountSchema
+            if (settings is null)
             {
-                Id = id,
-                Name = $"Account{index}",
-                Description = $"Description{index}",
-                Type = type,
-                UserId = userId,
-                Favorite = favorite,
-                Inactive = inactive,
-                OpenBalance = (Convert.ToDecimal(index) * 100m) + (Convert.ToDecimal(index) / 100m),
-                OpenDate = (new DateTime(2019, 1, 1)).AddDays(index),
-            };
-            
-            collection.InsertOne(schema);
-            
-            MongoIds.Add(id, schema.MongoId);
-        }
-
-        private static void CreateCategory(IMongoCollection<CategorySchema> collection, Guid id, int index,
-            Guid userId, CategoryType type, bool favorite)
-        {
-            var schema = new CategorySchema
-            {
-                Id = id,
-                Name = $"Category{index}",
-                Type = type,
-                UserId = userId,
-                Favorite = favorite,
-            };
-            
-            collection.InsertOne(schema);
-            
-            MongoIds.Add(id, schema.MongoId);
-        }
-
-        private static void CreateCashflow(IMongoCollection<CashflowSchema> collection, Guid id, int index,
-            Guid accountId, Guid categoryId, Guid userId, decimal amount, DateIntervalType intervalType, int frequency)
-        {
-            var schema = new CashflowSchema
-            {
-                Id = id,
-                Amount = amount,
-                EffectiveDate = (new DateTime(2020, 1, 1)).AddDays(index),
-                IntervalType = intervalType,
-                Frequency = frequency,
-                Recurrence = 0,
-                Description = $"Cashflow{index}",
-                Account = MongoIds[accountId],
-                Category = MongoIds[categoryId],
-                UserId = userId
-            };
-            
-            collection.InsertOne(schema);
-            
-            MongoIds.Add(id, schema.MongoId);
-        }
-
-        private static void CreateTransaction(IMongoCollection<TransactionSchema> collection, Guid id, int index,
-            Guid accountId, Guid categoryId, Guid userId, decimal amount)
-        {
-            var schema = new TransactionSchema
-            {
-                Id = id,
-                Amount = amount,
-                Date = (new DateTime(2020, 1, 1)).AddDays(index),
-                Description = $"Transaction{index}",
-                Account = MongoIds[accountId],
-                Category = MongoIds[categoryId],
-                UserId = userId
-            };
-            
-            collection.InsertOne(schema);
-            
-            MongoIds.Add(id, schema.MongoId);
-        }
-
-        private static void CleanupData(IMongoClient client, IHolefeederDatabaseSettings settings)
-        {
-            var databases = client.ListDatabaseNames().ToList();
-            if (databases.Any(db => settings.Database.Equals(db, StringComparison.OrdinalIgnoreCase)))
-            {
-                client.DropDatabase(settings.Database);
+                throw new ArgumentNullException(nameof(settings));
             }
+
+            var settingsBuilder = new MySqlConnectionStringBuilder(settings.ConnectionString);
+            var databaseName = settingsBuilder.Database;
+            settingsBuilder.Database = String.Empty;
+
+            using var connection = new MySqlConnection(settingsBuilder.ConnectionString);
+            
+            connection.Open();
+
+            RefreshDb(connection, databaseName);
+
+            connection.Close();
+        }
+
+        public static void SeedData(HolefeederDatabaseSettings settings)
+        {
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            using (var connection = new MySqlConnection(settings.ConnectionString))
+            {
+                connection.Open();
+
+                AccountBuilder.Create(Account1).OfType(AccountType.Checking).ForUser(TestUserGuid1).Build();
+                AccountBuilder.Create(Account2).OfType(AccountType.CreditCard).ForUser(TestUserGuid1).IsFavorite()
+                    .Build();
+                AccountBuilder.Create(Account3).OfType(AccountType.Loan).ForUser(TestUserGuid1).IsInactive().Build();
+                AccountBuilder.Create(Account4).OfType(AccountType.Checking).ForUser(TestUserGuid2).Build();
+                AccountBuilder.Create(OpenAccountNoCashflows).OfType(AccountType.Checking).ForUser(TestUserForCommands)
+                    .Build();
+                AccountBuilder.Create(OpenAccountWithCashflows).OfType(AccountType.Checking)
+                    .ForUser(TestUserForCommands).Build();
+                AccountBuilder.Create(TargetAccount1).OfType(AccountType.Checking)
+                    .ForUser(TestUserForCommands).Build();
+                AccountBuilder.Create(TargetAccount2).OfType(AccountType.Savings)
+                    .ForUser(TestUserForCommands).Build();
+                foreach (var entity in AccountBuilder.Accounts)
+                {
+                    connection.InsertAsync(entity).Wait();
+                }
+
+                CategoryBuilder.Create(Category1).OfType(CategoryType.Expense).ForUser(TestUserGuid1).Build();
+                CategoryBuilder.Create(Category2).OfType(CategoryType.Gain).ForUser(TestUserGuid1).IsFavorite().Build();
+                CategoryBuilder.Create(Category3).OfType(CategoryType.Expense).ForUser(TestUserGuid2).Build();
+                CategoryBuilder.Create(Category4).OfType(CategoryType.Expense).ForUser(TestUserForCommands).Build();
+                CategoryBuilder.Create(CategoryIn).Named("Transfer In").OfType(CategoryType.Gain).ForUser(TestUserForCommands).Build();
+                CategoryBuilder.Create(CategoryOut).Named("Transfer Out").OfType(CategoryType.Expense).ForUser(TestUserForCommands).Build();
+                foreach (var entity in CategoryBuilder.Categories)
+                {
+                    connection.InsertAsync(entity).Wait();
+                }
+
+                CashflowBuilder.Create(Cashflow1).OfType(DateIntervalType.Weekly).WithFrequency(2).OfAmount(111)
+                    .ForAccount(Account1).ForCategory(Category1).ForUser(TestUserGuid1).Build();
+                CashflowBuilder.Create(Cashflow2).OfType(DateIntervalType.Weekly).WithFrequency(2).OfAmount(111)
+                    .ForAccount(OpenAccountWithCashflows).ForCategory(Category4).ForUser(TestUserForCommands).Build();
+                CashflowBuilder.Create(Cashflow3).OfType(DateIntervalType.Weekly).WithFrequency(2).OfAmount(222)
+                    .ForAccount(Account4).ForCategory(Category1).ForUser(TestUserGuid2).Build();
+                CashflowBuilder.Create(Cashflow4).OfType(DateIntervalType.OneTime).OfAmount(333)
+                    .ForAccount(Account4).ForCategory(Category1).ForUser(TestUserGuid2).Build();
+                foreach (var entity in CashflowBuilder.Cashflows)
+                {
+                    connection.InsertAsync(entity).Wait();
+                }
+
+                TransactionBuilder.Create(Transaction1).OfAmount(10).ForAccount(Account1).ForCategory(Category1)
+                    .ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction2).OfAmount(20).ForAccount(Account1).ForCategory(Category1)
+                    .ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction3).OfAmount(30).ForAccount(Account1).ForCategory(Category1)
+                    .ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction4).OfAmount(40).ForAccount(Account1).ForCategory(Category2)
+                    .ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction5).OfAmount(50).ForAccount(Account1).ForCategory(Category2)
+                    .ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction6).OfAmount(111).IsCashflow(Cashflow1, new DateTime(2020, 1, 2))
+                    .ForAccount(Account1).ForCategory(Category1).ForUser(TestUserGuid1).Build();
+                TransactionBuilder.Create(Transaction7).OfAmount(10).ForAccount(Account4).ForCategory(Category3)
+                    .ForUser(TestUserGuid2).Build();
+                TransactionBuilder.Create(Transaction8).OfAmount(20).ForAccount(Account4).ForCategory(Category3)
+                    .ForUser(TestUserGuid2).Build();
+                foreach (var entity in TransactionBuilder.Transactions)
+                {
+                    connection.InsertAsync(entity).Wait();
+                }
+
+                connection.Close();
+            }
+        }
+
+        private static void RefreshDb(IDbConnection connection, string databaseName)
+        {
+            connection.Execute($"DROP DATABASE IF EXISTS {databaseName};");
         }
     }
 }

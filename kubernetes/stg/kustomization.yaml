@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../base
+nameSuffix: -stg
+namespace: holefeeder-stg
+patchesJson6902:
+- target:
+   version: v1
+   kind: Namespace
+   name: holefeeder
+  path: namespace-patch.yaml
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: ui
+  path: ingress_patch.yaml
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: api
+  path: ingress_patch.yaml
+secretGenerator:
+- name: holefeeder-secrets
+  behavior: replace
+  envs:
+  - .env.secrets
+configMapGenerator:
+- name: config-env
+  behavior: merge
+  literals:
+  - ASPNETCORE_ENVIRONMENT=Staging
+  - NGX_API_URL=https://holefeeder-staging.drifterapps.app
+  - NGX_REDIRECT_URL=https://holefeeder-staging.drifterapps.app
+  - SEQ_URL=http://seq.default
+  - BUDGETING_URL=http://budgeting-stg
+  - OBJECT_STORE_URL=http://object-store-stg

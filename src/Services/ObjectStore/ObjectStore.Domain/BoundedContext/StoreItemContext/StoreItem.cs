@@ -1,49 +1,61 @@
 ﻿using System;
-using DrifterApps.Holefeeder.Framework.SeedWork;
+
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext
 {
-    public class StoreItem : Entity, IAggregateRoot
+    public record StoreItem : IAggregateRoot
     {
-        public string Code { get; }
-        
-        public string Data { get; }
-        
-        public Guid UserId { get; }
-        
-        public static StoreItem Create(string code, string data, Guid userId)
+        private readonly Guid _id;
+        private readonly string _code;
+        private readonly Guid _userId;
+
+        public Guid Id
         {
-            return new StoreItem(Guid.NewGuid(), code, data, userId);
+            get => _id;
+            init
+            {
+                if (value.Equals(default))
+                {
+                    throw new ObjectStoreDomainException($"{nameof(Id)} is required");
+                }
+
+                _id = value;
+            }
         }
 
-        public StoreItem(Guid id, string code, string data, Guid userId)
+        public string Code
         {
-            if (id == default)
+            get => _code;
+            init
             {
-                throw new ObjectStoreDomainException("Id is required");
-            }
-            Id = id;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ObjectStoreDomainException($"{nameof(Code)} is required");
+                }
 
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                throw new ObjectStoreDomainException("Code is required");
+                _code = value;
             }
-            Code = code;
-            
-            Data = data;
-
-            if (userId == default)
-            {
-                throw new ObjectStoreDomainException("UserId is required");
-            }
-            UserId = userId;
         }
 
-        public StoreItem SetData(string data)
+        public string Data { get; init; }
+
+        public Guid UserId
         {
-            return new StoreItem(Id, Code, data, UserId);
+            get => _userId;
+            init
+            {
+                if (value.Equals(default))
+                {
+                    throw new ObjectStoreDomainException($"{nameof(UserId)} is required");
+                }
+
+                _userId = value;
+            }
         }
+
+        public static StoreItem Create(string code, string data, Guid userId) =>
+            new() { Id = Guid.NewGuid(), Code = code, Data = data, UserId = userId };
     }
 }
