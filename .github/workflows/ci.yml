@@ -108,21 +108,21 @@ jobs:
         docker rm -fv testcontainer
 
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1.6
+      uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }}
       with:
         check_name: unit-test-results
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: ./testsresults/*.junit.xml
+        files: ./testsresults/**/*.junit.xml
 
     - name: Setup .NET core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v1
       if: ${{ always() }}
       with:
-        dotnet-version: 5.0.101
+        dotnet-version: 5.0.301
 
     - name: Report generator
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.3
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
       if: ${{ always() }}
       with:
         reports: 'testsresults/*/coverage.cobertura.xml'
