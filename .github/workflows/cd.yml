@@ -1,14 +1,9 @@
-name: continuous_deployment
+name: Continuous Deployment
 
 on:
   workflow_run:
-    workflows: 
-    - continuous_integration
-    # branches:
-    # - main
-    # - master
-    types: 
-      - completed
+    workflows: ["Continuous Integration"]
+    types: [completed]
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
