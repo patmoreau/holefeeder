@@ -125,16 +125,38 @@ jobs:
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
+    - name: Build Budgeting.API unit tests
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: unittests
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+    - name: Build ObjectStore.API unit tests
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: unittests
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
     - name: Budgeting.API unit tests
       run: |
-        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
-        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }} .
         docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
