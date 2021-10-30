@@ -168,7 +168,7 @@ jobs:
         target: unittests
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        tags: user/holefeeder-budgeting-api-unittests:tests
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
@@ -181,21 +181,19 @@ jobs:
         target: unittests
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        tags: user/holefeeder-object-store-api-unittests:tests
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Budgeting.API unit tests
       run: |
-        docker create -ti --name testcontainer holefeeder-budgeting-api-unittests
-        # docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer user/holefeeder-budgeting-api-unittests:tests
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
-        docker create -ti --name testcontainer holefeeder-object-store-api-unittests
-        # docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer user/holefeeder-object-store-api-unittests:tests
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
@@ -240,6 +238,7 @@ jobs:
 
   package:
     name: Unit tests
+    if: ${{ github.event.pull_request.merged == true && success() }}
     runs-on: ubuntu-latest
     needs: [set-version, unittests]
     env:
@@ -262,9 +261,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Docker login
-      if: ${{ github.event.pull_request.merged == true && success() }}
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.DOCKER_REGISTRY }} -u DrifterApps --password-stdin
+    - name: Login to GHCR
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ env.DOCKER_REGISTRY }}
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: push containers
       if: ${{ github.event.pull_request.merged == true && success() }}
