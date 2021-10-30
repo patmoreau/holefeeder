@@ -85,6 +85,7 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         file: ./src/ApiGateways/Web.Gateway/Dockerfile
         target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
