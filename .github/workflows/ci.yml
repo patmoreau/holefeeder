@@ -52,7 +52,7 @@ jobs:
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
   build:
-    name: Build and unit tests
+    name: Build
     runs-on: ubuntu-latest
     needs: set-version
     env:
