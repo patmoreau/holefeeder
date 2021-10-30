@@ -83,7 +83,7 @@ jobs:
         target: build
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
@@ -95,7 +95,7 @@ jobs:
         target: build
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
@@ -107,7 +107,7 @@ jobs:
         target: build
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
@@ -119,7 +119,7 @@ jobs:
         target: build
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
@@ -163,7 +163,7 @@ jobs:
         target: unittests
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
@@ -175,19 +175,21 @@ jobs:
         target: unittests
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Budgeting.API unit tests
       run: |
-        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer holefeeder-budgeting-api-unittests
+        # docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
-        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer holefeeder-object-store-api-unittests
+        # docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
