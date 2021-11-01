@@ -1,57 +1,21 @@
 name: Continuous Deployment
 
 on:
-  registry_package:
-    types: [published]
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: [main]
+    types: [completed]
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
 
 jobs:
 
-  set-version:
-    name: Set version
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.gitversion.outputs.majorMinorPatch }}
-      assembly-version: ${{ steps.gitversion.outputs.semVer }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Disable workflow commands
-        run: |
-          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
-
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.10
-        with:
-          versionSpec: '5.x'
-
-      - name: Determine Version
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0.9.10
-        with:
-          useConfigFile: true
-          configFilePath: GitVersion.yml
-
-      - name: Display GitVersion outputs
-        run: |
-          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
-          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
-
-      - name: Enable workflow commands
-        run: |
-          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
-
   deploy:
-    name: deploy to production
+    name: Deploy to production
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    needs: set-version
     env:
-      VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
     environment:
       name: production
