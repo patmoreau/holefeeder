@@ -1,13 +1,15 @@
 name: Continuous Integration
 
 on:
-  pull_request:
-    branches: [master]
-    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '.vscode/**']
 
-    paths-ignore:
-    - 'proxy/**'
-    - 'docs/**'
+  pull_request:
+    branches: [main]
+    paths-ignore: ['docs/**', '.vscode/**']
+
+  workflow_dispatch:
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
@@ -52,7 +54,7 @@ jobs:
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
   build:
-    name: Build and unit tests
+    name: Build
     runs-on: ubuntu-latest
     needs: set-version
     env:
@@ -63,33 +65,137 @@ jobs:
 
     - uses: actions/checkout@v2
     
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
     - name: Build Web.Gateway container
-      run: |
-        docker build -f ./src/ApiGateways/Web.Gateway/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }} .
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/ApiGateways/Web.Gateway/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
     - name: Build Budgeting.API container
-      run: |
-        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }} .
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
     - name: Build ObjectStore.API container
-      run: |
-        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }} .
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
     - name: Build Holefeeder.Web container
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Web/Holefeeder.Web/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        # tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    # Temp fix
+    # https://github.com/docker/build-push-action/issues/252
+    # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
       run: |
-        docker build -f ./src/Web/Holefeeder.Web/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target build -t ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }} .
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  unittests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: [set-version, build]
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+    steps:
+
+    - uses: actions/checkout@v2
+    
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Budgeting.API unit tests
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: unittests
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: user/holefeeder-budgeting-api-unittests:tests
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+    - name: Build ObjectStore.API unit tests
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: unittests
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: user/holefeeder-object-store-api-unittests:tests
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Budgeting.API unit tests
       run: |
-        docker build -f ./src/Services/Budgeting/Budgeting.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }} .
-        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer user/holefeeder-budgeting-api-unittests:tests
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
     - name: ObjectStore.API unit tests
       run: |
-        docker build -f ./src/Services/ObjectStore/ObjectStore.API/Dockerfile --build-arg BUILD_VERSION=${{ env.VERSION }} --target unittests -t ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }} .
-        docker create -ti --name testcontainer ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api-unittests:${{ env.VERSION }}
+        docker create -ti --name testcontainer user/holefeeder-object-store-api-unittests:tests
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
 
@@ -124,13 +230,90 @@ jobs:
         name: coverage-report
         path: coveragereport
 
-    - name: Docker login
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.DOCKER_REGISTRY }} -u DrifterApps --password-stdin
-
-    - name: push containers
-      if: ${{ github.event.pull_request.merged == true && success() }}
+    # Temp fix
+    # https://github.com/docker/build-push-action/issues/252
+    # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
       run: |
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  package:
+    name: Package
+    if: ${{ github.event_name == 'push' && github.ref == 'ref/head/main' && success() }}
+    runs-on: ubuntu-latest
+    needs: [set-version, unittests]
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+    steps:
+
+    - uses: actions/checkout@v2
+    
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Login to GHCR
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ env.DOCKER_REGISTRY }}
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Web.Gateway container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/ApiGateways/Web.Gateway/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build Budgeting.API container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build ObjectStore.API container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build Holefeeder.Web container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Web/Holefeeder.Web/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max

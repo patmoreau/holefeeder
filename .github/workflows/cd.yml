@@ -1,8 +1,8 @@
 name: Continuous Deployment
 
 on:
-  push:
-    branches: [master]
+  registry_package:
+    types: [published]
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
