@@ -317,3 +317,15 @@ jobs:
         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Tag version
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}          
+        script: |
+          await github.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "refs/tags/${{ env.VERSION }}",
+            sha: context.sha
+          })
