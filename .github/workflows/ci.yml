@@ -239,7 +239,7 @@ jobs:
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   package:
-    name: Unit tests
+    name: Package
     if: ${{ github.event_name == 'push' && github.ref == 'ref/head/main' && success() }}
     runs-on: ubuntu-latest
     needs: [set-version, unittests]
