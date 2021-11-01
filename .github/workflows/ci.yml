@@ -287,7 +287,7 @@ jobs:
       with:
         context: .
         file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
-        target: build
+        target: final
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: true
         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
@@ -299,7 +299,7 @@ jobs:
       with:
         context: .
         file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
-        target: build
+        target: final
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: true
         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
@@ -311,7 +311,7 @@ jobs:
       with:
         context: .
         file: ./src/Web/Holefeeder.Web/Dockerfile
-        target: build
+        target: final
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: true
         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
