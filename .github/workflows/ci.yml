@@ -1,13 +1,15 @@
 name: Continuous Integration
 
 on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '.vscode/**']
+
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, closed]
+    paths-ignore: ['docs/**', '.vscode/**']
 
-    paths-ignore:
-    - 'proxy/**'
-    - 'docs/**'
+  workflow_dispatch:
 
 env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
@@ -238,7 +240,7 @@ jobs:
 
   package:
     name: Unit tests
-    if: ${{ github.event.pull_request.merged == true && success() }}
+    if: ${{ github.event_name == 'push' && github.ref == 'ref/head/main' && success() }}
     runs-on: ubuntu-latest
     needs: [set-version, unittests]
     env:
@@ -268,10 +270,50 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: push containers
-      if: ${{ github.event.pull_request.merged == true && success() }}
-      run: |
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
-        docker push ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+    - name: Build Web.Gateway container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/ApiGateways/Web.Gateway/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build Budgeting.API container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build ObjectStore.API container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build Holefeeder.Web container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Web/Holefeeder.Web/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
