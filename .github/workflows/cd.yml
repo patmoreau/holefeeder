@@ -63,109 +63,36 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - name: test
-      run: echo ${{ env.VERSION }}
-
-
-
-
     - uses: yokawasa/action-setup-kube-tools@v0.8.0
       with:
         kubectl: '1.22.2'
         kustomize: '4.4.0'
         skaffold: '1.32.0'
 
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+    - name: Create .env.secrets file
+      run: |
+        printf "BUDGETING_CONNECTION_STRING=Server=mysql.default;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=budgeting_prd;
+        OBJECT_STORE_CONNECTION_STRING=Server=mysql.default;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=object_store_prd;
+        " > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
 
+    - name: Set image tags
+      run: |
+        cd $GITHUB_WORKSPACE/kubernetes/prd
+        kustomize edit set image ghcr.io/drifterapps/holefeeder/holefeeder-gateway-web=ghcr.io/drifterapps/holefeeder/holefeeder-gateway-web:${{ env.VERSION }}
+        kustomize edit set image ghcr.io/drifterapps/holefeeder/holefeeder-budgeting-api=ghcr.io/drifterapps/holefeeder/holefeeder-budgeting-api:${{ env.VERSION }}
+        kustomize edit set image ghcr.io/drifterapps/holefeeder/holefeeder-object-store-api=ghcr.io/drifterapps/holefeeder/holefeeder-object-store-api:${{ env.VERSION }}
+        kustomize edit set image ghcr.io/drifterapps/holefeeder/holefeeder-web=ghcr.io/drifterapps/holefeeder/holefeeder-web:${{ env.VERSION }}
 
-    # - name: Install doctl
-    #   uses: digitalocean/action-doctl@v2
-    #   with:
-    #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Save DigitalOcean kubeconfig with short-lived credentials
+      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-1-21-3-do-0-tor1-1634177939904
 
-    # - name: Log in to DigitalOcean Container Registry with short-lived credentials
-    #   run: doctl registry login --expiry-seconds 600
+    - name: Build deployment
+      run: kustomize build $GITHUB_WORKSPACE/kubernetes/prd
 
-    # - name: Push image to DigitalOcean Container Registry
-    #   run: docker push registry.digitalocean.com/asb/static-example:$(echo $GITHUB_SHA | head -c7)
-
-    # - name: Update deployment file
-    #   run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/asb/static-example:'${TAG}'|' $GITHUB_WORKSPACE/config/deployment.yml
-
-    # - name: Save DigitalOcean kubeconfig with short-lived credentials
-    #   run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 actions-example-k8s-1-18
-
-    # - name: Deploy to DigitalOcean Kubernetes
-    #   run: kubectl apply -f $GITHUB_WORKSPACE/config/deployment.yml
-
-    # - name: Verify deployment
-    #   run: kubectl rollout status deployment/static-example
-
-  # deploy:
-  #   name: deploy to production
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #   - set-version
-  #   - staging
-
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-
-  #   - name: download deployables artifacts
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: deployables
-  #       path: ./artifacts/.
-
-  #   - name: create environment file
-  #     run: |
-  #       printf "VERSION=${{ env.VERSION }}
-  #       DOCKER_REGISTRY=${{ env.DOCKER_REGISTRY }}
-  #       ENVIRONMENT=${{ env.ENVIRONMENT }}
-  #       ENVIRONMENT_PREFIX=${{ env.ENVIRONMENT_PREFIX }}
-  #       HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP=${{ env.HOLEFEEDER_EXTERNAL_DNS_NAME_OR_IP }}
-  #       MONGO_REPLICA_SET_NAME=${{ secrets.MONGO_REPLICA_SET_NAME }}
-  #       MONGO_CONNECTION_STRING=mongodb://${{ secrets.MONGODB_HOLEFEEDERAPI_USER }}:${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD }}@nosql-data/?authSource=${{ secrets.MONGO_DATABASE_NAME }}
-  #       MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGODB_ROOT_USER }}
-  #       MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGODB_ROOT_PASSWORD }}
-  #       MONGO_INITDB_USERNAME=${{ secrets.MONGODB_HOLEFEEDERAPI_USER }}
-  #       MONGO_INITDB_PASSWORD=${{ secrets.MONGODB_HOLEFEEDERAPI_PASSWORD }}
-  #       MONGO_INITDB_DATABASE=${{ secrets.MONGO_DATABASE_NAME }}
-  #       MONGO_DATABASE_VOLUME=./mongo
-  #       SEQ_ApiKey=${{ secrets.SEQ_APIKEY }}
-  #       " > .env
-  #     working-directory: ./artifacts
-
-  #   - name: copy file
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ secrets.PROD_WEB_SERVER }}
-  #       username: ${{ secrets.PROD_WEB_SERVER_USER }}
-  #       port: ${{ secrets.PROD_WEB_SERVER_PORT }}
-  #       key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #       source: "artifacts/docker-compose.yml,artifacts/docker-compose.prod.yml,artifacts/.env,artifacts/mongo/mongod.conf,artifacts/mongo/initdb.d/create-app-user.sh"
-  #       target: holefeeder
-  #       strip_components: 1
-   
-  #   - name: starting containers
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.PROD_WEB_SERVER }}
-  #       username: ${{ secrets.PROD_WEB_SERVER_USER }}
-  #       port: ${{ secrets.PROD_WEB_SERVER_PORT }}
-  #       key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #       script_stop: true
-  #       script: |
-  #         cd ~/holefeeder
-  #         echo github registry login
-  #         echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u DrifterApps --password-stdin
-  #         echo pull containers
-  #         docker-compose pull
-  #         echo start containers
-  #         docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-  #         echo stop staging
-  #         cd ~/holefeeder-staging
-  #         docker-compose down
-  #         echo cleanup previous images
-  #         docker image prune -f
+    - name: Deploy to DigitalOcean Kubernetes
+      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd

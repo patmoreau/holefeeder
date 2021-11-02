@@ -323,6 +323,15 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}          
         script: |
+          try {
+            await github.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ env.VERSION }}"
+            })
+          } catch (e) {
+            console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
+          }
           await github.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
