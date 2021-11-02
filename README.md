@@ -1,7 +1,7 @@
 # Holefeeder
 
-![holefeeder ci/cd](https://github.com/DrifterApps/Holefeeder/workflows/holefeeder%20ci/cd/badge.svg)
-![proxy ci/cd](https://github.com/DrifterApps/Holefeeder/workflows/proxy%20ci/cd/badge.svg)
+[![Continuous Integration](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci.yml)
+[![Continuous Deployment](https://github.com/DrifterApps/Holefeeder/actions/workflows/cd.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/cd.yml)
 
 ## Introduction
 
