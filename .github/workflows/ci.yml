@@ -73,7 +73,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-gateway-cache
-        key: buildx-gateway-${{ hashFiles('./src/ApiGateways/Web.Gateway/Dockerfile') }}
+        key: buildx-gateway-${{ github.sha }}
         restore-keys: |
           buildx-gateway
 
@@ -81,7 +81,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-budgeting-cache
-        key: buildx-budgeting-${{ hashFiles('./src/Budgeting/Budgeting.API/Dockerfile') }}
+        key: buildx-budgeting-${{ github.sha }}
         restore-keys: |
           buildx-budgeting
 
@@ -89,7 +89,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-object-store-cache
-        key: buildx-object-store-${{ hashFiles('./src/ObjectStore/ObjectStore.API/Dockerfile') }}
+        key: buildx-object-store-${{ github.sha }}
         restore-keys: |
           buildx-object-store
 
@@ -97,7 +97,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-ui-cache
-        key: buildx-ui-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+        key: buildx-ui-${{ github.sha }}
         restore-keys: |
           buildx-ui
 
@@ -184,7 +184,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-budgeting-cache
-        key: buildx-budgeting-${{ hashFiles('./src/Budgeting/Budgeting.API/Dockerfile') }}
+        key: buildx-budgeting-${{ github.sha }}
         restore-keys: |
           buildx-budgeting
 
@@ -192,7 +192,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-object-store-cache
-        key: buildx-object-store-${{ hashFiles('./src/ObjectStore/ObjectStore.API/Dockerfile') }}
+        key: buildx-object-store-${{ github.sha }}
         restore-keys: |
           buildx-object-store
 
@@ -284,7 +284,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-gateway-cache
-        key: buildx-gateway-${{ hashFiles('./src/ApiGateways/Web.Gateway/Dockerfile') }}
+        key: buildx-gateway-${{ github.sha }}
         restore-keys: |
           buildx-gateway
 
@@ -292,7 +292,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-budgeting-cache
-        key: buildx-budgeting-${{ hashFiles('./src/Budgeting/Budgeting.API/Dockerfile') }}
+        key: buildx-budgeting-${{ github.sha }}
         restore-keys: |
           buildx-budgeting
 
@@ -300,7 +300,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-object-store-cache
-        key: buildx-object-store-${{ hashFiles('./src/ObjectStore/ObjectStore.API/Dockerfile') }}
+        key: buildx-object-store-${{ github.sha }}
         restore-keys: |
           buildx-object-store
 
@@ -308,7 +308,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-ui-cache
-        key: buildx-ui-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+        key: buildx-ui-${{ github.sha }}
         restore-keys: |
           buildx-ui
 
