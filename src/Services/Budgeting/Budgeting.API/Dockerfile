@@ -40,14 +40,6 @@ COPY src/. src/.
 WORKDIR /src/src/Services/Budgeting/Budgeting.API
 RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
-FROM build as unittests
-WORKDIR /src/src/Services/Budgeting/Budgeting.UnitTests
-RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/budgeting-unit-tests-results.xml" --logger "html;LogFileName=/testsresults/budgeting-unit-tests-results.html" --logger "junit;LogFileName=/testsresults/budgeting-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"
-
-FROM build as functionaltests
-WORKDIR /src/src/Services/Budgeting/Budgeting.FunctionalTests
-RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/budgeting-functional-tests-results.xml" --logger "html;LogFileName=/testsresults/budgeting-functional-tests-results.html" --logger "junit;LogFileName=/testsresults/budgeting-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"
-
 FROM build AS publish
 
 FROM base AS final

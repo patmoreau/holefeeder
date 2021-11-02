@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgeting
+  labels:
+    app: budgeting
+spec:
+  selector:
+    matchLabels:
+      app: budgeting
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: budgeting
+        tier: backend
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - image: holefeeder/holefeeder-budgeting-api
+        name: budgeting
+        ports:
+        - containerPort: 80
+          name: budgeting
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m
+          limits:
+            memory: 128Mi
+            cpu: 250m

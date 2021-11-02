@@ -40,9 +40,6 @@ COPY src/. src/.
 WORKDIR /src/src/Services/ObjectStore/ObjectStore.API
 RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
-FROM build AS publish
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "ObjectStore.API.dll"]
+FROM build as functionaltests
+WORKDIR /src/src/Services/ObjectStore/ObjectStore.FunctionalTests
+RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/object-store-functional-tests-results.xml" --logger "html;LogFileName=/testsresults/object-store-functional-tests-results.html" --logger "junit;LogFileName=/testsresults/object-store-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"

@@ -37,12 +37,9 @@ ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /src
 COPY src/. src/.
-WORKDIR /src/src/Services/ObjectStore/ObjectStore.API
+WORKDIR /src/src/Services/Budgeting/Budgeting.API
 RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
-FROM build AS publish
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "ObjectStore.API.dll"]
+FROM build as functionaltests
+WORKDIR /src/src/Services/Budgeting/Budgeting.FunctionalTests
+RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/budgeting-functional-tests-results.xml" --logger "html;LogFileName=/testsresults/budgeting-functional-tests-results.html" --logger "junit;LogFileName=/testsresults/budgeting-functional-tests-results.junit.xml" --collect "XPlat Code Coverage"

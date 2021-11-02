@@ -7,59 +7,54 @@ build:
     envTemplate:
       template: '{{.VERSION}}'
   artifacts:
-  - image: ghcr.io/drifterapps/holefeeder/holefeeder-gateway-web
+  - image: holefeeder/holefeeder-gateway-web
     context: .
     docker:
       dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
+      target: final
       buildArgs:
         BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
-  - image: ghcr.io/drifterapps/holefeeder/holefeeder-web
+  - image: holefeeder/holefeeder-web
     context: .
     docker:
       dockerfile: src/Web/Holefeeder.Web/Dockerfile
+      target: final
       buildArgs:
         BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
-  - image: ghcr.io/drifterapps/holefeeder/holefeeder-budgeting-api
+  - image: holefeeder/holefeeder-budgeting-api
     context: .
     docker:
       dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
+      target: final
       buildArgs:
         BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
-  - image: ghcr.io/drifterapps/holefeeder/holefeeder-object-store-api
+  - image: holefeeder/holefeeder-object-store-api
     context: .
     docker:
       dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+      target: final
       buildArgs:
         BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
 profiles:
-  - name: cicd
-    build:
-      local:
-        push: false
-    deploy: {}
   - name: dev
     activation:
       - kubeContext: minikube
-    patches:
-      - op: replace
-        path: /build/artifacts/0/docker/buildArgs/BUILD_VERSION
-        value: '99.99.99'
-      - op: replace
-        path: /build/artifacts/1/docker/buildArgs/BUILD_VERSION
-        value: '99.99.99'
-      - op: replace
-        path: /build/artifacts/2/docker/buildArgs/BUILD_VERSION
-        value: '99.99.99'
-      - op: replace
-        path: /build/artifacts/3/docker/buildArgs/BUILD_VERSION
-        value: '99.99.99'
+    # patches:
+    #   - op: replace
+    #     path: /build/artifacts/0/docker/buildArgs/BUILD_VERSION
+    #     value: '99.99.99'
+    #   - op: replace
+    #     path: /build/artifacts/1/docker/buildArgs/BUILD_VERSION
+    #     value: '99.99.99'
+    #   - op: replace
+    #     path: /build/artifacts/2/docker/buildArgs/BUILD_VERSION
+    #     value: '99.99.99'
+    #   - op: replace
+    #     path: /build/artifacts/3/docker/buildArgs/BUILD_VERSION
+    #     value: '99.99.99'
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]
-  - name: stg
-    deploy:
-      kustomize:
-        paths: ["kubernetes/stg"]
   - name: prd
     deploy:
       kustomize:
