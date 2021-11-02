@@ -10,18 +10,13 @@ patchesJson6902:
    kind: Namespace
    name: holefeeder
   path: namespace-patch.yaml
+patchesStrategicMerge:
+- budgeting.env.yaml
+- gateway.env.yaml
+- object-store.env.yaml
+- ui.env.yaml
 secretGenerator:
 - name: holefeeder-secrets
-  behavior: replace
+  behavior: create
   envs:
   - .env.secrets
-configMapGenerator:
-- name: config-env
-  behavior: merge
-  literals:
-  - ASPNETCORE_ENVIRONMENT=Development
-  - NGX_API_URL=https://holefeeder.test
-  - NGX_REDIRECT_URL=https://holefeeder.test
-  - SEQ_URL=http://seq.default
-  - BUDGETING_URL=http://budgeting-dev
-  - OBJECT_STORE_URL=http://object-store-dev

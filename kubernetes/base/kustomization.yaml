@@ -1,19 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- budgeting.deployment.yaml
+- budgeting.service.yaml
+- gateway.deployment.yaml
+- gateway.ingress.yaml
+- gateway.service.yaml
 - namespace.yaml
-- ui.yaml
-- api-budgeting.yaml
-- api-object-store.yaml
-- api-gateway.yaml
-- api-ingress.yaml
-- ui-ingress.yaml
-secretGenerator:
-- name: holefeeder-secrets
-  envs:
-  - .env.secrets
+- object-store.deployment.yaml
+- object-store.service.yaml
+- ui.deployment.yaml
+- ui.ingress.yaml
+- ui.service.yaml
 configMapGenerator:
-- name: config-env
 - name: ui-config
   files:
   - templates/default.conf.template

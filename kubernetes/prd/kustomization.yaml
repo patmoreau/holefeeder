@@ -22,18 +22,13 @@ patchesJson6902:
     kind: Ingress
     name: api
   path: ingress_patch.yaml
+patchesStrategicMerge:
+- budgeting.env.yaml
+- gateway.env.yaml
+- object-store.env.yaml
+- ui.env.yaml
 secretGenerator:
 - name: holefeeder-secrets
-  behavior: replace
+  behavior: create
   envs:
   - .env.secrets
-configMapGenerator:
-- name: config-env
-  behavior: merge
-  literals:
-  - ASPNETCORE_ENVIRONMENT=Production
-  - NGX_API_URL=https://holefeeder.drifterapps.app
-  - NGX_REDIRECT_URL=https://holefeeder.drifterapps.app
-  - SEQ_URL=http://seq.default
-  - BUDGETING_URL=http://budgeting-prd
-  - OBJECT_STORE_URL=http://object-store-prd

@@ -84,7 +84,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
                 var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
 
-                // EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
+                EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
