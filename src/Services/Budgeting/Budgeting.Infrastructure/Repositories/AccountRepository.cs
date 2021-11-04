@@ -59,9 +59,9 @@ WHERE a.id = @Id AND a.user_id = @UserId;
                     splitOn: "id")
                 .ConfigureAwait(false))
                 .Distinct()
-                .Single();
+                .SingleOrDefault();
 
-            return _mapper.Map<Account>(account) with { Cashflows = cashflows.ToImmutableList()};
+            return account is null ? null : _mapper.Map<Account>(account) with { Cashflows = cashflows.ToImmutableList()};
         }
 
         public async Task<Account> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)

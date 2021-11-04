@@ -7,6 +7,8 @@ using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 using DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure;
 
+using FluentValidation;
+
 using HealthChecks.UI.Client;
 
 using MediatR;
@@ -119,6 +121,10 @@ namespace DrifterApps.Holefeeder.Budgeting.API
 
         private IServiceCollection RegisterServices(IServiceCollection services)
         {
+            // For all the validators, register them with dependency injection as scoped
+            AssemblyScanner.FindValidatorsInAssembly(typeof(GetAccountsHandler).Assembly)
+                .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            
             services.AddMediatR(typeof(GetAccountsHandler).Assembly)
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
