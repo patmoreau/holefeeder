@@ -9,7 +9,6 @@ using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.FunctionalTests.Builders;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
 using FluentAssertions;
 using FluentAssertions.Execution;

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.Exceptions;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
 using MediatR;
 

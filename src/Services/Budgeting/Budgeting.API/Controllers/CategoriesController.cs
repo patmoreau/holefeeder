@@ -15,9 +15,9 @@ using Microsoft.Identity.Web.Resource;
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
 {
     [Authorize]
-    [Route("api/v2/[controller]")]
+    [ApiVersion("2.0")]
     [RequiredScope(Scopes.REGISTERED_USER)]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : ControllerRoot
     {
         private struct Routes
         {

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
 {
-    [Route("api/v2/[controller]")]
-    public class VersionController : ControllerBase
+    [ApiVersion("2.0")]
+    public class VersionController : ControllerRoot
     {
         [HttpGet]
         public async Task<IActionResult> GetAsync(CancellationToken cancellationToken = default)

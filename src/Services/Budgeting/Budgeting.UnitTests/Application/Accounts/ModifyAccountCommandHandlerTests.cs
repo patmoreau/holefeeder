@@ -7,7 +7,6 @@ using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
 using FluentAssertions;
 

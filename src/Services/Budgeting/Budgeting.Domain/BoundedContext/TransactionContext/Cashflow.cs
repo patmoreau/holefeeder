@@ -54,7 +54,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
             get => _frequency;
             init
             {
-                if (value > 0)
+                if (value <= 0)
                 {
                     throw new HolefeederDomainException($"{nameof(Frequency)} must be positive");
                 }
@@ -115,7 +115,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
             }
         }
 
-        private Cashflow()
+        public Cashflow()
         {
             Tags = ImmutableList<string>.Empty;
         }

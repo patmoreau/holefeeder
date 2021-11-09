@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
 {
-    [Route("api/v2/[controller]")]
-    public class EnumerationsController : ControllerBase
+    [ApiVersion("2.0")]
+    public class EnumerationsController : ControllerRoot
     {
         private struct Routes
         {

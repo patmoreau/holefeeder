@@ -11,10 +11,10 @@ using DrifterApps.Holefeeder.Budgeting.Application.Cashflows;
 using DrifterApps.Holefeeder.Budgeting.Application.Categories;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
+using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
-using DrifterApps.Holefeeder.Budgeting.Infrastructure.Scripts;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Serializers;
 
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +32,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
     {
         private static readonly object Locker = new();
 
-        public static IServiceCollection AddHolefeederDatabase(this IServiceCollection services,
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
             if (configuration is null)
@@ -45,12 +45,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
             services.AddSingleton(sp => sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
             services.AddScoped<IHolefeederContext, HolefeederContext>();
-            services.AddScoped<Script000InitDatabase>();
-            services.AddScoped<Script005MongoDbMigration>();
 
             services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
             services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
+            services.AddTransient<ICashflowRepository, CashflowRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
             services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
             services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
@@ -75,9 +75,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
             var databaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
 
-            // var initDatabaseScript = scope.ServiceProvider.GetRequiredService<Script000InitDatabase>();
-            // var mongoDbMigration = scope.ServiceProvider.GetRequiredService<Script005MongoDbMigration>();
-
             lock (Locker)
             {
                 var connectionStringBuilder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
@@ -88,8 +85,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
-                    // .WithScript(Script000InitDatabase.ScriptName, initDatabaseScript)
-                    // .WithScript(Script005MongoDbMigration.ScriptName, mongoDbMigration)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
                         () => connectionManager,

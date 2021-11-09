@@ -64,9 +64,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
 
         public Guid CategoryId { get; init; }
 
-        public Guid? CashflowId { get; private init; }
+        public Guid? CashflowId { get; init; }
 
-        public DateTime? CashflowDate { get; private init; }
+        public DateTime? CashflowDate { get; init; }
 
         public IReadOnlyCollection<string> Tags { get; private init; }
 
@@ -84,7 +84,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
             }
         }
 
-        private Transaction()
+        public Transaction()
         {
             Tags = ImmutableList<string>.Empty;
         }

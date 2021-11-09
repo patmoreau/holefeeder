@@ -5,4 +5,10 @@
         <RootNamespace>DrifterApps.Holefeeder.Framework.SeedWork</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
 </Project>

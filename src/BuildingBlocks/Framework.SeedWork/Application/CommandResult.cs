@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
-
 namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
 {
     public record CommandResult(CommandStatus Status, ImmutableArray<string> Messages)

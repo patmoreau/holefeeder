@@ -9,7 +9,6 @@ using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
 using FluentValidation;
 
@@ -22,9 +21,9 @@ using Microsoft.Identity.Web.Resource;
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
 {
     [Authorize]
-    [Route("api/v2/[controller]")]
+    [ApiVersion("2.0")]
     [RequiredScope(Scopes.REGISTERED_USER)]
-    public class TransactionsController : ControllerBase
+    public class TransactionsController : ControllerRoot
     {
         private struct Routes
         {
@@ -45,8 +44,8 @@ namespace DrifterApps.Holefeeder.Budgeting.API.Controllers
         [ProducesResponseType(typeof(QueryResult<TransactionViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetTransactions([FromQuery] int? offset, int? limit, string[] sort,
-            string[] filter, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetTransactions([FromQuery] int? offset, [FromQuery] int? limit, [FromQuery] string[] sort,
+            [FromQuery] string[] filter, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(new GetTransactionsQuery(offset, limit, sort, filter), cancellationToken);
 

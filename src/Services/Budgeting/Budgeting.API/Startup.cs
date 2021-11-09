@@ -3,21 +3,17 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using DrifterApps.Holefeeder.Budgeting.API.Authorization;
 using DrifterApps.Holefeeder.Budgeting.Application;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
-using DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure;
-
-using FluentValidation;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using HealthChecks.UI.Client;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -70,6 +66,7 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v2", new OpenApiInfo {Title = "Budgeting.API", Version = "v2"});
+                c.CustomSchemaIds(type => type.ToString());
             });
 
             _ = services.AddMvcCore()
@@ -92,9 +89,10 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Budgeting.API v2"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Budgeting.API v2"));
 
             app.UseSerilogRequestLogging();
 
@@ -121,14 +119,23 @@ namespace DrifterApps.Holefeeder.Budgeting.API
 
         private IServiceCollection RegisterServices(IServiceCollection services)
         {
-            // For all the validators, register them with dependency injection as scoped
-            AssemblyScanner.FindValidatorsInAssembly(typeof(GetAccountsHandler).Assembly)
-                .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            services.AddApplication()
+                .AddInfrastructure(Configuration)
+                .AddLogging()
+                .AddApiVersioning(o =>
+                {
+                    o.ReportApiVersions = true;
+                    o.AssumeDefaultVersionWhenUnspecified = true;
+                    o.DefaultApiVersion = new ApiVersion(2, 0);
+                })
+                .AddVersionedApiExplorer(options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                })
+                .AddHostedService<LongRunningService>();
+            services.AddSingleton<BackgroundWorkerQueue>();
             
-            services.AddMediatR(typeof(GetAccountsHandler).Assembly)
-                .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
-                .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-
             services.AddTransient<Func<IRequestUser>>(provider =>
             {
                 var httpContext = provider.GetService<IHttpContextAccessor>();
@@ -138,8 +145,6 @@ namespace DrifterApps.Holefeeder.Budgeting.API
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
             services.AddScoped<ItemsCache>();
-
-            services.AddHolefeederDatabase(Configuration);
 
             return services;
         }
