@@ -24,14 +24,14 @@ namespace ObjectStore.UnitTests.Application
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenCodeIsEmpty_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new CreateStoreItemCommand { Code = null });
+            var result = _validator.TestValidate(new CreateStoreItemCommand { Code = null! });
             result.ShouldHaveValidationErrorFor(m => m.Code);
         }
 
         [Fact]
         public void GivenCreateStoreItemCommandValidator_WhenDataIsEmpty_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new CreateStoreItemCommand { Data = null });
+            var result = _validator.TestValidate(new CreateStoreItemCommand { Data = null! });
             result.ShouldHaveValidationErrorFor(m => m.Data);
         }
     }

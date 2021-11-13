@@ -28,7 +28,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public Task<QueryResult<StoreItemViewModel>> FindAsync(Guid userId, QueryParams queryParams,
+        public Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken)
         {
             if (queryParams is null)
@@ -39,7 +39,8 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             return FindInternalAsync(userId, queryParams);
         }
 
-        private async Task<QueryResult<StoreItemViewModel>> FindInternalAsync(Guid userId, QueryParams query)
+        private async Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindInternalAsync(Guid userId,
+            QueryParams query)
         {
             var builder = new SqlBuilder();
             var selectTemplate =
@@ -56,10 +57,11 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var items = await connection.QueryAsync<StoreItemEntity>(selectTemplate.RawSql, selectTemplate.Parameters);
             var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
-            return new QueryResult<StoreItemViewModel>(count, _mapper.Map<IEnumerable<StoreItemViewModel>>(items));
+            return new ValueTuple<int, IEnumerable<StoreItemViewModel>>(count,
+                _mapper.Map<IEnumerable<StoreItemViewModel>>(items));
         }
 
-        public async Task<StoreItemViewModel> FindByIdAsync(Guid userId, Guid id,
+        public async Task<StoreItemViewModel?> FindByIdAsync(Guid userId, Guid id,
             CancellationToken cancellationToken)
         {
             var connection = _context.Connection;
@@ -94,9 +96,9 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
         {
             var connection = _context.Connection;
 
-            return await connection
+            return (await connection
                 .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
-                .ConfigureAwait(false) is not null;
+                .ConfigureAwait(false)) is not null;
         }
 
         private const string SELECT_CODE =

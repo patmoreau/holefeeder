@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,10 +10,10 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Contracts
 {
     public interface IStoreItemsQueriesRepository
     {
-        Task<QueryResult<StoreItemViewModel>> FindAsync(Guid userId, QueryParams queryParams,
+        Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken);
 
-        Task<StoreItemViewModel> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
+        Task<StoreItemViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
 
         Task<bool> AnyCodeAsync(Guid userId, string code, CancellationToken cancellationToken);
 

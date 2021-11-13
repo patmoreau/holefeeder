@@ -8,7 +8,7 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Behaviors
 {
-    public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
         private readonly ItemsCache _itemsCache;
         private readonly Func<IRequestUser> _getRequestUser;

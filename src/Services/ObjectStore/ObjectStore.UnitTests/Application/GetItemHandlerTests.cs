@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
@@ -25,7 +26,7 @@ namespace ObjectStore.UnitTests.Application
                 new GetStoreItemHandler(Substitute.For<IStoreItemsQueriesRepository>(), Substitute.For<ItemsCache>());
 
             // act
-            Func<Task> action = async () => await handler.Handle(null, default);
+            Func<Task> action = async () => await handler.Handle(null!, default);
 
             // assert
             await action.Should().ThrowAsync<ArgumentNullException>();
@@ -47,10 +48,12 @@ namespace ObjectStore.UnitTests.Application
             var handler = new GetStoreItemHandler(repository, cache);
 
             // act
-            var result = await handler.Handle(new GetStoreItemQuery { Id = Guid.NewGuid() }, default);
+            var result = await handler.Handle(new GetStoreItemQuery(Guid.NewGuid()), default);
 
             // assert
-            result.Should().BeEquivalentTo(new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
+            result.Should()
+                .BeEquivalentTo(
+                    new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
         }
     }
 }

@@ -10,9 +10,9 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities
         [Key]
         public Guid Id { get; init; }
 
-        public string Code { get; init; }
+        public string Code { get; init; } = null!;
 
-        public string Data { get; init; }
+        public string Data { get; init; } = null!;
 
         [Key]
         public Guid UserId { get; init; }

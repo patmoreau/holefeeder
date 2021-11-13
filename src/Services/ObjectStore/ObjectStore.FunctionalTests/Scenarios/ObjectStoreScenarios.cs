@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -6,14 +7,13 @@ using System.Text;
 using System.Text.Json;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.API;
 using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
 using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc;
 
 using Xbehave;
 
@@ -30,12 +30,12 @@ namespace ObjectStore.FunctionalTests.Scenarios
         public ObjectStoreScenarios(ObjectStoreWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
         }
 
         [Scenario]
-        public void GetStoreItems(HttpClient client, HttpResponseMessage response)
+        public void GetStoreItems(HttpClient client, IEnumerable<StoreItemViewModel>? result)
         {
             "Given GetStoreItems query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -43,34 +43,21 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string requestUri = "/api/v2/StoreItems";
+                    const string requestUri = "/api/v2/store-items";
 
-                    response = await client.GetAsync(requestUri);
+                    result = await client.GetFromJsonAsync<IEnumerable<StoreItemViewModel>>(requestUri);
                 });
 
-            "Then the status code should indicate success"
-                .x(() => response.Should()
+            "Then the result contain the store items of the user"
+                .x(() => result.Should()
                     .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
-
-            "And the result contain the store items of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<StoreItemViewModel>>(
-                            _jsonSerializerOptions);
-
-                    result.Should()
-                        .NotBeNull()
-                        .And.BeEquivalentTo(new QueryResult<StoreItemViewModel>(3,
-                            new[]
-                            {
-                                new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code001", "Data001"),
-                                new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code002", "Data002"),
-                                new StoreItemViewModel(StoreItemContextSeed.Guid3, "Code003", "Data003")
-                            }));
-                });
+                    .And.BeEquivalentTo(
+                        new[]
+                        {
+                            new StoreItemViewModel(StoreItemContextSeed.Guid1, "Code001", "Data001"),
+                            new StoreItemViewModel(StoreItemContextSeed.Guid2, "Code002", "Data002"),
+                            new StoreItemViewModel(StoreItemContextSeed.Guid3, "Code003", "Data003")
+                        }));
         }
 
         [Scenario]
@@ -82,7 +69,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
         [Example("", "code", 10, 30, 30, 100, "Code011", "Code040")]
         [Example("", "code", 90, 30, 10, 100, "Code091", "Code100")]
         public void GetStoreItems_WithQueryParams(string filter, string sort, int offset, int limit, int count,
-            int totalCount, string first, string last, HttpClient client, HttpResponseMessage response)
+            int totalCount, string first, string last, HttpClient client, IEnumerable<StoreItemViewModel>? result)
         {
             "Given GetStoreItems query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -94,7 +81,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    var sb = new StringBuilder("/api/v2/StoreItems?");
+                    var sb = new StringBuilder("/api/v2/store-items?");
                     if (!string.IsNullOrWhiteSpace(filter))
                     {
                         sb.Append($"filter={filter}&");
@@ -117,28 +104,17 @@ namespace ObjectStore.FunctionalTests.Scenarios
 
                     var requestUri = sb.ToString();
 
-                    response = await client.GetAsync(requestUri);
+                    result = await client.GetFromJsonAsync<IEnumerable<StoreItemViewModel>>(requestUri);
                 });
 
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
-
             "And the result contains the expected query results"
-                .x(async () =>
+                .x(() =>
                 {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<StoreItemViewModel>>(
-                            _jsonSerializerOptions);
-
                     using (new AssertionScope())
                     {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(totalCount);
-                        result?.Items.Should()
-                            .HaveCount(count)
+                        result.Should()
+                            .NotBeNull()
+                            .And.HaveCount(count)
                             .And.StartWith(new[] { first }, (head, expected) => head.Code == expected)
                             .And.EndWith(new[] { last }, (tail, expected) => tail.Code == expected);
                     }
@@ -157,7 +133,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+                    var requestUri = $"/api/v2/store-items/{id.ToString()}";
 
                     response = await client.GetAsync(requestUri);
                 });
@@ -191,13 +167,13 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+                    var requestUri = $"/api/v2/store-items/{id.ToString()}";
 
                     response = await client.GetAsync(requestUri);
                 });
 
-            "Then the status code should indicate BadRequest"
-                .x(() => response.StatusCode.Should().Be(HttpStatusCode.BadRequest));
+            "Then the status code should indicate NotFound"
+                .x(() => response.StatusCode.Should().Be(HttpStatusCode.NotFound));
         }
 
         [Scenario]
@@ -212,7 +188,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+                    var requestUri = $"/api/v2/store-items/{id.ToString()}";
 
                     response = await client.GetAsync(requestUri);
                 });
@@ -236,7 +212,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    var requestUri = $"/api/v2/StoreItems/{id.ToString()}";
+                    var requestUri = $"/api/v2/store-items/{id.ToString()}";
 
                     response = await client.GetAsync(requestUri);
                 });
@@ -265,7 +241,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string requestUri = "/api/v2/StoreItems/create-store-item";
+                    const string requestUri = "/api/v2/store-items/create-store-item";
 
                     response = await client.PostAsJsonAsync(requestUri, command);
                 });
@@ -278,21 +254,14 @@ namespace ObjectStore.FunctionalTests.Scenarios
 
             "With the header location present"
                 .x(() => response.Headers.Location?.AbsolutePath.Should()
-                    .MatchRegex("^/api/v2/StoreItems/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"));
+                    .MatchRegex("^/api/v2/store-items/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"));
 
-            "And a CommandResult with created status"
+            "And a Guid is returned"
                 .x(async () =>
                 {
-                    using (new AssertionScope())
-                    {
-                        var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
-                        result.Should().NotBeNull()
-                            .And.BeEquivalentTo(CommandResult<Guid>.Create(CommandStatus.Created, Guid.Empty),
-                                options => options
-                                    .ComparingByMembers<CommandResult<Guid>>()
-                                    .Using<Guid>(ctx => ctx.Subject.Should().NotBeEmpty()).WhenTypeIs<Guid>());
-                    }
+                    var result =
+                        await response.Content.ReadFromJsonAsync<Guid>(_jsonSerializerOptions);
+                    result.Should().NotBeEmpty();
                 });
         }
 
@@ -309,7 +278,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API with invalid data"
                 .x(async () =>
                 {
-                    const string requestUri = "/api/v2/StoreItems/create-store-item";
+                    const string requestUri = "/api/v2/store-items/create-store-item";
 
                     response = await client.PostAsJsonAsync(requestUri, new { });
                 });
@@ -334,7 +303,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string requestUri = "/api/v2/StoreItems/create-store-item";
+                    const string requestUri = "/api/v2/store-items/create-store-item";
 
                     response = await client.PostAsJsonAsync(requestUri, command);
                 });
@@ -348,17 +317,17 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "And a CommandResult with created status"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+                    var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
                     result.Should()
                         .NotBeNull()
-                        .And.BeEquivalentTo(CommandResult<Guid>.Create(CommandStatus.BadRequest, Guid.Empty,
-                                "Code 'Code001' already exists."),
-                            options => options.ComparingByMembers<CommandResult<Guid>>());
+                        .And.BeOfType<ProblemDetails>()
+                        .Which.Detail.Should()
+                        .Contain("Code 'Code001' already exists.");
                 });
         }
 
         [Scenario]
-        public void ModifyStoreItemCommand(HttpClient client, Guid data, CommandResult<Guid> createResult,
+        public void ModifyStoreItemCommand(HttpClient client, Guid data, Guid createResult,
             ModifyStoreItemCommand modifyCommand, CommandResult modifyResult,
             HttpResponseMessage modifyResponse)
         {
@@ -372,7 +341,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
             "On existing store item"
                 .x(async () =>
                 {
-                    const string createRequestUri = "/api/v2/StoreItems/create-store-item";
+                    const string createRequestUri = "/api/v2/store-items/create-store-item";
 
                     var code = Guid.NewGuid();
                     data = Guid.NewGuid();
@@ -381,20 +350,20 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     var createResponse = await client.PostAsJsonAsync(createRequestUri, createCommand);
 
                     createResult =
-                        await createResponse.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
+                        (await createResponse.Content.ReadFromJsonAsync<Guid>(_jsonSerializerOptions))!;
                 });
 
             "And modifying the data property"
                 .x(() => modifyCommand =
                     new ModifyStoreItemCommand
                     {
-                        Id = createResult?.Result ?? Guid.Empty, Data = $"{data.ToString()}-modified"
+                        Id = createResult, Data = $"{data.ToString()}-modified"
                     });
 
             "When I call the API"
                 .x(async () =>
                 {
-                    const string modifyRequestUri = "/api/v2/StoreItems/modify-store-item";
+                    const string modifyRequestUri = "/api/v2/store-items/modify-store-item";
 
                     modifyResponse = await client.PostAsJsonAsync(modifyRequestUri, modifyCommand);
                 });
@@ -403,17 +372,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
                 .x(() => modifyResponse.Should()
                     .NotBeNull()
                     .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
-
-            "And a CommandResult with ok status"
-                .x(async () =>
-                {
-                    var result = await modifyResponse.Content.ReadFromJsonAsync<CommandResult>(_jsonSerializerOptions);
-                    result.Should()
-                        .NotBeNull()
-                        .And.BeEquivalentTo(CommandResult.Create(CommandStatus.Ok),
-                            options => options.ComparingByMembers<CommandResult>());
-                });
+                    .Which.StatusCode.Should().Be(HttpStatusCode.NoContent));
         }
     }
 }

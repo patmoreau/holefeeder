@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ObjectStore.FunctionalTests
 {
-    public class ObjectStoreWebApplicationFactory : WebApplicationFactory<Startup>
+    public class ObjectStoreWebApplicationFactory : WebApplicationFactory<Program>
     {
         private static readonly object Locker = new();
         private static bool _dataSeeded;
@@ -32,7 +32,7 @@ namespace ObjectStore.FunctionalTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Tests")
-                .ConfigureAppConfiguration((context, conf) =>
+                .ConfigureAppConfiguration((_, conf) =>
                 {
                     conf.AddJsonFile(Path.Combine(
                             GetProjectPath(String.Empty, typeof(ObjectStoreWebApplicationFactory).Assembly),
@@ -48,13 +48,13 @@ namespace ObjectStore.FunctionalTests
                 .ConfigureTestServices(services =>
                 {
                     services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
                 });
         }
 
         public void SeedData()
         {
-            var settings = Services.GetService<ObjectStoreDatabaseSettings>();
+            var settings = Services.GetRequiredService<ObjectStoreDatabaseSettings>();
 
             if (_dataSeeded)
             {
@@ -104,12 +104,13 @@ namespace ObjectStore.FunctionalTests
             {
                 directoryInfo = directoryInfo.Parent;
 
-                var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, projectRelativePath));
+                var projectDirectoryInfo =
+                    new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
 
                 if (projectDirectoryInfo.Exists &&
-                    new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName, $"{projectName}.csproj"))
+                    new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName!, $"{projectName}.csproj"))
                         .Exists)
-                    return Path.Combine(projectDirectoryInfo.FullName, projectName);
+                    return Path.Combine(projectDirectoryInfo.FullName, projectName!);
             } while (directoryInfo.Parent != null);
 
             throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");

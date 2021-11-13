@@ -8,10 +8,10 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 {
-    public class ModifyStoreItemCommand : IRequest<CommandResult>
+    public class ModifyStoreItemCommand : IRequest<bool>
     {
         [DataMember, Required] public Guid Id { get; init; }
 
-        [DataMember, Required] public string Data { get; init; }
+        [DataMember, Required] public string Data { get; init; } = string.Empty;
     }
 }

@@ -10,6 +10,7 @@ using MediatR;
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Behaviors
 {
     public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 

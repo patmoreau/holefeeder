@@ -9,7 +9,7 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
 {
-    public class GetStoreItemHandler : IRequestHandler<GetStoreItemQuery, StoreItemViewModel>
+    public class GetStoreItemHandler : IRequestHandler<GetStoreItemQuery, StoreItemViewModel?>
     {
         private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
         private readonly ItemsCache _cache;
@@ -20,7 +20,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
             _cache = cache;
         }
 
-        public Task<StoreItemViewModel> Handle(GetStoreItemQuery query, CancellationToken cancellationToken)
+        public Task<StoreItemViewModel?> Handle(GetStoreItemQuery query, CancellationToken cancellationToken)
         {
             if (query is null)
             {
@@ -30,9 +30,13 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
             return HandleInternal(query, cancellationToken);
         }
 
-        private async Task<StoreItemViewModel> HandleInternal(GetStoreItemQuery query, CancellationToken cancellationToken)
+        private async Task<StoreItemViewModel?> HandleInternal(GetStoreItemQuery query,
+            CancellationToken cancellationToken)
         {
-            return await _itemsQueriesRepository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken);
+            var result =
+                await _itemsQueriesRepository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken);
+
+            return result;
         }
     }
 }

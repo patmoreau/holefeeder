@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +12,8 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
 {
-    public class GetStoreItemsHandler : IRequestHandler<GetStoreItemsQuery, QueryResult<StoreItemViewModel>>
+    public class GetStoreItemsHandler
+        : IRequestHandler<GetStoreItemsQuery, (int Total, IEnumerable<StoreItemViewModel> Items)>
     {
         private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
         private readonly ItemsCache _cache;
@@ -21,15 +24,14 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Queries
             _cache = cache;
         }
 
-        public Task<QueryResult<StoreItemViewModel>> Handle(GetStoreItemsQuery query,
+        public async Task<(int Total, IEnumerable<StoreItemViewModel> Items)> Handle(GetStoreItemsQuery query,
             CancellationToken cancellationToken)
         {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
+            var (total, items) =
+                await _itemsQueriesRepository.FindAsync((Guid)_cache["UserId"], QueryParams.Create(query),
+                    cancellationToken);
 
-            return _itemsQueriesRepository.FindAsync((Guid)_cache["UserId"], query.Query, cancellationToken);
+            return (total, items);
         }
     }
 }

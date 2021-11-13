@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 {
-    public class CreateStoreItemCommandHandler : IRequestHandler<CreateStoreItemCommand, CommandResult<Guid>>
+    public class CreateStoreItemCommandHandler : IRequestHandler<CreateStoreItemCommand, Guid>
     {
         private readonly IStoreItemsRepository _itemsRepository;
         private readonly ItemsCache _cache;
@@ -30,18 +30,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
             _logger = logger;
         }
 
-        public Task<CommandResult<Guid>> Handle(CreateStoreItemCommand request, CancellationToken cancellationToken)
-        {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            return HandleAsync(request, cancellationToken);
-        }
-
-        private async Task<CommandResult<Guid>> HandleAsync(CreateStoreItemCommand request,
-            CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateStoreItemCommand request, CancellationToken cancellationToken)
         {
             if (await _itemsRepository.FindByCodeAsync((Guid)_cache["UserId"], request.Code, cancellationToken) != null)
             {
@@ -59,7 +48,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Application.Commands
 
             await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
 
-            return new CommandResult<Guid>(CommandStatus.Created, storeItem.Id, ImmutableArray<string>.Empty);
+            return storeItem.Id;
         }
     }
 }
