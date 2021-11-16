@@ -8,8 +8,7 @@ using AutoMapper;
 using Dapper;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities;
 

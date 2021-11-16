@@ -1,5 +1,4 @@
-﻿using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
-using DrifterApps.Holefeeder.ObjectStore.Application.Validators;
+﻿using DrifterApps.Holefeeder.ObjectStore.Application.Validators;
 
 using FluentValidation.TestHelper;
 

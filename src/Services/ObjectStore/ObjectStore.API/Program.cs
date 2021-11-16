@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 using DrifterApps.Holefeeder.ObjectStore.API;
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.API.Controllers;
+using DrifterApps.Holefeeder.ObjectStore.API.Middlewares;
 using DrifterApps.Holefeeder.ObjectStore.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +32,7 @@ builder.Services
     .AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v2", new() { Title = builder.Environment.ApplicationName, Version = "v2" });
+        c.CustomSchemaIds(type => type.ToString());
         c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OAuth2,

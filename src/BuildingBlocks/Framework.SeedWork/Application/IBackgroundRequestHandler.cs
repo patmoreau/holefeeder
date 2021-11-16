@@ -2,12 +2,11 @@
 
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
+
+public interface
+    IBackgroundRequestHandler<in TRequest, TBackgroundTask, TResponse> : IRequestHandler<TRequest, Guid>
+    where TRequest : IRequest<Guid>
+    where TBackgroundTask : IBackgroundTask<TRequest, TResponse>
 {
-    public interface IBackgroundRequestHandler<in TRequest, TBackgroundTask, TResponse> : IRequestHandler<TRequest, CommandResult<Guid>>
-        where TRequest : IRequest<CommandResult<Guid>>
-        where TBackgroundTask : IBackgroundTask<TRequest, TResponse>
-    {
-        
-    }
 }

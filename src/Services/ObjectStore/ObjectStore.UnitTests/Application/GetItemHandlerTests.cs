@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
-using DrifterApps.Holefeeder.ObjectStore.Application.Queries;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 
 using FluentAssertions;
 

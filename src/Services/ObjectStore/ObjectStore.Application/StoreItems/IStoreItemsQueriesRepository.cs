@@ -4,9 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application.Contracts
+namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems
 {
     public interface IStoreItemsQueriesRepository
     {

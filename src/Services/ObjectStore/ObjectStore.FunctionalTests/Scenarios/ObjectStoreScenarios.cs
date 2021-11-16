@@ -7,8 +7,7 @@ using System.Text;
 using System.Text.Json;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 
 using FluentAssertions;
 using FluentAssertions.Execution;

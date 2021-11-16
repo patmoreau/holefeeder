@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
-namespace DrifterApps.Holefeeder.ObjectStore.API;
+namespace DrifterApps.Holefeeder.ObjectStore.API.Middlewares;
 
 public static class CustomErrorHandler
 {
@@ -44,11 +44,6 @@ public static class CustomErrorHandler
             string? details;
             switch (ex)
             {
-                case ValidationException validationException:
-                    statusCode = StatusCodes.Status400BadRequest;
-                    title = validationException.Source ?? nameof(ValidationException);
-                    details = validationException.Message;
-                    break;
                 case ObjectStoreDomainException domainException:
                     statusCode = StatusCodes.Status400BadRequest;
                     title = $"A domain error occured: {domainException.Context}";

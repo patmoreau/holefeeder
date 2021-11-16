@@ -6,7 +6,7 @@ using Dapper;
 using DbUp;
 using DbUp.MySql;
 
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories;

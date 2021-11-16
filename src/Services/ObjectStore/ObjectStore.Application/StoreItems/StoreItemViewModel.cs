@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application.Models
+namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems
 {
     public record StoreItemViewModel (Guid Id, string Code, string Data);
 }

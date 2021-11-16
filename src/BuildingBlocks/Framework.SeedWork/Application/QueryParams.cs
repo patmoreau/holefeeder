@@ -44,8 +44,8 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
 
         public static QueryParams Empty => new(DEFAULT_OFFSET, DEFAULT_LIMIT, DefaultSort, DefaultFilter);
 
-        public static QueryParams Create(IQuery query) =>
-            new(query.Offset, query.Limit, query.Sort, query.Filter);
+        public static QueryParams Create(IRequestQuery requestQuery) =>
+            new(requestQuery.Offset, requestQuery.Limit, requestQuery.Sort, requestQuery.Filter);
 
         public const int DEFAULT_OFFSET = 0;
         public const int DEFAULT_LIMIT = int.MaxValue;

@@ -1,17 +1,8 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
-using DrifterApps.Holefeeder.ObjectStore.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Commands;
-using DrifterApps.Holefeeder.ObjectStore.Application.Queries;
-
-using MediatR;
+﻿using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Commands;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.ObjectStore.API.Controllers;
 
@@ -21,53 +12,31 @@ public static class StoreItemsRoutes
     {
         const string routePrefix = "api/v2/store-items";
 
-        app.MapGet($"{routePrefix}",
-                async (GetStoreItemsQuery query, IMediator mediator, ItemsCache cache, ClaimsPrincipal user, HttpResponse response) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var result = await mediator.Send(query);
-                    response.Headers.Add("X-Total-Count", $"{result.Total}");
-                    return Results.Ok(result.Items);
-                })
-            .WithTags("Store Items")
+        app.MapGet($"{routePrefix}", DispatchRequest.QueryAsync<GetStoreItems.Request>)
+            .WithName(nameof(GetStoreItems))
             .AddOptions();
 
-        app.MapGet($"{routePrefix}/{{id}}",
-                async (Guid id, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var result = await mediator.Send(new GetStoreItemQuery(id));
-                    return result is null ? Results.NotFound() : Results.Ok(result);
-                })
-            .WithTags("Store Items")
+        app.MapGet($"{routePrefix}/{{id}}", DispatchRequest.WithIdAsync<GetStoreItem.Request>)
+            .WithName(nameof(GetStoreItem))
             .AddOptions();
 
         app.MapPost($"{routePrefix}/create-store-item",
-                async ([FromBody]CreateStoreItemCommand command, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var result = await mediator.Send(command);
-                    return Results.Ok(result);
-                })
-            .WithTags("Store Items")
+                DispatchRequest.CreateAsync<CreateStoreItem.Request>)
+            .WithName(nameof(CreateStoreItem))
             .AddOptions();
 
-        app.MapPost($"{routePrefix}/modify-store-item",
-            async (ModifyStoreItemCommand command, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-            {
-                cache.Add("UserId", user.GetUniqueId());
-                var result = await mediator.Send(command);
-                return result ? Results.NoContent() : Results.NotFound();
-                
-            })
-            .WithTags("Store Items")
+        app.MapPost($"{routePrefix}/modify-store-item", DispatchRequest.ModifyAsync<ModifyStoreItem.Request>)
+            .WithName(nameof(ModifyStoreItem))
             .AddOptions();
 
         return app;
     }
 
-    private static IEndpointConventionBuilder AddOptions(this IEndpointConventionBuilder builder) =>
+    private static void AddOptions(this RouteHandlerBuilder builder)
+    {
         builder
-            .RequireAuthorization() //(Scopes.REGISTERED_USER)
+            .WithTags("Store Items")
+            .RequireAuthorization()
             .WithGroupName("v2");
+    }
 }

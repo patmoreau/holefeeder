@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application.Contracts
+namespace DrifterApps.Holefeeder.ObjectStore.Application
 {
     public interface IRequestUser
     {

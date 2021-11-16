@@ -1,6 +1,6 @@
 ﻿namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
-public interface IQuery
+public interface IRequestQuery
 {
     int Offset { get; }
     int Limit { get; }

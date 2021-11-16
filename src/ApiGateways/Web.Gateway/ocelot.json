@@ -1,14 +1,14 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v2/{everything}",
+      "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/budgeting/api/v2/{everything}",
+      "UpstreamPathTemplate": "/budgeting/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -33,14 +33,14 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/api/v2/{everything}",
+      "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{ObjectStoreUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/object-store/api/v2/{everything}",
+      "UpstreamPathTemplate": "/object-store/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",

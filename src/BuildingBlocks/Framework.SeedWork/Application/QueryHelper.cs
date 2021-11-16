@@ -6,7 +6,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 public static class QueryHelper
 {
-    public static bool TryParse<T>(string? value, IFormatProvider? provider, out T query) where T : IQuery
+    public static bool TryParse<T>(string? value, IFormatProvider? provider, out T query) where T : IRequestQuery
     {
         if (value is null)
         {
