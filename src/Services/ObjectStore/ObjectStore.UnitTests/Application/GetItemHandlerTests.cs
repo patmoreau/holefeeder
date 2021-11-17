@@ -11,26 +11,14 @@ using FluentAssertions;
 
 using NSubstitute;
 
+using OneOf;
+
 using Xunit;
 
 namespace ObjectStore.UnitTests.Application
 {
     public class GetItemHandlerTests
     {
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
-        {
-            // arrange
-            var handler =
-                new GetStoreItemHandler(Substitute.For<IStoreItemsQueriesRepository>(), Substitute.For<ItemsCache>());
-
-            // act
-            Func<Task> action = async () => await handler.Handle(null!, default);
-
-            // assert
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
         [Fact]
         public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
         {
@@ -44,15 +32,16 @@ namespace ObjectStore.UnitTests.Application
             repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), CancellationToken.None)
                 .Returns(new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
 
-            var handler = new GetStoreItemHandler(repository, cache);
+            var handler = new GetStoreItem.Handler(repository, cache);
 
             // act
-            var result = await handler.Handle(new GetStoreItemQuery(Guid.NewGuid()), default);
+            var result = await handler.Handle(new GetStoreItem.Request { Id = Guid.NewGuid() }, default);
 
             // assert
+            OneOf<StoreItemViewModel, NotFoundRequestResult> expected =
+                new StoreItemViewModel(Guid.Parse(guid), "code", "data");
             result.Should()
-                .BeEquivalentTo(
-                    new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
+                .BeEquivalentTo(expected);
         }
     }
 }

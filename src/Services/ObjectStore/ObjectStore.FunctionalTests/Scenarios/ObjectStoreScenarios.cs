@@ -8,10 +8,12 @@ using System.Text.Json;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Commands;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Xbehave;
@@ -224,7 +226,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void CreateStoreItemCommand(HttpClient client, CreateStoreItemCommand command,
+        public void CreateStoreItemCommand(HttpClient client, CreateStoreItem.Request command,
             HttpResponseMessage response)
         {
             "Given CreateStoreItem command"
@@ -235,7 +237,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     Guid.NewGuid().ToString()));
 
             "With valid data"
-                .x(() => command = new CreateStoreItemCommand { Code = "New Code", Data = "New Data" });
+                .x(() => command = new CreateStoreItem.Request("New Code", "New Data"));
 
             "When I call the API"
                 .x(async () =>
@@ -259,8 +261,8 @@ namespace ObjectStore.FunctionalTests.Scenarios
                 .x(async () =>
                 {
                     var result =
-                        await response.Content.ReadFromJsonAsync<Guid>(_jsonSerializerOptions);
-                    result.Should().NotBeEmpty();
+                        await response.Content.ReadFromJsonAsync<JsonElement>(_jsonSerializerOptions);
+                    result.GetProperty("id").GetGuid().Should().NotBeEmpty();
                 });
         }
 
@@ -282,22 +284,22 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     response = await client.PostAsJsonAsync(requestUri, new { });
                 });
 
-            "Then the status code should indicate BadRequest"
+            "Then the status code should indicate UnprocessableEntity"
                 .x(() => response.Should()
                     .NotBeNull()
                     .And.BeOfType<HttpResponseMessage>()
-                    .Which.StatusCode.Should().Be(HttpStatusCode.BadRequest));
+                    .Which.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity));
         }
 
         [Scenario]
-        public void CreateStoreItemCommand_WhenCodeAlreadyExist(HttpClient client, CreateStoreItemCommand command,
+        public void CreateStoreItemCommand_WhenCodeAlreadyExist(HttpClient client, CreateStoreItem.Request command,
             HttpResponseMessage response)
         {
             "Given CreateStoreItem command"
                 .x(() => client = _factory.CreateClient());
 
             "With valid data"
-                .x(() => command = new CreateStoreItemCommand { Code = "Code001", Data = "Data001" });
+                .x(() => command = new CreateStoreItem.Request("Code001", "Data001"));
 
             "When I call the API"
                 .x(async () =>
@@ -307,27 +309,28 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     response = await client.PostAsJsonAsync(requestUri, command);
                 });
 
-            "Then the status code should indicate BadRequest"
+            "Then the status code should indicate UnprocessableEntity"
                 .x(() => response.Should()
                     .NotBeNull()
                     .And.BeOfType<HttpResponseMessage>()
-                    .Which.StatusCode.Should().Be(HttpStatusCode.BadRequest));
+                    .Which.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity));
 
             "And a CommandResult with created status"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                    var result = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
                     result.Should()
                         .NotBeNull()
-                        .And.BeOfType<ProblemDetails>()
-                        .Which.Detail.Should()
-                        .Contain("Code 'Code001' already exists.");
+                        .And.BeOfType<HttpValidationProblemDetails>()
+                        .Which.Errors.Should()
+                        .ContainEquivalentOf(new KeyValuePair<string, string[]>("Code",
+                            new[] { "Code 'Code001' already exists." }));
                 });
         }
 
         [Scenario]
         public void ModifyStoreItemCommand(HttpClient client, Guid data, Guid createResult,
-            ModifyStoreItemCommand modifyCommand, CommandResult modifyResult,
+            ModifyStoreItem.Request modifyCommand, CommandResult modifyResult,
             HttpResponseMessage modifyResponse)
         {
             "Given ModifyStoreItem command"
@@ -345,19 +348,18 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     var code = Guid.NewGuid();
                     data = Guid.NewGuid();
 
-                    var createCommand = new CreateStoreItemCommand { Code = code.ToString(), Data = data.ToString() };
+                    var createCommand = new CreateStoreItem.Request(code.ToString(), data.ToString());
                     var createResponse = await client.PostAsJsonAsync(createRequestUri, createCommand);
 
-                    createResult =
-                        (await createResponse.Content.ReadFromJsonAsync<Guid>(_jsonSerializerOptions))!;
+                    var result =
+                        (await createResponse.Content.ReadFromJsonAsync<JsonElement>(_jsonSerializerOptions))!;
+
+                    createResult = result.GetProperty("id").GetGuid();
                 });
 
             "And modifying the data property"
                 .x(() => modifyCommand =
-                    new ModifyStoreItemCommand
-                    {
-                        Id = createResult, Data = $"{data.ToString()}-modified"
-                    });
+                    new ModifyStoreItem.Request(createResult, $"{data.ToString()}-modified"));
 
             "When I call the API"
                 .x(async () =>

@@ -30,7 +30,7 @@ public static class CreateStoreItem
     public class Validator : AbstractValidator<Request>,
         IValidator<Request, OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
-        public Validator(ILogger<Request> logger)
+        public Validator(ILogger<Validator> logger)
         {
             RuleFor(x => x.Code).NotEmpty();
             RuleFor(x => x.Data).NotEmpty();
