@@ -4,20 +4,26 @@ using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
+using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
 using FluentValidation;
+using FluentValidation.Results;
 
 using MediatR;
 
 using Microsoft.Extensions.Logging;
 
+using OneOf;
+
 namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Commands;
 
 public static class ModifyStoreItem
 {
-    public record Request(Guid Id, string Data) : IRequest<IRequestResult>;
+    public record Request(Guid Id, string Data)
+        : IRequest<OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>;
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<Request>,
+        IValidator<Request, OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>
     {
         public Validator(ILogger<Validator> logger)
         {
@@ -26,9 +32,13 @@ public static class ModifyStoreItem
 
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
         }
+
+        public OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>
+            CreateResponse(ValidationResult result) => new ValidationErrorsRequestResult(result.ToDictionary());
     }
 
-    public class Handler : IRequestHandler<Request, IRequestResult>
+    public class Handler : IRequestHandler<Request,
+        OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>
     {
         private readonly IStoreItemsRepository _itemsRepository;
         private readonly ItemsCache _cache;
@@ -41,23 +51,34 @@ public static class ModifyStoreItem
             _logger = logger;
         }
 
-        public async Task<IRequestResult> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>
+            Handle(Request request,
+                CancellationToken cancellationToken)
         {
-            var storeItem = await _itemsRepository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
-            if (storeItem is null)
+            try
             {
-                return new NotFoundRequestResult();
+                var storeItem =
+                    await _itemsRepository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
+                if (storeItem is null)
+                {
+                    return new NotFoundRequestResult();
+                }
+
+                storeItem = storeItem with { Data = request.Data };
+
+                _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
+
+                await _itemsRepository.SaveAsync(storeItem, cancellationToken);
+
+                await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
+
+                return Unit.Value;
             }
-
-            storeItem = storeItem with { Data = request.Data };
-
-            _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
-
-            await _itemsRepository.SaveAsync(storeItem, cancellationToken);
-
-            await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-            return new NoContentResult();
+            catch (ObjectStoreDomainException ex)
+            {
+                _itemsRepository.UnitOfWork.Dispose();
+                return new DomainErrorRequestResult(ex.Context, ex.Message);
+            }
         }
     }
 }

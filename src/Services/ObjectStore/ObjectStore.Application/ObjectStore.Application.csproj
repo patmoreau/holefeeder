@@ -16,6 +16,7 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="OneOf" Version="3.0.201" />
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
       <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     </ItemGroup>

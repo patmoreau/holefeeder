@@ -6,16 +6,18 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using MediatR;
 
+using OneOf;
+
 namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 
 public static class GetStoreItem
 {
-    public record Request : IRequest<IRequestResult>, IRequestById
+    public record Request : IRequest<OneOf<StoreItemViewModel, NotFoundRequestResult>>
     {
         public Guid Id { get; init; }
     }
     
-    public class Handler : IRequestHandler<Request, IRequestResult>
+    public class Handler : IRequestHandler<Request, OneOf<StoreItemViewModel, NotFoundRequestResult>>
     {
         private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
         private readonly ItemsCache _cache;
@@ -26,7 +28,7 @@ public static class GetStoreItem
             _cache = cache;
         }
 
-        public async Task<IRequestResult> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<OneOf<StoreItemViewModel, NotFoundRequestResult>> Handle(Request request, CancellationToken cancellationToken)
         {
             var result =
                 await _itemsQueriesRepository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
@@ -35,7 +37,7 @@ public static class GetStoreItem
                 return new NotFoundRequestResult();
             }
 
-            return new IdRequestResult(result);
+            return result;
         }
     }
 

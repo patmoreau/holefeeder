@@ -6,20 +6,29 @@ using System.Threading.Tasks;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
+using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
 using FluentValidation;
+using FluentValidation.Results;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using OneOf;
 
 namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Commands;
 
 public static class CreateStoreItem
 {
-    public record Request(string Code, string Data) : IRequest<IRequestResult>, IValidateable;
+    public record Request(string Code, string Data) :
+        IRequest<OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>,
+        IValidateable;
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<Request>,
+        IValidator<Request, OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
         public Validator(ILogger<Request> logger)
         {
@@ -28,9 +37,14 @@ public static class CreateStoreItem
 
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
         }
+
+        public OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult> CreateResponse(
+            ValidationResult result) =>
+            new ValidationErrorsRequestResult(result.ToDictionary());
     }
 
-    public class Handler : IRequestHandler<Request, IRequestResult>
+    public class Handler : IRequestHandler<Request,
+        OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
         private readonly IStoreItemsRepository _itemsRepository;
         private readonly ItemsCache _cache;
@@ -43,7 +57,8 @@ public static class CreateStoreItem
             _logger = logger;
         }
 
-        public async Task<IRequestResult> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>> Handle(Request request,
+            CancellationToken cancellationToken)
         {
             if (await _itemsRepository.FindByCodeAsync((Guid)_cache["UserId"], request.Code, cancellationToken) != null)
             {
@@ -63,12 +78,12 @@ public static class CreateStoreItem
 
                 await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
 
-                return new CreatedRequestResult(storeItem.Id, nameof(GetStoreItem));
+                return storeItem.Id;
             }
-            catch (Exception)
+            catch (ObjectStoreDomainException ex)
             {
                 _itemsRepository.UnitOfWork.Dispose();
-                throw;
+                return new DomainErrorRequestResult(ex.Context, ex.Message);
             }
         }
     }

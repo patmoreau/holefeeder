@@ -8,15 +8,16 @@ using FluentValidation.Results;
 
 using MediatR;
 
+using OneOf;
+
 namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>, IValidateable
-    where TResponse : IRequestResult
 {
-    private readonly IValidator<TRequest> _validator;
+    private readonly IValidator<TRequest, TResponse> _validator;
 
-    public ValidationBehavior(IValidator<TRequest> validator)
+    public ValidationBehavior(IValidator<TRequest, TResponse> validator)
     {
         _validator = validator;
     }
@@ -28,7 +29,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (!result.IsValid)
         {
-            return (TResponse)(IRequestResult)new ValidationErrorsRequestResult(result.ToDictionary());
+            return _validator.CreateResponse(result);
         }
 
         return await next();

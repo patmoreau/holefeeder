@@ -14,11 +14,14 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddMediatR(typeof(GetStoreItemHandler).Assembly)
+        services.AddMediatR(typeof(GetStoreItems))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+            .AddValidators(typeof(GetStoreItems).Assembly,
+                item => services.AddScoped(item.InterfaceType, item.ValidatorType));
 
-        AssemblyScanner.FindValidatorsInAssembly(typeof(ServiceCollectionExtensions).Assembly)
+        AssemblyScanner
+            .FindValidatorsInAssembly(typeof(GetStoreItems).Assembly)
             .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
 
         services.AddScoped<ItemsCache>();
