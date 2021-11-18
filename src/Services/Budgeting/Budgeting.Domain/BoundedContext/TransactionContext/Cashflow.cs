@@ -8,148 +8,127 @@ using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.Domain.Exceptions;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
-namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext
+namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
+
+public record Cashflow : IAggregateRoot
 {
-    public record Cashflow : IAggregateRoot
+    private readonly int _frequency;
+    private readonly int _recurrence;
+    private readonly decimal _amount;
+
+    public Guid Id { get; }
+
+    public DateTime EffectiveDate { get; init; }
+
+    public DateIntervalType IntervalType { get; init; } = DateIntervalType.Weekly;
+
+    public int Frequency
     {
-        private readonly Guid _id;
-        private readonly DateTime _effectiveDate;
-        private readonly int _frequency;
-        private readonly int _recurrence;
-        private readonly decimal _amount;
-        private readonly Guid _userId;
-
-        public Guid Id
+        get => _frequency;
+        init
         {
-            get => _id;
-            init
+            if (value <= 0)
             {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(Id)} is required");
-                }
-
-                _id = value;
-            }
-        }
-
-        public DateTime EffectiveDate
-        {
-            get => _effectiveDate;
-            init
-            {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(EffectiveDate)} is required");
-                }
-
-                _effectiveDate = value;
-            }
-        }
-
-        public DateIntervalType IntervalType { get; init; }
-
-        public int Frequency
-        {
-            get => _frequency;
-            init
-            {
-                if (value <= 0)
-                {
-                    throw new HolefeederDomainException($"{nameof(Frequency)} must be positive");
-                }
-
-                _frequency = value;
-            }
-        }
-
-        public int Recurrence
-        {
-            get => _recurrence;
-            init
-            {
-                if (value < 0)
-                {
-                    throw new HolefeederDomainException($"{nameof(Recurrence)} cannot be negative");
-                }
-
-                _recurrence = value;
-            }
-        }
-
-        public decimal Amount
-        {
-            get => _amount;
-            init
-            {
-                if (value < 0m)
-                {
-                    throw new HolefeederDomainException($"{nameof(Amount)} cannot be negative");
-                }
-
-                _amount = value;
-            }
-        }
-
-        public string Description { get; init; }
-
-        public Guid AccountId { get; init; }
-
-        public Guid CategoryId { get; init; }
-
-        public IReadOnlyCollection<string> Tags { get; private init; }
-
-        public bool Inactive { get; init; }
-
-        public Guid UserId
-        {
-            get => _userId;
-            init
-            {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(UserId)} is required");
-                }
-
-                _userId = value;
-            }
-        }
-
-        public Cashflow()
-        {
-            Tags = ImmutableList<string>.Empty;
-        }
-
-        public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency,
-            int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
-            => new()
-            {
-                Id = Guid.NewGuid(),
-                EffectiveDate = effectiveDate,
-                IntervalType = intervalType,
-                Frequency = frequency,
-                Recurrence = recurrence,
-                Amount = amount,
-                Description = description,
-                CategoryId = categoryId,
-                AccountId = accountId,
-                UserId = userId
-            };
-
-        public Cashflow AddTags(params string[] tags)
-        {
-            var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t) &&
-                                          !Tags.Contains(t,
-                                              StringComparer.Create(CultureInfo.InvariantCulture,
-                                                  CompareOptions.IgnoreCase)))
-                .ToList();
-            
-            if (!newTags.Any())
-            {
-                return this;
+                throw HolefeederDomainException.Create<Cashflow>($"{nameof(Frequency)} must be positive");
             }
 
-            return this with { Tags = newTags.ToImmutableList() };
+            _frequency = value;
         }
+    }
+
+    public int Recurrence
+    {
+        get => _recurrence;
+        init
+        {
+            if (value < 0)
+            {
+                throw HolefeederDomainException.Create<Cashflow>($"{nameof(Recurrence)} cannot be negative");
+            }
+
+            _recurrence = value;
+        }
+    }
+
+    public decimal Amount
+    {
+        get => _amount;
+        init
+        {
+            if (value < 0m)
+            {
+                throw HolefeederDomainException.Create<Cashflow>($"{nameof(Amount)} cannot be negative");
+            }
+
+            _amount = value;
+        }
+    }
+
+    public string Description { get; init; } = string.Empty;
+
+    public Guid AccountId { get; init; }
+
+    public Guid CategoryId { get; init; }
+
+    public IReadOnlyCollection<string> Tags { get; private init; }
+
+    public bool Inactive { get; init; }
+
+    public Guid UserId { get; init; }
+
+    public Cashflow(Guid id, DateTime effectiveDate, decimal amount, Guid userId)
+    {
+        if (id.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(Id)} is required");
+        }
+
+        Id = id;
+
+        if (effectiveDate.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(EffectiveDate)} is required");
+        }
+        
+        EffectiveDate = effectiveDate;
+        
+        Amount = amount;
+        
+        if (userId.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(UserId)} is required");
+        }
+
+        UserId = userId;
+
+        Tags = ImmutableList<string>.Empty;
+    }
+
+    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency,
+        int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+        => new(Guid.NewGuid(), effectiveDate, amount, userId)
+        {
+            IntervalType = intervalType,
+            Frequency = frequency,
+            Recurrence = recurrence,
+            Description = description,
+            CategoryId = categoryId,
+            AccountId = accountId,
+        };
+
+    public Cashflow AddTags(params string[] tags)
+    {
+        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t) &&
+                                      !Tags.Contains(t,
+                                          StringComparer.Create(CultureInfo.InvariantCulture,
+                                              CompareOptions.IgnoreCase)))
+            .ToList();
+
+        if (!newTags.Any())
+        {
+            return this;
+        }
+
+        return this with { Tags = newTags.ToImmutableList() };
     }
 }

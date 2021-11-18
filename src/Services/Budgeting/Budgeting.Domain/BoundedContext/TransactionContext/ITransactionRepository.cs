@@ -8,7 +8,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
 {
     public interface ITransactionRepository : IRepository<Transaction>
     {
-        Task<Transaction> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken);
+        Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken);
         Task SaveAsync(Transaction transaction, CancellationToken cancellationToken);
     }
 }

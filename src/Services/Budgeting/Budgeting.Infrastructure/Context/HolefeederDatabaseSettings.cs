@@ -1,8 +1,7 @@
 ﻿using Framework.Dapper.SeedWork;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
+
+public class HolefeederDatabaseSettings : MySqlDatabaseSettings
 {
-    public class HolefeederDatabaseSettings : DatabaseSettings
-    {
-    }
 }

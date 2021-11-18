@@ -5,7 +5,6 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Queries
-{
-    public record ImportDataStatusQuery(Guid RequestId) : IRequest<CommandResult<ImportDataStatusViewModel>>;
-}
+namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Queries;
+
+public record ImportDataStatusQuery(Guid RequestId) : IRequest<CommandResult<ImportDataStatusViewModel?>>;

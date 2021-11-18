@@ -6,35 +6,23 @@ using DrifterApps.Holefeeder.Budgeting.Application.Models;
 
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries
+namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
+
+public class GetTransactionHandler : IRequestHandler<GetTransactionQuery, TransactionViewModel?>
 {
-    public class GetTransactionHandler : IRequestHandler<GetTransactionQuery, TransactionViewModel>
+    private readonly ITransactionQueriesRepository _repository;
+    private readonly ItemsCache _cache;
+
+    public GetTransactionHandler(ITransactionQueriesRepository repository, ItemsCache cache)
     {
-        private readonly ITransactionQueriesRepository _repository;
-        private readonly ItemsCache _cache;
+        _repository = repository;
+        _cache = cache;
+    }
 
-        public GetTransactionHandler(ITransactionQueriesRepository repository, ItemsCache cache)
-        {
-            _repository = repository;
-            _cache = cache;
-        }
+    public async Task<TransactionViewModel?> Handle(GetTransactionQuery query, CancellationToken cancellationToken)
+    {
+        var transaction = (await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken));
 
-        public Task<TransactionViewModel> Handle(GetTransactionQuery query, CancellationToken cancellationToken)
-        {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            return HandleInternal(query, cancellationToken);
-        }
-
-        private async Task<TransactionViewModel> HandleInternal(GetTransactionQuery query,
-            CancellationToken cancellationToken)
-        {
-            var transaction = (await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken));
-
-            return transaction;
-        }
+        return transaction;
     }
 }

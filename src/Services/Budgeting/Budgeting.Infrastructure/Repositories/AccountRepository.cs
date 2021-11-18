@@ -17,28 +17,28 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
+
+public class AccountRepository : IAccountRepository
 {
-    public class AccountRepository : IAccountRepository
+    private readonly IHolefeederContext _context;
+    private readonly IMapper _mapper;
+
+    public IUnitOfWork UnitOfWork => _context;
+
+    public AccountRepository(IHolefeederContext context, IMapper mapper)
     {
-        private readonly IHolefeederContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public IUnitOfWork UnitOfWork => _context;
+    public async Task<Account?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        var connection = _context.Connection;
 
-        public AccountRepository(IHolefeederContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        var cashflows = new List<Guid>();
 
-        public async Task<Account> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
-        {
-            var connection = _context.Connection;
-
-            var cashflows = new List<Guid>();
-
-            var account = (await connection
+        var account = (await connection
                 .QueryAsync<AccountEntity, Guid?, AccountEntity>(@"
 SELECT 
     a.*, c.id
@@ -58,49 +58,40 @@ WHERE a.id = @Id AND a.user_id = @UserId;
                     new { Id = id, UserId = userId },
                     splitOn: "id")
                 .ConfigureAwait(false))
-                .Distinct()
-                .SingleOrDefault();
+            .Distinct()
+            .SingleOrDefault();
 
-            return account is null ? null : _mapper.Map<Account>(account) with { Cashflows = cashflows.ToImmutableList()};
-        }
+        return account is null ? null : _mapper.Map<Account>(account) with { Cashflows = cashflows.ToImmutableList()};
+    }
 
-        public async Task<Account> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
+    public async Task<Account?> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
+    {
+        var connection = _context.Connection;
+
+        var schema = await connection
+            .FindAsync<AccountEntity>(new {Name = name, UserId = userId})
+            .ConfigureAwait(false);
+
+        return _mapper.Map<Account>(schema.FirstOrDefault());
+    }
+
+    public async Task SaveAsync(Account account, CancellationToken cancellationToken)
+    {
+        var transaction = _context.Transaction;
+
+        var id = account.Id;
+        var userId = account.UserId;
+
+        var entity = await transaction.FindByIdAsync<AccountEntity>(new { Id = id, UserId = userId });
+
+        if (entity is null)
         {
-            var connection = _context.Connection;
-
-            var schema = await connection
-                .FindAsync<AccountEntity>(new {Name = name, UserId = userId})
+            await transaction.InsertAsync(_mapper.Map<AccountEntity>(account))
                 .ConfigureAwait(false);
-
-            return _mapper.Map<Account>(schema.FirstOrDefault());
         }
-
-        public async Task SaveAsync(Account account, CancellationToken cancellationToken)
+        else
         {
-            var transaction = _context.Transaction;
-
-            var id = account.Id;
-            var userId = account.UserId;
-
-            var entity = await FindAsync(transaction.Connection, id, userId);
-
-            if (entity is null)
-            {
-                await transaction.InsertAsync(_mapper.Map<AccountEntity>(account))
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                await transaction.UpdateAsync(_mapper.Map(account, entity)).ConfigureAwait(false);
-            }
-        }
-
-        private static async Task<AccountEntity> FindAsync(IDbConnection connection, Guid id, Guid userId)
-        {
-            var schema = await connection
-                .FindByIdAsync<AccountEntity>(new {Id = id, UserId = userId})
-                .ConfigureAwait(false);
-            return schema;
+            await transaction.UpdateAsync(_mapper.Map(account, entity)).ConfigureAwait(false);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             // given
 
             // act
-            var query = new GetTransactionsQuery(null, null, null, null);
+            var query = new GetTransactionsRequestQuery(null, null, null, null);
 
             // assert
             query.Query.Should().BeEquivalentTo(QueryParams.Empty);
@@ -37,7 +37,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             // given
 
             // act
-            var query = new GetTransactionsQuery(10, 20, new[] {"sort"}, new[] {"filter"});
+            var query = new GetTransactionsRequestQuery(10, 20, new[] {"sort"}, new[] {"filter"});
 
             // assert
             query.Query.Should().BeEquivalentTo(new QueryParams(10, 20, new[] {"sort"}, new[] {"filter"}));
@@ -68,7 +68,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             var handler = new GetTransactionsHandler(repository, cache);
 
             // when
-            QueryResult<TransactionViewModel> result = await handler.Handle(new GetTransactionsQuery(null, null, null, null), default);
+            QueryResult<TransactionViewModel> result = await handler.Handle(new GetTransactionsRequestQuery(null, null, null, null), default);
 
             // then
             result.Should().BeEquivalentTo(new QueryResult<TransactionViewModel>(2, _testTransactionData));

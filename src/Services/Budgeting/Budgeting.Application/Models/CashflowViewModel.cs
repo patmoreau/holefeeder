@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
@@ -18,13 +16,13 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         
         public decimal Amount { get; init; }
         
-        public DateIntervalType IntervalType { get; set; }
+        public DateIntervalType IntervalType { get; set; } = null!;
 
         public int Frequency { get; set; }
 
         public int Recurrence { get; set; }
 
-        public string Description { get; init; }
+        public string Description { get; init; } = null!;
 
         public ImmutableArray<string> Tags
         {
@@ -35,8 +33,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
             }
         }
 
-        public CategoryInfoViewModel Category { get; init; }
+        public CategoryInfoViewModel Category { get; init; } = null!;
         
-        public AccountInfoViewModel Account { get; init; }
+        public AccountInfoViewModel Account { get; init; } = null!;
     }
 }

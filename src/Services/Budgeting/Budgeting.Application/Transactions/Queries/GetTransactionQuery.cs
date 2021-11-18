@@ -6,8 +6,5 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries
 {
-    public record GetTransactionQuery : IRequest<TransactionViewModel>
-    {
-        public Guid Id { get; init; }
-    }
+    public record GetTransactionQuery(Guid Id) : IRequest<TransactionViewModel?>;
 }

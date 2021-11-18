@@ -1,12 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+
+public abstract record EntityRoot
 {
-    public abstract record EntityRoot
-    {
-        // [ExplicitKey]
-        [Key]
-        public Guid Id { get; init; }
-    }
+    [Key]
+    public Guid Id { get; init; }
 }

@@ -27,7 +27,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             // given
 
             // act
-            var query = new GetAccountsQuery(null, null, null, null);
+            var query = new GetAccountsRequestQuery(null, null, null, null);
 
             // assert
             query.Query.Should().BeEquivalentTo(QueryParams.Empty);
@@ -39,7 +39,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             // given
 
             // act
-            var query = new GetAccountsQuery(10, 20, new[] { "sort" }, new[] { "filter" });
+            var query = new GetAccountsRequestQuery(10, 20, new[] { "sort" }, new[] { "filter" });
 
             // assert
             query.Query.Should().BeEquivalentTo(new QueryParams(10, 20, new[] { "sort" }, new[] { "filter" }));
@@ -70,7 +70,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             var handler = new GetAccountsHandler(repository, cache);
 
             // when
-            var result = await handler.Handle(new GetAccountsQuery(null, null, null, null), default);
+            var result = await handler.Handle(new GetAccountsRequestQuery(null, null, null, null), default);
 
             // then
             result.Should().BeEquivalentTo(new QueryResult<AccountViewModel>(TestAccountData.Count(), TestAccountData));

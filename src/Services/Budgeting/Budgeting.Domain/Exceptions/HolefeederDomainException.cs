@@ -1,19 +1,18 @@
 using System;
 
-namespace DrifterApps.Holefeeder.Budgeting.Domain.Exceptions
+using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
+
+namespace DrifterApps.Holefeeder.Budgeting.Domain.Exceptions;
+
+public class HolefeederDomainException : Exception
 {
-    public class HolefeederDomainException : Exception
+    public string Context { get; }
+
+    private HolefeederDomainException(string context, string message) : base(message)
     {
-        public HolefeederDomainException()
-        {
-        }
-
-        public HolefeederDomainException(string message) : base(message)
-        {
-        }
-
-        public HolefeederDomainException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        Context = context;
     }
+
+    public static HolefeederDomainException Create<T>(string message) where T : IAggregateRoot =>
+        new(typeof(T).Name, $"{typeof(T).Name} entity error: {message}");
 }

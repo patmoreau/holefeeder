@@ -2,16 +2,15 @@
 
 using FluentValidation;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Validators
+namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Validators;
+
+public class MakePurchaseValidator : AbstractValidator<MakePurchaseCommand>
 {
-    public class MakePurchaseValidator : AbstractValidator<MakePurchaseCommand>
+    public MakePurchaseValidator()
     {
-        public MakePurchaseValidator()
-        {
-            RuleFor(command => command.AccountId).NotNull().NotEmpty();
-            RuleFor(command => command.CategoryId).NotNull().NotEmpty();
-            RuleFor(command => command.Date).NotNull();
-            RuleFor(command => command.Amount).GreaterThan(0);
-        }
+        RuleFor(command => command.AccountId).NotNull().NotEmpty();
+        RuleFor(command => command.CategoryId).NotNull().NotEmpty();
+        RuleFor(command => command.Date).NotNull();
+        RuleFor(command => command.Amount).GreaterThan(0);
     }
 }

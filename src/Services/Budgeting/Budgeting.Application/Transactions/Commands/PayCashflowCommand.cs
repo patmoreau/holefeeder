@@ -1,12 +1,10 @@
 ﻿using System;
 
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-
 using MediatR;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands
 {
-    public record PayCashflowCommand : IRequest<CommandResult<Guid>>
+    public record PayCashflowCommand : IRequest<Guid>
     {
         public DateTime Date { get; init; }
 

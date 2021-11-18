@@ -77,18 +77,16 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
 
             lock (Locker)
             {
-                var connectionStringBuilder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
-
                 var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
 
-                EnsureDatabase.For.MySqlDatabase(databaseSettings.BasicConnectionString);
+                EnsureDatabase.For.MySqlDatabase(databaseSettings.GetBuilder(true).ConnectionString);
 
                 var upgradeEngine = DeployChanges.To
                     .MySqlDatabase(connectionManager)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .JournalTo(new MySqlTableJournal(
                         () => connectionManager,
-                        () => MySqlConnectionManager.Log, connectionStringBuilder.Database, "schema_versions"))
+                        () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database, "schema_versions"))
                     .LogToConsole()
                     .Build();
 

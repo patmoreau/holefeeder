@@ -1,23 +1,20 @@
 ﻿using System;
 
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands
+namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands;
+
+public record MakePurchaseCommand : IRequest<Guid>
 {
-    public record MakePurchaseCommand : IRequest<CommandResult<Guid>>
-    {
-        public DateTime Date { get; init; }
+    public DateTime Date { get; init; }
 
-        public decimal Amount { get; init; }
+    public decimal Amount { get; init; }
 
-        public string Description { get; init; }
+    public string Description { get; init; } = null!;
 
-        public Guid AccountId { get; init; }
+    public Guid AccountId { get; init; }
 
-        public Guid CategoryId { get; init; }
+    public Guid CategoryId { get; init; }
 
-        public string[] Tags { get; init; }
-    }
+    public string[] Tags { get; init; } = null!;
 }

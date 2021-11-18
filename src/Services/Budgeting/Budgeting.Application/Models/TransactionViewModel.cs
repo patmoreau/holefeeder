@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         
         public decimal Amount { get; init; }
         
-        public string Description { get; init; }
+        public string Description { get; init; } = null!;
 
         public ImmutableArray<string> Tags
         {
@@ -26,8 +25,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
             }
         }
 
-        public CategoryInfoViewModel Category { get; init; }
+        public CategoryInfoViewModel Category { get; init; } = null!;
         
-        public AccountInfoViewModel Account { get; init; }
+        public AccountInfoViewModel Account { get; init; } = null!;
     }
 }

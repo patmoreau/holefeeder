@@ -14,40 +14,40 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext
 
         public Guid Id
         {
-            get=>_id;
-            init
+            get => _id;
+            private init
             {
                 if (value.Equals(default))
                 {
-                    throw new HolefeederDomainException($"{nameof(Id)} is required");
+                    throw HolefeederDomainException.Create<Category>($"{nameof(Id)} is required");
                 }
 
                 _id = value;
             }
         }
-        
+
         public CategoryType Type { get; init; }
-        
+
         public string Name
         {
-            get=>_name;
+            get => _name;
             init
             {
                 if (string.IsNullOrWhiteSpace(value) || value.Length > 255)
                 {
-                    throw new HolefeederDomainException($"{nameof(Name)} must be from 1 to 255 characters");
+                    throw HolefeederDomainException.Create<Category>($"{nameof(Name)} must be from 1 to 255 characters");
                 }
 
                 _name = value;
             }
         }
 
-        public string Color { get; init; }
-        
+        public string Color { get; init; } = string.Empty;
+
         public bool Favorite { get; init; }
-        
+
         public bool System { get; init; }
-        
+
         public decimal BudgetAmount { get; init; }
 
         public Guid UserId
@@ -57,23 +57,23 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext
             {
                 if (value.Equals(default))
                 {
-                    throw new HolefeederDomainException($"{nameof(UserId)} is required");
+                    throw HolefeederDomainException.Create<Category>($"{nameof(UserId)} is required");
                 }
 
                 _userId = value;
             }
         }
-        
+
+        public Category(Guid id, CategoryType type, string name, Guid userId)
+        {
+            Id = id;
+            Type = type;
+            Name = name;
+            UserId = userId;
+        }
+
         public static Category Create(CategoryType type, string name, decimal budgetAmount,
             string description, Guid userId)
-            => new()
-            {
-                Id = Guid.NewGuid(),
-                Type = type,
-                Name = name,
-                Favorite = false,
-                BudgetAmount = budgetAmount,
-                UserId = userId,
-            };
+            => new(Guid.NewGuid(), type, name, userId) { BudgetAmount = budgetAmount };
     }
 }

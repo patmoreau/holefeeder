@@ -11,107 +11,81 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext
 {
     public record Account : IAggregateRoot
     {
-        private readonly Guid _id;
-        private readonly string _name = string.Empty;
-        private readonly DateTime _openDate;
-        private readonly Guid _userId;
+        public Guid Id { get; }
 
-        public Guid Id
-        {
-            get=>_id;
-            init
-            {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(Id)} is required");
-                }
-
-                _id = value;
-            }
-        }
         public AccountType Type { get; init; }
-        public string Name
-        {
-            get=>_name;
-            init
-            {
-                if (string.IsNullOrWhiteSpace(value) || value.Length > 255)
-                {
-                    throw new HolefeederDomainException($"{nameof(Name)} must be from 1 to 255 characters");
-                }
 
-                _name = value;
-            }
-        }
+        public string Name { get; init; }
 
         public bool Favorite { get; init; }
+
         public decimal OpenBalance { get; init; }
-        public DateTime OpenDate
-        {
-            get=>_openDate;
-            init
-            {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(OpenDate)} is required");
-                }
 
-                _openDate = value;
-            }
-        }
+        public DateTime OpenDate { get; init; }
 
-        public string Description { get; init; }
+        public string Description { get; init; } = string.Empty;
+        
         public bool Inactive { get; init; }
-        public Guid UserId
-        {
-            get => _userId;
-            init
-            {
-                if (value.Equals(default))
-                {
-                    throw new HolefeederDomainException($"{nameof(UserId)} is required");
-                }
 
-                _userId = value;
-            }
-        }
+        public Guid UserId { get; }
 
         public IReadOnlyList<Guid> Cashflows { get; init; }
 
-        public Account()
+        public Account(Guid id, AccountType type, string name, DateTime openDate, Guid userId)
         {
+            if (id.Equals(default))
+            {
+                throw HolefeederDomainException.Create<Account>($"{nameof(Id)} is required");
+            }
+
+            Id = id;
+
+            Type = type;
+
+            if (string.IsNullOrWhiteSpace(name) || name.Length > 255)
+            {
+                throw HolefeederDomainException.Create<Account>($"{nameof(Name)} must be from 1 to 255 characters");
+            }
+
+            Name = name;
+
+            if (openDate.Equals(default))
+            {
+                throw HolefeederDomainException.Create<Account>($"{nameof(OpenDate)} is required");
+            }
+
+            OpenDate = openDate;
+
+            if (userId.Equals(default))
+            {
+                throw HolefeederDomainException.Create<Account>($"{nameof(UserId)} is required");
+            }
+
+            UserId = userId;
+
             Cashflows = ImmutableList<Guid>.Empty;
         }
-        
+
         public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
             string description, Guid userId)
-            => new()
+            => new(Guid.NewGuid(), type, name, openDate, userId)
             {
-                Id = Guid.NewGuid(),
-                Type = type,
-                Name = name,
-                Favorite = false,
-                OpenBalance = openBalance,
-                OpenDate = openDate,
-                Description = description,
-                Inactive = false,
-                UserId = userId,
-                Cashflows = ImmutableList<Guid>.Empty
+                OpenBalance = openBalance, Description = description
             };
 
         public Account Close()
         {
             if (Inactive)
             {
-                throw new HolefeederDomainException("Account already closed");
+                throw HolefeederDomainException.Create<Account>("Account already closed");
             }
 
             if (Cashflows.Any())
             {
-                throw new HolefeederDomainException("Account has active cashflows");
+                throw HolefeederDomainException.Create<Account>("Account has active cashflows");
             }
 
-            return this with {Inactive = true};
+            return this with { Inactive = true };
         }
     }
 }
