@@ -2,6 +2,7 @@
 using DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
 using DrifterApps.Holefeeder.Budgeting.Application.Imports.Commands;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
 using FluentValidation;
 
@@ -22,7 +23,8 @@ public static class ServiceCollectionExtensions
         services.AddMemoryCache();
             
         services.AddMediatR(typeof(GetAccounts).Assembly)
-            .AddTransient<ImportDataCommandTask>()
+            .AddSingleton<BackgroundWorkerQueue>()
+            .AddTransient<ImportData.BackgroundTask>()
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddValidators(typeof(GetAccounts).Assembly,

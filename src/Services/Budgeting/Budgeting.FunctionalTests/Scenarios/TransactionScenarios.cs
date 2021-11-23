@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -34,7 +35,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetTransactions(HttpClient client, HttpResponseMessage response)
+        public void GivenGetTransactions(HttpClient client, IEnumerable<TransactionViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -42,112 +43,94 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/transactions/get-transactions";
+                    const string request = "/api/v2/transactions";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the transactions of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<TransactionViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(6);
-                        result?.Items.Should()
-                            .HaveCount(6)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction1,
-                                        Date = new DateTime(2020, 1, 2),
-                                        Amount = 10m,
-                                        Description = "Transaction1",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction2,
-                                        Date = new DateTime(2020, 1, 3),
-                                        Amount = 20m,
-                                        Description = "Transaction2",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction3,
-                                        Date = new DateTime(2020, 1, 4),
-                                        Amount = 30m,
-                                        Description = "Transaction3",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction4,
-                                        Date = new DateTime(2020, 1, 5),
-                                        Amount = 40m,
-                                        Description = "Transaction4",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
-                                            "Category2", CategoryType.Gain, "#2"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction5,
-                                        Date = new DateTime(2020, 1, 6),
-                                        Amount = 50m,
-                                        Description = "Transaction5",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
-                                            "Category2", CategoryType.Gain, "#2"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction6,
-                                        Date = new DateTime(2020, 1, 7),
-                                        Amount = 111m,
-                                        Description = "Transaction6",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(6)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction1,
+                                Date = new DateTime(2020, 1, 2),
+                                Amount = 10m,
+                                Description = "Transaction1",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction2,
+                                Date = new DateTime(2020, 1, 3),
+                                Amount = 20m,
+                                Description = "Transaction2",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction3,
+                                Date = new DateTime(2020, 1, 4),
+                                Amount = 30m,
+                                Description = "Transaction3",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction4,
+                                Date = new DateTime(2020, 1, 5),
+                                Amount = 40m,
+                                Description = "Transaction4",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
+                                    "Category2", CategoryType.Gain, "#2"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction5,
+                                Date = new DateTime(2020, 1, 6),
+                                Amount = 50m,
+                                Description = "Transaction5",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
+                                    "Category2", CategoryType.Gain, "#2"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction6,
+                                Date = new DateTime(2020, 1, 7),
+                                Amount = 111m,
+                                Description = "Transaction6",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client, HttpResponseMessage response)
+        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client, IEnumerable<TransactionViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -155,64 +138,46 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API for amount < 30"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/transactions/get-transactions?filter=amount:lt:30";
+                    const string request = "/api/v2/transactions?filter=amount:lt:30";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the transactions of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<TransactionViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(2);
-                        result?.Items.Should()
-                            .HaveCount(2)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction1,
-                                        Date = new DateTime(2020, 1, 2),
-                                        Amount = 10m,
-                                        Description = "Transaction1",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction2,
-                                        Date = new DateTime(2020, 1, 3),
-                                        Amount = 20m,
-                                        Description = "Transaction2",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(2)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction1,
+                                Date = new DateTime(2020, 1, 2),
+                                Amount = 10m,
+                                Description = "Transaction1",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction2,
+                                Date = new DateTime(2020, 1, 3),
+                                Amount = 20m,
+                                Description = "Transaction2",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client, HttpResponseMessage response)
+        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<TransactionViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -220,60 +185,42 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API with an offset of 2 a limit of 2 and sorted by date"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/transactions/get-transactions?offset=2&limit=2&sort=date";
+                    const string request = "/api/v2/transactions?offset=2&limit=2&sort=date";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the transactions of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<TransactionViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(6);
-                        result?.Items.Should()
-                            .HaveCount(2)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction3,
-                                        Date = new DateTime(2020, 1, 4),
-                                        Amount = 30m,
-                                        Description = "Transaction3",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    },
-                                    new TransactionViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Transaction4,
-                                        Date = new DateTime(2020, 1, 5),
-                                        Amount = 40m,
-                                        Description = "Transaction4",
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
-                                            "Category2", CategoryType.Gain, "#2"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
-                                            "Account1")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(2)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction3,
+                                Date = new DateTime(2020, 1, 4),
+                                Amount = 30m,
+                                Description = "Transaction3",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            },
+                            new TransactionViewModel
+                            {
+                                Id = BudgetingContextSeed.Transaction4,
+                                Date = new DateTime(2020, 1, 5),
+                                Amount = 40m,
+                                Description = "Transaction4",
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category2,
+                                    "Category2", CategoryType.Gain, "#2"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
+                                    "Account1")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
@@ -329,7 +276,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void MakePurchaseCommand(HttpClient client, MakePurchaseCommand command,
+        public void MakePurchaseCommand(HttpClient client, MakePurchase.Request command,
             HttpResponseMessage response)
         {
             "Given MakePurchase command"
@@ -340,7 +287,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     Guid.NewGuid().ToString()));
 
             "With valid data"
-                .x(() => command = new MakePurchaseCommand
+                .x(() => command = new MakePurchase.Request
                 {
                     Date = DateTime.Now,
                     Amount = 999.19m,
@@ -364,27 +311,22 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .And.BeOfType<HttpResponseMessage>()
                     .Which.IsSuccessStatusCode.Should().BeTrue());
 
-            "With the header location present"
-                .x(() => response.Headers.Location?.AbsolutePath.Should().StartWithEquivalentOf("/api/v2/transactions/"));
 
-            "And a CommandResult with created status"
-                .x(async () =>
+            "With the header location present"
+                .x(() =>
                 {
                     using (new AssertionScope())
                     {
-                        var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
-                        result.Should().NotBeNull()
-                            .And.BeEquivalentTo(CommandResult<Guid>.Create(CommandStatus.Created, Guid.Empty),
-                                options => options
-                                    .ComparingByMembers<CommandResult<Guid>>()
-                                    .Using<Guid>(ctx => ctx.Subject.Should().NotBeEmpty()).WhenTypeIs<Guid>());
+                        response.Headers.Location.Should().NotBeNull();
+                        response.Headers.Location!.AbsolutePath.Should()
+                            .MatchRegex(
+                                "^/api/v2/transactions/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
                     }
                 });
         }
 
         [Scenario]
-        public void TransferCommand(HttpClient client, TransferCommand command,
+        public void TransferCommand(HttpClient client, Transfer.Request command,
             HttpResponseMessage response)
         {
             "Given TransferCommand command"
@@ -395,7 +337,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     BudgetingContextSeed.TestUserForCommands.ToString()));
 
             "With valid data"
-                .x(() => command = new TransferCommand
+                .x(() => command = new Transfer.Request
                 {
                     Date = DateTime.Now,
                     Amount = 100m,
@@ -419,20 +361,14 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "With the header location present"
-                .x(() => response.Headers.Location?.AbsolutePath.Should().StartWithEquivalentOf("/api/v2/transactions/"));
-
-            "And a CommandResult with created status"
-                .x(async () =>
+                .x(() =>
                 {
                     using (new AssertionScope())
                     {
-                        var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
-                        result.Should().NotBeNull()
-                            .And.BeEquivalentTo(CommandResult<Guid>.Create(CommandStatus.Created, Guid.Empty),
-                                options => options
-                                    .ComparingByMembers<CommandResult<Guid>>()
-                                    .Using<Guid>(ctx => ctx.Subject.Should().NotBeEmpty()).WhenTypeIs<Guid>());
+                        response.Headers.Location.Should().NotBeNull();
+                        response.Headers.Location!.AbsolutePath.Should()
+                            .MatchRegex(
+                                "^/api/v2/transactions/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
                     }
                 });
         }

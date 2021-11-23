@@ -25,11 +25,11 @@ public static class CategoriesRoutes
         return app;
     }
 
-    private static async Task<IResult> GetCategories(GetCategories.Request query, IMediator mediator, HttpResponse response)
+    private static async Task<IResult> GetCategories(IMediator mediator, HttpResponse response)
     {
-        var result = await mediator.Send(query);
-        response.Headers.Add("X-Total-Count", $"{result.Total}");
-        return Results.Ok(result);
+        var (total, enumerable) = await mediator.Send(new GetCategories.Request());
+        response.Headers.Add("X-Total-Count", $"{total}");
+        return Results.Ok(enumerable);
     }
     
     private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>

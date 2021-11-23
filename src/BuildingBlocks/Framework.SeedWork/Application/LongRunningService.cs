@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
+using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
+
 using Microsoft.Extensions.Hosting;
 
 namespace DrifterApps.Holefeeder.Framework.SeedWork.Application

@@ -87,9 +87,9 @@ builder.Services
 builder.Services
     .AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy())
-    .AddMySql(builder.Configuration["ObjectStoreDatabaseSettings:ConnectionString"],
-        "ObjectStoreDB-check",
-        tags: new[] { "object-store-db" });
+    .AddMySql(builder.Configuration["HolefeederDatabaseSettings:ConnectionString"],
+        "BudgetingDB-check",
+        tags: new[] { "budgeting-db" });
 
 builder.Host.UseSerilog();
 
@@ -111,6 +111,7 @@ app.AddAccountsRoutes()
     .AddCategoriesRoutes()
     .AddEnumerationsRoutes()
     .AddImportsRoutes()
+    .AddTransactionsRoutes()
     .UseCustomErrors(builder.Environment)
     .UseSwagger()
     .UseSwaggerUI(c =>

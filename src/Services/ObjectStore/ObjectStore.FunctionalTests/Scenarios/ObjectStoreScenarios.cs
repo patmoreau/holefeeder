@@ -14,7 +14,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 using Xbehave;
 
@@ -254,8 +253,16 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "With the header location present"
-                .x(() => response.Headers.Location?.AbsolutePath.Should()
-                    .MatchRegex("^/api/v2/store-items/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"));
+                .x(() =>
+                {
+                    using (new AssertionScope())
+                    {
+                        response.Headers.Location.Should().NotBeNull();
+                        response.Headers.Location!.AbsolutePath.Should()
+                            .MatchRegex(
+                                "^/api/v2/store-items/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+                    }
+                });
 
             "And a Guid is returned"
                 .x(async () =>
@@ -352,7 +359,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
                     var createResponse = await client.PostAsJsonAsync(createRequestUri, createCommand);
 
                     var result =
-                        (await createResponse.Content.ReadFromJsonAsync<JsonElement>(_jsonSerializerOptions))!;
+                        (await createResponse.Content.ReadFromJsonAsync<JsonElement>(_jsonSerializerOptions));
 
                     createResult = result.GetProperty("id").GetGuid();
                 });

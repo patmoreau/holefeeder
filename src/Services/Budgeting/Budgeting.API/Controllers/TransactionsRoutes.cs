@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Budgeting.API.Authorization;
 using DrifterApps.Holefeeder.Budgeting.Application;
+using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
+using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
 
@@ -20,45 +24,106 @@ public static class TransactionsRoutes
     {
         const string routePrefix = "api/v2/transactions";
 
-        app.MapGet($"{routePrefix}",
-                async (GetTransactionsRequestQuery query, IMediator mediator, ItemsCache cache, ClaimsPrincipal user, HttpResponse response) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var (total, items) = await mediator.Send(query);
-                    response.Headers.Add("X-Total-Count", $"{total}");
-                    return Results.Ok(items);
-                })
+        app.MapGet($"{routePrefix}", GetTransactions)
+            .WithName(nameof(GetTransactions))
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .Produces<TransactionViewModel[]>()
             .AddOptions();
 
-        app.MapGet($"{routePrefix}/{{id}}",
-                async (Guid id, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var result = await mediator.Send(new GetTransactionQuery(id));
-                    return Results.Ok(result);
-                })
+        app.MapGet($"{routePrefix}/{{id}}", GetTransaction)
+            .WithName(nameof(GetTransaction))
+            .Produces<TransactionViewModel>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .AddOptions();
 
-        app.MapPost($"{routePrefix}/make-purchase",
-                async ([FromBody]MakePurchaseCommand command, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    var result = await mediator.Send(command);
-                    return Results.Ok(result);
-                })
+        app.MapPost($"{routePrefix}/make-purchase", MakePurchase)
+            .WithName(nameof(MakePurchase))
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .Produces<Guid>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .AddOptions();
 
-        app.MapPost($"{routePrefix}/transfer",
-                async (TransferCommand command, IMediator mediator, ItemsCache cache, ClaimsPrincipal user) =>
-                {
-                    cache.Add("UserId", user.GetUniqueId());
-                    await mediator.Send(command);
-                    return Results.NoContent();
-                
-                })
+        app.MapPost($"{routePrefix}/transfer", Transfer)
+            .WithName(nameof(Transfer))
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .Produces<Guid>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .AddOptions();
+
+        app.MapPost($"{routePrefix}/pay-cashflow", PayCashflow)
+            .WithName(nameof(PayCashflow))
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .Produces<Guid>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .AddOptions();
 
         return app;
+    }
+
+    private static async Task<IResult> GetTransactions(GetTransactions.Request query, IMediator mediator, HttpResponse response)
+    {
+        var requestResult = await mediator.Send(query);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"
+            ),
+            result =>
+            {
+                response.Headers.Add("X-Total-Count", $"{result.Total}");
+                return Results.Ok(result.Items);
+            });
+    }
+    
+    private static async Task<IResult> GetTransaction(Guid id, IMediator mediator, CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(new GetTransaction.Request(id), cancellationToken);
+        return requestResult.Match(
+            Results.Ok,
+            _ => Results.NotFound());
+    }
+
+    private static async Task<IResult> MakePurchase(MakePurchase.Request request, IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(request, cancellationToken);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"),
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
+            error => Results.BadRequest(new { error.Context, error.Message })
+        );
+    }
+
+    private static async Task<IResult> Transfer(Transfer.Request request, IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(request, cancellationToken);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"),
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
+            error => Results.BadRequest(new { error.Context, error.Message })
+        );
+    }
+
+    private static async Task<IResult> PayCashflow(PayCashflow.Request request, IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(request, cancellationToken);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"),
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
+            error => Results.BadRequest(new { error.Context, error.Message })
+        );
     }
 
     private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>

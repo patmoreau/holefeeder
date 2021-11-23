@@ -7,12 +7,11 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
 public abstract class
-    BackgroundRequestHandler<TRequest, TBackgroundTask, TResponse> : IBackgroundRequestHandler<TRequest,
-        TBackgroundTask, TResponse>
-    where TRequest : IRequest<Guid>
+    BackgroundRequestHandler<TRequest, TBackgroundTask, TResponse> : IBackgroundRequestHandler<TRequest>
+    where TRequest : IRequest<RequestResponse>
     where TBackgroundTask : IBackgroundTask<TRequest, TResponse>
 {
     private readonly IServiceProvider _serviceProvider;
@@ -21,7 +20,7 @@ public abstract class
 
     private readonly Guid _id = Guid.NewGuid();
 
-    protected abstract Guid UserId { get; }
+    protected Guid UserId { get; init; }
 
     protected BackgroundRequestHandler(IServiceProvider serviceProvider,
         BackgroundWorkerQueue backgroundWorkerQueue, IMemoryCache memoryCache)
@@ -31,13 +30,8 @@ public abstract class
         _memoryCache = memoryCache;
     }
 
-    public Task<Guid> Handle(TRequest request, CancellationToken cancellationToken)
+    public Task<RequestResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
-
         _backgroundWorkerQueue.QueueBackgroundWorkItem(async token =>
         {
             using var scope = _serviceProvider.CreateScope();
@@ -47,7 +41,7 @@ public abstract class
             await task.Handle(UserId, request, UpdateTaskProgress, token);
         });
 
-        return Task.FromResult(_id);
+        return Task.FromResult(new RequestResponse(_id));
     }
 
     private void UpdateTaskProgress(TResponse response)

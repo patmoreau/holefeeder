@@ -5,6 +5,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CommandStatus
     {
+        Initializing,
         Accepted,
         BadRequest,
         Completed,

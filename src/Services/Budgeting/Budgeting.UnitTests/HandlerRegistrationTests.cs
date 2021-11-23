@@ -15,11 +15,11 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests
         [Fact]
         public void GivenAllRequests_WhenDefined_ShouldHaveMatchingHandler()
         {
-            var requestTypes = typeof(GetAccountsHandler).Assembly.GetTypes()
+            var requestTypes = typeof(GetAccounts.Handler).Assembly.GetTypes()
                 .Where(IsRequest)
                 .ToList();
 
-            var handlerTypes = typeof(GetAccountsHandler).Assembly.GetTypes()
+            var handlerTypes = typeof(GetAccounts.Handler).Assembly.GetTypes()
                 .Where(IsIRequestHandler)
                 .ToList();
 

@@ -8,10 +8,13 @@ using DrifterApps.Holefeeder.Budgeting.Application;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentAssertions;
 
 using NSubstitute;
+
+using OneOf;
 
 using Xunit;
 
@@ -26,22 +29,10 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             // given
 
             // act
-            var query = new GetTransactionQuery {Id = id};
+            var query = new GetTransaction.Request(id);
 
             // assert
             query.Id.Should().Be(id);
-        }
-
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
-        {
-            var cache = Substitute.For<ItemsCache>();
-            cache["UserId"] = Guid.NewGuid();
-            var handler = new GetTransactionHandler(Substitute.For<ITransactionQueriesRepository>(), cache);
-
-            Func<Task> action = async () => await handler.Handle(null, default);
-
-            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
@@ -52,23 +43,24 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             cache["UserId"] = Guid.NewGuid();
             var repository = Substitute.For<ITransactionQueriesRepository>();
             repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), CancellationToken.None)
-                .Returns(_testTransactionData[0] with {});
+                .Returns(_testTransactionData[0] with { });
 
-            var handler = new GetTransactionHandler(repository, cache);
+            var handler = new GetTransaction.Handler(repository, cache);
 
             // when
-            var result = await handler.Handle(new GetTransactionQuery {Id = Guid.NewGuid()}, default);
+            var result = await handler.Handle(new GetTransaction.Request(Guid.NewGuid()), default);
 
             // then
-            result.Should().BeEquivalentTo(_testTransactionData[0]);
+            OneOf<TransactionViewModel, NotFoundRequestResult> expected = _testTransactionData[0];
+            result.Should().BeEquivalentTo(expected);
         }
-        
+
         public static IEnumerable<object[]> GetIds()
         {
-            yield return new object[] {Guid.NewGuid()};
-            yield return new object[] {Guid.Empty};
+            yield return new object[] { Guid.NewGuid() };
+            yield return new object[] { Guid.Empty };
         }
-        
+
         private readonly TransactionViewModel[] _testTransactionData =
         {
             new()
@@ -77,7 +69,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
                 Date = DateTime.Today,
                 Amount = 12345m,
                 Description = "transaction #1",
-                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
+                Tags = ImmutableArray.Create(new[] { "tag#1", "tag#2" })
             },
             new()
             {
@@ -85,7 +77,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
                 Date = DateTime.Today,
                 Amount = 54321m,
                 Description = "transaction #2",
-                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
+                Tags = ImmutableArray.Create(new[] { "tag#1", "tag#2" })
             }
         };
     }

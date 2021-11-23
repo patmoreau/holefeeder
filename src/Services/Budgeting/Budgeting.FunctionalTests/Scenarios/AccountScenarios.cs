@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -12,6 +13,9 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 using Xbehave;
 
@@ -28,14 +32,14 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public AccountScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
             _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
         [Scenario]
-        public void GivenGetAccounts(HttpClient client, HttpResponseMessage response)
+        public void GivenGetAccounts(HttpClient client, IEnumerable<AccountViewModel>? result)
         {
             "Given GetAccount query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -43,74 +47,57 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/accounts/get-accounts";
+                    const string request = "/api/v2/accounts";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<AccountViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the accounts of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<AccountViewModel>>(_jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(3);
-                        result?.Items.Should()
-                            .HaveCount(3)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new AccountViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Account1,
-                                        Type = AccountType.Checking,
-                                        Name = "Account1",
-                                        OpenBalance = 100.01m,
-                                        OpenDate = new DateTime(2019, 1, 2),
-                                        TransactionCount = 6,
-                                        Balance = 19.01m,
-                                        Updated = new DateTime(2020, 1, 7),
-                                        Description = "Description1",
-                                        Favorite = false
-                                    },
-                                    new AccountViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Account2,
-                                        Type = AccountType.CreditCard,
-                                        Name = "Account2",
-                                        OpenBalance = 200.02m,
-                                        OpenDate = new DateTime(2019, 1, 3),
-                                        TransactionCount = 0,
-                                        Balance = 200.02m,
-                                        Updated = new DateTime(2019, 1, 3),
-                                        Description = "Description2",
-                                        Favorite = true
-                                    },
-                                    new AccountViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Account3,
-                                        Type = AccountType.Loan,
-                                        Name = "Account3",
-                                        OpenBalance = 300.03m,
-                                        OpenDate = new DateTime(2019, 1, 4),
-                                        TransactionCount = 0,
-                                        Balance = 300.03m,
-                                        Updated = new DateTime(2019, 1, 4),
-                                        Description = "Description3",
-                                        Favorite = false
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(3)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new AccountViewModel
+                            {
+                                Id = BudgetingContextSeed.Account1,
+                                Type = AccountType.Checking,
+                                Name = "Account1",
+                                OpenBalance = 100.01m,
+                                OpenDate = new DateTime(2019, 1, 2),
+                                TransactionCount = 6,
+                                Balance = 19.01m,
+                                Updated = new DateTime(2020, 1, 7),
+                                Description = "Description1",
+                                Favorite = false
+                            },
+                            new AccountViewModel
+                            {
+                                Id = BudgetingContextSeed.Account2,
+                                Type = AccountType.CreditCard,
+                                Name = "Account2",
+                                OpenBalance = 200.02m,
+                                OpenDate = new DateTime(2019, 1, 3),
+                                TransactionCount = 0,
+                                Balance = 200.02m,
+                                Updated = new DateTime(2019, 1, 3),
+                                Description = "Description2",
+                                Favorite = true
+                            },
+                            new AccountViewModel
+                            {
+                                Id = BudgetingContextSeed.Account3,
+                                Type = AccountType.Loan,
+                                Name = "Account3",
+                                OpenBalance = 300.03m,
+                                OpenDate = new DateTime(2019, 1, 4),
+                                TransactionCount = 0,
+                                Balance = 300.03m,
+                                Updated = new DateTime(2019, 1, 4),
+                                Description = "Description3",
+                                Favorite = false
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
@@ -167,7 +154,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void OpenAccountCommand(HttpClient client, OpenAccountCommand command,
+        public void OpenAccountCommand(HttpClient client, OpenAccount.Request command,
             HttpResponseMessage response)
         {
             "Given OpenAccount command"
@@ -178,14 +165,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     Guid.NewGuid().ToString()));
 
             "With valid data"
-                .x(() => command = new OpenAccountCommand
-                {
-                    Type = AccountType.Checking,
-                    Name = "New Account",
-                    OpenBalance = 1234m,
-                    OpenDate = DateTime.Today,
-                    Description = "New account description"
-                });
+                .x(() => command = new OpenAccount.Request(AccountType.Checking, "New Account", DateTime.Today, 1234m,
+                    "New account description"));
 
             "When I call the API"
                 .x(async () =>
@@ -202,26 +183,28 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "With the header location present"
-                .x(() => response.Headers.Location?.AbsolutePath.Should().StartWithEquivalentOf("/api/v2/accounts/"));
-
-            "And a CommandResult with created status"
-                .x(async () =>
+                .x(() =>
                 {
                     using (new AssertionScope())
                     {
-                        var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult<Guid>>(_jsonSerializerOptions);
-                        result.Should().NotBeNull()
-                            .And.BeEquivalentTo(CommandResult<Guid>.Create(CommandStatus.Created, Guid.Empty),
-                                options => options
-                                    .ComparingByMembers<CommandResult<Guid>>()
-                                    .Using<Guid>(ctx => ctx.Subject.Should().NotBeEmpty()).WhenTypeIs<Guid>());
+                        response.Headers.Location.Should().NotBeNull();
+                        response.Headers.Location!.AbsolutePath.Should()
+                            .MatchRegex(
+                                "^/api/v2/accounts/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
                     }
+                });
+
+            "And a Guid is returned"
+                .x(async () =>
+                {
+                    var result =
+                        await response.Content.ReadFromJsonAsync<JsonElement>(_jsonSerializerOptions);
+                    result.GetProperty("id").GetGuid().Should().NotBeEmpty();
                 });
         }
 
         [Scenario]
-        public void CloseAccountCommand(HttpClient client, CloseAccountCommand command,
+        public void CloseAccountCommand(HttpClient client, CloseAccount.Request command,
             HttpResponseMessage response)
         {
             "Given CloseAccount command"
@@ -232,7 +215,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     BudgetingContextSeed.TestUserForCommands.ToString()));
 
             "On Open Account with no cashflows"
-                .x(() => command = new CloseAccountCommand { Id = BudgetingContextSeed.OpenAccountNoCashflows });
+                .x(() => command = new CloseAccount.Request(BudgetingContextSeed.OpenAccountNoCashflows));
 
             "When I call the API"
                 .x(async () =>
@@ -247,23 +230,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .NotBeNull()
                     .And.BeOfType<HttpResponseMessage>()
                     .Which.IsSuccessStatusCode.Should().BeTrue());
-
-            "And a CommandResult with ok status"
-                .x(async () =>
-                {
-                    using (new AssertionScope())
-                    {
-                        var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult>(_jsonSerializerOptions);
-                        result.Should().NotBeNull()
-                            .And.BeEquivalentTo(CommandResult.Create(CommandStatus.Ok),
-                                options => options.ComparingByMembers<CommandResult>());
-                    }
-                });
         }
 
         [Scenario]
-        public void CloseAccountCommand_WithActiveCashflows(HttpClient client, CloseAccountCommand command,
+        public void CloseAccountCommand_WithActiveCashflows(HttpClient client, CloseAccount.Request command,
             HttpResponseMessage response)
         {
             "Given CloseAccount command"
@@ -274,7 +244,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     BudgetingContextSeed.TestUserForCommands.ToString()));
 
             "On Open Account with cashflows"
-                .x(() => command = new CloseAccountCommand { Id = BudgetingContextSeed.OpenAccountWithCashflows });
+                .x(() => command = new CloseAccount.Request(BudgetingContextSeed.OpenAccountWithCashflows));
 
             "When I call the API"
                 .x(async () =>
@@ -296,11 +266,15 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     using (new AssertionScope())
                     {
                         var result =
-                            await response.Content.ReadFromJsonAsync<CommandResult>(_jsonSerializerOptions);
+                            await response.Content.ReadFromJsonAsync<ProblemDetails>(_jsonSerializerOptions);
                         result.Should().NotBeNull()
                             .And.BeEquivalentTo(
-                                CommandResult.Create(CommandStatus.Conflict, "Account has active cashflows"),
-                                options => options.ComparingByMembers<CommandResult>());
+                                new ProblemDetails
+                                {
+                                    Detail = "Account entity error: Account has active cashflows", Title = "Account"
+                                },
+                                options => options.Excluding(info => info.Path.Contains("Type"))
+                                    .Excluding(info => info.Path.Contains("Status")));
                     }
                 });
         }
@@ -308,7 +282,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         [Scenario]
         public void FavoriteAccountCommand(
             HttpClient client,
-            FavoriteAccountCommand command,
+            FavoriteAccount.Request command,
             HttpResponseMessage response)
         {
             "Given FavoriteAccount command"
@@ -318,7 +292,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     client.DefaultRequestHeaders.Add(
                         TestAuthHandler.TEST_USER_ID_HEADER,
                         BudgetingContextSeed.TestUserForCommands.ToString());
-                    command = new FavoriteAccountCommand { Id = Guid.NewGuid(), IsFavorite = true };
+                    command = new FavoriteAccount.Request(Guid.NewGuid(), true);
                 });
 
             "On Open Account"
@@ -349,7 +323,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         [Scenario]
         public void ModifyAccountCommand(
             HttpClient client,
-            ModifyAccountCommand command,
+            ModifyAccount.Request command,
             HttpResponseMessage response)
         {
             "Given ModifyAccount command"
@@ -359,13 +333,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     client.DefaultRequestHeaders.Add(
                         TestAuthHandler.TEST_USER_ID_HEADER,
                         BudgetingContextSeed.TestUserForCommands.ToString());
-                    command = new ModifyAccountCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "modified name",
-                        Description = "modified description",
-                        OpenBalance = 123.45m
-                    };
+                    command = new ModifyAccount.Request(Guid.NewGuid(), "modified name", 123.45m,
+                        "modified description");
                 });
 
             "On Open Account"

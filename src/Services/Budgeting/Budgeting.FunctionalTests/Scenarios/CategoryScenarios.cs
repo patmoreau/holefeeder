@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -29,7 +30,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCategories(HttpClient client, HttpResponseMessage response)
+        public void GivenGetCategories(HttpClient client, IEnumerable<CategoryViewModel>? result)
         {
             "Given GetCategories query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -37,43 +38,30 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/categories/get-categories";
+                    const string request = "/api/v2/categories";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CategoryViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the categories of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<CategoryViewModel[]>(
-                            _jsonSerializerOptions);
-
-                    result.Should()
-                        .NotBeEmpty()
-                        .And.HaveCount(2)
-                        .And.ContainInOrder(new CategoryViewModel
-                        {
-                            Id = BudgetingContextSeed.Category1,
-                            Name = "Category1",
-                            Color = "#1",
-                            BudgetAmount = 0,
-                            Favorite = false
-                        }, new CategoryViewModel
-                        {
-                            Id = BudgetingContextSeed.Category2,
-                            Name = "Category2",
-                            Color = "#2",
-                            BudgetAmount = 0,
-                            Favorite = true
-                        });
-                });
+                .x(() => result.Should()
+                    .NotBeEmpty()
+                    .And.HaveCount(2)
+                    .And.ContainInOrder(new CategoryViewModel
+                    {
+                        Id = BudgetingContextSeed.Category1,
+                        Name = "Category1",
+                        Color = "#1",
+                        BudgetAmount = 0,
+                        Favorite = false
+                    }, new CategoryViewModel
+                    {
+                        Id = BudgetingContextSeed.Category2,
+                        Name = "Category2",
+                        Color = "#2",
+                        BudgetAmount = 0,
+                        Favorite = true
+                    }));
         }
     }
 }

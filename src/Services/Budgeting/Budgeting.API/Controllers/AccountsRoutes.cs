@@ -13,6 +13,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers;
 
@@ -80,7 +81,7 @@ public static class AccountsRoutes
                 return Results.Ok(result.Items);
             });
     }
-    
+
     private static async Task<IResult> GetAccount(Guid id, IMediator mediator, CancellationToken cancellationToken)
     {
         var requestResult = await mediator.Send(new GetAccount.Request(id), cancellationToken);
@@ -129,7 +130,8 @@ public static class AccountsRoutes
                 type: "https://httpstatuses.com/422"),
             _ => Results.NotFound(),
             _ => Results.NoContent(),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            error => Results.Problem(error.Message, statusCode: StatusCodes.Status400BadRequest,
+                title: error.Context)
         );
     }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Validators;
 
 using FluentValidation.TestHelper;
 
@@ -15,18 +14,18 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
 {
     public class FavoriteCommandValidatorTests
     {
-        private readonly FavoriteAccountValidator _validator;
+        private readonly FavoriteAccount.Validator _validator;
 
         public FavoriteCommandValidatorTests()
         {
-            var logger = Substitute.For<ILogger<FavoriteAccountValidator>>();
-            _validator = new FavoriteAccountValidator(logger);
+            var logger = Substitute.For<ILogger<FavoriteAccount.Validator>>();
+            _validator = new FavoriteAccount.Validator(logger);
         }
 
         [Fact]
         public void GivenFavoriteAccountValidator_WhenIdIsEmpty_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new FavoriteAccountCommand { Id = Guid.Empty, IsFavorite = true });
+            var result = _validator.TestValidate(new FavoriteAccount.Request(Guid.Empty, true));
             result.ShouldHaveValidationErrorFor(m => m.Id);
         }
     }
