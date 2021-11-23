@@ -6,6 +6,8 @@ using DrifterApps.Holefeeder.Budgeting.API.Controllers;
 using DrifterApps.Holefeeder.Budgeting.API.Middlewares;
 using DrifterApps.Holefeeder.Budgeting.Application;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -68,6 +70,8 @@ builder.Services
     })
     .AddApplication()
     .AddLogging()
+    .AddHostedService<LongRunningService>()
+    .AddSingleton<BackgroundWorkerQueue>()
     .AddTransient<Func<IRequestUser>>(provider =>
     {
         var httpContext = provider.GetService<IHttpContextAccessor>();

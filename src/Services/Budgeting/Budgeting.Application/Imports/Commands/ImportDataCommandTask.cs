@@ -63,9 +63,9 @@ public static partial class ImportData
 
                 updateProgress(_importDataStatus with { Status = CommandStatus.Completed });
             }
-            catch (HolefeederDomainException e)
+            catch (Exception e)
             {
-                updateProgress(_importDataStatus with { Status = CommandStatus.Error, Message = e.Message});
+                updateProgress(_importDataStatus with { Status = CommandStatus.Error, Message = e.Message });
             }
         }
 
@@ -88,11 +88,11 @@ public static partial class ImportData
                 var id = ConvertToValue<Guid>(element, "id");
                 var type = Enumeration.FromName<AccountType>(ConvertToValue<string>(element, "type"));
                 var name = ConvertToValue<string>(element, "name");
-                var favorite = ConvertToValue<bool>(element, "favorite");
+                var favorite = ConvertToValue(element, "favorite", false);
                 var openBalance = ConvertToValue<decimal>(element, "openBalance");
                 var openDate = ConvertToValue<DateTime>(element, "openDate");
-                var description = ConvertToValue<string>(element, "description");
-                var inactive = ConvertToValue<bool>(element, "inactive");
+                var description = ConvertToValue(element, "description", string.Empty);
+                var inactive = ConvertToValue(element, "inactive", false);
 
                 var exists = await _accountsRepository.FindByIdAsync(id, userId, cancellationToken);
                 if (exists is not null)
@@ -157,9 +157,9 @@ public static partial class ImportData
                 var id = ConvertToValue<Guid>(element, "id");
                 var type = Enumeration.FromName<CategoryType>(ConvertToValue<string>(element, "type"));
                 var name = ConvertToValue<string>(element, "name");
-                var favorite = ConvertToValue<bool>(element, "favorite");
-                var system = ConvertToValue<bool>(element, "system");
-                var color = ConvertToValue<string>(element, "color");
+                var favorite = ConvertToValue(element, "favorite", false);
+                var system = ConvertToValue(element, "system", false);
+                var color = ConvertToValue(element, "color", string.Empty);
                 var budgetAmount = ConvertToValue<decimal>(element, "budgetAmount");
 
                 var exists = await _categoriesRepository.FindByIdAsync(id, userId, cancellationToken);
@@ -225,7 +225,7 @@ public static partial class ImportData
                 var frequency = ConvertToValue<int>(element, "frequency");
                 var recurrence = ConvertToValue<int>(element, "recurrence");
                 var amount = ConvertToValue<decimal>(element, "amount");
-                var description = ConvertToValue<string>(element, "description");
+                var description = ConvertToValue(element, "description", string.Empty);
                 var categoryId = ConvertToValue<Guid>(element, "categoryId");
                 var accountId = ConvertToValue<Guid>(element, "accountId");
                 var tags = ConvertToStringArray(element, "tags");
@@ -301,7 +301,7 @@ public static partial class ImportData
                 var id = ConvertToValue<Guid>(element, "id");
                 var date = ConvertToValue<DateTime>(element, "date");
                 var amount = ConvertToValue<decimal>(element, "amount");
-                var description = ConvertToValue<string>(element, "description");
+                var description = ConvertToValue(element, "description", string.Empty);
                 var categoryId = ConvertToValue<Guid>(element, "categoryId");
                 var accountId = ConvertToValue<Guid>(element, "accountId");
                 Guid? cashflowId = ConvertToValueOrNull<Guid>(element, "cashflowId");
@@ -381,8 +381,19 @@ public static partial class ImportData
         {
             var element = GetElement(root, name);
 
-            return (element.ValueKind == JsonValueKind.Null ? default(T) : ConvertTo<T>(element)) ??
-                   throw new InvalidOperationException();
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                throw new InvalidOperationException($"'{name}' is null for {root.ToString()}");
+            }
+
+            return ConvertTo<T>(element);
+        }
+
+        private static T ConvertToValue<T>(JsonElement root, string name, T defaultValueIfNull)
+        {
+            var element = GetElement(root, name);
+
+            return element.ValueKind == JsonValueKind.Null ? defaultValueIfNull : (T)ConvertTo<T>(element);
         }
 
         private static string[] ConvertToStringArray(JsonElement root, string name)
