@@ -8,8 +8,9 @@ describe('DashboardHomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardHomeComponent ]
-    })
+    declarations: [DashboardHomeComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

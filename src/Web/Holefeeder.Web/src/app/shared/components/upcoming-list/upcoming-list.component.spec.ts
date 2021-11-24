@@ -8,8 +8,9 @@ describe('UpcomingListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpcomingListComponent ]
-    })
+    declarations: [UpcomingListComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

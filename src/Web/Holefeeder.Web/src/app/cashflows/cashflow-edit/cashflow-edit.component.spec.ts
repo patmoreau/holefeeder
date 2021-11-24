@@ -8,8 +8,9 @@ describe('CashflowEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CashflowEditComponent ]
-    })
+    declarations: [CashflowEditComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

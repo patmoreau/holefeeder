@@ -8,8 +8,9 @@ describe('ErrorNotfoundComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ErrorNotfoundComponent ]
-    })
+    declarations: [ErrorNotfoundComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 
