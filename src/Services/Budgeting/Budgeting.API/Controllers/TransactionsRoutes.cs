@@ -36,6 +36,13 @@ public static class TransactionsRoutes
             .ProducesProblem(StatusCodes.Status404NotFound)
             .AddOptions();
 
+        app.MapPost($"{routePrefix}/modify", ModifyTransaction)
+            .WithName(nameof(ModifyTransaction))
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .AddOptions();
+
         app.MapPost($"{routePrefix}/make-purchase", MakePurchase)
             .WithName(nameof(MakePurchase))
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
@@ -82,6 +89,21 @@ public static class TransactionsRoutes
         return requestResult.Match(
             Results.Ok,
             _ => Results.NotFound());
+    }
+
+    private static async Task<IResult> ModifyTransaction(ModifyTransaction.Request request, IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(request, cancellationToken);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"),
+            _ => Results.NotFound(),
+            _ => Results.NoContent(),
+            error => Results.BadRequest(new { error.Context, error.Message })
+        );
     }
 
     private static async Task<IResult> MakePurchase(MakePurchase.Request request, IMediator mediator,

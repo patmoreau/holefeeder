@@ -11,7 +11,7 @@ export class CategoriesService {
   constructor(private api: ApiService) {}
 
   find(): Promise<ICategory[]> {
-    return this.api.get(`${this.api.budgetingBasePath}/${this.basePath}/get-categories`).toPromise();
+    return this.api.get(`${this.api.budgetingBasePath}/${this.basePath}`).toPromise();
   }
 
   findOneById(id: number | string): Promise<ICategory> {

@@ -66,10 +66,9 @@ export class AccountEditComponent implements OnInit {
         }))
       );
     } else {
-      const newAccount = await this.accountsService.open(
-        Object.assign(new OpenAccountCommand(), this.accountForm.value)
+      accountId = await this.accountsService.open(
+        new OpenAccountCommand(Object.assign({}, this.accountForm.value))
       );
-      // accountId = newAccount.id;
     }
     this.router.navigate(['accounts', accountId]);
   }

@@ -1,3 +1,5 @@
+import { dateToUtc } from "../date-parser.helper";
+
 export class TransferMoneyCommand {
   date: Date;
   amount: number;
@@ -7,7 +9,7 @@ export class TransferMoneyCommand {
 
   constructor(obj: {date: Date, amount: number, description: string, fromAccountId: string,
     toAccountId: string}) {
-    this.date = obj.date;
+    this.date = dateToUtc(obj.date);
     this.amount = obj.amount;
     this.description = obj.description;
     this.fromAccountId = obj.fromAccountId;

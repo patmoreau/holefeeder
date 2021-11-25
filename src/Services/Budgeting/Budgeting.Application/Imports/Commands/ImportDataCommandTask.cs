@@ -228,6 +228,7 @@ public static partial class ImportData
                 var description = ConvertToValue(element, "description", string.Empty);
                 var categoryId = ConvertToValue<Guid>(element, "categoryId");
                 var accountId = ConvertToValue<Guid>(element, "accountId");
+                var inactive = ConvertToValue(element, "inactive", false);
                 var tags = ConvertToStringArray(element, "tags");
 
                 var exists = await _cashflowRepository.FindByIdAsync(id, userId, cancellationToken);
@@ -245,7 +246,8 @@ public static partial class ImportData
                             Description = description,
                             CategoryId = categoryId,
                             AccountId = accountId,
-                            UserId = userId
+                            UserId = userId,
+                            Inactive = inactive
                         };
                         cashflow = cashflow.AddTags(tags);
                         _logger.LogInformation("----- Modify Cashflow - Cashflow: {@Cashflow}", cashflow);
@@ -265,7 +267,8 @@ public static partial class ImportData
                         Amount = amount,
                         Description = description,
                         CategoryId = categoryId,
-                        AccountId = accountId
+                        AccountId = accountId,
+                        Inactive = inactive
                     };
                     cashflow = cashflow.AddTags(tags);
                     _logger.LogInformation("----- Create Cashflow - Cashflow: {@Cashflow}", cashflow);

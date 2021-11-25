@@ -5,6 +5,7 @@
     type="text"
     (keyup.enter)="addTag(newTag.value)"
     (blur)="addTag(newTag.value); newTag.value = ''"
+    [readonly]="isReadonly"
   />
   <div class="input-group-append">
     <a

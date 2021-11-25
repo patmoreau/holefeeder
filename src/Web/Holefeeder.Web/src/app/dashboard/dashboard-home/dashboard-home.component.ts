@@ -7,6 +7,7 @@ import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import {IUpcoming} from "@app/shared/interfaces/upcoming.interface";
+import { PayCashflowCommand } from '@app/shared/transactions/pay-cashflow-command.model';
 
 @Component({
   selector: 'dfta-dashboard-home',
@@ -31,18 +32,9 @@ export class DashboardHomeComponent {
       this.router.navigate(['/transactions/create'], { queryParams: { cashflow: upcoming.id, date: upcoming.date.toISOString() } });
     } else {
       const cashflow = await this.cashflowsService.findOneById(upcoming.id);
-      const transaction = Object.assign(new Transaction(), {
-        account: cashflow.account,
-        cashflow: cashflow.id,
-        category: cashflow.category,
-        amount: cashflow.amount,
-        id: undefined,
-        date: upcoming.date,
-        cashflowDate: upcoming.date,
-        description: cashflow.description,
-        tags: cashflow.tags ? cashflow.tags : []
-      });
-      // this.transactionsService.create(transaction);
+      const transaction = new PayCashflowCommand(Object.assign({}, {date:upcoming.date, amount:cashflow.amount, cashflowId:cashflow.id, cashflowDate:upcoming.date}));
+      await this.transactionsService.payCashflow(transaction);
+      await this.upcomingService.refreshUpcoming();
     }
   }
 }

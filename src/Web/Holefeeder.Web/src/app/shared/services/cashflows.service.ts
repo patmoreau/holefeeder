@@ -36,7 +36,7 @@ export class CashflowsService {
       });
     }
     return this.api
-      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-cashflows`, params)
+      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(

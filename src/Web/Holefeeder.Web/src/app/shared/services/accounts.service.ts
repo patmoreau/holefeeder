@@ -11,7 +11,7 @@ import { OpenAccountCommand } from '../accounts/open-account-command.model';
 export class AccountsService {
   private basePath = 'accounts';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   find(
     offset: number,
@@ -37,7 +37,7 @@ export class AccountsService {
       });
     }
     return this.api
-      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-accounts`, params)
+      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(
@@ -64,13 +64,16 @@ export class AccountsService {
       .toPromise();
   }
 
-  open(account: OpenAccountCommand): Promise<void> {
+  open(account: OpenAccountCommand): Promise<string> {
     return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/open-account`, account)
-         .toPromise();
+      .pipe(
+        map(data => data.id)
+      )
+      .toPromise();
   }
 
   modify(account: ModifyAccountCommand): Promise<void> {
     return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/modify-account`, account)
-         .toPromise();
+      .toPromise();
   }
 }

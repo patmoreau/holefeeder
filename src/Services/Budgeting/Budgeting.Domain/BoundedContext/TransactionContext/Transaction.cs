@@ -123,6 +123,8 @@ public record Transaction : IAggregateRoot
             Description = description,
             CategoryId = categoryId,
             AccountId = accountId,
+            CashflowId = cashflowId,
+            CashflowDate = cashflowDate,
             UserId = userId
         };
     }

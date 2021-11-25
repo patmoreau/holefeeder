@@ -48,9 +48,9 @@ SELECT X.* FROM (
     SELECT A.*, ROW_NUMBER() OVER (/**orderby**/) AS row_nb 
     FROM accounts A
     /**where**/
-    GROUP BY A.Id
 ) AS X 
-WHERE row_nb BETWEEN @Offset AND @Limit;
+WHERE row_nb BETWEEN @Offset AND @Limit
+ORDER BY row_nb;
 ";
         const string queryCountTemplate = @"SELECT COUNT(*) FROM accounts /**where**/";
 

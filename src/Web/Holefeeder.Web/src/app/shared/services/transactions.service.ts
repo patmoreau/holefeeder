@@ -7,6 +7,8 @@ import { map } from 'rxjs/operators';
 import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { MakePurchaseCommand } from '../transactions/make-purchase-command.model';
 import { TransferMoneyCommand } from '../transactions/transfer-money-command.model';
+import { PayCashflowCommand } from '../transactions/pay-cashflow-command.model';
+import { ModifyTransactionCommand } from '../transactions/modify-transaction-command.model';
 
 @Injectable()
 export class TransactionsService {
@@ -36,7 +38,7 @@ export class TransactionsService {
       });
     }
     return this.api
-      .get(`${this.api.budgetingBasePath}/${this.basePath}/get-transactions`, params)
+      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(
@@ -63,6 +65,11 @@ export class TransactionsService {
       .toPromise();
   }
 
+  modify(transaction: ModifyTransactionCommand): Promise<void> {
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/modify`, transaction)
+         .toPromise();
+  }
+
   makePurchase(transaction: MakePurchaseCommand): Promise<void> {
     return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/make-purchase`, transaction)
          .toPromise();
@@ -70,6 +77,11 @@ export class TransactionsService {
 
   transferMoney(transaction: TransferMoneyCommand): Promise<void> {
     return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/transfer-money`, transaction)
+         .toPromise();
+  }
+
+  payCashflow(transaction: PayCashflowCommand): Promise<void> {
+    return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/pay-cashflow`, transaction)
          .toPromise();
   }
 }

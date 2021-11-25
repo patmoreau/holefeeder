@@ -37,11 +37,12 @@ SELECT X.*, A.*, CA.* FROM (
     SELECT C.*, ROW_NUMBER() OVER (/**orderby**/) AS row_nb 
     FROM cashflows C
     /**where**/
-    GROUP BY C.Id
 ) AS X 
 INNER JOIN accounts A ON A.id = X.account_id
 INNER JOIN categories CA on CA.id = X.category_id
-WHERE row_nb BETWEEN @offset AND @limit";
+WHERE row_nb BETWEEN @offset AND @limit
+ORDER BY row_nb;
+";
         const string queryCountTemplate = @"SELECT COUNT(*) FROM cashflows /**where**/";
 
         var builder = new SqlBuilder();

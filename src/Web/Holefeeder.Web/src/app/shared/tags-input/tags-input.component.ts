@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormArray, FormControl, FormBuilder } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormArray, FormBuilder } from '@angular/forms';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -12,18 +12,25 @@ export class TagsInputComponent implements OnInit {
   faTimes = faTimes;
 
   @Input() tagsArray: FormArray;
+  @Input() isReadonly: boolean;
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() { }
 
   addTag(newTag: string) {
+    if (this.isReadonly) {
+      return;
+    }
     if (newTag && newTag !== '' && !this.tagsArray.controls.find(ctl => ctl.value === newTag)) {
       this.tagsArray.push(this.fb.control(newTag));
     }
   }
 
   removeTag(index: number) {
+    if (this.isReadonly) {
+      return;
+    }
     this.tagsArray.removeAt(index);
   }
 }
