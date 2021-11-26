@@ -64,6 +64,12 @@ public static class TransactionsRoutes
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .AddOptions();
 
+        app.MapDelete($"{routePrefix}/{{id}}", DeleteTransaction)
+            .WithName(nameof(DeleteTransaction))
+            .Produces<TransactionViewModel>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .AddOptions();
+
         return app;
     }
 
@@ -146,6 +152,18 @@ public static class TransactionsRoutes
             result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
             error => Results.BadRequest(new { error.Context, error.Message })
         );
+    }
+    
+    private static async Task<IResult> DeleteTransaction(Guid id, IMediator mediator, CancellationToken cancellationToken)
+    {
+        var requestResult = await mediator.Send(new DeleteTransaction.Request(id), cancellationToken);
+        return requestResult.Match(
+            result => Results.ValidationProblem(
+                result.Errors,
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                type: "https://httpstatuses.com/422"),
+            _ => Results.NoContent(),
+            _ => Results.NotFound());
     }
 
     private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>

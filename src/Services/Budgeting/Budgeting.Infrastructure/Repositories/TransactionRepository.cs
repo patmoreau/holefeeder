@@ -11,6 +11,8 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
 
+using MediatR;
+
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class TransactionRepository : ITransactionRepository
@@ -51,5 +53,13 @@ public class TransactionRepository : ITransactionRepository
             entity = _mapper.Map(transaction, entity);
             await _context.Transaction.UpdateAsync(entity).ConfigureAwait(false);
         }
+    }
+
+    public async Task DeleteAsync(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        var connection = _context.Transaction;
+
+        await connection.DeleteByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+            .ConfigureAwait(false);
     }
 }

@@ -10,5 +10,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
     {
         Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken);
         Task SaveAsync(Transaction transaction, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, Guid userId, CancellationToken cancellationToken);
     }
 }

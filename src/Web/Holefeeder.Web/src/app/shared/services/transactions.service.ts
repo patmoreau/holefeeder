@@ -84,4 +84,10 @@ export class TransactionsService {
     return this.api.post(`${this.api.budgetingBasePath}/${this.basePath}/pay-cashflow`, transaction)
          .toPromise();
   }
+
+  delete(id: number | string): Promise<void> {
+    return this.api
+      .delete(`${this.api.budgetingBasePath}/${this.basePath}/${id}`)
+      .toPromise();
+  }
 }

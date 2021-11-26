@@ -166,7 +166,7 @@ export class TransactionEditComponent implements OnInit {
 
   onDelete(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' }).result.then(async (_) => {
-      // await this.transactionsService.delete(this.transaction.id);
+      await this.transactionsService.delete(this.transaction.id);
       this.location.back();
     }, (_) => { });
   }

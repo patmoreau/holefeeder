@@ -171,6 +171,53 @@ public static class DapperExtensions
 
     #endregion
 
+    #region DeleteById
+
+    public static Task<int> DeleteByIdAsync<T>(this IDbConnection connection, object param) where T : class
+    {
+        var (sql, dynamicParameters) = BuildDeleteByIdSql<T>(param);
+        return connection.ExecuteAsync(sql, dynamicParameters);
+    }
+
+    public static Task<int> DeleteByIdAsync<T>(this IDbTransaction transaction, object param) where T : class
+    {
+        var (sql, dynamicParameters) = BuildDeleteByIdSql<T>(param);
+        return transaction.ExecuteAsync(sql, dynamicParameters);
+    }
+
+    private static (string, DynamicParameters) BuildDeleteByIdSql<T>(object param)
+        where T : class
+    {
+        _ = param ?? throw new ArgumentNullException(nameof(param));
+
+        var entityType = typeof(T);
+        var tableName = GetTableName(entityType);
+        var keys = GetIdProperties(entityType).ToList();
+
+        if (!keys.Any())
+        {
+            throw new ArgumentException("Get<T> only supports an entity with a [Key] or Id property");
+        }
+
+        var sql = new StringBuilder($"DELETE FROM `{tableName}` WHERE ")
+            .AppendJoin(" AND ", keys.Select(p => $"`{GetColumnName(p)}` = @{p.Name}"))
+            .Append(';')
+            .ToString();
+
+        var dynamicParameters = new DynamicParameters();
+        if (keys.Count == 1)
+            dynamicParameters.Add($"@{keys.First().Name}", param);
+        else
+        {
+            foreach (var key in keys)
+                dynamicParameters.Add($"@{key.Name}", param.GetType().GetProperty(key.Name)?.GetValue(param, null));
+        }
+
+        return (sql, dynamicParameters);
+    }
+
+    #endregion
+
     private static IEnumerable<PropertyDescriptor> GetAllProperties(Type type) =>
         TypeDescriptor.GetProperties(type).OfType<PropertyDescriptor>()
             .Where(p => !p.Attributes.OfType<NotMappedAttribute>().Any());
