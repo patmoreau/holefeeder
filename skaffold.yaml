@@ -5,7 +5,7 @@ metadata:
 build:
   tagPolicy:
     envTemplate:
-      template: '{{.VERSION}}'
+      template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'
   artifacts:
   - image: holefeeder/holefeeder-gateway-web
     context: .
@@ -13,45 +13,32 @@ build:
       dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
       target: final
       buildArgs:
-        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
   - image: holefeeder/holefeeder-web
     context: .
     docker:
       dockerfile: src/Web/Holefeeder.Web/Dockerfile
       target: final
       buildArgs:
-        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
   - image: holefeeder/holefeeder-budgeting-api
     context: .
     docker:
       dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
       target: final
       buildArgs:
-        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
   - image: holefeeder/holefeeder-object-store-api
     context: .
     docker:
       dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
       target: final
       buildArgs:
-        BUILD_VERSION: '{{.ASSEMBLY_VERSION}}'
+        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
 profiles:
   - name: dev
     activation:
-      - kubeContext: minikube
-    # patches:
-    #   - op: replace
-    #     path: /build/artifacts/0/docker/buildArgs/BUILD_VERSION
-    #     value: '99.99.99'
-    #   - op: replace
-    #     path: /build/artifacts/1/docker/buildArgs/BUILD_VERSION
-    #     value: '99.99.99'
-    #   - op: replace
-    #     path: /build/artifacts/2/docker/buildArgs/BUILD_VERSION
-    #     value: '99.99.99'
-    #   - op: replace
-    #     path: /build/artifacts/3/docker/buildArgs/BUILD_VERSION
-    #     value: '99.99.99'
+      - kubeContext: docker-desktop
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]

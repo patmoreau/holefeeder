@@ -1,7 +1,7 @@
 FROM nginx:alpine as base
 RUN apk update && apk add jq
 
-FROM node:16.12 as restore
+FROM node:lts as restore
 WORKDIR /app
 COPY src/Web/Holefeeder.Web/package*.json ./
 RUN npm install
@@ -12,7 +12,7 @@ ARG VERSION=${BUILD_VERSION:-99.99.99}
 ENV NODE_OPTIONS="--max_old_space_size=8096"
 WORKDIR /app
 COPY src/Web/Holefeeder.Web/. .
-RUN npm run build -- --prod
+RUN npm run build -- --configuration production
 RUN echo $VERSION > dist/assets/version.txt
 
 FROM base as final

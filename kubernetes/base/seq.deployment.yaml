@@ -1,44 +1,45 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: object-store
+  name: seq
   labels:
-    app: object-store
+    app: seq
 spec:
   ports:
     - port: 80
   selector:
-    app: object-store
-    tier: backend
-  type: ClusterIP
+    app: seq
+    tier: logging
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: object-store
+  name: seq
   labels:
-    app: object-store
+    app: seq
 spec:
   selector:
     matchLabels:
-      app: object-store
-      tier: backend
+      app: seq
+      tier: logging
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: object-store
-        tier: backend
+        app: seq
+        tier: logging
     spec:
-      imagePullSecrets:
-      - name: regcred
       containers:
-      - image: holefeeder/holefeeder-object-store-api
-        name: object-store
+      - image: datalust/seq:latest
+        name: seq
+        env:
+        - name: ACCEPT_EULA
+          value: 'Y'
         ports:
         - containerPort: 80
-          name: object-store
+          name: seq
         resources:
           requests:
             memory: 64Mi
