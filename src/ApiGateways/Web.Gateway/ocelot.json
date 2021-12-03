@@ -8,7 +8,7 @@
           "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/budgeting/{everything}",
+      "UpstreamPathTemplate": "/gateway/budgeting/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -24,7 +24,7 @@
           "Host": "{BudgetingUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/budgeting/hc",
+      "UpstreamPathTemplate": "/gateway/budgeting/hc",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -40,7 +40,7 @@
           "Host": "{ObjectStoreUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/object-store/{everything}",
+      "UpstreamPathTemplate": "/gateway/object-store/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -56,7 +56,7 @@
           "Host": "{ObjectStoreUrl}"
         }
       ],
-      "UpstreamPathTemplate": "/object-store/hc",
+      "UpstreamPathTemplate": "/gateway/object-store/hc",
       "UpstreamHttpMethod": [
         "GET",
         "POST",

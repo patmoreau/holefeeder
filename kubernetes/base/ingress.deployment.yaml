@@ -1,40 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api
+  name: holefeeder
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    cert-manager.io/cluster-issuer: selfsigned-issuer
 spec:
+  ingressClassName: nginx
   rules:
     - host: holefeeder.test
       http:
         paths:
           - pathType: Prefix
-            path: /gateway(/|$)(.*)
+            path: /gateway/
             backend:
               service:
                 name: gateway
                 port:
                   number: 80
-  tls: 
-  - hosts: 
-    - holefeeder.test 
-    secretName: holefeeder-tls
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ui
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: selfsigned-issuer
-spec:
-  rules:
-    - host: holefeeder.test
-      http:
-        paths:
           - pathType: Prefix
             path: /
             backend:
@@ -42,41 +23,6 @@ spec:
                 name: ui
                 port:
                   number: 80
-  tls: 
-  - hosts: 
-    - holefeeder.test 
-    secretName: holefeeder-tls
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: mysql-ingress
-  annotations:
-    # kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: selfsigned-issuer
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - mysql.test
-    secretName: mysql-tls
-  - hosts:
-    - adminer.test
-    secretName: adminer-tls
-  - hosts:
-    - seq.test
-    secretName: seq-tls
-  rules:
-    - host: mysql.test
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: mysql
-                port:
-                  number: 30306
     - host: adminer.test
       http:
         paths:
@@ -97,51 +43,20 @@ spec:
                 name: seq
                 port:
                   number: 80
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: adminer-ingress
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     cert-manager.io/cluster-issuer: selfsigned-issuer
-# spec:
-#   tls:
-#   - hosts:
-#     - adminer.test
-#     secretName: adminer-tls
-#   rules:
-#     - host: adminer.test
-#       http:
-#         paths:
-#           - pathType: Prefix
-#             path: /
-#             backend:
-#               service:
-#                 name: adminer
-#                 port:
-#                   number: 80
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: seq-ingress
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     cert-manager.io/cluster-issuer: selfsigned-issuer
-# spec:
-#   tls:
-#   - hosts:
-#     - seq.test
-#     secretName: seq-tls
-#   rules:
-#     - host: seq.test
-#       http:
-#         paths:
-#           - pathType: Prefix
-#             path: /
-#             backend:
-#               service:
-#                 name: seq
-#                 port:
-#                   number: 80
+    - host: mysql.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: mysql
+                port:
+                  number: 30306
+  tls: 
+  - hosts: 
+    - holefeeder.test 
+    - adminer.test
+    - seq.test
+    - mysql.test
+    secretName: holefeeder-tls
