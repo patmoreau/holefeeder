@@ -1,43 +1,23 @@
-<div class="d-flex border-top">
-  <div
-    *ngIf="!allowSave"
-    class="col-auto align-self-center justify-content-center "
-    (click)="click('EDIT')"
-  >
-    <fa-icon
-      class="pb-1 text-muted"
-      [icon]="faShoppingCart"
-      aria-hidden="true"
-    ></fa-icon>
+<div class="d-flex flex-row border-top">
+  <div *ngIf="!allowSave" class="align-self-center justify-content-center" (click)="click('EDIT')">
+    <i class="bi bi-cart"></i>
   </div>
-  <div
-    *ngIf="allowSave"
-    class="col-auto align-self-center justify-content-center "
-    (click)="click('SAVE')"
-  >
-    <fa-icon
-      class="pb-1 text-muted"
-      [icon]="faCheckCircle"
-      aria-hidden="true"
-    ></fa-icon>
+  <div *ngIf="allowSave" class="align-self-center justify-content-center" (click)="click('SAVE')">
+    <i class="bi bi-cart-plus"></i>
   </div>
-  <div
-    class="col d-flex flex-column pt-3 pb-3 border-left text-white text-nowrap hideOverflow"
-    (click)="click('EDIT')"
-  >
-    {{ description }}
-    <span class="text-lowercase" *ngFor="let tag of tags"
-      ><small
-        class="badge badge-pill badge-primary text-white font-weight-light"
-        >{{ tag }}</small
-      ></span
-    >
-  </div>
-  <div class="col-auto d-flex pt-3 pb-3 flex-column" (click)="click('EDIT')">
+  <div class="align-self-stretch flex-grow-1 gx-5 border-start text-center" (click)="click('EDIT')">
     <div class="text-right">
-      <small class="align-items-center font-weight-bold text-light">{{
-        amount | currency: 'CAD':'symbol-narrow'
-      }}</small>
+      {{ description }}
+    </div>
+    <div class="text-right">
+      <span class="text-lowercase" *ngFor="let tag of tags"
+      ><small class="badge badge-pill badge-primary font-weight-dark">{{ tag }}</small>
+    </span>
+    </div>
+  </div>
+  <div class="flex-column" (click)="click('EDIT')">
+    <div class="text-right">
+      <small class="align-items-center font-weight-bold">{{ amount | currency: 'CAD':'symbol-narrow' }}</small>
     </div>
     <div class="text-right">
       <small class="text-muted">{{ date | date: 'dd MMM yyyy' }}</small>
