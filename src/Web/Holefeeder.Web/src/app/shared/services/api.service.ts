@@ -1,8 +1,8 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {ConfigService} from '@app/config/config.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ConfigService } from '@app/config/config.service';
 
 @Injectable()
 export class ApiService {
@@ -34,7 +34,7 @@ export class ApiService {
     }).pipe(
       map(resp =>
         resp.headers.has('X-Total-Count')
-          ? {totalCount: +resp.headers.get('X-Total-Count'), items: resp.body}
+          ? { totalCount: +resp.headers.get('X-Total-Count'), items: resp.body }
           : resp.body
       ),
       catchError(this.formatErrors)

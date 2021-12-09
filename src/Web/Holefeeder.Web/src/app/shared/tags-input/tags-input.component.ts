@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-tags-input',
@@ -8,15 +7,14 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./tags-input.component.scss']
 })
 export class TagsInputComponent implements OnInit {
-  faPlus = faPlus;
-  faTimes = faTimes;
 
   @Input() tagsArray: FormArray;
   @Input() isReadonly: boolean;
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   addTag(newTag: string) {
     if (this.isReadonly) {

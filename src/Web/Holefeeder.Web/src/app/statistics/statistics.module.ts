@@ -8,7 +8,6 @@ import { StatisticsRoutingModule } from './statistics-routing.module';
 import { StatisticsService } from './services/statistics.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StatisticsTagsComponent } from './statistics-tags/statistics-tags.component';
 
 const COMPONENTS = [
@@ -25,7 +24,6 @@ const COMPONENTS = [
     FormsModule,
     NgbModule,
     NgxChartsModule,
-    FontAwesomeModule,
     SharedModule,
     StatisticsRoutingModule,
   ],

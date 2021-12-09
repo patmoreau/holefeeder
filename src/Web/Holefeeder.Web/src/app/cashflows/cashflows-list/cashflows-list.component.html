@@ -9,44 +9,31 @@
           Cashflows
         </h4>
         <p>
-          <strong class="ml-3 text-muted"
-            >{{ cashflows.totalCount }} results</strong
-          >
+          <strong class="ms-3 text-muted">{{ cashflows.totalCount }} results</strong>
         </p>
       </div>
       <div class="actions p-0 d-flex align-items-center">
-        <div class="form-group custom-control custom-switch">
-          <input
-            class="form-control custom-control-input"
-            type="checkbox"
-            id="inactive"
-            (change)="inactiveChange()"
-          />
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="inactive" (change)="inactiveChange()" />
           <label class="custom-control-label" for="inactive">Inactive</label>
         </div>
 
         <button type="button" class="btn btn-link" routerLink="create">
-          <fa-icon
-            class="pb-1 text-secondary"
-            [icon]="faPlus"
-            aria-hidden="true"
-          ></fa-icon>
+          <em class="bi bi-plus-square"></em>
         </button>
       </div>
     </div>
   </div>
   <div class="container">
-    <dfta-transaction-list-item
-      [description]="
+    <dfta-transaction-list-item [description]="
         cashflow.description ? cashflow.description : cashflow.category.name
-      "
-      [amount]="cashflow.amount"
-      [date]="cashflow.effectiveDate"
-      [tags]="cashflow.tags"
-      (click)="click(cashflow.id)"
-      *ngFor="let cashflow of cashflows.items"
-    ></dfta-transaction-list-item>
+      " [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [tags]="cashflow.tags" (click)="click(cashflow.id)"
+      *ngFor="let cashflow of cashflows.items"></dfta-transaction-list-item>
   </div>
   <ng-template #noItems>No cashflows defined!</ng-template>
 </ng-container>
-<ng-template #loader>Loading cashflows...</ng-template>
+<ng-template #loader>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>

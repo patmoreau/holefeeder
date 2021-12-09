@@ -7,7 +7,7 @@
           [firstDayOfWeek]=7 ngbDatepicker #date="ngbDatepicker" (click)="date.toggle()" required />
         <div class="input-group-append">
           <a class="btn btn-outline-secondary" (click)="date.toggle()">
-            <fa-icon [icon]="faCalendarAlt" aria-hidden="true"></fa-icon>
+            <em class="bi bi-calendar-event"></em>
           </a>
         </div>
       </div>
@@ -24,7 +24,7 @@
       <input class="form-control" type="number" formControlName="frequency" id="frequency" required min="1">
     </div>
     <div class="d-flex justify-content-end mt-4">
-      <button routerLink="../" class="btn btn-primary mr-2">Cancel</button>
+      <button routerLink="../" class="btn btn-primary me-2">Cancel</button>
       <button type="submit" [disabled]="!settingsForm.valid" class="btn btn-danger">Save</button>
     </div>
   </form>

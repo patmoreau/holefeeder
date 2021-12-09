@@ -9,7 +9,6 @@ import { CategoriesService } from '@app/shared/services/categories.service';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { DateIntervalTypeNames, DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
 import { Cashflow } from '@app/shared/models/cashflow.model';
-import { faArrowLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { startOfToday } from 'date-fns';
 import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
 import { CashflowDetail } from '@app/shared/models/cashflow-detail.model';
@@ -39,9 +38,6 @@ export class CashflowEditComponent implements OnInit {
   isLoaded = false;
 
   intervalTypesNames = DateIntervalTypeNames;
-
-  faArrowLeft = faArrowLeft;
-  faCalendarAlt = faCalendarAlt;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -126,4 +122,6 @@ export class CashflowEditComponent implements OnInit {
     }
     return false;
   }
+
+  get tags(): FormArray { return this.cashflowForm.get('tags') as FormArray }
 }

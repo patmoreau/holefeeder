@@ -3,6 +3,7 @@ kind: Config
 metadata:
   name: holefeeder
 build:
+  # insecureRegistries: ["192.168.64.2:32000"]
   tagPolicy:
     envTemplate:
       template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'

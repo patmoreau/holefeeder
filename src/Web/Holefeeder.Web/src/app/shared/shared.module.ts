@@ -2,10 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 import { DateViewComponent } from './components/date-view/date-view.component';
 import { AccountsService } from './services/accounts.service';
 import { TagsInputComponent } from './tags-input/tags-input.component';
@@ -21,8 +17,6 @@ import { TransactionListItemComponent } from './components/transaction-list-item
 import { UpcomingListComponent } from './components/upcoming-list/upcoming-list.component';
 import { CashflowsService } from './services/cashflows.service';
 import { AutofocusDirective } from './directives/autofocus.directive';
-
-library.add(fas, far);
 
 const COMPONENTS = [
   CurrencyComponent,
@@ -41,7 +35,6 @@ const COMPONENTS = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule,
     NgbModule
   ],
   exports: [COMPONENTS],

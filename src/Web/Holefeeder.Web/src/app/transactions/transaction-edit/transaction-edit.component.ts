@@ -12,7 +12,6 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 import { IAccount } from '@app/shared/interfaces/account.interface';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { startOfToday } from 'date-fns';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
 import { TransactionDetail } from '@app/shared/models/transaction-detail.model';
 import { IPagingInfo } from '@app/shared/interfaces/paging-info.interface';
@@ -46,8 +45,6 @@ export class TransactionEditComponent implements OnInit {
   isNew = false;
   payCashflow = false;
 
-  faCalendarAlt = faCalendarAlt;
-
   constructor(
     private route: ActivatedRoute,
     private accountsService: AccountsService,
@@ -73,9 +70,9 @@ export class TransactionEditComponent implements OnInit {
     this.transactionForm = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
       date: [''],
-      account: [{value: '', disabled: this.payCashflow}, [Validators.required]],
-      category: [{value: '', disabled: this.payCashflow}, [Validators.required]],
-      description: [{value: '', disabled: this.payCashflow}],
+      account: [{ value: '', disabled: this.payCashflow }, [Validators.required]],
+      category: [{ value: '', disabled: this.payCashflow }, [Validators.required]],
+      description: [{ value: '', disabled: this.payCashflow }],
       tags: this.formBuilder.array([])
     });
 
@@ -140,21 +137,21 @@ export class TransactionEditComponent implements OnInit {
     );
     if (this.transaction.id) {
       await this.transactionsService.modify(
-        new ModifyTransactionCommand(Object.assign({}, this.transactionForm.value,{
+        new ModifyTransactionCommand(Object.assign({}, this.transactionForm.value, {
           id: this.transaction.id,
           accountId: this.transactionForm.value.account,
           categoryId: this.transactionForm.value.category
         })));
     } else {
-      if(this.payCashflow){
+      if (this.payCashflow) {
         await this.transactionsService.payCashflow(
-          new PayCashflowCommand(Object.assign({}, this.transactionForm.value,{
+          new PayCashflowCommand(Object.assign({}, this.transactionForm.value, {
             cashflowId: this.cashflow.id,
             cashflowDate: this.cashflowDate
           })));
       } else {
         await this.transactionsService.makePurchase(
-          new MakePurchaseCommand(Object.assign({}, this.transactionForm.value,{
+          new MakePurchaseCommand(Object.assign({}, this.transactionForm.value, {
             accountId: this.transactionForm.value.account,
             categoryId: this.transactionForm.value.category
           })));
@@ -181,4 +178,6 @@ export class TransactionEditComponent implements OnInit {
     }
     return false;
   }
+
+  get tags(): FormArray { return this.transactionForm.get('tags') as FormArray }
 }

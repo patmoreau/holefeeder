@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CashflowsService } from '../../shared/services/cashflows.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
 import { IPagingInfo } from '@app/shared/interfaces/paging-info.interface';
 
@@ -15,8 +14,6 @@ export class CashflowsListComponent implements OnInit {
   cashflows: IPagingInfo<ICashflowDetail>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
-
-  faPlus = faPlus;
 
   constructor(private cashflowsService: CashflowsService, private router: Router) { }
 

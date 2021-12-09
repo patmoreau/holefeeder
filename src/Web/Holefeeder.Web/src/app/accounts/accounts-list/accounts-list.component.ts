@@ -1,11 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AccountsService} from '@app/shared/services/accounts.service';
-import {IAccount} from '@app/shared/interfaces/account.interface';
-import {UpcomingService} from '@app/singletons/services/upcoming.service';
-import {Subject} from 'rxjs';
-import {faPlus} from '@fortawesome/free-solid-svg-icons';
-import {IUpcoming} from "@app/shared/interfaces/upcoming.interface";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AccountsService } from '@app/shared/services/accounts.service';
+import { IAccount } from '@app/shared/interfaces/account.interface';
+import { UpcomingService } from '@app/singletons/services/upcoming.service';
+import { Subject } from 'rxjs';
+import { IUpcoming } from "@app/shared/interfaces/upcoming.interface";
 import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
 import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
@@ -21,8 +20,6 @@ export class AccountsListComponent implements OnInit {
   accountTypeNames: Map<string, string>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
-
-  faPlus = faPlus;
 
   constructor(
     private accountService: AccountsService,
@@ -55,7 +52,6 @@ export class AccountsListComponent implements OnInit {
   }
 
   getUpcomingBalance(account: IAccount): number {
-    console.log(account);
     return (
       account.balance +
       (this.upcomingCashflows ?
@@ -64,8 +60,8 @@ export class AccountsListComponent implements OnInit {
           .map(
             cashflow => {
               return cashflow.amount *
-              categoryTypeMultiplier(cashflow.category.type) *
-              accountTypeMultiplier(account.type)
+                categoryTypeMultiplier(cashflow.category.type) *
+                accountTypeMultiplier(account.type)
             }
           )
           .reduce((sum, current) => sum + current, 0) : 0)

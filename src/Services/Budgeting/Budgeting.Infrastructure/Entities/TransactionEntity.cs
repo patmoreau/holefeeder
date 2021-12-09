@@ -21,7 +21,7 @@ public record TransactionEntity : EntityRoot
 
     public DateTime? CashflowDate { get; init; }
 
-    public string[] Tags { get; init; } = null!;
+    public string Tags { get; init; } = null!;
 
     [Key]
     public Guid UserId { get; init; }

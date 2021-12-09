@@ -41,7 +41,7 @@ LEFT OUTER JOIN transactions t on t.cashflow_id = c.id
 WHERE c.user_id = @UserId AND c.inactive = 0
 GROUP BY c.id;",
                 (entity, accountEntity, categoryEntity) =>
-                    entity with { Account = accountEntity, Category = categoryEntity }, new { UserId = userId },
+                    entity with {Account = accountEntity, Category = categoryEntity}, new {UserId = userId},
                 splitOn: "id,id")
             .ConfigureAwait(false);
 
@@ -72,7 +72,9 @@ GROUP BY c.id;",
                         Date = d,
                         Amount = x.Amount,
                         Description = x.Description,
-                        Tags = x.Tags?.ToImmutableArray() ?? ImmutableArray<string>.Empty,
+                        Tags = string.IsNullOrWhiteSpace(x.Tags)
+                            ? ImmutableArray<string>.Empty
+                            : x.Tags.Split(',').ToImmutableArray(),
                         Category = new CategoryInfoViewModel(x.Category.Id, x.Category.Name, x.Category.Type,
                             x.Category.Color),
                         Account = new AccountInfoViewModel(x.Account.Id, x.Account.Name)

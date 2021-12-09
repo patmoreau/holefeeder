@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: holefeeder
   annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 16m
 spec:
   ingressClassName: nginx
   rules:

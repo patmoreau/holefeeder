@@ -1,6 +1,7 @@
-<ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loading">
+<ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loader">
   <ng-container *ngIf="upcomingCashflows.length; else noItems">
-    <dfta-transaction-list-item
+    <div class="container">
+      <dfta-transaction-list-item
       [description]="
       upcomingCashflow.description
           ? upcomingCashflow.description
@@ -13,7 +14,12 @@
       (action)="action($event, upcomingCashflow)"
       *ngFor="let upcomingCashflow of upcomingCashflows"
     ></dfta-transaction-list-item>
+    </div>
   </ng-container>
   <ng-template #noItems>Nothing to show!</ng-template>
 </ng-container>
-<ng-template #loading>Loading upcoming cashflows...</ng-template>
+<ng-template #loader>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>

@@ -2,7 +2,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER, InjectionToken} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ToastNoAnimationModule} from 'ngx-toastr';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -71,7 +70,6 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
     MsalModule,
     AppRoutingModule,
     HttpClientModule,
-    FontAwesomeModule,
     NgbModule,
     SingletonsModule,
     ToastNoAnimationModule.forRoot()

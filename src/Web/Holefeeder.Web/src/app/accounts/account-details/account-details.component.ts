@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IAccount } from '@app/shared/interfaces/account.interface';
 import { UpcomingService } from '@app/singletons/services/upcoming.service';
-import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IUpcoming } from "@app/shared/interfaces/upcoming.interface";
 import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
 import { AccountsService } from '@app/shared/services/accounts.service';
@@ -20,9 +19,6 @@ export class AccountDetailsComponent implements OnInit {
   upcomingCashflows: IUpcoming[];
   upcomingBalance = 0;
   isLoaded = false;
-  faArrowLeft = faArrowLeft;
-  faEdit = faEdit;
-  faPlus = faPlus;
 
   constructor(
     private accountsService: AccountsService,

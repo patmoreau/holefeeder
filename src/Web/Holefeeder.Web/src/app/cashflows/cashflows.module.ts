@@ -1,6 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CashflowsListComponent } from './cashflows-list/cashflows-list.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -21,7 +20,6 @@ const COMPONENTS = [
     FormsModule,
     NgbModule,
     SharedModule,
-    FontAwesomeModule,
     CashflowsRoutingModule
   ],
   declarations: [COMPONENTS, CashflowsComponent],

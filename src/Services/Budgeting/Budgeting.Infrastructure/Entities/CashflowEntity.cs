@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 
@@ -27,7 +29,7 @@ public record CashflowEntity : EntityRoot
 
     public bool Inactive { get; init; }
 
-    public string[] Tags { get; init; } = null!;
+    public string Tags { get; init; } = null!;
 
     [Key]
     public Guid UserId { get; init; }

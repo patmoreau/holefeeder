@@ -9,7 +9,6 @@ import {
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { Settings } from '@app/shared/models/settings.model';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-general',
@@ -24,8 +23,6 @@ export class GeneralComponent implements OnInit {
 
   settingsForm: FormGroup;
   intervalTypesNames = DateIntervalTypeNames;
-
-  faCalendarAlt = faCalendarAlt;
 
   constructor(
     private activatedRoute: ActivatedRoute,

@@ -1,25 +1,27 @@
-<div class="d-flex flex-row border-top">
-  <div *ngIf="!allowSave" class="align-self-center justify-content-center" (click)="click('EDIT')">
-    <i class="bi bi-cart"></i>
+<div class="d-flex flex-row bd-highlight mb-3 border-top">
+  <div class="p-2 bd-highlight align-self-center justify-content-center">
+    <div *ngIf="!allowSave" class="flex-shrink-0 align-items-center m-1" (click)="click('EDIT')">
+      <em class="bi bi-cart"></em>
+    </div>
+    <div *ngIf="allowSave" class="flex-shrink-0 align-items-center m-1" (click)="click('SAVE')">
+      <em class="bi bi-cart-plus"></em>
+    </div>
   </div>
-  <div *ngIf="allowSave" class="align-self-center justify-content-center" (click)="click('SAVE')">
-    <i class="bi bi-cart-plus"></i>
-  </div>
-  <div class="align-self-stretch flex-grow-1 gx-5 border-start text-center" (click)="click('EDIT')">
-    <div class="text-right">
+  <div class="p-2 bd-highlight flex-fill" (click)="click('EDIT')">
+    <div class="text-start">
       {{ description }}
     </div>
-    <div class="text-right">
-      <span class="text-lowercase" *ngFor="let tag of tags"
-      ><small class="badge badge-pill badge-primary font-weight-dark">{{ tag }}</small>
-    </span>
+    <div class="text-start">
+      <span class="text-lowercase" *ngFor="let tag of tags">
+        <small class="badge rounded-pill bg-primary">{{ tag }}</small>
+      </span>
     </div>
   </div>
-  <div class="flex-column" (click)="click('EDIT')">
-    <div class="text-right">
-      <small class="align-items-center font-weight-bold">{{ amount | currency: 'CAD':'symbol-narrow' }}</small>
+  <div class="p-2 bd-highlight justify-content-end" (click)="click('EDIT')">
+    <div class="text-end">
+      <small class="font-weight-bold">{{ amount | currency: 'CAD':'symbol-narrow' }}</small>
     </div>
-    <div class="text-right">
+    <div class="text-end">
       <small class="text-muted">{{ date | date: 'dd MMM yyyy' }}</small>
     </div>
   </div>

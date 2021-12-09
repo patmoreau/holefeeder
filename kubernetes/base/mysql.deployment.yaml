@@ -47,7 +47,7 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: mysql:8.0.26
+      - image: mariadb:10.5.13
         name: mysql
         ports:
         - containerPort: 3306

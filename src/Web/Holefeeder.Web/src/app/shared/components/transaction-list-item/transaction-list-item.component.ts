@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { faShoppingCart, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-transaction-list-item',
@@ -13,9 +12,6 @@ export class TransactionListItemComponent implements OnInit {
   @Input() tags: string[];
   @Input() allowSave: boolean;
   @Output() action: EventEmitter<string> = new EventEmitter<string>();
-
-  faShoppingCart = faShoppingCart;
-  faCheckCircle = faCheckCircle;
 
   constructor() { }
 
