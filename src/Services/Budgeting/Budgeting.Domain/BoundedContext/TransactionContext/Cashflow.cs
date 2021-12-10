@@ -70,7 +70,7 @@ public record Cashflow : IAggregateRoot
 
     public Guid CategoryId { get; init; }
 
-    public IReadOnlyCollection<string> Tags { get; private init; }
+    public IReadOnlyList<string> Tags { get; private init; }
 
     public bool Inactive { get; init; }
 
@@ -129,6 +129,6 @@ public record Cashflow : IAggregateRoot
             return this;
         }
 
-        return this with { Tags = newTags.ToImmutableList() };
+        return this with { Tags = newTags.ToImmutableArray() };
     }
 }

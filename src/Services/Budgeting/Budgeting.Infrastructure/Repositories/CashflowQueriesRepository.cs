@@ -4,14 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Cashflows;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using Framework.Dapper.SeedWork.Extensions;
@@ -21,12 +20,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class CashflowQueriesRepository : ICashflowQueriesRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly CashflowMapper _cashflowMapper;
 
-    public CashflowQueriesRepository(IHolefeederContext context, IMapper mapper)
+    public CashflowQueriesRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _cashflowMapper = cashflowMapper;
     }
 
     public async Task<(int Total, IEnumerable<CashflowViewModel> Items)> FindAsync(Guid userId,
@@ -67,7 +66,7 @@ ORDER BY row_nb;
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
         return new ValueTuple<int, IEnumerable<CashflowViewModel>>(count,
-            _mapper.Map<IEnumerable<CashflowViewModel>>(cashflows));
+            _cashflowMapper.MapToDto(cashflows));
     }
 
     public async Task<CashflowViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
@@ -94,6 +93,6 @@ INNER JOIN categories CA on CA.id = C.category_id
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);
-        return _mapper.Map<CashflowViewModel>(cashflows.FirstOrDefault());
+        return _cashflowMapper.MapToDtoOrNull(cashflows.FirstOrDefault());
     }
 }

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Categories;
@@ -13,6 +11,7 @@ using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 using Framework.Dapper.SeedWork.Extensions;
 
@@ -21,12 +20,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategoriesRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly CategoryMapper _categoryMapper;
 
-    public CategoriesQueriesRepository(IHolefeederContext context, IMapper mapper)
+    public CategoriesQueriesRepository(IHolefeederContext context, CategoryMapper categoryMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _categoryMapper = categoryMapper;
     }
 
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId,
@@ -40,7 +39,7 @@ public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategori
             .QueryAsync<CategoryEntity>(select, new { UserId = userId })
             .ConfigureAwait(false);
 
-        return _mapper.Map<IEnumerable<CategoryViewModel>>(results);
+        return _categoryMapper.MapToDto(results);
     }
 
     public async Task<CategoryViewModel?> FindByNameAsync(Guid userId, string name,
@@ -52,6 +51,6 @@ public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategori
                 .ConfigureAwait(false))
             .SingleOrDefault();
 
-        return _mapper.Map<CategoryViewModel>(category);
+        return _categoryMapper.MapToDtoOrNull(category);
     }
 }

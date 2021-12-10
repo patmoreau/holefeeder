@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts;
@@ -22,12 +20,10 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class AccountQueriesRepository : IAccountQueriesRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
 
-    public AccountQueriesRepository(IHolefeederContext context, IMapper mapper)
+    public AccountQueriesRepository(IHolefeederContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public Task<(int Total, IEnumerable<AccountViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,

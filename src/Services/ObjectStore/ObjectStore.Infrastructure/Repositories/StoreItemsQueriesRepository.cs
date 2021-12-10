@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities;
+using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Mapping;
 
 using Framework.Dapper.SeedWork.Extensions;
 
@@ -19,12 +18,12 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
     public class StoreItemsQueriesRepository : IStoreItemsQueriesRepository
     {
         private readonly IObjectStoreContext _context;
-        private readonly IMapper _mapper;
+        private readonly StoreItemMapper _storeItemMapper;
 
-        public StoreItemsQueriesRepository(IObjectStoreContext context, IMapper mapper)
+        public StoreItemsQueriesRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
         {
             _context = context;
-            _mapper = mapper;
+            _storeItemMapper = storeItemMapper;
         }
 
         public Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
@@ -57,7 +56,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
             return new ValueTuple<int, IEnumerable<StoreItemViewModel>>(count,
-                _mapper.Map<IEnumerable<StoreItemViewModel>>(items));
+                _storeItemMapper.MapToDto(items));
         }
 
         public async Task<StoreItemViewModel?> FindByIdAsync(Guid userId, Guid id,
@@ -69,7 +68,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
                 .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
                 .ConfigureAwait(false);
 
-            return _mapper.Map<StoreItemViewModel>(item);
+            return _storeItemMapper.MapToDtoOrNull(item);
         }
 
         public Task<bool> AnyCodeAsync(Guid userId, string code, CancellationToken cancellationToken)

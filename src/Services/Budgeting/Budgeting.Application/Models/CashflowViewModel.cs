@@ -29,7 +29,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
             get => _tags;
             init
             {
-                _tags = value == null ? ImmutableArray<string>.Empty : ImmutableArray.Create(value.ToArray());
+                _tags = ImmutableArray.Create(value.ToArray());
             }
         }
 

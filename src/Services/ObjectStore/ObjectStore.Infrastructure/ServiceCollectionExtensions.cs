@@ -9,6 +9,7 @@ using DbUp.MySql;
 using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
+using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Scripts;
 
@@ -40,13 +41,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
 
+        services.AddSingleton<StoreItemMapper>();
+        
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();
         services.AddScoped<Script000InitDatabase>();
 
         services.AddTransient<IStoreItemsQueriesRepository, StoreItemsQueriesRepository>();
         services.AddTransient<IStoreItemsRepository, StoreItemsRepository>();
-
-        services.AddAutoMapper(typeof(MappingProfile));
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 

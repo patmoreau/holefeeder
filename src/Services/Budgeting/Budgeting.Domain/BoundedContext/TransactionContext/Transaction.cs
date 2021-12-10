@@ -68,7 +68,7 @@ public record Transaction : IAggregateRoot
 
     public DateTime? CashflowDate { get; init; }
 
-    public IReadOnlyCollection<string> Tags { get; private init; }
+    public IReadOnlyList<string> Tags { get; private init; }
 
     public Guid UserId
     {
@@ -142,6 +142,6 @@ public record Transaction : IAggregateRoot
             return this;
         }
 
-        return this with { Tags = newTags.ToImmutableList() };
+        return this with { Tags = newTags.ToImmutableArray() };
     }
 }

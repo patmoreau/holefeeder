@@ -56,5 +56,5 @@ public record StoreItem : IAggregateRoot
     }
 
     public static StoreItem Create(string code, string data, Guid userId) =>
-        new() { Id = Guid.NewGuid(), Code = code, Data = data, UserId = userId };
+        new() {Id = Guid.NewGuid(), Code = code, Data = data, UserId = userId};
 }

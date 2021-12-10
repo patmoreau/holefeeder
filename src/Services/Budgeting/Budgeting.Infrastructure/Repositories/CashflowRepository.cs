@@ -1,13 +1,11 @@
 using System;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-
-using AutoMapper;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
@@ -17,24 +15,31 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class CashflowRepository : ICashflowRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly CashflowMapper _cashflowMapper;
 
     public IUnitOfWork UnitOfWork => _context;
 
-    public CashflowRepository(IHolefeederContext context, IMapper mapper)
+    public CashflowRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _cashflowMapper = cashflowMapper;
     }
 
     public async Task<Cashflow?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         var connection = _context.Connection;
 
-        var category = await connection.FindByIdAsync<CashflowEntity>(new { Id = id, UserId = userId })
+        var entity = await connection.FindByIdAsync<CashflowEntity>(new { Id = id, UserId = userId })
             .ConfigureAwait(false);
 
-        return _mapper.Map<Cashflow>(category);
+        if (entity is null)
+        {
+            return null;
+        }
+
+        var cashflow = _cashflowMapper.MapToModelOrNull(entity);
+        
+        return cashflow;
     }
 
     public async Task SaveAsync(Cashflow cashflow, CancellationToken cancellationToken)
@@ -48,12 +53,12 @@ public class CashflowRepository : ICashflowRepository
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_mapper.Map<CashflowEntity>(cashflow))
+            await transaction.InsertAsync(_cashflowMapper.MapToEntity(cashflow))
                 .ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_mapper.Map(cashflow, entity)).ConfigureAwait(false);
+            await transaction.UpdateAsync(_cashflowMapper.MapToEntity(cashflow)).ConfigureAwait(false);
         }
     }
 }

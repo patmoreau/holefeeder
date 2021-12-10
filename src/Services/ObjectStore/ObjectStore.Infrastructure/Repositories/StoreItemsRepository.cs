@@ -2,14 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities;
+using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Mapping;
 
 using Framework.Dapper.SeedWork.Extensions;
 
@@ -18,14 +17,14 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories;
 public class StoreItemsRepository : IStoreItemsRepository
 {
     private readonly IObjectStoreContext _context;
-    private readonly IMapper _mapper;
+    private readonly StoreItemMapper _storeItemMapper;
 
     public IUnitOfWork UnitOfWork => _context;
 
-    public StoreItemsRepository(IObjectStoreContext context, IMapper mapper)
+    public StoreItemsRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _storeItemMapper = storeItemMapper;
     }
 
     public async Task<StoreItem?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
@@ -35,7 +34,7 @@ public class StoreItemsRepository : IStoreItemsRepository
         var schema = await connection.FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
             .ConfigureAwait(false);
 
-        return _mapper.Map<StoreItem>(schema);
+        return _storeItemMapper.MapToModelOrNull(schema);
     }
 
     public async Task<StoreItem?> FindByCodeAsync(Guid userId, string code, CancellationToken cancellationToken)
@@ -46,26 +45,26 @@ public class StoreItemsRepository : IStoreItemsRepository
             .QuerySingleOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new { Code = code, UserId = userId })
             .ConfigureAwait(false);
 
-        return _mapper.Map<StoreItem>(schema);
+        return _storeItemMapper.MapToModelOrNull(schema);
     }
 
-    public async Task SaveAsync(StoreItem entity, CancellationToken cancellationToken)
+    public async Task SaveAsync(StoreItem model, CancellationToken cancellationToken)
     {
         var transaction = _context.Transaction;
 
-        var id = entity.Id;
-        var userId = entity.UserId;
+        var id = model.Id;
+        var userId = model.UserId;
 
-        var record = await transaction.FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
+        var entity = await transaction.FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
             .ConfigureAwait(false);
 
-        if (record is null)
+        if (entity is null)
         {
-            await transaction.InsertAsync(_mapper.Map<StoreItemEntity>(entity)).ConfigureAwait(false);
+            await transaction.InsertAsync(_storeItemMapper.MapToEntity(model)).ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_mapper.Map(entity, record)).ConfigureAwait(false);
+            await transaction.UpdateAsync(_storeItemMapper.MapToEntity(model)).ConfigureAwait(false);
         }
     }
 

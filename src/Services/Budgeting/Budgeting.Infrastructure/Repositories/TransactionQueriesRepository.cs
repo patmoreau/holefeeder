@@ -4,14 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using Framework.Dapper.SeedWork.Extensions;
@@ -21,12 +20,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class TransactionQueriesRepository : ITransactionQueriesRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly TransactionMapper _transactionMapper;
 
-    public TransactionQueriesRepository(IHolefeederContext context, IMapper mapper)
+    public TransactionQueriesRepository(IHolefeederContext context, TransactionMapper transactionMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _transactionMapper = transactionMapper;
     }
 
     public async Task<(int Total, IEnumerable<TransactionViewModel> Items)> FindAsync(Guid userId,
@@ -67,7 +66,7 @@ ORDER BY row_nb;
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
         return new ValueTuple<int, IEnumerable<TransactionViewModel>>(count,
-            _mapper.Map<IEnumerable<TransactionViewModel>>(transactions));
+            _transactionMapper.MapToDto(transactions));
     }
 
     public async Task<TransactionViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
@@ -94,6 +93,7 @@ INNER JOIN categories CA on CA.id = T.category_id
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);
-        return _mapper.Map<TransactionViewModel>(transactions.FirstOrDefault());
+
+        return _transactionMapper.MapToDtoOrNull(transactions.FirstOrDefault());
     }
 }

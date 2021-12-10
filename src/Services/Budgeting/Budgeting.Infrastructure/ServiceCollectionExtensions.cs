@@ -14,6 +14,7 @@ using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Serializers;
 
@@ -21,8 +22,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
-using MySqlConnector;
 
 using MySqlConnectionManager = Framework.Dapper.SeedWork.MySqlConnectionManager;
 
@@ -44,6 +43,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
                 configuration.GetSection(nameof(HolefeederDatabaseSettings)));
             services.AddSingleton(sp => sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
+            services.AddSingleton<AccountMapper>();
+            services.AddSingleton<CashflowMapper>();
+            services.AddSingleton<CategoryMapper>();
+            services.AddSingleton<TagsMapper>();
+            services.AddSingleton<TransactionMapper>();
+
             services.AddScoped<IHolefeederContext, HolefeederContext>();
 
             services.AddTransient<IAccountRepository, AccountRepository>();
@@ -56,8 +61,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
             services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
-
-            services.AddAutoMapper(typeof(MappingProfile));
 
             DefaultTypeMap.MatchNamesWithUnderscores = true;
 

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
@@ -20,14 +19,14 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 public class CategoryRepository : ICategoryRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly CategoryMapper _categoryMapper;
 
     public IUnitOfWork UnitOfWork => _context;
 
-    public CategoryRepository(IHolefeederContext context, IMapper mapper)
+    public CategoryRepository(IHolefeederContext context, CategoryMapper categoryMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _categoryMapper = categoryMapper;
     }
 
     public async Task<Category?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
@@ -37,7 +36,7 @@ public class CategoryRepository : ICategoryRepository
         var category = await connection.FindByIdAsync<CategoryEntity>(new { Id = id, UserId = userId })
             .ConfigureAwait(false);
 
-        return _mapper.Map<Category>(category);
+        return _categoryMapper.MapToModelOrNull(category);
     }
 
     public async Task<Category?> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
@@ -48,7 +47,7 @@ public class CategoryRepository : ICategoryRepository
             .FindAsync<CategoryEntity>(new {Name = name, UserId = userId})
             .ConfigureAwait(false);
 
-        return _mapper.Map<Category>(schema.FirstOrDefault());
+        return _categoryMapper.MapToModelOrNull(schema.FirstOrDefault());
     }
 
     public async Task SaveAsync(Category category, CancellationToken cancellationToken)
@@ -62,12 +61,12 @@ public class CategoryRepository : ICategoryRepository
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_mapper.Map<CategoryEntity>(category))
+            await transaction.InsertAsync(_categoryMapper.MapToEntity(category))
                 .ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_mapper.Map(category, entity)).ConfigureAwait(false);
+            await transaction.UpdateAsync(_categoryMapper.MapToEntity(category)).ConfigureAwait(false);
         }
     }
 }

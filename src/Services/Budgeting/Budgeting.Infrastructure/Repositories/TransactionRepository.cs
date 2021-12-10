@@ -2,34 +2,31 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
+using DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
-
-using MediatR;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class TransactionRepository : ITransactionRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly IMapper _mapper;
+    private readonly TransactionMapper _transactionMapper;
 
     public IUnitOfWork UnitOfWork => _context;
 
-    public TransactionRepository(IHolefeederContext context, IMapper mapper)
+    public TransactionRepository(IHolefeederContext context, TransactionMapper transactionMapper)
     {
         _context = context;
-        _mapper = mapper;
+        _transactionMapper = transactionMapper;
     }
 
     public async Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
-        _mapper.Map<Transaction>(await _context.Connection
+        _transactionMapper.MapToModelOrNull(await _context.Connection
             .FindByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
             .ConfigureAwait(false));
 
@@ -45,12 +42,12 @@ public class TransactionRepository : ITransactionRepository
 
         if (entity is null)
         {
-            entity = _mapper.Map<TransactionEntity>(transaction);
+            entity = _transactionMapper.MapToEntity(transaction);
             await _context.Transaction.InsertAsync(entity).ConfigureAwait(false);
         }
         else
         {
-            entity = _mapper.Map(transaction, entity);
+            entity = _transactionMapper.MapToEntity(transaction);
             await _context.Transaction.UpdateAsync(entity).ConfigureAwait(false);
         }
     }
