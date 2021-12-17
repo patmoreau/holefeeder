@@ -4,25 +4,24 @@ using System.Threading.Tasks;
 
 using MediatR;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Behaviors
+namespace DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
+
+public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly ItemsCache _itemsCache;
+    private readonly Func<IRequestUser> _getRequestUser;
+
+    public AuthBehavior(ItemsCache itemsCache, Func<IRequestUser> getRequestUser)
     {
-        private readonly ItemsCache _itemsCache;
-        private readonly Func<IRequestUser> _getRequestUser;
+        _itemsCache = itemsCache;
+        _getRequestUser = getRequestUser;
+    }
 
-        public AuthBehavior(ItemsCache itemsCache, Func<IRequestUser> getRequestUser)
-        {
-            _itemsCache = itemsCache;
-            _getRequestUser = getRequestUser;
-        }
+    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        RequestHandlerDelegate<TResponse> next)
+    {
+        _itemsCache["UserId"] = _getRequestUser().UserId;
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<TResponse> next)
-        {
-            _itemsCache["UserId"] = _getRequestUser().UserId;
-
-            return next();
-        }
+        return next();
     }
 }

@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { faArrowLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { AccountsService } from '@app/shared/services/accounts.service';
 import { IAccount } from '@app/shared/interfaces/account.interface';
 import { Account } from '@app/shared/models/account.model';
@@ -21,8 +20,6 @@ export class AccountEditComponent implements OnInit {
   isLoaded = false;
   account: IAccount;
   isDirty = true;
-  faArrowLeft = faArrowLeft;
-  faCalendarAlt = faCalendarAlt;
 
   accountForm: FormGroup;
 
@@ -66,10 +63,9 @@ export class AccountEditComponent implements OnInit {
         }))
       );
     } else {
-      const newAccount = await this.accountsService.open(
-        Object.assign(new OpenAccountCommand(), this.accountForm.value)
+      accountId = await this.accountsService.open(
+        new OpenAccountCommand(Object.assign({}, this.accountForm.value))
       );
-      // accountId = newAccount.id;
     }
     this.router.navigate(['accounts', accountId]);
   }

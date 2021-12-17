@@ -1,0 +1,63 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: holefeeder
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 16m
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: holefeeder.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /gateway/
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ui
+                port:
+                  number: 80
+    - host: adminer.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: adminer
+                port:
+                  number: 80
+    - host: seq.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: seq
+                port:
+                  number: 80
+    - host: mysql.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: mysql
+                port:
+                  number: 30306
+  tls: 
+  - hosts: 
+    - holefeeder.test 
+    - adminer.test
+    - seq.test
+    - mysql.test
+    secretName: holefeeder-tls

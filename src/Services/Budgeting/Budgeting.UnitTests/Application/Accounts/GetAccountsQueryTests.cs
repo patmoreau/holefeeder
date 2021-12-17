@@ -15,48 +15,14 @@ using FluentAssertions;
 
 using NSubstitute;
 
+using OneOf;
+
 using Xunit;
 
 namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
 {
     public class GetAccountsQueryTests
     {
-        [Fact]
-        public void GivenQuery_WhenNoQueryParamsPassed_ThenQueryParamsEmptyBuilt()
-        {
-            // given
-
-            // act
-            var query = new GetAccountsQuery(null, null, null, null);
-
-            // assert
-            query.Query.Should().BeEquivalentTo(QueryParams.Empty);
-        }
-
-        [Fact]
-        public void GivenQuery_WhenQueryValid_ThenValid()
-        {
-            // given
-
-            // act
-            var query = new GetAccountsQuery(10, 20, new[] { "sort" }, new[] { "filter" });
-
-            // assert
-            query.Query.Should().BeEquivalentTo(new QueryParams(10, 20, new[] { "sort" }, new[] { "filter" }));
-        }
-
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
-        {
-            var cache = Substitute.For<ItemsCache>();
-            cache["UserId"] = Guid.NewGuid();
-            var handler = new GetAccountsHandler(Substitute.For<IAccountQueriesRepository>(), cache);
-
-            Func<Task> action = async () => await handler.Handle(null, default);
-
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
         [Fact]
         public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
         {
@@ -65,15 +31,19 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             cache["UserId"] = Guid.NewGuid();
             var repository = Substitute.For<IAccountQueriesRepository>();
             repository.FindAsync(Arg.Any<Guid>(), Arg.Any<QueryParams>(), CancellationToken.None)
-                .Returns(new QueryResult<AccountViewModel>(TestAccountData.Count(), TestAccountData));
+                .Returns((TestAccountData.Count(), TestAccountData));
 
-            var handler = new GetAccountsHandler(repository, cache);
+            var handler = new GetAccounts.Handler(repository, cache);
 
             // when
-            var result = await handler.Handle(new GetAccountsQuery(null, null, null, null), default);
+            var result =
+                await handler.Handle(
+                    new GetAccounts.Request(0, int.MaxValue, Array.Empty<string>(), Array.Empty<string>()), default);
 
             // then
-            result.Should().BeEquivalentTo(new QueryResult<AccountViewModel>(TestAccountData.Count(), TestAccountData));
+            var expected = new ListRequestResult(TestAccountData.Count(), TestAccountData);
+            result.Value.Should().BeEquivalentTo(expected,
+                options => options.ComparingByMembers<OneOf<ValidationErrorsRequestResult, ListRequestResult>>());
         }
 
         private static IEnumerable<AccountViewModel> TestAccountData

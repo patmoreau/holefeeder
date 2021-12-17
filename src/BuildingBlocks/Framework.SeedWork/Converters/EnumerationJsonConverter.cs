@@ -21,6 +21,11 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Converters
             }
 
             var typeName = reader.GetString();
+            if (string.IsNullOrEmpty(typeName))
+            {
+                throw new JsonException($"Missing {typeof(T).Name}");
+            }
+            
             var type = Enumeration.FromName<T>(typeName);
             if (type is null)
             {

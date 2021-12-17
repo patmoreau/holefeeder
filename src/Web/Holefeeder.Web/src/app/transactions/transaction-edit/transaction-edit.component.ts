@@ -12,11 +12,13 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 import { IAccount } from '@app/shared/interfaces/account.interface';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { startOfToday } from 'date-fns';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
 import { TransactionDetail } from '@app/shared/models/transaction-detail.model';
 import { IPagingInfo } from '@app/shared/interfaces/paging-info.interface';
 import { MakePurchaseCommand } from '@app/shared/transactions/make-purchase-command.model';
+import { PayCashflowCommand } from '@app/shared/transactions/pay-cashflow-command.model';
+import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
+import { ModifyTransactionCommand } from '@app/shared/transactions/modify-transaction-command.model';
 
 @Component({
   selector: 'dfta-transaction-edit',
@@ -36,11 +38,12 @@ export class TransactionEditComponent implements OnInit {
 
   accounts: IPagingInfo<IAccount>;
   categories: ICategory[];
+  cashflow: ICashflowDetail;
+  cashflowDate: Date;
 
   isLoaded = false;
   isNew = false;
-
-  faCalendarAlt = faCalendarAlt;
+  payCashflow = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,14 +55,6 @@ export class TransactionEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private location: Location
   ) {
-    this.transactionForm = this.formBuilder.group({
-      amount: ['', [Validators.required, Validators.min(0)]],
-      date: [''],
-      account: ['', [Validators.required]],
-      category: ['', [Validators.required]],
-      description: [''],
-      tags: this.formBuilder.array([])
-    });
   }
 
   async ngOnInit() {
@@ -69,6 +64,17 @@ export class TransactionEditComponent implements OnInit {
     ], [
       'inactive:eq:false'
     ]);
+
+    this.payCashflow = this.route.snapshot.queryParamMap.has('cashflow');
+
+    this.transactionForm = this.formBuilder.group({
+      amount: ['', [Validators.required, Validators.min(0)]],
+      date: [''],
+      account: [{ value: '', disabled: this.payCashflow }, [Validators.required]],
+      category: [{ value: '', disabled: this.payCashflow }, [Validators.required]],
+      description: [{ value: '', disabled: this.payCashflow }],
+      tags: this.formBuilder.array([])
+    });
 
     this.categories = await this.categoriesService.find();
 
@@ -80,20 +86,21 @@ export class TransactionEditComponent implements OnInit {
     } else {
       this.isNew = true;
       const date = this.route.snapshot.queryParamMap.has('date') ? new Date(this.route.snapshot.queryParamMap.get('date')) : startOfToday();
-      if (this.route.snapshot.queryParamMap.has('cashflow')) {
+      if (this.payCashflow) {
         const cashflowId = this.route.snapshot.queryParamMap.get('cashflow');
-        const cashflow = await this.cashflowsService.findOneById(cashflowId);
+        this.cashflow = await this.cashflowsService.findOneById(cashflowId);
+        this.cashflowDate = date;
 
         this.transaction = Object.assign(new TransactionDetail(), {
-          account: cashflow.account,
-          cashflow: cashflow.id,
-          category: cashflow.category,
-          amount: cashflow.amount,
+          account: this.cashflow.account,
+          cashflow: this.cashflow.id,
+          category: this.cashflow.category,
+          amount: this.cashflow.amount,
           id: undefined,
           date: date,
           cashflowDate: date,
-          description: cashflow.description,
-          tags: cashflow.tags ? cashflow.tags : []
+          description: this.cashflow.description,
+          tags: this.cashflow.tags ? this.cashflow.tags : []
         });
       } else {
         this.transaction = Object.assign(new TransactionDetail(), {
@@ -122,21 +129,33 @@ export class TransactionEditComponent implements OnInit {
     this.location.back();
   }
 
-  onSubmit() {
+  async onSubmit() {
     const transaction = Object.assign(
       new Transaction(),
       this.transaction,
       this.transactionForm.value
     );
     if (this.transaction.id) {
-      // this.transactionsService.update(this.transaction.id, transaction);
-    } else {
-      console.log(this.transactionForm.value);
-      this.transactionsService.makePurchase(
-        new MakePurchaseCommand(Object.assign({}, this.transactionForm.value,{
+      await this.transactionsService.modify(
+        new ModifyTransactionCommand(Object.assign({}, this.transactionForm.value, {
+          id: this.transaction.id,
           accountId: this.transactionForm.value.account,
           categoryId: this.transactionForm.value.category
         })));
+    } else {
+      if (this.payCashflow) {
+        await this.transactionsService.payCashflow(
+          new PayCashflowCommand(Object.assign({}, this.transactionForm.value, {
+            cashflowId: this.cashflow.id,
+            cashflowDate: this.cashflowDate
+          })));
+      } else {
+        await this.transactionsService.makePurchase(
+          new MakePurchaseCommand(Object.assign({}, this.transactionForm.value, {
+            accountId: this.transactionForm.value.account,
+            categoryId: this.transactionForm.value.category
+          })));
+      }
     }
 
     this.location.back();
@@ -144,7 +163,7 @@ export class TransactionEditComponent implements OnInit {
 
   onDelete(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' }).result.then(async (_) => {
-      // await this.transactionsService.delete(this.transaction.id);
+      await this.transactionsService.delete(this.transaction.id);
       this.location.back();
     }, (_) => { });
   }
@@ -159,4 +178,6 @@ export class TransactionEditComponent implements OnInit {
     }
     return false;
   }
+
+  get tags(): FormArray { return this.transactionForm.get('tags') as FormArray }
 }

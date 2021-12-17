@@ -1,7 +1,6 @@
 ﻿using System;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Validators;
 
 using FluentValidation.TestHelper;
 
@@ -15,25 +14,25 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
 {
     public class CloseCommandValidatorTests
     {
-        private readonly CloseAccountValidator _validator;
+        private readonly CloseAccount.Validator _validator;
 
         public CloseCommandValidatorTests()
         {
-            var logger = Substitute.For<ILogger<CloseAccountValidator>>();
-            _validator = new CloseAccountValidator(logger);
+            var logger = Substitute.For<ILogger<CloseAccount.Validator>>();
+            _validator = new CloseAccount.Validator(logger);
         }
 
         [Fact]
         public void GivenCloseAccountValidator_WhenIdIsEmpty_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new CloseAccountCommand { Id = Guid.Empty });
+            var result = _validator.TestValidate(new CloseAccount.Request(Guid.Empty));
             result.ShouldHaveValidationErrorFor(m => m.Id);
         }
 
         [Fact]
         public void GivenCloseAccountValidator_WhenIdIsNull_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new CloseAccountCommand());
+            var result = _validator.TestValidate(new CloseAccount.Request(default));
             result.ShouldHaveValidationErrorFor(m => m.Id);
         }
     }

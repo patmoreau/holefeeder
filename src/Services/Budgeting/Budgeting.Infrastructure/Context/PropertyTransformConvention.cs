@@ -2,13 +2,12 @@
 
 using Humanizer;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
+
+internal class PropertyTransformConvention : Convention
 {
-    internal class PropertyTransformConvention : Convention
+    public PropertyTransformConvention()
     {
-        public PropertyTransformConvention()
-        {
-            Properties().Configure(c => c.Transform(propertyName => propertyName.Underscore()));
-        }
+        Properties().Configure(c => c.Transform(propertyName => propertyName.Underscore()));
     }
 }

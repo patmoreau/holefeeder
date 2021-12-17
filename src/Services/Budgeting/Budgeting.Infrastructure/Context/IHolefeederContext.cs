@@ -2,9 +2,8 @@
 
 using Framework.Dapper.SeedWork;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Context;
+
+public interface IHolefeederContext : IDbContext, IUnitOfWork
 {
-    public interface IHolefeederContext : IDbContext, IUnitOfWork
-    {
-    }
 }

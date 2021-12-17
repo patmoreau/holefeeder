@@ -1,15 +1,19 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application.Models
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CommandStatus
     {
-        Ok,
-        Created,
-        NotFound,
+        Initializing,
+        Accepted,
         BadRequest,
+        Completed,
+        Conflict,
+        Created,
         Error,
-        Conflict
+        InProgress,
+        NotFound,
+        Ok
     }
 }

@@ -9,16 +9,16 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure
     {
         public static IQueryable<T> Sort<T>(this IQueryable<T> query, IReadOnlyList<string> sort)
         {
-            if (sort is null || !sort.Any())
+            if (!sort.Any())
                 return query;
 
-            IOrderedQueryable<T> q = null;
+            IOrderedQueryable<T>? q = null;
             foreach (Match match in Regex.Matches(string.Join(";", sort), @"(?<desc>-{0,1})(?<field>\w+)"))
             {
-                if (match.Groups["field"] == null)
+                if (!match.Groups.ContainsKey("field"))
                     continue;
 
-                var asc = string.IsNullOrWhiteSpace(match.Groups["desc"]?.Value);
+                var asc = match.Groups.ContainsKey("desc") && string.IsNullOrWhiteSpace(match.Groups["desc"].Value);
                 var field = match.Groups["field"].Value;
 
                 var propertyInfo = typeof(T).GetProperties()
@@ -39,7 +39,8 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Infrastructure
                         : q.ThenByDescending(x => propertyInfo.GetValue(x));
                 }
             }
-            return q;
+
+            return q ?? query;
         }
     }
 }

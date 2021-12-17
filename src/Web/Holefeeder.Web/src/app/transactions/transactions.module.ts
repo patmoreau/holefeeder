@@ -5,7 +5,6 @@ import { TransactionsRoutingModule } from './transactions-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { TransactionEditComponent } from './transaction-edit/transaction-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const COMPONENTS = [TransactionEditComponent];
 
@@ -15,7 +14,6 @@ const COMPONENTS = [TransactionEditComponent];
     ReactiveFormsModule,
     FormsModule,
     SharedModule,
-    FontAwesomeModule,
     NgbModule,
     TransactionsRoutingModule,
   ],

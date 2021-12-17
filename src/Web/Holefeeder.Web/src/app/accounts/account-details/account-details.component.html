@@ -1,12 +1,7 @@
 <ng-container *ngIf="isLoaded; else loader">
   <div class="pt-3">
-    <a routerLink="/accounts" class="text-large line-height-1 btn-link">
-      <fa-icon
-        class="pb-1"
-        [icon]="faArrowLeft"
-        aria-hidden="true"
-      ></fa-icon>
-      Accounts
+    <a routerLink="/accounts" class="text-large line-height-1">
+      <em class="bi bi-box-arrow-left pb-1 pe-1"></em>Accounts
     </a>
     <div class="d-flex flex-wrap justify-content-between align-items-center">
       <div class="d-flex align-items-center">
@@ -19,18 +14,10 @@
       </div>
       <div class="actions p-0 d-flex align-items-center">
         <button type="button" class="btn btn-link" (click)="edit()">
-          <fa-icon
-            class="pb-1 text-secondary"
-            [icon]="faEdit"
-            aria-hidden="true"
-          ></fa-icon>
+          <em class="bi bi-pencil-square"></em>
         </button>
         <button type="button" class="btn btn-link" (click)="addTransaction()">
-          <fa-icon
-            class="pb-1 text-secondary"
-            [icon]="faPlus"
-            aria-hidden="true"
-          ></fa-icon>
+          <em class="bi bi-plus-square"></em>
         </button>
       </div>
     </div>
@@ -38,9 +25,7 @@
       <div class="d-flex flex-column flex-fill p-3 border-right">
         <small class="text-muted">Balance</small>
         <span class="lead font-weight-bolder">
-          <span [className]="balanceClass()">{{
-            account.balance | currency
-          }}</span>
+          <span [className]="balanceClass()">{{ account.balance | currency }}</span>
         </span>
       </div>
       <div class="flex-fill d-flex flex-column">
@@ -49,14 +34,13 @@
           <small class="align-items-center font-weight-bold">
             <span [className]="upcomingBalanceClass()">{{
               upcomingBalance | currency
-            }}</span></small
-          >
+              }}</span></small>
         </div>
         <div class="d-flex p-3 justify-content-between">
           <small class="text-muted">Updated</small>
           <small class="text-muted">{{
             account.updated | date: 'yyyy-MM-dd'
-          }}</small>
+            }}</small>
         </div>
       </div>
     </div>
@@ -66,7 +50,7 @@
       <a class="nav-link" [routerLink]="['upcoming']" routerLinkActive="active">Upcoming</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" [routerLink]="['transactions']" routerLinkActive="active">Past transactions</a>
+      <a class="nav-link" [routerLink]="['transactions']" routerLinkActive="active">Past transactions</a>
     </li>
   </ul>
   <router-outlet></router-outlet>

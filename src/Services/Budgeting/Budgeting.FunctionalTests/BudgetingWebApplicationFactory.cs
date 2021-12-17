@@ -20,7 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
 {
-    public class BudgetingWebApplicationFactory : WebApplicationFactory<Startup>
+    public class BudgetingWebApplicationFactory : WebApplicationFactory<Program>
     {
         private static readonly object Locker = new();
         private static bool _dataSeeded;
@@ -36,7 +36,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Tests")
-                .ConfigureAppConfiguration((context, conf) =>
+                .ConfigureAppConfiguration((_, conf) =>
                 {
                     conf.AddJsonFile(Path.Combine(
                             GetProjectPath(String.Empty, typeof(BudgetingWebApplicationFactory).Assembly),
@@ -52,8 +52,29 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
                 .ConfigureTestServices(services =>
                 {
                     services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
                 });
+        }
+
+        public void SeedData()
+        {
+            var settings = Services.GetRequiredService<HolefeederDatabaseSettings>();
+
+            if (_dataSeeded)
+            {
+                return;
+            }
+
+            lock (Locker)
+            {
+                if (_dataSeeded)
+                {
+                    return;
+                }
+
+                BudgetingContextSeed.SeedData(settings);
+                _dataSeeded = true;
+            }
         }
 
         private static void PrepareData(HolefeederDatabaseSettings settings)
@@ -87,36 +108,16 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
             {
                 directoryInfo = directoryInfo.Parent;
 
-                var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, projectRelativePath));
+                var projectDirectoryInfo =
+                    new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
 
-                if (projectDirectoryInfo.Exists && new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName,
-                        $"{projectName}.csproj"))
-                    .Exists)
-                    return Path.Combine(projectDirectoryInfo.FullName, projectName);
+                if (projectDirectoryInfo.Exists &&
+                    new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName!, $"{projectName}.csproj"))
+                        .Exists)
+                    return Path.Combine(projectDirectoryInfo.FullName, projectName!);
             } while (directoryInfo.Parent != null);
 
             throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
-        }
-
-        public void SeedData()
-        {
-            var settings = Services.GetService<HolefeederDatabaseSettings>();
-
-            if (_dataSeeded)
-            {
-                return;
-            }
-
-            lock (Locker)
-            {
-                if (_dataSeeded)
-                {
-                    return;
-                }
-
-                BudgetingContextSeed.SeedData(settings);
-                _dataSeeded = true;
-            }
         }
 
         public async Task SeedAccountData(Func<IHolefeederContext, AccountEntity> predicate)

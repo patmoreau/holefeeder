@@ -2,7 +2,7 @@
 
 namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context
 {
-    public class ObjectStoreDatabaseSettings : DatabaseSettings
+    public class ObjectStoreDatabaseSettings : MySqlDatabaseSettings
     {
     }
 }

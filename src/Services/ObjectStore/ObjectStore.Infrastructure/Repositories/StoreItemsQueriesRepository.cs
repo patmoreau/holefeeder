@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Dapper;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Entities;
+using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Mapping;
 
 using Framework.Dapper.SeedWork.Extensions;
 
@@ -20,15 +18,15 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
     public class StoreItemsQueriesRepository : IStoreItemsQueriesRepository
     {
         private readonly IObjectStoreContext _context;
-        private readonly IMapper _mapper;
+        private readonly StoreItemMapper _storeItemMapper;
 
-        public StoreItemsQueriesRepository(IObjectStoreContext context, IMapper mapper)
+        public StoreItemsQueriesRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
         {
             _context = context;
-            _mapper = mapper;
+            _storeItemMapper = storeItemMapper;
         }
 
-        public Task<QueryResult<StoreItemViewModel>> FindAsync(Guid userId, QueryParams queryParams,
+        public Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
             CancellationToken cancellationToken)
         {
             if (queryParams is null)
@@ -39,7 +37,8 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             return FindInternalAsync(userId, queryParams);
         }
 
-        private async Task<QueryResult<StoreItemViewModel>> FindInternalAsync(Guid userId, QueryParams query)
+        private async Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindInternalAsync(Guid userId,
+            QueryParams query)
         {
             var builder = new SqlBuilder();
             var selectTemplate =
@@ -56,10 +55,11 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var items = await connection.QueryAsync<StoreItemEntity>(selectTemplate.RawSql, selectTemplate.Parameters);
             var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
-            return new QueryResult<StoreItemViewModel>(count, _mapper.Map<IEnumerable<StoreItemViewModel>>(items));
+            return new ValueTuple<int, IEnumerable<StoreItemViewModel>>(count,
+                _storeItemMapper.MapToDto(items));
         }
 
-        public async Task<StoreItemViewModel> FindByIdAsync(Guid userId, Guid id,
+        public async Task<StoreItemViewModel?> FindByIdAsync(Guid userId, Guid id,
             CancellationToken cancellationToken)
         {
             var connection = _context.Connection;
@@ -68,7 +68,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
                 .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
                 .ConfigureAwait(false);
 
-            return _mapper.Map<StoreItemViewModel>(item);
+            return _storeItemMapper.MapToDtoOrNull(item);
         }
 
         public Task<bool> AnyCodeAsync(Guid userId, string code, CancellationToken cancellationToken)
@@ -94,9 +94,9 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
         {
             var connection = _context.Connection;
 
-            return await connection
+            return (await connection
                 .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
-                .ConfigureAwait(false) is not null;
+                .ConfigureAwait(false)) is not null;
         }
 
         private const string SELECT_CODE =

@@ -1,8 +1,6 @@
 <ng-container *ngIf="data; else loader">
   <div class="pt-3 pb-4">
-    <div
-      class="container d-flex flex-wrap justify-content-between align-items-center"
-    >
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <h1 class="mb-0 line-height-1 text-truncate d-none d-lg-block">
           Statistics
@@ -15,29 +13,16 @@
   </div>
   <div class="container text-white">
     <div class="card-deck row">
-      <div
-        class="col-12 col-md-6 col-lg-4 col-xl-4 pb-4"
-        *ngFor="let category of data"
-      >
-        <div
-          class="card rounded bg-card"
-          style="height: 100%;"
-          (click)="clickCategory(category)"
-        >
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 pb-4" *ngFor="let category of data">
+        <div class="card rounded bg-card" style="height: 100%;" (click)="clickCategory(category)">
           <div class="card-body">
             <div class="row">
-              <div class="col-8 text-left">
+              <div class="col-8 text-start">
                 <h6 class="card-title test-white-25">
-                  <fa-icon
-                    class="pb-1"
-                    [styles]="getColorStyle(category)"
-                    [icon]="faDotCircle"
-                    aria-hidden="true"
-                  ></fa-icon
-                  > {{ category.category }}
+                  <em class="bi bi-record-circle pb-1 pe-1"></em>{{ category.category }}
                 </h6>
               </div>
-              <div class="col-4 text-right">
+              <div class="col-4 text-end">
                 <h6 class="card-title text-muted">
                   {{ getPercentage(category) | percent: '1.2-2' }}
                 </h6>
@@ -46,48 +31,44 @@
           </div>
           <div class="card-footer">
             <div class="row">
-              <div class="col-6 text-left">
-                <span class="text-muted"
-                  >Current ({{ category.current.count }})</span
-                >
+              <div class="col-6 text-start">
+                <span class="text-muted">Current ({{ category.current.count }})</span>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-6 text-end">
                 <span class="text-muted">{{
                   category.current.amount | currency
-                }}</span>
+                  }}</span>
               </div>
             </div>
             <div class="row mt-1">
-              <div class="col-6 text-left">
-                <span class="text-muted"
-                  >Average ({{ category.avg.count }})</span
-                >
+              <div class="col-6 text-start">
+                <span class="text-muted">Average ({{ category.avg.count }})</span>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-6 text-end">
                 <span class="text-muted">{{
                   category.avg.amount | currency
-                }}</span>
+                  }}</span>
               </div>
             </div>
             <div class="row mt-2">
-              <div class="col-6 text-left">
+              <div class="col-6 text-start">
                 <small class="text-muted">
                   6 months ({{ category.sixMonths.count }})
                 </small>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-6 text-end">
                 <small class="text-muted">
                   {{ category.sixMonths.amount | currency }}
                 </small>
               </div>
             </div>
             <div class="row mt-1">
-              <div class="col-6 text-left">
+              <div class="col-6 text-start">
                 <small class="text-muted">
                   12 months ({{ category.twelveMonths.count }})
                 </small>
               </div>
-              <div class="col-6 text-right">
+              <div class="col-6 text-end">
                 <small class="text-muted">
                   {{ category.twelveMonths.amount | currency }}
                 </small>
@@ -105,15 +86,15 @@
       doughnut="true"
       labels="true"
       trimLabels="false"
-      
+
     >
     <ng-template #tooltipTemplate let-model="model">
         <span class="tooltip-label">{{ model.name }}</span>
         <span class="tooltip-val">{{ model.value | currency }}</span>
       </ng-template>
     </ngx-charts-pie-chart> -->
-    <!-- <div class="row mb-3 text-bold text-right">
-      <div class="col-4 text-left">
+    <!-- <div class="row mb-3 text-bold text-end">
+      <div class="col-4 text-start">
         Categories
       </div>
       <div class="col-2">
@@ -131,17 +112,17 @@
     </div>
     <div
       *ngFor="let category of data"
-      class="row mb-3 text-right"
+      class="row mb-3 text-end"
       (click)="toggleCategory(category)"
     >
-      <div class="col-4 text-left">{{ category.category }}</div>
+      <div class="col-4 text-start">{{ category.category }}</div>
       <div class="col-2">{{ category.current.amount | currency }}</div>
       <div class="col-2">{{ category.sixMonths.amount | currency }}</div>
       <div class="col-2">{{ category.twelveMonths.amount | currency }}</div>
       <div class="col-2">{{ category.avg.amount | currency }}</div>
       <div *ngIf="category.id === expandedCategory" class="container">
         <div *ngFor="let tag of expandedData" class="row mb-1 text-muted">
-          <div class="col text-left">{{ tag.tag }}</div>
+          <div class="col text-start">{{ tag.tag }}</div>
           <div class="col">{{ tag.current.amount | currency }}</div>
           <div class="col">{{ tag.sixMonths.amount | currency }}</div>
           <div class="col">{{ tag.twelveMonths.amount | currency }}</div>

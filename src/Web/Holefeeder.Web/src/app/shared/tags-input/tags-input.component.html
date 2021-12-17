@@ -1,26 +1,17 @@
 <div class="input-group mb-2">
-  <input
-    #newTag
-    class="form-control"
-    type="text"
-    (keyup.enter)="addTag(newTag.value)"
-    (blur)="addTag(newTag.value); newTag.value = ''"
-  />
+  <input #newTag class="form-control" type="text" (keyup.enter)="addTag(newTag.value)"
+    (blur)="addTag(newTag.value); newTag.value = ''" [readonly]="isReadonly" />
   <div class="input-group-append">
-    <a
-      class="btn btn-outline-secondary text-secondary"
-      (click)="addTag(newTag.value)"
-    >
-      <fa-icon [icon]="faPlus" aria-hidden="true"></fa-icon>
+    <a class="btn btn-outline-secondary text-secondary" (click)="addTag(newTag.value)">
+      <em class="bi bi-plus"></em>
     </a>
   </div>
 </div>
 <div>
   <span class="text-lowercase" *ngFor="let tag of tagsArray.controls; index as i">
-    <small class="badge badge-pill badge-primary text-white font-weight-light"
-      >{{ tag.value }}
+    <small class="badge rounded-pill bg-primary">{{ tag.value }}
       <a class="btn btn-sm p-0" (click)="removeTag(i)">
-        <fa-icon [icon]="faTimes" aria-hidden="true"></fa-icon> </a
-    ></small>&nbsp;
+        <em class="bi bi-x"></em>
+      </a></small>&nbsp;
   </span>
 </div>

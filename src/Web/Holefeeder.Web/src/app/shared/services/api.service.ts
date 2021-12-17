@@ -1,13 +1,13 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {ConfigService} from '@app/config/config.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ConfigService } from '@app/config/config.service';
 
 @Injectable()
 export class ApiService {
-  budgetingBasePath = 'gateway/budgeting/api/v2';
-  objectStoreBasePath = 'gateway/object-store/api/v2';
+  budgetingBasePath = 'budgeting/api/v2';
+  objectStoreBasePath = 'object-store/api/v2';
 
   constructor(private http: HttpClient, private configService: ConfigService) {
   }
@@ -34,7 +34,7 @@ export class ApiService {
     }).pipe(
       map(resp =>
         resp.headers.has('X-Total-Count')
-          ? {totalCount: +resp.headers.get('X-Total-Count'), items: resp.body}
+          ? { totalCount: +resp.headers.get('X-Total-Count'), items: resp.body }
           : resp.body
       ),
       catchError(this.formatErrors)

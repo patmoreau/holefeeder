@@ -13,48 +13,14 @@ using FluentAssertions;
 
 using NSubstitute;
 
+using OneOf;
+
 using Xunit;
 
 namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
 {
     public class GetTransactionsQueryTests
     {
-        [Fact]
-        public void GivenQuery_WhenNoQueryParamsPassed_ThenQueryParamsEmptyBuilt()
-        {
-            // given
-
-            // act
-            var query = new GetTransactionsQuery(null, null, null, null);
-
-            // assert
-            query.Query.Should().BeEquivalentTo(QueryParams.Empty);
-        }
-
-        [Fact]
-        public void GivenQuery_WhenQueryValid_ThenValid()
-        {
-            // given
-
-            // act
-            var query = new GetTransactionsQuery(10, 20, new[] {"sort"}, new[] {"filter"});
-
-            // assert
-            query.Query.Should().BeEquivalentTo(new QueryParams(10, 20, new[] {"sort"}, new[] {"filter"}));
-        }
-
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
-        {
-            var cache = Substitute.For<ItemsCache>();
-            cache["UserId"] = Guid.NewGuid();
-            var handler = new GetTransactionsHandler(Substitute.For<ITransactionQueriesRepository>(), cache);
-
-            Func<Task> action = async () => await handler.Handle(null, default);
-
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
         [Fact]
         public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
         {
@@ -63,15 +29,17 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             cache["UserId"] = Guid.NewGuid();
             var repository = Substitute.For<ITransactionQueriesRepository>();
             repository.FindAsync(Arg.Any<Guid>(), Arg.Any<QueryParams>(), CancellationToken.None)
-                .Returns(new QueryResult<TransactionViewModel>(_testTransactionData.Length, _testTransactionData));
+                .Returns((_testTransactionData.Length, _testTransactionData));
 
-            var handler = new GetTransactionsHandler(repository, cache);
+            var handler = new GetTransactions.Handler(repository, cache);
 
             // when
-            QueryResult<TransactionViewModel> result = await handler.Handle(new GetTransactionsQuery(null, null, null, null), default);
+            var result = await handler.Handle(new GetTransactions.Request(0, 1, Array.Empty<string>(), Array.Empty<string>()), default);
 
             // then
-            result.Should().BeEquivalentTo(new QueryResult<TransactionViewModel>(2, _testTransactionData));
+            OneOf<ValidationErrorsRequestResult, ListRequestResult> expected =
+                new ListRequestResult(2, _testTransactionData);
+            result.Should().BeEquivalentTo(expected);
         }
 
         private readonly TransactionViewModel[] _testTransactionData =

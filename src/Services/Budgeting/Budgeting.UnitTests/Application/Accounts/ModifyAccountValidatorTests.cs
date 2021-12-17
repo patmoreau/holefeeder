@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Validators;
 
 using FluentValidation.TestHelper;
 
@@ -16,25 +15,25 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
 {
     public class ModifyAccountCommandValidatorTests
     {
-        private readonly ModifyAccountValidator _validator;
+        private readonly ModifyAccount.Validator _validator;
 
         public ModifyAccountCommandValidatorTests()
         {
-            var logger = Substitute.For<ILogger<ModifyAccountValidator>>();
-            _validator = new ModifyAccountValidator(logger);
+            var logger = Substitute.For<ILogger<ModifyAccount.Validator>>();
+            _validator = new ModifyAccount.Validator(logger);
         }
 
         [Fact]
         public void GivenModifyAccountValidator_WhenIdIsInvalid_ThenShouldHaveError()
         {
-            var result = _validator.TestValidate(new ModifyAccountCommand { Id = Guid.Empty });
+            var result = _validator.TestValidate(new ModifyAccount.Request(Guid.Empty, "name", 1, "description"));
             result.ShouldHaveValidationErrorFor(m => m.Id);
         }
 
         [Theory, MemberData(nameof(InvalidNames))]
         public void GivenModifyAccountValidator_WhenNameIsInvalid_ThenShouldHaveError(string name)
         {
-            var result = _validator.TestValidate(new ModifyAccountCommand { Name = name });
+            var result = _validator.TestValidate(new ModifyAccount.Request(Guid.NewGuid(), name, 1, "description"));
             result.ShouldHaveValidationErrorFor(m => m.Name);
         }
 
@@ -48,7 +47,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
                 yield return new object[] { "" };
                 yield return new object[] { "           " };
                 yield return new object[] { string.Concat(LONG_STRING, LONG_STRING, LONG_STRING) };
-                yield return new object[] { null };
+                yield return new object[] { null! };
             }
         }
     }

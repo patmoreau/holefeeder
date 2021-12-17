@@ -8,8 +8,9 @@ describe('AccountsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountsListComponent ]
-    })
+    declarations: [AccountsListComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

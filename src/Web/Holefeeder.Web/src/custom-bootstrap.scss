@@ -1,11 +1,7 @@
-
 // import only the necessary Bootstrap files
-@import "~bootstrap/scss/functions"; 
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/bootstrap";
 
-$body-bg: theme-color("dark");
-$headings-color: $white;
+$headings-color: $dark;
 
 $theme-colors: (
   "primary": $orange,

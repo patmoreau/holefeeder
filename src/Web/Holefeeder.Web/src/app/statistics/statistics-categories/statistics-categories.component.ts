@@ -4,11 +4,10 @@ import { SettingsService } from '@app/singletons/services/settings.service';
 import { CategoryType } from '@app/shared/enums/category-type.enum';
 import { addMonths, startOfDay } from 'date-fns';
 import { DateService } from '@app/singletons/services/date.service';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
 import { ICategory } from '@app/shared/interfaces/category.interface';
 import { CategoriesService } from '@app/shared/services/categories.service';
-import { faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'dfta-statistics-categories',
@@ -19,8 +18,6 @@ export class StatisticsCategoriesComponent implements OnInit {
   data: any[] = [];
 
   categories: ICategory[];
-
-  faDotCircle = faDotCircle;
 
   constructor(
     private dateService: DateService,

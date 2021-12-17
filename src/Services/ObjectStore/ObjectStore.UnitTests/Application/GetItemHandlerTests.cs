@@ -2,14 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.ObjectStore.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.Contracts;
-using DrifterApps.Holefeeder.ObjectStore.Application.Models;
-using DrifterApps.Holefeeder.ObjectStore.Application.Queries;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems;
+using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 
 using FluentAssertions;
 
 using NSubstitute;
+
+using OneOf;
 
 using Xunit;
 
@@ -17,20 +19,6 @@ namespace ObjectStore.UnitTests.Application
 {
     public class GetItemHandlerTests
     {
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsNull_ThenThrowArgumentNullException()
-        {
-            // arrange
-            var handler =
-                new GetStoreItemHandler(Substitute.For<IStoreItemsQueriesRepository>(), Substitute.For<ItemsCache>());
-
-            // act
-            Func<Task> action = async () => await handler.Handle(null, default);
-
-            // assert
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
         [Fact]
         public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
         {
@@ -44,13 +32,16 @@ namespace ObjectStore.UnitTests.Application
             repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), CancellationToken.None)
                 .Returns(new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
 
-            var handler = new GetStoreItemHandler(repository, cache);
+            var handler = new GetStoreItem.Handler(repository, cache);
 
             // act
-            var result = await handler.Handle(new GetStoreItemQuery { Id = Guid.NewGuid() }, default);
+            var result = await handler.Handle(new GetStoreItem.Request { Id = Guid.NewGuid() }, default);
 
             // assert
-            result.Should().BeEquivalentTo(new StoreItemViewModel(Guid.Parse(guid), "code", "data"));
+            OneOf<StoreItemViewModel, NotFoundRequestResult> expected =
+                new StoreItemViewModel(Guid.Parse(guid), "code", "data");
+            result.Should()
+                .BeEquivalentTo(expected);
         }
     }
 }

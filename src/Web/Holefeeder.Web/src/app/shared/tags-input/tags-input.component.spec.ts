@@ -8,8 +8,9 @@ describe('TagsInputComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TagsInputComponent ]
-    })
+    declarations: [TagsInputComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

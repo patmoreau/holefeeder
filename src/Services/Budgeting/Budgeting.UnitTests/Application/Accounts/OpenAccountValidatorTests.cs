@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Validators;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 
 using FluentValidation.TestHelper;
@@ -17,36 +16,36 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
 {
     public class OpenCommandValidatorTests
     {
-        private readonly OpenAccountValidator _validator;
+        private readonly OpenAccount.Validator _validator;
 
         public OpenCommandValidatorTests()
         {
-            var logger = Substitute.For<ILogger<OpenAccountValidator>>();
-            _validator = new OpenAccountValidator(logger);
+            var logger = Substitute.For<ILogger<OpenAccount.Validator>>();
+            _validator = new OpenAccount.Validator(logger);
         }
 
         [Theory, MemberData(nameof(InvalidNames))]
         public void GivenOpenAccountValidator_WhenNameIsInvalid_ThenShouldHaveError(string name)
         {
-            var result = _validator.TestValidate(new OpenAccountCommand { Name = name });
+            var result = _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, name, DateTime.Now, 1, "description"));
             result.ShouldHaveValidationErrorFor(m => m.Name);
         }
 
         [Theory, MemberData(nameof(InvalidDateTimes))]
         public void GivenOpenAccountValidator_WhenOpenDateIsInvalid_ThenShouldHaveError(DateTime openDate)
         {
-            var result = _validator.TestValidate(new OpenAccountCommand { OpenDate = openDate });
+            var result = _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, "name", openDate, 1, "description"));
             result.ShouldHaveValidationErrorFor(m => m.OpenDate);
         }
 
         [Theory, MemberData(nameof(InvalidTypes))]
         public void GivenOpenAccountValidator_WhenTypeIsInvalid_ThenShouldHaveError(AccountType type)
         {
-            var result = _validator.TestValidate(new OpenAccountCommand { Type = type });
+            var result = _validator.TestValidate(new OpenAccount.Request(type, "name", DateTime.Now, 1, "description"));
             result.ShouldHaveValidationErrorFor(m => m.Type);
         }
 
-        private const string longString
+        private const string LONG_STRING
             = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%*(){}|[]\\;':\",./<>?";
 
         public static IEnumerable<object[]> InvalidNames
@@ -55,8 +54,8 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             {
                 yield return new object[] { "" };
                 yield return new object[] { "           " };
-                yield return new object[] { string.Concat(longString, longString, longString) };
-                yield return new object[] { null };
+                yield return new object[] { string.Concat(LONG_STRING, LONG_STRING, LONG_STRING) };
+                yield return new object[] { null! };
             }
         }
 
@@ -66,7 +65,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             {
                 yield return new object[] { DateTime.MinValue };
                 yield return new object[] { default(DateTime) };
-                yield return new object[] { null };
+                yield return new object[] { null! };
             }
         }
 
@@ -74,8 +73,8 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         {
             get
             {
-                yield return new object[] { default(AccountType) };
-                yield return new object[] { null };
+                yield return new object[] { default(AccountType)! };
+                yield return new object[] { null! };
             }
         }
     }

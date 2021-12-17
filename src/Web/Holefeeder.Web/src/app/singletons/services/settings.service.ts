@@ -13,7 +13,7 @@ import { startOfToday } from 'date-fns';
   providedIn: 'root'
 })
 export class SettingsService {
-  private basePath = 'StoreItems';
+  private basePath = 'store-items';
   private objectData: IObjectData;
   private settings$ = new BehaviorSubject<ISettings>(Object.assign(
     new Settings(),
@@ -28,7 +28,7 @@ export class SettingsService {
 
   loadUserSettings() {
     this.api
-      .get(`${this.api.objectStoreBasePath}/${this.basePath}?filter=code:eq:settings`)
+      .getList(`${this.api.objectStoreBasePath}/${this.basePath}?filter=code:eq:settings`)
       .pipe(
         filter(data => data.totalCount !== 0),
         map(data => Object.assign(new ObjectData(), data.items[0]) as IObjectData)

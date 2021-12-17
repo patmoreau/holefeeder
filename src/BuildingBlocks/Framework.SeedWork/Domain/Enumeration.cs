@@ -17,9 +17,9 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             Name = name;
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
-            return Id.CompareTo(((Enumeration)obj)?.Id);
+            return Id.CompareTo((obj as Enumeration)?.Id);
         }
 
         public override string ToString() => Name;
@@ -31,7 +31,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             return fields.Select(f => f.GetValue(null)).Cast<T>();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not Enumeration otherValue)
             {
@@ -89,32 +89,32 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             return matchingItem;
         }
 
-        public static bool operator ==(Enumeration left, Enumeration right)
+        public static bool operator ==(Enumeration? left, Enumeration? right)
         {
             return left?.Equals(right) ?? ReferenceEquals(right, null);
         }
 
-        public static bool operator !=(Enumeration left, Enumeration right)
+        public static bool operator !=(Enumeration? left, Enumeration? right)
         {
             return !(left == right);
         }
 
-        public static bool operator <(Enumeration left, Enumeration right)
+        public static bool operator <(Enumeration? left, Enumeration? right)
         {
             return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
         }
 
-        public static bool operator <=(Enumeration left, Enumeration right)
+        public static bool operator <=(Enumeration? left, Enumeration? right)
         {
             return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
         }
 
-        public static bool operator >(Enumeration left, Enumeration right)
+        public static bool operator >(Enumeration? left, Enumeration? right)
         {
             return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
         }
 
-        public static bool operator >=(Enumeration left, Enumeration right)
+        public static bool operator >=(Enumeration? left, Enumeration? right)
         {
             return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
         }

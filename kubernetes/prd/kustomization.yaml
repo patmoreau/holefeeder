@@ -3,30 +3,21 @@ kind: Kustomization
 bases:
 - ../base
 nameSuffix: -prd
-namespace: holefeeder-prd
-patchesJson6902:
-- target:
-   version: v1
-   kind: Namespace
-   name: holefeeder
-  path: namespace-patch.yaml
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: ui
-  path: ingress_patch.yaml
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: api
-  path: ingress_patch.yaml
+
 patchesStrategicMerge:
 - budgeting.env.yaml
 - gateway.env.yaml
 - object-store.env.yaml
 - ui.env.yaml
+
+patchesJson6902:
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: holefeeder
+  path: ingress.patch.yaml
+
 secretGenerator:
 - name: holefeeder-secrets
   behavior: create

@@ -1,19 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-using DrifterApps.Holefeeder.Budgeting.API;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.Domain.Extensions;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentAssertions;
-using FluentAssertions.Execution;
-
-using Microsoft.AspNetCore.Mvc.Testing;
 
 using Xbehave;
 
@@ -37,7 +33,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows(HttpClient client, HttpResponseMessage response)
+        public void GivenGetCashflows(HttpClient client, IEnumerable<CashflowViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -49,70 +45,52 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/cashflows/get-cashflows";
+                    const string request = "/api/v2/cashflows";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the cashflows of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<CashflowViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(2);
-                        result?.Items.Should()
-                            .HaveCount(2)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new CashflowViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Cashflow3,
-                                        EffectiveDate = new DateTime(2020, 1, 4),
-                                        Amount = 222m,
-                                        Description = "Cashflow3",
-                                        Frequency = 2,
-                                        IntervalType = DateIntervalType.Weekly,
-                                        Recurrence = 0,
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
-                                            "Account4")
-                                    },
-                                    new CashflowViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Cashflow4,
-                                        EffectiveDate = new DateTime(2020, 1, 5),
-                                        Amount = 333m,
-                                        Description = "Cashflow4",
-                                        Frequency = 2,
-                                        IntervalType = DateIntervalType.OneTime,
-                                        Recurrence = 0,
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
-                                            "Account4")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(2)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new CashflowViewModel
+                            {
+                                Id = BudgetingContextSeed.Cashflow3,
+                                EffectiveDate = new DateTime(2020, 1, 4),
+                                Amount = 222m,
+                                Description = "Cashflow3",
+                                Frequency = 2,
+                                IntervalType = DateIntervalType.Weekly,
+                                Recurrence = 0,
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
+                                    "Account4")
+                            },
+                            new CashflowViewModel
+                            {
+                                Id = BudgetingContextSeed.Cashflow4,
+                                EffectiveDate = new DateTime(2020, 1, 5),
+                                Amount = 333m,
+                                Description = "Cashflow4",
+                                Frequency = 2,
+                                IntervalType = DateIntervalType.OneTime,
+                                Recurrence = 0,
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
+                                    "Account4")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client, HttpResponseMessage response)
+        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client, IEnumerable<CashflowViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -124,55 +102,36 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API for amount < 300"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/cashflows/get-cashflows?filter=amount:lt:300";
+                    const string request = "/api/v2/cashflows?filter=amount:lt:300";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the cashflows of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<CashflowViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(1);
-                        result?.Items.Should()
-                            .HaveCount(1)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new CashflowViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Cashflow3,
-                                        EffectiveDate = new DateTime(2020, 1, 4),
-                                        Amount = 222m,
-                                        Description = "Cashflow3",
-                                        Frequency = 2,
-                                        IntervalType = DateIntervalType.Weekly,
-                                        Recurrence = 0,
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
-                                            "Account4")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And.HaveCount(1)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new CashflowViewModel
+                            {
+                                Id = BudgetingContextSeed.Cashflow3,
+                                EffectiveDate = new DateTime(2020, 1, 4),
+                                Amount = 222m,
+                                Description = "Cashflow3",
+                                Frequency = 2,
+                                IntervalType = DateIntervalType.Weekly,
+                                Recurrence = 0,
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
+                                    "Account4")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client, HttpResponseMessage response)
+        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<CashflowViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -184,51 +143,33 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "When I call the API with an offset of 0 a limit of 1 and sorted by effective date desc"
                 .x(async () =>
                 {
-                    const string request = "/api/v2/cashflows/get-cashflows?offset=0&limit=1&sort=-effective_date";
+                    const string request = "/api/v2/cashflows?offset=0&limit=1&sort=-effective_date";
 
-                    response = await client.GetAsync(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
                 });
-
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
 
             "And the result contain the cashflows of the user"
-                .x(async () =>
-                {
-                    var result =
-                        await response.Content.ReadFromJsonAsync<QueryResult<CashflowViewModel>>(
-                            _jsonSerializerOptions);
-
-                    using (new AssertionScope())
-                    {
-                        result.Should().NotBeNull();
-                        result?.TotalCount.Should().Be(2);
-                        result?.Items.Should()
-                            .HaveCount(1)
-                            .And.BeEquivalentTo(new[]
-                                {
-                                    new CashflowViewModel
-                                    {
-                                        Id = BudgetingContextSeed.Cashflow4,
-                                        EffectiveDate = new DateTime(2020, 1, 5),
-                                        Amount = 333m,
-                                        Description = "Cashflow4",
-                                        Frequency = 2,
-                                        IntervalType = DateIntervalType.OneTime,
-                                        Recurrence = 0,
-                                        Tags = ImmutableArray<string>.Empty,
-                                        Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
-                                            "Category1", CategoryType.Expense, "#1"),
-                                        Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
-                                            "Account4")
-                                    }
-                                }
-                            );
-                    }
-                });
+                .x(() => result.Should().NotBeNull().And
+                    .HaveCount(1)
+                    .And.BeEquivalentTo(new[]
+                        {
+                            new CashflowViewModel
+                            {
+                                Id = BudgetingContextSeed.Cashflow4,
+                                EffectiveDate = new DateTime(2020, 1, 5),
+                                Amount = 333m,
+                                Description = "Cashflow4",
+                                Frequency = 2,
+                                IntervalType = DateIntervalType.OneTime,
+                                Recurrence = 0,
+                                Tags = ImmutableArray<string>.Empty,
+                                Category = new CategoryInfoViewModel(BudgetingContextSeed.Category1,
+                                    "Category1", CategoryType.Expense, "#1"),
+                                Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
+                                    "Account4")
+                            }
+                        }
+                    ));
         }
 
         [Scenario]
@@ -335,7 +276,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
 
         [Scenario]
         public void GivenGetUpcoming_WithUnpaidCashflows(DateTime from, DateTime to, HttpResponseMessage response,
-            UpcomingViewModel[] result)
+            UpcomingViewModel[]? result)
         {
             "Given GetUpcoming query from 2020-01-29"
                 .x(() => from = new DateTime(2020, 1, 29));
@@ -363,7 +304,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "And the result contain 2 cashflows"
                 .x(async () =>
                 {
-                    result = await response.Content.ReadFromJsonAsync<UpcomingViewModel[]>(_jsonSerializerOptions);
+                    result = await response.Content.ReadFromJsonAsync<UpcomingViewModel[]>(_jsonSerializerOptions)!;
 
                     result.Should()
                         .NotBeEmpty()
@@ -404,7 +345,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
 
         [Scenario]
         public void GivenGetUpcoming_ForMultiplePeriods(DateTime from, DateTime to, HttpResponseMessage response,
-            UpcomingViewModel[] result)
+            UpcomingViewModel[]? result)
         {
             "Given GetUpcoming query from 2020-01-15"
                 .x(() => from = new DateTime(2020, 1, 15));

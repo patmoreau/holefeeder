@@ -5,7 +5,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
 {
     public abstract class ValueObject
     {
-        protected static bool EqualOperator(ValueObject left, ValueObject right)
+        private static bool EqualOperator(ValueObject? left, ValueObject? right)
         {
             if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
             {
@@ -15,14 +15,14 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             return ReferenceEquals(left, null) || left.Equals(right);
         }
 
-        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+        protected static bool NotEqualOperator(ValueObject? left, ValueObject? right)
         {
             return !EqualOperator(left, right);
         }
 
-        protected abstract IEnumerable<object> GetAtomicValues();
+        protected abstract IEnumerable<object?> GetAtomicValues();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -30,8 +30,8 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             }
 
             var other = (ValueObject)obj;
-            var thisValues = GetAtomicValues().GetEnumerator();
-            var otherValues = other.GetAtomicValues().GetEnumerator();
+            using var thisValues = GetAtomicValues().GetEnumerator();
+            using var otherValues = other.GetAtomicValues().GetEnumerator();
             while (thisValues.MoveNext() && otherValues.MoveNext())
             {
                 if (ReferenceEquals(thisValues.Current, null) ^ ReferenceEquals(otherValues.Current, null))
@@ -55,7 +55,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
                 .Aggregate((x, y) => x ^ y);
         }
 
-        public ValueObject GetCopy()
+        public ValueObject? GetCopy()
         {
             return MemberwiseClone() as ValueObject;
         }

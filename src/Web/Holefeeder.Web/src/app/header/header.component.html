@@ -1,77 +1,76 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-  <a class="navbar-brand mr-auto mr-lg-0" routerLink="/"><img src="../../../assets/images/favicon.png" width="40"
-      height="40" class="d-inline-block align-top" alt="" /></a>
-
-  <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas"
-    (click)="isNavbarCollapsed = !isNavbarCollapsed" [attr.aria-expanded]="!isNavbarCollapsed">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault" [class.open]="!isNavbarCollapsed">
-    <ng-container *ngIf="loggedIn">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
-            (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="faTachometerAlt" aria-hidden="true"></fa-icon>
-            Dashboard
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/accounts']" routerLinkActive="active"
-            (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="faUniversity" aria-hidden="true"></fa-icon>
-            Accounts
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/cashflows']" routerLinkActive="active"
-            (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="faFileInvoiceDollar" aria-hidden="true"></fa-icon>
-            Cashflows
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/statistics']" routerLinkActive="active"
-            (click)="isNavbarCollapsed = !isNavbarCollapsed">
-            <fa-icon class="pb-1" [icon]="faChartPie" aria-hidden="true"></fa-icon>
-            Statistics
-          </a>
-        </li>
-      </ul>
-    </ng-container>
-    <form class="form-inline my-2 my-lg-0">
-      <ng-container *ngIf="loggedIn">
-        <button type="button" class="btn btn-outline-secondary mr-sm-2" (click)="open(datePicker)">
-          {{ period?.start | date }} - {{ period?.end | date }}
-          <fa-icon [icon]="faAngleDown" aria-hidden="true"></fa-icon>
-        </button>
-        <div ngbDropdown display="dynamic" class="nav-item dropdown my-2 my-sm-0">
-          <a ngbDropdownToggle class="nav-link dropdown-toggle" id="dropdownUser" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">{{profile?.name}}</a>
-          <div ngbDropdownMenu class="downdown-menu" aria-labelledby="dropdownUser">
-            <a class="dropdown-item" [routerLink]="['/settings']"
-               (click)="isNavbarCollapsed = !isNavbarCollapsed">Settings</a>
-            <a class="dropdown-item" [href]="'/healthchecks-ui'" appExternalUrl
-               (click)="isNavbarCollapsed = !isNavbarCollapsed">Health Checks</a>
-            <a class="dropdown-item" (click)="logout()">Log out</a>
-          </div>
-        </div>
-      </ng-container>
-    </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-safe"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ng-container *ngIf="loggedIn">
+          <ul class="navbar-nav justify-content-begin flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active">
+                <i class="bi bi-speedometer2"></i>&nbsp;Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/accounts']" routerLinkActive="active">
+                <i class="bi bi-wallet2"></i>&nbsp;Accounts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/cashflows']" routerLinkActive="active">
+                <i class="bi bi-cash-coin"></i>&nbsp;Cashflows
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/statistics']" routerLinkActive="active">
+                <i class="bi bi-graph-up"></i>&nbsp;Statistics
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <button type="button" class="btn btn-outline-secondary" (click)="open(datePicker)">
+                <i class="bi bi-calendar-range"></i>&nbsp;{{ period?.start | date }} - {{ period?.end | date }}
+              </button>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle"></i>&nbsp;{{profile?.name}}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="offcanvasNavbarDropdown">
+                <li><a class="dropdown-item" [routerLink]="['/settings']"><i class="bi bi-gear"></i>&nbsp;Settings</a></li>
+                <li><a class="dropdown-item" [routerLink]="['/healthchecks-ui']"><i class="bi bi-file-medical"></i>&nbsp;Health Checks</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-left"></i>&nbsp;Log out</a></li>
+              </ul>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </nav>
 <ng-template #datePicker let-modal>
-  <div class="modal-header bg-light">
-    <h4 class="modal-title" id="modal-basic-title">Period selection</h4>
+  <div class="modal-header">
+    <h4 class="modal-title text-dark" id="modal-basic-title">Period selection</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body bg-light">
+  <div class="modal-body">
     <form>
       <div class="form-group">
-        <div class="d-md-none d-flex bd-highlight justify-content-center">
+        <div class="d-md-none d-flex justify-content-center">
           <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="t"
             [firstDayOfWeek]=7 outsideDays="hidden">
           </ngb-datepicker>
@@ -82,21 +81,21 @@
           </ngb-datepicker>
         </div>
         <div class="d-flex p-1 justify-content-center">
-          <button type="button" class="btn btn-outline-lighter" (click)="previousPeriod()" ngbTooltip="Previous period">
-            <fa-icon [icon]="faCalendarMinus" aria-hidden="true"></fa-icon>
+          <button type="button" class="btn btn-outline" (click)="previousPeriod()" ngbTooltip="Previous period">
+            <i class="bi bi-calendar-minus"></i>
           </button>
-          <button type="button" class="btn btn-outline-lighter ml-3" (click)="currentPeriod()"
+          <button type="button" class="btn btn-outline ms-3" (click)="currentPeriod()"
             ngbTooltip="Current period">
-            <fa-icon [icon]="faCalendarCheck" aria-hidden="true"></fa-icon>
+            <i class="bi bi-calendar-check"></i>
           </button>
-          <button type="button" class="btn btn-outline-lighter ml-3" (click)="nextPeriod()" ngbTooltip="Next period">
-            <fa-icon [icon]="faCalendarPlus" aria-hidden="true"></fa-icon>
+          <button type="button" class="btn btn-outline ms-3" (click)="nextPeriod()" ngbTooltip="Next period">
+            <i class="bi bi-calendar-plus"></i>
           </button>
         </div>
       </div>
     </form>
   </div>
-  <div class="modal-footer bg-light">
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="modal.close('Set click')">
       Set
     </button>

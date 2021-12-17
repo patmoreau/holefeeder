@@ -8,8 +8,9 @@ describe('GeneralComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeneralComponent ]
-    })
+    declarations: [GeneralComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

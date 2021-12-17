@@ -1,18 +1,23 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+namespace: holefeeder
+
 resources:
+- adminer.deployment.yaml
 - budgeting.deployment.yaml
-- budgeting.service.yaml
 - gateway.deployment.yaml
-- gateway.ingress.yaml
-- gateway.service.yaml
-- namespace.yaml
+- ingress.deployment.yaml
+- mysql.deployment.yaml
 - object-store.deployment.yaml
-- object-store.service.yaml
+- seq.deployment.yaml
 - ui.deployment.yaml
-- ui.ingress.yaml
-- ui.service.yaml
+- namespace.yaml
+
 configMapGenerator:
 - name: ui-config
   files:
   - templates/default.conf.template
+- name: mysql-initdb-scripts
+  files:
+  - init/mysql-initdb.sh

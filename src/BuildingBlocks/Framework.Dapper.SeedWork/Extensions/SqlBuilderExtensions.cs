@@ -13,7 +13,7 @@ namespace Framework.Dapper.SeedWork.Extensions
     {
         public static SqlBuilder Filter(this SqlBuilder query, IReadOnlyList<string> filter)
         {
-            if (filter is null || !filter.Any())
+            if (!filter.Any())
             {
                 return query;
             }
@@ -31,6 +31,10 @@ namespace Framework.Dapper.SeedWork.Extensions
                 if (Guid.TryParse(value, out var guidValue))
                 {
                     parameters.Add($"{property}", guidValue);
+                }
+                else if (bool.TryParse(value, out var boolValue))
+                {
+                    parameters.Add($"{property}", boolValue);
                 }
                 else
                 {

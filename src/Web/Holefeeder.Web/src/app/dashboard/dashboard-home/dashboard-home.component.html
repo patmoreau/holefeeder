@@ -1,46 +1,31 @@
-<ng-container
-  *ngIf="upcomingCashflows$ | async as upcomingCashflows; else loader"
->
+<ng-container *ngIf="upcomingCashflows$ | async as upcomingCashflows; else loader">
   <ng-container *ngIf="upcomingCashflows.length; else noItems">
     <div class="container pt-3 pb-4">
       <div class="d-flex flex-wrap justify-content-between align-items-center">
         <div class="d-flex align-items-center">
           <h4 class="mb-0 line-height-1 text-truncate">Upcoming</h4>
           <span>
-            <strong class="ml-3 text-muted"
-              >{{ upcomingCashflows.length }} cashflows</strong
-            >
+            <strong class="ms-3 text-muted">{{ upcomingCashflows.length }} cashflows</strong>
           </span>
         </div>
         <div class="actions p-0 d-flex align-items-center">
-          <button
-            type="button"
-            class="btn btn-link"
-            routerLink="/transactions/create"
-          >
-            <fa-icon
-              class="pb-1 text-secondary"
-              [icon]="faPlus"
-              aria-hidden="true"
-            ></fa-icon>
+          <button type="button" class="btn btn-link" routerLink="/transactions/create">
+            <em class="bi bi-plus-square"></em>
           </button>
         </div>
       </div>
     </div>
     <div class="container">
-      <dfta-transaction-list-item
-        [description]="
+      <dfta-transaction-list-item [description]="
           upcoming.description ? upcoming.description : upcoming.category.name
-        "
-        [amount]="upcoming.amount"
-        [date]="upcoming.date"
-        [tags]="upcoming.tags"
-        [allowSave]="true"
-        (action)="action($event, upcoming)"
-        *ngFor="let upcoming of upcomingCashflows"
-      ></dfta-transaction-list-item>
+        " [amount]="upcoming.amount" [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true"
+        (action)="action($event, upcoming)" *ngFor="let upcoming of upcomingCashflows"></dfta-transaction-list-item>
     </div>
   </ng-container>
   <ng-template #noItems>Nothing upcoming!</ng-template>
 </ng-container>
-<ng-template #loader><span>Loading upcoming...</span></ng-template>
+<ng-template #loader>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ng-template>

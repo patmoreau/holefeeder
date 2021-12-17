@@ -10,14 +10,14 @@ namespace Framework.Dapper.SeedWork
 {
     public class MySqlDbContext : IDbContext
     {
-        private readonly DatabaseSettings _settings;
+        private readonly MySqlDatabaseSettings _settings;
 
-        private MySqlConnection _connection;
-        private MySqlTransaction _transaction;
+        private MySqlConnection? _connection;
+        private MySqlTransaction? _transaction;
 
         private bool _isDisposed;
 
-        public MySqlDbContext(DatabaseSettings settings)
+        public MySqlDbContext(MySqlDatabaseSettings settings)
         {
             _settings = settings;
         }
@@ -31,9 +31,7 @@ namespace Framework.Dapper.SeedWork
                     throw new ObjectDisposedException(this.GetType().FullName);
                 }
 
-                CreateConnection();
-
-                return _connection;
+                return _connection ??= CreateConnection(_settings.ConnectionString);
             }
         }
 
@@ -46,11 +44,13 @@ namespace Framework.Dapper.SeedWork
                     throw new ObjectDisposedException(this.GetType().FullName);
                 }
 
-                if (_transaction is null)
+                if (_transaction is not null)
                 {
-                    CreateConnection();
-                    _transaction = _connection.BeginTransaction();
+                    return _transaction;
                 }
+
+                _connection ??= CreateConnection(_settings.ConnectionString);
+                _transaction = _connection.BeginTransaction();
 
                 return _transaction;
             }
@@ -84,12 +84,12 @@ namespace Framework.Dapper.SeedWork
             }
         }
 
-        private void CreateConnection()
+        private static MySqlConnection CreateConnection(string connectionString)
         {
-            if (_connection is not null) return;
+            var connection = new MySqlConnection(connectionString);
+            connection.Open();
 
-            _connection = new MySqlConnection(_settings.ConnectionString);
-            _connection.Open();
+            return connection;
         }
         
         public void Dispose()

@@ -8,8 +8,9 @@ describe('TransactionListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionListItemComponent ]
-    })
+    declarations: [TransactionListItemComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

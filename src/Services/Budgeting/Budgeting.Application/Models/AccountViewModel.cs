@@ -8,9 +8,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
     {
         public Guid Id { get; init; }
 
-        public AccountType Type { get; init; }
+        public AccountType Type { get; init; } = null!;
 
-        public string Name { get; init; }
+        public string Name { get; init; } = null!;
 
         public decimal OpenBalance { get; init; }
 
@@ -22,7 +22,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
 
         public DateTime? Updated { get; init; }
 
-        public string Description { get; init; }
+        public string Description { get; init; } = null!;
 
         public bool Favorite { get; init; }
     }

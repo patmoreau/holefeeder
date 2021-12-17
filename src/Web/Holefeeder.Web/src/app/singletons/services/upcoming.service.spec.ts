@@ -6,9 +6,10 @@ import { UpcomingService } from './upcoming.service';
 describe('UpcomingService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [UpcomingService]
-    });
+    imports: [HttpClientTestingModule],
+    providers: [UpcomingService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject(

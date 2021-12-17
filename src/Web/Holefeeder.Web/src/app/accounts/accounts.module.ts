@@ -6,7 +6,6 @@ import { AccountDetailsComponent } from './account-details/account-details.compo
 import { AccountsRoutingModule } from './accounts-routing.module';
 import { AccountEditComponent } from './account-edit/account-edit.component';
 import { SharedModule } from '@app/shared/shared.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
@@ -29,7 +28,6 @@ const COMPONENTS = [
     FormsModule,
     NgbModule,
     SharedModule,
-    FontAwesomeModule,
     AccountsRoutingModule
   ],
   declarations: [COMPONENTS],

@@ -5,9 +5,10 @@ import { CashflowsService } from './cashflows.service';
 describe('CashflowsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CashflowsService]
-    });
+    imports: [HttpClientTestingModule],
+    providers: [CashflowsService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject(
