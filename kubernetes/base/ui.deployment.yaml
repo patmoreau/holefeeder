@@ -31,8 +31,6 @@ spec:
         app: ui
         tier: frontend
     spec:
-      imagePullSecrets:
-      - name: regcred
       containers:
       - image: holefeeder/holefeeder-web
         name: ui

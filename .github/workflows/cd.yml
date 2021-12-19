@@ -56,6 +56,7 @@ jobs:
     env:
       VERSION: ${{ needs.get-version.outputs.version }}
       ENVIRONMENT: Production
+      POD_KUBECONFIG: '${{ github.workspace }}/.kube/pod-kubeconfig'
     environment:
       name: production
 
@@ -69,16 +70,18 @@ jobs:
         kustomize: '4.4.0'
         skaffold: '1.32.0'
 
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Create kube config
+      run: |
+        mkdir -p '${{ github.workspace }}/.kube' \
+          && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
 
     - name: Create .env.secrets file
       run: |
-        printf "BUDGETING_CONNECTION_STRING=Server=mysql.default;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=budgeting_prd;
-        OBJECT_STORE_CONNECTION_STRING=Server=mysql.default;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=object_store_prd;
-        " > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+        printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=budgeting_prd;
+        OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=object_store_prd;
+        MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_USER=${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
 
     - name: Set image tags
       run: |
@@ -88,8 +91,5 @@ jobs:
         kustomize edit set image holefeeder/holefeeder-object-store-api=${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
         kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
 
-    - name: Save DigitalOcean kubeconfig with short-lived credentials
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-1-21-3-do-0-tor1-1634177939904
-
     - name: Deploy to DigitalOcean Kubernetes
-      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd
+      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG

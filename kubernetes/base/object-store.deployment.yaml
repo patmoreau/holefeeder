@@ -31,8 +31,6 @@ spec:
         app: object-store
         tier: backend
     spec:
-      imagePullSecrets:
-      - name: regcred
       containers:
       - image: holefeeder/holefeeder-object-store-api
         name: object-store
