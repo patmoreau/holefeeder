@@ -77,8 +77,8 @@ jobs:
 
     - name: Create .env.secrets file
       run: |
-        printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=budgeting_prd;
-        OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};AllowPublicKeyRetrieval=True;Database=object_store_prd;
+        printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
+        OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
         MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_USER=${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
