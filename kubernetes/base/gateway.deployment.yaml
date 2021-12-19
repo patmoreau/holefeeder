@@ -31,8 +31,6 @@ spec:
         app: gateway
         tier: backend
     spec:
-      imagePullSecrets:
-      - name: regcred
       containers:
       - image: holefeeder/holefeeder-gateway-web
         name: gateway

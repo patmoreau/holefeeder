@@ -31,8 +31,6 @@ spec:
         app: budgeting
         tier: backend
     spec:
-      imagePullSecrets:
-      - name: regcred
       containers:
       - image: holefeeder/holefeeder-budgeting-api
         name: budgeting

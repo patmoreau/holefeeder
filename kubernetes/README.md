@@ -57,3 +57,26 @@ kubectl create namespace cert-manager
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.5.4 --set installCRDs=true
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
 ```
+
+## creating github registry secret for kubernetes
+
+Encode github username and PAT
+```bash
+echo -n "username:123123adsfasdf123123" | base64
+```
+
+Create and encode .dockerconfigjson
+```json
+{
+    "auths":
+    {
+        "ghcr.io":
+            {
+                "auth":"dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="
+            }
+    }
+}
+```
+```bash
+echo -n '{"auths":{"ghcr.io":{"auth":"dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="}}}' | base64
+```
