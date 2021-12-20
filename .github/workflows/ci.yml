@@ -3,11 +3,11 @@ name: Continuous Integration
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**']
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   pull_request:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**']
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   workflow_dispatch:
 
