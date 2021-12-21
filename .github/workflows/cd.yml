@@ -75,10 +75,10 @@ jobs:
         kustomize: '4.4.0'
         skaffold: '1.32.0'
 
-    - name: Create kube config
-      run: |
-        mkdir -p '${{ github.workspace }}/.kube' \
-          && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Create .env.secrets file
       run: |
@@ -96,5 +96,8 @@ jobs:
         kustomize edit set image holefeeder/holefeeder-object-store-api=${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
         kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
 
+    - name: Save DigitalOcean kubeconfig with short-lived credentials
+      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-1-21-3-do-0-tor1-1634177939904
+
     - name: Deploy to DigitalOcean Kubernetes
-      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
+      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd
