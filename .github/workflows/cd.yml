@@ -17,7 +17,7 @@ jobs:
     name: Set version
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.get_version.outputs.VERSION }}
+      version: ${{ steps.get_version.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v2
@@ -28,8 +28,14 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      - name: Check output
-        run: echo ${{ steps.get_version.outputs.VERSION }}
+      - name: 'Get lastest version tag'
+        id: get_version
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+
+      - name: Check version
+        run: echo ${{ steps.get_version.outputs.tag }}
 
   deploy:
     name: Deploy to production
