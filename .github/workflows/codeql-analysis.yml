@@ -14,9 +14,11 @@ name: "CodeQL"
 on:
   push:
     branches: [ main ]
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main ]
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
   schedule:
     - cron: '22 3 * * 3'
 
