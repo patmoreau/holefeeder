@@ -97,7 +97,7 @@ jobs:
         kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
 
     - name: Save DigitalOcean kubeconfig with short-lived credentials
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-1-21-3-do-0-tor1-1634177939904
+      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-do-holefeeder-cluster
 
     - name: Deploy to DigitalOcean Kubernetes
       run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd
