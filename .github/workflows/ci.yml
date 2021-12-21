@@ -3,11 +3,11 @@ name: Continuous Integration
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**']
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   pull_request:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**']
+    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   workflow_dispatch:
 
@@ -31,6 +31,11 @@ jobs:
       - name: Disable workflow commands
         run: |
           echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+
+      - name: Ensure .NET Installed
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.10
@@ -207,7 +212,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       if: ${{ always() }}
       with:
-        dotnet-version: 5.0.301
+        dotnet-version: 6.0.x
 
     - name: Report generator
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
