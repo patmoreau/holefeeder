@@ -1,6 +1,6 @@
 - op: add
   path: "/spec/ingressClassName"
-  value: public
+  value: nginx
 - op: replace
   path: "/metadata/annotations/cert-manager.io~1cluster-issuer"
   value: letsencrypt-prd
