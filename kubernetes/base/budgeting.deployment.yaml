@@ -39,8 +39,8 @@ spec:
           name: budgeting
         resources:
           requests:
-            memory: 64Mi
-            cpu: 100m
+            memory: 32Mi
+            cpu: 10m
           limits:
             memory: 64Mi
-            cpu: 100m
+            cpu: 50m

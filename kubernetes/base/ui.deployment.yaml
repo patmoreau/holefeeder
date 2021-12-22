@@ -40,10 +40,10 @@ spec:
         resources:
           requests:
             memory: 32Mi
-            cpu: 50m
+            cpu: 10m
           limits:
             memory: 32Mi
-            cpu: 50m
+            cpu: 10m
         volumeMounts:
         - name: templates
           mountPath: /etc/nginx/templates
