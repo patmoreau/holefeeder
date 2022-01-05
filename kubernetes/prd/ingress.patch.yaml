@@ -1,6 +1,9 @@
 - op: add
-  path: "/spec/ingressClassName"
-  value: nginx
+  path: "/metadata/annotations/acme.cert-manager.io~1http01-edit-in-place"
+  value: true
+- op: add
+  path: "/metadata/annotations/cert-manager.io~1issue-temporary-certificate"
+  value: true
 - op: replace
   path: "/metadata/annotations/cert-manager.io~1cluster-issuer"
   value: letsencrypt-prd

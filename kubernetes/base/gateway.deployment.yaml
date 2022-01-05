@@ -10,7 +10,7 @@ spec:
   selector:
     app: gateway
     tier: backend
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment

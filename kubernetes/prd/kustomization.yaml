@@ -6,6 +6,9 @@ nameSuffix: -prd
 
 namespace: holefeeder
 
+resources:
+- cluster-issuer.yaml
+
 patchesStrategicMerge:
 - budgeting.env.yaml
 - gateway.env.yaml
@@ -29,17 +32,3 @@ secretGenerator:
   behavior: create
   literals:
   - .dockerconfigjson=eyJhdXRocyI6eyJnaGNyLmlvIjp7ImF1dGgiOiJiVzl5YVc1a2FXNDZaMmh3WDI0d1YzVlZjRmRFU2tsNlFtSkNkWEZ2VTI1elJtdHlaM2hZU1ZZMlp6RnlOVkZpVlE9PSJ9fX0=
-
-images:
-- name: holefeeder/holefeeder-budgeting-api
-  newName: ghcr.io/drifterapps/holefeeder/holefeeder-budgeting-api
-  newTag: 2.0.8
-- name: holefeeder/holefeeder-gateway-web
-  newName: ghcr.io/drifterapps/holefeeder/holefeeder-gateway-web
-  newTag: 2.0.8
-- name: holefeeder/holefeeder-object-store-api
-  newName: ghcr.io/drifterapps/holefeeder/holefeeder-object-store-api
-  newTag: 2.0.8
-- name: holefeeder/holefeeder-web
-  newName: ghcr.io/drifterapps/holefeeder/holefeeder-web
-  newTag: 2.0.8

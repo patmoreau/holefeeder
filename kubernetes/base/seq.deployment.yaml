@@ -10,7 +10,7 @@ spec:
   selector:
     app: seq
     tier: logging
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment

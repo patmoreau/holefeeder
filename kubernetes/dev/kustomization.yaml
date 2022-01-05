@@ -7,6 +7,9 @@ nameSuffix: -dev
 
 namespace: holefeeder
 
+resources:
+- cluster-issuer.yaml
+
 patchesStrategicMerge:
 - budgeting.env.yaml
 - gateway.env.yaml
