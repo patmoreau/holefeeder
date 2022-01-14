@@ -32,7 +32,7 @@ export class TransactionEditComponent implements OnInit {
   confirmModal: NgbModalRef;
   confirmMessages: string;
 
-  account: string;
+  // account: IAccount;
   transaction: ITransactionDetail;
   transactionForm: FormGroup;
 
@@ -78,7 +78,12 @@ export class TransactionEditComponent implements OnInit {
 
     this.categories = await this.categoriesService.find();
 
-    this.account = this.route.parent.snapshot.queryParamMap.get('accountId');
+    let account: IAccount = this.accounts.items[0];
+    if (this.route.snapshot.queryParamMap.has('accountId')) {
+      const accountId = this.route.snapshot.queryParamMap.get('accountId');
+      account = await this.accountsService.findOneByIdWithDetails(accountId);
+    }
+
 
     if (this.route.snapshot.paramMap.has('transactionId')) {
       const transactionId = this.route.snapshot.paramMap.get('transactionId');
@@ -104,9 +109,9 @@ export class TransactionEditComponent implements OnInit {
         });
       } else {
         this.transaction = Object.assign(new TransactionDetail(), {
-          account: this.account ? this.account : this.accounts[0].id,
+          account: account,
           date: date,
-          category: this.categories[0].id
+          category: this.categories[0]
         });
       }
     }
@@ -130,11 +135,6 @@ export class TransactionEditComponent implements OnInit {
   }
 
   async onSubmit() {
-    const transaction = Object.assign(
-      new Transaction(),
-      this.transaction,
-      this.transactionForm.value
-    );
     if (this.transaction.id) {
       await this.transactionsService.modify(
         new ModifyTransactionCommand(Object.assign({}, this.transactionForm.value, {
@@ -165,7 +165,7 @@ export class TransactionEditComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' }).result.then(async (_) => {
       await this.transactionsService.delete(this.transaction.id);
       this.location.back();
-    }, (_) => { });
+    }, (_) => {});
   }
 
   onConfirm() { }

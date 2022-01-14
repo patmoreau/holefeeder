@@ -73,12 +73,6 @@
   </div>
 </ng-container>
 
-<ng-template #loader>
-  <div class="d-flex justify-content-center mt-5">
-    <div class="loader">Loading...</div>
-  </div>
-</ng-template>
-
 <ng-template #confirm let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
@@ -120,4 +114,8 @@
       Delete
     </button>
   </div>
+</ng-template>
+
+<ng-template #loader>
+  <dfta-loader></dfta-loader>
 </ng-template>
