@@ -35,7 +35,7 @@ namespace ObjectStore.UnitTests.Application
             var handler = new GetStoreItem.Handler(repository, cache);
 
             // act
-            var result = await handler.Handle(new GetStoreItem.Request { Id = Guid.NewGuid() }, default);
+            var result = await handler.Handle(new GetStoreItem.Request {Id = Guid.NewGuid()}, default);
 
             // assert
             OneOf<StoreItemViewModel, NotFoundRequestResult> expected =

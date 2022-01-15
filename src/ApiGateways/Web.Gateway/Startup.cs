@@ -14,6 +14,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
+
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -47,21 +48,21 @@ namespace DrifterApps.Holefeeder.Web.Gateway
                         .WithExposedHeaders("X-Total-Count");
                 });
             });
-            
+
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy());
- 
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(
                     options => options.TokenValidationParameters =
                         new TokenValidationParameters {ValidateIssuer = false},
                     options => Configuration.Bind("AzureAd", options));
-            
+
             services.AddMvcCore(options => options.EnableEndpointRouting = false);
-            
+
             services.AddOcelot()
                 .AddCacheManager(x => x.WithDictionaryHandle());
-            
+
             services.ConfigureDownstreamHostAndPortsPlaceholders(Configuration);
         }
 
@@ -73,19 +74,17 @@ namespace DrifterApps.Holefeeder.Web.Gateway
             }
 
             app.UseMvc();
-            
+
             app.UseCors(MY_ALLOW_SPECIFIC_ORIGINS);
 
             app.UseRouting();
 
             app.UseSerilogRequestLogging();
-                        
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
-                {
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                endpoints.MapHealthChecks("/hc",
+                    new HealthCheckOptions {ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
             });
 
             app.UseOcelot().GetAwaiter().GetResult();

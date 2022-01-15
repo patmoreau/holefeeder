@@ -20,14 +20,14 @@ public static class ExportData
     public class Handler
         : IRequestHandler<Request, OneOf<ExportDataDto>>
     {
-        private readonly IExportQueriesRepository _exportRepository;
+        private readonly IMyDataQueriesRepository _myDataRepository;
         private readonly ItemsCache _cache;
         private readonly ILogger<Handler> _logger;
 
         public Handler(
-            IExportQueriesRepository exportRepository, ItemsCache cache, ILogger<Handler> logger)
+            IMyDataQueriesRepository myDataRepository, ItemsCache cache, ILogger<Handler> logger)
         {
-            _exportRepository = exportRepository;
+            _myDataRepository = myDataRepository;
             _cache = cache;
             _logger = logger;
         }
@@ -37,11 +37,11 @@ public static class ExportData
         {
             _logger.LogTrace("***** Request: {@Request}", request);
 
-            var accounts = await _exportRepository.ExportAccountsAsync((Guid)_cache["UserId"], cancellationToken);
-            var categories = await _exportRepository.ExportCategoriesAsync((Guid)_cache["UserId"], cancellationToken);
-            var cashflows = await _exportRepository.ExportCashflowsAsync((Guid)_cache["UserId"], cancellationToken);
+            var accounts = await _myDataRepository.ExportAccountsAsync((Guid)_cache["UserId"], cancellationToken);
+            var categories = await _myDataRepository.ExportCategoriesAsync((Guid)_cache["UserId"], cancellationToken);
+            var cashflows = await _myDataRepository.ExportCashflowsAsync((Guid)_cache["UserId"], cancellationToken);
             var transactions =
-                await _exportRepository.ExportTransactionsAsync((Guid)_cache["UserId"], cancellationToken);
+                await _myDataRepository.ExportTransactionsAsync((Guid)_cache["UserId"], cancellationToken);
 
             return new ExportDataDto(accounts.ToImmutableArray(), categories.ToImmutableArray(),
                 cashflows.ToImmutableArray(), transactions.ToImmutableArray());

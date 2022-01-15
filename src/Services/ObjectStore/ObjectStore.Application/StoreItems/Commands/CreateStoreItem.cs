@@ -61,7 +61,7 @@ public static class CreateStoreItem
             {
                 return new ValidationErrorsRequestResult(new Dictionary<string, string[]>
                 {
-                    { nameof(request.Code), new[] { $"Code '{request.Code}' already exists." } }
+                    {nameof(request.Code), new[] {$"Code '{request.Code}' already exists."}}
                 });
             }
 

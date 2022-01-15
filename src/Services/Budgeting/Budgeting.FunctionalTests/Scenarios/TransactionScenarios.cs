@@ -27,10 +27,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public TransactionScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]
@@ -129,7 +129,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client, IEnumerable<TransactionInfoViewModel>? result)
+        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client,
+            IEnumerable<TransactionInfoViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -176,7 +177,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<TransactionInfoViewModel>? result)
+        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client,
+            IEnumerable<TransactionInfoViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -255,7 +257,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "And the result contain the transaction"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<TransactionInfoViewModel>(_jsonSerializerOptions);
+                    var result =
+                        await response.Content.ReadFromJsonAsync<TransactionInfoViewModel>(_jsonSerializerOptions);
 
                     result.Should().BeEquivalentTo(
                         new TransactionInfoViewModel
@@ -293,7 +296,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     Description = "New purchase",
                     AccountId = BudgetingContextSeed.Account4,
                     CategoryId = BudgetingContextSeed.Category1,
-                    Tags = new [] {"Tag1", "Tag2"}
+                    Tags = new[] {"Tag1", "Tag2"}
                 });
 
             "When I call the API"

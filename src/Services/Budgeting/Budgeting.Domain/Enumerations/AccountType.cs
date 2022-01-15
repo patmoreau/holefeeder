@@ -19,7 +19,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.Enumerations
         private AccountType(int id, string name) : base(id, name)
         {
         }
-        
+
         public abstract int Multiplier { get; }
 
         private class CreditAccountType : AccountType
@@ -28,7 +28,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.Enumerations
 
             public override int Multiplier => -1;
         }
-        
+
         private class DebitAccountType : AccountType
         {
             public DebitAccountType(int id, string name) : base(id, name) { }

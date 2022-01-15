@@ -21,6 +21,5 @@ public record CategoryEntity : EntityRoot
 
     public bool System { get; init; }
 
-    [Key]
-    public Guid UserId { get; init; }
+    [Key] public Guid UserId { get; init; }
 }

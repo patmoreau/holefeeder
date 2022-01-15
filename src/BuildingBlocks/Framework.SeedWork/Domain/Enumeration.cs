@@ -60,7 +60,7 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
             {
                 throw new ArgumentNullException(nameof(secondValue));
             }
-            
+
             var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
             return absoluteDifference;
         }

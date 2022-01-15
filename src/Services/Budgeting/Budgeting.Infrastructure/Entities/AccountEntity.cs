@@ -23,6 +23,5 @@ public record AccountEntity : EntityRoot
 
     public bool Inactive { get; init; }
 
-    [Key]
-    public Guid UserId { get; init; }
+    [Key] public Guid UserId { get; init; }
 }

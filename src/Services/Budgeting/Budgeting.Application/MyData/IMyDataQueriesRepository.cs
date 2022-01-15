@@ -7,7 +7,7 @@ using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.MyData;
 
-public interface IExportQueriesRepository
+public interface IMyDataQueriesRepository
 {
     Task<IEnumerable<MyDataAccountDto>> ExportAccountsAsync(Guid userId,
         CancellationToken cancellationToken = default);

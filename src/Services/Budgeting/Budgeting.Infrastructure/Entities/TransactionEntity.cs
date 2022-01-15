@@ -23,12 +23,9 @@ public record TransactionEntity : EntityRoot
 
     public string Tags { get; init; } = null!;
 
-    [Key]
-    public Guid UserId { get; init; }
-        
-    [NotMapped]
-    public AccountEntity Account { get; init; } = null!;
-        
-    [NotMapped]
-    public CategoryEntity Category { get; init; } = null!;
+    [Key] public Guid UserId { get; init; }
+
+    [NotMapped] public AccountEntity Account { get; init; } = null!;
+
+    [NotMapped] public CategoryEntity Category { get; init; } = null!;
 }

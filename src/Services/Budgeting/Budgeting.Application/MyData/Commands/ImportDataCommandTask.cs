@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,10 +7,8 @@ using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
-using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
-using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Microsoft.Extensions.Logging;
 
@@ -52,7 +49,7 @@ public static partial class ImportData
         {
             try
             {
-                updateProgress(_importDataStatus with { Status = CommandStatus.InProgress });
+                updateProgress(_importDataStatus with {Status = CommandStatus.InProgress});
                 await ImportAccountsAsync(userId, request, updateProgress, cancellationToken);
                 await ImportCategoriesAsync(userId, request, updateProgress, cancellationToken);
                 await ImportCashflowsAsync(userId, request, updateProgress, cancellationToken);
@@ -60,53 +57,48 @@ public static partial class ImportData
 
                 await _accountsRepository.UnitOfWork.CommitAsync(cancellationToken);
 
-                updateProgress(_importDataStatus with { Status = CommandStatus.Completed });
+                updateProgress(_importDataStatus with {Status = CommandStatus.Completed});
             }
             catch (Exception e)
             {
-                updateProgress(_importDataStatus with { Status = CommandStatus.Error, Message = e.Message });
+                updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.Message});
             }
         }
 
         private async Task ImportAccountsAsync(Guid userId, Request request,
             Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
-            if (!ContainsElement(request.Data.RootElement, "accounts"))
+            if (!request.Data.Accounts.Any())
             {
                 return;
             }
 
-            var accounts = GetElement(request.Data.RootElement, "accounts");
+            var accounts = request.Data.Accounts;
 
-            _importDataStatus = _importDataStatus with { AccountsTotal = accounts.GetArrayLength() };
-            updateProgress(_importDataStatus with { Status = CommandStatus.InProgress });
+            _importDataStatus = _importDataStatus with
+            {
+                Status = CommandStatus.InProgress, AccountsTotal = accounts.Length
+            };
+            updateProgress(_importDataStatus);
 
-            foreach (var element in accounts.EnumerateArray())
+            foreach (var element in accounts)
             {
                 Account account = null!;
-                var id = ConvertToValue<Guid>(element, "id");
-                var type = Enumeration.FromName<AccountType>(ConvertToValue<string>(element, "type"));
-                var name = ConvertToValue<string>(element, "name");
-                var favorite = ConvertToValue(element, "favorite", false);
-                var openBalance = ConvertToValue<decimal>(element, "openBalance");
-                var openDate = ConvertToValue<DateTime>(element, "openDate");
-                var description = ConvertToValue(element, "description", string.Empty);
-                var inactive = ConvertToValue(element, "inactive", false);
 
-                var exists = await _accountsRepository.FindByIdAsync(id, userId, cancellationToken);
+                var exists = await _accountsRepository.FindByIdAsync(element.Id, userId, cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
                         account = exists with
                         {
-                            Type = type,
-                            Name = name,
-                            Favorite = favorite,
-                            OpenBalance = openBalance,
-                            OpenDate = openDate,
-                            Description = description,
-                            Inactive = inactive
+                            Type = element.Type,
+                            Name = element.Name,
+                            Favorite = element.Favorite,
+                            OpenBalance = element.OpenBalance,
+                            OpenDate = element.OpenDate,
+                            Description = element.Description,
+                            Inactive = element.Inactive
                         };
                         _logger.LogInformation("----- Modify Account - Account: {@Account}", account);
                     }
@@ -117,12 +109,12 @@ public static partial class ImportData
                 }
                 else
                 {
-                    account = new Account(id, type, name, openDate, userId)
+                    account = new Account(element.Id, element.Type, element.Name, element.OpenDate, userId)
                     {
-                        Favorite = favorite,
-                        OpenBalance = openBalance,
-                        Description = description,
-                        Inactive = inactive
+                        Favorite = element.Favorite,
+                        OpenBalance = element.OpenBalance,
+                        Description = element.Description,
+                        Inactive = element.Inactive
                     };
                     _logger.LogInformation("----- Create Account - Account: {@Account}", account);
                 }
@@ -140,40 +132,36 @@ public static partial class ImportData
         private async Task ImportCategoriesAsync(Guid userId, Request request,
             Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
-            if (!ContainsElement(request.Data.RootElement, "categories"))
+            if (!request.Data.Categories.Any())
             {
                 return;
             }
 
-            var categories = GetElement(request.Data.RootElement, "categories");
+            var categories = request.Data.Categories;
 
-            _importDataStatus = _importDataStatus with { CategoriesTotal = categories.GetArrayLength() };
+            _importDataStatus = _importDataStatus with
+            {
+                Status = CommandStatus.InProgress, CategoriesTotal = categories.Length
+            };
             updateProgress(_importDataStatus);
 
-            foreach (var element in categories.EnumerateArray())
+            foreach (var element in categories)
             {
                 Category category = null!;
-                var id = ConvertToValue<Guid>(element, "id");
-                var type = Enumeration.FromName<CategoryType>(ConvertToValue<string>(element, "type"));
-                var name = ConvertToValue<string>(element, "name");
-                var favorite = ConvertToValue(element, "favorite", false);
-                var system = ConvertToValue(element, "system", false);
-                var color = ConvertToValue(element, "color", string.Empty);
-                var budgetAmount = ConvertToValue<decimal>(element, "budgetAmount");
 
-                var exists = await _categoriesRepository.FindByIdAsync(id, userId, cancellationToken);
+                var exists = await _categoriesRepository.FindByIdAsync(element.Id, userId, cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
                         category = exists with
                         {
-                            Type = type,
-                            Name = name,
-                            Favorite = favorite,
-                            System = system,
-                            BudgetAmount = budgetAmount,
-                            Color = color,
+                            Type = element.Type,
+                            Name = element.Name,
+                            Favorite = element.Favorite,
+                            System = element.System,
+                            BudgetAmount = element.BudgetAmount,
+                            Color = element.Color,
                         };
                         _logger.LogInformation("----- Modify Category - Category: {@Category}", category);
                     }
@@ -184,9 +172,12 @@ public static partial class ImportData
                 }
                 else
                 {
-                    category = new Category(id, type, name, userId)
+                    category = new Category(element.Id, element.Type, element.Name, userId)
                     {
-                        Favorite = favorite, System = system, BudgetAmount = budgetAmount, Color = color,
+                        Favorite = element.Favorite,
+                        System = element.System,
+                        BudgetAmount = element.BudgetAmount,
+                        Color = element.Color,
                     };
                     _logger.LogInformation("----- Create Category - Category: {@Category}", category);
                 }
@@ -204,51 +195,41 @@ public static partial class ImportData
         private async Task ImportCashflowsAsync(Guid userId, Request request,
             Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
-            if (!ContainsElement(request.Data.RootElement, "cashflows"))
+            if (!request.Data.Cashflows.Any())
             {
                 return;
             }
 
-            var cashflows = GetElement(request.Data.RootElement, "cashflows");
+            var cashflows = request.Data.Cashflows;
 
-            _importDataStatus = _importDataStatus with { CashflowsTotal = cashflows.GetArrayLength() };
+            _importDataStatus = _importDataStatus with
+            {
+                Status = CommandStatus.InProgress, CashflowsTotal = cashflows.Length
+            };
             updateProgress(_importDataStatus);
 
-            foreach (var element in cashflows.EnumerateArray())
+            foreach (var element in cashflows)
             {
                 Cashflow cashflow = null!;
-                var id = ConvertToValue<Guid>(element, "id");
-                var effectiveDate = ConvertToValue<DateTime>(element, "effectiveDate");
-                var intervalType =
-                    Enumeration.FromName<DateIntervalType>(ConvertToValue<string>(element, "intervalType"));
-                var frequency = ConvertToValue<int>(element, "frequency");
-                var recurrence = ConvertToValue<int>(element, "recurrence");
-                var amount = ConvertToValue<decimal>(element, "amount");
-                var description = ConvertToValue(element, "description", string.Empty);
-                var categoryId = ConvertToValue<Guid>(element, "categoryId");
-                var accountId = ConvertToValue<Guid>(element, "accountId");
-                var inactive = ConvertToValue(element, "inactive", false);
-                var tags = ConvertToStringArray(element, "tags");
 
-                var exists = await _cashflowRepository.FindByIdAsync(id, userId, cancellationToken);
+                var exists = await _cashflowRepository.FindByIdAsync(element.Id, userId, cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
                         cashflow = exists with
                         {
-                            EffectiveDate = effectiveDate,
-                            IntervalType = intervalType,
-                            Frequency = frequency,
-                            Recurrence = recurrence,
-                            Amount = amount,
-                            Description = description,
-                            CategoryId = categoryId,
-                            AccountId = accountId,
-                            UserId = userId,
-                            Inactive = inactive
+                            EffectiveDate = element.EffectiveDate,
+                            IntervalType = element.IntervalType,
+                            Frequency = element.Frequency,
+                            Recurrence = element.Recurrence,
+                            Amount = element.Amount,
+                            Description = element.Description,
+                            CategoryId = element.CategoryId,
+                            AccountId = element.AccountId,
+                            Inactive = element.Inactive
                         };
-                        cashflow = cashflow.AddTags(tags);
+                        cashflow = cashflow.AddTags(element.Tags);
                         _logger.LogInformation("----- Modify Cashflow - Cashflow: {@Cashflow}", cashflow);
                     }
                     else
@@ -258,18 +239,18 @@ public static partial class ImportData
                 }
                 else
                 {
-                    cashflow = new Cashflow(id, effectiveDate, amount, userId)
+                    cashflow = new Cashflow(element.Id, element.EffectiveDate, element.Amount, userId)
                     {
-                        IntervalType = intervalType,
-                        Frequency = frequency,
-                        Recurrence = recurrence,
-                        Amount = amount,
-                        Description = description,
-                        CategoryId = categoryId,
-                        AccountId = accountId,
-                        Inactive = inactive
+                        IntervalType = element.IntervalType,
+                        Frequency = element.Frequency,
+                        Recurrence = element.Recurrence,
+                        Amount = element.Amount,
+                        Description = element.Description,
+                        CategoryId = element.CategoryId,
+                        AccountId = element.AccountId,
+                        Inactive = element.Inactive
                     };
-                    cashflow = cashflow.AddTags(tags);
+                    cashflow = cashflow.AddTags(element.Tags);
                     _logger.LogInformation("----- Create Cashflow - Cashflow: {@Cashflow}", cashflow);
                 }
 
@@ -287,47 +268,40 @@ public static partial class ImportData
         private async Task ImportTransactionsAsync(Guid userId, Request request,
             Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
-            if (!ContainsElement(request.Data.RootElement, "transactions"))
+            if (!request.Data.Transactions.Any())
             {
                 return;
             }
 
-            var transactions = GetElement(request.Data.RootElement, "transactions");
+            var transactions = request.Data.Transactions;
 
-            _importDataStatus = _importDataStatus with { TransactionsTotal = transactions.GetArrayLength() };
+            _importDataStatus = _importDataStatus with
+            {
+                Status = CommandStatus.InProgress, TransactionsTotal = transactions.Length
+            };
             updateProgress(_importDataStatus);
 
-            foreach (var element in transactions.EnumerateArray())
+            foreach (var element in transactions)
             {
                 Transaction transaction = null!;
-                var id = ConvertToValue<Guid>(element, "id");
-                var date = ConvertToValue<DateTime>(element, "date");
-                var amount = ConvertToValue<decimal>(element, "amount");
-                var description = ConvertToValue(element, "description", string.Empty);
-                var categoryId = ConvertToValue<Guid>(element, "categoryId");
-                var accountId = ConvertToValue<Guid>(element, "accountId");
-                Guid? cashflowId = ConvertToValueOrNull<Guid>(element, "cashflowId");
-                DateTime? cashflowDate = ConvertToValueOrNull<DateTime>(element, "cashflowDate");
 
-                var tags = ConvertToStringArray(element, "tags");
-
-                var exists = await _transactionRepository.FindByIdAsync(id, userId, cancellationToken);
+                var exists = await _transactionRepository.FindByIdAsync(element.Id, userId, cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
                         transaction = exists with
                         {
-                            Date = date,
-                            Amount = amount,
-                            Description = description,
-                            CategoryId = categoryId,
-                            AccountId = accountId,
-                            CashflowId = cashflowId,
-                            CashflowDate = cashflowDate,
+                            Date = element.Date,
+                            Amount = element.Amount,
+                            Description = element.Description,
+                            CategoryId = element.CategoryId,
+                            AccountId = element.AccountId,
+                            CashflowId = element.CashflowId,
+                            CashflowDate = element.CashflowDate,
                             UserId = userId
                         };
-                        transaction = transaction.AddTags(tags);
+                        transaction = transaction.AddTags(element.Tags);
                         _logger.LogInformation("----- Modify Transaction - Transaction: {@Transaction}", transaction);
                     }
                     else
@@ -339,17 +313,17 @@ public static partial class ImportData
                 {
                     transaction = new Transaction
                     {
-                        Id = id,
-                        Date = date,
-                        Amount = amount,
-                        Description = description,
-                        CategoryId = categoryId,
-                        AccountId = accountId,
-                        CashflowId = cashflowId,
-                        CashflowDate = cashflowDate,
+                        Id = element.Id,
+                        Date = element.Date,
+                        Amount = element.Amount,
+                        Description = element.Description,
+                        CategoryId = element.CategoryId,
+                        AccountId = element.AccountId,
+                        CashflowId = element.CashflowId,
+                        CashflowDate = element.CashflowDate,
                         UserId = userId
                     };
-                    transaction = transaction.AddTags(tags);
+                    transaction = transaction.AddTags(element.Tags);
                     _logger.LogInformation("----- Create Transaction - Transaction: {@Transaction}", transaction);
                 }
 
@@ -361,83 +335,6 @@ public static partial class ImportData
                 };
                 updateProgress(_importDataStatus);
             }
-        }
-
-        private static bool ContainsElement(JsonElement element, string name) =>
-            element.EnumerateObject()
-                .Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-        private static JsonElement GetElement(JsonElement element, string name) =>
-            element.EnumerateObject()
-                .Single(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                .Value;
-
-        private static T? ConvertToValueOrNull<T>(JsonElement root, string name) where T : struct
-        {
-            var element = GetElement(root, name);
-
-            return element.ValueKind == JsonValueKind.Null ? null : ConvertTo<T>(element);
-        }
-
-        private static T ConvertToValue<T>(JsonElement root, string name)
-        {
-            var element = GetElement(root, name);
-
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                throw new InvalidOperationException($"'{name}' is null for {root.ToString()}");
-            }
-
-            return ConvertTo<T>(element);
-        }
-
-        private static T ConvertToValue<T>(JsonElement root, string name, T defaultValueIfNull)
-        {
-            var element = GetElement(root, name);
-
-            return element.ValueKind == JsonValueKind.Null ? defaultValueIfNull : (T)ConvertTo<T>(element);
-        }
-
-        private static string[] ConvertToStringArray(JsonElement root, string name)
-        {
-            var element = GetElement(root, name);
-
-            return (element.ValueKind is JsonValueKind.Null or not JsonValueKind.Array
-                ? Array.Empty<string>()
-                : element.EnumerateArray()
-                    .Select(s => s.GetString())
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .ToArray())!;
-        }
-
-        private static dynamic ConvertTo<T>(JsonElement element)
-        {
-            if (typeof(T) == typeof(int))
-            {
-                return element.GetInt32();
-            }
-
-            if (typeof(T) == typeof(Guid))
-            {
-                return element.GetGuid();
-            }
-
-            if (typeof(T) == typeof(bool))
-            {
-                return element.GetBoolean();
-            }
-
-            if (typeof(T) == typeof(DateTime))
-            {
-                return element.GetDateTime();
-            }
-
-            if (typeof(T) == typeof(decimal))
-            {
-                return element.GetDecimal();
-            }
-
-            return element.GetString() ?? string.Empty;
         }
     }
 }

@@ -57,8 +57,8 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
 
         public static IEnumerable<object[]> GetIds()
         {
-            yield return new object[] { Guid.NewGuid() };
-            yield return new object[] { Guid.Empty };
+            yield return new object[] {Guid.NewGuid()};
+            yield return new object[] {Guid.Empty};
         }
 
         private readonly TransactionInfoViewModel[] _testTransactionData =
@@ -69,7 +69,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
                 Date = DateTime.Today,
                 Amount = 12345m,
                 Description = "transaction #1",
-                Tags = ImmutableArray.Create(new[] { "tag#1", "tag#2" })
+                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
             },
             new()
             {
@@ -77,7 +77,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
                 Date = DateTime.Today,
                 Amount = 54321m,
                 Description = "transaction #2",
-                Tags = ImmutableArray.Create(new[] { "tag#1", "tag#2" })
+                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
             }
         };
     }

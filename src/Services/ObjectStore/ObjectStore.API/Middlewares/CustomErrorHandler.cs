@@ -54,7 +54,7 @@ public static class CustomErrorHandler
                     break;
             }
 
-            var problem = new ProblemDetails { Status = statusCode, Title = title, Detail = details };
+            var problem = new ProblemDetails {Status = statusCode, Title = title, Detail = details};
 
             var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
             problem.Extensions["traceId"] = traceId;

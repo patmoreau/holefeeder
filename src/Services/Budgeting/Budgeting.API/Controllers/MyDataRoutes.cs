@@ -46,7 +46,7 @@ public static class MyDataRoutes
     {
         var requestResult = await mediator.Send(command);
         return requestResult.Match(
-            result => Results.AcceptedAtRoute(nameof(ImportDataStatus), new { Id = result }, new { Id = result }),
+            result => Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = result}, new {Id = result}),
             result => Results.ValidationProblem(
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,

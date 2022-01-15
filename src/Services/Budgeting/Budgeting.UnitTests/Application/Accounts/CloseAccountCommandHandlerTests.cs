@@ -32,15 +32,16 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
             var command = new CloseAccount.Request(Guid.NewGuid());
             var repository = Substitute.For<IAccountRepository>();
             repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-                .Returns(new Account(Guid.NewGuid(), AccountType.Checking, "Account name",DateTime.Today, Guid.NewGuid())
-                {
-                    Type = AccountType.Checking,
-                    Favorite = false,
-                    OpenBalance = Decimal.One,
-                    Description = "Description",
-                    Inactive = false,
-                    Cashflows = Array.Empty<Guid>()
-                });
+                .Returns(
+                    new Account(Guid.NewGuid(), AccountType.Checking, "Account name", DateTime.Today, Guid.NewGuid())
+                    {
+                        Type = AccountType.Checking,
+                        Favorite = false,
+                        OpenBalance = Decimal.One,
+                        Description = "Description",
+                        Inactive = false,
+                        Cashflows = Array.Empty<Guid>()
+                    });
             var cache = Substitute.For<ItemsCache>();
             cache["UserId"] = Guid.NewGuid();
             var logger = Substitute.For<ILogger<CloseAccount.Handler>>();
@@ -54,7 +55,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
                 Unit.Value;
             result.Should().BeEquivalentTo(expected);
         }
-        
+
         [Fact]
         public async Task GivenCloseAccountCommand_WhenAccountDoesNotExists_ThenReturnCommandNotFound()
         {

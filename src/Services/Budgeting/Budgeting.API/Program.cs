@@ -31,7 +31,8 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v2", new() { Title = builder.Environment.ApplicationName, Version = "v2" });
+        c.SwaggerDoc("v2", new() {Title = builder.Environment.ApplicationName, Version = "v2"});
+        c.CustomSchemaIds(type => type.ToString());
         c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OAuth2,
@@ -62,7 +63,7 @@ builder.Services
             {
                 new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" },
+                    Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"},
                 },
                 new List<string>()
             }
@@ -84,7 +85,7 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
         options => options.TokenValidationParameters =
-            new TokenValidationParameters { ValidateIssuer = false },
+            new TokenValidationParameters {ValidateIssuer = false},
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
 // Registers required services for health checks
@@ -93,7 +94,7 @@ builder.Services
     .AddCheck("self", () => HealthCheckResult.Healthy())
     .AddMySql(builder.Configuration["HolefeederDatabaseSettings:ConnectionString"],
         "BudgetingDB-check",
-        tags: new[] { "budgeting-db" });
+        tags: new[] {"budgeting-db"});
 
 builder.Host.UseSerilog();
 
@@ -134,5 +135,7 @@ app.Run();
 
 namespace DrifterApps.Holefeeder.Budgeting.API
 {
-    public partial class Program { }
+    public partial class Program
+    {
+    }
 }

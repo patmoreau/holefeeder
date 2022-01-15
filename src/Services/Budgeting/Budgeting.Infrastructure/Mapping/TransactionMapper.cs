@@ -88,7 +88,7 @@ public class TransactionMapper
         return entity;
     }
 
-    public MyDataTransactionDto MapToExportDto(TransactionEntity entity)
+    public MyDataTransactionDto MapToMyDataTransactionDto(TransactionEntity entity)
     {
         var dto = new MyDataTransactionDto
         {
@@ -96,7 +96,7 @@ public class TransactionMapper
             Amount = entity.Amount,
             Date = entity.Date,
             Description = entity.Description,
-            Tags = _tagsMapper.Map(entity.Tags).ToImmutableArray(),
+            Tags = _tagsMapper.Map(entity.Tags).ToArray(),
             AccountId = entity.AccountId,
             CategoryId = entity.CategoryId,
             CashflowId = entity.CashflowId,

@@ -64,7 +64,7 @@ public static class OpenAccount
             {
                 return new ValidationErrorsRequestResult(new Dictionary<string, string[]>
                 {
-                    { nameof(request.Name), new[] { $"'{request.Name}' already exists." } }
+                    {nameof(request.Name), new[] {$"'{request.Name}' already exists."}}
                 });
             }
 

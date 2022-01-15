@@ -59,7 +59,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
             services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
-            services.AddTransient<IExportQueriesRepository, ExportQueriesRepository>();
+            services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
             services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();

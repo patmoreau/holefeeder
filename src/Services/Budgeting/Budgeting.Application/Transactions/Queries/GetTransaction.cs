@@ -26,7 +26,8 @@ public static class GetTransaction
             _cache = cache;
         }
 
-        public async Task<OneOf<TransactionInfoViewModel, NotFoundRequestResult>> Handle(Request query, CancellationToken cancellationToken)
+        public async Task<OneOf<TransactionInfoViewModel, NotFoundRequestResult>> Handle(Request query,
+            CancellationToken cancellationToken)
         {
             var transaction = (await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken));
             if (transaction is null)

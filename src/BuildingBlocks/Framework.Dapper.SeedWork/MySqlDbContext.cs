@@ -91,7 +91,7 @@ namespace Framework.Dapper.SeedWork
 
             return connection;
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

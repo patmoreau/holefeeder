@@ -16,7 +16,7 @@ public static class GetStoreItem
     {
         public Guid Id { get; init; }
     }
-    
+
     public class Handler : IRequestHandler<Request, OneOf<StoreItemViewModel, NotFoundRequestResult>>
     {
         private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
@@ -28,7 +28,8 @@ public static class GetStoreItem
             _cache = cache;
         }
 
-        public async Task<OneOf<StoreItemViewModel, NotFoundRequestResult>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<OneOf<StoreItemViewModel, NotFoundRequestResult>> Handle(Request request,
+            CancellationToken cancellationToken)
         {
             var result =
                 await _itemsQueriesRepository.FindByIdAsync((Guid)_cache["UserId"], request.Id, cancellationToken);
@@ -40,5 +41,4 @@ public static class GetStoreItem
             return result;
         }
     }
-
 }

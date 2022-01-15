@@ -50,7 +50,7 @@ public class CashflowMapper
     {
         return entity is null ? null : MapToDto(entity);
     }
-    
+
     public CashflowInfoViewModel MapToDto(CashflowEntity entity)
     {
         var dto = new CashflowInfoViewModel
@@ -93,8 +93,8 @@ public class CashflowMapper
 
         return entity;
     }
-    
-    public MyDataCashflowDto MapToExportDto(CashflowEntity entity)
+
+    public MyDataCashflowDto MapToMyDataCashflowDto(CashflowEntity entity)
     {
         var dto = new MyDataCashflowDto
         {
@@ -105,9 +105,10 @@ public class CashflowMapper
             Frequency = entity.Frequency,
             IntervalType = entity.IntervalType,
             Recurrence = entity.Recurrence,
-            Tags = _tagsMapper.Map(entity.Tags).ToImmutableArray(),
+            Tags = _tagsMapper.Map(entity.Tags).ToArray(),
             AccountId = entity.AccountId,
-            CategoryId = entity.CategoryId
+            CategoryId = entity.CategoryId,
+            Inactive = entity.Inactive
         };
 
         return dto;

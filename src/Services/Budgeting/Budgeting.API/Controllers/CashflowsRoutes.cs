@@ -18,7 +18,7 @@ public static class CashflowsRoutes
     {
         const string routePrefix = "api/v2/cashflows";
 
-        app.MapGet($"{routePrefix}/get-upcoming",GetUpcoming)
+        app.MapGet($"{routePrefix}/get-upcoming", GetUpcoming)
             .WithName(nameof(GetUpcoming))
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .Produces<UpcomingViewModel[]>()
@@ -71,7 +71,7 @@ public static class CashflowsRoutes
                 return Results.Ok(result.Items);
             });
     }
-    
+
     private static async Task<IResult> GetCashflow(Guid id, IMediator mediator, CancellationToken cancellationToken)
     {
         var requestResult = await mediator.Send(new GetCashflow.Request(id), cancellationToken);

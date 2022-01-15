@@ -27,14 +27,18 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         [Theory, MemberData(nameof(InvalidNames))]
         public void GivenOpenAccountValidator_WhenNameIsInvalid_ThenShouldHaveError(string name)
         {
-            var result = _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, name, DateTime.Now, 1, "description"));
+            var result =
+                _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, name, DateTime.Now, 1,
+                    "description"));
             result.ShouldHaveValidationErrorFor(m => m.Name);
         }
 
         [Theory, MemberData(nameof(InvalidDateTimes))]
         public void GivenOpenAccountValidator_WhenOpenDateIsInvalid_ThenShouldHaveError(DateTime openDate)
         {
-            var result = _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, "name", openDate, 1, "description"));
+            var result =
+                _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, "name", openDate, 1,
+                    "description"));
             result.ShouldHaveValidationErrorFor(m => m.OpenDate);
         }
 
@@ -52,10 +56,10 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         {
             get
             {
-                yield return new object[] { "" };
-                yield return new object[] { "           " };
-                yield return new object[] { string.Concat(LONG_STRING, LONG_STRING, LONG_STRING) };
-                yield return new object[] { null! };
+                yield return new object[] {""};
+                yield return new object[] {"           "};
+                yield return new object[] {string.Concat(LONG_STRING, LONG_STRING, LONG_STRING)};
+                yield return new object[] {null!};
             }
         }
 
@@ -63,9 +67,9 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         {
             get
             {
-                yield return new object[] { DateTime.MinValue };
-                yield return new object[] { default(DateTime) };
-                yield return new object[] { null! };
+                yield return new object[] {DateTime.MinValue};
+                yield return new object[] {default(DateTime)};
+                yield return new object[] {null!};
             }
         }
 
@@ -73,8 +77,8 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         {
             get
             {
-                yield return new object[] { default(AccountType)! };
-                yield return new object[] { null! };
+                yield return new object[] {default(AccountType)!};
+                yield return new object[] {null!};
             }
         }
     }

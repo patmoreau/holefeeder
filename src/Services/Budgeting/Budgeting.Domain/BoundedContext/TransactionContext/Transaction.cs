@@ -136,12 +136,12 @@ public record Transaction : IAggregateRoot
                                           StringComparer.Create(CultureInfo.InvariantCulture,
                                               CompareOptions.IgnoreCase)))
             .ToList();
-            
+
         if (!newTags.Any())
         {
             return this;
         }
 
-        return this with { Tags = newTags.ToImmutableArray() };
+        return this with {Tags = newTags.ToImmutableArray()};
     }
 }

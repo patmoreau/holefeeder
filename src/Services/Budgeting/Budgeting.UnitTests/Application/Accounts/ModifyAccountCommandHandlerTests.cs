@@ -53,7 +53,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
                 Unit.Value;
             result.Should().BeEquivalentTo(expected);
         }
-        
+
         [Fact]
         public async Task GivenModifyAccountCommand_WhenAccountDoesNotExists_ThenReturnCommandNotFound()
         {

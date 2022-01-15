@@ -34,7 +34,6 @@ public static class GetUpcoming
             var result = new Request(hasFrom ? from : DateTime.MinValue, hasTo ? to : DateTime.MaxValue);
 
             return ValueTask.FromResult<Request?>(result);
-
         }
     }
 

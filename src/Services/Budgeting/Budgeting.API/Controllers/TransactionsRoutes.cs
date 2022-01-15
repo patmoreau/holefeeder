@@ -68,7 +68,8 @@ public static class TransactionsRoutes
         return app;
     }
 
-    private static async Task<IResult> GetTransactions(GetTransactions.Request query, IMediator mediator, HttpResponse response)
+    private static async Task<IResult> GetTransactions(GetTransactions.Request query, IMediator mediator,
+        HttpResponse response)
     {
         var requestResult = await mediator.Send(query);
         return requestResult.Match(
@@ -83,7 +84,7 @@ public static class TransactionsRoutes
                 return Results.Ok(result.Items);
             });
     }
-    
+
     private static async Task<IResult> GetTransaction(Guid id, IMediator mediator, CancellationToken cancellationToken)
     {
         var requestResult = await mediator.Send(new GetTransaction.Request(id), cancellationToken);
@@ -103,7 +104,7 @@ public static class TransactionsRoutes
                 type: "https://httpstatuses.com/422"),
             _ => Results.NotFound(),
             _ => Results.NoContent(),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -116,8 +117,8 @@ public static class TransactionsRoutes
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,
                 type: "https://httpstatuses.com/422"),
-            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result}, new {Id = result}),
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -130,8 +131,8 @@ public static class TransactionsRoutes
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,
                 type: "https://httpstatuses.com/422"),
-            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result}, new {Id = result}),
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -144,12 +145,13 @@ public static class TransactionsRoutes
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,
                 type: "https://httpstatuses.com/422"),
-            result => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result }),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            result => Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result}, new {Id = result}),
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
-    
-    private static async Task<IResult> DeleteTransaction(Guid id, IMediator mediator, CancellationToken cancellationToken)
+
+    private static async Task<IResult> DeleteTransaction(Guid id, IMediator mediator,
+        CancellationToken cancellationToken)
     {
         var requestResult = await mediator.Send(new DeleteTransaction.Request(id), cancellationToken);
         return requestResult.Match(

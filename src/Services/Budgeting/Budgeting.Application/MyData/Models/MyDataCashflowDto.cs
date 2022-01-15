@@ -8,14 +8,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models
 {
     public record MyDataCashflowDto
     {
-        private readonly ImmutableArray<string> _tags = ImmutableArray<string>.Empty;
-
         public Guid Id { get; init; }
-        
+
         public DateTime EffectiveDate { get; init; }
-        
+
         public decimal Amount { get; init; }
-        
+
         public DateIntervalType IntervalType { get; set; } = null!;
 
         public int Frequency { get; set; }
@@ -24,17 +22,12 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models
 
         public string Description { get; init; } = null!;
 
-        public ImmutableArray<string> Tags
-        {
-            get => _tags;
-            init
-            {
-                _tags = ImmutableArray.Create(value.ToArray());
-            }
-        }
+        public string[] Tags { get; init; } = Array.Empty<string>();
 
         public Guid CategoryId { get; init; }
-        
+
         public Guid AccountId { get; init; }
+
+        public bool Inactive { get; init; }
     }
 }

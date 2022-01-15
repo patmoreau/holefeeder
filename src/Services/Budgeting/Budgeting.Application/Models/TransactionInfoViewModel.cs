@@ -9,11 +9,11 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         private readonly ImmutableArray<string> _tags = ImmutableArray<string>.Empty;
 
         public Guid Id { get; init; }
-        
+
         public DateTime Date { get; init; }
-        
+
         public decimal Amount { get; init; }
-        
+
         public string Description { get; init; } = null!;
 
         public ImmutableArray<string> Tags
@@ -26,7 +26,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         }
 
         public CategoryInfoViewModel Category { get; init; } = null!;
-        
+
         public AccountInfoViewModel Account { get; init; } = null!;
     }
 }

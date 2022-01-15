@@ -352,22 +352,22 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Domain
                 yield return new object[]
                 {
                     DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                    new DateTime(2014, 3, 1), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 3, 1), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 3, 1), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 3, 1), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
@@ -392,7 +392,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Domain
                 yield return new object[]
                 {
                     DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
@@ -407,7 +407,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Domain
                 yield return new object[]
                 {
                     DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
@@ -417,22 +417,22 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Domain
                 yield return new object[]
                 {
                     DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                    new DateTime(2014, 4, 1), new[] { new DateTime(2014, 2, 2), new DateTime(2014, 3, 2) }
+                    new DateTime(2014, 4, 1), new[] {new DateTime(2014, 2, 2), new DateTime(2014, 3, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 4, 1), new[] { new DateTime(2014, 2, 2), new DateTime(2014, 3, 2) }
+                    new DateTime(2014, 4, 1), new[] {new DateTime(2014, 2, 2), new DateTime(2014, 3, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
@@ -443,23 +443,23 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Domain
                 {
                     DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
                     new DateTime(2016, 4, 1),
-                    new[] { new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2) }
+                    new[] {new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
                     new DateTime(2016, 4, 1),
-                    new[] { new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2) }
+                    new[] {new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2)}
                 };
                 yield return new object[]
                 {
                     DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2013, 1, 1),
-                    new DateTime(2014, 2, 2), new[] { new DateTime(2014, 2, 2) }
+                    new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
                 };
                 yield return new object[]
                 {

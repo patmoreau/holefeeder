@@ -6,7 +6,8 @@ using MediatR;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.Behaviors;
 
-public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class AuthBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
     private readonly ItemsCache _itemsCache;
     private readonly Func<IRequestUser> _getRequestUser;

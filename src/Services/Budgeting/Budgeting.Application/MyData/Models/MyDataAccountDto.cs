@@ -16,12 +16,10 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models
 
         public DateTime OpenDate { get; init; }
 
-        public int TransactionCount { get; init; }
-
         public string Description { get; init; } = null!;
 
         public bool Favorite { get; init; }
-        
+
         public bool Inactive { get; init; }
     }
 }

@@ -14,7 +14,7 @@ using Framework.Dapper.SeedWork.Extensions;
 
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
-public class ExportQueriesRepository : IExportQueriesRepository
+public class MyDataQueriesRepository : IMyDataQueriesRepository
 {
     private readonly IHolefeederContext _context;
     private readonly AccountMapper _accountMapper;
@@ -22,7 +22,7 @@ public class ExportQueriesRepository : IExportQueriesRepository
     private readonly CashflowMapper _cashflowMapper;
     private readonly TransactionMapper _transactionMapper;
 
-    public ExportQueriesRepository(IHolefeederContext context, AccountMapper accountMapper,
+    public MyDataQueriesRepository(IHolefeederContext context, AccountMapper accountMapper,
         CategoryMapper categoryMapper, CashflowMapper cashflowMapper, TransactionMapper transactionMapper)
     {
         _context = context;
@@ -31,7 +31,9 @@ public class ExportQueriesRepository : IExportQueriesRepository
         _cashflowMapper = cashflowMapper;
         _transactionMapper = transactionMapper;
     }
-    public async Task<IEnumerable<MyDataAccountDto>> ExportAccountsAsync(Guid userId, CancellationToken cancellationToken = default)
+
+    public async Task<IEnumerable<MyDataAccountDto>> ExportAccountsAsync(Guid userId,
+        CancellationToken cancellationToken = default)
     {
         var connection = _context.Connection;
 
@@ -39,10 +41,11 @@ public class ExportQueriesRepository : IExportQueriesRepository
             .FindAsync<AccountEntity>(new {UserId = userId})
             .ConfigureAwait(false);
 
-        return schema.Select(_accountMapper.MapToExportDto);
+        return schema.Select(_accountMapper.MapToMyDataAccountDto);
     }
 
-    public async Task<IEnumerable<MyDataCategoryDto>> ExportCategoriesAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MyDataCategoryDto>> ExportCategoriesAsync(Guid userId,
+        CancellationToken cancellationToken = default)
     {
         var connection = _context.Connection;
 
@@ -50,10 +53,11 @@ public class ExportQueriesRepository : IExportQueriesRepository
             .FindAsync<CategoryEntity>(new {UserId = userId})
             .ConfigureAwait(false);
 
-        return schema.Select(_categoryMapper.MapToExportDto);
+        return schema.Select(_categoryMapper.MapToMyDataCategoryDto);
     }
 
-    public async Task<IEnumerable<MyDataCashflowDto>> ExportCashflowsAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MyDataCashflowDto>> ExportCashflowsAsync(Guid userId,
+        CancellationToken cancellationToken = default)
     {
         var connection = _context.Connection;
 
@@ -61,10 +65,11 @@ public class ExportQueriesRepository : IExportQueriesRepository
             .FindAsync<CashflowEntity>(new {UserId = userId})
             .ConfigureAwait(false);
 
-        return schema.Select(_cashflowMapper.MapToExportDto);
+        return schema.Select(_cashflowMapper.MapToMyDataCashflowDto);
     }
 
-    public async Task<IEnumerable<MyDataTransactionDto>> ExportTransactionsAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MyDataTransactionDto>> ExportTransactionsAsync(Guid userId,
+        CancellationToken cancellationToken = default)
     {
         var connection = _context.Connection;
 
@@ -72,6 +77,6 @@ public class ExportQueriesRepository : IExportQueriesRepository
             .FindAsync<TransactionEntity>(new {UserId = userId})
             .ConfigureAwait(false);
 
-        return schema.Select(_transactionMapper.MapToExportDto);
+        return schema.Select(_transactionMapper.MapToMyDataTransactionDto);
     }
 }

@@ -37,12 +37,12 @@ public static class ServiceCollectionExtensions
         services.AddOptions<ObjectStoreDatabaseSettings>()
             .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)))
             .ValidateDataAnnotations();
-            
+
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
 
         services.AddSingleton<StoreItemMapper>();
-        
+
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();
         services.AddScoped<Script000InitDatabase>();
 

@@ -33,7 +33,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
 
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]

@@ -95,8 +95,8 @@ public static class AccountsRoutes
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,
                 type: "https://httpstatuses.com/422"),
-            result => Results.CreatedAtRoute(nameof(GetAccount), new { Id = result }, new { Id = result }),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            result => Results.CreatedAtRoute(nameof(GetAccount), new {Id = result}, new {Id = result}),
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -111,7 +111,7 @@ public static class AccountsRoutes
                 type: "https://httpstatuses.com/422"),
             _ => Results.NotFound(),
             _ => Results.NoContent(),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -142,7 +142,7 @@ public static class AccountsRoutes
                 type: "https://httpstatuses.com/422"),
             _ => Results.NotFound(),
             _ => Results.NoContent(),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 

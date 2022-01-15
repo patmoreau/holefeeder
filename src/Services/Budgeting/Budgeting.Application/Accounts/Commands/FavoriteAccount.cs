@@ -64,7 +64,7 @@ public static class FavoriteAccount
 
             try
             {
-                account = account with { Favorite = request.IsFavorite };
+                account = account with {Favorite = request.IsFavorite};
 
                 _logger.LogInformation("----- Set Favorite - Account: {@Account}", account);
 

@@ -52,7 +52,7 @@ WHERE a.id = @Id AND a.user_id = @UserId;
 
                         return account;
                     },
-                    new { Id = id, UserId = userId },
+                    new {Id = id, UserId = userId},
                     splitOn: "id")
                 .ConfigureAwait(false))
             .Distinct()
@@ -79,7 +79,7 @@ WHERE a.id = @Id AND a.user_id = @UserId;
         var id = account.Id;
         var userId = account.UserId;
 
-        var entity = await transaction.FindByIdAsync<AccountEntity>(new { Id = id, UserId = userId });
+        var entity = await transaction.FindByIdAsync<AccountEntity>(new {Id = id, UserId = userId});
 
         if (entity is null)
         {

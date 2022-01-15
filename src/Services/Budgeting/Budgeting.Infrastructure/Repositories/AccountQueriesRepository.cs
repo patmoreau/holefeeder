@@ -37,7 +37,8 @@ public class AccountQueriesRepository : IAccountQueriesRepository
         return FindInternalAsync(userId, queryParams);
     }
 
-    private async Task<(int Total, IEnumerable<AccountViewModel> Items)> FindInternalAsync(Guid userId, QueryParams queryParams)
+    private async Task<(int Total, IEnumerable<AccountViewModel> Items)> FindInternalAsync(Guid userId,
+        QueryParams queryParams)
     {
         const string queryTemplate = @"
 SELECT X.* FROM (
@@ -53,10 +54,10 @@ ORDER BY row_nb;
         var builder = new SqlBuilder();
         var selectTemplate =
             builder.AddTemplate(queryTemplate,
-                new { Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit });
+                new {Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit});
         var countTemplate = builder.AddTemplate(queryCountTemplate);
 
-        builder.Where($"user_id = @{nameof(userId)}", new { userId })
+        builder.Where($"user_id = @{nameof(userId)}", new {userId})
             .Filter(queryParams.Filter)
             .Sort(queryParams.Sort);
 
@@ -83,10 +84,10 @@ ORDER BY row_nb;
         var connection = _context.Connection;
 
         var account = await connection.QuerySingleAsync<AccountEntity>(
-                @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new { Id = id, UserId = userId })
+                @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
-        var transactions = await GetTransactions(connection, new[] { account });
+        var transactions = await GetTransactions(connection, new[] {account});
 
         return BuildAccountViewModel(account, transactions);
     }
@@ -100,7 +101,7 @@ WHERE id = @Id AND user_id = @UserId AND inactive = 0;
 ";
 
         var isActive = await _context.Connection
-            .ExecuteScalarAsync<int>(selectIsActive, new { Id = id, UserId = userId })
+            .ExecuteScalarAsync<int>(selectIsActive, new {Id = id, UserId = userId})
             .ConfigureAwait(false);
         return isActive > 0;
     }
@@ -133,8 +134,8 @@ WHERE t.account_id IN @Ids";
 
         var transactions = await connection
             .QueryAsync<TransactionEntity, CategoryEntity, TransactionEntity>(sql,
-                (t, c) => t with { Category = c },
-                new { Ids = accounts.Select(a => a.Id) },
+                (t, c) => t with {Category = c},
+                new {Ids = accounts.Select(a => a.Id)},
                 splitOn: "id")
             .ConfigureAwait(false);
 

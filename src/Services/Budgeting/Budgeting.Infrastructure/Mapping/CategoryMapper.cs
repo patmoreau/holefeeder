@@ -17,7 +17,7 @@ public class CategoryMapper
     {
         return entity is null ? null : MapToDto(entity);
     }
-    
+
     public CategoryViewModel MapToDto(CategoryEntity entity)
     {
         var dto = new CategoryViewModel
@@ -34,7 +34,7 @@ public class CategoryMapper
 
     public IEnumerable<CategoryViewModel> MapToDto(IEnumerable<CategoryEntity> entities) =>
         entities.Select(MapToDto);
-    
+
     public Category? MapToModelOrNull(CategoryEntity? entity)
     {
         if (entity is null)
@@ -67,12 +67,13 @@ public class CategoryMapper
             UserId = model.UserId
         };
     }
-    
-    public MyDataCategoryDto MapToExportDto(CategoryEntity entity)
+
+    public MyDataCategoryDto MapToMyDataCategoryDto(CategoryEntity entity)
     {
         var dto = new MyDataCategoryDto
         {
             Id = entity.Id,
+            Type = entity.Type,
             BudgetAmount = entity.BudgetAmount,
             Color = entity.Color,
             Favorite = entity.Favorite,

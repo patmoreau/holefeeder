@@ -47,10 +47,10 @@ ORDER BY row_nb;
         var builder = new SqlBuilder();
         var selectTemplate =
             builder.AddTemplate(queryTemplate,
-                new { Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit });
+                new {Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit});
         var countTemplate = builder.AddTemplate(queryCountTemplate);
 
-        builder.Where($"user_id = @{nameof(userId)}", new { userId })
+        builder.Where($"user_id = @{nameof(userId)}", new {userId})
             .Filter(queryParams.Filter)
             .Sort(queryParams.Sort);
 
@@ -59,7 +59,7 @@ ORDER BY row_nb;
         var transactions = await connection
             .QueryAsync<TransactionEntity, AccountEntity, CategoryEntity, TransactionEntity>(
                 selectTemplate.RawSql,
-                (transaction, account, category) => transaction with { Account = account, Category = category },
+                (transaction, account, category) => transaction with {Account = account, Category = category},
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);
@@ -69,7 +69,8 @@ ORDER BY row_nb;
             _transactionMapper.MapToDto(transactions));
     }
 
-    public async Task<TransactionInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    public async Task<TransactionInfoViewModel?> FindByIdAsync(Guid userId, Guid id,
+        CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
 SELECT T.*, A.*, CA.* 
@@ -84,12 +85,12 @@ INNER JOIN categories CA on CA.id = T.category_id
         var selectTemplate =
             builder.AddTemplate(queryTemplate);
 
-        builder.Where($"T.id = @{nameof(id)} AND T.user_id = @{nameof(userId)}", new { id, userId });
+        builder.Where($"T.id = @{nameof(id)} AND T.user_id = @{nameof(userId)}", new {id, userId});
 
         var transactions = await connection
             .QueryAsync<TransactionEntity, AccountEntity, CategoryEntity, TransactionEntity>(
                 selectTemplate.RawSql,
-                (transaction, account, category) => transaction with { Account = account, Category = category },
+                (transaction, account, category) => transaction with {Account = account, Category = category},
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);

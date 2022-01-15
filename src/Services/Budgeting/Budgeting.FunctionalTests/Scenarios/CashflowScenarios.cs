@@ -26,10 +26,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public CashflowScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]
@@ -90,7 +90,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client, IEnumerable<CashflowInfoViewModel>? result)
+        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client,
+            IEnumerable<CashflowInfoViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -131,7 +132,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<CashflowInfoViewModel>? result)
+        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client,
+            IEnumerable<CashflowInfoViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -205,7 +207,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "And the result contain the Cashflow"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<CashflowInfoViewModel>(_jsonSerializerOptions);
+                    var result =
+                        await response.Content.ReadFromJsonAsync<CashflowInfoViewModel>(_jsonSerializerOptions);
 
                     result.Should().BeEquivalentTo(
                         new CashflowInfoViewModel

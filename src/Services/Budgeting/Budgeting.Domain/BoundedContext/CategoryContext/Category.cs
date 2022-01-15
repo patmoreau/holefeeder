@@ -35,7 +35,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext
             {
                 if (string.IsNullOrWhiteSpace(value) || value.Length > 255)
                 {
-                    throw HolefeederDomainException.Create<Category>($"{nameof(Name)} must be from 1 to 255 characters");
+                    throw HolefeederDomainException.Create<Category>(
+                        $"{nameof(Name)} must be from 1 to 255 characters");
                 }
 
                 _name = value;
@@ -74,6 +75,6 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext
 
         public static Category Create(CategoryType type, string name, decimal budgetAmount,
             string description, Guid userId)
-            => new(Guid.NewGuid(), type, name, userId) { BudgetAmount = budgetAmount };
+            => new(Guid.NewGuid(), type, name, userId) {BudgetAmount = budgetAmount};
     }
 }
