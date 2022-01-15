@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
-using FluentValidation;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +54,7 @@ public static class CustomErrorHandler
                     break;
             }
 
-            var problem = new ProblemDetails { Status = statusCode, Title = title, Detail = details };
+            var problem = new ProblemDetails {Status = statusCode, Title = title, Detail = details};
 
             var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
             problem.Extensions["traceId"] = traceId;

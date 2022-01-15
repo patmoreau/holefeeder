@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
             from z in x.GetInterfaces()
             where z.IsGenericType && typeof(IValidator<,>).IsAssignableFrom(z.GetGenericTypeDefinition())
             select (ValidatorType: x, InterfaceType: z);
-        
+
         foreach (var type in types)
         {
             process(type);

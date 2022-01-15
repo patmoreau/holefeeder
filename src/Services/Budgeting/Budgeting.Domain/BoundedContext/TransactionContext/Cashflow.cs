@@ -89,11 +89,11 @@ public record Cashflow : IAggregateRoot
         {
             throw HolefeederDomainException.Create<Cashflow>($"{nameof(EffectiveDate)} is required");
         }
-        
+
         EffectiveDate = effectiveDate;
-        
+
         Amount = amount;
-        
+
         if (userId.Equals(default))
         {
             throw HolefeederDomainException.Create<Cashflow>($"{nameof(UserId)} is required");
@@ -129,6 +129,6 @@ public record Cashflow : IAggregateRoot
             return this;
         }
 
-        return this with { Tags = newTags.ToImmutableArray() };
+        return this with {Tags = newTags.ToImmutableArray()};
     }
 }

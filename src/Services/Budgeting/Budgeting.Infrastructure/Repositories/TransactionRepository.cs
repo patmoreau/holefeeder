@@ -27,7 +27,7 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
         _transactionMapper.MapToModelOrNull(await _context.Connection
-            .FindByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+            .FindByIdAsync<TransactionEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false));
 
     public async Task SaveAsync(Transaction transaction, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ public class TransactionRepository : ITransactionRepository
 
         var connection = _context.Transaction;
 
-        var entity = await connection.FindByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+        var entity = await connection.FindByIdAsync<TransactionEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
         if (entity is null)
@@ -56,7 +56,7 @@ public class TransactionRepository : ITransactionRepository
     {
         var connection = _context.Transaction;
 
-        await connection.DeleteByIdAsync<TransactionEntity>(new { Id = id, UserId = userId })
+        await connection.DeleteByIdAsync<TransactionEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
     }
 }

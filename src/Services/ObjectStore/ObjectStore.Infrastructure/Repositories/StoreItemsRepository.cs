@@ -31,7 +31,7 @@ public class StoreItemsRepository : IStoreItemsRepository
     {
         var connection = _context.Connection;
 
-        var schema = await connection.FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
+        var schema = await connection.FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
         return _storeItemMapper.MapToModelOrNull(schema);
@@ -42,7 +42,7 @@ public class StoreItemsRepository : IStoreItemsRepository
         var connection = _context.Connection;
 
         var schema = await connection
-            .QuerySingleOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new { Code = code, UserId = userId })
+            .QuerySingleOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new {Code = code, UserId = userId})
             .ConfigureAwait(false);
 
         return _storeItemMapper.MapToModelOrNull(schema);
@@ -55,7 +55,7 @@ public class StoreItemsRepository : IStoreItemsRepository
         var id = model.Id;
         var userId = model.UserId;
 
-        var entity = await transaction.FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
+        var entity = await transaction.FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
         if (entity is null)

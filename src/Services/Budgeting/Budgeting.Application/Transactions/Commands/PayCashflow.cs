@@ -61,7 +61,7 @@ public static class PayCashflow
                 (Guid)_cache["UserId"]);
 
             transaction = transaction.AddTags(cashflow.Tags.ToArray());
-            
+
             _logger.LogInformation("----- Pay Cashflow - Transaction: {@Transaction}", transaction);
 
             await _transactionRepository.SaveAsync(transaction, cancellationToken);

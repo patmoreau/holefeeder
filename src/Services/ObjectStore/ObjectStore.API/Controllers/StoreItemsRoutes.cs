@@ -67,7 +67,7 @@ public static class StoreItemsRoutes
 
     private static async Task<IResult> GetStoreItem(Guid id, IMediator mediator, CancellationToken cancellationToken)
     {
-        var requestResult = await mediator.Send(new GetStoreItem.Request { Id = id }, cancellationToken);
+        var requestResult = await mediator.Send(new GetStoreItem.Request {Id = id}, cancellationToken);
         return requestResult.Match(
             Results.Ok,
             _ => Results.NotFound());
@@ -82,8 +82,8 @@ public static class StoreItemsRoutes
                 result.Errors,
                 statusCode: StatusCodes.Status422UnprocessableEntity,
                 type: "https://httpstatuses.com/422"),
-            result => Results.CreatedAtRoute(nameof(GetStoreItem), new { Id = result }, new { Id = result }),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            result => Results.CreatedAtRoute(nameof(GetStoreItem), new {Id = result}, new {Id = result}),
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 
@@ -98,7 +98,7 @@ public static class StoreItemsRoutes
                 type: "https://httpstatuses.com/422"),
             _ => Results.NotFound(),
             _ => Results.NoContent(),
-            error => Results.BadRequest(new { error.Context, error.Message })
+            error => Results.BadRequest(new {error.Context, error.Message})
         );
     }
 

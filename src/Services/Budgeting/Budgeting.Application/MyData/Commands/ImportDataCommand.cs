@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
@@ -15,12 +16,24 @@ using Microsoft.Extensions.Logging;
 
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Commands;
+namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
 
 public static partial class ImportData
 {
-    public record Request([Required] bool UpdateExisting, [Required] JsonDocument Data)
-        : IRequest<RequestResponse>, IValidateable;
+    public record Request : IRequest<RequestResponse>, IValidateable
+    {
+        [Required] public bool UpdateExisting { get; init; }
+
+        [Required] public Dto Data { get; init; } = null!;
+
+        public record Dto
+        {
+            public MyDataAccountDto[] Accounts { get; init; } = Array.Empty<MyDataAccountDto>();
+            public MyDataCategoryDto[] Categories { get; init; } = Array.Empty<MyDataCategoryDto>();
+            public MyDataCashflowDto[] Cashflows { get; init; } = Array.Empty<MyDataCashflowDto>();
+            public MyDataTransactionDto[] Transactions { get; init; } = Array.Empty<MyDataTransactionDto>();
+        }
+    }
 
     public class Validator : AbstractValidator<Request>, IValidator<Request, RequestResponse>
     {
@@ -29,10 +42,10 @@ public static partial class ImportData
             RuleFor(command => command.Data)
                 .NotNull()
                 .Must(data =>
-                    data.RootElement.TryGetProperty("accounts", out _) ||
-                    data.RootElement.TryGetProperty("categories", out _) ||
-                    data.RootElement.TryGetProperty("cashflows", out _) ||
-                    data.RootElement.TryGetProperty("transactions", out _))
+                    data.Accounts.Any() ||
+                    data.Categories.Any() ||
+                    data.Cashflows.Any() ||
+                    data.Transactions.Any())
                 .WithMessage("must contain at least 1 array of accounts|categories|cashflows|transactions");
 
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
@@ -43,7 +56,7 @@ public static partial class ImportData
     }
 
     public class Handler
-        : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusViewModel>
+        : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
     {
         public Handler(
             ItemsCache cache,

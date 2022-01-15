@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 
@@ -31,18 +29,13 @@ public record CashflowEntity : EntityRoot
 
     public string Tags { get; init; } = null!;
 
-    [Key]
-    public Guid UserId { get; init; }
-        
-    [NotMapped]
-    public DateTime? LastPaidDate { get; init; }
-        
-    [NotMapped]
-    public DateTime? LastCashflowDate { get; init; }
+    [Key] public Guid UserId { get; init; }
 
-    [NotMapped]
-    public AccountEntity Account { get; init; } = null!;
-        
-    [NotMapped]
-    public CategoryEntity Category { get; init; } = null!;
+    [NotMapped] public DateTime? LastPaidDate { get; init; }
+
+    [NotMapped] public DateTime? LastCashflowDate { get; init; }
+
+    [NotMapped] public AccountEntity Account { get; init; } = null!;
+
+    [NotMapped] public CategoryEntity Category { get; init; } = null!;
 }

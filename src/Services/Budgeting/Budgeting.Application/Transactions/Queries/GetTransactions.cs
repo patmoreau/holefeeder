@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
-using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentValidation.Results;

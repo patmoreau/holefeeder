@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="10.3.4" />
-      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="FluentValidation" Version="10.3.6" />
+      <PackageReference Include="MediatR" Version="10.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-      <PackageReference Include="OneOf" Version="3.0.203" />
+      <PackageReference Include="OneOf" Version="3.0.205" />
     </ItemGroup>
 
 </Project>

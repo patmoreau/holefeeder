@@ -19,10 +19,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public EnumerationScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]

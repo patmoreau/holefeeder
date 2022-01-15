@@ -24,7 +24,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext
         public DateTime OpenDate { get; init; }
 
         public string Description { get; init; } = string.Empty;
-        
+
         public bool Inactive { get; init; }
 
         public Guid UserId { get; }
@@ -68,10 +68,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext
 
         public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
             string description, Guid userId)
-            => new(Guid.NewGuid(), type, name, openDate, userId)
-            {
-                OpenBalance = openBalance, Description = description
-            };
+            => new(Guid.NewGuid(), type, name, openDate, userId) {OpenBalance = openBalance, Description = description};
 
         public Account Close()
         {
@@ -85,7 +82,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext
                 throw HolefeederDomainException.Create<Account>("Account has active cashflows");
             }
 
-            return this with { Inactive = true };
+            return this with {Inactive = true};
         }
     }
 }

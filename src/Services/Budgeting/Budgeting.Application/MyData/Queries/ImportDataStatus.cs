@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using MediatR;
@@ -12,14 +12,14 @@ using Microsoft.Extensions.Logging;
 
 using OneOf;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Queries;
+namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Queries;
 
 public static class ImportDataStatus
 {
-    public record Request(Guid RequestId) : IRequest<OneOf<ImportDataStatusViewModel, NotFoundRequestResult>>;
+    public record Request(Guid RequestId) : IRequest<OneOf<ImportDataStatusDto, NotFoundRequestResult>>;
 
     public class Handler
-        : IRequestHandler<Request, OneOf<ImportDataStatusViewModel, NotFoundRequestResult>>
+        : IRequestHandler<Request, OneOf<ImportDataStatusDto, NotFoundRequestResult>>
     {
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<Handler> _logger;
@@ -30,17 +30,17 @@ public static class ImportDataStatus
             _logger = logger;
         }
 
-        public Task<OneOf<ImportDataStatusViewModel, NotFoundRequestResult>> Handle(Request request,
+        public Task<OneOf<ImportDataStatusDto, NotFoundRequestResult>> Handle(Request request,
             CancellationToken cancellationToken)
         {
             _logger.LogTrace("***** Request: {@Request}", request);
             if (_memoryCache.TryGetValue(request.RequestId, out var status))
             {
-                return Task.FromResult<OneOf<ImportDataStatusViewModel, NotFoundRequestResult>>(
-                    (ImportDataStatusViewModel)status);
+                return Task.FromResult<OneOf<ImportDataStatusDto, NotFoundRequestResult>>(
+                    (ImportDataStatusDto)status);
             }
 
-            return Task.FromResult<OneOf<ImportDataStatusViewModel, NotFoundRequestResult>>(
+            return Task.FromResult<OneOf<ImportDataStatusDto, NotFoundRequestResult>>(
                 new NotFoundRequestResult());
         }
     }

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Queries;
 using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
@@ -13,8 +12,6 @@ using FluentValidation.Results;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using OneOf;
@@ -64,7 +61,7 @@ public static class CreateStoreItem
             {
                 return new ValidationErrorsRequestResult(new Dictionary<string, string[]>
                 {
-                    { nameof(request.Code), new[] { $"Code '{request.Code}' already exists." } }
+                    {nameof(request.Code), new[] {$"Code '{request.Code}' already exists."}}
                 });
             }
 

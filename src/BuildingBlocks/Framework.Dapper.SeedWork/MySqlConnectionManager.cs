@@ -11,6 +11,7 @@ namespace Framework.Dapper.SeedWork
     public class MySqlConnectionManager : DatabaseConnectionManager
     {
         public static IUpgradeLog Log { get; private set; } = null!;
+
         public MySqlConnectionManager(string connectionString)
             : base(new DelegateConnectionFactory(log =>
             {

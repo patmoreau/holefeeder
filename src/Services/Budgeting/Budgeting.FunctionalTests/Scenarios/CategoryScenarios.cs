@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -23,10 +22,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public CategoryScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]
@@ -47,21 +46,23 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 .x(() => result.Should()
                     .NotBeEmpty()
                     .And.HaveCount(2)
-                    .And.ContainInOrder(new CategoryViewModel
-                    {
-                        Id = BudgetingContextSeed.Category1,
-                        Name = "Category1",
-                        Color = "#1",
-                        BudgetAmount = 0,
-                        Favorite = false
-                    }, new CategoryViewModel
-                    {
-                        Id = BudgetingContextSeed.Category2,
-                        Name = "Category2",
-                        Color = "#2",
-                        BudgetAmount = 0,
-                        Favorite = true
-                    }));
+                    .And.ContainInOrder(
+                        new CategoryViewModel
+                        {
+                            Id = BudgetingContextSeed.Category1,
+                            Name = "Category1",
+                            Color = "#1",
+                            BudgetAmount = 0,
+                            Favorite = false
+                        },
+                        new CategoryViewModel
+                        {
+                            Id = BudgetingContextSeed.Category2,
+                            Name = "Category2",
+                            Color = "#2",
+                            BudgetAmount = 0,
+                            Favorite = true
+                        }));
         }
     }
 }

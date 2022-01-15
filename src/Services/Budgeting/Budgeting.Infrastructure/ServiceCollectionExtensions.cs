@@ -9,6 +9,7 @@ using DbUp.MySql;
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts;
 using DrifterApps.Holefeeder.Budgeting.Application.Cashflows;
 using DrifterApps.Holefeeder.Budgeting.Application.Categories;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
@@ -58,6 +59,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
             services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
+            services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
             services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();

@@ -28,7 +28,7 @@ public class CashflowQueriesRepository : ICashflowQueriesRepository
         _cashflowMapper = cashflowMapper;
     }
 
-    public async Task<(int Total, IEnumerable<CashflowViewModel> Items)> FindAsync(Guid userId,
+    public async Task<(int Total, IEnumerable<CashflowInfoViewModel> Items)> FindAsync(Guid userId,
         QueryParams queryParams, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
@@ -47,10 +47,10 @@ ORDER BY row_nb;
         var builder = new SqlBuilder();
         var selectTemplate =
             builder.AddTemplate(queryTemplate,
-                new { Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit });
+                new {Offset = queryParams.Offset + 1, Limit = queryParams.Offset + queryParams.Limit});
         var countTemplate = builder.AddTemplate(queryCountTemplate);
 
-        builder.Where($"user_id = @{nameof(userId)}", new { userId })
+        builder.Where($"user_id = @{nameof(userId)}", new {userId})
             .Filter(queryParams.Filter)
             .Sort(queryParams.Sort);
 
@@ -59,17 +59,17 @@ ORDER BY row_nb;
         var cashflows = await connection
             .QueryAsync<CashflowEntity, AccountEntity, CategoryEntity, CashflowEntity>(
                 selectTemplate.RawSql,
-                (cashflow, account, category) => cashflow with { Account = account, Category = category },
+                (cashflow, account, category) => cashflow with {Account = account, Category = category},
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
-        return new ValueTuple<int, IEnumerable<CashflowViewModel>>(count,
+        return new ValueTuple<int, IEnumerable<CashflowInfoViewModel>>(count,
             _cashflowMapper.MapToDto(cashflows));
     }
 
-    public async Task<CashflowViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    public async Task<CashflowInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
 SELECT C.*, A.*, CA.* 
@@ -84,12 +84,12 @@ INNER JOIN categories CA on CA.id = C.category_id
         var selectTemplate =
             builder.AddTemplate(queryTemplate);
 
-        builder.Where($"C.id = @{nameof(id)} AND C.user_id = @{nameof(userId)}", new { id, userId });
+        builder.Where($"C.id = @{nameof(id)} AND C.user_id = @{nameof(userId)}", new {id, userId});
 
         var cashflows = await connection
             .QueryAsync<CashflowEntity, AccountEntity, CategoryEntity, CashflowEntity>(
                 selectTemplate.RawSql,
-                (cashflow, account, category) => cashflow with { Account = account, Category = category },
+                (cashflow, account, category) => cashflow with {Account = account, Category = category},
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);

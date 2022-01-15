@@ -36,7 +36,7 @@ public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategori
         var connection = _context.Connection;
 
         var results = await connection
-            .QueryAsync<CategoryEntity>(select, new { UserId = userId })
+            .QueryAsync<CategoryEntity>(select, new {UserId = userId})
             .ConfigureAwait(false);
 
         return _categoryMapper.MapToDto(results);
@@ -47,7 +47,7 @@ public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategori
     {
         var connection = _context.Connection;
 
-        var category = (await connection.FindAsync<CategoryEntity>(new { UserId = userId, Name = name })
+        var category = (await connection.FindAsync<CategoryEntity>(new {UserId = userId, Name = name})
                 .ConfigureAwait(false))
             .SingleOrDefault();
 

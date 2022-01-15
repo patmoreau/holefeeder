@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 
-using DrifterApps.Holefeeder.ObjectStore.API;
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.API.Controllers;
 using DrifterApps.Holefeeder.ObjectStore.API.Middlewares;
@@ -31,7 +29,7 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v2", new() { Title = builder.Environment.ApplicationName, Version = "v2" });
+        c.SwaggerDoc("v2", new() {Title = builder.Environment.ApplicationName, Version = "v2"});
         c.CustomSchemaIds(type => type.ToString());
         c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {
@@ -63,7 +61,7 @@ builder.Services
             {
                 new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" },
+                    Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"},
                     // Scheme = "oauth2",
                     // Name = "Bearer",
                     // In = ParameterLocation.Header,
@@ -86,7 +84,7 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
         options => options.TokenValidationParameters =
-            new TokenValidationParameters { ValidateIssuer = false },
+            new TokenValidationParameters {ValidateIssuer = false},
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
 // Registers required services for health checks
@@ -95,7 +93,7 @@ builder.Services
     .AddCheck("self", () => HealthCheckResult.Healthy())
     .AddMySql(builder.Configuration["ObjectStoreDatabaseSettings:ConnectionString"],
         "ObjectStoreDB-check",
-        tags: new[] { "object-store-db" });
+        tags: new[] {"object-store-db"});
 
 builder.Host.UseSerilog();
 
@@ -131,5 +129,7 @@ app.Run();
 
 namespace DrifterApps.Holefeeder.ObjectStore.API
 {
-    public partial class Program { }
+    public partial class Program
+    {
+    }
 }

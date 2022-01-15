@@ -59,7 +59,10 @@ namespace DrifterApps.Holefeeder.Web.Gateway
                         .AddEnvironmentVariables();
                 })
                 .UseSerilog()
-                .UseDefaultServiceProvider((ctx, opts) => { /* elided for brevity */ })
+                .UseDefaultServiceProvider((ctx, opts) =>
+                {
+                    /* elided for brevity */
+                })
                 .UseStartup<Startup>()
                 .Build();
     }

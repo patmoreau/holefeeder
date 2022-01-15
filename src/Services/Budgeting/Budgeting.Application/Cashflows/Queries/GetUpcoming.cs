@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentValidation;
@@ -35,7 +34,6 @@ public static class GetUpcoming
             var result = new Request(hasFrom ? from : DateTime.MinValue, hasTo ? to : DateTime.MaxValue);
 
             return ValueTask.FromResult<Request?>(result);
-
         }
     }
 

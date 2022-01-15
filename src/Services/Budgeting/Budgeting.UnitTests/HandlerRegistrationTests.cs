@@ -5,7 +5,9 @@ using System.Linq;
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 
 using FluentAssertions;
+
 using MediatR;
+
 using Xunit;
 
 namespace DrifterApps.Holefeeder.Budgeting.UnitTests

@@ -8,7 +8,6 @@ using System.Text.Json;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -28,14 +27,14 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         public TransactionScenarios(BudgetingWebApplicationFactory factory)
         {
             _factory = factory;
-            
+
             _factory.SeedData();
 
-            _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
         }
 
         [Scenario]
-        public void GivenGetTransactions(HttpClient client, IEnumerable<TransactionViewModel>? result)
+        public void GivenGetTransactions(HttpClient client, IEnumerable<TransactionInfoViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -45,7 +44,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/transactions";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionInfoViewModel>>(request);
                 });
 
             "And the result contain the transactions of the user"
@@ -53,7 +52,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .HaveCount(6)
                     .And.BeEquivalentTo(new[]
                         {
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction1,
                                 Date = new DateTime(2020, 1, 2),
@@ -65,7 +64,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction2,
                                 Date = new DateTime(2020, 1, 3),
@@ -77,7 +76,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction3,
                                 Date = new DateTime(2020, 1, 4),
@@ -89,7 +88,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction4,
                                 Date = new DateTime(2020, 1, 5),
@@ -101,7 +100,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction5,
                                 Date = new DateTime(2020, 1, 6),
@@ -113,7 +112,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction6,
                                 Date = new DateTime(2020, 1, 7),
@@ -130,7 +129,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client, IEnumerable<TransactionViewModel>? result)
+        public void GivenGetTransactions_WithAmountRestrictions(HttpClient client,
+            IEnumerable<TransactionInfoViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -140,7 +140,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/transactions?filter=amount:lt:30";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionInfoViewModel>>(request);
                 });
 
             "And the result contain the transactions of the user"
@@ -148,7 +148,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .HaveCount(2)
                     .And.BeEquivalentTo(new[]
                         {
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction1,
                                 Date = new DateTime(2020, 1, 2),
@@ -160,7 +160,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction2,
                                 Date = new DateTime(2020, 1, 3),
@@ -177,7 +177,8 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<TransactionViewModel>? result)
+        public void GivenGetTransactions_WithOffsetAndLimitAndSort(HttpClient client,
+            IEnumerable<TransactionInfoViewModel>? result)
         {
             "Given GetTransactions query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -187,7 +188,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/transactions?offset=2&limit=2&sort=date";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<TransactionViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<TransactionInfoViewModel>>(request);
                 });
 
             "And the result contain the transactions of the user"
@@ -195,7 +196,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .HaveCount(2)
                     .And.BeEquivalentTo(new[]
                         {
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction3,
                                 Date = new DateTime(2020, 1, 4),
@@ -207,7 +208,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account1,
                                     "Account1")
                             },
-                            new TransactionViewModel
+                            new TransactionInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Transaction4,
                                 Date = new DateTime(2020, 1, 5),
@@ -256,10 +257,11 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "And the result contain the transaction"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<TransactionViewModel>(_jsonSerializerOptions);
+                    var result =
+                        await response.Content.ReadFromJsonAsync<TransactionInfoViewModel>(_jsonSerializerOptions);
 
                     result.Should().BeEquivalentTo(
-                        new TransactionViewModel
+                        new TransactionInfoViewModel
                         {
                             Id = BudgetingContextSeed.Transaction2,
                             Date = new DateTime(2020, 1, 3),
@@ -294,7 +296,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     Description = "New purchase",
                     AccountId = BudgetingContextSeed.Account4,
                     CategoryId = BudgetingContextSeed.Category1,
-                    Tags = new [] {"Tag1", "Tag2"}
+                    Tags = new[] {"Tag1", "Tag2"}
                 });
 
             "When I call the API"

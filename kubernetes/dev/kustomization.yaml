@@ -13,6 +13,7 @@ resources:
 patchesStrategicMerge:
 - budgeting.env.yaml
 - gateway.env.yaml
+- mysql.deployment.yaml
 - object-store.env.yaml
 - ui.env.yaml
 

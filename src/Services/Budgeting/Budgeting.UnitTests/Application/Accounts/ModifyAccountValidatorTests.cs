@@ -44,10 +44,10 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
         {
             get
             {
-                yield return new object[] { "" };
-                yield return new object[] { "           " };
-                yield return new object[] { string.Concat(LONG_STRING, LONG_STRING, LONG_STRING) };
-                yield return new object[] { null! };
+                yield return new object[] {""};
+                yield return new object[] {"           "};
+                yield return new object[] {string.Concat(LONG_STRING, LONG_STRING, LONG_STRING)};
+                yield return new object[] {null!};
             }
         }
     }

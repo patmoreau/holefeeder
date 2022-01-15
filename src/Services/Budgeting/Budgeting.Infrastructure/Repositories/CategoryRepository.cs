@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var connection = _context.Connection;
 
-        var category = await connection.FindByIdAsync<CategoryEntity>(new { Id = id, UserId = userId })
+        var category = await connection.FindByIdAsync<CategoryEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
         return _categoryMapper.MapToModelOrNull(category);

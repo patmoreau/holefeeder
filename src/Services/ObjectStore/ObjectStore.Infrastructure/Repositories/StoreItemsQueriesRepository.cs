@@ -43,10 +43,10 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var builder = new SqlBuilder();
             var selectTemplate =
                 builder.AddTemplate(QUERY_TEMPLATE,
-                    new { Offset = query.Offset + 1, Limit = query.Offset + query.Limit });
+                    new {Offset = query.Offset + 1, Limit = query.Offset + query.Limit});
             var countTemplate = builder.AddTemplate(QUERY_COUNT_TEMPLATE);
 
-            builder.Where($"user_id = @{nameof(userId)}", new { userId })
+            builder.Where($"user_id = @{nameof(userId)}", new {userId})
                 .Filter(query.Filter)
                 .Sort(query.Sort);
 
@@ -65,7 +65,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var connection = _context.Connection;
 
             var item = await connection
-                .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
+                .FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
                 .ConfigureAwait(false);
 
             return _storeItemMapper.MapToDtoOrNull(item);
@@ -86,7 +86,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var connection = _context.Connection;
 
             return await connection
-                .QueryFirstOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new { Code = code, UserId = userId })
+                .QueryFirstOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new {Code = code, UserId = userId})
                 .ConfigureAwait(false) is not null;
         }
 
@@ -95,7 +95,7 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories
             var connection = _context.Connection;
 
             return (await connection
-                .FindByIdAsync<StoreItemEntity>(new { Id = id, UserId = userId })
+                .FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
                 .ConfigureAwait(false)) is not null;
         }
 

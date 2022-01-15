@@ -67,12 +67,12 @@ namespace Framework.Dapper.SeedWork.Extensions
         private static readonly IDictionary<string, string> _operators =
             new Dictionary<string, string>
             {
-                { ":eq:", "=" },
-                { ":ne:", "<>" },
-                { ":gt:", ">" },
-                { ":ge:", ">=" },
-                { ":lt:", "<" },
-                { ":le:", "<=" },
+                {":eq:", "="},
+                {":ne:", "<>"},
+                {":gt:", ">"},
+                {":ge:", ">="},
+                {":lt:", "<"},
+                {":le:", "<="},
             };
     }
 }

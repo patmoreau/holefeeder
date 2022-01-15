@@ -31,7 +31,7 @@ public static class CategoriesRoutes
         response.Headers.Add("X-Total-Count", $"{total}");
         return Results.Ok(enumerable);
     }
-    
+
     private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>
         builder
             .WithTags("Categories")

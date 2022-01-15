@@ -9,6 +9,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Categories
 {
     public interface ICategoryQueriesRepository
     {
-        Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId,
+            CancellationToken cancellationToken = default);
     }
 }

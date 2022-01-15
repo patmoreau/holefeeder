@@ -64,7 +64,7 @@ public static class ModifyStoreItem
                     return new NotFoundRequestResult();
                 }
 
-                storeItem = storeItem with { Data = request.Data };
+                storeItem = storeItem with {Data = request.Data};
 
                 _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
 

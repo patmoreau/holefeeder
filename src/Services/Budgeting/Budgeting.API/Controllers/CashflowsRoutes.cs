@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.API.Authorization;
-using DrifterApps.Holefeeder.Budgeting.Application;
 using DrifterApps.Holefeeder.Budgeting.Application.Cashflows.Queries;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 
@@ -12,7 +9,6 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers;
 
@@ -22,7 +18,7 @@ public static class CashflowsRoutes
     {
         const string routePrefix = "api/v2/cashflows";
 
-        app.MapGet($"{routePrefix}/get-upcoming",GetUpcoming)
+        app.MapGet($"{routePrefix}/get-upcoming", GetUpcoming)
             .WithName(nameof(GetUpcoming))
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .Produces<UpcomingViewModel[]>()
@@ -31,12 +27,12 @@ public static class CashflowsRoutes
         app.MapGet($"{routePrefix}", GetCashflows)
             .WithName(nameof(GetCashflows))
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
-            .Produces<CashflowViewModel[]>()
+            .Produces<CashflowInfoViewModel[]>()
             .AddOptions();
 
         app.MapGet($"{routePrefix}/{{id}}", GetCashflow)
             .WithName(nameof(GetCashflow))
-            .Produces<CashflowViewModel>()
+            .Produces<CashflowInfoViewModel>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .AddOptions();
 
@@ -75,7 +71,7 @@ public static class CashflowsRoutes
                 return Results.Ok(result.Items);
             });
     }
-    
+
     private static async Task<IResult> GetCashflow(Guid id, IMediator mediator, CancellationToken cancellationToken)
     {
         var requestResult = await mediator.Send(new GetCashflow.Request(id), cancellationToken);

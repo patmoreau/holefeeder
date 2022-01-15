@@ -62,7 +62,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
             settingsBuilder.Database = String.Empty;
 
             using var connection = new MySqlConnection(settingsBuilder.ConnectionString);
-            
+
             connection.Open();
 
             RefreshDb(connection, databaseName);
@@ -103,8 +103,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests
                 CategoryBuilder.Create(Category2).OfType(CategoryType.Gain).ForUser(TestUserGuid1).IsFavorite().Build();
                 CategoryBuilder.Create(Category3).OfType(CategoryType.Expense).ForUser(TestUserGuid2).Build();
                 CategoryBuilder.Create(Category4).OfType(CategoryType.Expense).ForUser(TestUserForCommands).Build();
-                CategoryBuilder.Create(CategoryIn).Named("Transfer In").OfType(CategoryType.Gain).ForUser(TestUserForCommands).Build();
-                CategoryBuilder.Create(CategoryOut).Named("Transfer Out").OfType(CategoryType.Expense).ForUser(TestUserForCommands).Build();
+                CategoryBuilder.Create(CategoryIn).Named("Transfer In").OfType(CategoryType.Gain)
+                    .ForUser(TestUserForCommands).Build();
+                CategoryBuilder.Create(CategoryOut).Named("Transfer Out").OfType(CategoryType.Expense)
+                    .ForUser(TestUserForCommands).Build();
                 foreach (var entity in CategoryBuilder.Categories)
                 {
                     connection.InsertAsync(entity).Wait();

@@ -25,7 +25,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
     {
         private readonly ObjectStoreWebApplicationFactory _factory;
 
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true, };
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new() {PropertyNameCaseInsensitive = true,};
 
         public ObjectStoreScenarios(ObjectStoreWebApplicationFactory factory)
         {
@@ -115,8 +115,8 @@ namespace ObjectStore.FunctionalTests.Scenarios
                         result.Should()
                             .NotBeNull()
                             .And.HaveCount(count)
-                            .And.StartWith(new[] { first }, (head, expected) => head.Code == expected)
-                            .And.EndWith(new[] { last }, (tail, expected) => tail.Code == expected);
+                            .And.StartWith(new[] {first}, (head, expected) => head.Code == expected)
+                            .And.EndWith(new[] {last}, (tail, expected) => tail.Code == expected);
                     }
                 });
         }
@@ -331,7 +331,7 @@ namespace ObjectStore.FunctionalTests.Scenarios
                         .And.BeOfType<HttpValidationProblemDetails>()
                         .Which.Errors.Should()
                         .ContainEquivalentOf(new KeyValuePair<string, string[]>("Code",
-                            new[] { "Code 'Code001' already exists." }));
+                            new[] {"Code 'Code001' already exists."}));
                 });
         }
 

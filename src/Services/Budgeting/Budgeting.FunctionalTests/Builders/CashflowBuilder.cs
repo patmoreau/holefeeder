@@ -48,35 +48,35 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Builders
             _inactive = false;
             _userId = Guid.Empty;
         }
-        
+
         public CashflowBuilder OfAmount(decimal amount)
         {
             _amount = amount;
 
             return this;
         }
-        
+
         public CashflowBuilder OfType(DateIntervalType type)
         {
             _type = type;
 
             return this;
         }
-        
+
         public CashflowBuilder WithFrequency(int frequency)
         {
             _frequency = frequency;
 
             return this;
         }
-        
+
         public CashflowBuilder ForAccount(Guid account)
         {
             _account = account;
 
             return this;
         }
-        
+
         public CashflowBuilder ForCategory(Guid category)
         {
             _category = category;

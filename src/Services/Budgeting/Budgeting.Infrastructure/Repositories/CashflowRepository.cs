@@ -29,7 +29,7 @@ public class CashflowRepository : ICashflowRepository
     {
         var connection = _context.Connection;
 
-        var entity = await connection.FindByIdAsync<CashflowEntity>(new { Id = id, UserId = userId })
+        var entity = await connection.FindByIdAsync<CashflowEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
         if (entity is null)
@@ -38,7 +38,7 @@ public class CashflowRepository : ICashflowRepository
         }
 
         var cashflow = _cashflowMapper.MapToModelOrNull(entity);
-        
+
         return cashflow;
     }
 

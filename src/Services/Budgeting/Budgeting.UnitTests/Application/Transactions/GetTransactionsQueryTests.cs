@@ -34,7 +34,9 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             var handler = new GetTransactions.Handler(repository, cache);
 
             // when
-            var result = await handler.Handle(new GetTransactions.Request(0, 1, Array.Empty<string>(), Array.Empty<string>()), default);
+            var result =
+                await handler.Handle(new GetTransactions.Request(0, 1, Array.Empty<string>(), Array.Empty<string>()),
+                    default);
 
             // then
             OneOf<ValidationErrorsRequestResult, ListRequestResult> expected =
@@ -42,7 +44,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             result.Should().BeEquivalentTo(expected);
         }
 
-        private readonly TransactionViewModel[] _testTransactionData =
+        private readonly TransactionInfoViewModel[] _testTransactionData =
         {
             new()
             {
