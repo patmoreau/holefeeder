@@ -9,12 +9,10 @@ using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
 using DrifterApps.Holefeeder.Budgeting.FunctionalTests.Builders;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Xbehave;

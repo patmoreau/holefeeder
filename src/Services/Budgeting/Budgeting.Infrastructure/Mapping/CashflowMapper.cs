@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 
@@ -45,14 +46,14 @@ public class CashflowMapper
         return model.AddTags(_tagsMapper.Map(entity.Tags));
     }
 
-    public CashflowViewModel? MapToDtoOrNull(CashflowEntity? entity)
+    public CashflowInfoViewModel? MapToDtoOrNull(CashflowEntity? entity)
     {
         return entity is null ? null : MapToDto(entity);
     }
     
-    public CashflowViewModel MapToDto(CashflowEntity entity)
+    public CashflowInfoViewModel MapToDto(CashflowEntity entity)
     {
-        var dto = new CashflowViewModel
+        var dto = new CashflowInfoViewModel
         {
             Id = entity.Id,
             Amount = entity.Amount,
@@ -69,7 +70,7 @@ public class CashflowMapper
         return dto;
     }
 
-    public IEnumerable<CashflowViewModel> MapToDto(IEnumerable<CashflowEntity> entities) =>
+    public IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<CashflowEntity> entities) =>
         entities.Select(MapToDto);
 
     public CashflowEntity MapToEntity(Cashflow model)
@@ -91,5 +92,24 @@ public class CashflowMapper
         };
 
         return entity;
+    }
+    
+    public MyDataCashflowDto MapToExportDto(CashflowEntity entity)
+    {
+        var dto = new MyDataCashflowDto
+        {
+            Id = entity.Id,
+            Amount = entity.Amount,
+            Description = entity.Description,
+            EffectiveDate = entity.EffectiveDate,
+            Frequency = entity.Frequency,
+            IntervalType = entity.IntervalType,
+            Recurrence = entity.Recurrence,
+            Tags = _tagsMapper.Map(entity.Tags).ToImmutableArray(),
+            AccountId = entity.AccountId,
+            CategoryId = entity.CategoryId
+        };
+
+        return dto;
     }
 }

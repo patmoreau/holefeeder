@@ -28,7 +28,7 @@ public class CashflowQueriesRepository : ICashflowQueriesRepository
         _cashflowMapper = cashflowMapper;
     }
 
-    public async Task<(int Total, IEnumerable<CashflowViewModel> Items)> FindAsync(Guid userId,
+    public async Task<(int Total, IEnumerable<CashflowInfoViewModel> Items)> FindAsync(Guid userId,
         QueryParams queryParams, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
@@ -65,11 +65,11 @@ ORDER BY row_nb;
             .ConfigureAwait(false);
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
-        return new ValueTuple<int, IEnumerable<CashflowViewModel>>(count,
+        return new ValueTuple<int, IEnumerable<CashflowInfoViewModel>>(count,
             _cashflowMapper.MapToDto(cashflows));
     }
 
-    public async Task<CashflowViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    public async Task<CashflowInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
 SELECT C.*, A.*, CA.* 

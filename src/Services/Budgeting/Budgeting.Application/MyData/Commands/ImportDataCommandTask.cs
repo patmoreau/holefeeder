@@ -4,12 +4,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext;
 using DrifterApps.Holefeeder.Budgeting.Domain.Enumerations;
-using DrifterApps.Holefeeder.Budgeting.Domain.Exceptions;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
@@ -19,11 +18,11 @@ using Microsoft.Extensions.Logging;
 using Category = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext.Category;
 using Transaction = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext.Transaction;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Commands;
+namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
 
 public static partial class ImportData
 {
-    public class BackgroundTask : IBackgroundTask<Request, ImportDataStatusViewModel>
+    public class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
     {
         private readonly IAccountRepository _accountsRepository;
         private readonly ICategoryRepository _categoriesRepository;
@@ -31,7 +30,7 @@ public static partial class ImportData
         private readonly ITransactionRepository _transactionRepository;
         private readonly ILogger<BackgroundTask> _logger;
 
-        private ImportDataStatusViewModel _importDataStatus = ImportDataStatusViewModel.Init();
+        private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
         public BackgroundTask(
             IAccountRepository accountsRepository,
@@ -49,7 +48,7 @@ public static partial class ImportData
         }
 
         public async Task Handle(Guid userId, Request request,
-            Action<ImportDataStatusViewModel> updateProgress, CancellationToken cancellationToken)
+            Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
             try
             {
@@ -70,7 +69,7 @@ public static partial class ImportData
         }
 
         private async Task ImportAccountsAsync(Guid userId, Request request,
-            Action<ImportDataStatusViewModel> updateProgress, CancellationToken cancellationToken)
+            Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
             if (!ContainsElement(request.Data.RootElement, "accounts"))
             {
@@ -139,7 +138,7 @@ public static partial class ImportData
         }
 
         private async Task ImportCategoriesAsync(Guid userId, Request request,
-            Action<ImportDataStatusViewModel> updateProgress, CancellationToken cancellationToken)
+            Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
             if (!ContainsElement(request.Data.RootElement, "categories"))
             {
@@ -203,7 +202,7 @@ public static partial class ImportData
         }
 
         private async Task ImportCashflowsAsync(Guid userId, Request request,
-            Action<ImportDataStatusViewModel> updateProgress, CancellationToken cancellationToken)
+            Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
             if (!ContainsElement(request.Data.RootElement, "cashflows"))
             {
@@ -286,7 +285,7 @@ public static partial class ImportData
 
 
         private async Task ImportTransactionsAsync(Guid userId, Request request,
-            Action<ImportDataStatusViewModel> updateProgress, CancellationToken cancellationToken)
+            Action<ImportDataStatusDto> updateProgress, CancellationToken cancellationToken)
         {
             if (!ContainsElement(request.Data.RootElement, "transactions"))
             {

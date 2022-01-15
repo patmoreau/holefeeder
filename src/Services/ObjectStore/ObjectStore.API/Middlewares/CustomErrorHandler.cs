@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
-using FluentValidation;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;

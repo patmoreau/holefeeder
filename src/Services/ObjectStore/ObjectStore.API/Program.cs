@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 
-using DrifterApps.Holefeeder.ObjectStore.API;
 using DrifterApps.Holefeeder.ObjectStore.API.Authorization;
 using DrifterApps.Holefeeder.ObjectStore.API.Controllers;
 using DrifterApps.Holefeeder.ObjectStore.API.Middlewares;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.AccountContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 
@@ -10,6 +11,19 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 public class AccountMapper
 {
+    public MyDataAccountDto MapToExportDto(AccountEntity entity) =>
+        new MyDataAccountDto
+        {
+            Id = entity.Id,
+            Description = entity.Description,
+            Favorite = entity.Favorite,
+            Name = entity.Name,
+            OpenBalance = entity.OpenBalance,
+            OpenDate = entity.OpenDate,
+            Type = entity.Type,
+            Inactive = entity.Inactive
+        };
+    
     public AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity) =>
         new AccountInfoViewModel(entity.Id, entity.Name);
     

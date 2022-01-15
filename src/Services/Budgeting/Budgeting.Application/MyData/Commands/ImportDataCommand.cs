@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Imports.Commands;
+namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
 
 public static partial class ImportData
 {
@@ -43,7 +43,7 @@ public static partial class ImportData
     }
 
     public class Handler
-        : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusViewModel>
+        : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
     {
         public Handler(
             ItemsCache cache,

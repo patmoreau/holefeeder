@@ -10,8 +10,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Transactions;
 
 public interface ITransactionQueriesRepository
 {
-    Task<(int Total, IEnumerable<TransactionViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
+    Task<(int Total, IEnumerable<TransactionInfoViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
         CancellationToken cancellationToken);
 
-    Task<TransactionViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
+    Task<TransactionInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
 }

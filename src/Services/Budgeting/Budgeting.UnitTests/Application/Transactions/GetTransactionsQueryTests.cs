@@ -42,7 +42,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             result.Should().BeEquivalentTo(expected);
         }
 
-        private readonly TransactionViewModel[] _testTransactionData =
+        private readonly TransactionInfoViewModel[] _testTransactionData =
         {
             new()
             {

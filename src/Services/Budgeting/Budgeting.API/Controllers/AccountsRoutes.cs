@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.API.Authorization;
-using DrifterApps.Holefeeder.Budgeting.Application;
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Commands;
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
@@ -13,7 +10,6 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers;
 

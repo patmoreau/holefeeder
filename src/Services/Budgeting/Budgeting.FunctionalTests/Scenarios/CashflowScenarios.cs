@@ -33,7 +33,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows(HttpClient client, IEnumerable<CashflowViewModel>? result)
+        public void GivenGetCashflows(HttpClient client, IEnumerable<CashflowInfoViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -47,7 +47,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/cashflows";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowInfoViewModel>>(request);
                 });
 
             "And the result contain the cashflows of the user"
@@ -55,7 +55,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .HaveCount(2)
                     .And.BeEquivalentTo(new[]
                         {
-                            new CashflowViewModel
+                            new CashflowInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Cashflow3,
                                 EffectiveDate = new DateTime(2020, 1, 4),
@@ -70,7 +70,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                                 Account = new AccountInfoViewModel(BudgetingContextSeed.Account4,
                                     "Account4")
                             },
-                            new CashflowViewModel
+                            new CashflowInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Cashflow4,
                                 EffectiveDate = new DateTime(2020, 1, 5),
@@ -90,7 +90,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client, IEnumerable<CashflowViewModel>? result)
+        public void GivenGetCashflows_WithAmountRestrictions(HttpClient client, IEnumerable<CashflowInfoViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -104,14 +104,14 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/cashflows?filter=amount:lt:300";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowInfoViewModel>>(request);
                 });
 
             "And the result contain the cashflows of the user"
                 .x(() => result.Should().NotBeNull().And.HaveCount(1)
                     .And.BeEquivalentTo(new[]
                         {
-                            new CashflowViewModel
+                            new CashflowInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Cashflow3,
                                 EffectiveDate = new DateTime(2020, 1, 4),
@@ -131,7 +131,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
         }
 
         [Scenario]
-        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<CashflowViewModel>? result)
+        public void GivenGetCashflows_WithOffsetAndLimitAndSort(HttpClient client, IEnumerable<CashflowInfoViewModel>? result)
         {
             "Given GetCashflows query"
                 .x(() => client = _factory.CreateDefaultClient());
@@ -145,7 +145,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                 {
                     const string request = "/api/v2/cashflows?offset=0&limit=1&sort=-effective_date";
 
-                    result = await client.GetFromJsonAsync<IEnumerable<CashflowViewModel>>(request);
+                    result = await client.GetFromJsonAsync<IEnumerable<CashflowInfoViewModel>>(request);
                 });
 
             "And the result contain the cashflows of the user"
@@ -153,7 +153,7 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
                     .HaveCount(1)
                     .And.BeEquivalentTo(new[]
                         {
-                            new CashflowViewModel
+                            new CashflowInfoViewModel
                             {
                                 Id = BudgetingContextSeed.Cashflow4,
                                 EffectiveDate = new DateTime(2020, 1, 5),
@@ -205,10 +205,10 @@ namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
             "And the result contain the Cashflow"
                 .x(async () =>
                 {
-                    var result = await response.Content.ReadFromJsonAsync<CashflowViewModel>(_jsonSerializerOptions);
+                    var result = await response.Content.ReadFromJsonAsync<CashflowInfoViewModel>(_jsonSerializerOptions);
 
                     result.Should().BeEquivalentTo(
-                        new CashflowViewModel
+                        new CashflowInfoViewModel
                         {
                             Id = BudgetingContextSeed.Cashflow3,
                             EffectiveDate = new DateTime(2020, 1, 4),

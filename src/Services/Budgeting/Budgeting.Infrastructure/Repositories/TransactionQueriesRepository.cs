@@ -28,7 +28,7 @@ public class TransactionQueriesRepository : ITransactionQueriesRepository
         _transactionMapper = transactionMapper;
     }
 
-    public async Task<(int Total, IEnumerable<TransactionViewModel> Items)> FindAsync(Guid userId,
+    public async Task<(int Total, IEnumerable<TransactionInfoViewModel> Items)> FindAsync(Guid userId,
         QueryParams queryParams, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
@@ -65,11 +65,11 @@ ORDER BY row_nb;
             .ConfigureAwait(false);
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
-        return new ValueTuple<int, IEnumerable<TransactionViewModel>>(count,
+        return new ValueTuple<int, IEnumerable<TransactionInfoViewModel>>(count,
             _transactionMapper.MapToDto(transactions));
     }
 
-    public async Task<TransactionViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    public async Task<TransactionInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
     {
         const string queryTemplate = @"
 SELECT T.*, A.*, CA.* 

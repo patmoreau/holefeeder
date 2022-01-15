@@ -2,6 +2,7 @@
 using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext;
 using DrifterApps.Holefeeder.Budgeting.Infrastructure.Entities;
 
@@ -16,6 +17,7 @@ public class CategoryMapper
     {
         return entity is null ? null : MapToDto(entity);
     }
+    
     public CategoryViewModel MapToDto(CategoryEntity entity)
     {
         var dto = new CategoryViewModel
@@ -64,5 +66,20 @@ public class CategoryMapper
             System = model.System,
             UserId = model.UserId
         };
+    }
+    
+    public MyDataCategoryDto MapToExportDto(CategoryEntity entity)
+    {
+        var dto = new MyDataCategoryDto
+        {
+            Id = entity.Id,
+            BudgetAmount = entity.BudgetAmount,
+            Color = entity.Color,
+            Favorite = entity.Favorite,
+            Name = entity.Name,
+            System = entity.System
+        };
+
+        return dto;
     }
 }

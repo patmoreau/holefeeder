@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Commands;
-using DrifterApps.Holefeeder.Budgeting.Application.Imports.Queries;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+using DrifterApps.Holefeeder.Budgeting.Application.MyData.Queries;
 
 using MediatR;
 
@@ -11,21 +12,34 @@ using Microsoft.AspNetCore.Http;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers;
 
-public static class ImportsRoutes
+public static class MyDataRoutes
 {
-    public static WebApplication AddImportsRoutes(this WebApplication app)
+    public static WebApplication AddMyDataRoutes(this WebApplication app)
     {
-        const string routePrefix = "api/v2/imports";
+        const string routePrefix = "api/v2/my-data";
+
+        app.MapGet($"{routePrefix}/export-data", GetExportData)
+            .WithName(nameof(GetExportData))
+            .Produces<ExportDataDto>()
+            .AddOptions();
 
         app.MapPost($"{routePrefix}/import-data", ImportData)
             .WithName(nameof(ImportData))
             .AddOptions();
 
-        app.MapGet($"{routePrefix}/{{id}}", ImportDataStatus)
+        app.MapGet($"{routePrefix}/import-status/{{id}}", ImportDataStatus)
             .WithName(nameof(ImportDataStatus))
             .AddOptions();
 
         return app;
+    }
+
+    private static async Task<IResult> GetExportData(IMediator mediator)
+    {
+        var requestResult = await mediator.Send(new ExportData.Request());
+        return requestResult.Match(
+            Results.Ok
+        );
     }
 
     private static async Task<IResult> ImportData(ImportData.Request command, IMediator mediator)
@@ -51,7 +65,7 @@ public static class ImportsRoutes
 
     private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>
         builder
-            .WithTags("Imports")
+            .WithTags("MyData")
             .RequireAuthorization()
             .WithGroupName("v2");
 }

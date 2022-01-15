@@ -22,8 +22,4 @@
       <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Imports\Validators" />
-    </ItemGroup>
-
 </Project>

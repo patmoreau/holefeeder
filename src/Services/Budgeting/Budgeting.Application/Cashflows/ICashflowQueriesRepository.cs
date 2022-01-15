@@ -10,8 +10,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Cashflows;
 
 public interface ICashflowQueriesRepository
 {
-    Task<(int Total, IEnumerable<CashflowViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
+    Task<(int Total, IEnumerable<CashflowInfoViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
         CancellationToken cancellationToken);
 
-    Task<CashflowViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
+    Task<CashflowInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
 }

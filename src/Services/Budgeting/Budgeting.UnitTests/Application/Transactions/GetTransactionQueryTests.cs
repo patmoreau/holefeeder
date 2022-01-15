@@ -51,7 +51,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             var result = await handler.Handle(new GetTransaction.Request(Guid.NewGuid()), default);
 
             // then
-            OneOf<TransactionViewModel, NotFoundRequestResult> expected = _testTransactionData[0];
+            OneOf<TransactionInfoViewModel, NotFoundRequestResult> expected = _testTransactionData[0];
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -61,7 +61,7 @@ namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
             yield return new object[] { Guid.Empty };
         }
 
-        private readonly TransactionViewModel[] _testTransactionData =
+        private readonly TransactionInfoViewModel[] _testTransactionData =
         {
             new()
             {

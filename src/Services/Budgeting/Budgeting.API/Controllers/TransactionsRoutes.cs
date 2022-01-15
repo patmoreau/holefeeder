@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DrifterApps.Holefeeder.Budgeting.API.Authorization;
-using DrifterApps.Holefeeder.Budgeting.Application;
-using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Commands;
 using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
@@ -14,7 +10,6 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DrifterApps.Holefeeder.Budgeting.API.Controllers;
 
@@ -27,12 +22,12 @@ public static class TransactionsRoutes
         app.MapGet($"{routePrefix}", GetTransactions)
             .WithName(nameof(GetTransactions))
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
-            .Produces<TransactionViewModel[]>()
+            .Produces<TransactionInfoViewModel[]>()
             .AddOptions();
 
         app.MapGet($"{routePrefix}/{{id}}", GetTransaction)
             .WithName(nameof(GetTransaction))
-            .Produces<TransactionViewModel>()
+            .Produces<TransactionInfoViewModel>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .AddOptions();
 
@@ -66,7 +61,7 @@ public static class TransactionsRoutes
 
         app.MapDelete($"{routePrefix}/{{id}}", DeleteTransaction)
             .WithName(nameof(DeleteTransaction))
-            .Produces<TransactionViewModel>()
+            .Produces<TransactionInfoViewModel>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .AddOptions();
 
