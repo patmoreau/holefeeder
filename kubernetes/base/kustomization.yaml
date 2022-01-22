@@ -10,7 +10,6 @@ resources:
 - ingress.deployment.yaml
 - mysql.deployment.yaml
 - object-store.deployment.yaml
-- seq.deployment.yaml
 - ui.deployment.yaml
 - namespace.yaml
 
