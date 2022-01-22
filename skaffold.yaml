@@ -37,9 +37,15 @@ build:
       buildArgs:
         BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
 profiles:
-  - name: dev
+  - name: dev-docker
     activation:
       - kubeContext: docker-desktop
+    deploy:
+      kustomize:
+        paths: ["kubernetes/dev"]
+  - name: dev-k3d
+    activation:
+      - kubeContext: k3d-*
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]

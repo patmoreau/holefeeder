@@ -33,16 +33,6 @@ spec:
                 name: adminer
                 port:
                   number: 80
-    - host: seq.test
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: seq
-                port:
-                  number: 80
     - host: mysql.test
       http:
         paths:
@@ -57,6 +47,5 @@ spec:
   - hosts: 
     - holefeeder.test 
     - adminer.test
-    - seq.test
     - mysql.test
     secretName: holefeeder-tls
