@@ -81,7 +81,7 @@ export class TransactionEditComponent implements OnInit {
     let account: IAccount = this.accounts.items[0];
     if (this.route.snapshot.queryParamMap.has('accountId')) {
       const accountId = this.route.snapshot.queryParamMap.get('accountId');
-      account = await this.accountsService.findOneByIdWithDetails(accountId);
+      account = await this.accountsService.findOneByIdWithDetails(accountId).toPromise();
     }
 
 

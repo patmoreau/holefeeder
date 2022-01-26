@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IAccount } from '@app/shared/interfaces/account.interface';
+import { Observable } from 'rxjs';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -7,13 +9,11 @@ import { AccountService } from '../account.service';
   styleUrls: ['./account-upcoming.component.scss']
 })
 export class AccountUpcomingComponent implements OnInit {
-  accountId: string;
+  account$: Observable<IAccount> | undefined;
 
   constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-    this.accountService.accountSelected$.subscribe(account => {
-      this.accountId = account.id;
-    });
+    this.account$ = this.accountService.accountSelected$;
   }
 }

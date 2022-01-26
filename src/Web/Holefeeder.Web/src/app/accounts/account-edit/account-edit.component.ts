@@ -9,6 +9,7 @@ import { IAccount } from '@app/shared/interfaces/account.interface';
 import { Account } from '@app/shared/models/account.model';
 import { ModifyAccountCommand } from '@app/shared/accounts/modify-account-command.model';
 import { OpenAccountCommand } from '@app/shared/accounts/open-account-command.model';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'dfta-account-edit',
@@ -17,8 +18,7 @@ import { OpenAccountCommand } from '@app/shared/accounts/open-account-command.mo
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]
 })
 export class AccountEditComponent implements OnInit {
-  isLoaded = false;
-  account: IAccount;
+  account$: Observable<IAccount> | undefined;
   isDirty = true;
 
   accountForm: FormGroup;
@@ -43,23 +43,21 @@ export class AccountEditComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const id = this.activatedRoute.parent.snapshot.paramMap.get('accountId');
-    if (id) {
-      this.account = await this.accountsService.findOneByIdWithDetails(id);
-      this.accountForm.patchValue(this.account);
-    } else {
-      this.account = new Account();
-    }
-    this.isLoaded = true;
+    this.activatedRoute.params.subscribe(async params => {
+      this.account$ = this.accountsService.findOneByIdWithDetails(params['accountId'])
+        .pipe(
+          tap(account => this.accountForm.patchValue(account ?? new Account()))
+        );
+    });
   }
 
-  async onSubmit() {
+  async onSubmit(account: IAccount) {
     let accountId: string;
-    if (this.account.id) {
-      accountId = this.account.id;
+    if (account.id) {
+      accountId = account.id;
       await this.accountsService.modify(
         new ModifyAccountCommand(Object.assign({}, this.accountForm.value, {
-          id: this.account.id
+          id: account.id
         }))
       );
     } else {

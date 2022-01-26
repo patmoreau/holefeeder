@@ -31,20 +31,20 @@ interface IdTokenClaims extends AuthenticationResult {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  period: IDateInterval;
+  period: IDateInterval | undefined;
+  closeResult: string | undefined;
 
-  closeResult: string;
-
-  hoveredDate: NgbDate;
-
-  fromDate: NgbDate;
-  toDate: NgbDate;
+  hoveredDate: NgbDate | undefined;
+  fromDate: NgbDate | undefined;
+  toDate: NgbDate | undefined;
 
   isNavbarCollapsed = false;
-  profile: Account;
+
+  profile: Account | undefined;
 
   isIframe = false;
   loggedIn = false;
+
   private readonly _destroying$ = new Subject<void>();
 
   constructor(
@@ -52,9 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private dateService: DateService,
     private settingsService: SettingsService,
     private router: Router,
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private msalBroadcastService: MsalBroadcastService,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration
   ) {
     this.isNavbarCollapsed = true;
   }
@@ -130,7 +130,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   login(userFlowRequest?: RedirectRequest | PopupRequest) {
-    this.msalGuardConfig
     if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
       if (this.msalGuardConfig.authRequest) {
         this.authService.loginPopup({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
@@ -167,7 +166,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.login(editProfileFlowRequest);
   }
 
-  open(content) {
+  open(content: any) {
     this.setCalendar(this.period);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })

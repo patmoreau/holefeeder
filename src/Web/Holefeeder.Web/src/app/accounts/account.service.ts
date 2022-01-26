@@ -6,7 +6,7 @@ import { BehaviorSubject } from "rxjs";
 export class AccountService {
 
   // Observable IAccountDetail sources
-  private accountSelectedSource = new BehaviorSubject<IAccount>(null);
+  private accountSelectedSource = new BehaviorSubject<IAccount | undefined>(undefined);
 
   // Observable IAccountDetail streams
   accountSelected$ = this.accountSelectedSource.asObservable();

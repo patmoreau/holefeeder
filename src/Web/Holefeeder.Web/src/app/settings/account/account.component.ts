@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
-  profileForm: FormGroup;
+  profileForm!: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private router: Router) {}
 
@@ -19,7 +19,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  saveProfile(formValues) {
+  saveProfile(formValues: any): void {
     console.debug(formValues);
   }
 

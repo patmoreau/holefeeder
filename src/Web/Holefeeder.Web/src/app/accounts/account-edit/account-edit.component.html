@@ -1,4 +1,4 @@
-<ng-container *ngIf="isLoaded; else loader">
+<ng-container *ngIf="account$ | async as account; else loader">
   <div class="pt-3 pb-4 mb-3">
     <div class="container">
       <ng-container *ngIf="!account.id; else selected">
@@ -12,15 +12,18 @@
     <ng-template #selected>
       <div class="pb-3 mt-3">
         <a routerLink="../" class="text-large line-height-1">
-          <em class="bi bi-box-arrow-left pb-1 pe-1"></em>Account</a>
+          <em class="bi bi-box-arrow-left pb-1 pe-1"></em>Details</a>
       </div>
-      <h1 class="display-3 mb-0 line-height-1 text-truncate">
-        Account {{ account.name }}
+      <h1 class="mb-0 line-height-1 text-truncate d-none d-lg-block">
+        {{ account.name }}
       </h1>
-    </ng-template>
+      <h4 class="mb-0 line-height-1 text-truncate d-lg-none">
+        {{ account.name }}
+      </h4>
+  </ng-template>
   </div>
   <div class="container mb-5">
-    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit(account)">
       <div class="form-group">
         <label for="name">Name</label>
         <input class="form-control" type="text" formControlName="name" id="name" placeholder="account name..." />

@@ -37,7 +37,7 @@ export class CurrencyComponent extends BaseControlValueAccessor<number>
 
   ngOnInit() {}
 
-  writeValue(val: number): void {
+  override writeValue(val: number): void {
     super.writeValue(val);
     this.currency.patchValue(val);
   }

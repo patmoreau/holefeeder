@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { IPagingInfo } from '../interfaces/paging-info.interface';
 import { ModifyAccountCommand } from '../accounts/modify-account-command.model';
 import { OpenAccountCommand } from '../accounts/open-account-command.model';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AccountsService {
@@ -55,13 +56,12 @@ export class AccountsService {
       .toPromise();
   }
 
-  findOneByIdWithDetails(id: number | string): Promise<IAccount> {
+  findOneByIdWithDetails(id: number | string): Observable<IAccount> {
     return this.api
       .get(`${this.api.budgetingBasePath}/${this.basePath}/${id}`)
       .pipe(
         map(accountDetailFromServer)
-      )
-      .toPromise();
+      );
   }
 
   open(account: OpenAccountCommand): Promise<string> {

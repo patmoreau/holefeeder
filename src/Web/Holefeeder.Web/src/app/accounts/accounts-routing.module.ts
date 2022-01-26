@@ -26,16 +26,16 @@ const routes: Routes = [
         canActivate: [MsalGuard],
       },
       {
+        path: ':accountId/edit',
+        component: AccountEditComponent,
+        canActivate: [MsalGuard],
+      },
+      {
         path: ':accountId',
         component: AccountDetailsComponent,
         canActivate: [MsalGuard],
         children: [
           { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
-          {
-            path: 'edit',
-            component: AccountEditComponent,
-            canActivate: [MsalGuard],
-          },
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,
@@ -45,11 +45,7 @@ const routes: Routes = [
             path: 'transactions',
             component: AccountTransactionsComponent,
             canActivate: [MsalGuard],
-          },
-          // {
-          //   path: 'transactions',
-          //   loadChildren: './transactions/transactions.module#TransactionsModule', canActivate: [AuthGuardService]
-          // },
+          }
         ]
       },
     ]

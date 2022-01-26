@@ -7,6 +7,7 @@ import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.int
 import { AccountsService } from '@app/shared/services/accounts.service';
 import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
 import { AccountService } from '../account.service';
+import { filter, from, Observable, tap, switchMap, of, scan } from 'rxjs';
 
 @Component({
   selector: 'dfta-account-details',
@@ -15,10 +16,10 @@ import { AccountService } from '../account.service';
   providers: [AccountService]
 })
 export class AccountDetailsComponent implements OnInit {
-  account: IAccount;
-  upcomingCashflows: IUpcoming[];
-  upcomingBalance = 0;
-  isLoaded = false;
+  account$: Observable<IAccount> | undefined;
+  upcomingBalance$: Observable<number> | undefined;
+
+  account: IAccount | undefined;
 
   constructor(
     private accountsService: AccountsService,
@@ -31,41 +32,40 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(async params => {
-      const accountId = params['accountId'];
-      this.account = await this.accountsService.findOneByIdWithDetails(accountId);
-      this.accountService.accountSelected(this.account);
+      this.account$ = this.accountsService.findOneByIdWithDetails(params['accountId'])
+        .pipe(
+          tap(account => this.accountService.accountSelected(account))
+        );
 
-      this.isLoaded = true;
-      this.upcomingService.cashflows.subscribe(cashflows =>
-        this.upcomingBalance =
-        this.account.balance +
-        cashflows
-          .filter(cashflow => cashflow.account.id === this.account.id)
-          .map(cashflow =>
-            cashflow.amount *
-            categoryTypeMultiplier(cashflow.category.type) *
-            accountTypeMultiplier(this.account.type)
-          )
-          .reduce((sum, current) => sum + current, 0)
-      );
-      });
-
+      this.upcomingBalance$ = this.account$.pipe(
+        switchMap(account => {
+          const accountMutiplier = accountTypeMultiplier(account.type);
+          return account ? this.upcomingService.cashflows
+            .pipe(
+              switchMap(cashflows => from(cashflows)),
+              filter(cashflow => cashflow.account.id === account.id),
+              scan((sum, cashflow) => sum + (cashflow.amount *
+                categoryTypeMultiplier(cashflow.category.type) * accountMutiplier), account.balance)
+            ) : of(0);
+        })
+      )
+    });
   }
 
   edit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
-  addTransaction() {
-    this.router.navigate(['transactions', 'create'], { queryParams: { accountId: this.account.id } });
+  addTransaction(account: IAccount) {
+    this.router.navigate(['transactions', 'create'], { queryParams: { accountId: account.id } });
   }
 
-  balanceClass(): string {
-    return this.amountClass(this.account.balance * accountTypeMultiplier(this.account.type));
+  balanceClass(account: IAccount): string {
+    return this.amountClass(account.balance * accountTypeMultiplier(account.type));
   }
 
-  upcomingBalanceClass(): string {
-    return this.amountClass(this.upcomingBalance * accountTypeMultiplier(this.account.type));
+  upcomingBalanceClass(account: IAccount, upcomingBalance: number): string {
+    return this.amountClass(upcomingBalance * accountTypeMultiplier(account.type));
   }
 
   private amountClass(amount: number): string {

@@ -1,1 +1,4 @@
-<dfta-transactions-list [accountId]="accountId"></dfta-transactions-list>
+<ng-container *ngIf="account$ | async as account; else loader">
+  <dfta-transactions-list [accountId]="account.id"></dfta-transactions-list>
+</ng-container>
+<ng-template #loader>Loading...</ng-template>

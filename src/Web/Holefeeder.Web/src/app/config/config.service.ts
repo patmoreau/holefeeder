@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpBackend, HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { IConfig } from "@app/config/config.interface";
 import { BrowserCacheLocation, Configuration, InteractionType } from "@azure/msal-browser";
 import { MsalGuardConfiguration, MsalInterceptorConfiguration } from "@azure/msal-angular";
-import { Observable } from 'rxjs';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -41,7 +40,7 @@ const tokenRequest: { scopes: string[] } = { scopes: apiConfig.scopes };
   providedIn: 'root'
 })
 export class ConfigService {
-  private configData: IConfig;
+  private configData!: IConfig;
 
   private http: HttpClient;
 
@@ -65,52 +64,52 @@ export class ConfigService {
             return config;
           })
         )
-        .subscribe(value => {
-          this.configData = Object.assign(value);
-          resolve(true);
-        },
-          (error) => {
-            reject(error);
-          });
+        .subscribe({
+          next: (value) => {
+            this.configData = Object.assign(value);
+            resolve(true);
+          },
+          error: (error) => reject(error)
+        });
     })
   }
 
   get config(): IConfig {
-      return this.configData;
-    }
+    return this.configData;
+  }
 
   get msalConfiguration(): Configuration {
-      return Object.assign({
-        auth: {
-          clientId: '9814ecda-b8db-4775-a361-714af29fe486',
-          authority: b2cPolicies.authorities.signUpSignIn.authority,
-          redirectUri: this.configData.redirectUrl,
-          postLogoutRedirectUri: this.configData.redirectUrl,
-          knownAuthorities: [b2cPolicies.authorityDomain]
-        },
-        cache: {
-          cacheLocation: BrowserCacheLocation.LocalStorage,
-          storeAuthStateInCookie: isIE, // set to true for IE 11
-        },
-      });
-    }
+    return Object.assign({
+      auth: {
+        clientId: '9814ecda-b8db-4775-a361-714af29fe486',
+        authority: b2cPolicies.authorities.signUpSignIn.authority,
+        redirectUri: this.configData.redirectUrl,
+        postLogoutRedirectUri: this.configData.redirectUrl,
+        knownAuthorities: [b2cPolicies.authorityDomain]
+      },
+      cache: {
+        cacheLocation: BrowserCacheLocation.LocalStorage,
+        storeAuthStateInCookie: isIE, // set to true for IE 11
+      },
+    });
+  }
 
   get msalInterceptorConfiguration(): MsalInterceptorConfiguration {
-      const protectedResourceMap = new Map<string, Array<string>>();
-      protectedResourceMap.set(this.configData.apiUrl, apiConfig.scopes);
+    const protectedResourceMap = new Map<string, Array<string>>();
+    protectedResourceMap.set(this.configData.apiUrl, apiConfig.scopes);
 
-      return Object.assign({
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap,
-      });
-    }
+    return Object.assign({
+      interactionType: InteractionType.Redirect,
+      protectedResourceMap,
+    });
+  }
 
   get msalGuardConfiguration(): MsalGuardConfiguration {
-      return Object.assign({
-        interactionType: InteractionType.Redirect,
-        authRequest: {
-          scopes: [...apiConfig.scopes],
-        },
-      });
-    }
+    return Object.assign({
+      interactionType: InteractionType.Redirect,
+      authRequest: {
+        scopes: [...apiConfig.scopes],
+      },
+    });
+  }
 }
