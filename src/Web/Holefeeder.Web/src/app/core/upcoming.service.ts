@@ -31,6 +31,7 @@ export class UpcomingService extends StateService<UpcomingState> {
       map(([period, _]) => period),
       switchMap(period => this.apiService.findUpcoming(period))
     ).subscribe(items => this.setState({ upcoming: items }));
+
     this.refresh();
   }
 

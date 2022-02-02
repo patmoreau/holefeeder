@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
 import { Upcoming } from "@app/core/models/upcoming.model";
@@ -12,14 +12,16 @@ import { UpcomingService } from '@app/core/upcoming.service';
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.scss']
 })
-export class DashboardHomeComponent {
-  upcomingCashflows$: Observable<Upcoming[]>;
+export class DashboardHomeComponent implements OnInit {
+  upcoming$: Observable<Upcoming[]>;
 
   constructor(private upcomingService: UpcomingService,
     private cashflowsService: CashflowsService,
     private transactionsService: TransactionsService,
-    private router: Router) {
-    this.upcomingCashflows$ = this.upcomingService.upcoming$;
+    private router: Router) { }
+
+  ngOnInit(): void {
+    this.upcoming$ = this.upcomingService.upcoming$;
   }
 
   async action(event: string, upcoming: Upcoming) {
