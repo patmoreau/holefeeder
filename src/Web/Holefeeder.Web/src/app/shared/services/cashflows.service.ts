@@ -4,7 +4,7 @@ import { ICashflow, cashflowToServer, cashflowFromServer } from '../interfaces/c
 import { map } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
 import { cashflowDetailFromServer, ICashflowDetail } from '../interfaces/cashflow-detail.interface';
-import { IPagingInfo } from '../interfaces/paging-info.interface';
+import { PagingInfo } from '../interfaces/paging-info.interface';
 
 @Injectable()
 export class CashflowsService {
@@ -17,7 +17,7 @@ export class CashflowsService {
     limit: number,
     sort: string[],
     filter: string[]
-  ): Promise<IPagingInfo<ICashflowDetail>> {
+  ): Promise<PagingInfo<ICashflowDetail>> {
     let params = new HttpParams();
     if (offset) {
       params = params.set('offset', `${offset}`);
@@ -36,7 +36,7 @@ export class CashflowsService {
       });
     }
     return this.api
-      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
+      .find(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(

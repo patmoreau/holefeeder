@@ -6,16 +6,10 @@ import { ConfigService } from '@app/config/config.service';
 
 @Injectable()
 export class ApiService {
-  budgetingBasePath = 'budgeting/api/v2';
-  objectStoreBasePath = 'object-store/api/v2';
+  public readonly budgetingBasePath = 'budgeting/api/v2';
+  public readonly objectStoreBasePath = 'object-store/api/v2';
 
-  constructor(private http: HttpClient, private configService: ConfigService) {
-  }
-
-  private formatErrors(error: any) {
-    console.error(error);
-    return throwError(error.error);
-  }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.get(`${this.configService.config.apiUrl}/${path}`, {
@@ -27,7 +21,7 @@ export class ApiService {
     );
   }
 
-  getList(path: string, params: HttpParams = new HttpParams()): Observable<any> {
+  find(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.get(`${this.configService.config.apiUrl}/${path}`, {
       observe: 'response',
       params: params
@@ -67,5 +61,10 @@ export class ApiService {
       .pipe(
         catchError(this.formatErrors)
       );
+  }
+
+  private formatErrors(error: any) {
+    console.error(error);
+    return throwError(() => new Error(error.error));
   }
 }

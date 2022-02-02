@@ -7,7 +7,6 @@ import { AccountsService } from './services/accounts.service';
 import { TagsInputComponent } from './tags-input/tags-input.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { TransactionsService } from './services/transactions.service';
-import { CategoriesService } from './services/categories.service';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
 import { CurrencyComponent } from './components/currency/currency.component';
 import { CurrencyDirective } from './components/currency/currency.directive';
@@ -44,7 +43,6 @@ const COMPONENTS = [
     SubscriberService,
     CashflowsService,
     AccountsService,
-    CategoriesService,
     TransactionsService
   ]
 })

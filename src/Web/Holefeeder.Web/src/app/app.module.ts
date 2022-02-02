@@ -8,7 +8,6 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HeaderComponent} from './header/header.component';
 import {FooterComponent} from './footer/footer.component';
 import {ErrorNotfoundComponent} from './error-notfound/error-notfound.component';
-import {SingletonsModule} from './singletons/singletons.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {
@@ -29,6 +28,12 @@ import {
 } from "@azure/msal-browser";
 import {RedirectComponent} from "@app/redirect.component";
 import {ExternalUrlDirective} from "@app/directives/external-url.directive";
+import { DateIntervalAdapter } from './core/models/date-interval.model';
+import { SettingsAdapter, SettingsStoreItemAdapter } from './core/models/settings.model';
+import { StoreItemAdapter } from './core/models/store-item.model';
+import { SettingsService } from './core/settings.service';
+import { CategoriesService } from './core/categories.service';
+import { CategoriesApiService } from './core/api/categories-api.service';
 
 const COMPONENTS = [
   AppComponent,
@@ -71,11 +76,17 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    SingletonsModule,
     ToastNoAnimationModule.forRoot()
   ],
   providers: [
+    CategoriesService,
+    CategoriesApiService,
     ConfigService,
+    DateIntervalAdapter,
+    SettingsAdapter,
+    SettingsStoreItemAdapter,
+    StoreItemAdapter,
+    SettingsService,
     {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/config'},
     {
       provide: APP_INITIALIZER, useFactory: initializerFactory,

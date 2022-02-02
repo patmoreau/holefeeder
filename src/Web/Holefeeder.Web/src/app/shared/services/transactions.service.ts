@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '@app/shared/services/api.service';
 import { ITransactionDetail, transactionDetailFromServer } from '../interfaces/transaction-detail.interface';
 import { HttpParams } from '@angular/common/http';
-import { IPagingInfo } from '../interfaces/paging-info.interface';
+import { PagingInfo } from '../interfaces/paging-info.interface';
 import { map } from 'rxjs/operators';
-import { UpcomingService } from '@app/singletons/services/upcoming.service';
 import { MakePurchaseCommand } from '../transactions/make-purchase-command.model';
 import { TransferMoneyCommand } from '../transactions/transfer-money-command.model';
 import { PayCashflowCommand } from '../transactions/pay-cashflow-command.model';
@@ -14,14 +13,14 @@ import { ModifyTransactionCommand } from '../transactions/modify-transaction-com
 export class TransactionsService {
   private basePath = 'transactions';
 
-  constructor(private upcomingService: UpcomingService, private api: ApiService) { }
+  constructor(private api: ApiService) { }
 
   find(
     accountId: string,
     offset: number,
     limit: number,
     sort: string[]
-  ): Promise<IPagingInfo<ITransactionDetail>> {
+  ): Promise<PagingInfo<ITransactionDetail>> {
     let params = new HttpParams();
     if (accountId) {
       params = params.set('filter', `account_id:eq:${accountId}`);
@@ -38,7 +37,7 @@ export class TransactionsService {
       });
     }
     return this.api
-      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
+      .find(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(

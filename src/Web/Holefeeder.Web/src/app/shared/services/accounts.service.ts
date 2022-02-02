@@ -3,7 +3,7 @@ import { ApiService } from '@app/shared/services/api.service';
 import { HttpParams } from '@angular/common/http';
 import { IAccount, accountDetailFromServer } from '../interfaces/account.interface';
 import { map } from 'rxjs/operators';
-import { IPagingInfo } from '../interfaces/paging-info.interface';
+import { PagingInfo } from '../interfaces/paging-info.interface';
 import { ModifyAccountCommand } from '../accounts/modify-account-command.model';
 import { OpenAccountCommand } from '../accounts/open-account-command.model';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ export class AccountsService {
     limit: number,
     sort: string[],
     filter: string[]
-  ): Promise<IPagingInfo<IAccount>> {
+  ): Promise<PagingInfo<IAccount>> {
     let params = new HttpParams();
     if (offset) {
       params = params.set('offset', `${offset}`);
@@ -38,7 +38,7 @@ export class AccountsService {
       });
     }
     return this.api
-      .getList(`${this.api.budgetingBasePath}/${this.basePath}`, params)
+      .find(`${this.api.budgetingBasePath}/${this.basePath}`, params)
       .pipe(
         map(data =>
           Object.assign(

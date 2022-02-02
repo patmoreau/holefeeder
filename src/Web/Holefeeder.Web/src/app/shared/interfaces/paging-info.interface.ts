@@ -1,4 +1,4 @@
-export interface IPagingInfo<T> {
+export interface PagingInfo<T> {
     totalCount: number;
     items: T[];
 }

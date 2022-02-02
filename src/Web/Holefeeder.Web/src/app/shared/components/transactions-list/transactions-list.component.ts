@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionsService } from '@app/shared/services/transactions.service';
 import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
-import { IPagingInfo } from '@app/shared/interfaces/paging-info.interface';
+import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string;
 
-  transactions$: Observable<IPagingInfo<ITransactionDetail>>;
+  transactions$: Observable<PagingInfo<ITransactionDetail>>;
 
   page = 1;
 

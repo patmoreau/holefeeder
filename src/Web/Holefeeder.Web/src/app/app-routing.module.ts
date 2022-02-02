@@ -9,21 +9,21 @@ const appRoutes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {
     path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+    loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
-  {path: 'accounts', loadChildren: () => import('./accounts/accounts.module').then(m => m.AccountsModule)},
-  {path: 'settings', loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)},
+  {path: 'accounts', loadChildren: () => import('./modules/accounts/accounts.module').then(m => m.AccountsModule)},
+  {path: 'settings', loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)},
   {
     path: 'cashflows',
-    loadChildren: () => import('./cashflows/cashflows.module').then(m => m.CashflowsModule)
+    loadChildren: () => import('./modules/cashflows/cashflows.module').then(m => m.CashflowsModule)
   },
   {
     path: 'transactions',
-    loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsModule)
+    loadChildren: () => import('./modules/transactions/transactions.module').then(m => m.TransactionsModule)
   },
   {
     path: 'statistics',
-    loadChildren: () => import('./statistics/statistics.module').then(m => m.StatisticsModule)
+    loadChildren: () => import('./modules/statistics/statistics.module').then(m => m.StatisticsModule)
   },
   {
     path: 'externalRedirect',

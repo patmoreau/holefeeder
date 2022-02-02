@@ -1,9 +1,11 @@
+<ng-container *ngIf="settings$ | async"></ng-container>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <em class="bi bi-safe"></em>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -36,22 +38,28 @@
             </li>
           </ul>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <button type="button" class="btn btn-outline-secondary" (click)="open(datePicker)">
-                <em class="bi bi-calendar-range"></em>&nbsp;{{ period?.start | date }} - {{ period?.end | date }}
+            <ng-container *ngIf="period$ | async as period">
+              <li class="nav-item">
+              <button type="button" class="btn btn-outline-secondary" (click)="open(datePicker, period)">
+                <em class="bi bi-calendar-range"></em>&nbsp;{{ period.start | date }} - {{ period.end | date }}
               </button>
             </li>
+            </ng-container>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <em class="bi bi-person-circle"></em>&nbsp;{{profile?.name}}
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="offcanvasNavbarDropdown">
-                <li><a class="dropdown-item" [routerLink]="['/settings']"><em class="bi bi-gear"></em>&nbsp;Settings</a></li>
-                <li><a class="dropdown-item" [routerLink]="['/healthchecks-ui']"><em class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
+                <li><a class="dropdown-item" [routerLink]="['/settings']"><em class="bi bi-gear"></em>&nbsp;Settings</a>
+                </li>
+                <li><a class="dropdown-item" [routerLink]="['/healthchecks-ui']"><em
+                      class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" (click)="logout()"><em class="bi bi-box-arrow-left"></em>&nbsp;Log out</a></li>
+                <li><a class="dropdown-item" (click)="logout()"><em class="bi bi-box-arrow-left"></em>&nbsp;Log out</a>
+                </li>
               </ul>
             </li>
           </ul>
@@ -84,8 +92,7 @@
           <button type="button" class="btn btn-outline" (click)="previousPeriod()" ngbTooltip="Previous period">
             <em class="bi bi-calendar-minus"></em>
           </button>
-          <button type="button" class="btn btn-outline ms-3" (click)="currentPeriod()"
-            ngbTooltip="Current period">
+          <button type="button" class="btn btn-outline ms-3" (click)="currentPeriod()" ngbTooltip="Current period">
             <em class="bi bi-calendar-check"></em>
           </button>
           <button type="button" class="btn btn-outline ms-3" (click)="nextPeriod()" ngbTooltip="Next period">

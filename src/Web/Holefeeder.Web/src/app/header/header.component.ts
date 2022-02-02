@@ -1,11 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DateService } from '@app/singletons/services/date.service';
 import { addDays, startOfToday } from 'date-fns';
-import { IDateInterval } from '@app/shared/interfaces/date-interval.interface';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
-import { SettingsService } from "@app/singletons/services/settings.service";
+import { Observable, Subject } from 'rxjs';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from "@azure/msal-angular";
 import {
   AuthenticationResult, AuthError,
@@ -18,6 +15,9 @@ import {
 import { b2cPolicies } from "@app/config/config.service";
 import { filter, takeUntil } from "rxjs/operators";
 import { Account } from '@app/shared/models/account.model';
+import { Settings } from '@app/core/models/settings.model';
+import { SettingsService } from '@app/core/settings.service';
+import { DateInterval } from '@app/core/models/date-interval.model';
 
 interface IdTokenClaims extends AuthenticationResult {
   idTokenClaims: {
@@ -31,7 +31,9 @@ interface IdTokenClaims extends AuthenticationResult {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  period: IDateInterval | undefined;
+  settings$: Observable<Settings> | undefined;
+  period$: Observable<DateInterval> | undefined;
+
   closeResult: string | undefined;
 
   hoveredDate: NgbDate | undefined;
@@ -49,7 +51,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
-    private dateService: DateService,
     private settingsService: SettingsService,
     private router: Router,
     private authService: MsalService,
@@ -57,6 +58,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration
   ) {
     this.isNavbarCollapsed = true;
+
+    this.settings$ = this.settingsService.settings$;
+    this.period$ = this.settingsService.period$;
   }
 
   ngOnInit() {
@@ -112,12 +116,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
 
     if (this.loggedIn) {
-      this.settingsService.loadUserSettings();
+      this.settingsService.loggedOn();
     }
-
-    this.dateService.period.subscribe(period => {
-      this.period = period;
-    });
   }
 
   ngOnDestroy(): void {
@@ -155,6 +155,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+    this.settingsService.loggedOff();
   }
 
   editProfile() {
@@ -166,38 +167,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.login(editProfileFlowRequest);
   }
 
-  open(content: any) {
-    this.setCalendar(this.period);
+  open(content: any, period: DateInterval) {
+    this.setCalendar(period);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
         _ => {
-          this.dateService.setPeriod({
-            start: this.getDate(this.fromDate),
-            end: this.getDate(this.toDate)
-          } as IDateInterval);
+          this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate), this.getDate(this.toDate)));
         },
-        _ => {
-        }
+        _ => { }
       );
   }
 
   nextPeriod() {
     const date = this.getDate(this.toDate);
-    const period = this.dateService.getPeriod(addDays(date, 2));
+    const period = this.settingsService.getPeriod(addDays(date, 2));
 
     this.setCalendar(period);
   }
 
   currentPeriod() {
-    const period = this.dateService.getPeriod(startOfToday());
+    const period = this.settingsService.getPeriod(startOfToday());
 
     this.setCalendar(period);
   }
 
   previousPeriod() {
     const date = this.getDate(this.fromDate);
-    const period = this.dateService.getPeriod(addDays(date, -1));
+    const period = this.settingsService.getPeriod(addDays(date, -1));
 
     this.setCalendar(period);
   }
@@ -241,7 +238,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
-  private setCalendar(period: IDateInterval) {
+  private setCalendar(period: DateInterval) {
     if (period === null) {
       return;
     }
