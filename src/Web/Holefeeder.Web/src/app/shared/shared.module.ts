@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateViewComponent } from './components/date-view/date-view.component';
-import { AccountsService } from './services/accounts.service';
 import { TagsInputComponent } from './tags-input/tags-input.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { TransactionsService } from './services/transactions.service';
@@ -42,7 +41,6 @@ const COMPONENTS = [
     ApiService,
     SubscriberService,
     CashflowsService,
-    AccountsService,
     TransactionsService
   ]
 })

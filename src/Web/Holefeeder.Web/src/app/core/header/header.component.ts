@@ -12,12 +12,12 @@ import {
   PopupRequest,
   RedirectRequest
 } from "@azure/msal-browser";
-import { b2cPolicies } from "@app/config/config.service";
+import { b2cPolicies } from "@app/core/config/config.service";
 import { filter, takeUntil } from "rxjs/operators";
-import { Account } from '@app/shared/models/account.model';
 import { Settings } from '@app/core/models/settings.model';
-import { SettingsService } from '@app/core/settings.service';
 import { DateInterval } from '@app/core/models/date-interval.model';
+import { SettingsService } from '../services/settings.service';
+import { Account } from '@app/modules/accounts/models/account.model';
 
 interface IdTokenClaims extends AuthenticationResult {
   idTokenClaims: {

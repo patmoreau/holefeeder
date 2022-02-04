@@ -1,6 +1,6 @@
 import {InjectionToken, NgModule} from '@angular/core';
 import {Routes, RouterModule, ActivatedRouteSnapshot} from '@angular/router';
-import {ErrorNotfoundComponent} from './error-notfound/error-notfound.component';
+import {ErrorNotfoundComponent} from './core/error-notfound/error-notfound.component';
 import {RedirectComponent} from "@app/redirect.component";
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');

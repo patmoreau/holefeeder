@@ -1,25 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountsService } from '@app/shared/services/accounts.service';
-import { IAccount } from '@app/shared/interfaces/account.interface';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Upcoming } from "@app/core/models/upcoming.model";
 import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
 import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
-import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
-import { UpcomingService } from '@app/core/upcoming.service';
+import { Account } from '../models/account.model';
+import { AccountsService } from '../services/accounts.service';
+import { UpcomingService } from '@app/core/services/upcoming.service';
 
 @Component({
   templateUrl: './accounts-list.component.html',
   styleUrls: ['./accounts-list.component.scss']
 })
 export class AccountsListComponent implements OnInit {
-  accounts: PagingInfo<IAccount>;
+  accounts$: Observable<Account[]>;
   upcomingCashflows$: Observable<Upcoming[]>;
   accountTypeNames: Map<string, string>;
   showInactive = false;
-  $showInactive = new Subject<boolean>();
 
   constructor(
     private accountService: AccountsService,
@@ -30,28 +28,24 @@ export class AccountsListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.$showInactive.subscribe(async (showInactive) => {
-      this.accounts = await this.accountService.find(null, null, [
-        '-favorite',
-        'name'
-      ], [
-        showInactive ? 'inactive:eq:true' : 'inactive:eq:false'
-      ]);
-    });
+    this.accounts$ = this.accountService.accounts$
     this.upcomingCashflows$ = this.upcomingService.upcoming$;
-    this.$showInactive.next(this.showInactive);
   }
 
-  click(id: string) {
-    this.router.navigate(['accounts', id]);
+  click(account: Account) {
+    this.router.navigate(['accounts', account.id]);
   }
 
   inactiveChange() {
     this.showInactive = !this.showInactive;
-    this.$showInactive.next(this.showInactive);
+    if(this.showInactive) {
+      this.accountService.showInactive();
+    } else{
+      this.accountService.hideInactive();
+    }
   }
 
-  getUpcomingBalance(account: IAccount, cashflows: Upcoming[]): number {
+  getUpcomingBalance(account: Account, cashflows: Upcoming[]): number {
     return (
       account.balance +
       (cashflows ?
@@ -68,7 +62,7 @@ export class AccountsListComponent implements OnInit {
     );
   }
 
-  amountClass(account: IAccount): string {
+  amountClass(account: Account): string {
     const val = account.balance * accountTypeMultiplier(account.type);
     if (val < 0) {
       return 'text-danger';

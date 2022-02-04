@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IAccount } from '@app/shared/interfaces/account.interface';
 import { Observable } from 'rxjs';
-import { AccountService } from '../account.service';
+import { Account } from '../models/account.model';
+import { AccountsService } from '../services/accounts.service';
 
 @Component({
   selector: 'dfta-account-transactions',
@@ -9,11 +9,11 @@ import { AccountService } from '../account.service';
   styleUrls: ['./account-transactions.component.scss']
 })
 export class AccountTransactionsComponent implements OnInit {
-  account$: Observable<IAccount> | undefined;
+  account$: Observable<Account> | undefined;
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountsService: AccountsService) { }
 
   ngOnInit() {
-    this.account$ = this.accountService.accountSelected$;
+    this.account$ = this.accountsService.selectedAccount$;
   }
 }

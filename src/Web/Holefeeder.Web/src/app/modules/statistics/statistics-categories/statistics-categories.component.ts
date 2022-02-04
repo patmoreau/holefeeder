@@ -4,8 +4,8 @@ import { CategoryType } from '@app/shared/enums/category-type.enum';
 import { addMonths, startOfDay } from 'date-fns';
 import { combineLatest, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { SettingsService } from '@app/core/settings.service';
-import { CategoriesService } from '@app/core/categories.service';
+import { SettingsService } from '@app/core/services/settings.service';
+import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 
 @Component({

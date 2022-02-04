@@ -10,7 +10,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
 import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
-import { AccountsService } from '@app/shared/services/accounts.service';
+import { AccountsApiService } from '@app/modules/accounts/services/api/accounts-api.service';
+import { AccountsService } from './services/accounts.service';
+import { OpenAccountAdapter } from './models/open-account-command.model';
+import { ModifyAccountAdapter } from './models/modify-account-command.model';
+import { AccountAdapter } from './models/account.model';
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -31,7 +35,7 @@ const COMPONENTS = [
     AccountsRoutingModule
   ],
   declarations: [COMPONENTS],
-  providers: [AccountsService],
+  providers: [AccountsService, AccountsApiService, AccountAdapter, OpenAccountAdapter, ModifyAccountAdapter],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AccountsModule { }

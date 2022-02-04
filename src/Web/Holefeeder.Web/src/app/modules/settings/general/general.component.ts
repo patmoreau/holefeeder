@@ -7,7 +7,7 @@ import {
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { Observable, tap } from 'rxjs';
-import { SettingsService } from '@app/core/settings.service';
+import { SettingsService } from '@app/core/services/settings.service';
 import { Settings, SettingsAdapter } from '@app/core/models/settings.model';
 
 @Component({

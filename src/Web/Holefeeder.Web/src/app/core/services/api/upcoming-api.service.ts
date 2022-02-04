@@ -4,8 +4,8 @@ import { format } from 'date-fns';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Upcoming, UpcomingAdapter } from "@app/core/models/upcoming.model";
-import { ConfigService } from '@app/config/config.service';
-import { DateInterval } from '../models/date-interval.model';
+import { ConfigService } from '@app/core/config/config.service';
+import { DateInterval } from '../../models/date-interval.model';
 
 const apiRoute: string = 'budgeting/api/v2/cashflows/get-upcoming';
 

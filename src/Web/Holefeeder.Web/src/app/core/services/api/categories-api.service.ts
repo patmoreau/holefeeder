@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ConfigService } from '@app/config/config.service';
+import { ConfigService } from '@app/core/config/config.service';
 import { map, Observable } from 'rxjs';
-import { Category, CategoryAdapter } from '../models/category.model';
+import { Category, CategoryAdapter } from '../../models/category.model';
 
 const apiRoute: string = 'budgeting/api/v2/categories';
 

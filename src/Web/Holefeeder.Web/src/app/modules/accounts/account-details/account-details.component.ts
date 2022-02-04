@@ -1,69 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAccount } from '@app/shared/interfaces/account.interface';
 import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
-import { AccountsService } from '@app/shared/services/accounts.service';
 import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
-import { AccountService } from '../account.service';
-import { filter, from, Observable, tap, switchMap, of, scan } from 'rxjs';
-import { UpcomingService } from '@app/core/upcoming.service';
+import { AccountsService } from '../services/accounts.service';
+import { filter, from, Observable, switchMap, of, scan, tap, map, switchMapTo } from 'rxjs';
+import { Account } from '../models/account.model';
+import { UpcomingService } from '@app/core/services/upcoming.service';
 
 @Component({
   selector: 'dfta-account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.scss'],
-  providers: [AccountService]
+  styleUrls: ['./account-details.component.scss']
 })
 export class AccountDetailsComponent implements OnInit {
-  account$: Observable<IAccount> | undefined;
+  account$: Observable<Account> | undefined;
   upcomingBalance$: Observable<number> | undefined;
-
-  account: IAccount | undefined;
 
   constructor(
     private accountsService: AccountsService,
     private upcomingService: UpcomingService,
-    private accountService: AccountService,
     private router: Router,
     private route: ActivatedRoute
   ) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(async params => {
-      this.account$ = this.accountsService.findOneByIdWithDetails(params['accountId'])
-        .pipe(
-          tap(account => this.accountService.accountSelected(account))
-        );
+    this.account$ = this.route.params
+      .pipe(
+        switchMap(params => this.accountsService.findById(params['accountId'])),
+        tap((account: Account) => this.accountsService.selectAccount(account))
+      );
 
-      this.upcomingBalance$ = this.account$.pipe(
-        switchMap(account => {
-          const accountMutiplier = accountTypeMultiplier(account.type);
-          return account ? this.upcomingService.upcoming$
-            .pipe(
-              switchMap(cashflows => from(cashflows)),
-              filter(cashflow => cashflow.account.id === account.id),
-              scan((sum, cashflow) => sum + (cashflow.amount *
-                categoryTypeMultiplier(cashflow.category.type) * accountMutiplier), account.balance)
-            ) : of(0);
-        })
-      )
-    });
+    this.upcomingBalance$ = this.account$.pipe(
+      filter(account => account !== undefined),
+      switchMap(account => this.upcomingService.getUpcoming(account.id)
+        .pipe(
+          switchMap(cashflows => from(cashflows)),
+          scan((sum, cashflow) => sum + (cashflow.amount *
+            categoryTypeMultiplier(cashflow.category.type) * accountTypeMultiplier(account.type)), account.balance)
+        ))
+    );
   }
 
   edit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
-  addTransaction(account: IAccount) {
+  addTransaction(account: Account) {
     this.router.navigate(['transactions', 'create'], { queryParams: { accountId: account.id } });
   }
 
-  balanceClass(account: IAccount): string {
+  balanceClass(account: Account): string {
     return this.amountClass(account.balance * accountTypeMultiplier(account.type));
   }
 
-  upcomingBalanceClass(account: IAccount, upcomingBalance: number): string {
+  upcomingBalanceClass(account: Account, upcomingBalance: number): string {
     return this.amountClass(upcomingBalance * accountTypeMultiplier(account.type));
   }
 

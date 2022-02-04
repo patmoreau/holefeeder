@@ -23,7 +23,7 @@
   </ng-template>
   </div>
   <div class="container mb-5">
-    <form [formGroup]="accountForm" (ngSubmit)="onSubmit(account)">
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="name">Name</label>
         <input class="form-control" type="text" formControlName="name" id="name" placeholder="account name..." />

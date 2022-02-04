@@ -5,12 +5,8 @@
     </a>
     <div class="d-flex flex-wrap justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <h1 class="mb-0 line-height-1 text-truncate d-none d-lg-block">
-          {{ account.name }}
-        </h1>
-        <h4 class="mb-0 line-height-1 text-truncate d-lg-none">
-          {{ account.name }}
-        </h4>
+        <h1 class="mb-0 line-height-1 text-truncate d-none d-lg-block"> {{ account.name }} </h1>
+        <h4 class="mb-0 line-height-1 text-truncate d-lg-none"> {{ account.name }} </h4>
       </div>
       <div class="actions p-0 d-flex align-items-center">
         <button type="button" class="btn btn-link" (click)="edit()">
@@ -32,18 +28,17 @@
         <div class="d-flex p-3 justify-content-between border-bottom">
           <small class="text-muted align-items-center">Projection</small>
           <small class="align-items-center font-weight-bold">
-            <ng-container *ngIf="upcomingBalance$ | async as upcomingBalance">
-              <span [className]="upcomingBalanceClass(account, upcomingBalance)">{{
-                upcomingBalance | currency
-                }}</span>
+            <ng-container *ngIf="upcomingBalance$ | async as upcomingBalance; else noUpcoming">
+              <span [className]="upcomingBalanceClass(account, upcomingBalance)">{{ upcomingBalance | currency }}</span>
             </ng-container>
+            <ng-template #noUpcoming>
+              <span [className]="upcomingBalanceClass(account, account.balance)">{{ account.balance | currency }}</span>
+            </ng-template>
           </small>
         </div>
         <div class="d-flex p-3 justify-content-between">
           <small class="text-muted">Updated</small>
-          <small class="text-muted">{{
-            account.updated | date: 'yyyy-MM-dd'
-            }}</small>
+          <small class="text-muted">{{ account.updated | date: 'yyyy-MM-dd' }}</small>
         </div>
       </div>
     </div>
@@ -58,4 +53,6 @@
   </ul>
   <router-outlet></router-outlet>
 </ng-container>
-<ng-template #loader>Loading account...</ng-template>
+<ng-template #loader>
+  <dfta-loader></dfta-loader>
+</ng-template>

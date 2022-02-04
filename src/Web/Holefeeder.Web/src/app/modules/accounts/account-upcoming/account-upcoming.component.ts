@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IAccount } from '@app/shared/interfaces/account.interface';
-import { Observable } from 'rxjs';
-import { AccountService } from '../account.service';
+import { ActivatedRoute } from '@angular/router';
+import { Account } from '@app/modules/accounts/models/account.model';
+import { Observable, switchMap, tap } from 'rxjs';
+import { AccountsService } from '../services/accounts.service';
 
 @Component({
   selector: 'dfta-account-upcoming',
@@ -9,11 +10,13 @@ import { AccountService } from '../account.service';
   styleUrls: ['./account-upcoming.component.scss']
 })
 export class AccountUpcomingComponent implements OnInit {
-  account$: Observable<IAccount> | undefined;
+  account$: Observable<Account> | undefined;
 
-  constructor(private accountService: AccountService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private accountsService: AccountsService) { }
 
   ngOnInit() {
-    this.account$ = this.accountService.accountSelected$;
+    this.account$ = this.accountsService.selectedAccount$;
   }
 }

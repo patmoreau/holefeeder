@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { StateService } from '@app/core/state.service';
+import { StateService } from '@app/core/services/state.service';
 import { filter, mergeMap, Observable } from 'rxjs';
-import { Category } from './models/category.model';
+import { Category } from '../models/category.model';
 import { CategoriesApiService } from './api/categories-api.service';
 
 interface CategoriesState {

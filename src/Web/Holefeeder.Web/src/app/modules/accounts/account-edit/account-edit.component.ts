@@ -4,12 +4,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { AccountsService } from '@app/shared/services/accounts.service';
-import { IAccount } from '@app/shared/interfaces/account.interface';
-import { Account } from '@app/shared/models/account.model';
-import { ModifyAccountCommand } from '@app/shared/accounts/modify-account-command.model';
-import { OpenAccountCommand } from '@app/shared/accounts/open-account-command.model';
 import { Observable, tap } from 'rxjs';
+import { Account, AccountAdapter } from '../models/account.model';
+import { AccountsService } from '../services/accounts.service';
 
 @Component({
   selector: 'dfta-account-edit',
@@ -18,7 +15,7 @@ import { Observable, tap } from 'rxjs';
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]
 })
 export class AccountEditComponent implements OnInit {
-  account$: Observable<IAccount> | undefined;
+  account$: Observable<Account> | undefined;
   isDirty = true;
 
   accountForm: FormGroup;
@@ -28,6 +25,7 @@ export class AccountEditComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private accountsService: AccountsService,
+    private adapter: AccountAdapter,
     private formBuilder: FormBuilder,
     private router: Router
   ) {
@@ -44,28 +42,16 @@ export class AccountEditComponent implements OnInit {
 
   async ngOnInit() {
     this.activatedRoute.params.subscribe(async params => {
-      this.account$ = this.accountsService.findOneByIdWithDetails(params['accountId'])
+      this.account$ = this.accountsService.findById(params['accountId'])
         .pipe(
-          tap(account => this.accountForm.patchValue(account ?? new Account()))
+          tap(account => this.accountForm.patchValue(account))
         );
     });
   }
 
-  async onSubmit(account: IAccount) {
-    let accountId: string;
-    if (account.id) {
-      accountId = account.id;
-      await this.accountsService.modify(
-        new ModifyAccountCommand(Object.assign({}, this.accountForm.value, {
-          id: account.id
-        }))
-      );
-    } else {
-      accountId = await this.accountsService.open(
-        new OpenAccountCommand(Object.assign({}, this.accountForm.value))
-      );
-    }
-    this.router.navigate(['accounts', accountId]);
+  async onSubmit() {
+    this.accountsService.save(this.adapter.adapt(this.accountForm.value))
+      .subscribe(id => this.router.navigate(['accounts', id]));
   }
 
   compareFn(optionOne: any, optionTwo: any): boolean {

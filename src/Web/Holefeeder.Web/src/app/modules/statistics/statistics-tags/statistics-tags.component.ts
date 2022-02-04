@@ -3,8 +3,8 @@ import { StatisticsService } from '../services/statistics.service';
 import { addMonths, startOfDay } from 'date-fns';
 import { combineLatest, Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { SettingsService } from '@app/core/settings.service';
-import { CategoriesService } from '@app/core/categories.service';
+import { SettingsService } from '@app/core/services/settings.service';
+import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 
 @Component({

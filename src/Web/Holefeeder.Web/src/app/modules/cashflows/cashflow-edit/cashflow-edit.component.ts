@@ -10,12 +10,11 @@ import { Cashflow } from '@app/shared/models/cashflow.model';
 import { startOfToday } from 'date-fns';
 import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
 import { CashflowDetail } from '@app/shared/models/cashflow-detail.model';
-import { AccountsService } from '@app/shared/services/accounts.service';
-import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
-import { IAccount } from '@app/shared/interfaces/account.interface';
 import { Observable } from 'rxjs';
-import { CategoriesService } from '@app/core/categories.service';
+import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
+import { AccountInfo } from '@app/core/models/account-info.model';
+import { AccountsInfoService } from '@app/core/services/account-info.service';
 
 @Component({
   selector: 'dfta-cashflow-edit',
@@ -33,7 +32,7 @@ export class CashflowEditComponent implements OnInit {
   cashflow: ICashflowDetail;
   cashflowForm: FormGroup;
 
-  accounts: PagingInfo<IAccount>;
+  accounts$: Observable<AccountInfo[]>;
   categories$: Observable<Category[]>;
 
   isLoaded = false;
@@ -42,7 +41,7 @@ export class CashflowEditComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private accountsService: AccountsService,
+    private accountsService: AccountsInfoService,
     private cashflowsService: CashflowsService,
     private categoriesService: CategoriesService,
     private formBuilder: FormBuilder,
@@ -65,12 +64,7 @@ export class CashflowEditComponent implements OnInit {
 
     this.account = this.activatedRoute.snapshot.queryParamMap.get('account');
 
-    this.accounts = await this.accountsService.find(null, null, [
-      '-favorite',
-      'name'
-    ], [
-      'inactive:eq:false'
-    ]);
+    this.accounts$ = this.accountsService.accounts$;
     this.categories$ = this.categoriesService.categories$;
 
     if (this.activatedRoute.snapshot.paramMap.has('cashflowId')) {
@@ -79,7 +73,7 @@ export class CashflowEditComponent implements OnInit {
       );
     } else {
       this.cashflow = Object.assign(new CashflowDetail(), {
-        account: this.account ? this.account : this.accounts[0].id,
+        account: this.account ? this.account : this.accountsService.findOneByIndex(0).id,
         // category: this.categories[0].id,
         intervalType: DateIntervalType.monthly,
         effectiveDate: startOfToday(),

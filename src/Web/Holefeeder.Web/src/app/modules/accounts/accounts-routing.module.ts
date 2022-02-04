@@ -35,7 +35,7 @@ const routes: Routes = [
         component: AccountDetailsComponent,
         canActivate: [MsalGuard],
         children: [
-          { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
+          { path: '', redirectTo: 'upcoming' },
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,

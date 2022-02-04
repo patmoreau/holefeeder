@@ -4,21 +4,20 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { NgbDateAdapter, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AccountsService } from '@app/shared/services/accounts.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
-import { IAccount } from '@app/shared/interfaces/account.interface';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { startOfToday } from 'date-fns';
 import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
 import { TransactionDetail } from '@app/shared/models/transaction-detail.model';
-import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
 import { MakePurchaseCommand } from '@app/shared/transactions/make-purchase-command.model';
 import { PayCashflowCommand } from '@app/shared/transactions/pay-cashflow-command.model';
 import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
 import { ModifyTransactionCommand } from '@app/shared/transactions/modify-transaction-command.model';
 import { Observable } from 'rxjs';
-import { CategoriesService } from '@app/core/categories.service';
+import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
+import { AccountInfo } from '@app/core/models/account-info.model';
+import { AccountsInfoService } from '@app/core/services/account-info.service';
 
 @Component({
   selector: 'dfta-transaction-edit',
@@ -36,7 +35,7 @@ export class TransactionEditComponent implements OnInit {
   transaction: ITransactionDetail;
   transactionForm: FormGroup;
 
-  accounts: PagingInfo<IAccount>;
+  accounts$: Observable<AccountInfo[]>;
   categories$: Observable<Category[]>;
   selectedCategory: Category | undefined;
   cashflow: ICashflowDetail;
@@ -48,7 +47,7 @@ export class TransactionEditComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private accountsService: AccountsService,
+    private accountsService: AccountsInfoService,
     private cashflowsService: CashflowsService,
     private categoriesService: CategoriesService,
     private transactionsService: TransactionsService,
@@ -59,13 +58,6 @@ export class TransactionEditComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.accounts = await this.accountsService.find(null, null, [
-      '-favorite',
-      'name'
-    ], [
-      'inactive:eq:false'
-    ]);
-
     this.payCashflow = this.route.snapshot.queryParamMap.has('cashflow');
 
     this.transactionForm = this.formBuilder.group({
@@ -77,14 +69,13 @@ export class TransactionEditComponent implements OnInit {
       tags: this.formBuilder.array([])
     });
 
+    this.accounts$ = this.accountsService.accounts$;
     this.categories$ = this.categoriesService.categories$;
 
-    let account: IAccount = this.accounts.items[0];
+    let accountId = this.accountsService.findOneByIndex(0)?.id;
     if (this.route.snapshot.queryParamMap.has('accountId')) {
-      const accountId = this.route.snapshot.queryParamMap.get('accountId');
-      account = await this.accountsService.findOneByIdWithDetails(accountId).toPromise();
+      accountId = this.route.snapshot.queryParamMap.get('accountId');
     }
-
 
     if (this.route.snapshot.paramMap.has('transactionId')) {
       const transactionId = this.route.snapshot.paramMap.get('transactionId');
@@ -110,7 +101,7 @@ export class TransactionEditComponent implements OnInit {
         });
       } else {
         this.transaction = Object.assign(new TransactionDetail(), {
-          account: account,
+          account: accountId,
           date: date,
           category: this.categoriesService.findOneByIndex(0)
         });

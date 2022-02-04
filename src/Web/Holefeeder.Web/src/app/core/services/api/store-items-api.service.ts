@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap, Observable } from 'rxjs';
-import { StoreItem, StoreItemAdapter } from '../models/store-item.model';
-import { ConfigService } from '@app/config/config.service';
+import { StoreItem, StoreItemAdapter } from '../../models/store-item.model';
+import { ConfigService } from '@app/core/config/config.service';
 
 const apiRoute: string = 'object-store/api/v2/store-items';
 

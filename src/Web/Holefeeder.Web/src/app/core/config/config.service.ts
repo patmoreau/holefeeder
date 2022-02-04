@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpBackend, HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from "rxjs/operators";
-import { IConfig } from "@app/config/config.interface";
+import { IConfig } from "@app/core/config/config.interface";
 import { BrowserCacheLocation, Configuration, InteractionType } from "@azure/msal-browser";
 import { MsalGuardConfiguration, MsalInterceptorConfiguration } from "@azure/msal-angular";
 

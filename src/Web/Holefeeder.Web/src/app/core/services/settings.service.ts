@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { StateService } from '@app/core/state.service';
+import { StateService } from '@app/core/services/state.service';
 import { Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { addDays, addMonths, addWeeks, addYears, compareAsc, startOfDay, startOfToday } from 'date-fns';
 import { DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
 import { StoreItemsService } from './api/store-items-api.service';
-import { Settings, SettingsStoreItemAdapter } from './models/settings.model';
-import { StoreItem } from './models/store-item.model';
-import { DateInterval } from './models/date-interval.model';
+import { Settings, SettingsStoreItemAdapter } from '../models/settings.model';
+import { StoreItem } from '../models/store-item.model';
+import { DateInterval } from '../models/date-interval.model';
 
 interface SettingsState {
   period: DateInterval;

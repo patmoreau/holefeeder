@@ -5,7 +5,7 @@ import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { TransactionsService } from '@app/shared/services/transactions.service';
 import { Upcoming } from "@app/core/models/upcoming.model";
 import { PayCashflowCommand } from '@app/shared/transactions/pay-cashflow-command.model';
-import { UpcomingService } from '@app/core/upcoming.service';
+import { UpcomingService } from '@app/core/services/upcoming.service';
 
 @Component({
   selector: 'dfta-upcoming-list',
