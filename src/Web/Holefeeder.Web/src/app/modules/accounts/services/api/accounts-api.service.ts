@@ -17,7 +17,7 @@ export class AccountsApiService extends BaseApiService {
     super();
   }
 
-  find(offset: number, limit: number, sort: string[], filter: string[]): Observable<PagingInfo<Account>> {
+  find(offset: number | null, limit: number | null, sort: string[], filter: string[]): Observable<PagingInfo<Account>> {
     let params = new HttpParams();
     if (offset) {
       params = params.set('offset', `${offset}`);

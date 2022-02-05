@@ -9,7 +9,7 @@ interface CategoriesState {
 }
 
 const initialState: CategoriesState = {
-  categories: undefined,
+  categories: [],
 };
 
 @Injectable({

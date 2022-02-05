@@ -36,9 +36,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeResult: string | undefined;
 
-  hoveredDate: NgbDate | undefined;
-  fromDate: NgbDate | undefined;
-  toDate: NgbDate | undefined;
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null = null;
+  toDate: NgbDate | null = null;
 
   isNavbarCollapsed = false;
 
@@ -180,6 +180,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   nextPeriod() {
+    if(this.toDate === undefined)
+    {
+      console.warn('No date defined');
+      return;
+    }
     const date = this.getDate(this.toDate);
     const period = this.settingsService.getPeriod(addDays(date, 2));
 
@@ -193,6 +198,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   previousPeriod() {
+    if(this.fromDate === undefined)
+    {
+      console.warn('No date defined');
+      return;
+    }
     const date = this.getDate(this.fromDate);
     const period = this.settingsService.getPeriod(addDays(date, -1));
 

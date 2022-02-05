@@ -15,7 +15,7 @@ export class CategoriesApiService {
   find(): Observable<Category[]> {
     return this.http.get(`${this.configService.config.apiUrl}/${apiRoute}`)
       .pipe(
-        map((data: any[]) => data.map(this.adapter.adapt))
+        map((data: any) => data.map(this.adapter.adapt))
       )
   }
 

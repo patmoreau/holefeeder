@@ -8,8 +8,8 @@ import { FormArray, FormBuilder } from '@angular/forms';
 })
 export class TagsInputComponent implements OnInit {
 
-  @Input() tagsArray: FormArray;
-  @Input() isReadonly: boolean;
+  @Input() tagsArray: FormArray = new FormArray([]);
+  @Input() isReadonly: boolean = false;
 
   constructor(private fb: FormBuilder) { }
 

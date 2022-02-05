@@ -20,7 +20,7 @@ const storeItemCode = 'settings';
 const initialState: SettingsState = {
   period: new DateInterval(startOfToday(), addMonths(startOfToday(), 1)),
   settings: new Settings(startOfToday(), DateIntervalType.monthly, 1),
-  storeItem: new StoreItem(undefined, storeItemCode, undefined)
+  storeItem: new StoreItem(null, storeItemCode, '')
 };
 
 @Injectable({

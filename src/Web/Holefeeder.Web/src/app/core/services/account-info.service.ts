@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
-import { filter, mergeMap, Observable, switchMap } from 'rxjs';
+import { filter, mergeMap, Observable } from 'rxjs';
 import { AccountInfo } from '../models/account-info.model';
-import { MessageAction } from '../models/message-action.enum';
 import { MessageType } from '../models/message-type.enum';
-import { Message } from '../models/message.model';
 import { AccountsInfoApiService } from './api/accounts-info-api.service';
 import { MessageService } from './message.service';
 
@@ -13,7 +11,7 @@ interface AccountsInfoState {
 }
 
 const initialState: AccountsInfoState = {
-  accounts: undefined,
+  accounts: [],
 };
 
 @Injectable({
@@ -53,9 +51,9 @@ export class AccountsInfoService extends StateService<AccountsInfoState> {
       );
   }
 
-  findOneByIndex(index: number): AccountInfo {
-    if (this.state.accounts === undefined) {
-      return undefined;
+  findOneByIndex(index: number): AccountInfo | null {
+    if (index < 0 || index > this.state.accounts.length) {
+      return null;
     }
     return this.state.accounts[index];
   }

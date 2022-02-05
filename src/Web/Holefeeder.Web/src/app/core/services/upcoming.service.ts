@@ -10,7 +10,7 @@ interface UpcomingState {
 }
 
 const initialState: UpcomingState = {
-  upcoming: undefined,
+  upcoming: [],
 };
 
 @Injectable({

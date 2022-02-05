@@ -10,14 +10,14 @@ import { AccountsApiService } from "./api/accounts-api.service";
 
 interface AccountState {
   accounts: Account[];
-  selected: Account;
+  selected: Account | null;
   count: number;
   inactive: boolean;
 }
 
 const initialState: AccountState = {
-  accounts: undefined,
-  selected: undefined,
+  accounts: [],
+  selected: null,
   count: 0,
   inactive: false
 };
@@ -33,7 +33,7 @@ export class AccountsService extends StateService<AccountState> {
 
   count$: Observable<number> = this.select((state) => state.count);
 
-  selectedAccount$: Observable<Account> = this.select((state) => state.selected);
+  selectedAccount$: Observable<Account | null> = this.select((state) => state.selected);
 
   constructor(private apiService: AccountsApiService, private messages: MessageService, private openAdapter: OpenAccountAdapter, private modifyAdapter: ModifyAccountAdapter) {
     super(initialState);
@@ -60,7 +60,7 @@ export class AccountsService extends StateService<AccountState> {
       })
   }
 
-  findById(id: string): Observable<Account> {
+  findById(id: string): Observable<Account | null> {
     return this.select((state) => state.accounts?.find(account => account.id === id));
   }
 

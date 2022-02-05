@@ -21,7 +21,7 @@ export class UpcomingApiService {
         .set('to', format(period.end, 'yyyy-MM-dd'))
     })
       .pipe(
-        map((data: any[]) => data.map(this.adapter.adapt))
+        map((data: any) => data.map(this.adapter.adapt))
       );
   }
 }

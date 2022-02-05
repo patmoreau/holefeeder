@@ -25,11 +25,12 @@ export class AccountsListComponent implements OnInit {
     private router: Router
   ) {
     this.accountTypeNames = AccountTypeNames;
+
+    this.accounts$ = this.accountService.accounts$
+    this.upcomingCashflows$ = this.upcomingService.upcoming$;
   }
 
   ngOnInit() {
-    this.accounts$ = this.accountService.accounts$
-    this.upcomingCashflows$ = this.upcomingService.upcoming$;
   }
 
   click(account: Account) {

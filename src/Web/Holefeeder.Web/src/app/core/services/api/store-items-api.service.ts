@@ -16,7 +16,7 @@ export class StoreItemsService {
   getStoreItem(code: string): Observable<StoreItem> {
     return this.http.get(`${this.configService.config.apiUrl}/${apiRoute}?filter=code:eq:${code}`)
       .pipe(
-        mergeMap((data: any[]) => data),
+        mergeMap((data: any) => data),
         map((item: any) => this.adapter.adapt(item))
       );
   }

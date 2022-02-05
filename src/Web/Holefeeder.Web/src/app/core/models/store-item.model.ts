@@ -3,7 +3,7 @@ import { Adapter } from "@app/shared/interfaces/adapter.interface";
 
 export class StoreItem {
   constructor(
-    public id: string,
+    public id: string | null,
     public code: string,
     public data: string) { }
 }
