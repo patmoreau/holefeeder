@@ -12,9 +12,7 @@ const initialState: CategoriesState = {
   categories: [],
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class CategoriesService extends StateService<CategoriesState> {
 
   categories$: Observable<Category[]> = this.select((state) => state.categories);

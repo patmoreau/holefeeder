@@ -47,7 +47,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   addTransaction(account: Account) {
-    this.router.navigate(['transactions', 'create'], { queryParams: { accountId: account.id } });
+    this.router.navigate(['transactions', 'make-purchase', account.id]);
   }
 
   balanceClass(account: Account): string {

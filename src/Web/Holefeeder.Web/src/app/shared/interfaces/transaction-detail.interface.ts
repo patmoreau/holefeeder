@@ -1,8 +1,8 @@
 import { ICategoryInfo } from './category-info.interface';
 import { IAccountInfo } from './account-info.interface';
 import { ICashflowInfo } from './cashflow-info.interface';
-import { TransactionDetail } from '../models/transaction-detail.model';
 import { dateFromUtc } from '../date-parser.helper';
+import { TransactionDetail } from '../models/transaction-detail.model';
 
 export interface ITransactionDetail {
     id: string;

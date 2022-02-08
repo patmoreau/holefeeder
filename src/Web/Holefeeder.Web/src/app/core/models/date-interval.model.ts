@@ -8,9 +8,7 @@ export class DateInterval {
   ) { }
 }
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class DateIntervalAdapter implements Adapter<DateInterval> {
   adapt(item: any): DateInterval {
     return new DateInterval(item.start, item.end);

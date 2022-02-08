@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TransactionsService } from '@app/shared/services/transactions.service';
-import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
 import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
+import { TransactionsService } from '@app/shared/services/transactions.service';
 
 @Component({
   selector: 'dfta-transactions-list',

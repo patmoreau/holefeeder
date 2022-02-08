@@ -14,24 +14,22 @@ const initialState: AccountsInfoState = {
   accounts: [],
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AccountsInfoService extends StateService<AccountsInfoState> {
 
-  accounts$: Observable<AccountInfo[]> = this.select((state) => state.accounts);
+  accounts$: Observable<AccountInfo[]> = this.select((state) => state.accounts).pipe(filter(accounts => accounts.length !== 0));
 
   constructor(private apiService: AccountsInfoApiService, private messages: MessageService) {
     super(initialState);
 
     this.messages.listen
       .pipe(
-        filter(message => message.type === MessageType.account || message.type === MessageType.general)
+        filter(message => message.type === MessageType.account || message.type === MessageType.transaction)
       ).subscribe(_ => {
         this.refresh();
       });
 
-      this.refresh();
+    this.refresh();
   }
 
   private refresh() {

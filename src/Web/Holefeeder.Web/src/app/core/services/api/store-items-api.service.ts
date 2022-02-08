@@ -6,9 +6,7 @@ import { ConfigService } from '@app/core/config/config.service';
 
 const apiRoute: string = 'object-store/api/v2/store-items';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class StoreItemsService {
   constructor(private http: HttpClient, private configService: ConfigService, private adapter: StoreItemAdapter) {
   }

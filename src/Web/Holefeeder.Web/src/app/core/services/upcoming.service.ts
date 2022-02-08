@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
-import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, map, Observable, Subject, switchMap, tap } from 'rxjs';
+import { MessageType } from '../models/message-type.enum';
 import { Upcoming } from '../models/upcoming.model';
 import { UpcomingApiService } from './api/upcoming-api.service';
+import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 
 interface UpcomingState {
@@ -13,23 +15,26 @@ const initialState: UpcomingState = {
   upcoming: [],
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UpcomingService extends StateService<UpcomingState> {
   private refresh$ = new Subject<void>();
 
   upcoming$: Observable<Upcoming[]> = this.select((state) => state.upcoming);
 
-  constructor(private apiService: UpcomingApiService, private settingsService: SettingsService) {
+  constructor(private apiService: UpcomingApiService, private settingsService: SettingsService, private messages: MessageService) {
     super(initialState);
+
+    this.messages.listen
+    .pipe(
+      filter(message => message.type === MessageType.transaction || message.type === MessageType.cashflow)
+    ).subscribe(_ => this.refresh());
 
     combineLatest([
       this.settingsService.period$,
-      this.refresh$
+      this.refresh$,
     ]).pipe(
       map(([period, _]) => period),
-      switchMap(period => this.apiService.findUpcoming(period))
+      switchMap(period => this.apiService.findUpcoming(period)),
     ).subscribe(items => this.setState({ upcoming: items }));
 
     this.refresh();
@@ -37,6 +42,10 @@ export class UpcomingService extends StateService<UpcomingState> {
 
   getUpcoming(accountId: string): Observable<Upcoming[]> {
     return this.select(state => state.upcoming.filter(u => u.account.id === accountId));
+  }
+
+  getById(id: string): Observable<Upcoming> {
+    return this.select(state => state.upcoming.find(u => u.id === id));
   }
 
   refresh() {

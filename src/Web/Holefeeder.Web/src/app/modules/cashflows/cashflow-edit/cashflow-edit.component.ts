@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CashflowsService } from '@app/shared/services/cashflows.service';
 import { NgbDateAdapter, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { DateIntervalTypeNames, DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
@@ -15,6 +14,7 @@ import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 import { AccountInfo } from '@app/core/models/account-info.model';
 import { AccountsInfoService } from '@app/core/services/account-info.service';
+import { CashflowsService } from '@app/shared/services/cashflows.service';
 
 @Component({
   selector: 'dfta-cashflow-edit',

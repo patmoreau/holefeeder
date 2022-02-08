@@ -1,119 +1,44 @@
-<ng-container *ngIf="isLoaded; else loader">
-  <div class="pt-3 pb-4 mb-3">
-    <div class="container">
-      <h4 class="mb-0 line-height-1 text-truncate">
-        {{ isNew ? 'Create' : 'Edit' }} transaction
-      </h4>
-      <div class="container mb-5">
-        <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="amount">Amount</label>
-            <input class="form-control" type="number" formControlName="amount" id="amount"
-              placeholder="transaction amount..." required dftaAutofocus />
-          </div>
-          <div class="form-group">
-            <label for="datepicker">Date</label>
-            <div class="input-group mb-2">
-              <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="date" ngbDatepicker
-                [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()" />
-              <div class="input-group-append">
-                <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
-                  <em class="bi bi-calendar-event"></em>
-                </a>
-              </div>
-            </div>
-            <em *ngIf="
-                transactionForm.get('date').invalid &&
-                transactionForm.get('date').dirty
-              " class="form-text text-danger">Required</em>
-          </div>
-          <div class="form-group">
-            <label for="category">Category</label>
-            <select class="form-control" formControlName="category" id="category" required>
-              <option *ngFor="let category of categories$ | async" [ngValue]="category.id">{{ category.name }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="account">Account</label>
-            <select class="form-control" formControlName="account" id="account" required>
-              <option *ngFor="let account of accounts$ | async" [ngValue]="account.id">{{ account.name }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="tags">Tags</label>
-            <dfta-tags-input formArrayName="tags" id="tags" [tagsArray]="tags" [isReadonly]="payCashflow">
-            </dfta-tags-input>
-          </div>
-          <div class="form-group">
-            <label for="description">Note</label>
-            <input class="form-control" type="text" formControlName="description" id="description"
-              [placeholder]="'transaction note...'" />
-          </div>
+<ng-container *ngIf="values$ | async as values">
 
-          <div class="d-flex justify-content-end mt-4">
-            <button class="btn btn-danger me-2" type="button" (click)="onDelete(confirmDelete)" [disabled]="isNew">
-              Delete
-            </button>
-            <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
-              Cancel
-            </button>
-            <button type="submit" class="btn btn-primary" [disabled]="!transactionForm.valid">
-              Save
-            </button>
-          </div>
-
-          <em *ngIf="!transactionForm.valid" class="form-text text-danger">{{
-            transactionForm.errors
-            }}</em>
-        </form>
+  <div [formGroup]="form" class="container mt-2">
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input class="form-control" type="number" formControlName="amount" id="amount" placeholder="transaction amount..."
+        required dftaAutofocus />
+    </div>
+    <div class="form-group">
+      <label for="datepicker">Date</label>
+      <div class="input-group mb-2">
+        <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="date" ngbDatepicker
+          [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()" />
+        <div class="input-group-append">
+          <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
+            <em class="bi bi-calendar-event"></em>
+          </a>
+        </div>
       </div>
+      <em *ngIf="form.get('date').invalid && form.get('date').dirty" class="form-text text-danger">Required</em>
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select class="form-control" formControlName="category" id="category" required>
+        <option *ngFor="let category of values.categories" [ngValue]="category.id">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="account">Account</label>
+      <select class="form-control" formControlName="account" id="account" required>
+        <option *ngFor="let account of values.accounts" [ngValue]="account.id">{{ account.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="tags">Tags</label>
+      <dfta-tags-input formArrayName="tags" id="tags" [tagsArray]="tags"></dfta-tags-input>
+    </div>
+    <div class="form-group">
+      <label for="description">Note</label>
+      <input class="form-control" type="text" formControlName="description" id="description"
+        [placeholder]="'transaction note...'" />
     </div>
   </div>
 </ng-container>
-
-<ng-template #confirm let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <div class="modal-body">
-      <div *ngIf="confirmMessages" class="alert alert-warning" role="alert">
-        {{ confirmMessages }}
-      </div>
-      <strong>Are you sure you want to save this transaction?</strong>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="modal.dismiss()">
-        Cancel
-      </button>
-      <button type="button" class="btn btn-danger" (click)="onConfirm()">
-        Confirm
-      </button>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #confirmDelete let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title text-danger" id="modal-delete-title">Confirmation</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <strong>Are you sure you want to delete this transaction?</strong>
-  </div>
-  <div class="modal-footer">
-    <button type="button" ngbAutofocus class="btn btn-secondary" (click)="modal.dismiss()">
-      Cancel
-    </button>
-    <button type="button" class="btn btn-danger" (click)="modal.close()">
-      Delete
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #loader>
-  <dfta-loader></dfta-loader>
-</ng-template>

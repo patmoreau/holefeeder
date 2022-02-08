@@ -17,7 +17,10 @@ export class AccountsInfoApiService extends BaseApiService {
   }
 
   find(): Observable<AccountInfo[]> {
-    let params = new HttpParams().append('filter', `inactive:eq:false`);
+    let params = new HttpParams()
+      .append('filter', `inactive:eq:false`)
+      .append('sort', '-favorite')
+      .append('sort', 'name');
     return this.http
       .get<Object[]>(`${this.configService.config.apiUrl}/${apiRoute}`, {
         params: params

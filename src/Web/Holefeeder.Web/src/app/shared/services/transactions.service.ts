@@ -4,10 +4,10 @@ import { ITransactionDetail, transactionDetailFromServer } from '../interfaces/t
 import { HttpParams } from '@angular/common/http';
 import { PagingInfo } from '../interfaces/paging-info.interface';
 import { map } from 'rxjs/operators';
-import { MakePurchaseCommand } from '../transactions/make-purchase-command.model';
-import { TransferMoneyCommand } from '../transactions/transfer-money-command.model';
-import { PayCashflowCommand } from '../transactions/pay-cashflow-command.model';
-import { ModifyTransactionCommand } from '../transactions/modify-transaction-command.model';
+import { ModifyTransactionCommand } from '../models/modify-transaction-command.model';
+import { MakePurchaseCommand } from '../models/make-purchase-command.model';
+import { TransferMoneyCommand } from '../models/transfer-money-command.model';
+import { PayCashflowCommand } from '../models/pay-cashflow-command.model';
 
 @Injectable()
 export class TransactionsService {

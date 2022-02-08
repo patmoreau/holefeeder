@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CashflowsService } from '../../../shared/services/cashflows.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
 import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
+import { CashflowsService } from '@app/shared/services/cashflows.service';
 
 @Component({
   selector: 'dfta-cashflows-list',

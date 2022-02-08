@@ -23,9 +23,7 @@ const initialState: SettingsState = {
   storeItem: new StoreItem(null, storeItemCode, '')
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SettingsService extends StateService<SettingsState> {
 
   private userEvent$ = new Subject<boolean>();

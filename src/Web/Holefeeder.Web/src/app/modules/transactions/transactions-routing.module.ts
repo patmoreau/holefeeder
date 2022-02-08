@@ -1,23 +1,35 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TransactionEditComponent } from './transaction-edit/transaction-edit.component';
 import { MsalGuard } from '@azure/msal-angular';
+import { PayCashflowComponent } from './pay-cashflow/pay-cashflow.component';
+import { ModifyTransactionComponent } from './modify-transaction/modify-transaction.component';
+import { MakePurchaseComponent } from './make-purchase/make-purchase.component';
 
-const authRoutes: Routes = [
+const routes: Routes = [
   {
-    path: 'create',
-    component: TransactionEditComponent,
+    path: 'pay-cashflow/:cashflowId',
+    component: PayCashflowComponent,
+    canActivate: [MsalGuard],
+  },
+  {
+    path: 'make-purchase',
+    component: MakePurchaseComponent,
+    canActivate: [MsalGuard],
+  },
+  {
+    path: 'make-purchase/:accountId',
+    component: MakePurchaseComponent,
     canActivate: [MsalGuard],
   },
   {
     path: ':transactionId',
-    component: TransactionEditComponent,
+    component: ModifyTransactionComponent,
     canActivate: [MsalGuard],
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(authRoutes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class TransactionsRoutingModule { }

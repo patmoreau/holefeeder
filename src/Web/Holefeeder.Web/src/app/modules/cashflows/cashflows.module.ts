@@ -10,7 +10,8 @@ import { CashflowsComponent } from './cashflows/cashflows.component';
 
 const COMPONENTS = [
   CashflowsListComponent,
-  CashflowEditComponent
+  CashflowEditComponent,
+  CashflowsComponent
 ];
 
 @NgModule({
@@ -22,7 +23,7 @@ const COMPONENTS = [
     SharedModule,
     CashflowsRoutingModule
   ],
-  declarations: [COMPONENTS, CashflowsComponent],
+  declarations: [COMPONENTS],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CashflowsModule { }

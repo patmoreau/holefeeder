@@ -79,14 +79,10 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
     ToastNoAnimationModule.forRoot()
   ],
   providers: [
-    CategoriesService,
-    CategoriesApiService,
-    ConfigService,
     DateIntervalAdapter,
     SettingsAdapter,
     SettingsStoreItemAdapter,
     StoreItemAdapter,
-    SettingsService,
     {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/config'},
     {
       provide: APP_INITIALIZER, useFactory: initializerFactory,
