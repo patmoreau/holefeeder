@@ -5,7 +5,7 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { AccountsService } from '../services/accounts.service';
 
 @Component({
-  selector: 'dfta-account-upcoming',
+  selector: 'app-account-upcoming',
   templateUrl: './account-upcoming.component.html',
   styleUrls: ['./account-upcoming.component.scss']
 })

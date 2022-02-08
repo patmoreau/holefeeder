@@ -4,7 +4,7 @@ import { Account } from '../models/account.model';
 import { AccountsService } from '../services/accounts.service';
 
 @Component({
-  selector: 'dfta-account-transactions',
+  selector: 'app-account-transactions',
   templateUrl: './account-transactions.component.html',
   styleUrls: ['./account-transactions.component.scss']
 })

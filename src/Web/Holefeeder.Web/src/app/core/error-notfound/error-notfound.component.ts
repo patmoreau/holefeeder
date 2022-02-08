@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'dfta-error-notfound',
+  selector: 'app-error-notfound',
   templateUrl: './error-notfound.component.html',
   styleUrls: ['./error-notfound.component.scss']
 })

@@ -25,10 +25,10 @@
     </div>
   </div>
   <div class="container">
-    <dfta-transaction-list-item [description]="
+    <app-transaction-list-item [description]="
         cashflow.description ? cashflow.description : cashflow.category.name
       " [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [tags]="cashflow.tags" (click)="click(cashflow.id)"
-      *ngFor="let cashflow of cashflows.items"></dfta-transaction-list-item>
+      *ngFor="let cashflow of cashflows.items"></app-transaction-list-item>
   </div>
   <ng-template #noItems>No cashflows defined!</ng-template>
 </ng-container>

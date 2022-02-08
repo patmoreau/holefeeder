@@ -1,7 +1,7 @@
 <ng-container *ngIf="(transactions$ | async) as transactions; else loader">
     <ng-container *ngIf="transactions.items; else noItems">
       <div class="container">
-        <dfta-transaction-list-item
+        <app-transaction-list-item
         [description]="
           transaction.description
             ? transaction.description
@@ -12,7 +12,7 @@
         [tags]="transaction.tags"
         (click)="click(transaction)"
         *ngFor="let transaction of transactions.items"
-      ></dfta-transaction-list-item>
+      ></app-transaction-list-item>
     </div>
   </ng-container>
   <ngb-pagination

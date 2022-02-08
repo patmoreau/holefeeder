@@ -26,7 +26,7 @@ interface IdTokenClaims extends AuthenticationResult {
 }
 
 @Component({
-  selector: 'dfta-header',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

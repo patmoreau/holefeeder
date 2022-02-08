@@ -6,7 +6,7 @@ import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 
 @Component({
-  selector: 'dfta-cashflows-list',
+  selector: 'app-cashflows-list',
   templateUrl: './cashflows-list.component.html',
   styleUrls: ['./cashflows-list.component.scss']
 })

@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
+import { dateToUtc } from "@app/shared/date-parser.helper";
+import { AccountType } from "@app/shared/enums/account-type.enum";
 import { Adapter } from "@app/shared/interfaces/adapter.interface";
-import { dateToUtc } from "../../../shared/date-parser.helper";
 
 export class OpenAccountCommand {
   constructor(
-    public type: string,
+    public type: AccountType,
     public name: string,
     public openDate: Date,
     public openBalance: number,

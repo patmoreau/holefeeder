@@ -8,7 +8,7 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 import { PayCashflowCommand } from '@app/shared/models/pay-cashflow-command.model';
 
 @Component({
-  selector: 'dfta-dashboard-home',
+  selector: 'app-dashboard-home',
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.scss']
 })

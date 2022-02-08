@@ -1,12 +1,12 @@
-<ng-container *ngIf="values$ | async; else loader">
+<ng-container>
   <div class="pt-3 pb-4 mb-3">
     <div class="container">
       <h4 class="mb-0 line-height-1 text-truncate">
-        Pay cashflow
+        Open account
       </h4>
       <div class="container mb-5">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <app-transaction-edit></app-transaction-edit>
+          <app-account-edit></app-account-edit>
 
           <div class="d-flex justify-content-end mt-4">
             <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
@@ -23,6 +23,3 @@
     </div>
   </div>
 </ng-container>
-<ng-template #loader>
-  <app-loader></app-loader>
-</ng-template>

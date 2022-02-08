@@ -18,13 +18,13 @@
   </div>
 </div>
 <div class="container">
-  <dfta-transaction-list-item *ngFor="let upcoming of (upcoming$ | async)"
+  <app-transaction-list-item *ngFor="let upcoming of (upcoming$ | async)"
     [description]="upcoming.description ? upcoming.description : upcoming.category.name" [amount]="upcoming.amount"
     [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true" (action)="action($event, upcoming)">
-  </dfta-transaction-list-item>
+  </app-transaction-list-item>
 </div>
 <ng-template #loader>
-  <dfta-loader [small]="true"></dfta-loader>
+  <app-loader [small]="true"></app-loader>
 </ng-template>
 <ng-template #noItems>
   <strong class="ms-3 text-muted">all good!</strong>

@@ -1,5 +1,5 @@
-import { DateIntervalType } from '../../shared/enums/date-interval-type.enum';
 import { Injectable } from '@angular/core';
+import { DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
 import { Adapter } from '@app/shared/interfaces/adapter.interface';
 import { nameofFactory } from '@app/shared/nameof-factory.helper';
 import { startOfToday } from 'date-fns';
@@ -14,9 +14,7 @@ export class Settings {
   ) { }
 }
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class SettingsStoreItemAdapter implements Adapter<Settings> {
   adapt(item: any): Settings {
     if (item?.data === undefined) {

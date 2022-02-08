@@ -8,9 +8,7 @@ export class StoreItem {
     public data: string) { }
 }
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class StoreItemAdapter implements Adapter<StoreItem> {
   adapt(item: any): StoreItem {
     return new StoreItem(item.id, item.code, item.data);

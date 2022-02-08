@@ -8,7 +8,7 @@ import { Account } from '../models/account.model';
 import { UpcomingService } from '@app/core/services/upcoming.service';
 
 @Component({
-  selector: 'dfta-account-details',
+  selector: 'app-account-details',
   templateUrl: './account-details.component.html',
   styleUrls: ['./account-details.component.scss']
 })

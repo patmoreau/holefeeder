@@ -12,7 +12,7 @@ import { MakePurchaseCommandAdapter } from '../models/make-purchase-command.mode
 const accountIdParamName = 'accountId';
 
 @Component({
-  selector: 'dfta-make-purchase',
+  selector: 'app-make-purchase',
   templateUrl: './make-purchase.component.html',
   styleUrls: ['./make-purchase.component.scss']
 })

@@ -7,6 +7,8 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
 import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
 import { MsalGuard } from '@azure/msal-angular';
+import { OpenAccountComponent } from './open-account/open-account.component';
+import { ModifyAccountComponent } from './modify-account/modify-account.component';
 
 const routes: Routes = [
   {
@@ -22,12 +24,12 @@ const routes: Routes = [
       },
       {
         path: 'create',
-        component: AccountEditComponent,
+        component: OpenAccountComponent,
         canActivate: [MsalGuard],
       },
       {
         path: ':accountId/edit',
-        component: AccountEditComponent,
+        component: ModifyAccountComponent,
         canActivate: [MsalGuard],
       },
       {

@@ -1,7 +1,7 @@
 <ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loader">
   <ng-container *ngIf="upcomingCashflows.length; else noItems">
     <div class="container">
-      <dfta-transaction-list-item
+      <app-transaction-list-item
       [description]="
       upcomingCashflow.description
           ? upcomingCashflow.description
@@ -13,7 +13,7 @@
       [allowSave]="true"
       (action)="action($event, upcomingCashflow)"
       *ngFor="let upcomingCashflow of upcomingCashflows"
-    ></dfta-transaction-list-item>
+    ></app-transaction-list-item>
     </div>
   </ng-container>
   <ng-template #noItems>Nothing to show!</ng-template>

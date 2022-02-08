@@ -12,7 +12,7 @@ import { ModalService } from '@app/shared/services/modal.service';
 const transactionIdParamName = 'transactionId';
 
 @Component({
-  selector: 'dfta-modify-transaction',
+  selector: 'app-modify-transaction',
   templateUrl: './modify-transaction.component.html',
   styleUrls: ['./modify-transaction.component.scss']
 })

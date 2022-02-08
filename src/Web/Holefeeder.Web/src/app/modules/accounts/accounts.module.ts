@@ -15,6 +15,8 @@ import { AccountsService } from './services/accounts.service';
 import { OpenAccountAdapter } from './models/open-account-command.model';
 import { ModifyAccountAdapter } from './models/modify-account-command.model';
 import { AccountAdapter } from './models/account.model';
+import { OpenAccountComponent } from './open-account/open-account.component';
+import { ModifyAccountComponent } from './modify-account/modify-account.component';
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -34,7 +36,7 @@ const COMPONENTS = [
     SharedModule,
     AccountsRoutingModule
   ],
-  declarations: [COMPONENTS],
+  declarations: [COMPONENTS, OpenAccountComponent, ModifyAccountComponent],
   providers: [AccountsService, AccountsApiService, AccountAdapter, OpenAccountAdapter, ModifyAccountAdapter],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

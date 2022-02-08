@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'dfta-cashflows',
+  selector: 'app-cashflows',
   templateUrl: './cashflows.component.html',
   styleUrls: ['./cashflows.component.scss']
 })

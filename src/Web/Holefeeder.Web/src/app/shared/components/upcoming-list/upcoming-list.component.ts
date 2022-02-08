@@ -8,7 +8,7 @@ import { TransactionsService } from '@app/shared/services/transactions.service';
 import { PayCashflowCommand } from '@app/shared/models/pay-cashflow-command.model';
 
 @Component({
-  selector: 'dfta-upcoming-list',
+  selector: 'app-upcoming-list',
   templateUrl: './upcoming-list.component.html',
   styleUrls: ['./upcoming-list.component.scss']
 })

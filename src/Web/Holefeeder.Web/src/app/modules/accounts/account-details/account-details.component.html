@@ -9,10 +9,10 @@
         <h4 class="mb-0 line-height-1 text-truncate d-lg-none"> {{ account.name }} </h4>
       </div>
       <div class="actions p-0 d-flex align-items-center">
-        <button type="button" class="btn btn-link" (click)="edit()">
+        <button type="button" aria-label="edit" class="btn btn-link" (click)="edit()">
           <em class="bi bi-pencil-square"></em>
         </button>
-        <button type="button" class="btn btn-link" (click)="addTransaction(account)">
+        <button type="button" aria-label="add-transaction" class="btn btn-link" (click)="addTransaction(account)">
           <em class="bi bi-plus-square"></em>
         </button>
       </div>
@@ -54,5 +54,5 @@
   <router-outlet></router-outlet>
 </ng-container>
 <ng-template #loader>
-  <dfta-loader></dfta-loader>
+  <app-loader></app-loader>
 </ng-template>

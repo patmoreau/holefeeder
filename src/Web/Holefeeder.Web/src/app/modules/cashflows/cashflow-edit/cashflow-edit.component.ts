@@ -17,7 +17,7 @@ import { AccountsInfoService } from '@app/core/services/account-info.service';
 import { CashflowsService } from '@app/shared/services/cashflows.service';
 
 @Component({
-  selector: 'dfta-cashflow-edit',
+  selector: 'app-cashflow-edit',
   templateUrl: './cashflow-edit.component.html',
   styleUrls: ['./cashflow-edit.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]

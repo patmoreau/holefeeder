@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { MessageAction } from '@app/shared/enums/message-action.enum';
+import { MessageType } from '@app/shared/enums/message-type.enum';
 import { Observable, Subject } from 'rxjs';
-import { MessageAction } from '../models/message-action.enum';
-import { MessageType } from '../models/message-type.enum';
 import { Message } from '../models/message.model';
 
 @Injectable({ providedIn: 'root' })

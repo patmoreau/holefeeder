@@ -7,7 +7,7 @@ import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.in
 import { TransactionsService } from '@app/shared/services/transactions.service';
 
 @Component({
-  selector: 'dfta-transactions-list',
+  selector: 'app-transactions-list',
   templateUrl: './transactions-list.component.html',
   styleUrls: ['./transactions-list.component.scss']
 })

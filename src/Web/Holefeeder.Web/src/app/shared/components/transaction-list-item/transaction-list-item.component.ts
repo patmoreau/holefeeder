@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'dfta-transaction-list-item',
+  selector: 'app-transaction-list-item',
   templateUrl: './transaction-list-item.component.html',
   styleUrls: ['./transaction-list-item.component.scss']
 })

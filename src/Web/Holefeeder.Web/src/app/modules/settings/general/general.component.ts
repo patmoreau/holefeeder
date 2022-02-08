@@ -11,7 +11,7 @@ import { SettingsService } from '@app/core/services/settings.service';
 import { Settings, SettingsAdapter } from '@app/core/models/settings.model';
 
 @Component({
-  selector: 'dfta-general',
+  selector: 'app-general',
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]

@@ -8,9 +8,7 @@ export class AccountInfo {
   ) { }
 }
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class AccountInfoAdapter implements Adapter<AccountInfo> {
   adapt(item: any): AccountInfo {
     return new AccountInfo(item.id, item.name);

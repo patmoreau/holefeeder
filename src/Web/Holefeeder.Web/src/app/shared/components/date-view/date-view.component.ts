@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 
 @Component({
-  selector: 'dfta-date-view',
+  selector: 'app-date-view',
   templateUrl: './date-view.component.html',
   styleUrls: ['./date-view.component.scss']
 })

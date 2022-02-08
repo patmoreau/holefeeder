@@ -1,10 +1,10 @@
 <ng-container *ngIf="settings$ | async"></ng-container>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a aria-label="home" class="navbar-brand" href="#">
       <em class="bi bi-safe"></em>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+    <button class="navbar-toggler" aria-label="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
       aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -89,13 +89,13 @@
           </ngb-datepicker>
         </div>
         <div class="d-flex p-1 justify-content-center">
-          <button type="button" class="btn btn-outline" (click)="previousPeriod()" ngbTooltip="Previous period">
+          <button type="button" aria-label="previous-period" class="btn btn-outline" (click)="previousPeriod()" ngbTooltip="Previous period">
             <em class="bi bi-calendar-minus"></em>
           </button>
-          <button type="button" class="btn btn-outline ms-3" (click)="currentPeriod()" ngbTooltip="Current period">
+          <button type="button" aria-label="current-period" class="btn btn-outline ms-3" (click)="currentPeriod()" ngbTooltip="Current period">
             <em class="bi bi-calendar-check"></em>
           </button>
-          <button type="button" class="btn btn-outline ms-3" (click)="nextPeriod()" ngbTooltip="Next period">
+          <button type="button" aria-label="next-period" class="btn btn-outline ms-3" (click)="nextPeriod()" ngbTooltip="Next period">
             <em class="bi bi-calendar-plus"></em>
           </button>
         </div>

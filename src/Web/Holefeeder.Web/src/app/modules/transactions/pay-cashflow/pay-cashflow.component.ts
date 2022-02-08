@@ -11,7 +11,7 @@ import { PayCashflowCommandAdapter } from '../models/pay-cashflow-command.model'
 const cashflowIdParamName = 'cashflowId';
 
 @Component({
-  selector: 'dfta-pay-cashflow',
+  selector: 'app-pay-cashflow',
   templateUrl: './pay-cashflow.component.html',
   styleUrls: ['./pay-cashflow.component.scss']
 })

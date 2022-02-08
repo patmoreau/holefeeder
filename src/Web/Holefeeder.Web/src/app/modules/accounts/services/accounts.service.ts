@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "@app/core/services/message.service";
-import { MessageType } from "@app/core/models/message-type.enum";
 import { StateService } from "@app/core/services/state.service";
-import { combineLatest, filter, map, Observable, switchMap } from "rxjs";
+import { combineLatest, filter, map, Observable, tap } from "rxjs";
 import { Account } from "../models/account.model";
-import { ModifyAccountAdapter } from "../models/modify-account-command.model";
-import { OpenAccountAdapter } from "../models/open-account-command.model";
+import { ModifyAccountAdapter, ModifyAccountCommand } from "../models/modify-account-command.model";
+import { OpenAccountAdapter, OpenAccountCommand } from "../models/open-account-command.model";
 import { AccountsApiService } from "./api/accounts-api.service";
+import { MessageAction } from "@app/shared/enums/message-action.enum";
+import { MessageType } from "@app/shared/enums/message-type.enum";
 
 interface AccountState {
   accounts: Account[];
@@ -76,11 +77,16 @@ export class AccountsService extends StateService<AccountState> {
     this.setState({ selected: account });
   }
 
-  save(account: Account): Observable<string> {
-    if (account.id === undefined) {
-      return this.apiService.open(this.openAdapter.adapt(account));
-    } else {
-      return this.apiService.modify(this.modifyAdapter.adapt(account)).pipe(map(_ => account.id));
-    }
+  open(account: OpenAccountCommand): Observable<string> {
+    return this.apiService.open(account)
+      .pipe(tap(id => this.messages.sendMessage(MessageType.account, MessageAction.post, { id: id })));
+  }
+
+  modify(account: ModifyAccountCommand): Observable<string> {
+    return this.apiService.modify(account)
+      .pipe(
+        map(_ => account.id),
+        tap(id => this.messages.sendMessage(MessageType.account, MessageAction.post, { id: id }))
+      );
   }
 }

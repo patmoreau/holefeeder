@@ -15,7 +15,7 @@
         <input class="form-check-input" type="checkbox" id="inactive" (change)="inactiveChange()" />
         <label class="custom-control-label" for="inactive">Inactive</label>
       </div>
-      <button type="button" class="btn btn-link" routerLink="create">
+      <button type="button" aria-label="create" class="btn btn-link" routerLink="create">
         <em class="bi bi-plus-square"></em>
       </button>
     </div>
@@ -60,7 +60,7 @@
   </div>
 </ng-container>
 <ng-template #loader>
-  <dfta-loader [small]="true"></dfta-loader>
+  <app-loader [small]="true"></app-loader>
 </ng-template>
 <ng-template #noItems>
   <strong class="ms-3 text-muted">all good!</strong>

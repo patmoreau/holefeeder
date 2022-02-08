@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
+import { MessageType } from '@app/shared/enums/message-type.enum';
 import { filter, mergeMap, Observable } from 'rxjs';
 import { AccountInfo } from '../models/account-info.model';
-import { MessageType } from '../models/message-type.enum';
 import { AccountsInfoApiService } from './api/accounts-info-api.service';
 import { MessageService } from './message.service';
 

@@ -9,7 +9,7 @@ import { AccountInfo } from '@app/core/models/account-info.model';
 import { AccountsInfoService } from '@app/core/services/account-info.service';
 
 @Component({
-  selector: 'dfta-transaction-edit',
+  selector: 'app-transaction-edit',
   templateUrl: './transaction-edit.component.html',
   styleUrls: ['./transaction-edit.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]

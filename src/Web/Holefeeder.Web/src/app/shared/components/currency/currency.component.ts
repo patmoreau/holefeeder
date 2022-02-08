@@ -9,7 +9,7 @@ import {
 import { BaseControlValueAccessor } from '@app/shared/base-control-value.accessor';
 
 @Component({
-  selector: 'dfta-currency',
+  selector: 'app-currency',
   templateUrl: './currency.component.html',
   styleUrls: ['./currency.component.scss'],
   providers: [

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
+import { MessageType } from '@app/shared/enums/message-type.enum';
 import { combineLatest, filter, map, Observable, Subject, switchMap, tap } from 'rxjs';
-import { MessageType } from '../models/message-type.enum';
 import { Upcoming } from '../models/upcoming.model';
 import { UpcomingApiService } from './api/upcoming-api.service';
 import { MessageService } from './message.service';

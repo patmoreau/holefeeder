@@ -6,8 +6,8 @@ import { TransactionDetail } from "../models/transaction-detail.model";
 import { MakePurchaseCommand } from "../models/make-purchase-command.model";
 import { ModifyTransactionCommand } from "../models/modify-transaction-command.model";
 import { PayCashflowCommand } from "../models/pay-cashflow-command.model";
-import { MessageType } from "@app/core/models/message-type.enum";
-import { MessageAction } from "@app/core/models/message-action.enum";
+import { MessageAction } from "@app/shared/enums/message-action.enum";
+import { MessageType } from "@app/shared/enums/message-type.enum";
 
 @Injectable()
 export class TransactionsService {

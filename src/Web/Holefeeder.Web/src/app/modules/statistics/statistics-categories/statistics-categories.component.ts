@@ -9,7 +9,7 @@ import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 
 @Component({
-  selector: 'dfta-statistics-categories',
+  selector: 'app-statistics-categories',
   templateUrl: './statistics-categories.component.html',
   styleUrls: ['./statistics-categories.component.scss']
 })
