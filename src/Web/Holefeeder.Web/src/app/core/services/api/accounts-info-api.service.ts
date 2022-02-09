@@ -3,14 +3,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ConfigService } from '@app/core/config/config.service';
-import { BaseApiService } from '@app/shared/services/base-api.service';
+import { BaseApiService } from '@app/core/services/api/base-api.service';
 import { AccountInfo, AccountInfoAdapter } from '@app/core/models/account-info.model';
 
 const apiRoute: string = 'budgeting/api/v2/accounts';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AccountsInfoApiService extends BaseApiService {
   constructor(private http: HttpClient, private configService: ConfigService, private adapter: AccountInfoAdapter) {
     super();

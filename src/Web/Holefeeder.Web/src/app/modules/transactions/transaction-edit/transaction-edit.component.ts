@@ -16,9 +16,9 @@ import { AccountsInfoService } from '@app/core/services/account-info.service';
 })
 export class TransactionEditComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
 
-  values$: Observable<{ accounts: AccountInfo[], categories: Category[] }>;
+  values$!: Observable<{ accounts: AccountInfo[], categories: Category[] }>;
 
   constructor(
     private rootFormGroup: FormGroupDirective,

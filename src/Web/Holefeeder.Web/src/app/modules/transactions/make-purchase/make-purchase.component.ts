@@ -6,8 +6,8 @@ import { Location } from '@angular/common';
 import { AccountsInfoService } from '@app/core/services/account-info.service';
 import { startOfToday } from 'date-fns';
 import { CategoriesService } from '@app/core/services/categories.service';
-import { TransactionsService } from '../services/transactions.service';
-import { MakePurchaseCommandAdapter } from '../models/make-purchase-command.model';
+import { TransactionsService } from '../../../core/services/transactions.service';
+import { MakePurchaseCommandAdapter } from '../../../core/models/make-purchase-command.model';
 
 const accountIdParamName = 'accountId';
 
@@ -18,9 +18,9 @@ const accountIdParamName = 'accountId';
 })
 export class MakePurchaseComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
 
-  values$: Observable<any>;
+  values$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,

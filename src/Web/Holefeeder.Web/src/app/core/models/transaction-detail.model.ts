@@ -18,7 +18,7 @@ export class TransactionDetail {
   ) { }
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TransactionDetailAdapter implements Adapter<TransactionDetail> {
   adapt(item: any): TransactionDetail {
     return new TransactionDetail(item.id, dateFromUtc(item.date), item.amount, item.description,

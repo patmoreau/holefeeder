@@ -6,17 +6,16 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./transaction-list-item.component.scss']
 })
 export class TransactionListItemComponent implements OnInit {
-  @Input() description: string;
-  @Input() amount: number;
-  @Input() date: Date;
-  @Input() tags: string[];
-  @Input() allowSave: boolean;
+  @Input() description!: string;
+  @Input() amount!: number;
+  @Input() date!: Date;
+  @Input() tags!: string[];
+  @Input() allowSave!: boolean;
   @Output() action: EventEmitter<string> = new EventEmitter<string>();
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   click(action: string) {
     this.action.emit(action);

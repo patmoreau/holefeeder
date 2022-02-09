@@ -40,7 +40,7 @@ const appRoutes: Routes = [
     {
       provide: externalUrlProvider,
       useValue: (route: ActivatedRouteSnapshot) => {
-        const externalUrl = route.paramMap.get('externalUrl');
+        const externalUrl = route.paramMap.get('externalUrl') ?? undefined;
         window.open(externalUrl, '_self');
       },
     },

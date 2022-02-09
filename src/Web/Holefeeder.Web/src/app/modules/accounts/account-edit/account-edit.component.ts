@@ -16,7 +16,7 @@ import { AccountsService } from '../services/accounts.service';
 })
 export class AccountEditComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
 
   accountTypesNames = AccountTypeNames;
 

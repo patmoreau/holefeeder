@@ -6,7 +6,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class AutofocusDirective implements OnInit {
   private host: HTMLInputElement;
-  private focused: Element;
+  private focused: Element | null;
   private autoFocus = true;
 
   @Input()
@@ -14,9 +14,9 @@ export class AutofocusDirective implements OnInit {
     this.autoFocus = value;
   }
 
-  constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: HTMLDocument) {
-    this.host = elRef.nativeElement;
-    this.focused = document.activeElement;
+  constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: Document) {
+    this.host = this.elRef.nativeElement;
+    this.focused = this.document.activeElement;
   }
 
   ngOnInit(): void {

@@ -61,8 +61,8 @@ export class AccountsService extends StateService<AccountState> {
       })
   }
 
-  findById(id: string): Observable<Account | null> {
-    return this.select((state) => state.accounts?.find(account => account.id === id));
+  findById(id: string): Observable<Account | undefined> {
+    return this.select((state) => state.accounts.find(account => account.id === id));
   }
 
   showInactive() {

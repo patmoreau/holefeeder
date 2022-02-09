@@ -44,7 +44,7 @@ export class UpcomingService extends StateService<UpcomingState> {
     return this.select(state => state.upcoming.filter(u => u.account.id === accountId));
   }
 
-  getById(id: string): Observable<Upcoming> {
+  getById(id: string): Observable<Upcoming | undefined> {
     return this.select(state => state.upcoming.find(u => u.id === id));
   }
 

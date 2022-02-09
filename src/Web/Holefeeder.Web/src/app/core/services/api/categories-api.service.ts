@@ -6,9 +6,7 @@ import { Category, CategoryAdapter } from '../../models/category.model';
 
 const apiRoute: string = 'budgeting/api/v2/categories';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class CategoriesApiService {
   constructor(private http: HttpClient, private configService: ConfigService, private adapter: CategoryAdapter) { }
 

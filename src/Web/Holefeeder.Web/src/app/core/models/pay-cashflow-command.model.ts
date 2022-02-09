@@ -11,7 +11,7 @@ export class PayCashflowCommand {
   ) { }
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PayCashflowCommandAdapter implements Adapter<PayCashflowCommand> {
   adapt(item: any): PayCashflowCommand {
     return new PayCashflowCommand(dateToUtc(item.date), item.amount, item.cashflow, dateToUtc(item.cashflowDate));

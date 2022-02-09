@@ -14,7 +14,7 @@ import { Location } from '@angular/common';
 })
 export class OpenAccountComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
 
   constructor(
     private router: Router,

@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { AccountsService } from '../services/accounts.service';
 import { Account } from '../models/account.model';
 import { ModifyAccountAdapter } from '../models/modify-account-command.model';
+import { filterNullish } from '@app/shared/rxjs.helper';
 
 const accountIdParamName = 'accountId';
 
@@ -19,15 +20,15 @@ const accountIdParamName = 'accountId';
 export class ModifyAccountComponent implements OnInit {
 
   @ViewChild('confirm', { static: true })
-  confirmModalElement: ElementRef;
-  confirmModal: NgbModalRef;
-  confirmMessages: string;
+  confirmModalElement!: ElementRef;
+  confirmModal!: NgbModalRef;
+  confirmMessages!: string;
 
-  form: FormGroup;
+  form!: FormGroup;
 
-  accountId: string;
+  accountId!: string;
 
-  values$: Observable<any>;
+  values$!: Observable<any>;
 
   constructor(
     private router: Router,
@@ -51,8 +52,8 @@ export class ModifyAccountComponent implements OnInit {
 
     this.values$ = this.route.params.pipe(
       switchMap((params: Params) => this.accountsService.findById(params[accountIdParamName])),
-      filter((account: Account) => account !== undefined),
-      tap((account: Account) => {
+      filterNullish(),
+      tap(account => {
         this.accountId = account.id;
         this.form.patchValue({
           name: account.name,

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { StatisticsService } from '../services/statistics.service';
 import { CategoryType } from '@app/shared/enums/category-type.enum';
 import { addMonths, startOfDay } from 'date-fns';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { SettingsService } from '@app/core/services/settings.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
+import { StatisticsService } from '@app/core/services/statistics.service';
 
 @Component({
   selector: 'app-statistics-categories',
@@ -16,15 +16,15 @@ import { Category } from '@app/core/models/category.model';
 export class StatisticsCategoriesComponent implements OnInit {
   data: any[] = [];
 
-  categories$: Observable<Category[]>;
+  categories$!: Observable<Category[]>;
 
   constructor(
     private categoriesService: CategoriesService,
     private statisticsService: StatisticsService,
     private settingsService: SettingsService,
-    private router: Router) {}
+    private router: Router) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.categories$ = this.categoriesService.categories$;
 
     combineLatest([
@@ -32,15 +32,16 @@ export class StatisticsCategoriesComponent implements OnInit {
       this.settingsService.settings$,
       this.settingsService.period$
     ])
-      .subscribe(async ([categories, settings, dateInterval]) => {
-        const statistics = (await this.statisticsService.find(settings)).filter(i => i.item.type !== CategoryType.gain);
-
-        const start = startOfDay(dateInterval.start);
-        const end = startOfDay(dateInterval.end);
+      .pipe(
+        switchMap(([category, settings, dateInterval]) => forkJoin({ statistics: this.statisticsService.find(settings), dateInterval: of(dateInterval) }))
+      )
+      .subscribe(stats => {
+        const start = startOfDay(stats.dateInterval.start);
+        const end = startOfDay(stats.dateInterval.end);
         const fromSixMonths = addMonths(start, -6);
         const fromTwelveMonths = addMonths(start, -12);
 
-        const series = statistics
+        const series = stats.statistics.filter(stat => stat.item.type !== CategoryType.gain)
           .map(i => Object.assign({
             id: i.item.id,
             category: i.item.name,

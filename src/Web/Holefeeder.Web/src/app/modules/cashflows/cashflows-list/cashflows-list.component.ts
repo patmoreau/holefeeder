@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
-import { PagingInfo } from '@app/shared/interfaces/paging-info.interface';
-import { CashflowsService } from '@app/shared/services/cashflows.service';
+import { Observable, Subject } from 'rxjs';
+import { CashflowsService } from '@app/core/services/cashflows.service';
+import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
+import { PagingInfo } from '@app/core/models/paging-info.model';
 
 @Component({
   selector: 'app-cashflows-list',
@@ -11,7 +11,7 @@ import { CashflowsService } from '@app/shared/services/cashflows.service';
   styleUrls: ['./cashflows-list.component.scss']
 })
 export class CashflowsListComponent implements OnInit {
-  cashflows: PagingInfo<ICashflowDetail>;
+  cashflows$!: Observable<PagingInfo<CashflowDetail>>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
 
@@ -19,7 +19,7 @@ export class CashflowsListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.$showInactive.subscribe(async (showInactive) => {
-      this.cashflows = await this.cashflowsService.find(null, null, [
+      this.cashflows$ = this.cashflowsService.find(0, 0, [
         'description'
       ], [
         showInactive ? 'inactive:eq:true' : 'inactive:eq:false'

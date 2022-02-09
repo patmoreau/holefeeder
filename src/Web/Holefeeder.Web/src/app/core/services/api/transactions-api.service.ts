@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { BaseApiService } from '@app/shared/services/base-api.service';
 import { ConfigService } from '@app/core/config/config.service';
-import { PagingInfo } from '@app/shared/models/paging-info.model';
-import { TransactionDetail, TransactionDetailAdapter } from '../../models/transaction-detail.model';
+import { PagingInfo } from '@app/core/models/paging-info.model';
 import { Observable, of } from 'rxjs';
-import { ModifyTransactionCommand } from '../../models/modify-transaction-command.model';
-import { MakePurchaseCommand } from '../../models/make-purchase-command.model';
-import { TransferMoneyCommand } from '../../models/transfer-money-command.model';
-import { PayCashflowCommand } from '../../models/pay-cashflow-command.model';
+import { BaseApiService } from './base-api.service';
+import { TransactionDetail, TransactionDetailAdapter } from '@app/core/models/transaction-detail.model';
+import { ModifyTransactionCommand } from '@app/core/models/modify-transaction-command.model';
+import { MakePurchaseCommand } from '@app/core/models/make-purchase-command.model';
+import { TransferMoneyCommand } from '@app/core/models/transfer-money-command.model';
+import { PayCashflowCommand } from '@app/core/models/pay-cashflow-command.model';
 
 const apiRoute: string = 'budgeting/api/v2/transactions';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TransactionsApiService extends BaseApiService {
   private basePath = 'transactions';
 

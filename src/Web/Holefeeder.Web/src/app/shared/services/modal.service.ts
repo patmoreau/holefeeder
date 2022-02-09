@@ -5,7 +5,7 @@ import { from, Observable } from 'rxjs';
 @Injectable()
 export class ModalService {
 
-  private ngbModalRef: NgbModalRef;
+  private ngbModalRef: NgbModalRef | undefined;
 
   constructor(private ngbModal: NgbModal) { }
 

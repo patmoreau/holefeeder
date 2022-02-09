@@ -173,7 +173,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
         _ => {
-          this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate), this.getDate(this.toDate)));
+          this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate!), this.getDate(this.toDate!)));
         },
         _ => { }
       );
@@ -185,7 +185,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       console.warn('No date defined');
       return;
     }
-    const date = this.getDate(this.toDate);
+    const date = this.getDate(this.toDate!);
     const period = this.settingsService.getPeriod(addDays(date, 2));
 
     this.setCalendar(period);
@@ -203,7 +203,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       console.warn('No date defined');
       return;
     }
-    const date = this.getDate(this.fromDate);
+    const date = this.getDate(this.fromDate!);
     const period = this.settingsService.getPeriod(addDays(date, -1));
 
     this.setCalendar(period);

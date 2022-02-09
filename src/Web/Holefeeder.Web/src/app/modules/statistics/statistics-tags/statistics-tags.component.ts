@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { StatisticsService } from '../services/statistics.service';
 import { addMonths, startOfDay } from 'date-fns';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { SettingsService } from '@app/core/services/settings.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
+import { StatisticsService } from '@app/core/services/statistics.service';
 
 @Component({
   selector: 'app-statistics-tags',
@@ -15,7 +15,7 @@ import { Category } from '@app/core/models/category.model';
 export class StatisticsTagsComponent implements OnInit {
   data: any[] = [];
 
-  category$: Observable<Category>;
+  category$!: Observable<Category>;
 
   isLoaded = false;
 
@@ -23,27 +23,27 @@ export class StatisticsTagsComponent implements OnInit {
     private categoriesService: CategoriesService,
     private statisticsService: StatisticsService,
     private settingsService: SettingsService,
-    private activatedRoute: ActivatedRoute) {}
+    private activatedRoute: ActivatedRoute) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     const id = this.activatedRoute.snapshot.paramMap.get('categoryId');
-    this.category$ = this.categoriesService.findOneById(id);
+    this.category$ = this.categoriesService.findOneById(id!);
 
     combineLatest([
       this.category$,
       this.settingsService.settings$,
       this.settingsService.period$,
     ])
-      .subscribe(async ([category, settings, dateInterval]) => {
-        const statistics = (await this.statisticsService
-          .findByCategoryId(category.id, settings));
-
-        const start = startOfDay(dateInterval.start);
-        const end = startOfDay(dateInterval.end);
+      .pipe(
+        switchMap(([category, settings, dateInterval]) => forkJoin({ statistics: this.statisticsService.findByCategoryId(category.id, settings), dateInterval: of(dateInterval) }))
+      )
+      .subscribe(stats => {
+        const start = startOfDay(stats.dateInterval.start);
+        const end = startOfDay(stats.dateInterval.end);
         const fromSixMonths = addMonths(start, -6);
         const fromTwelveMonths = addMonths(start, -12);
 
-        const series = statistics
+        const series = stats.statistics
           .map(i => Object.assign({
             tag: i.item,
             current: {

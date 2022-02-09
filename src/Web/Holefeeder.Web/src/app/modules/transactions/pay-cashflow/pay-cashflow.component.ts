@@ -4,9 +4,10 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Upcoming } from '@app/core/models/upcoming.model';
 import { UpcomingService } from '@app/core/services/upcoming.service';
-import { filter, Observable, switchMap, tap } from 'rxjs';
-import { TransactionsService } from '../services/transactions.service';
-import { PayCashflowCommandAdapter } from '../models/pay-cashflow-command.model';
+import { Observable, switchMap, tap } from 'rxjs';
+import { TransactionsService } from '@app/core/services/transactions.service';
+import { PayCashflowCommandAdapter } from '@app/core/models/pay-cashflow-command.model';
+import { filterNullish } from '@app/shared/rxjs.helper';
 
 const cashflowIdParamName = 'cashflowId';
 
@@ -17,11 +18,11 @@ const cashflowIdParamName = 'cashflowId';
 })
 export class PayCashflowComponent implements OnInit {
 
-  form: FormGroup;
+  form!: FormGroup;
 
-  cashflow: Upcoming;
+  cashflow!: Upcoming;
 
-  values$: Observable<any>;
+  values$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,8 +46,8 @@ export class PayCashflowComponent implements OnInit {
 
     this.values$ = this.route.params.pipe(
       switchMap((params: Params) => this.cashflowsService.getById(params[cashflowIdParamName])),
-      filter((cashflow: Upcoming) => cashflow !== undefined),
-      tap((cashflow: Upcoming) => {
+      filterNullish(),
+      tap(cashflow => {
         this.cashflow = cashflow;
         this.form.patchValue({
           amount: cashflow.amount,

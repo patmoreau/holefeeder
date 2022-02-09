@@ -3,9 +3,11 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Upcoming } from "@app/core/models/upcoming.model";
 import { UpcomingService } from '@app/core/services/upcoming.service';
-import { CashflowsService } from '@app/shared/services/cashflows.service';
-import { TransactionsService } from '@app/shared/services/transactions.service';
-import { PayCashflowCommand } from '@app/shared/models/pay-cashflow-command.model';
+import { TransactionsService } from '@app/core/services/transactions.service';
+import { PayCashflowCommandAdapter } from '@app/core/models/pay-cashflow-command.model';
+import { MessageService } from '@app/core/services/message.service';
+import { MessageType } from '@app/shared/enums/message-type.enum';
+import { MessageAction } from '@app/shared/enums/message-action.enum';
 
 @Component({
   selector: 'app-upcoming-list',
@@ -13,28 +15,29 @@ import { PayCashflowCommand } from '@app/shared/models/pay-cashflow-command.mode
   styleUrls: ['./upcoming-list.component.scss']
 })
 export class UpcomingListComponent implements OnInit {
-  @Input() accountId: string;
+  @Input() accountId: string | undefined;
 
-  upcomingCashflows$: Observable<Upcoming[]>;
+  upcomingCashflows$: Observable<Upcoming[]> | undefined;
 
   constructor(
     private upcomingService: UpcomingService,
-    private cashflowsService: CashflowsService,
     private transactionsService: TransactionsService,
+    private adapter: PayCashflowCommandAdapter,
+    private messages: MessageService,
     private router: Router) { }
 
   ngOnInit() {
-    this.upcomingCashflows$ = this.upcomingService.getUpcoming(this.accountId);
+    if (this.accountId) {
+      this.upcomingCashflows$ = this.upcomingService.getUpcoming(this.accountId);
+    }
   }
 
-  async action(event: string, upcoming: Upcoming) {
+  action(event: string, upcoming: Upcoming) {
     if (event === 'EDIT') {
       this.router.navigate(['transactions', 'pay-cashflow', upcoming.id, upcoming.date]);
     } else {
-      const cashflow = await this.cashflowsService.findOneById(upcoming.id);
-      const transaction = new PayCashflowCommand(Object.assign({}, { date: upcoming.date, amount: cashflow.amount, cashflowId: cashflow.id, cashflowDate: upcoming.date }));
-      await this.transactionsService.payCashflow(transaction);
-      this.upcomingService.refresh();
+      this.transactionsService.payCashflow(this.adapter.adapt({ date: upcoming.date, amount: upcoming.amount, cashflow: upcoming.id, cashflowDate: upcoming.date }))
+        .subscribe(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, { id: id }));
     }
   }
 }

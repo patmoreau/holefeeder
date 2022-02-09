@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { ConfigService } from '@app/core/config/config.service';
-import { PagingInfo } from '@app/shared/models/paging-info.model';
+import { PagingInfo } from '@app/core/models/paging-info.model';
 import { Account, AccountAdapter } from '../../models/account.model';
-import { BaseApiService } from '@app/shared/services/base-api.service';
+import { BaseApiService } from '@app/core/services/api/base-api.service';
 import { OpenAccountCommand } from '../../models/open-account-command.model';
 import { ModifyAccountCommand } from '../../models/modify-account-command.model';
 

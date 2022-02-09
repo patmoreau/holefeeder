@@ -5,7 +5,6 @@ import { StatisticsCategoriesComponent } from './statistics-categories/statistic
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StatisticsRoutingModule } from './statistics-routing.module';
-import { StatisticsService } from './services/statistics.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { StatisticsTagsComponent } from './statistics-tags/statistics-tags.component';
@@ -27,7 +26,6 @@ const COMPONENTS = [
     SharedModule,
     StatisticsRoutingModule,
   ],
-  providers: [StatisticsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class StatisticsModule { }

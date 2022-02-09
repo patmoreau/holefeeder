@@ -1,13 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, switchMap, filter, tap } from 'rxjs';
-import { TransactionsService } from '../services/transactions.service';
-import { TransactionDetail } from '../models/transaction-detail.model';
-import { ModifyTransactionCommandAdapter } from '../models/modify-transaction-command.model';
 import { ModalService } from '@app/shared/services/modal.service';
+import { TransactionsService } from '@app/core/services/transactions.service';
+import { ModifyTransactionCommandAdapter } from '@app/core/models/modify-transaction-command.model';
+import { TransactionDetail } from '@app/core/models/transaction-detail.model';
 
 const transactionIdParamName = 'transactionId';
 
@@ -18,16 +17,11 @@ const transactionIdParamName = 'transactionId';
 })
 export class ModifyTransactionComponent implements OnInit {
 
-  @ViewChild('confirm', { static: true })
-  confirmModalElement: ElementRef;
-  confirmModal: NgbModalRef;
-  confirmMessages: string;
+  form!: FormGroup;
 
-  form: FormGroup;
+  transactionId!: string;
 
-  transactionId: string;
-
-  values$: Observable<any>;
+  values$!: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,

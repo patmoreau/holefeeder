@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
 import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
 import { AccountsService } from '../services/accounts.service';
-import { filter, from, Observable, switchMap, of, scan, tap, map, switchMapTo } from 'rxjs';
+import { filter, from, Observable, switchMap, scan, tap } from 'rxjs';
 import { Account } from '../models/account.model';
 import { UpcomingService } from '@app/core/services/upcoming.service';
 
@@ -13,8 +13,8 @@ import { UpcomingService } from '@app/core/services/upcoming.service';
   styleUrls: ['./account-details.component.scss']
 })
 export class AccountDetailsComponent implements OnInit {
-  account$: Observable<Account> | undefined;
-  upcomingBalance$: Observable<number> | undefined;
+  account$!: Observable<Account | undefined>;
+  upcomingBalance$!: Observable<number>;
 
   constructor(
     private accountsService: AccountsService,
@@ -28,16 +28,17 @@ export class AccountDetailsComponent implements OnInit {
     this.account$ = this.route.params
       .pipe(
         switchMap(params => this.accountsService.findById(params['accountId'])),
-        tap((account: Account) => this.accountsService.selectAccount(account))
+        filter(account => account !== undefined),
+        tap(account => this.accountsService.selectAccount(account!))
       );
 
     this.upcomingBalance$ = this.account$.pipe(
       filter(account => account !== undefined),
-      switchMap(account => this.upcomingService.getUpcoming(account.id)
+      switchMap(account => this.upcomingService.getUpcoming(account!.id)
         .pipe(
           switchMap(cashflows => from(cashflows)),
           scan((sum, cashflow) => sum + (cashflow.amount *
-            categoryTypeMultiplier(cashflow.category.type) * accountTypeMultiplier(account.type)), account.balance)
+            categoryTypeMultiplier(cashflow.category.type) * accountTypeMultiplier(account!.type)), account!.balance)
         ))
     );
   }

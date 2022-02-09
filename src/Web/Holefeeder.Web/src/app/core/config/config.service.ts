@@ -52,7 +52,7 @@ export class ConfigService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
 
     return new Promise<boolean>((resolve, reject) => {
-      this.http.get(`${endpoint}/_ngx-rtconfig.json?cb=${new Date().getTime()}`, { headers })
+      this.http.get<Object[]>(`${endpoint}/_ngx-rtconfig.json?cb=${new Date().getTime()}`, { headers })
         .pipe(
           map(data => {
             let config: any = {};

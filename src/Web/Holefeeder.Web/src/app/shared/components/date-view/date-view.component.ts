@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-date-view',
@@ -6,8 +6,9 @@ import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
   styleUrls: ['./date-view.component.scss']
 })
 export class DateViewComponent implements OnInit {
-  @Input() date: Date;
-  @Input() color: string;
+  @Input() date: Date | undefined;
+  @Input() color: string | undefined;
+
   constructor() { }
 
   ngOnInit() {

@@ -1,20 +1,26 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "@app/core/services/message.service";
 import { Observable, tap } from "rxjs";
-import { TransactionsApiService } from "./api/transactions-api.service";
-import { TransactionDetail } from "../models/transaction-detail.model";
-import { MakePurchaseCommand } from "../models/make-purchase-command.model";
-import { ModifyTransactionCommand } from "../models/modify-transaction-command.model";
-import { PayCashflowCommand } from "../models/pay-cashflow-command.model";
 import { MessageAction } from "@app/shared/enums/message-action.enum";
 import { MessageType } from "@app/shared/enums/message-type.enum";
+import { TransactionsApiService } from "./api/transactions-api.service";
+import { TransactionDetail } from "../models/transaction-detail.model";
+import { PayCashflowCommand } from "../models/pay-cashflow-command.model";
+import { MakePurchaseCommand } from "../models/make-purchase-command.model";
+import { ModifyTransactionCommand } from "../models/modify-transaction-command.model";
+import { PagingInfo } from "@app/core/models/paging-info.model";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TransactionsService {
 
   constructor(private apiService: TransactionsApiService, private messages: MessageService) { }
 
-  findById(id: string): Observable<TransactionDetail | null> {
+
+  find(accountId: string, offset: number, limit: number, sort: string[]): Observable<PagingInfo<TransactionDetail>> {
+    return this.apiService.find(accountId, offset, limit, sort);
+  }
+
+  findById(id: string): Observable<TransactionDetail> {
     return this.apiService.findOneById(id);
   }
 

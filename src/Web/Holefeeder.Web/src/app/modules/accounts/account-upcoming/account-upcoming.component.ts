@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Account } from '@app/modules/accounts/models/account.model';
-import { Observable, switchMap, tap } from 'rxjs';
+import { filterNullish } from '@app/shared/rxjs.helper';
+import { Observable } from 'rxjs';
 import { AccountsService } from '../services/accounts.service';
 
 @Component({
@@ -10,13 +11,13 @@ import { AccountsService } from '../services/accounts.service';
   styleUrls: ['./account-upcoming.component.scss']
 })
 export class AccountUpcomingComponent implements OnInit {
-  account$: Observable<Account> | undefined;
+  account$!: Observable<Account>;
 
   constructor(
     private route: ActivatedRoute,
     private accountsService: AccountsService) { }
 
   ngOnInit() {
-    this.account$ = this.accountsService.selectedAccount$;
+    this.account$ = this.accountsService.selectedAccount$.pipe(filterNullish());
   }
 }

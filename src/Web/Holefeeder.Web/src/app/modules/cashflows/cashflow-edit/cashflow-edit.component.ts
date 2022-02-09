@@ -5,16 +5,14 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbDateAdapter, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
 import { DateIntervalTypeNames, DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
-import { Cashflow } from '@app/shared/models/cashflow.model';
 import { startOfToday } from 'date-fns';
-import { ICashflowDetail } from '@app/shared/interfaces/cashflow-detail.interface';
-import { CashflowDetail } from '@app/shared/models/cashflow-detail.model';
 import { Observable } from 'rxjs';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 import { AccountInfo } from '@app/core/models/account-info.model';
 import { AccountsInfoService } from '@app/core/services/account-info.service';
-import { CashflowsService } from '@app/shared/services/cashflows.service';
+import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
+import { CashflowsService } from '@app/core/services/cashflows.service';
 
 @Component({
   selector: 'app-cashflow-edit',
@@ -24,16 +22,16 @@ import { CashflowsService } from '@app/shared/services/cashflows.service';
 })
 export class CashflowEditComponent implements OnInit {
   @ViewChild('confirm', { static: true })
-  confirmModalElement: ElementRef;
-  confirmModal: NgbModalRef;
-  confirmMessages: string;
+  confirmModalElement!: ElementRef;
+  confirmModal!: NgbModalRef;
+  confirmMessages!: string;
 
-  account: string;
-  cashflow: ICashflowDetail;
+  account!: string;
+  cashflow!: CashflowDetail;
   cashflowForm: FormGroup;
 
-  accounts$: Observable<AccountInfo[]>;
-  categories$: Observable<Category[]>;
+  accounts$!: Observable<AccountInfo[]>;
+  categories$!: Observable<Category[]>;
 
   isLoaded = false;
 
@@ -62,22 +60,22 @@ export class CashflowEditComponent implements OnInit {
 
   async ngOnInit() {
 
-    this.account = this.activatedRoute.snapshot.queryParamMap.get('account');
+    this.account = this.activatedRoute.snapshot.queryParamMap.get('account')!;
 
     this.accounts$ = this.accountsService.accounts$;
     this.categories$ = this.categoriesService.categories$;
 
     if (this.activatedRoute.snapshot.paramMap.has('cashflowId')) {
-      this.cashflow = await this.cashflowsService.findOneById(
-        this.activatedRoute.snapshot.paramMap.get('cashflowId')
-      );
+      // this.cashflow = await this.cashflowsService.findOneById(
+      //   this.activatedRoute.snapshot.paramMap.get('cashflowId')
+      // );
     } else {
-      this.cashflow = Object.assign(new CashflowDetail(), {
-        account: this.account ? this.account : this.accountsService.findOneByIndex(0).id,
-        // category: this.categories[0].id,
-        intervalType: DateIntervalType.monthly,
-        effectiveDate: startOfToday(),
-      });
+      // this.cashflow = Object.assign(new CashflowDetail(), {
+      //   account: this.account ? this.account : this.accountsService.findOneByIndex(0).id,
+      //   // category: this.categories[0].id,
+      //   intervalType: DateIntervalType.monthly,
+      //   effectiveDate: startOfToday(),
+      // });
     }
     this.cashflowForm.patchValue(this.cashflow);
     if (this.cashflow.tags) {
@@ -93,16 +91,16 @@ export class CashflowEditComponent implements OnInit {
   }
 
   onSubmit() {
-    const cashflow = Object.assign(
-      new Cashflow(),
-      this.cashflow,
-      this.cashflowForm.value
-    );
-    if (this.cashflow.id) {
-      this.cashflowsService.update(this.cashflow.id, cashflow);
-    } else {
-      this.cashflowsService.create(cashflow);
-    }
+    // const cashflow = Object.assign(
+    //   new Cashflow(),
+    //   this.cashflow,
+    //   this.cashflowForm.value
+    // );
+    // if (this.cashflow.id) {
+    //   this.cashflowsService.update(this.cashflow.id, cashflow);
+    // } else {
+    //   this.cashflowsService.create(cashflow);
+    // }
 
     this.location.back();
   }
