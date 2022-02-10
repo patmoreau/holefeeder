@@ -1,0 +1,31 @@
+<div class="container pt-3 pb-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <h4 class="mb-0 line-height-1 text-truncate">Upcoming</h4>
+      <span>
+        <ng-container *ngIf="upcoming$ | async as upcoming; else loader">
+          <ng-container *ngIf="upcoming.length; else noItems">
+            <strong class="ms-3 text-muted">{{ upcoming.length }} cashflows</strong>
+          </ng-container>
+        </ng-container>
+      </span>
+    </div>
+    <div class="actions p-0 d-flex align-items-center">
+      <button type="button" class="btn btn-link" routerLink="/transactions/make-purchase" title="Make purchase">
+        <em class="bi bi-plus-square"></em>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <app-transaction-list-item *ngFor="let upcoming of (upcoming$ | async)"
+    [description]="upcoming.description ? upcoming.description : upcoming.category.name" [amount]="upcoming.amount"
+    [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true" (action)="action($event, upcoming)">
+  </app-transaction-list-item>
+</div>
+<ng-template #loader>
+  <app-loader [small]="true"></app-loader>
+</ng-template>
+<ng-template #noItems>
+  <strong class="ms-3 text-muted">all good!</strong>
+</ng-template>

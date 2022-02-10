@@ -2,14 +2,14 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 
 @Component({
-  selector: 'dfta-tags-input',
+  selector: 'app-tags-input',
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss']
 })
 export class TagsInputComponent implements OnInit {
 
-  @Input() tagsArray: FormArray;
-  @Input() isReadonly: boolean;
+  @Input() tagsArray: FormArray = new FormArray([]);
+  @Input() isReadonly: boolean = false;
 
   constructor(private fb: FormBuilder) { }
 

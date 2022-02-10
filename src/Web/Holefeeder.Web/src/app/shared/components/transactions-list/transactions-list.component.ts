@@ -1,20 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TransactionsService } from '@app/shared/services/transactions.service';
-import { ITransactionDetail } from '@app/shared/interfaces/transaction-detail.interface';
-import { IPagingInfo } from '@app/shared/interfaces/paging-info.interface';
-import { switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { TransactionsService } from '@app/core/services/transactions.service';
+import { TransactionDetail } from '@app/core/models/transaction-detail.model';
+import { PagingInfo } from '@app/core/models/paging-info.model';
 
 @Component({
-  selector: 'dfta-transactions-list',
+  selector: 'app-transactions-list',
   templateUrl: './transactions-list.component.html',
   styleUrls: ['./transactions-list.component.scss']
 })
 export class TransactionsListComponent implements OnInit {
-  @Input() accountId: string;
+  @Input() accountId: string | undefined;
 
-  transactions$: Observable<IPagingInfo<ITransactionDetail>>;
+  transactions$: Observable<PagingInfo<TransactionDetail>> | undefined;
 
   page = 1;
 
@@ -28,20 +28,22 @@ export class TransactionsListComponent implements OnInit {
 
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
-      switchMap(async params => {
-        this.page = params.has('page') ? +params.get('page') : 1;
-        return await this.transactionsService.find(
-          this.accountId,
-          (this.page - 1) * this.limit,
-          this.limit,
-          ['-date']
-        );
+      filter(params => params !== null),
+      switchMap(params => {
+        this.page = +(params.get('page') ?? 1);
+        return this.accountId ?
+          this.transactionsService.find(
+            this.accountId,
+            (this.page - 1) * this.limit,
+            this.limit,
+            ['-date']) :
+          of(new PagingInfo<TransactionDetail>(0, []));
       })
     );
   }
 
-  click(transaction: ITransactionDetail) {
-    this.router.navigate(['transactions', transaction.id]/*, { relativeTo: this.route }*/);
+  click(transaction: TransactionDetail) {
+    this.router.navigate(['transactions', transaction.id]);
   }
 
   pageChange() {

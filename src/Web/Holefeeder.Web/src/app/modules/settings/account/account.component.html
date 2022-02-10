@@ -1,0 +1,33 @@
+<form [formGroup]="profileForm" (ngSubmit)="saveProfile(profileForm.value)" autocomplete="off" novalidate>
+  <div class="field">
+    <label class="label" for="firstName">First Name:</label>
+    <div class="control">
+      <input formControlName="firstName" id="firstName" type="text" class="input" placeholder="First Name..." />
+      <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="alert alert-danger">
+        <div *ngIf="firstName?.errors?.['required']">
+          First name is required.
+        </div>
+        <div *ngIf="firstName?.errors?.['pattern']">
+          Must start with a letter.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label" for="lastName">Last Name:</label>
+    <div class="control">
+      <input formControlName="lastName" id="lastName" type="text" class="input" placeholder="Last Name..." />
+      <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="alert alert-danger">
+        <div *ngIf="lastName?.errors?.['required']">
+          Last name is required.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-grouped">
+    <div class="control">
+      <button class="button is-link" [disabled]="!profileForm.valid">Save</button>
+    </div>
+  </div>
+</form>

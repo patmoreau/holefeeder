@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'dfta-redirect',
+  selector: 'app-redirect',
   template: `<div></div>`,
 })
 export class RedirectComponent { }

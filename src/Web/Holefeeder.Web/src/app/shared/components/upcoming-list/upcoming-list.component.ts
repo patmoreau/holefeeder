@@ -1,46 +1,43 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UpcomingService } from '@app/singletons/services/upcoming.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { CashflowsService } from '@app/shared/services/cashflows.service';
-import { TransactionsService } from '@app/shared/services/transactions.service';
-import { IUpcoming } from "@app/shared/interfaces/upcoming.interface";
-import { PayCashflowCommand } from '@app/shared/transactions/pay-cashflow-command.model';
+import { Router } from '@angular/router';
+import { Upcoming } from "@app/core/models/upcoming.model";
+import { UpcomingService } from '@app/core/services/upcoming.service';
+import { TransactionsService } from '@app/core/services/transactions.service';
+import { PayCashflowCommandAdapter } from '@app/core/models/pay-cashflow-command.model';
+import { MessageService } from '@app/core/services/message.service';
+import { MessageType } from '@app/shared/enums/message-type.enum';
+import { MessageAction } from '@app/shared/enums/message-action.enum';
 
 @Component({
-  selector: 'dfta-upcoming-list',
+  selector: 'app-upcoming-list',
   templateUrl: './upcoming-list.component.html',
   styleUrls: ['./upcoming-list.component.scss']
 })
 export class UpcomingListComponent implements OnInit {
-  @Input() accountId: string;
+  @Input() accountId: string | undefined;
 
-  upcomingCashflows$: Observable<IUpcoming[]>;
+  upcomingCashflows$: Observable<Upcoming[]> | undefined;
 
   constructor(
     private upcomingService: UpcomingService,
-    private cashflowsService: CashflowsService,
     private transactionsService: TransactionsService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private adapter: PayCashflowCommandAdapter,
+    private messages: MessageService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.upcomingCashflows$ = this.upcomingService.cashflows.pipe(
-      map(upcomingCashflows => upcomingCashflows.filter(upcomingCashflow => upcomingCashflow.account.id === this.accountId)),
-    );
+    if (this.accountId) {
+      this.upcomingCashflows$ = this.upcomingService.getUpcoming(this.accountId);
+    }
   }
 
-  async action(event: string, upcoming: IUpcoming) {
+  action(event: string, upcoming: Upcoming) {
     if (event === 'EDIT') {
-      this.router.navigate(['transactions', 'create'],
-        { /*relativeTo: this.route,*/ queryParams: { cashflow: upcoming.id, date: upcoming.date } });
+      this.router.navigate(['transactions', 'pay-cashflow', upcoming.id, upcoming.date]);
     } else {
-      const cashflow = await this.cashflowsService.findOneById(upcoming.id);
-      const transaction = new PayCashflowCommand(Object.assign({}, { date: upcoming.date, amount: cashflow.amount, cashflowId: cashflow.id, cashflowDate: upcoming.date }));
-      await this.transactionsService.payCashflow(transaction);
-      await this.upcomingService.refreshUpcoming();
+      this.transactionsService.payCashflow(this.adapter.adapt({ date: upcoming.date, amount: upcoming.amount, cashflow: upcoming.id, cashflowDate: upcoming.date }))
+        .subscribe(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, { id: id }));
     }
   }
 }

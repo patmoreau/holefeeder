@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgbDateAdapter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { startOfDay, startOfToday } from 'date-fns';
+import { startOfToday } from 'date-fns';
 
 @Injectable()
 export class NgbDateParserAdapter extends NgbDateAdapter<Date> {
@@ -8,7 +8,7 @@ export class NgbDateParserAdapter extends NgbDateAdapter<Date> {
     return this._fromNativeDate(date ? date : startOfToday());
   }
 
-  toModel(date: NgbDateStruct): Date {
+  toModel(date: NgbDateStruct): Date | null {
     return date &&
       this.isInteger(date.year) &&
       this.isInteger(date.month) &&

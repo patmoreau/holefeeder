@@ -1,0 +1,49 @@
+<ng-container *ngIf="values$ | async; else loader">
+  <div class="pt-3 pb-4 mb-3">
+    <div class="container">
+      <h4 class="mb-0 line-height-1 text-truncate">
+        Modify transaction
+      </h4>
+      <div class="container mb-5">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <app-transaction-edit></app-transaction-edit>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button class="btn btn-danger me-2" type="button" (click)="onDelete(confirmDelete)"
+              title="Delete">Delete</button>
+            <button class="btn btn-secondary me-2" type="button" (click)="goBack()" title="Cancel">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!form.valid" title="Save">
+              Save
+            </button>
+          </div>
+
+          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #confirmDelete let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title text-danger" id="modal-delete-title">Confirmation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>Are you sure you want to delete this transaction?</strong>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ngbAutofocus class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modal.close()">
+      Delete
+    </button>
+  </div>
+</ng-template>
+<ng-template #loader>
+  <app-loader></app-loader>
+</ng-template>

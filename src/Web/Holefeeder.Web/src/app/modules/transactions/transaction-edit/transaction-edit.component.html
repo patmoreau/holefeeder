@@ -1,0 +1,44 @@
+<ng-container *ngIf="values$ | async as values">
+
+  <div [formGroup]="form" class="container mt-2">
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input class="form-control" type="number" formControlName="amount" id="amount" placeholder="transaction amount..."
+        required dftaAutofocus />
+    </div>
+    <div class="form-group">
+      <label for="datepicker">Date</label>
+      <div class="input-group mb-2">
+        <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="date" ngbDatepicker
+          [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()" />
+        <div class="input-group-append">
+          <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
+            <em class="bi bi-calendar-event"></em>
+          </a>
+        </div>
+      </div>
+      <em *ngIf="form.get('date')?.invalid && form.get('date')?.dirty" class="form-text text-danger">Required</em>
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select class="form-control" formControlName="category" id="category" required>
+        <option *ngFor="let category of values.categories" [ngValue]="category.id">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="account">Account</label>
+      <select class="form-control" formControlName="account" id="account" required>
+        <option *ngFor="let account of values.accounts" [ngValue]="account.id">{{ account.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="tags">Tags</label>
+      <app-tags-input formArrayName="tags" id="tags" [tagsArray]="tags"></app-tags-input>
+    </div>
+    <div class="form-group">
+      <label for="description">Note</label>
+      <input class="form-control" type="text" formControlName="description" id="description"
+        [placeholder]="'transaction note...'" />
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,4 @@
+<ng-container *ngIf="account$ | async as account; else loader">
+  <app-upcoming-list [accountId]="account.id"></app-upcoming-list>
+</ng-container>
+<ng-template #loader>Loading...</ng-template>

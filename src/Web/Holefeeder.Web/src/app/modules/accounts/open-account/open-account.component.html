@@ -1,0 +1,25 @@
+<ng-container>
+  <div class="pt-3 pb-4 mb-3">
+    <div class="container">
+      <h4 class="mb-0 line-height-1 text-truncate">
+        Open account
+      </h4>
+      <div class="container mb-5">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <app-account-edit></app-account-edit>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+              Save
+            </button>
+          </div>
+
+          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>

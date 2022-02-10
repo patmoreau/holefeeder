@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'dfta-loader',
+  selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent implements OnInit {
+  @Input() small: boolean = false;
+
   constructor() {}
 
   ngOnInit() {}
