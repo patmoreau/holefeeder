@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpBackend, HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from "rxjs/operators";
-import { IConfig } from "@app/core/config/config.interface";
-import { BrowserCacheLocation, Configuration, InteractionType } from "@azure/msal-browser";
-import { MsalGuardConfiguration, MsalInterceptorConfiguration } from "@azure/msal-angular";
+import {Injectable} from '@angular/core';
+import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
+import {map} from "rxjs/operators";
+import {IConfig} from "@app/core/config/config.interface";
+import {BrowserCacheLocation, Configuration, InteractionType} from "@azure/msal-browser";
+import {MsalGuardConfiguration, MsalInterceptorConfiguration} from "@azure/msal-angular";
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -32,9 +32,9 @@ const apiConfig: { scopes: string[]; uri: string } = {
   uri: 'https://holefeeder.onmicrosoft.com/holefeeder.api'
 };
 
-const loginRequest: { scopes: string[] } = { scopes: ['openid', 'profile'] };
+const loginRequest: { scopes: string[] } = {scopes: ['openid', 'profile']};
 
-const tokenRequest: { scopes: string[] } = { scopes: apiConfig.scopes };
+const tokenRequest: { scopes: string[] } = {scopes: apiConfig.scopes};
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,7 @@ export class ConfigService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
 
     return new Promise<boolean>((resolve, reject) => {
-      this.http.get<Object[]>(`${endpoint}/_ngx-rtconfig.json?cb=${new Date().getTime()}`, { headers })
+      this.http.get<Object[]>(`${endpoint}/_ngx-rtconfig.json?cb=${new Date().getTime()}`, {headers})
         .pipe(
           map(data => {
             let config: any = {};
