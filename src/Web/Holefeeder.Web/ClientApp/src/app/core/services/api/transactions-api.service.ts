@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { ConfigService } from '@app/core/config/config.service';
-import { PagingInfo } from '@app/core/models/paging-info.model';
-import { Observable, of } from 'rxjs';
-import { BaseApiService } from './base-api.service';
-import { TransactionDetail, TransactionDetailAdapter } from '@app/core/models/transaction-detail.model';
-import { ModifyTransactionCommand } from '@app/core/models/modify-transaction-command.model';
-import { MakePurchaseCommand } from '@app/core/models/make-purchase-command.model';
-import { TransferMoneyCommand } from '@app/core/models/transfer-money-command.model';
-import { PayCashflowCommand } from '@app/core/models/pay-cashflow-command.model';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {ConfigService} from '@app/core/config/config.service';
+import {PagingInfo} from '@app/core/models/paging-info.model';
+import {Observable, of} from 'rxjs';
+import {BaseApiService} from './base-api.service';
+import {TransactionDetail, TransactionDetailAdapter} from '@app/core/models/transaction-detail.model';
+import {ModifyTransactionCommand} from '@app/core/models/modify-transaction-command.model';
+import {MakePurchaseCommand} from '@app/core/models/make-purchase-command.model';
+import {TransferMoneyCommand} from '@app/core/models/transfer-money-command.model';
+import {PayCashflowCommand} from '@app/core/models/pay-cashflow-command.model';
 
 const apiRoute: string = 'budgeting/api/v2/transactions';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class TransactionsApiService extends BaseApiService {
   private basePath = 'transactions';
 
@@ -74,11 +74,11 @@ export class TransactionsApiService extends BaseApiService {
       );
   }
 
-  transferMoney(transaction: TransferMoneyCommand): Observable<void> {
+  transferMoney(transaction: TransferMoneyCommand): Observable<string> {
     return this.http
-      .post(`${this.configService.config.apiUrl}/${apiRoute}/transfer-money`, transaction)
+      .post(`${this.configService.config.apiUrl}/${apiRoute}/transfer`, transaction)
       .pipe(
-        switchMap(_ => of(void 0)),
+        map((data: any) => data.id),
         catchError(this.formatErrors)
       );
   }

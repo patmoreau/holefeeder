@@ -1,0 +1,41 @@
+<ng-container *ngIf="values$ | async as values">
+
+  <div [formGroup]="form" class="container mt-2">
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input class="form-control" type="number" formControlName="amount" id="amount" placeholder="transaction amount..."
+             required dftaAutofocus />
+    </div>
+    <div class="form-group">
+      <label for="datepicker">Date</label>
+      <div class="input-group mb-2">
+        <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="date" ngbDatepicker
+               [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()" />
+        <div class="input-group-append">
+          <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
+            <em class="bi bi-calendar-event"></em>
+          </a>
+        </div>
+      </div>
+      <em *ngIf="form.get('date')?.invalid && form.get('date')?.dirty" class="form-text text-danger">Required</em>
+    </div>
+    <div class="form-group">
+      <label for="fromAccount">From</label>
+      <select class="form-control" formControlName="fromAccount" id="fromAccount" required>
+        <option *ngFor="let account of values" [ngValue]="account.id">{{ account.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="toAccount">To</label>
+      <select class="form-control" formControlName="toAccount" id="toAccount" required>
+        <option *ngFor="let account of values" [ngValue]="account.id">{{ account.name }}</option>
+      </select>
+      <em *ngIf="form.get('toAccount')?.value === form.get('fromAccount')?.value" class="form-text text-danger">Accounts must be different</em>
+    </div>
+    <div class="form-group">
+      <label for="description">Note</label>
+      <input class="form-control" type="text" formControlName="description" id="description"
+             [placeholder]="'transaction note...'" />
+    </div>
+  </div>
+</ng-container>

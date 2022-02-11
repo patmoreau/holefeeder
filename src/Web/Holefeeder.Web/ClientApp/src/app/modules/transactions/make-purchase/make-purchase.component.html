@@ -1,24 +1,52 @@
 <ng-container *ngIf="values$ | async; else loader">
   <div class="pt-3 pb-4 mb-3">
     <div class="container">
-      <h4 class="mb-0 line-height-1 text-truncate">
+      <h4 class="mb-5 line-height-1 text-truncate">
         Make purchase
       </h4>
       <div class="container mb-5">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <app-transaction-edit></app-transaction-edit>
-
-          <div class="d-flex justify-content-end mt-4">
-            <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
-              Cancel
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase" type="button"
+                    role="tab" aria-controls="purchase" aria-selected="true">Purchase
             </button>
-            <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
-              Save
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="transfer-tab" data-bs-toggle="tab" data-bs-target="#transfer" type="button"
+                    role="tab" aria-controls="transfer" aria-selected="false">Transfer
             </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="purchase" role="tabpanel" aria-labelledby="purchase-tab">
+            <form [formGroup]="formPurchase" (ngSubmit)="onMakePurchase()">
+              <app-transaction-edit></app-transaction-edit>
+              <div class="d-flex justify-content-end mt-4">
+                <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="!formPurchase.valid">
+                  Save
+                </button>
+              </div>
+              <em *ngIf="!formPurchase.valid" class="form-text text-danger">{{ formPurchase.errors }}</em>
+            </form>
           </div>
-
-          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
-        </form>
+          <div class="tab-pane fade" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+            <form [formGroup]="formTransfer" (ngSubmit)="onTransfer()">
+              <app-transfer></app-transfer>
+              <div class="d-flex justify-content-end mt-4">
+                <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="!formTransfer.valid">
+                  Save
+                </button>
+              </div>
+              <em *ngIf="!formTransfer.valid" class="form-text text-danger">{{ formTransfer.errors }}</em>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>

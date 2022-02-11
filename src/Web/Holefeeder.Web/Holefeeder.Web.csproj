@@ -21,6 +21,8 @@
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
         <None Remove="ClientApp\.angular\**" />
         <Content Remove="ClientApp\.angular\**" />
+        <None Remove="ClientApp\dist\**" />
+        <Content Remove="ClientApp\dist\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,10 +31,16 @@
 
     <ItemGroup>
       <Compile Remove="ClientApp\.angular\**" />
+      <Compile Remove="ClientApp\dist\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="ClientApp\.angular\**" />
+      <EmbeddedResource Remove="ClientApp\dist\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="ClientApp\dist\holefeeder-web\assets\config\_ngx-rtconfig.json" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

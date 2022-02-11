@@ -1,18 +1,21 @@
-import { dateToUtc } from "@app/shared/date-parser.helper";
+import {dateToUtc} from "@app/shared/date-parser.helper";
+import {Injectable} from "@angular/core";
+import {Adapter} from "@app/shared/interfaces/adapter.interface";
 
 export class TransferMoneyCommand {
-  date: Date;
-  amount: number;
-  description: string;
-  fromAccountId: string;
-  toAccountId: string;
+  constructor(
+    public date: Date,
+    public amount: number,
+    public description: string,
+    public fromAccountId: string,
+    public toAccountId: string
+  ) {
+  }
+}
 
-  constructor(obj: {date: Date, amount: number, description: string, fromAccountId: string,
-    toAccountId: string}) {
-    this.date = dateToUtc(obj.date);
-    this.amount = obj.amount;
-    this.description = obj.description;
-    this.fromAccountId = obj.fromAccountId;
-    this.toAccountId = obj.toAccountId;
+@Injectable({providedIn: 'root'})
+export class TransferMoneyCommandAdapter implements Adapter<TransferMoneyCommand> {
+  adapt(item: any): TransferMoneyCommand {
+    return new TransferMoneyCommand(dateToUtc(item.date), item.amount, item.description, item.fromAccount, item.toAccount);
   }
 }

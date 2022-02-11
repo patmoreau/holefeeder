@@ -79,7 +79,8 @@
               "browserTarget": "holefeeder-web:build:production"
             },
             "development": {
-              "browserTarget": "holefeeder-web:build:development"
+              "browserTarget": "holefeeder-web:build:development",
+              "proxyConfig": "proxy.conf.js"
             }
           },
           "defaultConfiguration": "development"
