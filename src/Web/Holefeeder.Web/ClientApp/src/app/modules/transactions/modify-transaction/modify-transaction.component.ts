@@ -72,7 +72,6 @@ export class ModifyTransactionComponent implements OnInit {
   onDelete(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' })
       .pipe(
-        tap(console.log),
         switchMap(_ => this.transactionsService.delete(this.transactionId))
       )
       .subscribe(_ => this.location.back());

@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
 import { MessageType } from '@app/shared/enums/message-type.enum';
-import { combineLatest, filter, map, Observable, Subject, switchMap, tap } from 'rxjs';
+import { filterNullish } from '@app/shared/rxjs.helper';
+import {
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+  take
+} from 'rxjs';
 import { Upcoming } from '../models/upcoming.model';
 import { UpcomingApiService } from './api/upcoming-api.service';
 import { MessageService } from './message.service';
@@ -25,9 +34,9 @@ export class UpcomingService extends StateService<UpcomingState> {
     super(initialState);
 
     this.messages.listen
-    .pipe(
-      filter(message => message.type === MessageType.transaction || message.type === MessageType.cashflow)
-    ).subscribe(_ => this.refresh());
+      .pipe(
+        filter(message => message.type === MessageType.transaction || message.type === MessageType.cashflow)
+      ).subscribe(_ => this.refresh());
 
     combineLatest([
       this.settingsService.period$,
@@ -44,8 +53,12 @@ export class UpcomingService extends StateService<UpcomingState> {
     return this.select(state => state.upcoming.filter(u => u.account.id === accountId));
   }
 
-  getById(id: string): Observable<Upcoming | undefined> {
-    return this.select(state => state.upcoming.find(u => u.id === id));
+  getById(id: string, date: Date): Observable<Upcoming> {
+    return this.select(state => state.upcoming.find(u => u.id === id && u.date.toISOString() === date.toISOString()))
+      .pipe(
+        take(1),
+        filterNullish(),
+      );
   }
 
   refresh() {

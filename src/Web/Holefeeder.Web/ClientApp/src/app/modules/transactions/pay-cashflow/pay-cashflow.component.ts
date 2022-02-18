@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Data, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Upcoming } from '@app/core/models/upcoming.model';
 import { UpcomingService } from '@app/core/services/upcoming.service';
-import { Observable, switchMap, tap } from 'rxjs';
+import {map, Observable, switchMap, tap } from 'rxjs';
 import { TransactionsService } from '@app/core/services/transactions.service';
 import { PayCashflowCommandAdapter } from '@app/core/models/pay-cashflow-command.model';
 import { filterNullish } from '@app/shared/rxjs.helper';
@@ -44,9 +44,8 @@ export class PayCashflowComponent implements OnInit {
       tags: this.formBuilder.array([])
     });
 
-    this.values$ = this.route.params.pipe(
-      switchMap((params: Params) => this.cashflowsService.getById(params[cashflowIdParamName])),
-      filterNullish(),
+    this.values$ = this.route.data.pipe(
+      map((data: Data) => data['cashflow']),
       tap(cashflow => {
         this.cashflow = cashflow;
         this.form.patchValue({
@@ -58,9 +57,10 @@ export class PayCashflowComponent implements OnInit {
         });
         if (cashflow.tags) {
           const tags = this.form.get('tags') as FormArray;
-          cashflow.tags.forEach(t => tags.push(this.formBuilder.control(t)));
+          cashflow.tags.forEach((tag: string) => tags.push(this.formBuilder.control(tag)));
         }
-      }));
+      })
+    );
   }
 
   onSubmit(): void {

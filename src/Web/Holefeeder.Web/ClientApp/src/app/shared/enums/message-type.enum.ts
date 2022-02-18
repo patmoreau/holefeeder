@@ -3,5 +3,6 @@ export enum MessageType {
   cashflow = 'cashflow',
   category = 'category',
   transaction = 'transaction',
-  general = 'general'
+  general = 'general',
+  error = 'error'
 }

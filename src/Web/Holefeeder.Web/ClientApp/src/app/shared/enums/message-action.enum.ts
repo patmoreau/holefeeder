@@ -1,5 +1,6 @@
 export enum MessageAction {
   post = 'post',
   delete = 'delete',
-  noAction = 'no-action'
+  noAction = 'no-action',
+  error = 'error'
 }

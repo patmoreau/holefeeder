@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER, InjectionToken} from '@angular/core';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER, InjectionToken, ErrorHandler} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ToastNoAnimationModule} from 'ngx-toastr';
 import {AppComponent} from './app.component';
@@ -28,18 +28,20 @@ import {
 } from "@azure/msal-browser";
 import {RedirectComponent} from "@app/redirect.component";
 import {ExternalUrlDirective} from "@app/directives/external-url.directive";
-import { DateIntervalAdapter } from './core/models/date-interval.model';
-import { SettingsAdapter, SettingsStoreItemAdapter } from './core/models/settings.model';
-import { StoreItemAdapter } from './core/models/store-item.model';
-import { SettingsService } from './core/services/settings.service';
-import { CategoriesService } from './core/services/categories.service';
-import { CategoriesApiService } from './core/services/api/categories-api.service';
+import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
+import {LoadingBarModule} from '@ngx-loading-bar/core';
+import {ResourceNotfoundComponent} from "@app/core/resource-notfound/resource-notfound.component";
+import {CoreModule} from "@app/core/core.module";
+import { GlobalErrorHandler } from './core/errors/global-error-handler';
+import { HttpLoadingInterceptor } from './core/errors/http-loading.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 const COMPONENTS = [
   AppComponent,
   HeaderComponent,
   FooterComponent,
   ErrorNotfoundComponent,
+  ResourceNotfoundComponent,
   RedirectComponent,
   ExternalUrlDirective
 ];
@@ -73,12 +75,24 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
     ReactiveFormsModule,
     FormsModule,
     MsalModule,
+    SharedModule,
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
-    ToastNoAnimationModule.forRoot()
+    ToastNoAnimationModule.forRoot(),
+    LoadingBarRouterModule,
+    LoadingBarModule
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingInterceptor,
+      multi: true,
+    },
     {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/config'},
     {
       provide: APP_INITIALIZER, useFactory: initializerFactory,

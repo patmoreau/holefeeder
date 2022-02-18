@@ -29,7 +29,7 @@ export class DashboardHomeComponent implements OnInit {
 
   async action(event: string, upcoming: Upcoming) {
     if (event === 'EDIT') {
-      this.router.navigate(['transactions', 'pay-cashflow', upcoming.id, upcoming.date]);
+      this.router.navigate(['transactions', 'pay-cashflow', upcoming.id], { queryParams: { date: upcoming.date } });
     } else {
       this.transactionsService.payCashflow(this.adapter.adapt({ date: upcoming.date, amount: upcoming.amount, cashflow: upcoming.id, cashflowDate: upcoming.date }))
         .subscribe(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, { id: id }));

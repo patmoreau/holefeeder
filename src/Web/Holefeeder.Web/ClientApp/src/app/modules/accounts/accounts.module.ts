@@ -17,6 +17,7 @@ import { ModifyAccountAdapter } from './models/modify-account-command.model';
 import { AccountAdapter } from './models/account.model';
 import { OpenAccountComponent } from './open-account/open-account.component';
 import { ModifyAccountComponent } from './modify-account/modify-account.component';
+import {AccountResolver} from "@app/modules/accounts/account.resolver";
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -37,7 +38,14 @@ const COMPONENTS = [
     AccountsRoutingModule
   ],
   declarations: [COMPONENTS, OpenAccountComponent, ModifyAccountComponent],
-  providers: [AccountsService, AccountsApiService, AccountAdapter, OpenAccountAdapter, ModifyAccountAdapter],
+  providers: [
+    AccountsService,
+    AccountsApiService,
+    AccountAdapter,
+    AccountResolver,
+    OpenAccountAdapter,
+    ModifyAccountAdapter
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AccountsModule { }

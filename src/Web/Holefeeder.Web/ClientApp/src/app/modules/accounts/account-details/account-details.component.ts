@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
-import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
-import { AccountsService } from '../services/accounts.service';
-import { filter, from, Observable, switchMap, scan, tap } from 'rxjs';
-import { Account } from '../models/account.model';
-import { UpcomingService } from '@app/core/services/upcoming.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Data, Router} from '@angular/router';
+import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
+import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
+import {AccountsService} from '../services/accounts.service';
+import {filter, from, Observable, switchMap, scan, tap, concatMap, map, of} from 'rxjs';
+import {Account} from '../models/account.model';
+import {UpcomingService} from '@app/core/services/upcoming.service';
 
 @Component({
   selector: 'app-account-details',
@@ -25,12 +25,9 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.account$ = this.route.params
-      .pipe(
-        switchMap(params => this.accountsService.findById(params['accountId'])),
-        filter(account => account !== undefined),
-        tap(account => this.accountsService.selectAccount(account!))
-      );
+    this.account$ = this.route.data.pipe(
+      map((data: Data) => data['account']),
+    );
 
     this.upcomingBalance$ = this.account$.pipe(
       filter(account => account !== undefined),
@@ -44,7 +41,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['edit'], { relativeTo: this.route });
+    this.router.navigate(['edit'], {relativeTo: this.route});
   }
 
   addTransaction(account: Account) {
@@ -52,14 +49,14 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   balanceClass(account: Account): string {
-    return this.amountClass(account.balance * accountTypeMultiplier(account.type));
+    return AccountDetailsComponent.amountClass(account.balance * accountTypeMultiplier(account.type));
   }
 
   upcomingBalanceClass(account: Account, upcomingBalance: number): string {
-    return this.amountClass(upcomingBalance * accountTypeMultiplier(account.type));
+    return AccountDetailsComponent.amountClass(upcomingBalance * accountTypeMultiplier(account.type));
   }
 
-  private amountClass(amount: number): string {
+  private static amountClass(amount: number): string {
     if (amount < 0) {
       return 'text-danger';
     } else if (amount > 0) {

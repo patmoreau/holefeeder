@@ -63,7 +63,6 @@ export class MakePurchaseComponent implements OnInit {
       tap(([params, accounts]) => {
         let fromAccount = params[accountIdParamName] ?? this.accountService.findOneByIndex(0)?.id;
         let toAccount = this.accountService.findOneByIndex(1)?.id;
-        console.log(fromAccount);
         this.formPurchase.patchValue({
           date: startOfToday(),
           account: fromAccount,
