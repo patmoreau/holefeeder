@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Data, Router} from '@angular/router';
-import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
-import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
-import {AccountsService} from '../services/accounts.service';
-import {filter, from, Observable, switchMap, scan, tap, concatMap, map, of} from 'rxjs';
-import {Account} from '../models/account.model';
-import {UpcomingService} from '@app/core/services/upcoming.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, Router } from '@angular/router';
+import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
+import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
+import { filter, from, Observable, switchMap, scan, map } from 'rxjs';
+import { UpcomingService } from '@app/core/services/upcoming.service';
+import { AccountsService } from '@app/core/services/accounts.service';
+import { Account } from '@app/core/models/account.model';
 
 @Component({
   selector: 'app-account-details',
@@ -41,7 +41,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    this.router.navigate(['edit'], { relativeTo: this.route });
   }
 
   addTransaction(account: Account) {

@@ -4,15 +4,14 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbDateAdapter, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { DateIntervalTypeNames, DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
-import { startOfToday } from 'date-fns';
+import { DateIntervalTypeNames } from '@app/shared/enums/date-interval-type.enum';
 import { Observable } from 'rxjs';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
-import { AccountInfo } from '@app/core/models/account-info.model';
-import { AccountsInfoService } from '@app/core/services/account-info.service';
 import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
 import { CashflowsService } from '@app/core/services/cashflows.service';
+import { Account } from '@app/core/models/account.model';
+import { AccountsService } from '@app/core/services/accounts.service';
 
 @Component({
   selector: 'app-cashflow-edit',
@@ -30,7 +29,7 @@ export class CashflowEditComponent implements OnInit {
   cashflow!: CashflowDetail;
   cashflowForm: FormGroup;
 
-  accounts$!: Observable<AccountInfo[]>;
+  accounts$!: Observable<Account[]>;
   categories$!: Observable<Category[]>;
 
   isLoaded = false;
@@ -39,7 +38,7 @@ export class CashflowEditComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private accountsService: AccountsInfoService,
+    private accountsService: AccountsService,
     private cashflowsService: CashflowsService,
     private categoriesService: CategoriesService,
     private formBuilder: FormBuilder,
@@ -62,7 +61,7 @@ export class CashflowEditComponent implements OnInit {
 
     this.account = this.activatedRoute.snapshot.queryParamMap.get('account')!;
 
-    this.accounts$ = this.accountsService.accounts$;
+    this.accounts$ = this.accountsService.activeAccounts$;
     this.categories$ = this.categoriesService.categories$;
 
     if (this.activatedRoute.snapshot.paramMap.has('cashflowId')) {

@@ -14,14 +14,15 @@ export class Account {
     public balance: number,
     public updated: Date,
     public description: string,
-    public favorite: boolean
+    public favorite: boolean,
+    public inactive: boolean
   ) { }
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AccountAdapter implements Adapter<Account> {
   adapt(item: any): Account {
     return new Account(item.id, item.name, item.type, item.openBalance, dateFromUtc(item.openDate),
-      item.transactionCount, item.balance, dateFromUtc(item.updated), item.description, item.favorite);
+      item.transactionCount, item.balance, dateFromUtc(item.updated), item.description, item.favorite, item.inactive);
   }
 }

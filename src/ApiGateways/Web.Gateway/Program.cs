@@ -1,69 +1,90 @@
-using System;
-using System.IO;
+using System.Linq;
 
-using Microsoft.AspNetCore.Hosting;
+using DrifterApps.Holefeeder.Web.Gateway.Ocelot;
+
+using HealthChecks.UI.Client;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+
+using Ocelot.Cache.CacheManager;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
 using Serilog;
-using Serilog.Events;
 
-namespace DrifterApps.Holefeeder.Web.Gateway
-{
-    public static class Program
+const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+var builder = WebApplication.CreateBuilder(args);
+
+var allowedOrigins = builder.Configuration.GetValue<string>("AllowedHosts").Split(";").ToArray();
+
+builder.Services
+  .AddCors(options =>
+  {
+    options.AddPolicy(myAllowSpecificOrigins, policyBuilder =>
     {
-        private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                optional: true)
-            .AddEnvironmentVariables()
-            .Build();
+      policyBuilder
+        .WithOrigins(allowedOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithExposedHeaders("X-Total-Count");
+    });
+  })
+  .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddMicrosoftIdentityWebApi(
+    options => options.TokenValidationParameters =
+      new TokenValidationParameters {ValidateIssuer = false},
+    options => builder.Configuration.Bind("AzureAd", options));
 
-        public static void Main(string[] args)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .Enrich.WithProperty("Env", Configuration["ASPNETCORE_ENVIRONMENT"])
-                .Enrich.WithProperty("MicroServiceName", "Web.Gateway")
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq(Configuration["SEQ_Url"], apiKey: Configuration["SEQ_ApiKey"])
-                .CreateLogger();
+builder.Services
+  .AddMvcCore(options => options.EnableEndpointRouting = false);
 
-            Log.Logger.Information("Web.Gateway started");
-            try
-            {
-                BuildWebHost(args).Run();
-            }
-            // ReSharper disable once CA1031
-#pragma warning disable CA1031
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Application start-up failed");
-            }
-#pragma warning restore
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
+builder.Services
+  .AddOcelot()
+  .AddCacheManager(x => x.WithDictionaryHandle());
 
-        private static IWebHost BuildWebHost(string[] args) =>
-            new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .ConfigureAppConfiguration((_, config) =>
-                {
-                    config.AddJsonFile("appsettings.json", true)
-                        .AddJsonFile($"ocelot.json", false, true)
-                        .AddEnvironmentVariables();
-                })
-                .UseSerilog()
-                .UseDefaultServiceProvider((ctx, opts) =>
-                {
-                    /* elided for brevity */
-                })
-                .UseStartup<Startup>()
-                .Build();
-    }
+builder.Services
+  .ConfigureDownstreamHostAndPortsPlaceholders(builder.Configuration)
+  .AddHealthChecks()
+  .AddCheck("self", () => HealthCheckResult.Healthy());
+
+builder.Host.UseSerilog();
+
+var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+  app.UseDeveloperExceptionPage();
+}
+else
+{
+  app.UseExceptionHandler("/Error")
+    .UseHsts();
+}
+
+app.UseMvc()
+  .UseCors(myAllowSpecificOrigins)
+  .UseRouting()
+  .UseSerilogRequestLogging()
+  .UseEndpoints(endpoints =>
+{
+  endpoints.MapHealthChecks("/hc",
+    new HealthCheckOptions {ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
+})
+  .UseOcelot().GetAwaiter().GetResult();
+
+app.Run();
+
+namespace DrifterApps.Holefeeder.Budgeting.API
+{
+  public class Program
+  {
+  }
 }

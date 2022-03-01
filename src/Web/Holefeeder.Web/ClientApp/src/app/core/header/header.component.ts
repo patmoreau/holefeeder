@@ -17,7 +17,7 @@ import { filter, takeUntil } from "rxjs/operators";
 import { Settings } from '@app/core/models/settings.model';
 import { DateInterval } from '@app/core/models/date-interval.model';
 import { SettingsService } from '../services/settings.service';
-import { Account } from '@app/modules/accounts/models/account.model';
+import { Account } from '../models/account.model';
 
 interface IdTokenClaims extends AuthenticationResult {
   idTokenClaims: {

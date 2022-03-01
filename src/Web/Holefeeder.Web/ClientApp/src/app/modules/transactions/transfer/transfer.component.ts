@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormGroupDirective} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {AccountsInfoService} from '@app/core/services/account-info.service';
-import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateParserAdapter} from "@app/shared/ngb-date-parser.adapter";
-import {AccountInfo} from "@app/core/models/account-info.model";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { AccountsService } from '@app/core/services/accounts.service';
+import { NgbDateAdapter } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDateParserAdapter } from "@app/shared/ngb-date-parser.adapter";
+import { AccountInfo } from "@app/core/models/account-info.model";
 
 @Component({
   selector: 'app-transfer',
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateParserAdapter}]
+  providers: [{ provide: NgbDateAdapter, useClass: NgbDateParserAdapter }]
 })
 export class TransferComponent implements OnInit {
 
@@ -20,13 +20,13 @@ export class TransferComponent implements OnInit {
 
   constructor(
     private rootFormGroup: FormGroupDirective,
-    private accountsService: AccountsInfoService
+    private accountsService: AccountsService
   ) {
   }
 
   ngOnInit() {
     this.form = this.rootFormGroup.control;
 
-    this.values$ = this.accountsService.accounts$;
+    this.values$ = this.accountsService.activeAccounts$;
   }
 }

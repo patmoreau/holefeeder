@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
-import {catchError, delay, first, Observable, take, tap} from 'rxjs';
-import {Account} from "@app/modules/accounts/models/account.model";
-import {AccountsService} from "@app/modules/accounts/services/accounts.service";
+import {catchError, first, Observable, tap} from 'rxjs';
 import {filterNullish} from "@app/shared/rxjs.helper";
+import {AccountsService} from "@app/core/services/accounts.service";
+import { Account } from '../models/account.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AccountResolver implements Resolve<Account> {
   constructor(
     private accountsService: AccountsService,
@@ -17,7 +17,6 @@ export class AccountResolver implements Resolve<Account> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any> {
-
     return this.accountsService.findById(route.params['accountId'])
       .pipe(
         filterNullish(),

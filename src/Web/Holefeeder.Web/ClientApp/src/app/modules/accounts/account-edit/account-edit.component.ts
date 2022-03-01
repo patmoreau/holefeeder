@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { Observable, tap } from 'rxjs';
-import { Account, AccountAdapter } from '../models/account.model';
-import { AccountsService } from '../services/accounts.service';
 
 @Component({
   selector: 'app-account-edit',

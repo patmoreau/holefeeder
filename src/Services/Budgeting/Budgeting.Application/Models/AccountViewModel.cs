@@ -25,5 +25,7 @@ namespace DrifterApps.Holefeeder.Budgeting.Application.Models
         public string Description { get; init; } = null!;
 
         public bool Favorite { get; init; }
+
+        public bool Inactive { get; init; }
     }
 }

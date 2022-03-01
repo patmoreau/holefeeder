@@ -22,10 +22,6 @@ const appRoutes: Routes = [
     loadChildren: () => import('./modules/transactions/transactions.module').then(m => m.TransactionsModule)
   },
   {
-    path: 'statistics',
-    loadChildren: () => import('./modules/statistics/statistics.module').then(m => m.StatisticsModule)
-  },
-  {
     path: 'externalRedirect',
     resolve: {
       url: externalUrlProvider,

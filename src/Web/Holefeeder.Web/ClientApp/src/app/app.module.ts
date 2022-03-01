@@ -46,14 +46,12 @@ const COMPONENTS = [
   ExternalUrlDirective
 ];
 
-const AUTH_CONFIG_URL_TOKEN = new InjectionToken<string>('/assets/config');
-
-export function initializerFactory(config: ConfigService, configUrl: string): any {
-  const promise = config.loadAppConfig(configUrl).then(_ => {
-    console.debug('Configuration initialized.');
-  });
-  return () => promise;
-}
+// export function initializerFactory(config: ConfigService): any {
+//   const promise = config.loadAppConfig(configUrl).then(_ => {
+//     console.debug('Configuration initialized.');
+//   });
+//   return () => promise;
+// }
 
 export function MSALInstanceFactory(config: ConfigService): IPublicClientApplication {
   return new PublicClientApplication(config.msalConfiguration);
@@ -70,7 +68,7 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
 @NgModule({
   declarations: [COMPONENTS],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
@@ -79,25 +77,17 @@ export function MSALGuardConfigFactory(config: ConfigService): MsalGuardConfigur
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
+    CoreModule,
     ToastNoAnimationModule.forRoot(),
     LoadingBarRouterModule,
     LoadingBarModule
   ],
   providers: [
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpLoadingInterceptor,
-      multi: true,
-    },
-    {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/config'},
-    {
-      provide: APP_INITIALIZER, useFactory: initializerFactory,
-      deps: [ConfigService, AUTH_CONFIG_URL_TOKEN], multi: true
-    },
+    // {provide: AUTH_CONFIG_URL_TOKEN, useValue: '/assets/config'},
+    // {
+    //   provide: APP_INITIALIZER, useFactory: initializerFactory,
+    //   deps: [ConfigService, AUTH_CONFIG_URL_TOKEN], multi: true
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,

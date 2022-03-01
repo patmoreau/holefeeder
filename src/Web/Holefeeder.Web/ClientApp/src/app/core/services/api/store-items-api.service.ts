@@ -20,7 +20,7 @@ export class StoreItemsService {
   }
 
   saveStoreItem(item: StoreItem): Observable<StoreItem> {
-    const command = item.id === undefined ? 'create-store-item' : 'modify-store-item';
+    const command = item.id ? 'modify-store-item' : 'create-store-item';
     return this.http.post(`${this.configService.config.apiUrl}/${apiRoute}/${command}`, item)
       .pipe(
         map((data: any) => {

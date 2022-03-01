@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormGroupDirective } from '@angular/forms';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserAdapter } from '@app/shared/ngb-date-parser.adapter';
-import { combineLatest, forkJoin, Observable, tap } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { Category } from '@app/core/models/category.model';
 import { AccountInfo } from '@app/core/models/account-info.model';
-import { AccountsInfoService } from '@app/core/services/account-info.service';
+import { AccountsService } from '@app/core/services/accounts.service';
 
 @Component({
   selector: 'app-transaction-edit',
@@ -22,7 +22,7 @@ export class TransactionEditComponent implements OnInit {
 
   constructor(
     private rootFormGroup: FormGroupDirective,
-    private accountsService: AccountsInfoService,
+    private accountsService: AccountsService,
     private categoriesService: CategoriesService
   ) {
   }
@@ -31,7 +31,7 @@ export class TransactionEditComponent implements OnInit {
     this.form = this.rootFormGroup.control;
 
     this.values$ = combineLatest({
-      accounts: this.accountsService.accounts$,
+      accounts: this.accountsService.activeAccounts$,
       categories: this.categoriesService.categories$
     });
   }

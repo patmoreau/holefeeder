@@ -42,10 +42,10 @@ public class AccountQueriesRepository : IAccountQueriesRepository
     {
         const string queryTemplate = @"
 SELECT X.* FROM (
-    SELECT A.*, ROW_NUMBER() OVER (/**orderby**/) AS row_nb 
+    SELECT A.*, ROW_NUMBER() OVER (/**orderby**/) AS row_nb
     FROM accounts A
     /**where**/
-) AS X 
+) AS X
 WHERE row_nb BETWEEN @Offset AND @Limit
 ORDER BY row_nb;
 ";
@@ -120,7 +120,8 @@ WHERE id = @Id AND user_id = @UserId AND inactive = 0;
             Name = account.Name,
             TransactionCount = transactions.Count,
             Updated = transactions.Any() ? transactions.Max(t => t.Date) : account.OpenDate,
-            Type = account.Type
+            Type = account.Type,
+            Inactive = account.Inactive
         };
 
     private static async Task<IList<TransactionEntity>> GetTransactions(IDbConnection connection,

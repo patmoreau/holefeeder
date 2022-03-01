@@ -3,12 +3,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ModalService } from '@app/shared/services/modal.service';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, switchMap, filter, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { Location } from '@angular/common';
-import { AccountsService } from '../services/accounts.service';
-import { Account } from '../models/account.model';
 import { ModifyAccountAdapter } from '../models/modify-account-command.model';
 import { filterNullish } from '@app/shared/rxjs.helper';
+import { AccountCommandsService } from '../services/account-commands.service';
+import { AccountsService } from '@app/core/services/accounts.service';
 
 const accountIdParamName = 'accountId';
 
@@ -36,9 +36,11 @@ export class ModifyAccountComponent implements OnInit {
     private formBuilder: FormBuilder,
     private location: Location,
     private accountsService: AccountsService,
+    private commandsService: AccountCommandsService,
     private adapter: ModifyAccountAdapter,
     private modalService: ModalService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
 
@@ -66,7 +68,7 @@ export class ModifyAccountComponent implements OnInit {
   }
 
   onSubmit() {
-    this.accountsService.modify(
+    this.commandsService.modify(
       this.adapter.adapt(Object.assign({}, this.form.value, {
         id: this.accountId
       }))).subscribe(id => this.router.navigate(['accounts', id]));
