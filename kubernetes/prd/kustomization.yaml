@@ -11,7 +11,6 @@ resources:
 
 patchesStrategicMerge:
 - budgeting.env.yaml
-- gateway.env.yaml
 - object-store.env.yaml
 - ui.env.yaml
 

@@ -1,14 +1,13 @@
 import {Inject, Injectable} from "@angular/core";
-import { MessageService } from "@app/core/services/message.service";
-import { StateService } from "@app/core/services/state.service";
-import { catchError, filter, map, Observable, Subject, take } from "rxjs";
-import { Account, AccountAdapter } from "../models/account.model";
-import { MessageType } from "@app/shared/enums/message-type.enum";
-import { ConfigService } from "../config/config.service";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { PagingInfo } from "../models/paging-info.model";
-import { formatErrors, mapToPagingInfo } from "../utils/api.utils";
-import { filterNullish } from "@app/shared/rxjs.helper";
+import {MessageService} from "@app/core/services/message.service";
+import {StateService} from "@app/core/services/state.service";
+import {catchError, filter, map, Observable, Subject, take} from "rxjs";
+import {Account, AccountAdapter} from "../models/account.model";
+import {MessageType} from "@app/shared/enums/message-type.enum";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {PagingInfo} from "../models/paging-info.model";
+import {formatErrors, mapToPagingInfo} from "../utils/api.utils";
+import {filterNullish} from "@app/shared/rxjs.helper";
 
 const apiRoute: string = 'budgeting/api/v2/accounts';
 
@@ -22,7 +21,7 @@ const initialState: AccountState = {
   selected: null
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AccountsService extends StateService<AccountState> {
 
   private refresh$ = new Subject<boolean>();
@@ -37,8 +36,7 @@ export class AccountsService extends StateService<AccountState> {
 
   constructor(
     private http: HttpClient,
-    @Inject('BASE_URL') private baseUrl: string,
-    private configService: ConfigService,
+    @Inject('BASE_API_URL') private apiUrl: string,
     private messages: MessageService,
     private adapter: AccountAdapter
   ) {
@@ -54,7 +52,7 @@ export class AccountsService extends StateService<AccountState> {
   }
 
   private load() {
-    this.getAll().subscribe(pagingInfo => this.setState({ accounts: pagingInfo.items }))
+    this.getAll().subscribe(pagingInfo => this.setState({accounts: pagingInfo.items}))
   }
 
   findById(id: string): Observable<Account | undefined> {
@@ -62,7 +60,7 @@ export class AccountsService extends StateService<AccountState> {
   }
 
   selectAccount(account: Account) {
-    this.setState({ selected: account });
+    this.setState({selected: account});
   }
 
   findOneById(id: string): Observable<Account> {
@@ -86,7 +84,7 @@ export class AccountsService extends StateService<AccountState> {
       .append('sort', 'name');
 
     return this.http
-      .get<Object[]>(`${this.baseUrl}/${apiRoute}`, {
+      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params
       }).pipe(

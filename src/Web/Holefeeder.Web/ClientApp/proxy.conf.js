@@ -7,7 +7,9 @@ const PROXY_CONFIG = [
   {
     context: [
       "/config",
-      "/gateway"
+      "/gateway",
+      "/hc-ui",
+      "/healthz"
     ],
     target: target,
     secure: false

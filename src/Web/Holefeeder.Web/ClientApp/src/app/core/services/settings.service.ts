@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
-import { StateService } from '@app/core/services/state.service';
-import { Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { addDays, addMonths, addWeeks, addYears, compareAsc, startOfDay, startOfToday } from 'date-fns';
-import { DateIntervalType } from '@app/shared/enums/date-interval-type.enum';
-import { StoreItemsService } from './api/store-items-api.service';
-import { Settings, SettingsStoreItemAdapter } from '../models/settings.model';
-import { StoreItem } from '../models/store-item.model';
-import { DateInterval } from '../models/date-interval.model';
+import {Injectable} from '@angular/core';
+import {StateService} from '@app/core/services/state.service';
+import {Observable, of, Subject} from 'rxjs';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {addDays, addMonths, addWeeks, addYears, compareAsc, startOfDay, startOfToday} from 'date-fns';
+import {DateIntervalType} from '@app/shared/enums/date-interval-type.enum';
+import {StoreItemsService} from './api/store-items-api.service';
+import {Settings, SettingsStoreItemAdapter} from '../models/settings.model';
+import {StoreItem} from '../models/store-item.model';
+import {DateInterval} from '../models/date-interval.model';
+import {MessageService} from "@app/core/services/message.service";
+import {MessageType} from "@app/shared/enums/message-type.enum";
+import {MessageAction} from "@app/shared/enums/message-action.enum";
 
 interface SettingsState {
   period: DateInterval;
@@ -23,19 +26,21 @@ const initialState: SettingsState = {
   storeItem: new StoreItem(null, storeItemCode, '')
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class SettingsService extends StateService<SettingsState> {
-
-  private userEvent$ = new Subject<boolean>();
 
   settings$: Observable<Settings> = this.select((state) => state.settings);
   period$: Observable<DateInterval> = this.select((state) => state.period);
 
-  constructor(private apiService: StoreItemsService, private adapter: SettingsStoreItemAdapter) {
+  constructor(
+    private apiService: StoreItemsService,
+    private adapter: SettingsStoreItemAdapter,
+    private messages: MessageService
+  ) {
     super(initialState);
 
-    this.userEvent$.pipe(
-      filter(userLogged => userLogged === true),
+    this.messages.listen.pipe(
+      filter(message => message.type === MessageType.general && message.action === MessageAction.userLogOn),
       switchMap(_ => this.apiService.getStoreItem(storeItemCode))
     ).subscribe(item => {
       const settings = this.adapter.adapt(item);
@@ -43,8 +48,8 @@ export class SettingsService extends StateService<SettingsState> {
       this.resetState(period, settings, item);
     });
 
-    this.userEvent$.pipe(
-      filter(userLogged => userLogged === false),
+    this.messages.listen.pipe(
+      filter(message => message.type === MessageType.general && message.action === MessageAction.userLogOff),
       switchMap(_ => of(initialState))
     ).subscribe(state => {
       this.resetState(state.period, state.settings, state.storeItem);
@@ -61,14 +66,6 @@ export class SettingsService extends StateService<SettingsState> {
 
   getPreviousDate(asOfDate: Date): Date {
     return this.calculatePreviousDate(asOfDate, this.state.settings);
-  }
-
-  loggedOff() {
-    this.userEvent$.next(false);
-  }
-
-  loggedOn() {
-    this.userEvent$.next(true);
   }
 
   setPeriod(asOfDate: Date | DateInterval) {

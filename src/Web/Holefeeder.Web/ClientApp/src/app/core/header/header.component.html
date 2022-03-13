@@ -1,21 +1,20 @@
-<ng-container *ngIf="settings$ | async"></ng-container>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
     <a aria-label="home" class="navbar-brand" href="#">
       <em class="bi bi-safe"></em>
     </a>
-    <button class="navbar-toggler" aria-label="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ng-container *ngIf="loggedIn">
+    <ng-container *ngIf="logged$ | async; else loginNavBar">
+      <button class="navbar-toggler" aria-label="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-begin flex-grow-1 pe-3">
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active">
@@ -49,12 +48,13 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
                  data-bs-toggle="dropdown" aria-expanded="false">
-                <em class="bi bi-person-circle"></em>&nbsp;{{profile?.name}}
+                <em class="bi bi-person-circle"></em>&nbsp;{{(user$ | async)?.userPrincipalName}}
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="offcanvasNavbarDropdown">
-                <li><a class="dropdown-item" [routerLink]="['/settings']"><em class="bi bi-gear"></em>&nbsp;Settings</a>
+                <li><a class="dropdown-item" [routerLink]="['/settings']"><em
+                  class="bi bi-gear"></em>&nbsp;Settings</a>
                 </li>
-                <li><a class="dropdown-item" [routerLink]="['/healthchecks-ui']"><em
+                <li><a class="dropdown-item" target="_blank" [routerLink]="['/hc-ui']"><em
                   class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
                 <li>
                   <hr class="dropdown-divider">
@@ -64,11 +64,16 @@
               </ul>
             </li>
           </ul>
-        </ng-container>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </nav>
+<ng-template #loginNavBar>
+  <button type="button" class="btn btn-outline-secondary" (click)="login()">
+    <em class="bi bi-box-arrow-in-right"></em>&nbsp;Log in
+  </button>
+</ng-template>
 <ng-template #datePicker let-modal>
   <div class="modal-header">
     <h4 class="modal-title text-dark" id="modal-basic-title">Period selection</h4>

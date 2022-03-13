@@ -1,7 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {ConfigService} from '@app/core/config/config.service';
 import {PagingInfo} from '@app/core/models/paging-info.model';
 import {Observable, of} from 'rxjs';
 import {BaseApiService} from './base-api.service';
@@ -17,7 +16,7 @@ const apiRoute: string = 'budgeting/api/v2/transactions';
 export class TransactionsApiService extends BaseApiService {
   private basePath = 'transactions';
 
-  constructor(private http: HttpClient, private configService: ConfigService, private adapter: TransactionDetailAdapter) {
+  constructor(private http: HttpClient, @Inject('BASE_API_URL') private apiUrl: string, private adapter: TransactionDetailAdapter) {
     super();
   }
 
@@ -38,7 +37,7 @@ export class TransactionsApiService extends BaseApiService {
       });
     }
     return this.http
-      .get<Object[]>(`${this.configService.config.apiUrl}/${apiRoute}`, {
+      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params
       }).pipe(
@@ -49,7 +48,7 @@ export class TransactionsApiService extends BaseApiService {
 
   findOneById(id: number | string): Observable<TransactionDetail> {
     return this.http
-      .get(`${this.configService.config.apiUrl}/${apiRoute}/${id}`)
+      .get(`${this.apiUrl}/${apiRoute}/${id}`)
       .pipe(
         map(this.adapter.adapt),
         catchError(this.formatErrors)
@@ -58,7 +57,7 @@ export class TransactionsApiService extends BaseApiService {
 
   modify(transaction: ModifyTransactionCommand): Observable<void> {
     return this.http
-      .post(`${this.configService.config.apiUrl}/${apiRoute}/modify`, transaction)
+      .post(`${this.apiUrl}/${apiRoute}/modify`, transaction)
       .pipe(
         switchMap(_ => of(void 0)),
         catchError(this.formatErrors)
@@ -67,7 +66,7 @@ export class TransactionsApiService extends BaseApiService {
 
   makePurchase(transaction: MakePurchaseCommand): Observable<string> {
     return this.http
-      .post(`${this.configService.config.apiUrl}/${apiRoute}/make-purchase`, transaction)
+      .post(`${this.apiUrl}/${apiRoute}/make-purchase`, transaction)
       .pipe(
         map((data: any) => data.id),
         catchError(this.formatErrors)
@@ -76,7 +75,7 @@ export class TransactionsApiService extends BaseApiService {
 
   transferMoney(transaction: TransferMoneyCommand): Observable<string> {
     return this.http
-      .post(`${this.configService.config.apiUrl}/${apiRoute}/transfer`, transaction)
+      .post(`${this.apiUrl}/${apiRoute}/transfer`, transaction)
       .pipe(
         map((data: any) => data.id),
         catchError(this.formatErrors)
@@ -85,7 +84,7 @@ export class TransactionsApiService extends BaseApiService {
 
   payCashflow(transaction: PayCashflowCommand): Observable<string> {
     return this.http
-      .post(`${this.configService.config.apiUrl}/${apiRoute}/pay-cashflow`, transaction)
+      .post(`${this.apiUrl}/${apiRoute}/pay-cashflow`, transaction)
       .pipe(
         map((data: any) => data.id),
         catchError(this.formatErrors)
@@ -94,7 +93,7 @@ export class TransactionsApiService extends BaseApiService {
 
   delete(id: string): Observable<void> {
     return this.http
-      .delete(`${this.configService.config.apiUrl}/${apiRoute}/${id}`)
+      .delete(`${this.apiUrl}/${apiRoute}/${id}`)
       .pipe(
         switchMap(_ => of(void 0)),
         catchError(this.formatErrors)

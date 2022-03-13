@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import { ICategoryInfo } from '@app/shared/interfaces/category-info.interface';
 import { Settings } from '@app/core/models/settings.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Statistics, StatisticsAdapter } from '../../models/statistics.model';
 import { catchError, map } from 'rxjs/operators';
-import { ConfigService } from '@app/core/config/config.service';
 import { Observable } from 'rxjs';
 import { BaseApiService } from './base-api.service';
 
@@ -15,7 +14,7 @@ export class StatisticsApiService extends BaseApiService {
 
   private basePath = 'api/v1/categories';
 
-  constructor(private http: HttpClient, private configService: ConfigService, private adapter: StatisticsAdapter<ICategoryInfo>) {
+  constructor(private http: HttpClient, @Inject('BASE_API_URL') private apiUrl: string, private adapter: StatisticsAdapter<ICategoryInfo>) {
     super();
   }
 
@@ -26,7 +25,7 @@ export class StatisticsApiService extends BaseApiService {
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.configService.config.apiUrl}/${apiRoute}/statistics`, {
+      .get<Object[]>(`${this.apiUrl}/${apiRoute}/statistics`, {
         params: params
       })
       .pipe(
@@ -42,7 +41,7 @@ export class StatisticsApiService extends BaseApiService {
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.configService.config.apiUrl}/${apiRoute}/${id}/statistics`, {
+      .get<Object[]>(`${this.apiUrl}/${apiRoute}/${id}/statistics`, {
         params: params
       })
       .pipe(

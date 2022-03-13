@@ -1,6 +1,6 @@
-import { catchError, Observable, retry, throwError } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {catchError, Observable, retry, throwError} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 @Injectable()
 export class HttpLoadingInterceptor implements HttpInterceptor {

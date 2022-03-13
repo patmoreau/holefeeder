@@ -9,8 +9,11 @@ using DrifterApps.Holefeeder.Budgeting.Infrastructure;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
+using HealthChecks.UI.Client;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,7 +99,8 @@ builder.Services
         "BudgetingDB-check",
         tags: new[] {"budgeting-db"});
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((context, _, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -110,6 +114,8 @@ else
     app.UseExceptionHandler("/Error")
         .UseHsts();
 }
+
+app.UseSerilogRequestLogging();
 
 app.AddAccountsRoutes()
     .AddCashflowsRoutes()
@@ -130,6 +136,9 @@ app.AddAccountsRoutes()
     .UseAuthentication()
     .UseAuthorization()
     .MigrateDb();
+
+app.MapHealthChecks("/healthz",
+    new HealthCheckOptions() {Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
 
 app.Run();
 

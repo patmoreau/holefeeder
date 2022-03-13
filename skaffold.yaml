@@ -8,13 +8,6 @@ build:
     envTemplate:
       template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'
   artifacts:
-  - image: holefeeder/holefeeder-gateway-web
-    context: .
-    docker:
-      dockerfile: src/ApiGateways/Web.Gateway/Dockerfile
-      target: final
-      buildArgs:
-        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
   - image: holefeeder/holefeeder-web
     context: .
     docker:

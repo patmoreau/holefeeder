@@ -6,7 +6,6 @@ namespace: holefeeder
 resources:
 - adminer.deployment.yaml
 - budgeting.deployment.yaml
-- gateway.deployment.yaml
 - ingress.deployment.yaml
 - mysql.deployment.yaml
 - object-store.deployment.yaml
@@ -14,9 +13,6 @@ resources:
 - namespace.yaml
 
 configMapGenerator:
-- name: ui-config
-  files:
-  - templates/default.conf.template
 - name: mysql-initdb-scripts
   files:
   - init/mysql-initdb.sh

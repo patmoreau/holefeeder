@@ -1,11 +1,9 @@
-import {InjectionToken, NgModule} from '@angular/core';
-import {Routes, RouterModule, ActivatedRouteSnapshot} from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {ErrorNotfoundComponent} from './core/error-notfound/error-notfound.component';
-import {RedirectComponent} from "@app/redirect.component";
+import {BrowserUtils} from "@azure/msal-browser";
 
-const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
-
-const appRoutes: Routes = [
+const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {
     path: 'dashboard',
@@ -21,28 +19,14 @@ const appRoutes: Routes = [
     path: 'transactions',
     loadChildren: () => import('./modules/transactions/transactions.module').then(m => m.TransactionsModule)
   },
-  {
-    path: 'externalRedirect',
-    resolve: {
-      url: externalUrlProvider,
-    },
-    component: RedirectComponent
-  },
   {path: '**', component: ErrorNotfoundComponent}
 ];
 
 @NgModule({
-  providers: [
-    {
-      provide: externalUrlProvider,
-      useValue: (route: ActivatedRouteSnapshot) => {
-        const externalUrl = route.paramMap.get('externalUrl') ?? undefined;
-        window.open(externalUrl, '_self');
-      },
-    },
-  ],
   imports: [
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(routes, {
+      initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() ? 'enabled' : 'disabled'
+    })
   ],
   exports: [RouterModule]
 })

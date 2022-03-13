@@ -1,5 +1,5 @@
 <ngx-loading-bar height="4px" [includeSpinner]="false"></ngx-loading-bar>
 <app-toast-view></app-toast-view>
 <app-header></app-header>
-<router-outlet></router-outlet>
+<router-outlet *ngIf="!isIframe"></router-outlet>
 <app-footer></app-footer>
