@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data} from '@angular/router';
-import { Account } from '@app/core/models/account.model';
 import {map, Observable} from 'rxjs';
+import {Account} from "@app/core";
 
 @Component({
   selector: 'app-account-upcoming',

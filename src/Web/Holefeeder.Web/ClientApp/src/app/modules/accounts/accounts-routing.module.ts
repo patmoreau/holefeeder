@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
-import { AccountsListComponent } from './accounts-list/accounts-list.component';
-import { AccountDetailsComponent } from './account-details/account-details.component';
-import { AccountsComponent } from './accounts/accounts.component';
-import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
-import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
-import { OpenAccountComponent } from './open-account/open-account.component';
-import { ModifyAccountComponent } from './modify-account/modify-account.component';
-import { AccountResolver } from "@app/core/resolvers/account.resolver";
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {MsalGuard} from '@azure/msal-angular';
+import {AccountsListComponent} from './accounts-list/accounts-list.component';
+import {AccountDetailsComponent} from './account-details/account-details.component';
+import {AccountsComponent} from './accounts/accounts.component';
+import {AccountUpcomingComponent} from './account-upcoming/account-upcoming.component';
+import {AccountTransactionsComponent} from './account-transactions/account-transactions.component';
+import {OpenAccountComponent} from './open-account/open-account.component';
+import {ModifyAccountComponent} from './modify-account/modify-account.component';
+import {AccountResolver} from "@app/core/resolvers/account.resolver";
 
 const routes: Routes = [
   {
@@ -40,7 +40,7 @@ const routes: Routes = [
           account: AccountResolver
         },
         children: [
-          { path: '', redirectTo: 'upcoming' },
+          {path: '', redirectTo: 'upcoming'},
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,

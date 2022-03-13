@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared/interfaces/adapter.interface";
+import {Injectable} from "@angular/core";
+import {Adapter} from "@app/shared/interfaces/adapter.interface";
 
 export class ModifyAccountCommand {
   constructor(
@@ -7,7 +7,8 @@ export class ModifyAccountCommand {
     public name: string,
     public openBalance: number,
     public description: string
-  ) { }
+  ) {
+  }
 }
 
 @Injectable()

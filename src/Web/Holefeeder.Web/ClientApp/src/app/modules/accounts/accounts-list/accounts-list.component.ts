@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
-import { Upcoming } from "@app/core/models/upcoming.model";
-import { categoryTypeMultiplier } from '@app/shared/interfaces/category-type.interface';
-import { accountTypeMultiplier } from '@app/shared/interfaces/account-type.interface';
-import { AccountTypeNames } from '@app/shared/enums/account-type.enum';
-import { UpcomingService } from '@app/core/services/upcoming.service';
-import { Account } from '@app/core/models/account.model';
-import { AccountsService } from '@app/core/services/accounts.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
+import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
+import {AccountTypeNames} from '@app/shared/enums/account-type.enum';
+import {Account, AccountsService, Upcoming, UpcomingService} from "@app/core";
 
 @Component({
   templateUrl: './accounts-list.component.html',
@@ -40,9 +37,9 @@ export class AccountsListComponent implements OnInit {
 
   inactiveChange() {
     this.showInactive = !this.showInactive;
-    if(this.showInactive) {
+    if (this.showInactive) {
       this.accounts$ = this.accountsService.inactiveAccounts$;
-    } else{
+    } else {
       this.accounts$ = this.accountsService.activeAccounts$;
     }
   }

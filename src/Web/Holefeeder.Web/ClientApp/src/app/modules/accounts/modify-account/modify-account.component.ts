@@ -1,14 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ModalService } from '@app/shared/services/modal.service';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, switchMap, tap } from 'rxjs';
-import { Location } from '@angular/common';
-import { ModifyAccountAdapter } from '../models/modify-account-command.model';
-import { filterNullish } from '@app/shared/rxjs.helper';
-import { AccountCommandsService } from '../services/account-commands.service';
-import { AccountsService } from '@app/core/services/accounts.service';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ModalService} from '@app/shared/services/modal.service';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {Observable, switchMap, tap} from 'rxjs';
+import {Location} from '@angular/common';
+import {ModifyAccountAdapter} from '../models/modify-account-command.model';
+import {filterNullish} from '@app/shared/rxjs.helper';
+import {AccountCommandsService} from '../services/account-commands.service';
+import {AccountsService} from "@app/core";
 
 const accountIdParamName = 'accountId';
 
@@ -19,7 +19,7 @@ const accountIdParamName = 'accountId';
 })
 export class ModifyAccountComponent implements OnInit {
 
-  @ViewChild('confirm', { static: true })
+  @ViewChild('confirm', {static: true})
   confirmModalElement!: ElementRef;
   confirmModal!: NgbModalRef;
   confirmMessages!: string;
@@ -46,9 +46,9 @@ export class ModifyAccountComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      type: [{ value: '', disable: true }, Validators.required],
+      type: [{value: '', disable: true}, Validators.required],
       openBalance: [0, [Validators.required, Validators.min(0)]],
-      openDate: [{ value: '', disable: true }, Validators.required],
+      openDate: [{value: '', disable: true}, Validators.required],
       description: ['']
     });
 
@@ -75,7 +75,7 @@ export class ModifyAccountComponent implements OnInit {
   }
 
   onDeactivate(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-deactivate-title' })
+    this.modalService.open(content, {ariaLabelledBy: 'modal-deactivate-title'})
       .subscribe(_ => this.location.back());
   }
 
