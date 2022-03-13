@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using Dapper;
 
@@ -16,6 +18,7 @@ using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Scripts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using MySqlConnectionManager = Framework.Dapper.SeedWork.MySqlConnectionManager;
@@ -59,7 +62,38 @@ public static class ServiceCollectionExtensions
         using var scope = app.ApplicationServices.CreateScope();
 
         var databaseSettings = scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseSettings>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ObjectStoreContext>>();
 
+        var completed = false;
+        var tryCount = 0;
+
+        while (tryCount++ < 3 && !completed)
+        {
+            logger.LogInformation("Migration attempt #{tryCount}", tryCount);
+            try
+            {
+                PerformMigration(databaseSettings);
+                completed = true;
+            }
+            catch (SocketException e)
+            {
+                logger.LogInformation("Migration attempt #{tryCount} - error {error}", tryCount, e);
+                Task.Delay(10000);
+            }
+        }
+
+        if (!completed)
+        {
+            throw new Exception("Unable to perform database migration, no connection to server was found.");
+        }
+
+        logger.LogInformation("Migration completed successfully");
+
+        return app;
+    }
+
+    private static void PerformMigration(ObjectStoreDatabaseSettings databaseSettings)
+    {
         lock (Locker)
         {
             var connectionManager =
@@ -83,7 +117,5 @@ public static class ServiceCollectionExtensions
                 throw result.Error;
             }
         }
-
-        return app;
     }
 }
