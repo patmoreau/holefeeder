@@ -1,16 +1,15 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {StateService} from '@app/core/services/state.service';
-import {Observable, of, Subject} from 'rxjs';
+import {mergeMap, Observable, of} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {addDays, addMonths, addWeeks, addYears, compareAsc, startOfDay, startOfToday} from 'date-fns';
 import {DateIntervalType} from '@app/shared/enums/date-interval-type.enum';
-import {StoreItemsService} from './api/store-items-api.service';
-import {Settings, SettingsStoreItemAdapter} from '../models/settings.model';
-import {StoreItem} from '../models/store-item.model';
-import {DateInterval} from '../models/date-interval.model';
-import {MessageService} from "@app/core/services/message.service";
 import {MessageType} from "@app/shared/enums/message-type.enum";
 import {MessageAction} from "@app/shared/enums/message-action.enum";
+import {HttpClient} from "@angular/common/http";
+import {DateInterval, MessageService, Settings, SettingsStoreItemAdapter, StoreItem, StoreItemAdapter} from "@app/core";
+
+const apiRoute: string = 'object-store/api/v2/store-items';
 
 interface SettingsState {
   period: DateInterval;
@@ -33,7 +32,9 @@ export class SettingsService extends StateService<SettingsState> {
   period$: Observable<DateInterval> = this.select((state) => state.period);
 
   constructor(
-    private apiService: StoreItemsService,
+    private http: HttpClient,
+    @Inject('BASE_API_URL') private apiUrl: string,
+    private storeItemAdapter: StoreItemAdapter,
     private adapter: SettingsStoreItemAdapter,
     private messages: MessageService
   ) {
@@ -41,7 +42,7 @@ export class SettingsService extends StateService<SettingsState> {
 
     this.messages.listen.pipe(
       filter(message => message.type === MessageType.general && message.action === MessageAction.userLogOn),
-      switchMap(_ => this.apiService.getStoreItem(storeItemCode))
+      switchMap(_ => this.getStoreItem(storeItemCode))
     ).subscribe(item => {
       const settings = this.adapter.adapt(item);
       const period = this.calculatePeriod(startOfToday(), settings);
@@ -81,7 +82,7 @@ export class SettingsService extends StateService<SettingsState> {
   saveSettings(settings: Settings): Observable<void> {
     const currStoreItem = this.state.storeItem;
 
-    return this.apiService.saveStoreItem(new StoreItem(currStoreItem.id, currStoreItem.code, JSON.stringify(settings)))
+    return this.saveStoreItem(new StoreItem(currStoreItem.id, currStoreItem.code, JSON.stringify(settings)))
       .pipe(
         map(storeItem => {
           const newSettings = this.adapter.adapt(storeItem);
@@ -182,5 +183,30 @@ export class SettingsService extends StateService<SettingsState> {
       settings: settings,
       storeItem: storeItem
     });
+  }
+
+  private getStoreItem(code: string): Observable<StoreItem> {
+    return this.http.get(`${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`)
+      .pipe(
+        mergeMap((data: any) => data),
+        map((item: any) => this.storeItemAdapter.adapt(item))
+      );
+  }
+
+  private saveStoreItem(item: StoreItem): Observable<StoreItem> {
+    const command = item.id ? 'modify-store-item' : 'create-store-item';
+    return this.http.post(`${this.apiUrl}/${apiRoute}/${command}`, item)
+      .pipe(
+        map((data: any) => {
+          if (data?.id === undefined) {
+            return item;
+          }
+          return this.storeItemAdapter.adapt({
+            id: data.id,
+            code: item.code,
+            data: item.data
+          });
+        })
+      );
   }
 }

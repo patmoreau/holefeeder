@@ -1,4 +1,4 @@
-<ngb-toast *ngFor="let toast of toasts$ | async" [autohide]="false" [class]="toast.className" [delay]="toast.delay" (hidden)="remove(toast)">
+<ngb-toast *ngFor="let toast of toasts$ | async" [autohide]="true" [class]="toast.className" [delay]="toast.delay" (hidden)="remove(toast)">
   <ng-container *ngTemplateOutlet="{'info': info, 'warning': warning, 'danger': danger}[toast.type]"></ng-container>
   {{ toast.message }}
 </ngb-toast>

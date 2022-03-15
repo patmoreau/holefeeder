@@ -2,10 +2,10 @@ import {Inject, Injectable} from "@angular/core";
 import {MessageService} from "@app/core/services/message.service";
 import {StateService} from "@app/core/services/state.service";
 import {catchError, filter, map, Observable, Subject, take} from "rxjs";
-import {Account, AccountAdapter} from "../models/account.model";
+import {Account, AccountAdapter} from "@app/core";
 import {MessageType} from "@app/shared/enums/message-type.enum";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {PagingInfo} from "../models/paging-info.model";
+import {PagingInfo} from "@app/core";
 import {formatErrors, mapToPagingInfo} from "../utils/api.utils";
 import {filterNullish} from "@app/shared/rxjs.helper";
 

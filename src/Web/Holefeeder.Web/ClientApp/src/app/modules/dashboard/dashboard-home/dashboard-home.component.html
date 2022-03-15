@@ -19,8 +19,10 @@
 </div>
 <div class="container">
   <app-transaction-list-item *ngFor="let upcoming of (upcoming$ | async)"
-    [description]="upcoming.description ? upcoming.description : upcoming.category.name" [amount]="upcoming.amount"
-    [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true" (action)="action($event, upcoming)">
+                             [description]="upcoming.description ? upcoming.description : upcoming.category.name"
+                             [amount]="upcoming.amount"
+                             [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true"
+                             (action)="action($event, upcoming)">
   </app-transaction-list-item>
 </div>
 <ng-template #loader>
