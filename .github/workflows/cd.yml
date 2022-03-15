@@ -70,7 +70,6 @@ jobs:
     - name: Set image tags
       run: |
         cd $GITHUB_WORKSPACE/kubernetes/prd
-        kustomize edit set image holefeeder/holefeeder-gateway-web=${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
         kustomize edit set image holefeeder/holefeeder-budgeting-api=${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
         kustomize edit set image holefeeder/holefeeder-object-store-api=${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
         kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}

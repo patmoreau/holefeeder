@@ -77,21 +77,6 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build Web.Gateway container
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/ApiGateways/Web.Gateway/Dockerfile
-        target: build
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-gateway-web:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=gateway-build
-        cache-to: |
-          type=gha,scope=gateway-build,mode=max
-
     - name: Build Budgeting.API container
       uses: docker/build-push-action@v2
       with:
@@ -257,21 +242,6 @@ jobs:
         registry: ${{ env.DOCKER_REGISTRY }}
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build Web.Gateway container
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./src/ApiGateways/Web.Gateway/Dockerfile
-        target: final
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: true
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-gateway-web:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=gateway-build
-          type=gha,scope=gateway-final
-        cache-to: |
-          type=gha,scope=gateway-final,mode=max
 
     - name: Build Budgeting.API container
       uses: docker/build-push-action@v2
