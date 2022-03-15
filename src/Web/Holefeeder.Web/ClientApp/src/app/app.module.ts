@@ -11,7 +11,6 @@ import {ErrorNotfoundComponent} from './core/error-notfound/error-notfound.compo
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MsalBroadcastService, MsalGuard, MsalModule, MsalRedirectComponent, MsalService} from '@azure/msal-angular';
-import {RedirectComponent} from "@app/redirect.component";
 import {ExternalUrlDirective} from "@app/directives/external-url.directive";
 import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
 import {LoadingBarModule} from '@ngx-loading-bar/core';
@@ -33,14 +32,13 @@ const COMPONENTS = [
   FooterComponent,
   ErrorNotfoundComponent,
   ResourceNotfoundComponent,
-  RedirectComponent,
   ExternalUrlDirective
 ];
 
 @NgModule({
   declarations: [COMPONENTS],
   imports: [
-    BrowserModule,//.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
