@@ -1,12 +1,11 @@
 using Xunit;
 
-namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Infrastructure
+namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Infrastructure;
+
+public class MappingProfileTests
 {
-    public class MappingProfileTests
+    [Fact]
+    public void GivenMappingProfile_WhenCheckingConfiguration_ThenNoErrors()
     {
-        [Fact]
-        public void GivenMappingProfile_WhenCheckingConfiguration_ThenNoErrors()
-        {
-        }
     }
 }

@@ -1,15 +1,15 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 
 export abstract class StateService<T> {
   private state$: BehaviorSubject<T>;
 
-  protected get state(): T {
-    return this.state$.getValue();
-  }
-
   constructor(initialState: T) {
     this.state$ = new BehaviorSubject<T>(initialState);
+  }
+
+  protected get state(): T {
+    return this.state$.getValue();
   }
 
   protected select<K>(mapFn: (state: T) => K): Observable<K> {

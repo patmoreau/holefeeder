@@ -16,4 +16,4 @@ public record IdRequestResult(object Item) : IRequestResult;
 
 public record CreatedRequestResult(Guid Id, string Name) : IRequestResult;
 
-public record NoContentResult() : IRequestResult;
+public record NoContentResult : IRequestResult;

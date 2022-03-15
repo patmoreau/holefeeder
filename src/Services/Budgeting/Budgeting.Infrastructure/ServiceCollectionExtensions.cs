@@ -29,111 +29,110 @@ using Microsoft.Extensions.Options;
 
 using MySqlConnectionManager = Framework.Dapper.SeedWork.MySqlConnectionManager;
 
-namespace DrifterApps.Holefeeder.Budgeting.Infrastructure
+namespace DrifterApps.Holefeeder.Budgeting.Infrastructure;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    private static readonly object Locker = new();
+
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+        IConfiguration configuration)
     {
-        private static readonly object Locker = new();
-
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-            IConfiguration configuration)
+        if (configuration is null)
         {
-            if (configuration is null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            services.Configure<HolefeederDatabaseSettings>(
-                configuration.GetSection(nameof(HolefeederDatabaseSettings)));
-            services.AddSingleton(sp => sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
-
-            services.AddSingleton<AccountMapper>();
-            services.AddSingleton<CashflowMapper>();
-            services.AddSingleton<CategoryMapper>();
-            services.AddSingleton<TagsMapper>();
-            services.AddSingleton<TransactionMapper>();
-
-            services.AddScoped<IHolefeederContext, HolefeederContext>();
-
-            services.AddTransient<IAccountRepository, AccountRepository>();
-            services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
-            services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
-            services.AddTransient<ICashflowRepository, CashflowRepository>();
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
-            services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
-            services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
-            services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
-            services.AddTransient<ITransactionRepository, TransactionRepository>();
-            services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
-
-            DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-            SqlMapper.AddTypeHandler(new AccountTypeHandler());
-            SqlMapper.AddTypeHandler(new CategoryTypeHandler());
-            SqlMapper.AddTypeHandler(new DateIntervalTypeHandler());
-            SqlMapper.AddTypeHandler(new TagsHandler());
-
-            return services;
+            throw new ArgumentNullException(nameof(configuration));
         }
 
-        public static IApplicationBuilder MigrateDb(this IApplicationBuilder app)
+        services.Configure<HolefeederDatabaseSettings>(
+            configuration.GetSection(nameof(HolefeederDatabaseSettings)));
+        services.AddSingleton(sp => sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
+
+        services.AddSingleton<AccountMapper>();
+        services.AddSingleton<CashflowMapper>();
+        services.AddSingleton<CategoryMapper>();
+        services.AddSingleton<TagsMapper>();
+        services.AddSingleton<TransactionMapper>();
+
+        services.AddScoped<IHolefeederContext, HolefeederContext>();
+
+        services.AddTransient<IAccountRepository, AccountRepository>();
+        services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
+        services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
+        services.AddTransient<ICashflowRepository, CashflowRepository>();
+        services.AddTransient<ICategoryRepository, CategoryRepository>();
+        services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
+        services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
+        services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
+        services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
+        services.AddTransient<ITransactionRepository, TransactionRepository>();
+        services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
+
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+        SqlMapper.AddTypeHandler(new AccountTypeHandler());
+        SqlMapper.AddTypeHandler(new CategoryTypeHandler());
+        SqlMapper.AddTypeHandler(new DateIntervalTypeHandler());
+        SqlMapper.AddTypeHandler(new TagsHandler());
+
+        return services;
+    }
+
+    public static IApplicationBuilder MigrateDb(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+
+        var databaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<HolefeederContext>>();
+
+        var completed = false;
+        var tryCount = 0;
+
+        while (tryCount++ < 3 && !completed)
         {
-            using var scope = app.ApplicationServices.CreateScope();
-
-            var databaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<HolefeederContext>>();
-
-            var completed = false;
-            var tryCount = 0;
-
-            while (tryCount++ < 3 && !completed)
+            logger.LogInformation("Migration attempt #{tryCount}", tryCount);
+            try
             {
-                logger.LogInformation("Migration attempt #{tryCount}", tryCount);
-                try
-                {
-                    PerformMigration(databaseSettings);
-                    completed = true;
-                }
-                catch (SocketException e)
-                {
-                    logger.LogInformation("Migration attempt #{tryCount} - error {error}", tryCount, e);
-                    Task.Delay(10000);
-                }
+                PerformMigration(databaseSettings);
+                completed = true;
             }
-
-            if (!completed)
+            catch (SocketException e)
             {
-                throw new Exception("Unable to perform database migration, no connection to server was found.");
+                logger.LogInformation("Migration attempt #{tryCount} - error {error}", tryCount, e);
+                Task.Delay(10000);
             }
-
-            logger.LogInformation("Migration completed successfully");
-
-            return app;
         }
 
-        private static void PerformMigration(HolefeederDatabaseSettings databaseSettings)
+        if (!completed)
         {
-            lock (Locker)
+            throw new Exception("Unable to perform database migration, no connection to server was found.");
+        }
+
+        logger.LogInformation("Migration completed successfully");
+
+        return app;
+    }
+
+    private static void PerformMigration(HolefeederDatabaseSettings databaseSettings)
+    {
+        lock (Locker)
+        {
+            var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
+
+            EnsureDatabase.For.MySqlDatabase(databaseSettings.GetBuilder(true).ConnectionString);
+
+            var upgradeEngine = DeployChanges.To
+                .MySqlDatabase(connectionManager)
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .JournalTo(new MySqlTableJournal(
+                    () => connectionManager,
+                    () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database, "schema_versions"))
+                .LogToConsole()
+                .Build();
+
+            var result = upgradeEngine.PerformUpgrade();
+            if (!result.Successful)
             {
-                var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
-
-                EnsureDatabase.For.MySqlDatabase(databaseSettings.GetBuilder(true).ConnectionString);
-
-                var upgradeEngine = DeployChanges.To
-                    .MySqlDatabase(connectionManager)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                    .JournalTo(new MySqlTableJournal(
-                        () => connectionManager,
-                        () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database, "schema_versions"))
-                    .LogToConsole()
-                    .Build();
-
-                var result = upgradeEngine.PerformUpgrade();
-                if (!result.Successful)
-                {
-                    throw result.Error;
-                }
+                throw result.Error;
             }
         }
     }

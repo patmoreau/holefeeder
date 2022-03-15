@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared/interfaces/adapter.interface";
+import {Injectable} from "@angular/core";
+import {Adapter} from "@app/shared/interfaces/adapter.interface";
 
 export abstract class ToastItem {
   constructor(
@@ -70,7 +70,7 @@ export enum ToastType {
   danger = 'danger'
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({providedIn: "root"})
 export class ToastItemAdapter implements Adapter<ToastItem> {
   adapt(item: any): ToastItem {
     if (item.type === ToastType.danger) {

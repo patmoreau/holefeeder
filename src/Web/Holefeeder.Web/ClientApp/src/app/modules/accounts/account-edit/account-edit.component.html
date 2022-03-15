@@ -1,7 +1,7 @@
 <div [formGroup]="form" class="container mt-2">
   <div class="form-group">
     <label for="name">Name</label>
-    <input class="form-control" type="text" formControlName="name" id="name" placeholder="account name..."/>
+    <input class="form-control" formControlName="name" id="name" placeholder="account name..." type="text"/>
   </div>
   <div class="form-group">
     <label for="name">Type</label>
@@ -12,16 +12,17 @@
   </div>
   <div class="form-group">
     <label for="openBalance">Opening balance</label>
-    <input class="form-control" type="number" formControlName="openBalance" id="openBalance" placeholder="amount..."
-           required/>
+    <input class="form-control" formControlName="openBalance" id="openBalance" placeholder="amount..." required
+           type="number"/>
   </div>
   <div class="form-group">
     <label for="openDate">Opening date</label>
     <div class="input-group mb-2">
-      <input class="form-control" placeholder="yyyy-mm-dd" id="openDate" formControlName="openDate" ngbDatepicker
-             [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()"/>
+      <input #date="ngbDatepicker" (click)="date.toggle()" [firstDayOfWeek]=7 class="form-control"
+             formControlName="openDate"
+             id="openDate" ngbDatepicker placeholder="yyyy-mm-dd"/>
       <div class="input-group-append">
-        <a class="btn btn-outline-secondary" (click)="date.toggle()">
+        <a (click)="date.toggle()" class="btn btn-outline-secondary">
           <em class="bi bi-calendar-event"></em>
         </a>
       </div>
@@ -29,7 +30,7 @@
   </div>
   <div class="form-group">
     <label for="description">Description</label>
-    <input class="form-control" type="text" formControlName="description" id="description"
-           placeholder="description..."/>
+    <input class="form-control" formControlName="description" id="description" placeholder="description..."
+           type="text"/>
   </div>
 </div>

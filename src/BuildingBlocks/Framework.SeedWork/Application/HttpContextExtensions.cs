@@ -23,6 +23,6 @@ public static class HttpContextExtensions
         var result = createInstance(hasOffset ? offset : QueryParams.DEFAULT_OFFSET,
             hasLimit ? limit : QueryParams.DEFAULT_LIMIT, sort, filter);
 
-        return ValueTask.FromResult<TRequest?>(result);
+        return ValueTask.FromResult(result);
     }
 }

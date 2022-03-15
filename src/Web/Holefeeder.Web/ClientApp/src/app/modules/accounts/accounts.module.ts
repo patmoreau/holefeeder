@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AccountsListComponent} from './accounts-list/accounts-list.component';
 import {AccountDetailsComponent} from './account-details/account-details.component';

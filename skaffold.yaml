@@ -8,41 +8,41 @@ build:
     envTemplate:
       template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'
   artifacts:
-  - image: holefeeder/holefeeder-web
-    context: .
-    docker:
-      dockerfile: src/Web/Holefeeder.Web/Dockerfile
-      target: final
-      buildArgs:
-        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
-  - image: holefeeder/holefeeder-budgeting-api
-    context: .
-    docker:
-      dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
-      target: final
-      buildArgs:
-        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
-  - image: holefeeder/holefeeder-object-store-api
-    context: .
-    docker:
-      dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
-      target: final
-      buildArgs:
-        BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
+    - image: holefeeder/holefeeder-web
+      context: .
+      docker:
+        dockerfile: src/Web/Holefeeder.Web/Dockerfile
+        target: final
+        buildArgs:
+          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
+    - image: holefeeder/holefeeder-budgeting-api
+      context: .
+      docker:
+        dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
+        target: final
+        buildArgs:
+          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
+    - image: holefeeder/holefeeder-object-store-api
+      context: .
+      docker:
+        dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        target: final
+        buildArgs:
+          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
 profiles:
   - name: dev-docker
     activation:
       - kubeContext: docker-desktop
     deploy:
       kustomize:
-        paths: ["kubernetes/dev"]
+        paths: [ "kubernetes/dev" ]
   - name: dev-k3d
     activation:
       - kubeContext: k3d-*
     deploy:
       kustomize:
-        paths: ["kubernetes/dev"]
+        paths: [ "kubernetes/dev" ]
   - name: prd
     deploy:
       kustomize:
-        paths: ["kubernetes/prd"]
+        paths: [ "kubernetes/prd" ]

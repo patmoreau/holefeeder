@@ -11,9 +11,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 public class TransactionMapper
 {
-    private readonly TagsMapper _tagsMapper;
     private readonly AccountMapper _accountMapper;
     private readonly CategoryMapper _categoryMapper;
+    private readonly TagsMapper _tagsMapper;
 
     public TransactionMapper(TagsMapper tagsMapper, AccountMapper accountMapper, CategoryMapper categoryMapper)
     {
@@ -66,8 +66,10 @@ public class TransactionMapper
         return dto;
     }
 
-    public IEnumerable<TransactionInfoViewModel> MapToDto(IEnumerable<TransactionEntity> entities) =>
-        entities.Select(MapToDto);
+    public IEnumerable<TransactionInfoViewModel> MapToDto(IEnumerable<TransactionEntity> entities)
+    {
+        return entities.Select(MapToDto);
+    }
 
     public TransactionEntity MapToEntity(Transaction model)
     {

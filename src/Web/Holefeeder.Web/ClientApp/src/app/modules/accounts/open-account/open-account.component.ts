@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AccountType } from '@app/shared/enums/account-type.enum';
-import { startOfToday } from 'date-fns';
-import { OpenAccountAdapter } from '../models/open-account-command.model';
-import { Location } from '@angular/common';
-import { AccountCommandsService } from '../services/account-commands.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AccountType} from '@app/shared/enums/account-type.enum';
+import {startOfToday} from 'date-fns';
+import {OpenAccountAdapter} from '../models/open-account-command.model';
+import {Location} from '@angular/common';
+import {AccountCommandsService} from '../services/account-commands.service';
 
 @Component({
   selector: 'app-open-account',
@@ -22,7 +22,8 @@ export class OpenAccountComponent implements OnInit {
     private location: Location,
     private commandsService: AccountCommandsService,
     private adapter: OpenAccountAdapter
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
 

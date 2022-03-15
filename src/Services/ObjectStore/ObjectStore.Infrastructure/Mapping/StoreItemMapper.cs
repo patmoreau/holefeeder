@@ -21,8 +21,10 @@ public class StoreItemMapper
         return dto;
     }
 
-    public IEnumerable<StoreItemViewModel> MapToDto(IEnumerable<StoreItemEntity> entities) =>
-        entities.Select(MapToDto);
+    public IEnumerable<StoreItemViewModel> MapToDto(IEnumerable<StoreItemEntity> entities)
+    {
+        return entities.Select(MapToDto);
+    }
 
     public StoreItem? MapToModelOrNull(StoreItemEntity? entity)
     {

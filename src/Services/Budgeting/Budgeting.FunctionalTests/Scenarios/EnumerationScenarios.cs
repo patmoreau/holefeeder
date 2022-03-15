@@ -8,118 +8,117 @@ using Xbehave;
 
 using Xunit;
 
-namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios
+namespace DrifterApps.Holefeeder.Budgeting.FunctionalTests.Scenarios;
+
+public class EnumerationScenarios : IClassFixture<BudgetingWebApplicationFactory>
 {
-    public class EnumerationScenarios : IClassFixture<BudgetingWebApplicationFactory>
+    private readonly BudgetingWebApplicationFactory _factory;
+
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public EnumerationScenarios(BudgetingWebApplicationFactory factory)
     {
-        private readonly BudgetingWebApplicationFactory _factory;
+        _factory = factory;
 
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
+        _factory.SeedData();
 
-        public EnumerationScenarios(BudgetingWebApplicationFactory factory)
-        {
-            _factory = factory;
+        _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
+    }
 
-            _factory.SeedData();
+    [Scenario]
+    public void GivenGetAccountTypes(HttpClient client, HttpResponseMessage response)
+    {
+        "Given GetAccountTypes query"
+            .x(() => client = _factory.CreateDefaultClient());
 
-            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
-        }
+        "When I call the API"
+            .x(async () =>
+            {
+                const string request = "/api/v2/enumerations/get-account-types";
 
-        [Scenario]
-        public void GivenGetAccountTypes(HttpClient client, HttpResponseMessage response)
-        {
-            "Given GetAccountTypes query"
-                .x(() => client = _factory.CreateDefaultClient());
+                response = await client.GetAsync(request);
+            });
 
-            "When I call the API"
-                .x(async () =>
-                {
-                    const string request = "/api/v2/enumerations/get-account-types";
+        "Then the status code should indicate success"
+            .x(() => response.Should()
+                .NotBeNull()
+                .And.BeOfType<HttpResponseMessage>()
+                .Which.IsSuccessStatusCode.Should().BeTrue());
 
-                    response = await client.GetAsync(request);
-                });
+        "And the result contain the account types of the API"
+            .x(async () =>
+            {
+                var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
 
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
+                result.Should()
+                    .NotBeEmpty()
+                    .And.HaveCount(7)
+                    .And.BeEquivalentTo("Checking", "CreditCard", "CreditLine", "Investment", "Loan", "Mortgage",
+                        "Savings");
+            });
+    }
 
-            "And the result contain the account types of the API"
-                .x(async () =>
-                {
-                    var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
+    [Scenario]
+    public void GivenGetCategoryTypes(HttpClient client, HttpResponseMessage response)
+    {
+        "Given GetAccountTypes query"
+            .x(() => client = _factory.CreateDefaultClient());
 
-                    result.Should()
-                        .NotBeEmpty()
-                        .And.HaveCount(7)
-                        .And.BeEquivalentTo("Checking", "CreditCard", "CreditLine", "Investment", "Loan", "Mortgage",
-                            "Savings");
-                });
-        }
+        "When I call the API"
+            .x(async () =>
+            {
+                const string request = "/api/v2/enumerations/get-category-types";
 
-        [Scenario]
-        public void GivenGetCategoryTypes(HttpClient client, HttpResponseMessage response)
-        {
-            "Given GetAccountTypes query"
-                .x(() => client = _factory.CreateDefaultClient());
+                response = await client.GetAsync(request);
+            });
 
-            "When I call the API"
-                .x(async () =>
-                {
-                    const string request = "/api/v2/enumerations/get-category-types";
+        "Then the status code should indicate success"
+            .x(() => response.Should()
+                .NotBeNull()
+                .And.BeOfType<HttpResponseMessage>()
+                .Which.IsSuccessStatusCode.Should().BeTrue());
 
-                    response = await client.GetAsync(request);
-                });
+        "And the result contain the category types of the API"
+            .x(async () =>
+            {
+                var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
 
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
+                result.Should()
+                    .NotBeEmpty()
+                    .And.HaveCount(2)
+                    .And.BeEquivalentTo("Expense", "Gain");
+            });
+    }
 
-            "And the result contain the category types of the API"
-                .x(async () =>
-                {
-                    var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
+    [Scenario]
+    public void GivenGetDateIntervalTypes(HttpClient client, HttpResponseMessage response)
+    {
+        "Given GetAccountTypes query"
+            .x(() => client = _factory.CreateDefaultClient());
 
-                    result.Should()
-                        .NotBeEmpty()
-                        .And.HaveCount(2)
-                        .And.BeEquivalentTo("Expense", "Gain");
-                });
-        }
+        "When I call the API"
+            .x(async () =>
+            {
+                const string request = "/api/v2/enumerations/get-date-interval-types";
 
-        [Scenario]
-        public void GivenGetDateIntervalTypes(HttpClient client, HttpResponseMessage response)
-        {
-            "Given GetAccountTypes query"
-                .x(() => client = _factory.CreateDefaultClient());
+                response = await client.GetAsync(request);
+            });
 
-            "When I call the API"
-                .x(async () =>
-                {
-                    const string request = "/api/v2/enumerations/get-date-interval-types";
+        "Then the status code should indicate success"
+            .x(() => response.Should()
+                .NotBeNull()
+                .And.BeOfType<HttpResponseMessage>()
+                .Which.IsSuccessStatusCode.Should().BeTrue());
 
-                    response = await client.GetAsync(request);
-                });
+        "And the result contain the date interval types of the API"
+            .x(async () =>
+            {
+                var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
 
-            "Then the status code should indicate success"
-                .x(() => response.Should()
-                    .NotBeNull()
-                    .And.BeOfType<HttpResponseMessage>()
-                    .Which.IsSuccessStatusCode.Should().BeTrue());
-
-            "And the result contain the date interval types of the API"
-                .x(async () =>
-                {
-                    var result = await response.Content.ReadFromJsonAsync<string[]>(_jsonSerializerOptions);
-
-                    result.Should()
-                        .NotBeEmpty()
-                        .And.HaveCount(4)
-                        .And.BeEquivalentTo("Weekly", "Monthly", "Yearly", "OneTime");
-                });
-        }
+                result.Should()
+                    .NotBeEmpty()
+                    .And.HaveCount(4)
+                    .And.BeEquivalentTo("Weekly", "Monthly", "Yearly", "OneTime");
+            });
     }
 }

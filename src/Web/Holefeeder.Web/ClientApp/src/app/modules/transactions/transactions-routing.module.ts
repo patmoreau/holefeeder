@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
-import { PayCashflowComponent } from './pay-cashflow/pay-cashflow.component';
-import { ModifyTransactionComponent } from './modify-transaction/modify-transaction.component';
-import { MakePurchaseComponent } from './make-purchase/make-purchase.component';
-import { UpcomingResolverService } from '@app/core/resolvers/upcoming-resolver.service';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {MsalGuard} from '@azure/msal-angular';
+import {PayCashflowComponent} from './pay-cashflow/pay-cashflow.component';
+import {ModifyTransactionComponent} from './modify-transaction/modify-transaction.component';
+import {MakePurchaseComponent} from './make-purchase/make-purchase.component';
+import {UpcomingResolverService} from '@app/core/resolvers/upcoming-resolver.service';
 
 const routes: Routes = [
   {
@@ -36,4 +36,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TransactionsRoutingModule { }
+export class TransactionsRoutingModule {
+}

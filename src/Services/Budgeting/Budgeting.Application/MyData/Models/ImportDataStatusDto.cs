@@ -10,5 +10,8 @@ public record ImportDataStatusDto(
     int TransactionsProcessed = 0, int TransactionsTotal = 0,
     string Message = "")
 {
-    public static ImportDataStatusDto Init() => new(CommandStatus.Initializing);
+    public static ImportDataStatusDto Init()
+    {
+        return new(CommandStatus.Initializing);
+    }
 }

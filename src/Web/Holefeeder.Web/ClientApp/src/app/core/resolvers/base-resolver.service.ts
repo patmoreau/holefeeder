@@ -1,8 +1,8 @@
-import { EMPTY, map, Observable, OperatorFunction, pipe, UnaryFunction } from 'rxjs';
-import { ToastsService } from '../services/toasts.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
-import { ToastType } from '../models/toast-item.model';
-import { Router } from '@angular/router';
+import {EMPTY, map, Observable, OperatorFunction, pipe, UnaryFunction} from 'rxjs';
+import {ToastsService} from '../services/toasts.service';
+import {LoadingBarService} from '@ngx-loading-bar/core';
+import {ToastType} from '../models/toast-item.model';
+import {Router} from '@angular/router';
 
 export abstract class BaseResolverService {
   constructor(private router: Router, private toasts: ToastsService, protected barService: LoadingBarService) {

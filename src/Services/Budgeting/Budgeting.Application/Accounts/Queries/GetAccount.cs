@@ -17,8 +17,8 @@ public static class GetAccount
 
     public class Handler : IRequestHandler<Request, OneOf<AccountViewModel, NotFoundRequestResult>>
     {
-        private readonly IAccountQueriesRepository _repository;
         private readonly ItemsCache _cache;
+        private readonly IAccountQueriesRepository _repository;
 
         public Handler(IAccountQueriesRepository repository, ItemsCache cache)
         {

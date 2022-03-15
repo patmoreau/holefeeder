@@ -15,7 +15,9 @@ public static class GetAccountTypes
 
     public class Handler : IRequestHandler<Request, AccountType[]>
     {
-        public Task<AccountType[]> Handle(Request query, CancellationToken cancellationToken) =>
-            Task.FromResult(Enumeration.GetAll<AccountType>().ToArray());
+        public Task<AccountType[]> Handle(Request query, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Enumeration.GetAll<AccountType>().ToArray());
+        }
     }
 }

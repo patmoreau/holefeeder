@@ -48,17 +48,19 @@ public static class Transfer
 
         public OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult> CreateResponse(
             ValidationResult result)
-            => new ValidationErrorsRequestResult(result.ToDictionary());
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class
         Handler : IRequestHandler<Request, OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
-        private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountQueriesRepository _accountQueriesRepository;
-        private readonly ICategoriesRepository _categoriesRepository;
         private readonly ItemsCache _cache;
+        private readonly ICategoriesRepository _categoriesRepository;
         private readonly ILogger _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         public Handler(ITransactionRepository transactionRepository,
             IAccountQueriesRepository accountQueriesRepository,
@@ -79,14 +81,14 @@ public static class Transfer
             var errors = new List<string>();
             var userId = (Guid)_cache["UserId"];
 
-            if (!(await _accountQueriesRepository.IsAccountActive(request.FromAccountId, userId,
-                    cancellationToken)))
+            if (!await _accountQueriesRepository.IsAccountActive(request.FromAccountId, userId,
+                    cancellationToken))
             {
                 errors.Add($"From account {request.FromAccountId} does not exists");
             }
 
-            if (!(await _accountQueriesRepository.IsAccountActive(request.ToAccountId, userId,
-                    cancellationToken)))
+            if (!await _accountQueriesRepository.IsAccountActive(request.ToAccountId, userId,
+                    cancellationToken))
             {
                 errors.Add($"To account {request.ToAccountId} does not exists");
             }

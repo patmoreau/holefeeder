@@ -12,74 +12,76 @@ using NSubstitute;
 
 using Xunit;
 
-namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts
+namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Accounts;
+
+public class OpenCommandValidatorTests
 {
-    public class OpenCommandValidatorTests
+    private const string LONG_STRING
+        = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%*(){}|[]\\;':\",./<>?";
+
+    private readonly OpenAccount.Validator _validator;
+
+    public OpenCommandValidatorTests()
     {
-        private readonly OpenAccount.Validator _validator;
+        var logger = Substitute.For<ILogger<OpenAccount.Validator>>();
+        _validator = new OpenAccount.Validator(logger);
+    }
 
-        public OpenCommandValidatorTests()
+    public static IEnumerable<object[]> InvalidNames
+    {
+        get
         {
-            var logger = Substitute.For<ILogger<OpenAccount.Validator>>();
-            _validator = new OpenAccount.Validator(logger);
+            yield return new object[] {""};
+            yield return new object[] {"           "};
+            yield return new object[] {string.Concat(LONG_STRING, LONG_STRING, LONG_STRING)};
+            yield return new object[] {null!};
         }
+    }
 
-        [Theory, MemberData(nameof(InvalidNames))]
-        public void GivenOpenAccountValidator_WhenNameIsInvalid_ThenShouldHaveError(string name)
+    public static IEnumerable<object[]> InvalidDateTimes
+    {
+        get
         {
-            var result =
-                _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, name, DateTime.Now, 1,
-                    "description"));
-            result.ShouldHaveValidationErrorFor(m => m.Name);
+            yield return new object[] {DateTime.MinValue};
+            yield return new object[] {default(DateTime)};
+            yield return new object[] {null!};
         }
+    }
 
-        [Theory, MemberData(nameof(InvalidDateTimes))]
-        public void GivenOpenAccountValidator_WhenOpenDateIsInvalid_ThenShouldHaveError(DateTime openDate)
+    public static IEnumerable<object[]> InvalidTypes
+    {
+        get
         {
-            var result =
-                _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, "name", openDate, 1,
-                    "description"));
-            result.ShouldHaveValidationErrorFor(m => m.OpenDate);
+            yield return new object[] {default(AccountType)!};
+            yield return new object[] {null!};
         }
+    }
 
-        [Theory, MemberData(nameof(InvalidTypes))]
-        public void GivenOpenAccountValidator_WhenTypeIsInvalid_ThenShouldHaveError(AccountType type)
-        {
-            var result = _validator.TestValidate(new OpenAccount.Request(type, "name", DateTime.Now, 1, "description"));
-            result.ShouldHaveValidationErrorFor(m => m.Type);
-        }
+    [Theory]
+    [MemberData(nameof(InvalidNames))]
+    public void GivenOpenAccountValidator_WhenNameIsInvalid_ThenShouldHaveError(string name)
+    {
+        var result =
+            _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, name, DateTime.Now, 1,
+                "description"));
+        result.ShouldHaveValidationErrorFor(m => m.Name);
+    }
 
-        private const string LONG_STRING
-            = "abcdefghijklmonpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%*(){}|[]\\;':\",./<>?";
+    [Theory]
+    [MemberData(nameof(InvalidDateTimes))]
+    public void GivenOpenAccountValidator_WhenOpenDateIsInvalid_ThenShouldHaveError(DateTime openDate)
+    {
+        var result =
+            _validator.TestValidate(new OpenAccount.Request(AccountType.Checking, "name", openDate, 1,
+                "description"));
+        result.ShouldHaveValidationErrorFor(m => m.OpenDate);
+    }
 
-        public static IEnumerable<object[]> InvalidNames
-        {
-            get
-            {
-                yield return new object[] {""};
-                yield return new object[] {"           "};
-                yield return new object[] {string.Concat(LONG_STRING, LONG_STRING, LONG_STRING)};
-                yield return new object[] {null!};
-            }
-        }
-
-        public static IEnumerable<object[]> InvalidDateTimes
-        {
-            get
-            {
-                yield return new object[] {DateTime.MinValue};
-                yield return new object[] {default(DateTime)};
-                yield return new object[] {null!};
-            }
-        }
-
-        public static IEnumerable<object[]> InvalidTypes
-        {
-            get
-            {
-                yield return new object[] {default(AccountType)!};
-                yield return new object[] {null!};
-            }
-        }
+    [Theory]
+    [MemberData(nameof(InvalidTypes))]
+    public void GivenOpenAccountValidator_WhenTypeIsInvalid_ThenShouldHaveError(AccountType type)
+    {
+        var result = _validator.TestValidate(new OpenAccount.Request(type, "name", DateTime.Now, 1, "description"));
+        result.ShouldHaveValidationErrorFor(m => m.Type);
     }
 }

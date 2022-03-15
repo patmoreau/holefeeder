@@ -2,15 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {StateService} from '@app/core/services/state.service';
 import {MessageType} from '@app/shared/enums/message-type.enum';
 import {filterNullish} from '@app/shared/rxjs.helper';
-import {
-  combineLatest,
-  filter,
-  map,
-  Observable,
-  Subject,
-  switchMap,
-  take
-} from 'rxjs';
+import {combineLatest, filter, map, Observable, Subject, switchMap, take} from 'rxjs';
 import {MessageService} from './message.service';
 import {SettingsService} from './settings.service';
 import {DateInterval, Upcoming, UpcomingAdapter} from "@app/core";
@@ -29,9 +21,8 @@ const initialState: UpcomingState = {
 
 @Injectable({providedIn: 'root'})
 export class UpcomingService extends StateService<UpcomingState> {
-  private refresh$ = new Subject<void>();
-
   upcoming$: Observable<Upcoming[]> = this.select((state) => state.upcoming);
+  private refresh$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,

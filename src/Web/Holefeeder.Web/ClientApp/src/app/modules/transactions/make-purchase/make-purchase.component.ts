@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { AccountsService } from '@app/core/services/accounts.service';
-import { startOfToday } from 'date-fns';
-import { CategoriesService } from '@app/core/services/categories.service';
-import { TransferMoneyCommandAdapter } from "@app/core/models/transfer-money-command.model";
-import { combineLatest, filter, Observable, tap } from "rxjs";
-import { TransactionsService } from "@app/core/services/transactions.service";
-import { MakePurchaseCommandAdapter } from "@app/core/models/make-purchase-command.model";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {Location} from '@angular/common';
+import {AccountsService} from '@app/core/services/accounts.service';
+import {startOfToday} from 'date-fns';
+import {CategoriesService} from '@app/core/services/categories.service';
+import {TransferMoneyCommandAdapter} from "@app/core/models/transfer-money-command.model";
+import {combineLatest, filter, Observable, tap} from "rxjs";
+import {TransactionsService} from "@app/core/services/transactions.service";
+import {MakePurchaseCommandAdapter} from "@app/core/models/make-purchase-command.model";
 
 const accountIdParamName = 'accountId';
 

@@ -32,10 +32,10 @@ public static class PayCashflow
     public class Handler : IRequestHandler<Request,
         OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
-        private readonly ITransactionRepository _transactionRepository;
-        private readonly ICashflowRepository _cashflowRepository;
         private readonly ItemsCache _cache;
+        private readonly ICashflowRepository _cashflowRepository;
         private readonly ILogger _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         public Handler(ITransactionRepository transactionRepository,
             ICashflowRepository cashflowRepository, ItemsCache cache, ILogger<Handler> logger)

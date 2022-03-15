@@ -8,7 +8,7 @@ export class User {
     public readonly userPrincipalName?: string,
     public readonly id?: string) {
   }
-};
+}
 
 @Injectable({providedIn: 'root'})
 export class UserAdapter implements Adapter<User> {

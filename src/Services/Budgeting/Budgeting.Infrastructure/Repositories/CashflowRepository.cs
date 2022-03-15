@@ -14,16 +14,16 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class CashflowRepository : ICashflowRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly CashflowMapper _cashflowMapper;
-
-    public IUnitOfWork UnitOfWork => _context;
+    private readonly IHolefeederContext _context;
 
     public CashflowRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
     {
         _context = context;
         _cashflowMapper = cashflowMapper;
     }
+
+    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Cashflow?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {

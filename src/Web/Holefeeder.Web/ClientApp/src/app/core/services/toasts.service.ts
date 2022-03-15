@@ -26,7 +26,12 @@ export class ToastsService extends StateService<ToastsState> {
       .pipe(
         filter(message => message.type === MessageType.error && message.action === MessageAction.error),
       ).subscribe((message: Message) => {
-        this.setState({toasts: [...this.state.toasts, this.adapter.adapt({type: ToastType.danger, message: message.content})]});
+        this.setState({
+          toasts: [...this.state.toasts, this.adapter.adapt({
+            type: ToastType.danger,
+            message: message.content
+          })]
+        });
       }
     );
   }

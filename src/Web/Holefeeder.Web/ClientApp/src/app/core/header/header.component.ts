@@ -131,6 +131,19 @@ export class HeaderComponent implements OnInit {
     );
   }
 
+  login() {
+  }
+
+  logout(popup?: boolean) {
+    if (popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: "/"
+      });
+    } else {
+      this.authService.logoutRedirect();
+    }
+  }
+
   private setCalendar(period: DateInterval) {
     if (period === null) {
       return;
@@ -151,18 +164,5 @@ export class HeaderComponent implements OnInit {
     const jsDate = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day);
     jsDate.setFullYear(ngbDate.year);
     return jsDate;
-  }
-
-  login() {
-  }
-
-  logout(popup?: boolean) {
-    if (popup) {
-      this.authService.logoutPopup({
-        mainWindowRedirectUri: "/"
-      });
-    } else {
-      this.authService.logoutRedirect();
-    }
   }
 }

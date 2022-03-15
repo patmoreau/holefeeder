@@ -86,8 +86,10 @@ GROUP BY c.id;",
     }
 
     private static bool IsUnpaid(DateTime effectiveDate, DateTime nextDate, DateTime? lastPaidDate,
-        DateTime? lastCashflowDate) =>
-        !lastPaidDate.HasValue
-            ? (nextDate >= effectiveDate)
-            : (nextDate > lastPaidDate && nextDate > lastCashflowDate);
+        DateTime? lastCashflowDate)
+    {
+        return !lastPaidDate.HasValue
+            ? nextDate >= effectiveDate
+            : nextDate > lastPaidDate && nextDate > lastCashflowDate;
+    }
 }

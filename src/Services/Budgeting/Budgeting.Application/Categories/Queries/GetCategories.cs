@@ -15,8 +15,8 @@ public static class GetCategories
 
     public class Handler : IRequestHandler<Request, ListRequestResult>
     {
-        private readonly ICategoryQueriesRepository _categoryQueriesRepository;
         private readonly ItemsCache _cache;
+        private readonly ICategoryQueriesRepository _categoryQueriesRepository;
 
         public Handler(ICategoryQueriesRepository categoryQueriesRepository, ItemsCache cache)
         {

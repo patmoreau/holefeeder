@@ -37,6 +37,33 @@ public class AccountQueriesRepository : IAccountQueriesRepository
         return FindInternalAsync(userId, queryParams);
     }
 
+    public async Task<AccountViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    {
+        var connection = _context.Connection;
+
+        var account = await connection.QuerySingleAsync<AccountEntity>(
+                @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new {Id = id, UserId = userId})
+            .ConfigureAwait(false);
+
+        var transactions = await GetTransactions(connection, new[] {account});
+
+        return BuildAccountViewModel(account, transactions);
+    }
+
+    public async Task<bool> IsAccountActive(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        const string selectIsActive = @"
+SELECT COUNT(*)
+FROM accounts
+WHERE id = @Id AND user_id = @UserId AND inactive = 0;
+";
+
+        var isActive = await _context.Connection
+            .ExecuteScalarAsync<int>(selectIsActive, new {Id = id, UserId = userId})
+            .ConfigureAwait(false);
+        return isActive > 0;
+    }
+
     private async Task<(int Total, IEnumerable<AccountViewModel> Items)> FindInternalAsync(Guid userId,
         QueryParams queryParams)
     {
@@ -79,36 +106,10 @@ ORDER BY row_nb;
         return new ValueTuple<int, IEnumerable<AccountViewModel>>(count, accountList);
     }
 
-    public async Task<AccountViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
-    {
-        var connection = _context.Connection;
-
-        var account = await connection.QuerySingleAsync<AccountEntity>(
-                @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new {Id = id, UserId = userId})
-            .ConfigureAwait(false);
-
-        var transactions = await GetTransactions(connection, new[] {account});
-
-        return BuildAccountViewModel(account, transactions);
-    }
-
-    public async Task<bool> IsAccountActive(Guid id, Guid userId, CancellationToken cancellationToken)
-    {
-        const string selectIsActive = @"
-SELECT COUNT(*)
-FROM accounts
-WHERE id = @Id AND user_id = @UserId AND inactive = 0;
-";
-
-        var isActive = await _context.Connection
-            .ExecuteScalarAsync<int>(selectIsActive, new {Id = id, UserId = userId})
-            .ConfigureAwait(false);
-        return isActive > 0;
-    }
-
     private static AccountViewModel BuildAccountViewModel(AccountEntity account,
-        ICollection<TransactionEntity> transactions) =>
-        new()
+        ICollection<TransactionEntity> transactions)
+    {
+        return new()
         {
             Id = account.Id,
             OpenBalance = account.OpenBalance,
@@ -123,6 +124,7 @@ WHERE id = @Id AND user_id = @UserId AND inactive = 0;
             Type = account.Type,
             Inactive = account.Inactive
         };
+    }
 
     private static async Task<IList<TransactionEntity>> GetTransactions(IDbConnection connection,
         IEnumerable<AccountEntity> accounts)

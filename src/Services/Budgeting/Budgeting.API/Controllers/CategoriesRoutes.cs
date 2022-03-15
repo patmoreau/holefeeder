@@ -32,9 +32,11 @@ public static class CategoriesRoutes
         return Results.Ok(enumerable);
     }
 
-    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>
-        builder
+    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder)
+    {
+        return builder
             .WithTags("Categories")
             .RequireAuthorization()
             .WithGroupName("v2");
+    }
 }

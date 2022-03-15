@@ -1,37 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>DrifterApps.Holefeeder.ObjectStore.API</RootNamespace>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..\..</DockerfileContext>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>DrifterApps.Holefeeder.ObjectStore.API</RootNamespace>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.1" />
-        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.3" />
-        <PackageReference Include="MediatR" Version="10.0.1" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Identity.Web" Version="1.23.0" />
-        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.16.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.1"/>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.3"/>
+    <PackageReference Include="MediatR" Version="10.0.1"/>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.2"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.23.0"/>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.16.0"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj" />
-      <ProjectReference Include="..\ObjectStore.Infrastructure\ObjectStore.Infrastructure.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj"/>
+    <ProjectReference Include="..\ObjectStore.Infrastructure\ObjectStore.Infrastructure.csproj"/>
+  </ItemGroup>
 
 </Project>

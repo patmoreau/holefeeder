@@ -80,9 +80,11 @@ public static class CashflowsRoutes
             _ => Results.NotFound());
     }
 
-    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>
-        builder
+    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder)
+    {
+        return builder
             .WithTags("Cashflows")
             .RequireAuthorization()
             .WithGroupName("v2");
+    }
 }

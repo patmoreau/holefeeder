@@ -2,10 +2,9 @@ import {Inject, Injectable} from "@angular/core";
 import {MessageService} from "@app/core/services/message.service";
 import {StateService} from "@app/core/services/state.service";
 import {catchError, filter, map, Observable, Subject, take} from "rxjs";
-import {Account, AccountAdapter} from "@app/core";
+import {Account, AccountAdapter, PagingInfo} from "@app/core";
 import {MessageType} from "@app/shared/enums/message-type.enum";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {PagingInfo} from "@app/core";
 import {formatErrors, mapToPagingInfo} from "../utils/api.utils";
 import {filterNullish} from "@app/shared/rxjs.helper";
 
@@ -24,15 +23,11 @@ const initialState: AccountState = {
 @Injectable({providedIn: 'root'})
 export class AccountsService extends StateService<AccountState> {
 
-  private refresh$ = new Subject<boolean>();
-
   inactiveAccounts$: Observable<Account[]> = this.select((state) => state.accounts.filter(x => x.inactive));
-
   activeAccounts$: Observable<Account[]> = this.select((state) => state.accounts.filter(x => !x.inactive));
-
   count$: Observable<number> = this.select((state) => state.accounts.length);
-
   selectedAccount$: Observable<Account | null> = this.select((state) => state.selected);
+  private refresh$ = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
@@ -49,10 +44,6 @@ export class AccountsService extends StateService<AccountState> {
     });
 
     this.load();
-  }
-
-  private load() {
-    this.getAll().subscribe(pagingInfo => this.setState({accounts: pagingInfo.items}))
   }
 
   findById(id: string): Observable<Account | undefined> {
@@ -76,6 +67,10 @@ export class AccountsService extends StateService<AccountState> {
       return null;
     }
     return this.state.accounts[index];
+  }
+
+  private load() {
+    this.getAll().subscribe(pagingInfo => this.setState({accounts: pagingInfo.items}))
   }
 
   private getAll(): Observable<PagingInfo<Account>> {

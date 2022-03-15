@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>DrifterApps.Holefeeder.Budgeting.Domain</RootNamespace>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>DrifterApps.Holefeeder.Budgeting.Domain</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj"/>
+  </ItemGroup>
 
 </Project>

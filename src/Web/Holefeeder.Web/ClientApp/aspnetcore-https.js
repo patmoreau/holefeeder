@@ -28,6 +28,6 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     '--format',
     'Pem',
     '--no-password',
-  ], { stdio: 'inherit', })
-  .on('exit', (code) => process.exit(code));
+  ], {stdio: 'inherit',})
+    .on('exit', (code) => process.exit(code));
 }

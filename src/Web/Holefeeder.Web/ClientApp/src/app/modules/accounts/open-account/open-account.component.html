@@ -5,14 +5,14 @@
         Open account
       </h4>
       <div class="container mb-5">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form (ngSubmit)="onSubmit()" [formGroup]="form">
           <app-account-edit></app-account-edit>
 
           <div class="d-flex justify-content-end mt-4">
-            <button class="btn btn-secondary me-2" type="button" (click)="goBack()">
+            <button (click)="goBack()" class="btn btn-secondary me-2" type="button">
               Cancel
             </button>
-            <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+            <button [disabled]="!form.valid" class="btn btn-primary" type="submit">
               Save
             </button>
           </div>

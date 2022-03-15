@@ -6,29 +6,28 @@ using DbUp.Engine;
 
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure.Context;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Scripts
+namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Scripts;
+
+public class Script000InitDatabase : IScript
 {
-    public class Script000InitDatabase : IScript
+    public static readonly string ScriptName =
+        $"{typeof(Script000InitDatabase).Namespace}.000-InitDatabase.sql";
+
+    private readonly ObjectStoreDatabaseSettings _objectStoreDatabaseSettings;
+
+    public Script000InitDatabase(ObjectStoreDatabaseSettings objectStoreDatabaseSettings)
     {
-        public static readonly string ScriptName =
-            $"{typeof(Script000InitDatabase).Namespace}.000-InitDatabase.sql";
+        _objectStoreDatabaseSettings = objectStoreDatabaseSettings;
+    }
 
-        private readonly ObjectStoreDatabaseSettings _objectStoreDatabaseSettings;
+    public string ProvideScript(Func<IDbCommand> dbCommandFactory)
+    {
+        var builder = _objectStoreDatabaseSettings.GetBuilder();
 
-        public Script000InitDatabase(ObjectStoreDatabaseSettings objectStoreDatabaseSettings)
-        {
-            _objectStoreDatabaseSettings = objectStoreDatabaseSettings;
-        }
+        var scriptBuilder = new StringBuilder();
 
-        public string ProvideScript(Func<IDbCommand> dbCommandFactory)
-        {
-            var builder = _objectStoreDatabaseSettings.GetBuilder();
+        scriptBuilder.AppendLine($"GRANT ALL ON {builder.Database}.* TO '{builder.UserID}'@'%' WITH GRANT OPTION;");
 
-            var scriptBuilder = new StringBuilder();
-
-            scriptBuilder.AppendLine($"GRANT ALL ON {builder.Database}.* TO '{builder.UserID}'@'%' WITH GRANT OPTION;");
-
-            return scriptBuilder.ToString();
-        }
+        return scriptBuilder.ToString();
     }
 }

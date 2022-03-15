@@ -4,12 +4,8 @@ using Holefeeder.Web.Config;
 using Holefeeder.Web.Controllers;
 using Holefeeder.Web.Extensions;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
 
 using Serilog;
 
@@ -31,7 +27,7 @@ builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nam
 //     options => builder.Configuration.Bind("AzureAdB2C", options));
 
 builder.Services
-    .AddHealthChecksUI(setupSettings: setup =>
+    .AddHealthChecksUI(setup =>
     {
         setup.AddHealthCheckEndpoint("web", "/healthz");
         setup.AddHealthCheckEndpoint("budgeting", "/gateway/budgeting/healthz");
@@ -63,8 +59,8 @@ app.UseRouting();
 // app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    "default",
+    "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
 

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from '@angular/router';
 import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
 import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
-import {filter, from, Observable, switchMap, scan, map} from 'rxjs';
+import {filter, from, map, Observable, scan, switchMap} from 'rxjs';
 import {Account, AccountsService, UpcomingService} from "@app/core";
 
 @Component({
@@ -20,6 +20,16 @@ export class AccountDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+  }
+
+  private static amountClass(amount: number): string {
+    if (amount < 0) {
+      return 'text-danger';
+    } else if (amount > 0) {
+      return 'text-success';
+    } else {
+      return 'text-info';
+    }
   }
 
   ngOnInit() {
@@ -52,15 +62,5 @@ export class AccountDetailsComponent implements OnInit {
 
   upcomingBalanceClass(account: Account, upcomingBalance: number): string {
     return AccountDetailsComponent.amountClass(upcomingBalance * accountTypeMultiplier(account.type));
-  }
-
-  private static amountClass(amount: number): string {
-    if (amount < 0) {
-      return 'text-danger';
-    } else if (amount > 0) {
-      return 'text-success';
-    } else {
-      return 'text-info';
-    }
   }
 }

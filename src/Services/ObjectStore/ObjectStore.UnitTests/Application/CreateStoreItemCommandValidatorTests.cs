@@ -8,30 +8,29 @@ using NSubstitute;
 
 using Xunit;
 
-namespace ObjectStore.UnitTests.Application
+namespace ObjectStore.UnitTests.Application;
+
+public class CreateStoreItemCommandValidatorTests
 {
-    public class CreateStoreItemCommandValidatorTests
+    private readonly CreateStoreItem.Validator _validator;
+
+    public CreateStoreItemCommandValidatorTests()
     {
-        private readonly CreateStoreItem.Validator _validator;
+        var logger = Substitute.For<ILogger<CreateStoreItem.Validator>>();
+        _validator = new CreateStoreItem.Validator(logger);
+    }
 
-        public CreateStoreItemCommandValidatorTests()
-        {
-            var logger = Substitute.For<ILogger<CreateStoreItem.Validator>>();
-            _validator = new CreateStoreItem.Validator(logger);
-        }
+    [Fact]
+    public void GivenCreateStoreItemCommandValidator_WhenCodeIsEmpty_ThenShouldHaveError()
+    {
+        var result = _validator.TestValidate(new CreateStoreItem.Request(null!, string.Empty));
+        result.ShouldHaveValidationErrorFor(m => m.Code);
+    }
 
-        [Fact]
-        public void GivenCreateStoreItemCommandValidator_WhenCodeIsEmpty_ThenShouldHaveError()
-        {
-            var result = _validator.TestValidate(new CreateStoreItem.Request(null!, string.Empty));
-            result.ShouldHaveValidationErrorFor(m => m.Code);
-        }
-
-        [Fact]
-        public void GivenCreateStoreItemCommandValidator_WhenDataIsEmpty_ThenShouldHaveError()
-        {
-            var result = _validator.TestValidate(new CreateStoreItem.Request(string.Empty, null!));
-            result.ShouldHaveValidationErrorFor(m => m.Data);
-        }
+    [Fact]
+    public void GivenCreateStoreItemCommandValidator_WhenDataIsEmpty_ThenShouldHaveError()
+    {
+        var result = _validator.TestValidate(new CreateStoreItem.Request(string.Empty, null!));
+        result.ShouldHaveValidationErrorFor(m => m.Data);
     }
 }

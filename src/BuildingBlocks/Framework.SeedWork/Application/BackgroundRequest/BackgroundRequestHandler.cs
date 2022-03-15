@@ -14,13 +14,11 @@ public abstract class
     where TRequest : IRequest<RequestResponse>
     where TBackgroundTask : IBackgroundTask<TRequest, TResponse>
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly BackgroundWorkerQueue _backgroundWorkerQueue;
-    private readonly IMemoryCache _memoryCache;
 
     private readonly Guid _id = Guid.NewGuid();
-
-    protected Guid UserId { get; init; }
+    private readonly IMemoryCache _memoryCache;
+    private readonly IServiceProvider _serviceProvider;
 
     protected BackgroundRequestHandler(IServiceProvider serviceProvider,
         BackgroundWorkerQueue backgroundWorkerQueue, IMemoryCache memoryCache)
@@ -29,6 +27,8 @@ public abstract class
         _backgroundWorkerQueue = backgroundWorkerQueue;
         _memoryCache = memoryCache;
     }
+
+    protected Guid UserId { get; init; }
 
     public Task<RequestResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {

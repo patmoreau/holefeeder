@@ -1,4 +1,4 @@
-import { dateToUtc, dateFromUtc } from '../date-parser.helper';
+import {dateFromUtc, dateToUtc} from '../date-parser.helper';
 
 export interface ICashflowInfo {
   id: string;
@@ -7,12 +7,12 @@ export interface ICashflowInfo {
 
 export function cashflowInfoToServer(item: ICashflowInfo): ICashflowInfo {
   return Object.assign({} as ICashflowInfo, item, {
-      date: dateToUtc(item.date)
+    date: dateToUtc(item.date)
   });
 }
 
 export function cashflowInfoFromServer(item: ICashflowInfo): ICashflowInfo {
   return Object.assign({} as ICashflowInfo, item, {
-      date: dateFromUtc(item.date)
+    date: dateFromUtc(item.date)
   });
 }

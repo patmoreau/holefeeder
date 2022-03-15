@@ -16,16 +16,19 @@ namespace DrifterApps.Holefeeder.ObjectStore.Infrastructure.Repositories;
 
 public class StoreItemsRepository : IStoreItemsRepository
 {
+    private const string SELECT_CODE =
+        "SELECT id, code, data, user_id FROM store_items WHERE lower(code) = lower(@Code) AND user_id = @UserId;";
+
     private readonly IObjectStoreContext _context;
     private readonly StoreItemMapper _storeItemMapper;
-
-    public IUnitOfWork UnitOfWork => _context;
 
     public StoreItemsRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
     {
         _context = context;
         _storeItemMapper = storeItemMapper;
     }
+
+    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<StoreItem?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
     {
@@ -67,7 +70,4 @@ public class StoreItemsRepository : IStoreItemsRepository
             await transaction.UpdateAsync(_storeItemMapper.MapToEntity(model)).ConfigureAwait(false);
         }
     }
-
-    private const string SELECT_CODE =
-        "SELECT id, code, data, user_id FROM store_items WHERE lower(code) = lower(@Code) AND user_id = @UserId;";
 }

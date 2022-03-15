@@ -16,10 +16,10 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class MyDataQueriesRepository : IMyDataQueriesRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly AccountMapper _accountMapper;
-    private readonly CategoryMapper _categoryMapper;
     private readonly CashflowMapper _cashflowMapper;
+    private readonly CategoryMapper _categoryMapper;
+    private readonly IHolefeederContext _context;
     private readonly TransactionMapper _transactionMapper;
 
     public MyDataQueriesRepository(IHolefeederContext context, AccountMapper accountMapper,

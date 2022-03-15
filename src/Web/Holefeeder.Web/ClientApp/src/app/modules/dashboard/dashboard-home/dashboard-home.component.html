@@ -11,18 +11,19 @@
       </span>
     </div>
     <div class="actions p-0 d-flex align-items-center">
-      <button type="button" class="btn btn-link" routerLink="/transactions/make-purchase" title="Make purchase">
+      <button class="btn btn-link" routerLink="/transactions/make-purchase" title="Make purchase" type="button">
         <em class="bi bi-plus-square"></em>
       </button>
     </div>
   </div>
 </div>
 <div class="container">
-  <app-transaction-list-item *ngFor="let upcoming of (upcoming$ | async)"
+  <app-transaction-list-item (action)="action($event, upcoming)"
+                             *ngFor="let upcoming of (upcoming$ | async)"
+                             [allowSave]="true"
+                             [amount]="upcoming.amount" [date]="upcoming.date"
                              [description]="upcoming.description ? upcoming.description : upcoming.category.name"
-                             [amount]="upcoming.amount"
-                             [date]="upcoming.date" [tags]="upcoming.tags" [allowSave]="true"
-                             (action)="action($event, upcoming)">
+                             [tags]="upcoming.tags">
   </app-transaction-list-item>
 </div>
 <ng-template #loader>

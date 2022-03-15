@@ -7,34 +7,33 @@ using FluentAssertions;
 
 using Xunit;
 
-namespace ObjectStore.UnitTests.Domain
+namespace ObjectStore.UnitTests.Domain;
+
+public class StoreItemTests
 {
-    public class StoreItemTests
+    [Fact]
+    public void GivenCreateStoreItem_WhenCodeEmpty_ThenThrowsException()
     {
-        [Fact]
-        public void GivenCreateStoreItem_WhenCodeEmpty_ThenThrowsException()
-        {
-            Action action = () => StoreItem.Create("", "data", Guid.NewGuid());
+        Action action = () => StoreItem.Create("", "data", Guid.NewGuid());
 
-            action.Should().Throw<ObjectStoreDomainException>();
-        }
+        action.Should().Throw<ObjectStoreDomainException>();
+    }
 
-        [Fact]
-        public void GivenNewStoreItem_WhenIdEmpty_ThenThrowsException()
-        {
-            Action action = () =>
-                _ = new StoreItem {Id = Guid.Empty, Code = "code", Data = "data", UserId = Guid.NewGuid()};
+    [Fact]
+    public void GivenNewStoreItem_WhenIdEmpty_ThenThrowsException()
+    {
+        Action action = () =>
+            _ = new StoreItem {Id = Guid.Empty, Code = "code", Data = "data", UserId = Guid.NewGuid()};
 
-            action.Should().Throw<ObjectStoreDomainException>();
-        }
+        action.Should().Throw<ObjectStoreDomainException>();
+    }
 
-        [Fact]
-        public void GivenNewStoreItem_WhenUserIdEmpty_ThenThrowsException()
-        {
-            Action action = () =>
-                _ = new StoreItem {Id = Guid.NewGuid(), Code = "code", Data = "data", UserId = Guid.Empty};
+    [Fact]
+    public void GivenNewStoreItem_WhenUserIdEmpty_ThenThrowsException()
+    {
+        Action action = () =>
+            _ = new StoreItem {Id = Guid.NewGuid(), Code = "code", Data = "data", UserId = Guid.Empty};
 
-            action.Should().Throw<ObjectStoreDomainException>();
-        }
+        action.Should().Throw<ObjectStoreDomainException>();
     }
 }

@@ -21,8 +21,9 @@ public static class ServiceCollectionExtensions
         return new[] {BuildRouteConfig("budgeting"), BuildRouteConfig("object-store")};
     }
 
-    private static RouteConfig BuildRouteConfig(string routeId) =>
-        new RouteConfig
+    private static RouteConfig BuildRouteConfig(string routeId)
+    {
+        return new RouteConfig
         {
             RouteId = routeId,
             ClusterId = $"{routeId}-cluster",
@@ -31,7 +32,8 @@ public static class ServiceCollectionExtensions
                 // Path or Hosts are required for each route. This catch-all pattern matches all request paths.
                 Path = $"/gateway/{routeId}/{{**remainder}}"
             }
-        }.WithTransformPathRemovePrefix(prefix: $"/gateway/{routeId}");
+        }.WithTransformPathRemovePrefix($"/gateway/{routeId}");
+    }
 
     private static ClusterConfig[] GetClusters(ConfigurationManager builderConfiguration)
     {
@@ -42,8 +44,9 @@ public static class ServiceCollectionExtensions
         };
     }
 
-    private static ClusterConfig BuildClusterConfig(string clusterId, string destinationUrl) =>
-        new()
+    private static ClusterConfig BuildClusterConfig(string clusterId, string destinationUrl)
+    {
+        return new ClusterConfig
         {
             ClusterId = $"{clusterId}-cluster",
             Destinations =
@@ -64,4 +67,5 @@ public static class ServiceCollectionExtensions
             },
             Metadata = new Dictionary<string, string> {{"ConsecutiveFailuresHealthPolicy.Threshold", "3"}}
         };
+    }
 }

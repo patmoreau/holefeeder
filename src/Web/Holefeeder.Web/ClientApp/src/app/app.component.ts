@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {filter, Subject} from "rxjs";
 import {MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService} from "@azure/msal-angular";
 import {
-  AuthenticationResult, AuthError,
+  AuthenticationResult,
   EventMessage,
   EventType,
   InteractionStatus,
@@ -10,7 +10,6 @@ import {
   RedirectRequest
 } from "@azure/msal-browser";
 import {takeUntil} from "rxjs/operators";
-import {b2cPolicies} from "@app/app-msal";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
 
-  checkAndSetActiveAccount(){
+  checkAndSetActiveAccount() {
     /**
      * If no active account set but there are accounts signed in, sets first account to active account
      * To use active account set here, subscribe to inProgress$ first in your component
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   loginRedirect() {
-    if (this.msalGuardConfig.authRequest){
+    if (this.msalGuardConfig.authRequest) {
       this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
     } else {
       this.authService.loginRedirect();
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   loginPopup() {
-    if (this.msalGuardConfig.authRequest){
+    if (this.msalGuardConfig.authRequest) {
       this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
         .subscribe((response: AuthenticationResult) => {
           this.authService.instance.setActiveAccount(response.account);

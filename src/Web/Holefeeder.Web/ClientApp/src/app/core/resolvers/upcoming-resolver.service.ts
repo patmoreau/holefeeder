@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { finalize, map, Observable, take, tap } from 'rxjs';
-import { UpcomingService } from "@app/core/services/upcoming.service";
-import { Upcoming } from "@app/core/models/upcoming.model";
-import { ToastsService } from '../services/toasts.service';
-import { LoadingBarService } from '@ngx-loading-bar/core';
-import { BaseResolverService } from './base-resolver.service';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {map, Observable, take} from 'rxjs';
+import {UpcomingService} from "@app/core/services/upcoming.service";
+import {Upcoming} from "@app/core/models/upcoming.model";
+import {ToastsService} from '../services/toasts.service';
+import {LoadingBarService} from '@ngx-loading-bar/core';
+import {BaseResolverService} from './base-resolver.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class UpcomingResolverService extends BaseResolverService implements Resolve<Upcoming> {
   constructor(
     private upcomingService: UpcomingService,

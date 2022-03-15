@@ -5,17 +5,17 @@
         Modify account
       </h4>
       <div class="container mb-5">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form (ngSubmit)="onSubmit()" [formGroup]="form">
           <app-account-edit></app-account-edit>
 
           <div class="d-flex justify-content-end mt-4">
-            <button class="btn btn-danger me-2" type="button" (click)="onDeactivate(confirmDeactivate)"
-                    title="Deactivate">Deactivate
+            <button (click)="onDeactivate(confirmDeactivate)" class="btn btn-danger me-2" title="Deactivate"
+                    type="button">Deactivate
             </button>
-            <button class="btn btn-secondary me-2" type="button" (click)="goBack()" title="Cancel">
+            <button (click)="goBack()" class="btn btn-secondary me-2" title="Cancel" type="button">
               Cancel
             </button>
-            <button type="submit" class="btn btn-primary" [disabled]="!form.valid" title="Save">
+            <button [disabled]="!form.valid" class="btn btn-primary" title="Save" type="submit">
               Save
             </button>
           </div>
@@ -29,7 +29,7 @@
 <ng-template #confirmDeactivate let-modal>
   <div class="modal-header">
     <h4 class="modal-title text-danger" id="modal-delete-title">Confirmation</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+    <button (click)="modal.dismiss()" aria-label="Close" class="close" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -37,10 +37,10 @@
     <strong>Are you sure you want to deactivate this account?</strong>
   </div>
   <div class="modal-footer">
-    <button type="button" ngbAutofocus class="btn btn-secondary" (click)="modal.dismiss()">
+    <button (click)="modal.dismiss()" class="btn btn-secondary" ngbAutofocus type="button">
       Cancel
     </button>
-    <button type="button" class="btn btn-danger" (click)="modal.close()">
+    <button (click)="modal.close()" class="btn btn-danger" type="button">
       Delete
     </button>
   </div>

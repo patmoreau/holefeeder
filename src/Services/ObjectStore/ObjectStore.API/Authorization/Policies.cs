@@ -1,7 +1,6 @@
-﻿namespace DrifterApps.Holefeeder.ObjectStore.API.Authorization
+﻿namespace DrifterApps.Holefeeder.ObjectStore.API.Authorization;
+
+public static class Policies
 {
-    public static class Policies
-    {
-        public const string REGISTERED_USER = "registered_user";
-    }
+    public const string REGISTERED_USER = "registered_user";
 }

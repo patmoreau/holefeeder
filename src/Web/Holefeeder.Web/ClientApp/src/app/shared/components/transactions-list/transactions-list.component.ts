@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { TransactionsService } from '@app/core/services/transactions.service';
-import { TransactionDetail } from '@app/core/models/transaction-detail.model';
-import { PagingInfo } from '@app/core/models/paging-info.model';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {filter, switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {TransactionsService} from '@app/core/services/transactions.service';
+import {TransactionDetail} from '@app/core/models/transaction-detail.model';
+import {PagingInfo} from '@app/core/models/paging-info.model';
 
 @Component({
   selector: 'app-transactions-list',
@@ -24,7 +24,8 @@ export class TransactionsListComponent implements OnInit {
     private transactionsService: TransactionsService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
@@ -47,6 +48,6 @@ export class TransactionsListComponent implements OnInit {
   }
 
   pageChange() {
-    this.router.navigate(['./'], { queryParams: { page: this.page }, relativeTo: this.route });
+    this.router.navigate(['./'], {queryParams: {page: this.page}, relativeTo: this.route});
   }
 }

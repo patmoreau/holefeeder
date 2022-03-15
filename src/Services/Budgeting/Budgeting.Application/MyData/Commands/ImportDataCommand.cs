@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json;
 
 using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 using DrifterApps.Holefeeder.Framework.SeedWork.Application;
@@ -51,8 +50,10 @@ public static partial class ImportData
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
         }
 
-        public RequestResponse CreateResponse(ValidationResult result) =>
-            new(new ValidationErrorsRequestResult(result.ToDictionary()));
+        public RequestResponse CreateResponse(ValidationResult result)
+        {
+            return new(new ValidationErrorsRequestResult(result.ToDictionary()));
+        }
     }
 
     public class Handler

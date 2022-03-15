@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {ErrorNotfoundComponent} from './core/error-notfound/error-notfound.component';
 import {BrowserUtils} from "@azure/msal-browser";
 

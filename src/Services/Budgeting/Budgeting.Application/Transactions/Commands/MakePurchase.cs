@@ -48,15 +48,17 @@ public static class MakePurchase
 
         public OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult> CreateResponse(
             ValidationResult result)
-            => new ValidationErrorsRequestResult(result.ToDictionary());
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request,
         OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
-        private readonly ITransactionRepository _transactionRepository;
         private readonly ItemsCache _cache;
         private readonly ILogger _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         public Handler(ITransactionRepository transactionRepository, ItemsCache cache,
             ILogger<Handler> logger)

@@ -3,9 +3,9 @@ import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@ang
 import {catchError, first, Observable, tap} from 'rxjs';
 import {filterNullish} from "@app/shared/rxjs.helper";
 import {AccountsService} from "@app/core/services/accounts.service";
-import { Account } from '../models/account.model';
+import {Account} from '../models/account.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AccountResolver implements Resolve<Account> {
   constructor(
     private accountsService: AccountsService,

@@ -17,6 +17,40 @@ namespace Framework.Dapper.SeedWork.Extensions;
 
 public static class DapperExtensions
 {
+    private static IEnumerable<PropertyDescriptor> GetAllProperties(Type type)
+    {
+        return TypeDescriptor.GetProperties(type).OfType<PropertyDescriptor>()
+            .Where(p => !p.Attributes.OfType<NotMappedAttribute>().Any());
+    }
+
+    private static IEnumerable<PropertyDescriptor> GetProperties(Type type)
+    {
+        return GetAllProperties(type).Where(p => !p.Attributes.OfType<KeyAttribute>().Any());
+    }
+
+    private static IEnumerable<PropertyDescriptor> GetIdProperties(Type type)
+    {
+        var keys = GetAllProperties(type)
+            .Where(p => p.Attributes.OfType<KeyAttribute>().Any())
+            .ToList();
+
+        return keys.Any()
+            ? keys
+            : TypeDescriptor.GetProperties(type).OfType<PropertyDescriptor>()
+                .Where(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string GetTableName(Type type)
+    {
+        return TypeDescriptor.GetAttributes(type).OfType<TableAttribute>().FirstOrDefault()?.Name ??
+               type.Name.Underscore();
+    }
+
+    private static string GetColumnName(MemberDescriptor property)
+    {
+        return property.Attributes.OfType<ColumnAttribute>().SingleOrDefault()?.Name ?? property.Name.Underscore();
+    }
+
     #region Insert
 
     public static Task<int> InsertAsync<T>(this IDbConnection connection, T entity) where T : class
@@ -120,11 +154,15 @@ public static class DapperExtensions
 
         var dynamicParameters = new DynamicParameters();
         if (keys.Count == 1)
+        {
             dynamicParameters.Add($"@{keys.First().Name}", param);
+        }
         else
         {
             foreach (var key in keys)
+            {
                 dynamicParameters.Add($"@{key.Name}", param.GetType().GetProperty(key.Name)?.GetValue(param, null));
+            }
         }
 
         return (sql, dynamicParameters);
@@ -206,41 +244,19 @@ public static class DapperExtensions
 
         var dynamicParameters = new DynamicParameters();
         if (keys.Count == 1)
+        {
             dynamicParameters.Add($"@{keys.First().Name}", param);
+        }
         else
         {
             foreach (var key in keys)
+            {
                 dynamicParameters.Add($"@{key.Name}", param.GetType().GetProperty(key.Name)?.GetValue(param, null));
+            }
         }
 
         return (sql, dynamicParameters);
     }
 
     #endregion
-
-    private static IEnumerable<PropertyDescriptor> GetAllProperties(Type type) =>
-        TypeDescriptor.GetProperties(type).OfType<PropertyDescriptor>()
-            .Where(p => !p.Attributes.OfType<NotMappedAttribute>().Any());
-
-    private static IEnumerable<PropertyDescriptor> GetProperties(Type type) =>
-        GetAllProperties(type).Where(p => !p.Attributes.OfType<KeyAttribute>().Any());
-
-    private static IEnumerable<PropertyDescriptor> GetIdProperties(Type type)
-    {
-        var keys = GetAllProperties(type)
-            .Where(p => p.Attributes.OfType<KeyAttribute>().Any())
-            .ToList();
-
-        return keys.Any()
-            ? keys
-            : TypeDescriptor.GetProperties(type).OfType<PropertyDescriptor>()
-                .Where(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static string GetTableName(Type type) =>
-        TypeDescriptor.GetAttributes(type).OfType<TableAttribute>().FirstOrDefault()?.Name ??
-        type.Name.Underscore();
-
-    private static string GetColumnName(MemberDescriptor property) =>
-        property.Attributes.OfType<ColumnAttribute>().SingleOrDefault()?.Name ?? property.Name.Underscore();
 }

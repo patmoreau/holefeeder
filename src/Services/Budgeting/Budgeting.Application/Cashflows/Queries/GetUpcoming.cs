@@ -51,14 +51,16 @@ public static class GetUpcoming
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
         }
 
-        public OneOf<ValidationErrorsRequestResult, ListRequestResult> CreateResponse(ValidationResult result) =>
-            new ValidationErrorsRequestResult(result.ToDictionary());
+        public OneOf<ValidationErrorsRequestResult, ListRequestResult> CreateResponse(ValidationResult result)
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request, OneOf<ValidationErrorsRequestResult, ListRequestResult>>
     {
-        private readonly IUpcomingQueriesRepository _repository;
         private readonly ItemsCache _cache;
+        private readonly IUpcomingQueriesRepository _repository;
 
         public Handler(IUpcomingQueriesRepository repository, ItemsCache cache)
         {

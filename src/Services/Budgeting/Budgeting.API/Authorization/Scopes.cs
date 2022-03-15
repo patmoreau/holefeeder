@@ -1,7 +1,6 @@
-﻿namespace DrifterApps.Holefeeder.Budgeting.API.Authorization
+﻿namespace DrifterApps.Holefeeder.Budgeting.API.Authorization;
+
+public static class Scopes
 {
-    public static class Scopes
-    {
-        public const string REGISTERED_USER = "holefeeder.user";
-    }
+    public const string REGISTERED_USER = "holefeeder.user";
 }

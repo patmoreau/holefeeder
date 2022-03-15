@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormArray, FormBuilder} from '@angular/forms';
 
 @Component({
   selector: 'app-tags-input',
@@ -11,7 +11,8 @@ export class TagsInputComponent implements OnInit {
   @Input() tagsArray: FormArray = new FormArray([]);
   @Input() isReadonly: boolean = false;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+  }
 
   ngOnInit() {
   }

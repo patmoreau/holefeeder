@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {MessageType} from '@app/shared/enums/message-type.enum';

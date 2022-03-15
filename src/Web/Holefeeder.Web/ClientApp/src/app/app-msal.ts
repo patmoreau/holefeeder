@@ -7,7 +7,8 @@ import {
 } from "@azure/msal-browser";
 import {
   MSAL_GUARD_CONFIG,
-  MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG,
+  MSAL_INSTANCE,
+  MSAL_INTERCEPTOR_CONFIG,
   MsalGuardConfiguration,
   MsalInterceptor,
   MsalInterceptorConfiguration

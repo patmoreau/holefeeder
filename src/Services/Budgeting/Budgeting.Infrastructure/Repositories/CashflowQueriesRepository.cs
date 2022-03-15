@@ -19,8 +19,8 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class CashflowQueriesRepository : ICashflowQueriesRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly CashflowMapper _cashflowMapper;
+    private readonly IHolefeederContext _context;
 
     public CashflowQueriesRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
     {

@@ -35,16 +35,19 @@ public static class ModifyAccount
         }
 
         public OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>
-            CreateResponse(ValidationResult result) => new ValidationErrorsRequestResult(result.ToDictionary());
+            CreateResponse(ValidationResult result)
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler
         : IRequestHandler<Request,
             OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>
     {
-        private readonly IAccountRepository _repository;
         private readonly ItemsCache _cache;
         private readonly ILogger<Handler> _logger;
+        private readonly IAccountRepository _repository;
 
         public Handler(IAccountRepository repository, ItemsCache cache,
             ILogger<Handler> logger)

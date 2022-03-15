@@ -7,8 +7,8 @@ namespace DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundReques
 
 public class BackgroundWorkerQueue
 {
-    private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems = new();
     private readonly SemaphoreSlim _signal = new(0);
+    private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems = new();
 
     public async Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
     {

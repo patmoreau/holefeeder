@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { dateFromUtc } from '@app/shared/date-parser.helper';
-import { AccountType } from '@app/shared/enums/account-type.enum';
-import { Adapter } from '@app/shared/interfaces/adapter.interface';
+import {Injectable} from '@angular/core';
+import {dateFromUtc} from '@app/shared/date-parser.helper';
+import {AccountType} from '@app/shared/enums/account-type.enum';
+import {Adapter} from '@app/shared/interfaces/adapter.interface';
 
 export class Account {
   constructor(
@@ -16,10 +16,11 @@ export class Account {
     public description: string,
     public favorite: boolean,
     public inactive: boolean
-  ) { }
+  ) {
+  }
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AccountAdapter implements Adapter<Account> {
   adapt(item: any): Account {
     return new Account(item.id, item.name, item.type, item.openBalance, dateFromUtc(item.openDate),

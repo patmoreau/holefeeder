@@ -31,15 +31,17 @@ public static class DeleteTransaction
 
         public OneOf<ValidationErrorsRequestResult, Unit, NotFoundRequestResult> CreateResponse(
             ValidationResult result)
-            => new ValidationErrorsRequestResult(result.ToDictionary());
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request,
         OneOf<ValidationErrorsRequestResult, Unit, NotFoundRequestResult>>
     {
-        private readonly ITransactionRepository _transactionRepository;
         private readonly ItemsCache _cache;
         private readonly ILogger _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         public Handler(ITransactionRepository transactionRepository, ItemsCache cache,
             ILogger<Handler> logger)

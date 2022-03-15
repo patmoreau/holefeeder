@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TransactionsRoutingModule} from './transactions-routing.module';
 import {SharedModule} from '@app/shared/shared.module';
 import {TransactionEditComponent} from './transaction-edit/transaction-edit.component';

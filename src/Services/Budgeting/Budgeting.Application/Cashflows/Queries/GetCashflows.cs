@@ -21,20 +21,24 @@ public static class GetCashflows
         : IRequest<OneOf<ValidationErrorsRequestResult, ListRequestResult>>, IRequestQuery, IValidateable
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
-            => context.ToQueryRequest(((offset, limit, sort, filter) => new Request(offset, limit, sort, filter)));
+        {
+            return context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
+        }
     }
 
     public class Validator : QueryValidatorRoot<Request>,
         IValidator<Request, OneOf<ValidationErrorsRequestResult, ListRequestResult>>
     {
-        public OneOf<ValidationErrorsRequestResult, ListRequestResult> CreateResponse(ValidationResult result) =>
-            new ValidationErrorsRequestResult(result.ToDictionary());
+        public OneOf<ValidationErrorsRequestResult, ListRequestResult> CreateResponse(ValidationResult result)
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request, OneOf<ValidationErrorsRequestResult, ListRequestResult>>
     {
-        private readonly ICashflowQueriesRepository _repository;
         private readonly ItemsCache _cache;
+        private readonly ICashflowQueriesRepository _repository;
 
         public Handler(ICashflowQueriesRepository repository, ItemsCache cache)
         {

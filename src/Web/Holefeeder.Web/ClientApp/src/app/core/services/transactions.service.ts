@@ -7,11 +7,13 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {formatErrors, mapToPagingInfo} from "@app/core/utils/api.utils";
 import {
-  MakePurchaseCommand, ModifyTransactionCommand,
+  MakePurchaseCommand,
+  ModifyTransactionCommand,
   PagingInfo,
   PayCashflowCommand,
   TransactionDetail,
-  TransactionDetailAdapter, TransferMoneyCommand
+  TransactionDetailAdapter,
+  TransferMoneyCommand
 } from "@app/core";
 
 const apiRoute: string = 'budgeting/api/v2/transactions';

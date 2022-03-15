@@ -11,22 +11,20 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
 using Framework.Dapper.SeedWork.Extensions;
 
-using Category = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext.Category;
-
 namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly CategoryMapper _categoryMapper;
-
-    public IUnitOfWork UnitOfWork => _context;
+    private readonly IHolefeederContext _context;
 
     public CategoryRepository(IHolefeederContext context, CategoryMapper categoryMapper)
     {
         _context = context;
         _categoryMapper = categoryMapper;
     }
+
+    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Category?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {

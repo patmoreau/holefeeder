@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { dateToUtc } from "@app/shared/date-parser.helper";
-import { Adapter } from "@app/shared/interfaces/adapter.interface";
+import {Injectable} from "@angular/core";
+import {dateToUtc} from "@app/shared/date-parser.helper";
+import {Adapter} from "@app/shared/interfaces/adapter.interface";
 
 export class ModifyTransactionCommand {
   constructor(
@@ -11,10 +11,11 @@ export class ModifyTransactionCommand {
     public accountId: string,
     public categoryId: string,
     public tags: string[]
-  ) { }
+  ) {
+  }
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ModifyTransactionCommandAdapter implements Adapter<ModifyTransactionCommand> {
   adapt(item: any): ModifyTransactionCommand {
     return new ModifyTransactionCommand(item.id, dateToUtc(item.date), item.amount, item.description,

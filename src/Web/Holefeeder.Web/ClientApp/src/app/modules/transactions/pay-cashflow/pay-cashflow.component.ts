@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Data, Params } from '@angular/router';
-import { Location } from '@angular/common';
-import { Upcoming } from '@app/core/models/upcoming.model';
-import { UpcomingService } from '@app/core/services/upcoming.service';
-import {map, Observable, switchMap, tap } from 'rxjs';
-import { TransactionsService } from '@app/core/services/transactions.service';
-import { PayCashflowCommandAdapter } from '@app/core/models/pay-cashflow-command.model';
-import { filterNullish } from '@app/shared/rxjs.helper';
+import {Component, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Data} from '@angular/router';
+import {Location} from '@angular/common';
+import {Upcoming} from '@app/core/models/upcoming.model';
+import {UpcomingService} from '@app/core/services/upcoming.service';
+import {map, Observable, tap} from 'rxjs';
+import {TransactionsService} from '@app/core/services/transactions.service';
+import {PayCashflowCommandAdapter} from '@app/core/models/pay-cashflow-command.model';
 
 const cashflowIdParamName = 'cashflowId';
 
@@ -31,16 +30,17 @@ export class PayCashflowComponent implements OnInit {
     private cashflowsService: UpcomingService,
     private transactionsService: TransactionsService,
     private adapter: PayCashflowCommandAdapter
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
 
     this.form = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
       date: [''],
-      account: [{ value: '', disabled: true }, [Validators.required]],
-      category: [{ value: '', disabled: true }, [Validators.required]],
-      description: [{ value: '', disabled: true }],
+      account: [{value: '', disabled: true}, [Validators.required]],
+      category: [{value: '', disabled: true}, [Validators.required]],
+      description: [{value: '', disabled: true}],
       tags: this.formBuilder.array([])
     });
 

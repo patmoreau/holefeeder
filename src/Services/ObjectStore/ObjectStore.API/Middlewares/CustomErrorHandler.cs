@@ -24,9 +24,15 @@ public static class CustomErrorHandler
         return app;
     }
 
-    private static Task WriteDevelopmentResponse(HttpContext httpContext) => WriteResponse(httpContext, true);
+    private static Task WriteDevelopmentResponse(HttpContext httpContext)
+    {
+        return WriteResponse(httpContext, true);
+    }
 
-    private static Task WriteProductionResponse(HttpContext httpContext) => WriteResponse(httpContext, false);
+    private static Task WriteProductionResponse(HttpContext httpContext)
+    {
+        return WriteResponse(httpContext, false);
+    }
 
     private static async Task WriteResponse(HttpContext httpContext, bool includeDetails)
     {

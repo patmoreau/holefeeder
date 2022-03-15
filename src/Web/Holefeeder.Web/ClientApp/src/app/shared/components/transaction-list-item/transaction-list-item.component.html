@@ -1,23 +1,23 @@
 <div class="d-flex flex-row bd-highlight mb-3 border-top">
   <div class="p-2 bd-highlight align-self-center justify-content-center">
-    <div *ngIf="!allowSave" class="flex-shrink-0 align-items-center m-1" (click)="click('EDIT')">
+    <div (click)="click('EDIT')" *ngIf="!allowSave" class="flex-shrink-0 align-items-center m-1">
       <em class="bi bi-cart"></em>
     </div>
-    <div *ngIf="allowSave" class="flex-shrink-0 align-items-center m-1" (click)="click('SAVE')">
+    <div (click)="click('SAVE')" *ngIf="allowSave" class="flex-shrink-0 align-items-center m-1">
       <em class="bi bi-cart-plus"></em>
     </div>
   </div>
-  <div class="p-2 bd-highlight flex-fill" (click)="click('EDIT')">
+  <div (click)="click('EDIT')" class="p-2 bd-highlight flex-fill">
     <div class="text-start">
       {{ description }}
     </div>
     <div class="text-start">
-      <span class="text-lowercase" *ngFor="let tag of tags">
+      <span *ngFor="let tag of tags" class="text-lowercase">
         <small class="badge rounded-pill bg-primary">{{ tag }}</small>
       </span>
     </div>
   </div>
-  <div class="p-2 bd-highlight justify-content-end" (click)="click('EDIT')">
+  <div (click)="click('EDIT')" class="p-2 bd-highlight justify-content-end">
     <div class="text-end">
       <small class="font-weight-bold">{{ amount | currency: 'CAD':'symbol-narrow' }}</small>
     </div>

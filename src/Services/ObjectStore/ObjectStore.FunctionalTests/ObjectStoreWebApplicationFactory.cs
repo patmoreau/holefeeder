@@ -14,106 +14,107 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ObjectStore.FunctionalTests
+namespace ObjectStore.FunctionalTests;
+
+public class ObjectStoreWebApplicationFactory : WebApplicationFactory<Program>
 {
-    public class ObjectStoreWebApplicationFactory : WebApplicationFactory<Program>
+    private static readonly object Locker = new();
+    private static bool _dataSeeded;
+    private static bool _dataPrepared;
+
+    protected override void ConfigureClient(HttpClient client)
     {
-        private static readonly object Locker = new();
-        private static bool _dataSeeded;
-        private static bool _dataPrepared;
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
 
-        protected override void ConfigureClient(HttpClient client)
+        base.ConfigureClient(client);
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment("Tests")
+            .ConfigureAppConfiguration((_, conf) =>
+            {
+                conf.AddJsonFile(Path.Combine(
+                        GetProjectPath(String.Empty, typeof(ObjectStoreWebApplicationFactory).Assembly),
+                        "appsettings.json"))
+                    .AddEnvironmentVariables();
+
+                var c = conf.Build();
+                var settings = c.GetSection(nameof(ObjectStoreDatabaseSettings))
+                    .Get<ObjectStoreDatabaseSettings>();
+
+                PrepareData(settings);
+            })
+            .ConfigureTestServices(services =>
+            {
+                services.AddAuthentication("Test")
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
+            });
+    }
+
+    public void SeedData()
+    {
+        var settings = Services.GetRequiredService<ObjectStoreDatabaseSettings>();
+
+        if (_dataSeeded)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
-
-            base.ConfigureClient(client);
+            return;
         }
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        lock (Locker)
         {
-            builder.UseEnvironment("Tests")
-                .ConfigureAppConfiguration((_, conf) =>
-                {
-                    conf.AddJsonFile(Path.Combine(
-                            GetProjectPath(String.Empty, typeof(ObjectStoreWebApplicationFactory).Assembly),
-                            "appsettings.json"))
-                        .AddEnvironmentVariables();
-
-                    var c = conf.Build();
-                    var settings = c.GetSection(nameof(ObjectStoreDatabaseSettings))
-                        .Get<ObjectStoreDatabaseSettings>();
-
-                    PrepareData(settings);
-                })
-                .ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
-                });
-        }
-
-        public void SeedData()
-        {
-            var settings = Services.GetRequiredService<ObjectStoreDatabaseSettings>();
-
             if (_dataSeeded)
             {
                 return;
             }
 
-            lock (Locker)
-            {
-                if (_dataSeeded)
-                {
-                    return;
-                }
+            StoreItemContextSeed.SeedData(settings);
+            _dataSeeded = true;
+        }
+    }
 
-                StoreItemContextSeed.SeedData(settings);
-                _dataSeeded = true;
-            }
+    private static void PrepareData(ObjectStoreDatabaseSettings settings)
+    {
+        if (_dataPrepared)
+        {
+            return;
         }
 
-        private static void PrepareData(ObjectStoreDatabaseSettings settings)
+        lock (Locker)
         {
             if (_dataPrepared)
             {
                 return;
             }
 
-            lock (Locker)
-            {
-                if (_dataPrepared)
-                {
-                    return;
-                }
-
-                StoreItemContextSeed.PrepareData(settings);
-                _dataPrepared = true;
-            }
+            StoreItemContextSeed.PrepareData(settings);
+            _dataPrepared = true;
         }
+    }
 
-        private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
+    private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
+    {
+        var projectName = startupAssembly.GetName().Name;
+
+        var applicationBasePath = AppContext.BaseDirectory;
+
+        var directoryInfo = new DirectoryInfo(applicationBasePath);
+
+        do
         {
-            var projectName = startupAssembly.GetName().Name;
+            directoryInfo = directoryInfo.Parent;
 
-            var applicationBasePath = AppContext.BaseDirectory;
+            var projectDirectoryInfo =
+                new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
 
-            var directoryInfo = new DirectoryInfo(applicationBasePath);
-
-            do
+            if (projectDirectoryInfo.Exists &&
+                new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName!, $"{projectName}.csproj"))
+                    .Exists)
             {
-                directoryInfo = directoryInfo.Parent;
+                return Path.Combine(projectDirectoryInfo.FullName, projectName!);
+            }
+        } while (directoryInfo.Parent != null);
 
-                var projectDirectoryInfo =
-                    new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
-
-                if (projectDirectoryInfo.Exists &&
-                    new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName!, $"{projectName}.csproj"))
-                        .Exists)
-                    return Path.Combine(projectDirectoryInfo.FullName, projectName!);
-            } while (directoryInfo.Parent != null);
-
-            throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
-        }
+        throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
     }
 }
