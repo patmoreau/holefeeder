@@ -14,6 +14,8 @@ public class CategoryTypeHandler : SqlMapper.TypeHandler<CategoryType>
         parameter.Value = value?.Name;
     }
 
-    public override CategoryType Parse(object value) =>
-        Enumeration.FromName<CategoryType>(value as string ?? string.Empty);
+    public override CategoryType Parse(object value)
+    {
+        return Enumeration.FromName<CategoryType>(value as string ?? string.Empty);
+    }
 }

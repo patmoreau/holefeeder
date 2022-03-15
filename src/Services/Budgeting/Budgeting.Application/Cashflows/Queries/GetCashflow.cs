@@ -17,8 +17,8 @@ public static class GetCashflow
 
     public class Handler : IRequestHandler<Request, OneOf<CashflowInfoViewModel, NotFoundRequestResult>>
     {
-        private readonly ICashflowQueriesRepository _repository;
         private readonly ItemsCache _cache;
+        private readonly ICashflowQueriesRepository _repository;
 
         public Handler(ICashflowQueriesRepository repository, ItemsCache cache)
         {
@@ -29,7 +29,7 @@ public static class GetCashflow
         public async Task<OneOf<CashflowInfoViewModel, NotFoundRequestResult>> Handle(Request query,
             CancellationToken cancellationToken)
         {
-            var result = (await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken));
+            var result = await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken);
             if (result is null)
             {
                 return new NotFoundRequestResult();

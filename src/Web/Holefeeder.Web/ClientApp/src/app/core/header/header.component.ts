@@ -1,40 +1,28 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { addDays, startOfToday } from 'date-fns';
-import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
-import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from "@azure/msal-angular";
-import {
-  AuthenticationResult, AuthError,
-  EventMessage,
-  EventType,
-  InteractionType,
-  PopupRequest,
-  RedirectRequest
-} from "@azure/msal-browser";
-import { b2cPolicies } from "@app/core/config/config.service";
-import { filter, takeUntil } from "rxjs/operators";
-import { Settings } from '@app/core/models/settings.model';
-import { DateInterval } from '@app/core/models/date-interval.model';
-import { SettingsService } from '../services/settings.service';
-import { Account } from '@app/modules/accounts/models/account.model';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {addDays, startOfToday} from 'date-fns';
+import {NgbDate, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Observable} from 'rxjs';
+import {MsalService} from "@azure/msal-angular";
+import {Settings} from '@app/core/models/settings.model';
+import {DateInterval} from '@app/core/models/date-interval.model';
+import {SettingsService} from '../services/settings.service';
+import {HttpClient} from "@angular/common/http";
+import {UserService} from "@app/core/services/user.service";
+import {User} from "@app/core/models/user.model";
 
-interface IdTokenClaims extends AuthenticationResult {
-  idTokenClaims: {
-    acr?: string
-  }
-}
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
   period$: Observable<DateInterval> | undefined;
 
-  closeResult: string | undefined;
+  logged$: Observable<boolean>;
+  user$: Observable<User | null>;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = null;
@@ -42,146 +30,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isNavbarCollapsed = false;
 
-  profile: Account | undefined;
-
-  isIframe = false;
   loggedIn = false;
 
-  private readonly _destroying$ = new Subject<void>();
-
   constructor(
+    private http: HttpClient,
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private router: Router,
-    private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService,
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration
+    private userService: UserService,
+    private authService: MsalService
   ) {
     this.isNavbarCollapsed = true;
 
+    this.user$ = this.userService.user$;
+    this.logged$ = this.userService.loggedOn$;
     this.settings$ = this.settingsService.settings$;
     this.period$ = this.settingsService.period$;
   }
 
   ngOnInit() {
-    this.isIframe = window !== window.parent && !window.opener;
-
-    this.checkAccount();
-
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS || msg.eventType === EventType.ACQUIRE_TOKEN_SUCCESS),
-        takeUntil(this._destroying$)
-      )
-      .subscribe((result: EventMessage) => {
-
-        let payload: IdTokenClaims = <AuthenticationResult>result.payload;
-
-        // We need to reject id tokens that were not issued with the default sign-in policy.
-        // "acr" claim in the token tells us what policy is used (NOTE: for new policies (v2.0), use "tfp" instead of "acr")
-        // To learn more about b2c tokens, visit https://docs.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview
-
-        if (payload.idTokenClaims?.acr === b2cPolicies.names.forgotPassword) {
-          window.alert('Password has been reset successfully. \nPlease sign-in with your new password.');
-          return this.authService.logout();
-        } else if (payload.idTokenClaims['acr'] === b2cPolicies.names.editProfile) {
-          window.alert('Profile has been updated successfully. \nPlease sign-in again.');
-          return this.authService.logout();
-        }
-
-        this.checkAccount();
-        return result;
-      });
-
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_FAILURE || msg.eventType === EventType.ACQUIRE_TOKEN_FAILURE),
-        takeUntil(this._destroying$)
-      )
-      .subscribe((result: EventMessage) => {
-        if (result.error instanceof AuthError) {
-          // Check for forgot password error
-          // Learn more about AAD error codes at https://docs.microsoft.com/azure/active-directory/develop/reference-aadsts-error-codes
-          if (result.error.message.includes('AADB2C90118')) {
-
-            // login request with reset authority
-            let resetPasswordFlowRequest = {
-              scopes: ["openid"],
-              authority: b2cPolicies.authorities.forgotPassword.authority,
-            }
-
-            this.login(resetPasswordFlowRequest);
-          }
-        }
-      });
-
-    if (this.loggedIn) {
-      this.settingsService.loggedOn();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this._destroying$.next(undefined);
-    this._destroying$.complete();
-  }
-
-  checkAccount() {
-    this.loggedIn = this.authService.instance.getAllAccounts().length > 0;
-  }
-
-  login(userFlowRequest?: RedirectRequest | PopupRequest) {
-    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
-      if (this.msalGuardConfig.authRequest) {
-        this.authService.loginPopup({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as PopupRequest)
-          .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
-            this.checkAccount();
-          });
-      } else {
-        this.authService.loginPopup(userFlowRequest)
-          .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
-            this.checkAccount();
-          });
-      }
-    } else {
-      if (this.msalGuardConfig.authRequest) {
-        this.authService.loginRedirect({ ...this.msalGuardConfig.authRequest, ...userFlowRequest } as RedirectRequest);
-      } else {
-        this.authService.loginRedirect(userFlowRequest);
-      }
-    }
-  }
-
-  logout() {
-    this.authService.logout();
-    this.settingsService.loggedOff();
-  }
-
-  editProfile() {
-    let editProfileFlowRequest = {
-      scopes: ["openid"],
-      authority: b2cPolicies.authorities.editProfile.authority,
-    }
-
-    this.login(editProfileFlowRequest);
   }
 
   open(content: any, period: DateInterval) {
     this.setCalendar(period);
     this.modalService
-      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .open(content, {ariaLabelledBy: 'modal-basic-title'})
       .result.then(
-        _ => {
-          this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate!), this.getDate(this.toDate!)));
-        },
-        _ => { }
-      );
+      _ => {
+        this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate!), this.getDate(this.toDate!)));
+      },
+      _ => {
+      }
+    );
   }
 
   nextPeriod() {
-    if(this.toDate === undefined)
-    {
+    if (this.toDate === undefined) {
       console.warn('No date defined');
       return;
     }
@@ -198,8 +82,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   previousPeriod() {
-    if(this.fromDate === undefined)
-    {
+    if (this.fromDate === undefined) {
       console.warn('No date defined');
       return;
     }
@@ -246,6 +129,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isInside(date) ||
       this.isHovered(date)
     );
+  }
+
+  login() {
+  }
+
+  logout(popup?: boolean) {
+    if (popup) {
+      this.authService.logoutPopup({
+        mainWindowRedirectUri: "/"
+      });
+    } else {
+      this.authService.logoutRedirect();
+    }
   }
 
   private setCalendar(period: DateInterval) {

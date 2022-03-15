@@ -17,8 +17,8 @@ public static class GetTransaction
 
     public class Handler : IRequestHandler<Request, OneOf<TransactionInfoViewModel, NotFoundRequestResult>>
     {
-        private readonly ITransactionQueriesRepository _repository;
         private readonly ItemsCache _cache;
+        private readonly ITransactionQueriesRepository _repository;
 
         public Handler(ITransactionQueriesRepository repository, ItemsCache cache)
         {
@@ -29,7 +29,7 @@ public static class GetTransaction
         public async Task<OneOf<TransactionInfoViewModel, NotFoundRequestResult>> Handle(Request query,
             CancellationToken cancellationToken)
         {
-            var transaction = (await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken));
+            var transaction = await _repository.FindByIdAsync((Guid)_cache["UserId"], query.Id, cancellationToken);
             if (transaction is null)
             {
                 return new NotFoundRequestResult();

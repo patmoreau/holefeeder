@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-transaction-list-item',
@@ -13,9 +13,11 @@ export class TransactionListItemComponent implements OnInit {
   @Input() allowSave!: boolean;
   @Output() action: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() { }
+  constructor() {
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   click(action: string) {
     this.action.emit(action);

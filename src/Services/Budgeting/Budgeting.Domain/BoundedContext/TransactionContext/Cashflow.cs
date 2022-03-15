@@ -12,9 +12,37 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
 
 public record Cashflow : IAggregateRoot
 {
+    private readonly decimal _amount;
     private readonly int _frequency;
     private readonly int _recurrence;
-    private readonly decimal _amount;
+
+    public Cashflow(Guid id, DateTime effectiveDate, decimal amount, Guid userId)
+    {
+        if (id.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(Id)} is required");
+        }
+
+        Id = id;
+
+        if (effectiveDate.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(EffectiveDate)} is required");
+        }
+
+        EffectiveDate = effectiveDate;
+
+        Amount = amount;
+
+        if (userId.Equals(default))
+        {
+            throw HolefeederDomainException.Create<Cashflow>($"{nameof(UserId)} is required");
+        }
+
+        UserId = userId;
+
+        Tags = ImmutableList<string>.Empty;
+    }
 
     public Guid Id { get; }
 
@@ -76,45 +104,19 @@ public record Cashflow : IAggregateRoot
 
     public Guid UserId { get; init; }
 
-    public Cashflow(Guid id, DateTime effectiveDate, decimal amount, Guid userId)
-    {
-        if (id.Equals(default))
-        {
-            throw HolefeederDomainException.Create<Cashflow>($"{nameof(Id)} is required");
-        }
-
-        Id = id;
-
-        if (effectiveDate.Equals(default))
-        {
-            throw HolefeederDomainException.Create<Cashflow>($"{nameof(EffectiveDate)} is required");
-        }
-
-        EffectiveDate = effectiveDate;
-
-        Amount = amount;
-
-        if (userId.Equals(default))
-        {
-            throw HolefeederDomainException.Create<Cashflow>($"{nameof(UserId)} is required");
-        }
-
-        UserId = userId;
-
-        Tags = ImmutableList<string>.Empty;
-    }
-
     public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency,
         int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
-        => new(Guid.NewGuid(), effectiveDate, amount, userId)
+    {
+        return new(Guid.NewGuid(), effectiveDate, amount, userId)
         {
             IntervalType = intervalType,
             Frequency = frequency,
             Recurrence = recurrence,
             Description = description,
             CategoryId = categoryId,
-            AccountId = accountId,
+            AccountId = accountId
         };
+    }
 
     public Cashflow AddTags(params string[] tags)
     {

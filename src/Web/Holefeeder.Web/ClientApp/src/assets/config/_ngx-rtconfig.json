@@ -1,4 +1,0 @@
-{
-  "NGX_API_URL": "https://localhost:5001/gateway",
-  "NGX_REDIRECT_URL": "https://localhost:4200"
-}

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { filterNullish } from '@app/shared/rxjs.helper';
-import { Observable } from 'rxjs';
-import { Account } from '../models/account.model';
-import { AccountsService } from '../services/accounts.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Data} from '@angular/router';
+import {map, Observable} from 'rxjs';
+import {Account} from "@app/core";
 
 @Component({
   selector: 'app-account-transactions',
@@ -12,9 +11,14 @@ import { AccountsService } from '../services/accounts.service';
 export class AccountTransactionsComponent implements OnInit {
   account$!: Observable<Account>;
 
-  constructor(private accountsService: AccountsService) { }
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
-    this.account$ = this.accountsService.selectedAccount$.pipe(filterNullish());
+    if (this.route.parent) {
+      this.account$ = this.route.parent.data.pipe(
+        map((data: Data) => data['account']),
+      );
+    }
   }
 }

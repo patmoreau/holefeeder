@@ -37,16 +37,18 @@ public static class OpenAccount
         }
 
         public OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult> CreateResponse(
-            ValidationResult result) =>
-            new ValidationErrorsRequestResult(result.ToDictionary());
+            ValidationResult result)
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request,
         OneOf<ValidationErrorsRequestResult, Guid, DomainErrorRequestResult>>
     {
-        private readonly IAccountRepository _repository;
         private readonly ItemsCache _cache;
         private readonly ILogger<Handler> _logger;
+        private readonly IAccountRepository _repository;
 
         public Handler(IAccountRepository repository, ItemsCache cache,
             ILogger<Handler> logger)

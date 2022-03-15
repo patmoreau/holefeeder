@@ -1,7 +1,7 @@
-import { HttpResponse } from '@angular/common/http';
-import { PagingInfo } from '@app/core/models/paging-info.model';
-import { Adapter } from '@app/shared/interfaces/adapter.interface';
-import { throwError } from 'rxjs';
+import {HttpResponse} from '@angular/common/http';
+import {PagingInfo} from '@app/core/models/paging-info.model';
+import {Adapter} from '@app/shared/interfaces/adapter.interface';
+import {throwError} from 'rxjs';
 
 export abstract class BaseApiService {
   mapToPagingInfo<T>(resp: HttpResponse<Object[]>, adapter: Adapter<T>): PagingInfo<T> {

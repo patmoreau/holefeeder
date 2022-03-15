@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -10,7 +10,16 @@ import { Router } from '@angular/router';
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {}
+  constructor(private formBuilder: FormBuilder, private router: Router) {
+  }
+
+  get firstName() {
+    return this.profileForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.profileForm.get('lastName');
+  }
 
   ngOnInit() {
     this.profileForm = this.formBuilder.group({
@@ -25,13 +34,5 @@ export class AccountComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/accounts']);
-  }
-
-  get firstName() {
-    return this.profileForm.get('firstName');
-  }
-
-  get lastName() {
-    return this.profileForm.get('lastName');
   }
 }

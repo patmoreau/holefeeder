@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { CashflowsService } from '@app/core/services/cashflows.service';
-import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
-import { PagingInfo } from '@app/core/models/paging-info.model';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable, Subject} from 'rxjs';
+import {CashflowsService} from '@app/core/services/cashflows.service';
+import {CashflowDetail} from '@app/core/models/cashflow-detail.model';
+import {PagingInfo} from '@app/core/models/paging-info.model';
 
 @Component({
   selector: 'app-cashflows-list',
@@ -15,7 +15,8 @@ export class CashflowsListComponent implements OnInit {
   showInactive = false;
   $showInactive = new Subject<boolean>();
 
-  constructor(private cashflowsService: CashflowsService, private router: Router) { }
+  constructor(private cashflowsService: CashflowsService, private router: Router) {
+  }
 
   async ngOnInit(): Promise<void> {
     this.$showInactive.subscribe(async (showInactive) => {

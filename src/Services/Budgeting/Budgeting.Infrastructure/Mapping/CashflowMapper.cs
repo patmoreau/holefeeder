@@ -11,9 +11,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 public class CashflowMapper
 {
-    private readonly TagsMapper _tagsMapper;
     private readonly AccountMapper _accountMapper;
     private readonly CategoryMapper _categoryMapper;
+    private readonly TagsMapper _tagsMapper;
 
     public CashflowMapper(TagsMapper tagsMapper, AccountMapper accountMapper, CategoryMapper categoryMapper)
     {
@@ -70,8 +70,10 @@ public class CashflowMapper
         return dto;
     }
 
-    public IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<CashflowEntity> entities) =>
-        entities.Select(MapToDto);
+    public IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<CashflowEntity> entities)
+    {
+        return entities.Select(MapToDto);
+    }
 
     public CashflowEntity MapToEntity(Cashflow model)
     {
@@ -88,7 +90,7 @@ public class CashflowMapper
             IntervalType = model.IntervalType,
             Recurrence = model.Recurrence,
             Tags = _tagsMapper.Map(model.Tags),
-            UserId = model.UserId,
+            UserId = model.UserId
         };
 
         return entity;

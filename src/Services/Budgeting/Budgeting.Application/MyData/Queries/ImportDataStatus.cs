@@ -21,8 +21,8 @@ public static class ImportDataStatus
     public class Handler
         : IRequestHandler<Request, OneOf<ImportDataStatusDto, NotFoundRequestResult>>
     {
-        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<Handler> _logger;
+        private readonly IMemoryCache _memoryCache;
 
         public Handler(IMemoryCache memoryCache, ILogger<Handler> logger)
         {

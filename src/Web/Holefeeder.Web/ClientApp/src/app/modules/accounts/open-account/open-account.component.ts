@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AccountType } from '@app/shared/enums/account-type.enum';
-import { startOfToday } from 'date-fns';
-import { OpenAccountAdapter } from '../models/open-account-command.model';
-import { AccountsService } from '../services/accounts.service';
-import { Location } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AccountType} from '@app/shared/enums/account-type.enum';
+import {startOfToday} from 'date-fns';
+import {OpenAccountAdapter} from '../models/open-account-command.model';
+import {Location} from '@angular/common';
+import {AccountCommandsService} from '../services/account-commands.service';
 
 @Component({
   selector: 'app-open-account',
@@ -20,9 +20,10 @@ export class OpenAccountComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private location: Location,
-    private accountsService: AccountsService,
+    private commandsService: AccountCommandsService,
     private adapter: OpenAccountAdapter
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
 
@@ -41,7 +42,7 @@ export class OpenAccountComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.accountsService.open(
+    this.commandsService.open(
       this.adapter.adapt(this.form.value))
       .subscribe(id => this.router.navigate(['accounts', id]));
   }

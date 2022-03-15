@@ -18,16 +18,16 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class AccountRepository : IAccountRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly AccountMapper _accountMapper;
-
-    public IUnitOfWork UnitOfWork => _context;
+    private readonly IHolefeederContext _context;
 
     public AccountRepository(IHolefeederContext context, AccountMapper accountMapper)
     {
         _context = context;
         _accountMapper = accountMapper;
     }
+
+    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Account?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {

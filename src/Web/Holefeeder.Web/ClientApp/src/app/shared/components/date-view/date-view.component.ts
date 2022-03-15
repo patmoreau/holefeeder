@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-date-view',
@@ -9,7 +9,8 @@ export class DateViewComponent implements OnInit {
   @Input() date: Date | undefined;
   @Input() color: string | undefined;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

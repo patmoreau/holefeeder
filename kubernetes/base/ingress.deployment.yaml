@@ -10,13 +10,6 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: /gateway/
-            backend:
-              service:
-                name: gateway
-                port:
-                  number: 80
-          - pathType: Prefix
             path: /
             backend:
               service:

@@ -1,16 +1,17 @@
 <div class="input-group mb-2">
-  <input #newTag class="form-control" type="text" (keyup.enter)="addTag(newTag.value)"
-    (blur)="addTag(newTag.value); newTag.value = ''" [readonly]="isReadonly" />
+  <input #newTag (blur)="addTag(newTag.value); newTag.value = ''" (keyup.enter)="addTag(newTag.value)"
+         [readonly]="isReadonly"
+         class="form-control" type="text"/>
   <div class="input-group-append">
-    <a class="btn btn-outline-secondary text-secondary" (click)="addTag(newTag.value)">
+    <a (click)="addTag(newTag.value)" class="btn btn-outline-secondary text-secondary">
       <em class="bi bi-plus"></em>
     </a>
   </div>
 </div>
 <div>
-  <span class="text-lowercase" *ngFor="let tag of tagsArray.controls; index as i">
+  <span *ngFor="let tag of tagsArray.controls; index as i" class="text-lowercase">
     <small class="badge rounded-pill bg-primary">{{ tag.value }}
-      <a class="btn btn-sm p-0" (click)="removeTag(i)">
+      <a (click)="removeTag(i)" class="btn btn-sm p-0">
         <em class="bi bi-x"></em>
       </a></small>&nbsp;
   </span>

@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { CashflowsListComponent } from './cashflows-list/cashflows-list.component';
-import { CashflowEditComponent } from './cashflow-edit/cashflow-edit.component';
-import { CashflowsComponent } from './cashflows/cashflows.component';
-import { MsalGuard } from '@azure/msal-angular';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {CashflowsListComponent} from './cashflows-list/cashflows-list.component';
+import {CashflowEditComponent} from './cashflow-edit/cashflow-edit.component';
+import {CashflowsComponent} from './cashflows/cashflows.component';
+import {MsalGuard} from '@azure/msal-angular';
+
 const routes: Routes = [
   {
     path: '',
@@ -32,4 +33,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class CashflowsRoutingModule {}
+export class CashflowsRoutingModule {
+}

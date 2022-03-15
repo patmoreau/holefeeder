@@ -3,16 +3,17 @@
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
-      <input class="form-control" type="number" formControlName="amount" id="amount" placeholder="transaction amount..."
-        required dftaAutofocus />
+      <input class="form-control" dftaAutofocus formControlName="amount" id="amount" placeholder="transaction amount..."
+             required type="number"/>
     </div>
     <div class="form-group">
       <label for="datepicker">Date</label>
       <div class="input-group mb-2">
-        <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" formControlName="date" ngbDatepicker
-          [firstDayOfWeek]=7 #date="ngbDatepicker" (click)="date.toggle()" />
+        <input #date="ngbDatepicker" (click)="date.toggle()" [firstDayOfWeek]=7 class="form-control"
+               formControlName="date"
+               id="datepicker" ngbDatepicker placeholder="yyyy-mm-dd"/>
         <div class="input-group-append">
-          <a class="btn btn-outline-secondary text-secondary" (click)="date.toggle()">
+          <a (click)="date.toggle()" class="btn btn-outline-secondary text-secondary">
             <em class="bi bi-calendar-event"></em>
           </a>
         </div>
@@ -33,12 +34,12 @@
     </div>
     <div class="form-group">
       <label for="tags">Tags</label>
-      <app-tags-input formArrayName="tags" id="tags" [tagsArray]="tags"></app-tags-input>
+      <app-tags-input [tagsArray]="tags" formArrayName="tags" id="tags"></app-tags-input>
     </div>
     <div class="form-group">
       <label for="description">Note</label>
-      <input class="form-control" type="text" formControlName="description" id="description"
-        [placeholder]="'transaction note...'" />
+      <input [placeholder]="'transaction note...'" class="form-control" formControlName="description" id="description"
+             type="text"/>
     </div>
   </div>
 </ng-container>

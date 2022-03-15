@@ -19,13 +19,25 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Repositories;
 
 public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategoriesRepository
 {
-    private readonly IHolefeederContext _context;
     private readonly CategoryMapper _categoryMapper;
+    private readonly IHolefeederContext _context;
 
     public CategoriesQueriesRepository(IHolefeederContext context, CategoryMapper categoryMapper)
     {
         _context = context;
         _categoryMapper = categoryMapper;
+    }
+
+    public async Task<CategoryViewModel?> FindByNameAsync(Guid userId, string name,
+        CancellationToken cancellationToken)
+    {
+        var connection = _context.Connection;
+
+        var category = (await connection.FindAsync<CategoryEntity>(new {UserId = userId, Name = name})
+                .ConfigureAwait(false))
+            .SingleOrDefault();
+
+        return _categoryMapper.MapToDtoOrNull(category);
     }
 
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId,
@@ -40,17 +52,5 @@ public class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategori
             .ConfigureAwait(false);
 
         return _categoryMapper.MapToDto(results);
-    }
-
-    public async Task<CategoryViewModel?> FindByNameAsync(Guid userId, string name,
-        CancellationToken cancellationToken)
-    {
-        var connection = _context.Connection;
-
-        var category = (await connection.FindAsync<CategoryEntity>(new {UserId = userId, Name = name})
-                .ConfigureAwait(false))
-            .SingleOrDefault();
-
-        return _categoryMapper.MapToDtoOrNull(category);
     }
 }

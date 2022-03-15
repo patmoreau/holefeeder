@@ -18,67 +18,66 @@ using OneOf;
 
 using Xunit;
 
-namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions
+namespace DrifterApps.Holefeeder.Budgeting.UnitTests.Application.Transactions;
+
+public class GetTransactionQueryTests
 {
-    public class GetTransactionQueryTests
+    private readonly TransactionInfoViewModel[] _testTransactionData =
     {
-        [Theory]
-        [MemberData(nameof(GetIds))]
-        public void GivenQuery_WhenQueryValid_ThenValid(Guid id)
+        new()
         {
-            // given
-
-            // act
-            var query = new GetTransaction.Request(id);
-
-            // assert
-            query.Id.Should().Be(id);
+            Id = Guid.Parse("6797a22c-6907-45a4-a827-30b5fab7fe0e"),
+            Date = DateTime.Today,
+            Amount = 12345m,
+            Description = "transaction #1",
+            Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
+        },
+        new()
+        {
+            Id = Guid.Parse("2962edd7-2adf-4fa3-ad97-d3a6bb0447d9"),
+            Date = DateTime.Today,
+            Amount = 54321m,
+            Description = "transaction #2",
+            Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
         }
+    };
 
-        [Fact]
-        public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
-        {
-            // given
-            var cache = Substitute.For<ItemsCache>();
-            cache["UserId"] = Guid.NewGuid();
-            var repository = Substitute.For<ITransactionQueriesRepository>();
-            repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), CancellationToken.None)
-                .Returns(_testTransactionData[0] with { });
+    [Theory]
+    [MemberData(nameof(GetIds))]
+    public void GivenQuery_WhenQueryValid_ThenValid(Guid id)
+    {
+        // given
 
-            var handler = new GetTransaction.Handler(repository, cache);
+        // act
+        var query = new GetTransaction.Request(id);
 
-            // when
-            var result = await handler.Handle(new GetTransaction.Request(Guid.NewGuid()), default);
+        // assert
+        query.Id.Should().Be(id);
+    }
 
-            // then
-            OneOf<TransactionInfoViewModel, NotFoundRequestResult> expected = _testTransactionData[0];
-            result.Should().BeEquivalentTo(expected);
-        }
+    [Fact]
+    public async Task GivenHandle_WhenRequestIsValid_ThenReturnData()
+    {
+        // given
+        var cache = Substitute.For<ItemsCache>();
+        cache["UserId"] = Guid.NewGuid();
+        var repository = Substitute.For<ITransactionQueriesRepository>();
+        repository.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), CancellationToken.None)
+            .Returns(_testTransactionData[0] with { });
 
-        public static IEnumerable<object[]> GetIds()
-        {
-            yield return new object[] {Guid.NewGuid()};
-            yield return new object[] {Guid.Empty};
-        }
+        var handler = new GetTransaction.Handler(repository, cache);
 
-        private readonly TransactionInfoViewModel[] _testTransactionData =
-        {
-            new()
-            {
-                Id = Guid.Parse("6797a22c-6907-45a4-a827-30b5fab7fe0e"),
-                Date = DateTime.Today,
-                Amount = 12345m,
-                Description = "transaction #1",
-                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
-            },
-            new()
-            {
-                Id = Guid.Parse("2962edd7-2adf-4fa3-ad97-d3a6bb0447d9"),
-                Date = DateTime.Today,
-                Amount = 54321m,
-                Description = "transaction #2",
-                Tags = ImmutableArray.Create(new[] {"tag#1", "tag#2"})
-            }
-        };
+        // when
+        var result = await handler.Handle(new GetTransaction.Request(Guid.NewGuid()), default);
+
+        // then
+        OneOf<TransactionInfoViewModel, NotFoundRequestResult> expected = _testTransactionData[0];
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    public static IEnumerable<object[]> GetIds()
+    {
+        yield return new object[] {Guid.NewGuid()};
+        yield return new object[] {Guid.Empty};
     }
 }

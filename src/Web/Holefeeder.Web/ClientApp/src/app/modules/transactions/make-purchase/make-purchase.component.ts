@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {AccountsInfoService} from '@app/core/services/account-info.service';
+import {AccountsService} from '@app/core/services/accounts.service';
 import {startOfToday} from 'date-fns';
 import {CategoriesService} from '@app/core/services/categories.service';
 import {TransferMoneyCommandAdapter} from "@app/core/models/transfer-money-command.model";
@@ -22,13 +22,13 @@ export class MakePurchaseComponent implements OnInit {
   formPurchase!: FormGroup;
   formTransfer!: FormGroup;
 
-  values$!: Observable<[any ,any]>;
+  values$!: Observable<[any, any]>;
 
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private location: Location,
-    private accountService: AccountsInfoService,
+    private accountService: AccountsService,
     private categoriesService: CategoriesService,
     private transactionsService: TransactionsService,
     private adapterPurchase: MakePurchaseCommandAdapter,
@@ -57,13 +57,12 @@ export class MakePurchaseComponent implements OnInit {
 
     this.values$ = combineLatest([
       this.route.params,
-      this.accountService.accounts$
+      this.accountService.activeAccounts$
     ]).pipe(
       filter(([_, accounts]) => accounts.length > 0),
       tap(([params, accounts]) => {
         let fromAccount = params[accountIdParamName] ?? this.accountService.findOneByIndex(0)?.id;
         let toAccount = this.accountService.findOneByIndex(1)?.id;
-        console.log(fromAccount);
         this.formPurchase.patchValue({
           date: startOfToday(),
           account: fromAccount,

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { StateService } from '@app/core/services/state.service';
-import { filter, mergeMap, Observable } from 'rxjs';
-import { Category } from '../models/category.model';
-import { CategoriesApiService } from './api/categories-api.service';
+import {Injectable} from '@angular/core';
+import {StateService} from '@app/core/services/state.service';
+import {filter, mergeMap, Observable} from 'rxjs';
+import {Category} from '../models/category.model';
+import {CategoriesApiService} from './api/categories-api.service';
 
 interface CategoriesState {
   categories: Category[];
@@ -12,7 +12,7 @@ const initialState: CategoriesState = {
   categories: [],
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class CategoriesService extends StateService<CategoriesState> {
 
   categories$: Observable<Category[]> = this.select((state) => state.categories);
@@ -22,7 +22,7 @@ export class CategoriesService extends StateService<CategoriesState> {
 
     this.apiService.find()
       .subscribe(items => {
-        this.setState({ categories: items });
+        this.setState({categories: items});
       });
   }
 

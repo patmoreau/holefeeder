@@ -14,6 +14,8 @@ public class AccountTypeHandler : SqlMapper.TypeHandler<AccountType>
         parameter.Value = value?.Name;
     }
 
-    public override AccountType Parse(object value) =>
-        Enumeration.FromName<AccountType>(value as string ?? string.Empty);
+    public override AccountType Parse(object value)
+    {
+        return Enumeration.FromName<AccountType>(value as string ?? string.Empty);
+    }
 }

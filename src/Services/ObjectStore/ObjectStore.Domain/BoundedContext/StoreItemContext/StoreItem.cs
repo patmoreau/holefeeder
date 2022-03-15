@@ -7,8 +7,8 @@ namespace DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemCont
 
 public record StoreItem : IAggregateRoot
 {
-    private readonly Guid _id;
     private readonly string _code = null!;
+    private readonly Guid _id;
     private readonly Guid _userId;
 
     public Guid Id
@@ -55,6 +55,8 @@ public record StoreItem : IAggregateRoot
         }
     }
 
-    public static StoreItem Create(string code, string data, Guid userId) =>
-        new() {Id = Guid.NewGuid(), Code = code, Data = data, UserId = userId};
+    public static StoreItem Create(string code, string data, Guid userId)
+    {
+        return new() {Id = Guid.NewGuid(), Code = code, Data = data, UserId = userId};
+    }
 }

@@ -163,9 +163,11 @@ public static class TransactionsRoutes
             _ => Results.NotFound());
     }
 
-    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder) =>
-        builder
+    private static RouteHandlerBuilder AddOptions(this RouteHandlerBuilder builder)
+    {
+        return builder
             .WithTags("Transactions")
             .RequireAuthorization()
             .WithGroupName("v2");
+    }
 }

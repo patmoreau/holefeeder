@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +8,6 @@ using DrifterApps.Holefeeder.ObjectStore.Domain.BoundedContext.StoreItemContext;
 using DrifterApps.Holefeeder.ObjectStore.Domain.Exceptions;
 
 using FluentValidation;
-using FluentValidation.Results;
 
 using MediatR;
 
@@ -15,11 +15,13 @@ using Microsoft.Extensions.Logging;
 
 using OneOf;
 
+using ValidationResult = FluentValidation.Results.ValidationResult;
+
 namespace DrifterApps.Holefeeder.ObjectStore.Application.StoreItems.Commands;
 
 public static class ModifyStoreItem
 {
-    public record Request(Guid Id, string Data)
+    public record Request([Required] Guid Id, string Data)
         : IRequest<OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>;
 
     public class Validator : AbstractValidator<Request>,
@@ -34,14 +36,17 @@ public static class ModifyStoreItem
         }
 
         public OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>
-            CreateResponse(ValidationResult result) => new ValidationErrorsRequestResult(result.ToDictionary());
+            CreateResponse(ValidationResult result)
+        {
+            return new ValidationErrorsRequestResult(result.ToDictionary());
+        }
     }
 
     public class Handler : IRequestHandler<Request,
         OneOf<ValidationErrorsRequestResult, NotFoundRequestResult, Unit, DomainErrorRequestResult>>
     {
-        private readonly IStoreItemsRepository _itemsRepository;
         private readonly ItemsCache _cache;
+        private readonly IStoreItemsRepository _itemsRepository;
         private readonly ILogger _logger;
 
         public Handler(IStoreItemsRepository itemsRepository, ItemsCache cache, ILogger<Handler> logger)

@@ -14,6 +14,8 @@ public class DateIntervalTypeHandler : SqlMapper.TypeHandler<DateIntervalType>
         parameter.Value = value?.Name;
     }
 
-    public override DateIntervalType Parse(object value) =>
-        Enumeration.FromName<DateIntervalType>(value as string ?? string.Empty);
+    public override DateIntervalType Parse(object value)
+    {
+        return Enumeration.FromName<DateIntervalType>(value as string ?? string.Empty);
+    }
 }

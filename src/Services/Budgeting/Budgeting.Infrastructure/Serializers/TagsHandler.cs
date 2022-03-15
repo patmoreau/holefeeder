@@ -12,5 +12,8 @@ public class TagsHandler : SqlMapper.TypeHandler<string[]>
         parameter.Value = string.Join(";", value);
     }
 
-    public override string[] Parse(object value) => (value as string)?.Split(";") ?? Array.Empty<string>();
+    public override string[] Parse(object value)
+    {
+        return (value as string)?.Split(";") ?? Array.Empty<string>();
+    }
 }

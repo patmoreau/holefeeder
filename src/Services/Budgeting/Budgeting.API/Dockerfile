@@ -12,7 +12,6 @@ WORKDIR /src
 COPY DrifterApps.Holefeeder.sln ./
 COPY Directory.Build.props ./
 
-COPY src/ApiGateways/Web.Gateway/*.csproj src/ApiGateways/Web.Gateway/
 COPY src/BuildingBlocks/Framework.Dapper.SeedWork/*.csproj src/BuildingBlocks/Framework.Dapper.SeedWork/
 COPY src/BuildingBlocks/Framework.Mongo.SeedWork/*.csproj src/BuildingBlocks/Framework.Mongo.SeedWork/
 COPY src/BuildingBlocks/Framework.SeedWork/*.csproj src/BuildingBlocks/Framework.SeedWork/

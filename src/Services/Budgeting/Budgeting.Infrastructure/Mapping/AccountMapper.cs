@@ -11,8 +11,9 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 public class AccountMapper
 {
-    public MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity) =>
-        new MyDataAccountDto
+    public MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity)
+    {
+        return new()
         {
             Id = entity.Id,
             Description = entity.Description,
@@ -23,9 +24,12 @@ public class AccountMapper
             Type = entity.Type,
             Inactive = entity.Inactive
         };
+    }
 
-    public AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity) =>
-        new AccountInfoViewModel(entity.Id, entity.Name);
+    public AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity)
+    {
+        return new(entity.Id, entity.Name);
+    }
 
     public Account? MapToModelOrNull(AccountEntity? entity, IEnumerable<Guid>? cashflows = null)
     {

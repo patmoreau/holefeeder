@@ -22,7 +22,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
         RequestHandlerDelegate<TResponse> next)
     {
-        ValidationResult result = await _validator.ValidateAsync(request, cancellationToken);
+        var result = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!result.IsValid)
         {
@@ -36,10 +36,12 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 public static class ValidationExtensions
 {
     public static IDictionary<string, string[]> ToDictionary(this ValidationResult validationResult)
-        => validationResult.Errors
+    {
+        return validationResult.Errors
             .GroupBy(x => x.PropertyName)
             .ToDictionary(
                 g => g.Key,
                 g => g.Select(x => x.ErrorMessage).ToArray()
             );
+    }
 }

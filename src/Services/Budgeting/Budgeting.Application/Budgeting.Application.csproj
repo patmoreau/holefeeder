@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>DrifterApps.Holefeeder.Budgeting.Application</RootNamespace>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>DrifterApps.Holefeeder.Budgeting.Application</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="10.3.6" />
-      <PackageReference Include="MediatR" Version="10.0.1" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-      <PackageReference Include="OneOf" Version="3.0.205" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="10.3.6"/>
+    <PackageReference Include="MediatR" Version="10.0.1"/>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0"/>
+    <PackageReference Include="OneOf" Version="3.0.211"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj" />
-      <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Framework.SeedWork\Framework.SeedWork.csproj"/>
+    <ProjectReference Include="..\Budgeting.Domain\Budgeting.Domain.csproj"/>
+  </ItemGroup>
 
 </Project>

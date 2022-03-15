@@ -9,35 +9,34 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
-namespace ObjectStore.FunctionalTests
+namespace ObjectStore.FunctionalTests;
+
+public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public const string TEST_USER_ID_HEADER = nameof(TEST_USER_ID_HEADER);
+
+    public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+        : base(options, logger, encoder, clock)
     {
-        public const string TEST_USER_ID_HEADER = nameof(TEST_USER_ID_HEADER);
+    }
 
-        public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-            : base(options, logger, encoder, clock)
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var testUserId = StoreItemContextSeed.TestUserGuid1.ToString();
+        if (Request.Headers.ContainsKey(TEST_USER_ID_HEADER))
         {
+            testUserId = Request.Headers[TEST_USER_ID_HEADER];
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            var testUserId = StoreItemContextSeed.TestUserGuid1.ToString();
-            if (Request.Headers.ContainsKey(TEST_USER_ID_HEADER))
-            {
-                testUserId = Request.Headers[TEST_USER_ID_HEADER];
-            }
+        var claims = new[] {new Claim(ClaimConstants.Name, "Test user"), new Claim(ClaimConstants.Sub, testUserId)};
+        var identity = new ClaimsIdentity(claims, "Test");
+        identity.AddClaim(new Claim(ClaimConstants.Scp, Scopes.REGISTERED_USER));
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, "Test");
 
-            var claims = new[] {new Claim(ClaimConstants.Name, "Test user"), new Claim(ClaimConstants.Sub, testUserId)};
-            var identity = new ClaimsIdentity(claims, "Test");
-            identity.AddClaim(new Claim(ClaimConstants.Scp, Scopes.REGISTERED_USER));
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "Test");
+        var result = AuthenticateResult.Success(ticket);
 
-            var result = AuthenticateResult.Success(ticket);
-
-            return Task.FromResult(result);
-        }
+        return Task.FromResult(result);
     }
 }

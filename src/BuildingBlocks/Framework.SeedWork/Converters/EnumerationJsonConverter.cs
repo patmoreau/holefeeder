@@ -4,43 +4,42 @@ using System.Text.Json.Serialization;
 
 using DrifterApps.Holefeeder.Framework.SeedWork.Domain;
 
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Converters
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Converters;
+
+public class EnumerationJsonConverter<T> : JsonConverter<T> where T : Enumeration
 {
-    public class EnumerationJsonConverter<T> : JsonConverter<T> where T : Enumeration
+    public override bool CanConvert(Type objectType)
     {
-        public override bool CanConvert(Type objectType)
+        return objectType.IsSubclassOf(typeof(Enumeration));
+    }
+
+    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType != JsonTokenType.String)
         {
-            return objectType.IsSubclassOf(typeof(Enumeration));
+            throw new JsonException($"Invalid Enumeration type {typeToConvert.FullName}");
         }
 
-        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        var typeName = reader.GetString();
+        if (string.IsNullOrEmpty(typeName))
         {
-            if (reader.TokenType != JsonTokenType.String)
-            {
-                throw new JsonException($"Invalid Enumeration type {typeToConvert.FullName}");
-            }
-
-            var typeName = reader.GetString();
-            if (string.IsNullOrEmpty(typeName))
-            {
-                throw new JsonException($"Missing {typeof(T).Name}");
-            }
-
-            var type = Enumeration.FromName<T>(typeName);
-            if (type is null)
-            {
-                throw new JsonException($"Invalid {typeof(T).Name}");
-            }
-
-            return type;
+            throw new JsonException($"Missing {typeof(T).Name}");
         }
 
-        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+        var type = Enumeration.FromName<T>(typeName);
+        if (type is null)
         {
-            if (value is not null)
-            {
-                writer.WriteStringValue(value.Name);
-            }
+            throw new JsonException($"Invalid {typeof(T).Name}");
+        }
+
+        return type;
+    }
+
+    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+    {
+        if (value is not null)
+        {
+            writer.WriteStringValue(value.Name);
         }
     }
 }

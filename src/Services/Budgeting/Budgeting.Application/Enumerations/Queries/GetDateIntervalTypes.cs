@@ -15,7 +15,9 @@ public static class GetDateIntervalTypes
 
     public class Handler : IRequestHandler<Request, DateIntervalType[]>
     {
-        public Task<DateIntervalType[]> Handle(Request query, CancellationToken cancellationToken) =>
-            Task.FromResult(Enumeration.GetAll<DateIntervalType>().ToArray());
+        public Task<DateIntervalType[]> Handle(Request query, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Enumeration.GetAll<DateIntervalType>().ToArray());
+        }
     }
 }

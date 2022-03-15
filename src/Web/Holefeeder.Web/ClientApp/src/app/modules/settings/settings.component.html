@@ -9,10 +9,10 @@
   <div class="container">
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/settings/account']" [routerLinkActive]="['active']">Personal Info</a>
+        <a [routerLinkActive]="['active']" [routerLink]="['/settings/account']" class="nav-link">Personal Info</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/settings/general']" [routerLinkActive]="['active']">Budget</a>
+        <a [routerLinkActive]="['active']" [routerLink]="['/settings/general']" class="nav-link">Budget</a>
       </li>
     </ul>
     <router-outlet></router-outlet>

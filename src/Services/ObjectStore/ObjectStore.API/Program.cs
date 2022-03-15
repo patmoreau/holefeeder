@@ -7,8 +7,11 @@ using DrifterApps.Holefeeder.ObjectStore.API.Middlewares;
 using DrifterApps.Holefeeder.ObjectStore.Application;
 using DrifterApps.Holefeeder.ObjectStore.Infrastructure;
 
+using HealthChecks.UI.Client;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +32,14 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v2", new() {Title = builder.Environment.ApplicationName, Version = "v2"});
+        c.SwaggerDoc("v2", new OpenApiInfo {Title = builder.Environment.ApplicationName, Version = "v2"});
         c.CustomSchemaIds(type => type.ToString());
         c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows()
+            Flows = new OpenApiOAuthFlows
             {
-                AuthorizationCode = new OpenApiOAuthFlow()
+                AuthorizationCode = new OpenApiOAuthFlow
                 {
                     AuthorizationUrl =
                         new Uri(
@@ -61,10 +64,7 @@ builder.Services
             {
                 new OpenApiSecurityScheme
                 {
-                    Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"},
-                    // Scheme = "oauth2",
-                    // Name = "Bearer",
-                    // In = ParameterLocation.Header,
+                    Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
                 },
                 new List<string>()
             }
@@ -95,7 +95,8 @@ builder.Services
         "ObjectStoreDB-check",
         tags: new[] {"object-store-db"});
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((context, _, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -109,6 +110,8 @@ else
     app.UseExceptionHandler("/Error")
         .UseHsts();
 }
+
+app.UseSerilogRequestLogging();
 
 app.AddStoreItemsRoutes()
     .UseCustomErrors(builder.Environment)
@@ -125,11 +128,14 @@ app.AddStoreItemsRoutes()
     .UseAuthorization()
     .MigrateDb();
 
+app.MapHealthChecks("/healthz",
+    new HealthCheckOptions {Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse});
+
 app.Run();
 
 namespace DrifterApps.Holefeeder.ObjectStore.API
 {
-    public partial class Program
+    public class Program
     {
     }
 }

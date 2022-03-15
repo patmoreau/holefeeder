@@ -5,25 +5,24 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 
 using Microsoft.Extensions.Hosting;
 
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Application
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Application;
+
+public class LongRunningService : BackgroundService
 {
-    public class LongRunningService : BackgroundService
+    private readonly BackgroundWorkerQueue _queue;
+
+    public LongRunningService(BackgroundWorkerQueue queue)
     {
-        private readonly BackgroundWorkerQueue _queue;
+        _queue = queue;
+    }
 
-        public LongRunningService(BackgroundWorkerQueue queue)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _queue = queue;
-        }
+            var workItem = await _queue.DequeueAsync(stoppingToken);
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                var workItem = await _queue.DequeueAsync(stoppingToken);
-
-                await workItem(stoppingToken);
-            }
+            await workItem(stoppingToken);
         }
     }
 }

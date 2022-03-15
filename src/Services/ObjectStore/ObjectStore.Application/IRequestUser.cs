@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace DrifterApps.Holefeeder.ObjectStore.Application
+namespace DrifterApps.Holefeeder.ObjectStore.Application;
+
+public interface IRequestUser
 {
-    public interface IRequestUser
-    {
-        Guid UserId { get; }
-    }
+    Guid UserId { get; }
 }

@@ -10,8 +10,10 @@ namespace DrifterApps.Holefeeder.Budgeting.Infrastructure.Mapping;
 
 public class CategoryMapper
 {
-    public CategoryInfoViewModel MapToCategoryInfoViewModel(CategoryEntity entity) =>
-        new CategoryInfoViewModel(entity.Id, entity.Name, entity.Type, entity.Color);
+    public CategoryInfoViewModel MapToCategoryInfoViewModel(CategoryEntity entity)
+    {
+        return new(entity.Id, entity.Name, entity.Type, entity.Color);
+    }
 
     public CategoryViewModel? MapToDtoOrNull(CategoryEntity? entity)
     {
@@ -32,8 +34,10 @@ public class CategoryMapper
         return dto;
     }
 
-    public IEnumerable<CategoryViewModel> MapToDto(IEnumerable<CategoryEntity> entities) =>
-        entities.Select(MapToDto);
+    public IEnumerable<CategoryViewModel> MapToDto(IEnumerable<CategoryEntity> entities)
+    {
+        return entities.Select(MapToDto);
+    }
 
     public Category? MapToModelOrNull(CategoryEntity? entity)
     {

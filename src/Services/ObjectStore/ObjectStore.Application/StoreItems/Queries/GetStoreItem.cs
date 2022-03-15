@@ -19,8 +19,8 @@ public static class GetStoreItem
 
     public class Handler : IRequestHandler<Request, OneOf<StoreItemViewModel, NotFoundRequestResult>>
     {
-        private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
         private readonly ItemsCache _cache;
+        private readonly IStoreItemsQueriesRepository _itemsQueriesRepository;
 
         public Handler(IStoreItemsQueriesRepository itemsQueriesRepository, ItemsCache cache)
         {

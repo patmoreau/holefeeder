@@ -20,9 +20,9 @@ public static class ExportData
     public class Handler
         : IRequestHandler<Request, OneOf<ExportDataDto>>
     {
-        private readonly IMyDataQueriesRepository _myDataRepository;
         private readonly ItemsCache _cache;
         private readonly ILogger<Handler> _logger;
+        private readonly IMyDataQueriesRepository _myDataRepository;
 
         public Handler(
             IMyDataQueriesRepository myDataRepository, ItemsCache cache, ILogger<Handler> logger)

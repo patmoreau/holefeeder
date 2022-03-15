@@ -13,7 +13,6 @@ using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
 using Microsoft.Extensions.Logging;
 
 using Category = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.CategoryContext.Category;
-using Transaction = DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionContext.Transaction;
 
 namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
 
@@ -22,10 +21,10 @@ public static partial class ImportData
     public class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
     {
         private readonly IAccountRepository _accountsRepository;
-        private readonly ICategoryRepository _categoriesRepository;
         private readonly ICashflowRepository _cashflowRepository;
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly ICategoryRepository _categoriesRepository;
         private readonly ILogger<BackgroundTask> _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
@@ -161,7 +160,7 @@ public static partial class ImportData
                             Favorite = element.Favorite,
                             System = element.System,
                             BudgetAmount = element.BudgetAmount,
-                            Color = element.Color,
+                            Color = element.Color
                         };
                         _logger.LogInformation("----- Modify Category - Category: {@Category}", category);
                     }
@@ -177,7 +176,7 @@ public static partial class ImportData
                         Favorite = element.Favorite,
                         System = element.System,
                         BudgetAmount = element.BudgetAmount,
-                        Color = element.Color,
+                        Color = element.Color
                     };
                     _logger.LogInformation("----- Create Category - Category: {@Category}", category);
                 }

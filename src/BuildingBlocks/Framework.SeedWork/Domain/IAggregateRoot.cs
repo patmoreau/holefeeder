@@ -1,6 +1,5 @@
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain;
+
+public interface IAggregateRoot
 {
-    public interface IAggregateRoot
-    {
-    }
 }

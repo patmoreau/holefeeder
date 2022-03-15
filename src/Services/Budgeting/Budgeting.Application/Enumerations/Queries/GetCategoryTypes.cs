@@ -15,7 +15,9 @@ public static class GetCategoryTypes
 
     public class Handler : IRequestHandler<Request, CategoryType[]>
     {
-        public Task<CategoryType[]> Handle(Request query, CancellationToken cancellationToken) =>
-            Task.FromResult(Enumeration.GetAll<CategoryType>().ToArray());
+        public Task<CategoryType[]> Handle(Request query, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Enumeration.GetAll<CategoryType>().ToArray());
+        }
     }
 }

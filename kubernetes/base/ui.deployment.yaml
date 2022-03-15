@@ -39,15 +39,8 @@ spec:
           name: ui
         resources:
           requests:
-            memory: 32Mi
-            cpu: 10m
+            memory: 64Mi
+            cpu: 50m
           limits:
-            memory: 32Mi
-            cpu: 10m
-        volumeMounts:
-        - name: templates
-          mountPath: /etc/nginx/templates
-      volumes:
-      - name: templates
-        configMap:
-          name: ui-config
+            memory: 128Mi
+            cpu: 150m

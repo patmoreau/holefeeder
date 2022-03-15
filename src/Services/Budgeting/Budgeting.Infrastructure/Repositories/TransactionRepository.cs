@@ -17,18 +17,20 @@ public class TransactionRepository : ITransactionRepository
     private readonly IHolefeederContext _context;
     private readonly TransactionMapper _transactionMapper;
 
-    public IUnitOfWork UnitOfWork => _context;
-
     public TransactionRepository(IHolefeederContext context, TransactionMapper transactionMapper)
     {
         _context = context;
         _transactionMapper = transactionMapper;
     }
 
-    public async Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
-        _transactionMapper.MapToModelOrNull(await _context.Connection
+    public IUnitOfWork UnitOfWork => _context;
+
+    public async Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        return _transactionMapper.MapToModelOrNull(await _context.Connection
             .FindByIdAsync<TransactionEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false));
+    }
 
     public async Task SaveAsync(Transaction transaction, CancellationToken cancellationToken)
     {

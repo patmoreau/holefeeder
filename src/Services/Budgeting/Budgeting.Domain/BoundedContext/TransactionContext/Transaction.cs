@@ -11,10 +11,15 @@ namespace DrifterApps.Holefeeder.Budgeting.Domain.BoundedContext.TransactionCont
 
 public record Transaction : IAggregateRoot
 {
-    private readonly Guid _id;
-    private readonly DateTime _date;
     private readonly decimal _amount;
+    private readonly DateTime _date;
+    private readonly Guid _id;
     private readonly Guid _userId;
+
+    public Transaction()
+    {
+        Tags = ImmutableList<string>.Empty;
+    }
 
     public Guid Id
     {
@@ -84,14 +89,10 @@ public record Transaction : IAggregateRoot
         }
     }
 
-    public Transaction()
-    {
-        Tags = ImmutableList<string>.Empty;
-    }
-
     public static Transaction Create(DateTime date, decimal amount, string description, Guid categoryId,
         Guid accountId, Guid userId)
-        => new()
+    {
+        return new()
         {
             Id = Guid.NewGuid(),
             Date = date,
@@ -101,6 +102,7 @@ public record Transaction : IAggregateRoot
             AccountId = accountId,
             UserId = userId
         };
+    }
 
     public static Transaction Create(DateTime date, decimal amount, string description, Guid categoryId,
         Guid accountId, Guid cashflowId, DateTime cashflowDate, Guid userId)

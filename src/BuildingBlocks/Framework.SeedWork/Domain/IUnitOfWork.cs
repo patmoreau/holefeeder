@@ -2,10 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain
+namespace DrifterApps.Holefeeder.Framework.SeedWork.Domain;
+
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        Task CommitAsync(CancellationToken cancellationToken);
-    }
+    Task CommitAsync(CancellationToken cancellationToken);
 }

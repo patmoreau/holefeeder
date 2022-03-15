@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Location } from '@angular/common';
-import { Observable, switchMap, filter, tap } from 'rxjs';
-import { ModalService } from '@app/shared/services/modal.service';
-import { TransactionsService } from '@app/core/services/transactions.service';
-import { ModifyTransactionCommandAdapter } from '@app/core/models/modify-transaction-command.model';
-import { TransactionDetail } from '@app/core/models/transaction-detail.model';
+import {Component, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Params} from '@angular/router';
+import {Location} from '@angular/common';
+import {filter, Observable, switchMap, tap} from 'rxjs';
+import {ModalService} from '@app/shared/services/modal.service';
+import {TransactionsService} from '@app/core/services/transactions.service';
+import {ModifyTransactionCommandAdapter} from '@app/core/models/modify-transaction-command.model';
+import {TransactionDetail} from '@app/core/models/transaction-detail.model';
 
 const transactionIdParamName = 'transactionId';
 
@@ -30,7 +30,8 @@ export class ModifyTransactionComponent implements OnInit {
     private transactionsService: TransactionsService,
     private adapter: ModifyTransactionCommandAdapter,
     private modalService: ModalService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
 
@@ -70,9 +71,8 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onDelete(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-delete-title' })
+    this.modalService.open(content, {ariaLabelledBy: 'modal-delete-title'})
       .pipe(
-        tap(console.log),
         switchMap(_ => this.transactionsService.delete(this.transactionId))
       )
       .subscribe(_ => this.location.back());
