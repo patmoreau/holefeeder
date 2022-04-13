@@ -10,7 +10,7 @@ using Holefeeder.Infrastructure.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddCarter()
+    .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
     .AddSwagger(builder.Environment)
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
@@ -37,16 +37,13 @@ app.UseAuthentication()
     .UseAuthorization()
     .UseHttpsRedirection();
 
-// app.MigrateDb();
+app.MigrateDb();
 
 await app.RunAsync();
 
 #pragma warning disable CA1050
-namespace Holefeeder.Api
+[ExcludeFromCodeCoverage]
+public partial class Program
 {
-    [ExcludeFromCodeCoverage]
-    public class Program
-    {
-    }
 }
 #pragma warning restore CA1050

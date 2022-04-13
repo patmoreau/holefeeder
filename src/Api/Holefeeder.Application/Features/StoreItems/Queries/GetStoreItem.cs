@@ -26,6 +26,7 @@ public class GetStoreItem : ICarterModule
             .Produces<StoreItemViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(StoreItems))
             .WithName(nameof(GetStoreItem))
             .RequireAuthorization();

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@ using FluentValidation.TestHelper;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.SeedWork;
 
+using Microsoft.AspNetCore.Http;
+
 using NSubstitute;
 
 using Xunit;
@@ -24,6 +27,22 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
 public class GetStoreItemsTests
 {
+    [Fact]
+    public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
+    {
+        // arrange
+        var httpContext = new DefaultHttpContext
+        {
+            Request = {QueryString = new QueryString("?offset=10&limit=100&sort=data&filter=code:eq:settings")}
+        };
+
+        // act
+        var result = await Request.BindAsync(httpContext, null!);
+
+        // assert
+        result.Should().BeEquivalentTo(new Request(10, 100, new[] {"data"}, new[] {"code:eq:settings"}));
+    }
+
     [Fact]
     public void GivenValidator_WhenOffsetIsInvalid_ThenError()
     {

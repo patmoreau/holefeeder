@@ -22,7 +22,7 @@ public class GetStoreItems : ICarterModule
                 {
                     var results = await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Add("X-Total-Count", $"{results.Total}");
-                    return Results.Ok(results);
+                    return Results.Ok(results.Items);
                 })
             .Produces<IEnumerable<StoreItemViewModel>>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -61,8 +61,7 @@ public class GetStoreItems : ICarterModule
         public async Task<QueryResult<StoreItemViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
             var (total, items) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request),
-                    cancellationToken);
+                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request), cancellationToken);
 
             return new QueryResult<StoreItemViewModel>(total, items);
         }

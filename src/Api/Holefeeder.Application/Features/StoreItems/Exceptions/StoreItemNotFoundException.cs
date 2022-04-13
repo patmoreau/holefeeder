@@ -7,7 +7,7 @@ namespace Holefeeder.Application.Features.StoreItems.Exceptions;
 
 public class StoreItemNotFoundException : DomainException
 {
-    public StoreItemNotFoundException(Guid id) : base(StatusCodes.Status400BadRequest,
+    public StoreItemNotFoundException(Guid id) : base(StatusCodes.Status404NotFound,
         $"{nameof(StoreItem)} '{id}' not found")
     {
     }
