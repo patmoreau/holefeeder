@@ -19,16 +19,10 @@ COPY src/Services/Budgeting/Budgeting.API/*.csproj src/Services/Budgeting/Budget
 COPY src/Services/Budgeting/Budgeting.Application/*.csproj src/Services/Budgeting/Budgeting.Application/
 COPY src/Services/Budgeting/Budgeting.Domain/*.csproj src/Services/Budgeting/Budgeting.Domain/
 COPY src/Services/Budgeting/Budgeting.Infrastructure/*.csproj src/Services/Budgeting/Budgeting.Infrastructure/
-COPY src/Services/ObjectStore/ObjectStore.API/*.csproj src/Services/ObjectStore/ObjectStore.API/
-COPY src/Services/ObjectStore/ObjectStore.Application/*.csproj src/Services/ObjectStore/ObjectStore.Application/
-COPY src/Services/ObjectStore/ObjectStore.Domain/*.csproj src/Services/ObjectStore/ObjectStore.Domain/
-COPY src/Services/ObjectStore/ObjectStore.Infrastructure/*.csproj src/Services/ObjectStore/ObjectStore.Infrastructure/
 COPY src/Web/Holefeeder.Web/*.csproj src/Web/Holefeeder.Web/
 
 COPY src/Services/Budgeting/Budgeting.UnitTests/*.csproj src/Services/Budgeting/Budgeting.UnitTests/
 COPY src/Services/Budgeting/Budgeting.FunctionalTests/*.csproj src/Services/Budgeting/Budgeting.FunctionalTests/
-COPY src/Services/ObjectStore/ObjectStore.UnitTests/*.csproj src/Services/ObjectStore/ObjectStore.UnitTests/
-COPY src/Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj src/Services/ObjectStore/ObjectStore.FunctionalTests/
 
 RUN dotnet restore DrifterApps.Holefeeder.sln
 

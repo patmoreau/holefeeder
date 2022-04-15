@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 
 using FluentAssertions;
@@ -52,8 +53,8 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
 
     internal Task SendGetRequest(ApiResources apiResource, string? query = null)
     {
-        Uri baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
-        Uri fullUri = baseUri;
+        var baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+        var fullUri = baseUri;
         if (query is not null)
         {
             fullUri = new Uri($"{fullUri}?{query}", fullUri.IsAbsoluteUri ? UriKind.Absolute : UriKind.Relative);
@@ -66,8 +67,21 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
 
     internal Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
     {
-        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
         HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
+
+        return SendRequest(request);
+    }
+
+    internal Task SendPostRequest(ApiResources apiResource, string? body = null)
+    {
+        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+
+        HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
+        if (body is not null)
+        {
+            request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+        }
 
         return SendRequest(request);
     }
@@ -94,26 +108,26 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
         return content;
     }
 
-    public async Task Authenticate()
+    public Task Authenticate()
     {
-        var tokenRequest = new PasswordTokenRequest
-        {
-            Address = "https://localhost:9999/accesstoken",
-            Method = HttpMethod.Post,
-            GrantType = "password",
-            UserName = "admin",
-            Password = "admin",
-            ClientId = "client_id",
-            ClientSecret = "client_secret"
-        };
-        var response = await _httpClient.Value.RequestPasswordTokenAsync(tokenRequest);
-
-        _httpClient.Value.SetBearerToken(response?.AccessToken);
+        // var tokenRequest = new PasswordTokenRequest
+        // {
+        //     Address = "https://localhost:9999/accesstoken",
+        //     Method = HttpMethod.Post,
+        //     GrantType = "password",
+        //     UserName = "admin",
+        //     Password = "admin",
+        //     ClientId = "client_id",
+        //     ClientSecret = "client_secret"
+        // };
+        // var response = await _httpClient.Value.RequestPasswordTokenAsync(tokenRequest);
+        //
+        // _httpClient.Value.SetBearerToken(response?.AccessToken);
 
         _httpClient.Value.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
             TestAuthHandler.AuthenticatedUserId.ToString());
 
-        // return Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)

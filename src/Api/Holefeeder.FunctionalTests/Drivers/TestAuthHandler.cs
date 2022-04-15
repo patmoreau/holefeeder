@@ -12,7 +12,7 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
 {
     public const string TEST_USER_ID_HEADER = nameof(TEST_USER_ID_HEADER);
 
-    public static readonly Guid AuthenticatedUserId = new("B80B9954-3EE0-4BB0-80DA-FA202744323E");
+    public static readonly Guid AuthenticatedUserId = new("b80b9954-3ee0-4bb0-80da-fa202744323e");
 
     public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)

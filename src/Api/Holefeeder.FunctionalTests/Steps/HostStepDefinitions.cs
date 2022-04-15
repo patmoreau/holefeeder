@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using System.Text.Json;
 
 using FluentAssertions;
@@ -20,12 +21,39 @@ public sealed class HostStepDefinitions
         _httpClientDriver = httpClientDriver;
     }
 
-    [When(
-        "I try to fetch (StoreItemsQuery|Budgeting) using query params with offset '([^']+)' and limit '([^']+)' and sort '([^']*)' and filter '([^']*)'")]
-    public Task WhenITryToFetchUsingQueryParamsOfOffsetAndSorts(ApiResources apiResource, int offset, int limit,
-        string sort, string filter)
+    [When("I try to ([^']*) using query params with offset '([^']+|)' and limit '([^']+|)' and sorts '([^']*)' and filters '([^']*)'")]
+    public Task WhenITryToFetchUsingQueryParams(ApiResources apiResource, int? offset, int? limit, string? sorts,
+        string? filters)
     {
-        return _httpClientDriver.SendGetRequest(apiResource, offset, limit, sort, filter);
+        var sb = new StringBuilder();
+        if (offset is not null)
+        {
+            sb.Append($"offset={offset}&");
+        }
+
+        if (limit is not null)
+        {
+            sb.Append($"limit={limit}&");
+        }
+
+        if (!string.IsNullOrWhiteSpace(sorts))
+        {
+            foreach (var sort in sorts.Split(';'))
+            {
+                sb.Append($"sort={sort}&");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(filters))
+        {
+            foreach (var filter in filters.Split(';'))
+            {
+                sb.Append($"filter={filter}&");
+            }
+        }
+
+        return _httpClientDriver.SendGetRequest(apiResource,
+            sb.Length == 0 ? null : sb.Remove(sb.Length - 1, 1).ToString());
     }
 
     [Then(@"I should ((?>not )?be authorized) to access the endpoint")]

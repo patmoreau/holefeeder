@@ -81,18 +81,28 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         {
 #line 4
     #line hidden
-            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Code",
                         "Data",
                         "UserId"});
-            table2.AddRow(new string[] {
-                        "B6D0941D-58BE-44B1-94F5-3B95E64024A4",
+            table4.AddRow(new string[] {
+                        "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                         "code #1",
                         "data #1",
-                        "B80B9954-3EE0-4BB0-80DA-FA202744323E"});
+                        "b80b9954-3ee0-4bb0-80da-fa202744323e"});
+            table4.AddRow(new string[] {
+                        "f9b6836c-3a32-49fd-991c-2785aa74e8e6",
+                        "code #2",
+                        "data #2",
+                        "bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7"});
+            table4.AddRow(new string[] {
+                        "754baec1-d586-4ddc-b980-e0c1bbc951bd",
+                        "code #3",
+                        "data #3",
+                        "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table2, "Given ");
+        testRunner.Given("the following items", ((string)(null)), table4, "Given ");
 #line hidden
         }
         
@@ -109,7 +119,7 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("HappyPath", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 9
+#line 11
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -122,17 +132,30 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
 #line 4
     this.FeatureBackground();
 #line hidden
-#line 10
+#line 12
         testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 11
-        testRunner.When("I try to fetch StoreItems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 13
+        testRunner.When("I try to GetStoreItems using query params with offset \'\' and limit \'\' and sorts \'" +
+                        "-code\' and filters \'\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 12
+#line 14
         testRunner.Then("I expect a \'200\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 13
-        testRunner.And("I get my expected items", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Id",
+                            "Code",
+                            "Data"});
+                table5.AddRow(new string[] {
+                            "754baec1-d586-4ddc-b980-e0c1bbc951bd",
+                            "code #3",
+                            "data #3"});
+                table5.AddRow(new string[] {
+                            "b6d0941d-58be-44b1-94f5-3b95e64024a4",
+                            "code #1",
+                            "data #1"});
+#line 15
+        testRunner.And("I get my expected items", ((string)(null)), table5, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -146,40 +169,6 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Unauthorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 15
-    this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 4
-    this.FeatureBackground();
-#line hidden
-#line 16
-        testRunner.Given("I am not authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 17
-        testRunner.When("I try to fetch StoreItems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 18
-        testRunner.Then("I should not be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Authorized")]
-        [Xunit.TraitAttribute("FeatureTitle", "StoreItems")]
-        [Xunit.TraitAttribute("Description", "Authorized")]
-        public void Authorized()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Authorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 20
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -194,26 +183,26 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
     this.FeatureBackground();
 #line hidden
 #line 21
-        testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("I am not authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 22
-        testRunner.When("I try to fetch StoreItems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I try to GetStoreItems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 23
-        testRunner.Then("I should be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should not be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Invalid Request")]
+        [Xunit.SkippableFactAttribute(DisplayName="Authorized")]
         [Xunit.TraitAttribute("FeatureTitle", "StoreItems")]
-        [Xunit.TraitAttribute("Description", "Invalid Request")]
-        public void InvalidRequest()
+        [Xunit.TraitAttribute("Description", "Authorized")]
+        public void Authorized()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid Request", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Authorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 25
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -231,13 +220,47 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 27
-        testRunner.When("I try to fetch StoreItemsQuery using query params with offset \'0\' and limit \'-1\' " +
-                        "and sort \'date\' and filter \'code:eq:settings\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I try to GetStoreItems", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 28
+        testRunner.Then("I should be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Invalid Request")]
+        [Xunit.TraitAttribute("FeatureTitle", "StoreItems")]
+        [Xunit.TraitAttribute("Description", "Invalid Request")]
+        public void InvalidRequest()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid Request", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 30
+    this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+    this.FeatureBackground();
+#line hidden
+#line 31
+        testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 32
+        testRunner.When("I try to GetStoreItems using query params with offset \'0\' and limit \'-1\' and sort" +
+                        "s \'date\' and filters \'code:eq:settings\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 33
         testRunner.Then("I expect a \'422\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 29
+#line 34
         testRunner.And("I get an problem details with error message saying \'One or more validation errors" +
                         " occurred.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
