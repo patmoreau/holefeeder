@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,12 +6,14 @@ using AutoBogus;
 
 using Bogus;
 
+using DrifterApps.Holefeeder.Budgeting.Application.Models;
+
 using FluentAssertions;
 
 using FluentValidation;
 using FluentValidation.TestHelper;
 
-using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 
 using Microsoft.AspNetCore.Http;
@@ -20,11 +22,11 @@ using NSubstitute;
 
 using Xunit;
 
-using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItems;
+using static Holefeeder.Application.Features.Accounts.Queries.GetAccounts;
 
-namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
+namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
-public class GetStoreItemsTests
+public class GetAccountsQueryTests
 {
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
@@ -86,10 +88,10 @@ public class GetStoreItemsTests
             .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
             .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1))
             .Generate();
-        var expected = new AutoFaker<StoreItemViewModel>().Generate(count);
+        var expected = new AutoFaker<AccountViewModel>().Generate(count);
         var userContextMock = Substitute.For<IUserContext>();
         userContextMock.UserId.Returns(userId);
-        var repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
+        var repositoryMock = Substitute.For<IAccountQueriesRepository>();
         repositoryMock.FindAsync(Arg.Is(userId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
             .Returns((count, expected));
         var handler = new Handler(userContextMock, repositoryMock);
@@ -98,6 +100,6 @@ public class GetStoreItemsTests
         var result = await handler.Handle(request, default);
 
         // assert
-        result.Should().Be(new QueryResult<StoreItemViewModel>(count, expected));
+        result.Should().Be(new QueryResult<AccountViewModel>(count, expected));
     }
 }

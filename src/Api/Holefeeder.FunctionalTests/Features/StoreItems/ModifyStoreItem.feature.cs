@@ -81,18 +81,18 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         {
 #line 4
     #line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Code",
                         "Data",
                         "UserId"});
-            table6.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                         "code #1",
                         "data #1",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table6, "Given ");
+        testRunner.Given("the following items", ((string)(null)), table8, "Given ");
 #line hidden
         }
         

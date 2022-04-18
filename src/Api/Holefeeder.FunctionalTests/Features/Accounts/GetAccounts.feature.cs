@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Holefeeder.FunctionalTests.Features.StoreItems
+namespace Holefeeder.FunctionalTests.Features.Accounts
 {
     using TechTalk.SpecFlow;
     using System;
@@ -20,7 +20,7 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [Xunit.TraitAttribute("Category", "IntegrationTests")]
-    public partial class CreateStoreItemFeature : object, Xunit.IClassFixture<CreateStoreItemFeature.FixtureData>, System.IDisposable
+    public partial class AccountsFeature : object, Xunit.IClassFixture<AccountsFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -30,10 +30,10 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "CreateStoreItem.feature"
+#line 1 "GetAccounts.feature"
 #line hidden
         
-        public CreateStoreItemFeature(CreateStoreItemFeature.FixtureData fixtureData, Holefeeder_FunctionalTests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public AccountsFeature(AccountsFeature.FixtureData fixtureData, Holefeeder_FunctionalTests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -42,7 +42,7 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features/StoreItems", "CreateStoreItem", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features/Accounts", "Accounts", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -81,18 +81,28 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         {
 #line 4
     #line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Code",
                         "Data",
                         "UserId"});
-            table3.AddRow(new string[] {
+            table1.AddRow(new string[] {
                         "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                         "code #1",
                         "data #1",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
+            table1.AddRow(new string[] {
+                        "f9b6836c-3a32-49fd-991c-2785aa74e8e6",
+                        "code #2",
+                        "data #2",
+                        "bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7"});
+            table1.AddRow(new string[] {
+                        "754baec1-d586-4ddc-b980-e0c1bbc951bd",
+                        "code #3",
+                        "data #3",
+                        "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table3, "Given ");
+        testRunner.Given("the following items", ((string)(null)), table1, "Given ");
 #line hidden
         }
         
@@ -102,14 +112,14 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="HappyPath")]
-        [Xunit.TraitAttribute("FeatureTitle", "CreateStoreItem")]
+        [Xunit.TraitAttribute("FeatureTitle", "Accounts")]
         [Xunit.TraitAttribute("Description", "HappyPath")]
         public void HappyPath()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("HappyPath", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 9
+#line 11
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -122,64 +132,43 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
 #line 4
     this.FeatureBackground();
 #line hidden
-#line 10
+#line 12
         testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 11
-        testRunner.When("I try to CreateStoreItem with code \'new code\' and data \' new data\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 12
-        testRunner.Then("I expect a \'201\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
 #line 13
-        testRunner.And("I get the route of the new resource in the header", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("I try to GetAccounts using query params with offset \'\' and limit \'\' and sorts \'-c" +
+                        "ode\' and filters \'\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 14
+        testRunner.Then("I expect a \'200\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Id",
+                            "Code",
+                            "Data"});
+                table2.AddRow(new string[] {
+                            "754baec1-d586-4ddc-b980-e0c1bbc951bd",
+                            "code #3",
+                            "data #3"});
+                table2.AddRow(new string[] {
+                            "b6d0941d-58be-44b1-94f5-3b95e64024a4",
+                            "code #1",
+                            "data #1"});
+#line 15
+        testRunner.And("I get my expected items", ((string)(null)), table2, "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Unauthorized")]
-        [Xunit.TraitAttribute("FeatureTitle", "CreateStoreItem")]
+        [Xunit.TraitAttribute("FeatureTitle", "Accounts")]
         [Xunit.TraitAttribute("Description", "Unauthorized")]
         public void Unauthorized()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Unauthorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 15
-    this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 4
-    this.FeatureBackground();
-#line hidden
-#line 16
-        testRunner.Given("I am not authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 17
-        testRunner.When("I try to CreateStoreItem", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 18
-        testRunner.Then("I should not be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Authorized")]
-        [Xunit.TraitAttribute("FeatureTitle", "CreateStoreItem")]
-        [Xunit.TraitAttribute("Description", "Authorized")]
-        public void Authorized()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Authorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 20
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -194,13 +183,86 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
     this.FeatureBackground();
 #line hidden
 #line 21
-        testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("I am not authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 22
-        testRunner.When("I try to CreateStoreItem", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I try to GetAccounts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 23
+        testRunner.Then("I should not be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Authorized")]
+        [Xunit.TraitAttribute("FeatureTitle", "Accounts")]
+        [Xunit.TraitAttribute("Description", "Authorized")]
+        public void Authorized()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Authorized", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 25
+    this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+    this.FeatureBackground();
+#line hidden
+#line 26
+        testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 27
+        testRunner.When("I try to GetAccounts", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 28
         testRunner.Then("I should be authorized to access the endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Invalid Request")]
+        [Xunit.TraitAttribute("FeatureTitle", "Accounts")]
+        [Xunit.TraitAttribute("Description", "Invalid Request")]
+        public void InvalidRequest()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid Request", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 30
+    this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 4
+    this.FeatureBackground();
+#line hidden
+#line 31
+        testRunner.Given("I am authorized", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 32
+        testRunner.When("I try to GetAccounts using query params with offset \'0\' and limit \'-1\' and sorts " +
+                        "\'date\' and filters \'code:eq:settings\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 33
+        testRunner.Then("I expect a \'422\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 34
+        testRunner.And("I get an problem details with error message saying \'One or more validation errors" +
+                        " occurred.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -213,12 +275,12 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
             
             public FixtureData()
             {
-                CreateStoreItemFeature.FeatureSetup();
+                AccountsFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                CreateStoreItemFeature.FeatureTearDown();
+                AccountsFeature.FeatureTearDown();
             }
         }
     }

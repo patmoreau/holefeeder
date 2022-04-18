@@ -39,7 +39,19 @@ public class DatabaseDriver
         await checkpoint.Reset(connection);
     }
 
-    public async Task AddToDatabase(Table items)
+    public async Task AddAccountsToDatabase(Table items)
+    {
+        await using var connection = new MySqlConnection(_settings.ConnectionString);
+
+        var rows = items.CreateSet<AccountEntity>();
+
+        foreach (var row in rows)
+        {
+            await connection.InsertAsync(row);
+        }
+    }
+
+    public async Task AddStoreItemsToDatabase(Table items)
     {
         await using var connection = new MySqlConnection(_settings.ConnectionString);
 

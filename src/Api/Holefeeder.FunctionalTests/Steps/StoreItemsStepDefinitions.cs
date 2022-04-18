@@ -26,7 +26,7 @@ public sealed class StoreItemsStepDefinitions
     [Given(@"the following items")]
     public async Task GivenTheFollowingItems(Table table)
     {
-        await _databaseDriver.AddToDatabase(table);
+        await _databaseDriver.AddStoreItemsToDatabase(table);
     }
 
     [When("I try to (GetStoreItems?)")]

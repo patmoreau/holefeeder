@@ -81,28 +81,28 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         {
 #line 4
     #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Code",
                         "Data",
                         "UserId"});
-            table4.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                         "code #1",
                         "data #1",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
-            table4.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "f9b6836c-3a32-49fd-991c-2785aa74e8e6",
                         "code #2",
                         "data #2",
                         "bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7"});
-            table4.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "754baec1-d586-4ddc-b980-e0c1bbc951bd",
                         "code #3",
                         "data #3",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table4, "Given ");
+        testRunner.Given("the following items", ((string)(null)), table6, "Given ");
 #line hidden
         }
         
@@ -142,20 +142,20 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
 #line 14
         testRunner.Then("I expect a \'200\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                             "Id",
                             "Code",
                             "Data"});
-                table5.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "754baec1-d586-4ddc-b980-e0c1bbc951bd",
                             "code #3",
                             "data #3"});
-                table5.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                             "code #1",
                             "data #1"});
 #line 15
-        testRunner.And("I get my expected items", ((string)(null)), table5, "And ");
+        testRunner.And("I get my expected items", ((string)(null)), table7, "And ");
 #line hidden
             }
             this.ScenarioCleanup();

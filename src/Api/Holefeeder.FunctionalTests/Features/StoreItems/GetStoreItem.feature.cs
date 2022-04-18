@@ -81,18 +81,18 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
         {
 #line 4
     #line hidden
-            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
                         "Code",
                         "Data",
                         "UserId"});
-            table2.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                         "code #1",
                         "data #1",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table2, "Given ");
+        testRunner.Given("the following items", ((string)(null)), table4, "Given ");
 #line hidden
         }
         
@@ -131,16 +131,16 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems
 #line 12
         testRunner.Then("I expect a \'200\' status code", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                             "Id",
                             "Code",
                             "Data"});
-                table3.AddRow(new string[] {
+                table5.AddRow(new string[] {
                             "b6d0941d-58be-44b1-94f5-3b95e64024a4",
                             "code #1",
                             "data #1"});
 #line 13
-        testRunner.And("I get my expected item", ((string)(null)), table3, "And ");
+        testRunner.And("I get my expected item", ((string)(null)), table5, "And ");
 #line hidden
             }
             this.ScenarioCleanup();

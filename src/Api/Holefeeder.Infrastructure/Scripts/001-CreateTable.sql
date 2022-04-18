@@ -1,4 +1,4 @@
-CREATE TABLE store_items
+CREATE TABLE IF NOT EXISTS store_items
 (
     id      BINARY(16)    NOT NULL,
     code    NVARCHAR(100) NOT NULL,
@@ -7,4 +7,4 @@ CREATE TABLE store_items
     PRIMARY KEY (id)
 );
 
-CREATE UNIQUE INDEX user_id_code_idx ON store_items (user_id, code);
+CREATE UNIQUE INDEX IF NOT EXISTS user_id_code_idx ON store_items (user_id, code);

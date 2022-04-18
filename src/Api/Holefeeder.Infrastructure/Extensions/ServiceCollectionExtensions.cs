@@ -26,15 +26,21 @@ public static class ServiceCollectionExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        services.AddOptions<ObjectStoreDatabaseSettings>()
-            .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)))
+        services
+            .AddOptions<ObjectStoreDatabaseSettings>()
+            .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));
+        services.AddOptions<HolefeederDatabaseSettings>()
+            .Bind(configuration.GetSection(nameof(HolefeederDatabaseSettings)))
             .ValidateDataAnnotations();
 
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
+        services.AddSingleton(sp =>
+            sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
         services.AddSingleton<StoreItemMapper>();
 
+        services.AddScoped<IHolefeederContext, HolefeederContext>();
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();
         services.AddScoped<Script000InitDatabase>();
 
