@@ -102,7 +102,7 @@ namespace Holefeeder.FunctionalTests.Features.Accounts
                         "data #3",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
-        testRunner.Given("the following items", ((string)(null)), table1, "Given ");
+        testRunner.Given("the following accounts", ((string)(null)), table1, "Given ");
 #line hidden
         }
         
@@ -155,7 +155,7 @@ namespace Holefeeder.FunctionalTests.Features.Accounts
                             "code #1",
                             "data #1"});
 #line 15
-        testRunner.And("I get my expected items", ((string)(null)), table2, "And ");
+        testRunner.And("I get my expected accounts", ((string)(null)), table2, "And ");
 #line hidden
             }
             this.ScenarioCleanup();

@@ -10,7 +10,7 @@ public record Account : IAggregateRoot
     {
         if (id.Equals(default))
         {
-            throw AccountDomainException.Create<Account>($"{nameof(Id)} is required");
+            throw new AccountDomainException($"{nameof(Id)} is required");
         }
 
         Id = id;
@@ -19,21 +19,21 @@ public record Account : IAggregateRoot
 
         if (string.IsNullOrWhiteSpace(name) || name.Length > 255)
         {
-            throw AccountDomainException.Create<Account>($"{nameof(Name)} must be from 1 to 255 characters");
+            throw new AccountDomainException($"{nameof(Name)} must be from 1 to 255 characters");
         }
 
         Name = name;
 
         if (openDate.Equals(default))
         {
-            throw AccountDomainException.Create<Account>($"{nameof(OpenDate)} is required");
+            throw new AccountDomainException($"{nameof(OpenDate)} is required");
         }
 
         OpenDate = openDate;
 
         if (userId.Equals(default))
         {
-            throw AccountDomainException.Create<Account>($"{nameof(UserId)} is required");
+            throw new AccountDomainException($"{nameof(UserId)} is required");
         }
 
         UserId = userId;
@@ -71,12 +71,12 @@ public record Account : IAggregateRoot
     {
         if (Inactive)
         {
-            throw AccountDomainException.Create<Account>("Account already closed");
+            throw new AccountDomainException("Account already closed");
         }
 
         if (Cashflows.Any())
         {
-            throw AccountDomainException.Create<Account>("Account has active cashflows");
+            throw new AccountDomainException("Account has active cashflows");
         }
 
         return this with {Inactive = true};

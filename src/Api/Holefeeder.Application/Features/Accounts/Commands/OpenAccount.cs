@@ -49,7 +49,7 @@ public class OpenAccount : ICarterModule
                     (await repository.FindByNameAsync(name, userContext.UserId, cancellation)) is null)
                 .WithMessage(x => $"Name '{x.Name}' already exists.")
                 .WithErrorCode("AlreadyExistsValidator");
-            RuleFor(command => command.OpenDate).NotNull().NotEmpty();
+            RuleFor(command => command.OpenDate).NotEmpty();
         }
     }
 

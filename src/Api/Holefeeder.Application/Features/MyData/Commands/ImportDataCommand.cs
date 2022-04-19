@@ -1,27 +1,42 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
-using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application;
-using DrifterApps.Holefeeder.Framework.SeedWork.Application.BackgroundRequest;
+using Carter;
 
 using FluentValidation;
 
 using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Application.Features.MyData.Queries;
+using Holefeeder.Application.SeedWork;
+using Holefeeder.Application.SeedWork.BackgroundRequest;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 
-using ValidationResult = FluentValidation.Results.ValidationResult;
+namespace Holefeeder.Application.Features.MyData.Commands;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Commands;
-
-public static partial class ImportData
+public partial class ImportData : ICarterModule
 {
-    public record Request : IRequest<RequestResponse>, IValidateable
+    public void AddRoutes(IEndpointRouteBuilder app)
+    {
+        app.MapPost("api/v2/my-data/export-data", async (Request request, IMediator mediator) =>
+            {
+                var requestResult = await mediator.Send(request);
+                return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestResult}, new {Id = requestResult});
+            })
+            .Produces<IEnumerable<ExportDataDto>>()
+            .Produces(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
+            .WithTags(nameof(MyData))
+            .WithName(nameof(ExportData))
+            .RequireAuthorization();
+    }
+
+    public record Request : IRequest<Guid>
     {
         [Required] public bool UpdateExisting { get; init; }
 
@@ -36,9 +51,9 @@ public static partial class ImportData
         }
     }
 
-    public class Validator : AbstractValidator<Request>, IValidator<Request, RequestResponse>
+    public class Validator : AbstractValidator<Request>
     {
-        public Validator(ILogger<Validator> logger)
+        public Validator()
         {
             RuleFor(command => command.Data)
                 .NotNull()
@@ -48,13 +63,6 @@ public static partial class ImportData
                     data.Cashflows.Any() ||
                     data.Transactions.Any())
                 .WithMessage("must contain at least 1 array of accounts|categories|cashflows|transactions");
-
-            logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
-        }
-
-        public RequestResponse CreateResponse(ValidationResult result)
-        {
-            return new(new ValidationErrorsRequestResult(result.ToDictionary()));
         }
     }
 
@@ -62,12 +70,12 @@ public static partial class ImportData
         : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
     {
         public Handler(
-            ItemsCache cache,
+            IUserContext userContext,
             IServiceProvider serviceProvider,
             BackgroundWorkerQueue backgroundWorkerQueue,
             IMemoryCache memoryCache) : base(serviceProvider, backgroundWorkerQueue, memoryCache)
         {
-            UserId = (Guid)cache["UserId"];
+            UserId = userContext.UserId;
         }
     }
 }

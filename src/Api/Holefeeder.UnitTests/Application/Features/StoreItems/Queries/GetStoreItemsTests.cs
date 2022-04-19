@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +9,6 @@ using Bogus;
 
 using FluentAssertions;
 
-using FluentValidation;
 using FluentValidation.TestHelper;
 
 using Holefeeder.Application.Features.StoreItems.Queries;
@@ -26,6 +26,24 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
 public class GetStoreItemsTests
 {
+    private readonly Faker<Request> _faker;
+
+    private readonly int _countDummy;
+    private readonly IEnumerable<StoreItemViewModel> _dummy;
+
+    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
+    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
+
+    public GetStoreItemsTests()
+    {
+        _faker = new AutoFaker<Request>()
+            .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
+            .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1));
+
+        _countDummy = new Faker().Random.Number(100);
+        _dummy = new AutoFaker<StoreItemViewModel>().Generate(_countDummy);
+    }
+
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
     {
@@ -46,58 +64,47 @@ public class GetStoreItemsTests
     public void GivenValidator_WhenOffsetIsInvalid_ThenError()
     {
         // arrange
-        var request = new Request(-1, QueryParams.DEFAULT_LIMIT, Array.Empty<string>(), Array.Empty<string>());
+        var request = _faker.RuleFor(x => x.Offset, -1).Generate();
+
         var validator = new Validator();
 
         // act
         var result = validator.TestValidate(request);
 
         // assert
-        result.ShouldHaveValidationErrorFor(r => r.Offset)
-            .WithErrorMessage("'Offset' must be >= 0.")
-            .WithSeverity(Severity.Error)
-            .WithErrorCode("GreaterThanOrEqualValidator");
+        result.ShouldHaveValidationErrorFor(r => r.Offset);
     }
 
     [Fact]
     public void GivenValidator_WhenLimitIsInvalid_ThenError()
     {
         // arrange
-        var request = new Request(QueryParams.DEFAULT_OFFSET, 0, Array.Empty<string>(), Array.Empty<string>());
+        var request = _faker.RuleFor(x => x.Limit, 0).Generate();
+
         var validator = new Validator();
 
         // act
         var result = validator.TestValidate(request);
 
         // assert
-        result.ShouldHaveValidationErrorFor(r => r.Limit)
-            .WithErrorMessage("'Limit' must be > 0.")
-            .WithSeverity(Severity.Error)
-            .WithErrorCode("GreaterThanValidator");
+        result.ShouldHaveValidationErrorFor(r => r.Limit);
     }
 
     [Fact]
     public async Task GivenHandler_WhenIdFound_ThenReturnResult()
     {
         // arrange
-        var count = new Faker().Random.Number(100);
-        var userId = AutoFaker.Generate<Guid>();
-        var request = new AutoFaker<Request>()
-            .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
-            .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1))
-            .Generate();
-        var expected = new AutoFaker<StoreItemViewModel>().Generate(count);
-        var userContextMock = Substitute.For<IUserContext>();
-        userContextMock.UserId.Returns(userId);
-        var repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
-        repositoryMock.FindAsync(Arg.Is(userId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((count, expected));
-        var handler = new Handler(userContextMock, repositoryMock);
+        var request = _faker.Generate();
+
+        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
+            .Returns((_countDummy, _dummy));
+
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
 
         // assert
-        result.Should().Be(new QueryResult<StoreItemViewModel>(count, expected));
+        result.Should().Be(new QueryResult<StoreItemViewModel>(_countDummy, _dummy));
     }
 }

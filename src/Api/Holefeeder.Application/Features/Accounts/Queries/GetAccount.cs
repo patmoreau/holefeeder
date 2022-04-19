@@ -2,7 +2,10 @@
 
 using DrifterApps.Holefeeder.Budgeting.Application.Models;
 
+using FluentValidation;
+
 using Holefeeder.Application.Features.Accounts.Exceptions;
+using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.SeedWork;
 
 using MediatR;
@@ -31,6 +34,14 @@ public class GetAccount : ICarterModule
     }
 
     public record Request(Guid Id) : IRequest<AccountViewModel>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+        }
+    }
 
     public class Handler : IRequestHandler<Request, AccountViewModel>
     {

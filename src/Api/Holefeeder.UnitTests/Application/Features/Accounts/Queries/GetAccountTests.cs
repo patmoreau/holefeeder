@@ -4,32 +4,32 @@ using System.Threading.Tasks;
 
 using AutoBogus;
 
-using Bogus;
+using DrifterApps.Holefeeder.Budgeting.Application.Models;
 
 using FluentAssertions;
 
 using FluentValidation.TestHelper;
 
-using Holefeeder.Application.Features.StoreItems.Exceptions;
-using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.Accounts.Exceptions;
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 
 using NSubstitute;
 
 using Xunit;
 
-using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItem;
+using static Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 
-namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
+namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
-public class GetStoreItemTests
+public class GetAccountTests
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>();
+    private readonly AutoFaker<Request> _faker = new();
 
-    private readonly StoreItemViewModel _storeItemDummy = AutoFaker.Generate<StoreItemViewModel>();
+    private readonly AccountViewModel _dummy = new AutoFaker<AccountViewModel>().Generate();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
+    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()
@@ -58,7 +58,7 @@ public class GetStoreItemTests
         Func<Task> action = () => handler.Handle(request, default);
 
         // assert
-        await action.Should().ThrowAsync<StoreItemNotFoundException>();
+        await action.Should().ThrowAsync<AccountNotFoundException>();
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class GetStoreItemTests
         var request = _faker.Generate();
 
         _repositoryMock.FindByIdAsync(Arg.Is(_userContextMock.UserId), Arg.Is(request.Id), Arg.Any<CancellationToken>())
-            .Returns(_storeItemDummy);
+            .Returns(_dummy);
 
         var handler = new Handler(_userContextMock, _repositoryMock);
 
@@ -76,6 +76,6 @@ public class GetStoreItemTests
         var result = await handler.Handle(request, default);
 
         // assert
-        result.Should().Be(_storeItemDummy);
+        result.Should().Be(_dummy);
     }
 }

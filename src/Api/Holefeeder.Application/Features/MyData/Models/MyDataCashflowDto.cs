@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Holefeeder.Domain.Enumerations;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+namespace Holefeeder.Application.Features.MyData.Models;
 
 public record MyDataCashflowDto
 {

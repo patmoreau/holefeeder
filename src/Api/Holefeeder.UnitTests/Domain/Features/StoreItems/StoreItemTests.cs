@@ -10,7 +10,7 @@ using Holefeeder.Domain.Features.StoreItem;
 
 using Xunit;
 
-namespace Holefeeder.UnitTests.Domain.Features.StoreItem;
+namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
 public class StoreItemTests
 {
@@ -23,7 +23,7 @@ public class StoreItemTests
         var userId = AutoFaker.Generate<Guid>();
 
         // act
-        Func<Task> action = () => Task.FromResult(new Holefeeder.Domain.Features.StoreItem.StoreItem(id, code, userId));
+        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
 
         // assert
         await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'Id' is required");
@@ -40,7 +40,7 @@ public class StoreItemTests
         var userId = AutoFaker.Generate<Guid>();
 
         // act
-        Func<Task> action = () => Task.FromResult(new Holefeeder.Domain.Features.StoreItem.StoreItem(id, code, userId));
+        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
 
         // assert
         await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'Code' is required");
@@ -55,7 +55,7 @@ public class StoreItemTests
         var userId = Guid.Empty;
 
         // act
-        Func<Task> action = () => Task.FromResult(new Holefeeder.Domain.Features.StoreItem.StoreItem(id, code, userId));
+        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
 
         // assert
         await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'UserId' is required");
@@ -71,10 +71,10 @@ public class StoreItemTests
         var userId = AutoFaker.Generate<Guid>();
 
         // act
-        Holefeeder.Domain.Features.StoreItem.StoreItem item = null!;
+        StoreItem item = null!;
         Func<Task> action = () =>
         {
-            item = new Holefeeder.Domain.Features.StoreItem.StoreItem(id, code, userId)
+            item = new StoreItem(id, code, userId)
             {
                 Data = data
             };

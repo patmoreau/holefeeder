@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Holefeeder.Domain.Features.Categories;
 
-using Holefeeder.Domain.Features.Categories;
-
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+namespace Holefeeder.Application.Features.MyData.Models;
 
 public record MyDataCategoryDto
 {

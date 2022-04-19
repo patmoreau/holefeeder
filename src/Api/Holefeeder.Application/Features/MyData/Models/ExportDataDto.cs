@@ -1,8 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-using Holefeeder.Application.Features.MyData.Models;
-
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+namespace Holefeeder.Application.Features.MyData.Models;
 
 public record ExportDataDto(
     ImmutableArray<MyDataAccountDto> Accounts,

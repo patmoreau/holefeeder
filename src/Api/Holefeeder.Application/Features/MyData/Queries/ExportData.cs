@@ -3,8 +3,8 @@
 using Carter;
 
 using DrifterApps.Holefeeder.Budgeting.Application.MyData;
-using DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
 
+using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 
 using MediatR;
@@ -50,13 +50,15 @@ public class ExportData : ICarterModule
         public async Task<ExportDataDto> Handle(Request request, CancellationToken cancellationToken)
         {
             var accounts = await _myDataRepository.ExportAccountsAsync(_userContext.UserId, cancellationToken);
-            var categories = await _myDataRepository.ExportCategoriesAsync(_userContext.UserId, cancellationToken);
-            var cashflows = await _myDataRepository.ExportCashflowsAsync(_userContext.UserId, cancellationToken);
-            var transactions =
-                await _myDataRepository.ExportTransactionsAsync(_userContext.UserId, cancellationToken);
+            // var categories = await _myDataRepository.ExportCategoriesAsync(_userContext.UserId, cancellationToken);
+            // var cashflows = await _myDataRepository.ExportCashflowsAsync(_userContext.UserId, cancellationToken);
+            // var transactions =
+            //     await _myDataRepository.ExportTransactionsAsync(_userContext.UserId, cancellationToken);
 
-            return new ExportDataDto(accounts.ToImmutableArray(), categories.ToImmutableArray(),
-                cashflows.ToImmutableArray(), transactions.ToImmutableArray());
+            return new ExportDataDto(accounts.ToImmutableArray(),
+                ImmutableArray<MyDataCategoryDto>.Empty, //categories.ToImmutableArray(),
+                ImmutableArray<MyDataCashflowDto>.Empty, //cashflows.ToImmutableArray(),
+                ImmutableArray<MyDataTransactionDto>.Empty); //transactions.ToImmutableArray());
         }
     }
 }

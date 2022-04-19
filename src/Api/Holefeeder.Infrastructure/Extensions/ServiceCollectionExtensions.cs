@@ -2,7 +2,11 @@
 
 using Dapper;
 
+using DrifterApps.Holefeeder.Budgeting.Application.MyData;
+
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Mapping;
@@ -38,12 +42,16 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
+        services.AddSingleton<AccountMapper>();
         services.AddSingleton<StoreItemMapper>();
 
         services.AddScoped<IHolefeederContext, HolefeederContext>();
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();
         services.AddScoped<Script000InitDatabase>();
 
+        services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
+        services.AddTransient<IAccountRepository, AccountRepository>();
+        services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
         services.AddTransient<IStoreItemsQueriesRepository, StoreItemsQueriesRepository>();
         services.AddTransient<IStoreItemsRepository, StoreItemsRepository>();
 

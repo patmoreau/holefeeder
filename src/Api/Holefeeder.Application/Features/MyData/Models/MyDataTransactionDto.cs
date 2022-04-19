@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+﻿namespace Holefeeder.Application.Features.MyData.Models;
 
 public record MyDataTransactionDto
 {

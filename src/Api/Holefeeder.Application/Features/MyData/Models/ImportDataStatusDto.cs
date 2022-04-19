@@ -1,6 +1,6 @@
-﻿using DrifterApps.Holefeeder.Framework.SeedWork.Application;
+﻿using Holefeeder.Application.SeedWork;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData.Models;
+namespace Holefeeder.Application.Features.MyData.Models;
 
 public record ImportDataStatusDto(
     CommandStatus Status,
