@@ -15,12 +15,12 @@ public sealed class SecurityStepDefinitions
     }
 
     [Given(@"I am ((?>not )?authorized)")]
-    public async Task GivenAuthorizationSet(bool isAuthorized)
+    public void GivenAuthorizationSet(bool isAuthorized)
     {
         if (isAuthorized)
         {
             _authenticationSystemDriver.SetupValidToken();
-            await _httpClientDriver.Authenticate();
+            _httpClientDriver.Authenticate();
         }
     }
 

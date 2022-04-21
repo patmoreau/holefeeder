@@ -83,23 +83,23 @@ namespace Holefeeder.FunctionalTests.Features.Accounts
     #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Id",
-                        "Code",
-                        "Data",
+                        "Type",
+                        "Name",
                         "UserId"});
             table1.AddRow(new string[] {
                         "b6d0941d-58be-44b1-94f5-3b95e64024a4",
-                        "code #1",
-                        "data #1",
+                        "Checking",
+                        "account #1",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
             table1.AddRow(new string[] {
                         "f9b6836c-3a32-49fd-991c-2785aa74e8e6",
-                        "code #2",
-                        "data #2",
+                        "Checking",
+                        "account #2",
                         "bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7"});
             table1.AddRow(new string[] {
                         "754baec1-d586-4ddc-b980-e0c1bbc951bd",
-                        "code #3",
-                        "data #3",
+                        "CreditCard",
+                        "account #3",
                         "b80b9954-3ee0-4bb0-80da-fa202744323e"});
 #line 5
         testRunner.Given("the following accounts", ((string)(null)), table1, "Given ");

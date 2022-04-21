@@ -22,17 +22,17 @@ public partial class ImportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v2/my-data/export-data", async (Request request, IMediator mediator) =>
+        app.MapPost("api/v2/my-data/import-data", async (Request request, IMediator mediator) =>
             {
                 var requestResult = await mediator.Send(request);
                 return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestResult}, new {Id = requestResult});
             })
-            .Produces<IEnumerable<ExportDataDto>>()
+            .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(MyData))
-            .WithName(nameof(ExportData))
+            .WithName(nameof(ImportData))
             .RequireAuthorization();
     }
 

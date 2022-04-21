@@ -20,7 +20,7 @@ public class GetAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v2/accounts/{id}", async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
+        app.MapGet("api/v2/accounts/{id:guid}", async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
             {
                 var requestResult = await mediator.Send(new Request(id), cancellationToken);
                 return Results.Ok(requestResult);

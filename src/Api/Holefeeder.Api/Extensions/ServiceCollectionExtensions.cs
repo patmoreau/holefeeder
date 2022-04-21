@@ -1,12 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 
-using Carter.OpenApi;
-
+using Holefeeder.Api.Authorization;
 using Holefeeder.Api.Swagger;
 
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +25,14 @@ public static class ServiceCollectionExtensions
                 options => options.TokenValidationParameters =
                     new TokenValidationParameters {ValidateIssuer = false},
                 options => configuration.Bind("AzureAdB2C", options));
+
+        services.AddAuthorization(o =>
+        {
+            o.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim(ClaimConstants.Scope, Policies.HOLEFEEDER_USER)
+                .Build();
+        });
 
         return services;
     }

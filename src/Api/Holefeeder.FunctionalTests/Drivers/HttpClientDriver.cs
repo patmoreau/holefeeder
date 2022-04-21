@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -6,8 +7,6 @@ using System.Text.Json;
 using FluentAssertions;
 
 using Holefeeder.FunctionalTests.Infrastructure;
-
-using IdentityModel.Client;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -22,14 +21,15 @@ namespace Holefeeder.FunctionalTests.Drivers;
 public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
 {
     private readonly Lazy<HttpClient> _httpClient;
-    private HttpResponseMessage? _responseMessage;
 
     public HttpClientDriver()
     {
         _httpClient = new Lazy<HttpClient>(CreateClient);
     }
 
-    public HttpResponseMessage? ResponseMessage => _responseMessage;
+    public string DefaultUserId { get; set; } = Guid.NewGuid().ToString();
+
+    public HttpResponseMessage? ResponseMessage { get; private set; }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -41,14 +41,19 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
             })
             .ConfigureTestServices(services =>
             {
-                services.AddAuthentication("Test")
-                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
+                services.Configure<MockAuthenticationHandlerOptions>(options => options.DefaultUserId = DefaultUserId);
+                services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
+                services.AddAuthentication(MockAuthenticationHandler.AUTHENTICATION_SCHEME)
+                    .AddScheme<MockAuthenticationHandlerOptions, MockAuthenticationHandler>(
+                        MockAuthenticationHandler.AUTHENTICATION_SCHEME, _ => { });
+                // services.AddAuthentication("Test")
+                //     .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
             });
     }
 
     private async Task SendRequest(HttpRequestMessage requestMessage)
     {
-        _responseMessage = await _httpClient.Value.SendAsync(requestMessage);
+        ResponseMessage = await _httpClient.Value.SendAsync(requestMessage);
     }
 
     internal Task SendGetRequest(ApiResources apiResource, string? query = null)
@@ -88,46 +93,40 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
 
     public void ShouldHaveResponseWithStatus(HttpStatusCode httpStatus)
     {
-        _responseMessage.Should().NotBeNull();
-        _responseMessage?.StatusCode.Should().Be(httpStatus);
+        ResponseMessage.Should().NotBeNull();
+        ResponseMessage?.StatusCode.Should().Be(httpStatus);
     }
 
     public void ShouldHaveResponseWithStatus(Func<HttpStatusCode?, bool> httpStatusPredicate)
     {
-        _responseMessage.Should().NotBeNull();
-        httpStatusPredicate(_responseMessage?.StatusCode).Should().BeTrue();
+        ResponseMessage.Should().NotBeNull();
+        httpStatusPredicate(ResponseMessage?.StatusCode).Should().BeTrue();
     }
 
     public async Task<T?> DeserializeContent<T>()
     {
-        var resultAsString = await _responseMessage!.Content.ReadAsStringAsync();
-        var content = JsonSerializer.Deserialize<T>(resultAsString, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var resultAsString = await ResponseMessage!.Content.ReadAsStringAsync();
+        var content = JsonSerializer.Deserialize<T>(resultAsString,
+            new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
         return content;
     }
 
-    public Task Authenticate()
+    public void Authenticate()
     {
-        // var tokenRequest = new PasswordTokenRequest
-        // {
-        //     Address = "https://localhost:9999/accesstoken",
-        //     Method = HttpMethod.Post,
-        //     GrantType = "password",
-        //     UserName = "admin",
-        //     Password = "admin",
-        //     ClientId = "client_id",
-        //     ClientSecret = "client_secret"
-        // };
-        // var response = await _httpClient.Value.RequestPasswordTokenAsync(tokenRequest);
-        //
-        // _httpClient.Value.SetBearerToken(response?.AccessToken);
+        AuthenticateUser(DefaultUserId);
+    }
 
-        _httpClient.Value.DefaultRequestHeaders.Add(TestAuthHandler.TEST_USER_ID_HEADER,
-            TestAuthHandler.AuthenticatedUserId.ToString());
+    public void AuthenticateUser(string userId)
+    {
+        UnAuthenticate();
 
-        return Task.CompletedTask;
+        _httpClient.Value.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId);
+    }
+
+    public void UnAuthenticate()
+    {
+        _httpClient.Value.DefaultRequestHeaders.Authorization = null;
     }
 
     private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)

@@ -32,7 +32,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\001-CreateTable.sql" />
+      <EmbeddedResource Include="Scripts\Holefeeder\001-CreateAccountsTable.sql" />
+      <EmbeddedResource Include="Scripts\Holefeeder\002-CreateCategoriesTable.sql" />
+      <EmbeddedResource Include="Scripts\Holefeeder\003-CreateCashflowsTable.sql" />
+      <EmbeddedResource Include="Scripts\Holefeeder\004-CreateTransactionsTable.sql" />
+      <EmbeddedResource Include="Scripts\ObjectStore\001-CreateTable.sql" />
     </ItemGroup>
 
 </Project>

@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authorization" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Holefeeder.FunctionalTests" />
   </ItemGroup>
 

@@ -36,9 +36,14 @@ public class AccountQueriesRepository : IAccountQueriesRepository
     {
         var connection = _context.Connection;
 
-        var account = await connection.QuerySingleAsync<AccountEntity>(
+        var account = await connection.QuerySingleOrDefaultAsync<AccountEntity>(
                 @"SELECT * FROM accounts WHERE id = @Id AND user_id = @UserId;", new {Id = id, UserId = userId})
             .ConfigureAwait(false);
+
+        if (account == null)
+        {
+            return null;
+        }
 
         var transactions = await GetTransactions(connection, new[] {account});
 

@@ -5,7 +5,7 @@ using DbUp.Engine;
 
 using Holefeeder.Infrastructure.Context;
 
-namespace Holefeeder.Infrastructure.Scripts;
+namespace Holefeeder.Infrastructure.Scripts.ObjectStore;
 
 public class Script000InitDatabase : IScript
 {

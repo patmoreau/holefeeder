@@ -12,6 +12,7 @@ using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Mapping;
 using Holefeeder.Infrastructure.Repositories;
 using Holefeeder.Infrastructure.Scripts;
+using Holefeeder.Infrastructure.Scripts.ObjectStore;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

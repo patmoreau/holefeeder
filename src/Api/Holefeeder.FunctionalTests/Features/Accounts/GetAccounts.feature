@@ -3,10 +3,10 @@
 Feature: Accounts
     Background:
         Given the following accounts
-          | Id                                   | Code    | Data    | UserId                               |
-          | b6d0941d-58be-44b1-94f5-3b95e64024a4 | code #1 | data #1 | b80b9954-3ee0-4bb0-80da-fa202744323e |
-          | f9b6836c-3a32-49fd-991c-2785aa74e8e6 | code #2 | data #2 | bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7 |
-          | 754baec1-d586-4ddc-b980-e0c1bbc951bd | code #3 | data #3 | b80b9954-3ee0-4bb0-80da-fa202744323e |
+          | Id                                   | Type    | Name     | UserId                               |
+          | b6d0941d-58be-44b1-94f5-3b95e64024a4 | Checking | account #1 | b80b9954-3ee0-4bb0-80da-fa202744323e |
+          | f9b6836c-3a32-49fd-991c-2785aa74e8e6 | Checking | account #2 | bf2f6750-6ada-4c1e-aa9f-ac7652b0ead7 |
+          | 754baec1-d586-4ddc-b980-e0c1bbc951bd | CreditCard | account #3 | b80b9954-3ee0-4bb0-80da-fa202744323e |
 
     Scenario: HappyPath
         Given I am authorized

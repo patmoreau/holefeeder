@@ -1,3 +1,5 @@
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.SeedWork;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Infrastructure.Extensions;
@@ -43,7 +45,18 @@ public class DatabaseDriver
     {
         await using var connection = new MySqlConnection(_settings.ConnectionString);
 
-        var rows = items.CreateSet<AccountEntity>();
+        var rows = items.CreateSet(row => new AccountEntity
+        {
+            Description = row.ContainsKey(nameof(AccountEntity.Description)) ? row[nameof(AccountEntity.Description)] : string.Empty,
+            Favorite = row.ContainsKey("Favorite") && Convert.ToBoolean(row["Favorite"]),
+            Id = Guid.Parse(row["Id"]),
+            Inactive = row.ContainsKey("Inactive") && Convert.ToBoolean(row["Inactive"]),
+            Name = row["Name"],
+            OpenBalance = row.ContainsKey("OpenBalance") ? Convert.ToDecimal(row["OpenBalance"]) : 0m,
+            OpenDate = row.ContainsKey("OpenDate") ? Convert.ToDateTime(row["OpenDate"]) : DateTime.Today,
+            Type = Enumeration.FromName<AccountType>(row["Type"]),
+            UserId = Guid.Parse(row["UserId"])
+        });
 
         foreach (var row in rows)
         {
