@@ -21,7 +21,7 @@
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0"/>
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1"/>
-    <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0"/>
+    <PackageReference Include="Yarp.ReverseProxy" Version="1.0.1"/>
     <PackageReference Include="Yarp.Telemetry.Consumption" Version="1.0.0"/>
   </ItemGroup>
 
