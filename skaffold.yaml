@@ -3,7 +3,6 @@ kind: Config
 metadata:
   name: holefeeder
 build:
-  # insecureRegistries: ["192.168.64.2:32000"]
   tagPolicy:
     envTemplate:
       template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'
@@ -15,17 +14,10 @@ build:
         target: final
         buildArgs:
           BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
-    - image: holefeeder/holefeeder-budgeting-api
+    - image: holefeeder/holefeeder-api
       context: .
       docker:
-        dockerfile: src/Services/Budgeting/Budgeting.API/Dockerfile
-        target: final
-        buildArgs:
-          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
-    - image: holefeeder/holefeeder-object-store-api
-      context: .
-      docker:
-        dockerfile: src/Services/ObjectStore/ObjectStore.API/Dockerfile
+        dockerfile: src/Api/Holefeeder.Api/Dockerfile
         target: final
         buildArgs:
           BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'

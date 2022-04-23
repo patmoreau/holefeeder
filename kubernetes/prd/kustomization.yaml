@@ -10,8 +10,7 @@ resources:
 - cluster-issuer.yaml
 
 patchesStrategicMerge:
-- budgeting.env.yaml
-- object-store.env.yaml
+- api.env.yaml
 - ui.env.yaml
 
 patchesJson6902:
