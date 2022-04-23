@@ -107,8 +107,8 @@ jobs:
         cache-to: |
           type=gha,scope=ui-build,mode=max
 
-  unittests:
-    name: Unit tests
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     needs: [set-version, build]
     env:

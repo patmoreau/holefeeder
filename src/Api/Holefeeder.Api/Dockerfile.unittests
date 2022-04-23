@@ -23,7 +23,7 @@ ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /src
 COPY src/. src/.
 WORKDIR /src/src/Api/Holefeeder.UnitTests
-RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
+RUN dotnet build /property:Version=${VERSION} --no-restore -c Release
 
 FROM build as unittests
 WORKDIR /src/src/Api/Holefeeder.UnitTests
