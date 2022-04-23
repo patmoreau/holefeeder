@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
@@ -8,48 +7,18 @@ using FluentAssertions;
 
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Holefeeder.FunctionalTests.Drivers;
 
-[Binding]
-public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
+public class HttpClientDriver
 {
     private readonly Lazy<HttpClient> _httpClient;
 
-    public HttpClientDriver()
+    public HttpClientDriver(Lazy<HttpClient> httpClient)
     {
-        _httpClient = new Lazy<HttpClient>(CreateClient);
+        _httpClient = httpClient;
     }
-
-    public string DefaultUserId { get; set; } = Guid.NewGuid().ToString();
 
     public HttpResponseMessage? ResponseMessage { get; private set; }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder
-            .ConfigureAppConfiguration((_, conf) =>
-            {
-                conf.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
-                    .AddEnvironmentVariables();
-            })
-            .ConfigureTestServices(services =>
-            {
-                services.Configure<MockAuthenticationHandlerOptions>(options => options.DefaultUserId = DefaultUserId);
-                services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
-                services.AddAuthentication(MockAuthenticationHandler.AUTHENTICATION_SCHEME)
-                    .AddScheme<MockAuthenticationHandlerOptions, MockAuthenticationHandler>(
-                        MockAuthenticationHandler.AUTHENTICATION_SCHEME, _ => { });
-                // services.AddAuthentication("Test")
-                //     .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
-            });
-    }
 
     private async Task SendRequest(HttpRequestMessage requestMessage)
     {
@@ -103,9 +72,14 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
         httpStatusPredicate(ResponseMessage?.StatusCode).Should().BeTrue();
     }
 
-    public async Task<T?> DeserializeContent<T>()
+    public T? DeserializeContent<T>()
     {
-        var resultAsString = await ResponseMessage!.Content.ReadAsStringAsync();
+        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+        if (resultAsString is null)
+        {
+            return default;
+        }
+
         var content = JsonSerializer.Deserialize<T>(resultAsString,
             new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
         return content;
@@ -113,45 +87,17 @@ public sealed class HttpClientDriver : WebApplicationFactory<Api.Api>
 
     public void Authenticate()
     {
-        AuthenticateUser(DefaultUserId);
+        AuthenticateUser(MockAuthenticationHandler.AuthorizedUserId);
     }
 
-    public void AuthenticateUser(string userId)
+    public void AuthenticateUser(Guid userId)
     {
-        UnAuthenticate();
-
         _httpClient.Value.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId);
+            new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId.ToString());
     }
 
     public void UnAuthenticate()
     {
         _httpClient.Value.DefaultRequestHeaders.Authorization = null;
-    }
-
-    private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
-    {
-        var projectName = startupAssembly.GetName().Name;
-
-        var applicationBasePath = AppContext.BaseDirectory;
-
-        var directoryInfo = new DirectoryInfo(applicationBasePath);
-
-        do
-        {
-            directoryInfo = directoryInfo.Parent;
-
-            var projectDirectoryInfo =
-                new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
-
-            if (projectDirectoryInfo.Exists &&
-                new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName!, $"{projectName}.csproj"))
-                    .Exists)
-            {
-                return Path.Combine(projectDirectoryInfo.FullName, projectName!);
-            }
-        } while (directoryInfo.Parent != null);
-
-        throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
     }
 }

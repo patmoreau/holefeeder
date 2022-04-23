@@ -6,8 +6,6 @@ using AutoBogus;
 
 using Bogus;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Models;
-
 using FluentAssertions;
 
 using FluentValidation.TestHelper;

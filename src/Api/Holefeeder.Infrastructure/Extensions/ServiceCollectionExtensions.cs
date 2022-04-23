@@ -2,17 +2,16 @@
 
 using Dapper;
 
-using DrifterApps.Holefeeder.Budgeting.Application.MyData;
-
 using Holefeeder.Application.Features.Accounts.Queries;
+using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Mapping;
 using Holefeeder.Infrastructure.Repositories;
-using Holefeeder.Infrastructure.Scripts;
 using Holefeeder.Infrastructure.Scripts.ObjectStore;
+using Holefeeder.Infrastructure.Serializers;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,6 +56,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IStoreItemsRepository, StoreItemsRepository>();
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+        SqlMapper.AddTypeHandler(new AccountTypeHandler());
+        SqlMapper.AddTypeHandler(new CategoryTypeHandler());
+        SqlMapper.AddTypeHandler(new DateIntervalTypeHandler());
+        SqlMapper.AddTypeHandler(new TagsHandler());
 
         return services;
     }

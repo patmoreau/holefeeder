@@ -9,7 +9,7 @@ using Holefeeder.Infrastructure.Mapping;
 
 namespace Holefeeder.Infrastructure.Repositories;
 
-public class AccountRepository : IAccountRepository
+internal class AccountRepository : IAccountRepository
 {
     private readonly AccountMapper _accountMapper;
     private readonly IHolefeederContext _context;

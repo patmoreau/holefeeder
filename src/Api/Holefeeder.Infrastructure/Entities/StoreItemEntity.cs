@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Holefeeder.Infrastructure.Entities;
 
 [Table("store_items")]
-public record StoreItemEntity
+internal record StoreItemEntity
 {
     [Key] public Guid Id { get; init; }
 

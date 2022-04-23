@@ -1,5 +1,4 @@
-﻿using DrifterApps.Holefeeder.Budgeting.Application.MyData;
-
+﻿using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Entities;
@@ -8,7 +7,7 @@ using Holefeeder.Infrastructure.Mapping;
 
 namespace Holefeeder.Infrastructure.Repositories;
 
-public class MyDataQueriesRepository : IMyDataQueriesRepository
+internal class MyDataQueriesRepository : IMyDataQueriesRepository
 {
     private readonly AccountMapper _accountMapper;
     // private readonly CashflowMapper _cashflowMapper;

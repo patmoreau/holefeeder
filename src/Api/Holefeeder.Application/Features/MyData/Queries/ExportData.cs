@@ -2,8 +2,6 @@
 
 using Carter;
 
-using DrifterApps.Holefeeder.Budgeting.Application.MyData;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 

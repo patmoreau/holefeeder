@@ -9,7 +9,7 @@ using Holefeeder.Infrastructure.Mapping;
 
 namespace Holefeeder.Infrastructure.Repositories;
 
-public class StoreItemsQueriesRepository : IStoreItemsQueriesRepository
+internal class StoreItemsQueriesRepository : IStoreItemsQueriesRepository
 {
     private const string SELECT_CODE =
         "SELECT id, code, data, user_id FROM store_items WHERE lower(code) = lower(@Code) AND user_id = @UserId;";

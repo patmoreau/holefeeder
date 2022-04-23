@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Encodings.Web;
 
 using Microsoft.AspNetCore.Authentication;
@@ -10,23 +9,16 @@ using Microsoft.Identity.Web;
 
 namespace Holefeeder.FunctionalTests.Infrastructure;
 
-public class MockAuthenticationHandlerOptions : AuthenticationSchemeOptions
+public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public string DefaultUserId { get; set; } = null!;
-}
-
-public class MockAuthenticationHandler : AuthenticationHandler<MockAuthenticationHandlerOptions>
-{
-    public const string TEST_USER_HEADER = nameof(TEST_USER_HEADER);
-
     public const string AUTHENTICATION_SCHEME = "Test";
 
-    private readonly string _defaultUserId;
+    public static readonly Guid AuthorizedUserId = Guid.NewGuid();
+    public static readonly Guid ForbiddenUserId = Guid.NewGuid();
 
-    public MockAuthenticationHandler(IOptionsMonitor<MockAuthenticationHandlerOptions> options, ILoggerFactory logger,
+    public MockAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
         UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
     {
-        _defaultUserId = options.CurrentValue.DefaultUserId;
     }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -49,7 +41,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<MockAuthenticatio
 
         if (headerValue.Parameter is null)
         {
-            return Task.FromResult(AuthenticateResult.Fail("Unauthorized user"));
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
 
         var claims = new List<Claim>
@@ -57,7 +49,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<MockAuthenticatio
             new(ClaimTypes.Name, "Test user"), new(ClaimTypes.NameIdentifier, headerValue.Parameter)
         };
 
-        if (headerValue.Parameter.Equals(_defaultUserId, StringComparison.OrdinalIgnoreCase))
+        if (headerValue.Parameter.Equals(AuthorizedUserId.ToString(), StringComparison.OrdinalIgnoreCase))
         {
             claims.Add(new Claim(ClaimConstants.Scope, "holefeeder.user"));
         }

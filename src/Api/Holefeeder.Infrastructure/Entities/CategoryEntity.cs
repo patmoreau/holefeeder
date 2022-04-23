@@ -6,7 +6,7 @@ using Holefeeder.Domain.Features.Categories;
 namespace Holefeeder.Infrastructure.Entities;
 
 [Table("categories")]
-public record CategoryEntity : EntityRoot
+internal record CategoryEntity : EntityRoot
 {
     public string Name { get; init; } = null!;
 

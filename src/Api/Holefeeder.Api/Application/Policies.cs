@@ -1,4 +1,4 @@
-﻿namespace DrifterApps.Holefeeder.ObjectStore.API.Authorization;
+﻿namespace Holefeeder.Api.Application;
 
 public static class Policies
 {

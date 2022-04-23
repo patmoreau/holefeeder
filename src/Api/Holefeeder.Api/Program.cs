@@ -42,8 +42,11 @@ app.MigrateDb();
 await app.RunAsync();
 
 #pragma warning disable CA1050
-[ExcludeFromCodeCoverage]
-public partial class Program
+namespace Holefeeder.Api
 {
+    [ExcludeFromCodeCoverage]
+    public partial class Program
+    {
+    }
 }
 #pragma warning restore CA1050

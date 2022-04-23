@@ -2,8 +2,6 @@ using System.Data;
 
 using Dapper;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Models;
-
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Infrastructure.Context;

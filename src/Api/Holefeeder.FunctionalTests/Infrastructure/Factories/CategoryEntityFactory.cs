@@ -1,0 +1,26 @@
+using AutoBogus;
+
+using Bogus.Extensions;
+
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.SeedWork;
+using Holefeeder.Infrastructure.Entities;
+
+namespace Holefeeder.FunctionalTests.Infrastructure.Factories;
+
+internal sealed class CategoryEntityFactory : AutoFaker<CategoryEntity>
+{
+    private const decimal BUDGET_AMOUNT_MAX = 100m;
+
+    public CategoryEntityFactory()
+    {
+        RuleFor(x => x.Id, faker => faker.Random.Guid());
+        RuleFor(x => x.Name, faker => faker.Random.Words().ClampLength(100));
+        RuleFor(x => x.Type, faker => faker.PickRandom(Enumeration.GetAll<CategoryType>()));
+        RuleFor(x => x.Color, faker => faker.Random.Word().ClampLength(25));
+        RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount(max: BUDGET_AMOUNT_MAX));
+        RuleFor(x => x.Favorite, faker => faker.Random.Bool());
+        RuleFor(x => x.System, faker => faker.Random.Bool());
+        RuleFor(x => x.UserId, faker => faker.Random.Guid());
+    }
+}

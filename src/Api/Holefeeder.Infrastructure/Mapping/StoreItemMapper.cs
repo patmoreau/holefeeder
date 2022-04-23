@@ -4,7 +4,7 @@ using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Infrastructure.Mapping;
 
-public class StoreItemMapper
+internal class StoreItemMapper
 {
     public StoreItemViewModel? MapToDtoOrNull(StoreItemEntity? entity)
     {

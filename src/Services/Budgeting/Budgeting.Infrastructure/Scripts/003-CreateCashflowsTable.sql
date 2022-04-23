@@ -1,4 +1,4 @@
-CREATE TABLE cashflows
+CREATE TABLE IF NOT EXISTS cashflows
 (
     id             BINARY(16)     NOT NULL PRIMARY KEY,
     effective_date DATE           NOT NULL,
@@ -22,4 +22,4 @@ CREATE TABLE cashflows
             ON UPDATE RESTRICT
 );
 
-CREATE INDEX user_id_effective_date_idx ON cashflows (user_id, effective_date);
+CREATE INDEX IF NOT EXISTS user_id_effective_date_idx ON cashflows (user_id, effective_date);

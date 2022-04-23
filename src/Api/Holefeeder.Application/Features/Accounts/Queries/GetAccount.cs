@@ -1,7 +1,5 @@
 ﻿using Carter;
 
-using DrifterApps.Holefeeder.Budgeting.Application.Models;
-
 using FluentValidation;
 
 using Holefeeder.Application.Features.Accounts.Exceptions;

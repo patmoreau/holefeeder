@@ -1,8 +1,6 @@
-using System;
-
 using Holefeeder.Domain.Features.Accounts;
 
-namespace DrifterApps.Holefeeder.Budgeting.Application.Models;
+namespace Holefeeder.Application.Features.Accounts.Queries;
 
 public record AccountViewModel
 {

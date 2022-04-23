@@ -6,7 +6,6 @@ using WireMock.Server;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-[Binding]
 public class AuthenticationSystemDriver
 {
     public const string VALID_TOKEN = nameof(VALID_TOKEN);

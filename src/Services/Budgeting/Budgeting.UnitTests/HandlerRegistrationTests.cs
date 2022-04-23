@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using DrifterApps.Holefeeder.Budgeting.Application.Accounts.Queries;
+using DrifterApps.Holefeeder.Budgeting.Application.Transactions.Queries;
 
 using FluentAssertions;
 
@@ -17,11 +18,11 @@ public class HandlerRegistrationTests
     [Fact]
     public void GivenAllRequests_WhenDefined_ShouldHaveMatchingHandler()
     {
-        var requestTypes = typeof(GetAccounts.Handler).Assembly.GetTypes()
+        var requestTypes = typeof(GetTransactions.Handler).Assembly.GetTypes()
             .Where(IsRequest)
             .ToList();
 
-        var handlerTypes = typeof(GetAccounts.Handler).Assembly.GetTypes()
+        var handlerTypes = typeof(GetTransactions.Handler).Assembly.GetTypes()
             .Where(IsIRequestHandler)
             .ToList();
 

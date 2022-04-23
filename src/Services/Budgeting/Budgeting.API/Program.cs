@@ -117,7 +117,7 @@ else
 
 app.UseSerilogRequestLogging();
 
-app.AddAccountsRoutes()
+app
     .AddCashflowsRoutes()
     .AddCategoriesRoutes()
     .AddEnumerationsRoutes()

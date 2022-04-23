@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Holefeeder.Application.Features.MyData.Models;
 
-using Holefeeder.Application.Features.MyData.Models;
-
-namespace DrifterApps.Holefeeder.Budgeting.Application.MyData;
+namespace Holefeeder.Application.Features.MyData;
 
 public interface IMyDataQueriesRepository
 {

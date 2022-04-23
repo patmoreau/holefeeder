@@ -1,4 +1,4 @@
-CREATE TABLE transactions
+CREATE TABLE IF NOT EXISTS transactions
 (
     id            BINARY(16)     NOT NULL PRIMARY KEY,
     date          DATE           NOT NULL,
@@ -24,4 +24,4 @@ CREATE TABLE transactions
             ON UPDATE RESTRICT
 );
 
-CREATE INDEX user_id_date_idx ON transactions (user_id, date);
+CREATE INDEX IF NOT EXISTS user_id_date_idx ON transactions (user_id, date);

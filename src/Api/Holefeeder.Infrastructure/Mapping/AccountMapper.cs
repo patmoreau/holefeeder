@@ -7,7 +7,7 @@ using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Infrastructure.Mapping;
 
-public class AccountMapper
+internal class AccountMapper
 {
     public MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity)
     {

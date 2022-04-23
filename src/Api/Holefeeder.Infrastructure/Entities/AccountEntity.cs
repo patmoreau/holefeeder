@@ -6,7 +6,7 @@ using Holefeeder.Domain.Features.Accounts;
 namespace Holefeeder.Infrastructure.Entities;
 
 [Table("accounts")]
-public record AccountEntity : EntityRoot
+internal record AccountEntity : EntityRoot
 {
     public AccountType Type { get; init; } = null!;
 
