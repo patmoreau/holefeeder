@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="ClientApp\dist\holefeeder-web\assets\config\_ngx-rtconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
