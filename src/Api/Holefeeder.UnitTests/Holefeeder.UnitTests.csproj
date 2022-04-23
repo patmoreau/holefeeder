@@ -5,8 +5,6 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-
-        <AssemblyName>DrifterApps.Holefeeder.UnitTests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

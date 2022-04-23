@@ -1,9 +1,3 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-LABEL author="Drifter Apps Inc."
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS restore
 WORKDIR /src
 
@@ -26,23 +20,11 @@ RUN dotnet restore DrifterApps.Holefeeder.sln
 FROM restore as build
 ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
-
-# Install Node.js, yarn and build-essential
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash
-RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y nodejs yarn build-essential
-
 WORKDIR /src
 COPY src/. src/.
-WORKDIR /src/src/Web/Holefeeder.Web
-RUN dotnet build /property:Version=${VERSION} --no-restore -c Release
+WORKDIR /src/src/Api/Holefeeder.UnitTests
+RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
-FROM build AS publish
-WORKDIR /src/src/Web/Holefeeder.Web
-RUN dotnet publish /property:Version=${VERSION} --no-restore --no-build -c Release -o /app
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Holefeeder.Web.dll"]
+FROM build as unittests
+WORKDIR /src/src/Api/Holefeeder.UnitTests
+RUN dotnet test --no-restore -c Release --results-directory /testsresults --logger "trx;LogFileName=/testsresults/holefeeder-unit-tests-results.xml" --logger "html;LogFileName=/testsresults/holefeeder-unit-tests-results.html" --logger "junit;LogFileName=/testsresults/holefeeder-unit-tests-results.junit.xml" --collect "XPlat Code Coverage"

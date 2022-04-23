@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DrifterApps.Holefeeder.FunctionalTests")]
-[assembly: InternalsVisibleTo("DrifterApps.Holefeeder.UnitTests")]
+[assembly: InternalsVisibleTo("Holefeeder.FunctionalTests")]
+[assembly: InternalsVisibleTo("Holefeeder.UnitTests")]
 
 namespace Holefeeder.Infrastructure;
 

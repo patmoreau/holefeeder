@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <AssemblyName>DrifterApps.Holefeeder.Api</AssemblyName>
     <UserSecretsId>73c709e4-2b64-49a2-8a44-c0ba396d2392</UserSecretsId>
   </PropertyGroup>
 
