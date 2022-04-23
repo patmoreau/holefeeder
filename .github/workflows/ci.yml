@@ -166,15 +166,18 @@ jobs:
 
     - name: Holefeeder.Api functional tests
       run: |
+        docker pull mariadb:10.5.13
+        docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mariadb:10.5.13
         docker create -ti --name testcontainer holefeeder/holefeeder-api-functionaltests:${{ env.VERSION }}
         docker cp testcontainer:/testsresults/ ./testsresults 
         docker rm -fv testcontainer
+        docker stop --name mariadbtest
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }}
       with:
-        check_name: unit-test-results
+        check_name: functional-test-results
         github_token: ${{ secrets.GITHUB_TOKEN }}
         files: ./testsresults/**/*.junit.xml
 
