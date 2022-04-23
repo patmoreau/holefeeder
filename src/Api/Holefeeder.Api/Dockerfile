@@ -31,6 +31,12 @@ COPY src/. src/.
 WORKDIR /src/src/Api/Holefeeder.Api
 RUN dotnet publish /property:Version=${VERSION} --no-restore -c Release -o /app
 
+FROM build as unittests
+WORKDIR /src/src/Api/Holefeeder.UnitTests
+
+FROM build as functionaltests
+WORKDIR /src/src/Api/Holefeeder.FunctionalTests
+
 FROM build AS publish
 
 FROM base AS final

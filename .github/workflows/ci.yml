@@ -126,52 +126,18 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build HolefeederApi unit tests
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/Api/Holefeeder.Api/Dockerfile.unittests
-        target: unittests
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-api-unittests:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=api-build
-          type=gha,scope=api-unittests
-        cache-to: |
-          type=gha,scope=api-unittests,mode=max
+    - name: Api unit tests
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
 
-    - name: Holefeeder.Api unit tests
+    - name: Api functional tests
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+
+    - name: Tests cleanup
       run: |
-        docker create -ti --name testcontainer holefeeder/holefeeder-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/testsresults/ ./testsresults 
-        docker rm -fv testcontainer
-
-    - name: Build HolefeederApi functional tests
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/Api/Holefeeder.Api/Dockerfile.functionaltests
-        target: functionaltests
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-api-functionaltests:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=api-build
-          type=gha,scope=api-functionaltests
-        cache-to: |
-          type=gha,scope=api-functionaltests,mode=max
-
-    - name: Holefeeder.Api functional tests
-      run: |
-        docker pull mariadb:10.5.13
-        docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mariadb:10.5.13
-        docker create -ti --name testcontainer holefeeder/holefeeder-api-functionaltests:${{ env.VERSION }}
-        docker cp testcontainer:/testsresults/ ./testsresults 
-        docker rm -fv testcontainer
-        docker stop --name mariadbtest
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
@@ -179,7 +145,7 @@ jobs:
       with:
         check_name: functional-test-results
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: ./testsresults/**/*.junit.xml
+        files: ./tests-results/**/*.junit.xml
 
     - name: Setup .NET core
       uses: actions/setup-dotnet@v1
@@ -191,7 +157,7 @@ jobs:
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
       if: ${{ always() }}
       with:
-        reports: 'testsresults/*/coverage.cobertura.xml'
+        reports: 'tests-results/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'

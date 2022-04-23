@@ -21,6 +21,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
+            .AddUserSecrets<Api.Api>()
             .AddEnvironmentVariables()
             .Build();
 
