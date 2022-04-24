@@ -3,10 +3,15 @@
 using Dapper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
+using Holefeeder.Application.Features.Cashflows;
+using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Mapping;
 using Holefeeder.Infrastructure.Repositories;
@@ -51,9 +56,17 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
         services.AddTransient<IAccountRepository, AccountRepository>();
+        services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
+        services.AddTransient<ICashflowRepository, CashflowRepository>();
+        services.AddTransient<ICategoryRepository, CategoryRepository>();
+        services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
+        services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
         services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
         services.AddTransient<IStoreItemsQueriesRepository, StoreItemsQueriesRepository>();
         services.AddTransient<IStoreItemsRepository, StoreItemsRepository>();
+        services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
+        services.AddTransient<ITransactionRepository, TransactionRepository>();
+        services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
