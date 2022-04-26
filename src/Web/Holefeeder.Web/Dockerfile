@@ -19,6 +19,7 @@ COPY src/Api/Holefeeder.Infrastructure/*.csproj src/Api/Holefeeder.Infrastructur
 COPY src/Web/Holefeeder.Web/*.csproj src/Web/Holefeeder.Web/
 
 COPY src/Api/Holefeeder.UnitTests/*.csproj src/Api/Holefeeder.UnitTests/
+COPY src/Api/Holefeeder.Tests.Common/*.csproj src/Api/Holefeeder.Tests.Common/
 COPY src/Api/Holefeeder.FunctionalTests/*.csproj src/Api/Holefeeder.FunctionalTests/
 
 RUN dotnet restore DrifterApps.Holefeeder.sln
