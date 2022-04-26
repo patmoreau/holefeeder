@@ -1,5 +1,7 @@
 using Carter;
 
+using FluentValidation;
+
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.SeedWork;
 
@@ -22,13 +24,15 @@ public class GetDateIntervalTypes : ICarterModule
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<DateIntervalType>>()
-            .Produces(StatusCodes.Status401Unauthorized)
             .WithTags(nameof(Enumerations))
-            .WithName(nameof(GetDateIntervalTypes))
-            .RequireAuthorization();
+            .WithName(nameof(GetDateIntervalTypes));
     }
 
     public record Request : IRequest<IEnumerable<DateIntervalType>>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+    }
 
     public class Handler : IRequestHandler<Request, IEnumerable<DateIntervalType>>
     {

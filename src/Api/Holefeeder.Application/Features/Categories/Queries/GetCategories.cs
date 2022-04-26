@@ -1,5 +1,7 @@
 ﻿using Carter;
 
+using FluentValidation;
+
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
@@ -16,9 +18,9 @@ public class GetCategories : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v2/categories",
-                async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
+                async (IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var (total, viewModels) = await mediator.Send(request, cancellationToken);
+                    var (total, viewModels) = await mediator.Send(new Request(), cancellationToken);
                     ctx.Response.Headers.Add("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
@@ -31,6 +33,10 @@ public class GetCategories : ICarterModule
     }
 
     public record Request : IRequest<QueryResult<CategoryViewModel>>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+    }
 
     public class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {

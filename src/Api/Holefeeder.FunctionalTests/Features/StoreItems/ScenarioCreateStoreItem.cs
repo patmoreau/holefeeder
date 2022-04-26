@@ -7,7 +7,7 @@ using Holefeeder.Infrastructure.Entities;
 
 using Xunit;
 
-using static Holefeeder.FunctionalTests.Infrastructure.Builders.StoreItemEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 

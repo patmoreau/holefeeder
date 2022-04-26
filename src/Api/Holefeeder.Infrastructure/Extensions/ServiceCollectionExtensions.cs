@@ -48,7 +48,11 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
         services.AddSingleton<AccountMapper>();
+        services.AddSingleton<CashflowMapper>();
+        services.AddSingleton<CategoryMapper>();
         services.AddSingleton<StoreItemMapper>();
+        services.AddSingleton<TransactionMapper>();
+        services.AddSingleton<TagsMapper>();
 
         services.AddScoped<IHolefeederContext, HolefeederContext>();
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();

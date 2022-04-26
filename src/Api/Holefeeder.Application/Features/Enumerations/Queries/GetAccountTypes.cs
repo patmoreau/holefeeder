@@ -1,5 +1,7 @@
 using Carter;
 
+using FluentValidation;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.SeedWork;
 
@@ -22,13 +24,15 @@ public class GetAccountTypes : ICarterModule
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<AccountType>>()
-            .Produces(StatusCodes.Status401Unauthorized)
             .WithTags(nameof(Enumerations))
-            .WithName(nameof(GetAccountTypes))
-            .RequireAuthorization();
+            .WithName(nameof(GetAccountTypes));
     }
 
     public record Request : IRequest<IEnumerable<AccountType>>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+    }
 
     public class Handler : IRequestHandler<Request, IEnumerable<AccountType>>
     {

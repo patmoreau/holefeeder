@@ -1,5 +1,8 @@
 ﻿using Carter;
 
+using FluentValidation;
+
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 
@@ -30,6 +33,14 @@ public class ImportDataStatus : ICarterModule
             .RequireAuthorization();
     }
     public record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.RequestId).NotEmpty();
+        }
+    }
 
     public class Handler : IRequestHandler<Request, ImportDataStatusDto>
     {

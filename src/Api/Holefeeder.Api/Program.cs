@@ -5,6 +5,7 @@ using Carter;
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,8 @@ builder.Services
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddHostedService<LongRunningService>();
 
 builder.Host.AddSerilog();
 

@@ -13,6 +13,7 @@ using FluentValidation.TestHelper;
 
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.SeedWork;
 
 using Microsoft.Extensions.Logging;
 
@@ -38,18 +39,8 @@ public class OpenAccountTests
 
     public OpenAccountTests()
     {
-        Func<AccountType>[] factories = {
-            () => AccountType.Checking,
-            () => AccountType.Investment,
-            () => AccountType.Loan,
-            () => AccountType.Mortgage,
-            () => AccountType.Savings,
-            () => AccountType.CreditCard,
-            () => AccountType.CreditLine
-        };
-
         _faker = new AutoFaker<Request>()
-            .RuleForType(typeof(AccountType), faker => factories[faker.Random.Int(0, factories.Length-1)]());
+            .RuleForType(typeof(AccountType), faker => faker.PickRandom(Enumeration.GetAll<AccountType>()));
     }
 
     [Fact]

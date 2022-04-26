@@ -2,13 +2,13 @@ using System.Net;
 using System.Text.Json;
 
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.FunctionalTests.Infrastructure.Builders;
 using Holefeeder.Infrastructure.Entities;
 
 using Xunit;
 
-using static Holefeeder.FunctionalTests.Infrastructure.Builders.StoreItemEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;

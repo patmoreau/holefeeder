@@ -14,4 +14,10 @@ public enum ApiResources
     CreateStoreItem,
     [ResourceRoute("api/v2/store-items/modify-store-item")]
     ModifyStoreItem,
+    [ResourceRoute("api/v2/enumerations/get-account-types")]
+    GetAccountTypes,
+    [ResourceRoute("api/v2/enumerations/get-category-types")]
+    GetCategoryTypes,
+    [ResourceRoute("api/v2/enumerations/get-date-interval-types")]
+    GetDateIntervalTypes,
 }

@@ -12,6 +12,7 @@ using FluentValidation.TestHelper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Tests.Common.Factories;
 
 using Microsoft.AspNetCore.Http;
 
@@ -27,8 +28,7 @@ public class GetAccountsTests
 {
     private readonly Faker<Request> _faker;
 
-    private readonly int _countDummy;
-    private readonly IEnumerable<AccountViewModel> _dummy;
+    private readonly AccountViewModelFactory _viewModelFactory = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
     private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
@@ -38,9 +38,6 @@ public class GetAccountsTests
         _faker = new AutoFaker<Request>()
             .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
             .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1));
-
-        _countDummy = new Faker().Random.Number(100);
-        _dummy = new AutoFaker<AccountViewModel>().Generate(_countDummy);
     }
 
     [Fact]
@@ -94,9 +91,11 @@ public class GetAccountsTests
     {
         // arrange
         var request = _faker.Generate();
+        var count = new Faker().Random.Number(100);
+        var models = _viewModelFactory.Generate(count);
 
         _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((_countDummy, _dummy));
+            .Returns((count, models));
 
         var handler = new Handler(_userContextMock, _repositoryMock);
 
@@ -104,6 +103,6 @@ public class GetAccountsTests
         var result = await handler.Handle(request, default);
 
         // assert
-        result.Should().Be(new QueryResult<AccountViewModel>(_countDummy, _dummy));
+        result.Should().Be(new QueryResult<AccountViewModel>(count, models));
     }
 }

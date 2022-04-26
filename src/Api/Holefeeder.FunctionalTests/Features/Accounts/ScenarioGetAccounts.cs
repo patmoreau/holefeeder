@@ -4,12 +4,12 @@ using FluentAssertions;
 
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.FunctionalTests.Infrastructure.Builders;
 
 using Xunit;
 
-using static Holefeeder.FunctionalTests.Infrastructure.Builders.AccountEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;

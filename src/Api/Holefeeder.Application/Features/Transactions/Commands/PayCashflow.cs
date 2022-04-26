@@ -44,6 +44,10 @@ public class PayCashflow : ICarterModule
         public DateTime CashflowDate { get; init; }
     }
 
+    public class Validator : AbstractValidator<Request>
+    {
+    }
+
     public class Handler : IRequestHandler<Request, Guid>
     {
         private readonly ICashflowRepository _cashflowRepository;

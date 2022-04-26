@@ -1,5 +1,7 @@
 using Carter;
 
+using FluentValidation;
+
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.SeedWork;
 
@@ -22,13 +24,15 @@ public class GetCategoryTypes : ICarterModule
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<CategoryType>>()
-            .Produces(StatusCodes.Status401Unauthorized)
             .WithTags(nameof(Enumerations))
-            .WithName(nameof(GetCategoryTypes))
-            .RequireAuthorization();
+            .WithName(nameof(GetCategoryTypes));
     }
 
     public record Request : IRequest<IEnumerable<CategoryType>>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+    }
 
     public class Handler : IRequestHandler<Request, IEnumerable<CategoryType>>
     {
