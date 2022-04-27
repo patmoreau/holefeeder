@@ -8,6 +8,7 @@ public static class ConfigRoutes
     {
         const string routePrefix = "config";
 
-        app.MapGet($"{routePrefix}", (AngularSettings settings) => new {settings.ApiUrl, settings.RedirectUrl});
+        app.MapGet($"{routePrefix}",
+            (AngularSettings settings) => new {settings.ApiUrl, settings.RedirectUrl, settings.LoggingLevel});
     }
 }
