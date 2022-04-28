@@ -45,3 +45,9 @@ jobs:
           event_file: artifacts/Event File/event.json
           event_name: ${{ github.event.workflow_run.event }}
           files: "artifacts/**/*.xml"
+
+      - name: Conclusion
+        run: |
+          echo "${{ steps.test-results.outputs.json }}"
+          echo "${{ steps.test-results.outputs.results.json }}"
+  
