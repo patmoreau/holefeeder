@@ -3,11 +3,8 @@ name: CI/CD
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   pull_request:
-    branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   workflow_dispatch:
 
@@ -15,6 +12,13 @@ env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
 
 jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug Action
+        uses: hmarr/debug-action@v2.0.1
 
   set-version:
     name: Set version
