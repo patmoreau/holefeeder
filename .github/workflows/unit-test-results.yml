@@ -41,6 +41,7 @@ jobs:
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           check_name: Test Results
+          json_file: results.json
           event_file: artifacts/Event File/event.json
           event_name: ${{ github.event.workflow_run.event }}
           files: "artifacts/**/*.xml"
