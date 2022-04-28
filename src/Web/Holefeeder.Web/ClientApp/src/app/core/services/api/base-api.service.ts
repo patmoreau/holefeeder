@@ -10,7 +10,6 @@ export abstract class BaseApiService {
   }
 
   protected formatErrors(error: any) {
-    console.error(error);
     return throwError(() => new Error(error.error));
   }
 }

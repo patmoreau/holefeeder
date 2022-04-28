@@ -7,7 +7,7 @@ import {catchError, map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {BaseApiService} from './base-api.service';
 
-const apiRoute: string = 'budgeting/api/v2/categories';
+const apiRoute: string = 'api/v2/categories';
 
 @Injectable({providedIn: 'root'})
 export class StatisticsApiService extends BaseApiService {

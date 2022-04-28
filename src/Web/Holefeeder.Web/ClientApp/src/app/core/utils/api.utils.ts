@@ -9,6 +9,5 @@ export function mapToPagingInfo<T>(resp: HttpResponse<Object[]>, adapter: Adapte
 }
 
 export function formatErrors(error: any) {
-  console.error(error);
   return throwError(() => new Error(error.error));
 }

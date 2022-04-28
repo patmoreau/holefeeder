@@ -77,35 +77,20 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build Budgeting.API container
+    - name: Build Holefeeder.Api container
       uses: docker/build-push-action@v2
       with:
         load: true
         context: .
-        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        file: ./src/Api/Holefeeder.Api/Dockerfile
         target: build
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: false
-        tags: holefeeder/holefeeder-budgeting-api:${{ env.VERSION }}
+        tags: holefeeder/holefeeder-api:${{ env.VERSION }}
         cache-from: |
-          type=gha,scope=budgeting-build
+          type=gha,scope=api-build
         cache-to: |
-          type=gha,scope=budgeting-build,mode=max
-
-    - name: Build ObjectStore.API container
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
-        target: build
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-object-store-api:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=object-store-build
-        cache-to: |
-          type=gha,scope=object-store-build,mode=max
+          type=gha,scope=api-build,mode=max
 
     - name: Build Holefeeder.Web container
       uses: docker/build-push-action@v2
@@ -122,8 +107,8 @@ jobs:
         cache-to: |
           type=gha,scope=ui-build,mode=max
 
-  unittests:
-    name: Unit tests
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     needs: [set-version, build]
     env:
@@ -141,57 +126,26 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build Budgeting.API unit tests
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile.unittests
-        target: unittests
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=budgeting-build
-          type=gha,scope=budgeting-unittests
-        cache-to: |
-          type=gha,scope=budgeting-unittests,mode=max
+    - name: Api unit tests
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
 
-    - name: Build ObjectStore.API unit tests
-      uses: docker/build-push-action@v2
-      with:
-        load: true
-        context: .
-        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile.unittests
-        target: unittests
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: false
-        tags: holefeeder/holefeeder-object-store-api-unittests:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=object-store-build
-          type=gha,scope=object-store-unittests
-        cache-to: |
-          type=gha,scope=object-store-unittests,mode=max
+    - name: Api functional tests
+      if: ${{ success() }}
+      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
 
-    - name: Budgeting.API unit tests
+    - name: Tests cleanup
       run: |
-        docker create -ti --name testcontainer holefeeder/holefeeder-budgeting-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/testsresults/ ./testsresults 
-        docker rm -fv testcontainer
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
-    - name: ObjectStore.API unit tests
-      run: |
-        docker create -ti --name testcontainer holefeeder/holefeeder-object-store-api-unittests:${{ env.VERSION }}
-        docker cp testcontainer:/testsresults/ ./testsresults 
-        docker rm -fv testcontainer
-
-    - name: Publish Unit Test Results
+    - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }}
       with:
-        check_name: unit-test-results
+        check_name: "Test Results"
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: ./testsresults/**/*.junit.xml
+        files: ./tests-results/**/*.junit.xml
 
     - name: Setup .NET core
       uses: actions/setup-dotnet@v1
@@ -203,7 +157,7 @@ jobs:
       uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
       if: ${{ always() }}
       with:
-        reports: 'testsresults/*/coverage.cobertura.xml'
+        reports: 'tests-results/*/coverage.cobertura.xml'
         targetdir: 'coveragereport'
         sourcedirs: 'src/'
         reporttypes: 'HtmlInline;Cobertura'
@@ -220,7 +174,7 @@ jobs:
     name: Package
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
     runs-on: ubuntu-latest
-    needs: [set-version, unittests]
+    needs: [set-version, tests]
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -243,35 +197,20 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Budgeting.API container
+    - name: Build Holefeeder.Api container
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./src/Services/Budgeting/Budgeting.API/Dockerfile
+        file: ./src/Api/Holefeeder.Api/Dockerfile
         target: final
         build-args: BUILD_VERSION=${{ env.VERSION }}
         push: true
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-budgeting-api:${{ env.VERSION }}
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
         cache-from: |
-          type=gha,scope=budgeting-build
-          type=gha,scope=budgeting-final
+          type=gha,scope=api-build
+          type=gha,scope=api-final
         cache-to: |
-          type=gha,scope=budgeting-final,mode=max
-
-    - name: Build ObjectStore.API container
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./src/Services/ObjectStore/ObjectStore.API/Dockerfile
-        target: final
-        build-args: BUILD_VERSION=${{ env.VERSION }}
-        push: true
-        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-object-store-api:${{ env.VERSION }}
-        cache-from: |
-          type=gha,scope=object-store-build
-          type=gha,scope=object-store-final
-        cache-to: |
-          type=gha,scope=object-store-final,mode=max
+          type=gha,scope=api-final,mode=max
 
     - name: Build Holefeeder.Web container
       uses: docker/build-push-action@v2

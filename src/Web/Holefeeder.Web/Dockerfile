@@ -12,23 +12,15 @@ WORKDIR /src
 COPY DrifterApps.Holefeeder.sln ./
 COPY Directory.Build.props ./
 
-COPY src/BuildingBlocks/Framework.Dapper.SeedWork/*.csproj src/BuildingBlocks/Framework.Dapper.SeedWork/
-COPY src/BuildingBlocks/Framework.Mongo.SeedWork/*.csproj src/BuildingBlocks/Framework.Mongo.SeedWork/
-COPY src/BuildingBlocks/Framework.SeedWork/*.csproj src/BuildingBlocks/Framework.SeedWork/
-COPY src/Services/Budgeting/Budgeting.API/*.csproj src/Services/Budgeting/Budgeting.API/
-COPY src/Services/Budgeting/Budgeting.Application/*.csproj src/Services/Budgeting/Budgeting.Application/
-COPY src/Services/Budgeting/Budgeting.Domain/*.csproj src/Services/Budgeting/Budgeting.Domain/
-COPY src/Services/Budgeting/Budgeting.Infrastructure/*.csproj src/Services/Budgeting/Budgeting.Infrastructure/
-COPY src/Services/ObjectStore/ObjectStore.API/*.csproj src/Services/ObjectStore/ObjectStore.API/
-COPY src/Services/ObjectStore/ObjectStore.Application/*.csproj src/Services/ObjectStore/ObjectStore.Application/
-COPY src/Services/ObjectStore/ObjectStore.Domain/*.csproj src/Services/ObjectStore/ObjectStore.Domain/
-COPY src/Services/ObjectStore/ObjectStore.Infrastructure/*.csproj src/Services/ObjectStore/ObjectStore.Infrastructure/
+COPY src/Api/Holefeeder.Api/*.csproj src/Api/Holefeeder.Api/
+COPY src/Api/Holefeeder.Application/*.csproj src/Api/Holefeeder.Application/
+COPY src/Api/Holefeeder.Domain/*.csproj src/Api/Holefeeder.Domain/
+COPY src/Api/Holefeeder.Infrastructure/*.csproj src/Api/Holefeeder.Infrastructure/
 COPY src/Web/Holefeeder.Web/*.csproj src/Web/Holefeeder.Web/
 
-COPY src/Services/Budgeting/Budgeting.UnitTests/*.csproj src/Services/Budgeting/Budgeting.UnitTests/
-COPY src/Services/Budgeting/Budgeting.FunctionalTests/*.csproj src/Services/Budgeting/Budgeting.FunctionalTests/
-COPY src/Services/ObjectStore/ObjectStore.UnitTests/*.csproj src/Services/ObjectStore/ObjectStore.UnitTests/
-COPY src/Services/ObjectStore/ObjectStore.FunctionalTests/*.csproj src/Services/ObjectStore/ObjectStore.FunctionalTests/
+COPY src/Api/Holefeeder.UnitTests/*.csproj src/Api/Holefeeder.UnitTests/
+COPY src/Api/Holefeeder.Tests.Common/*.csproj src/Api/Holefeeder.Tests.Common/
+COPY src/Api/Holefeeder.FunctionalTests/*.csproj src/Api/Holefeeder.FunctionalTests/
 
 RUN dotnet restore DrifterApps.Holefeeder.sln
 

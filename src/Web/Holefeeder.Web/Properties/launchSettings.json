@@ -6,8 +6,7 @@
       "applicationUrl": "https://localhost:7246;http://localhost:5085",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
-        "ReverseProxy__Clusters__budgeting-cluster__Destinations__budgeting-cluster-destination__Address": "http://localhost:5010"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       }
     }
   }

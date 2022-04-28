@@ -365,3 +365,4 @@ data/
 .run/Holefeeder.run.xml
 tags.json
 **/.angular/
+**/.DS_Store

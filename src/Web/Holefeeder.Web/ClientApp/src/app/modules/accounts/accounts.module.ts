@@ -14,6 +14,7 @@ import {OpenAccountAdapter} from './models/open-account-command.model';
 import {ModifyAccountAdapter} from './models/modify-account-command.model';
 import {OpenAccountComponent} from './open-account/open-account.component';
 import {ModifyAccountComponent} from './modify-account/modify-account.component';
+import {AccountCommandsService} from "@app/modules/accounts/services/account-commands.service";
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -36,7 +37,8 @@ const COMPONENTS = [
   declarations: [COMPONENTS, OpenAccountComponent, ModifyAccountComponent],
   providers: [
     OpenAccountAdapter,
-    ModifyAccountAdapter
+    ModifyAccountAdapter,
+    AccountCommandsService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -6,7 +6,7 @@ import {BaseApiService} from './base-api.service';
 import {PagingInfo} from '@app/core/models/paging-info.model';
 import {CashflowDetail, CashflowDetailAdapter} from '@app/core/models/cashflow-detail.model';
 
-const apiRoute: string = 'budgeting/api/v2/cashflows';
+const apiRoute: string = 'api/v2/cashflows';
 
 @Injectable({providedIn: 'root'})
 export class CashflowsApiService extends BaseApiService {

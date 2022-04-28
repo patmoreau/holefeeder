@@ -6,7 +6,7 @@ import {OpenAccountCommand} from '../models/open-account-command.model';
 import {formatErrors} from '@app/core/utils/api.utils';
 import {ModifyAccountCommand} from '../models/modify-account-command.model';
 
-const apiRoute: string = 'budgeting/api/v2/accounts';
+const apiRoute: string = 'api/v2/accounts';
 
 @Injectable()
 export class AccountCommandsService {

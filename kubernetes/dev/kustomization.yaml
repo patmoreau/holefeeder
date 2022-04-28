@@ -11,9 +11,8 @@ resources:
 - cluster-issuer.yaml
 
 patchesStrategicMerge:
-- budgeting.env.yaml
+- api.env.yaml
 - mysql.deployment.yaml
-- object-store.env.yaml
 - ui.env.yaml
 
 patchesJson6902:

@@ -9,7 +9,7 @@ import {MessageAction} from "@app/shared/enums/message-action.enum";
 import {HttpClient} from "@angular/common/http";
 import {DateInterval, MessageService, Settings, SettingsStoreItemAdapter, StoreItem, StoreItemAdapter} from "@app/core";
 
-const apiRoute: string = 'object-store/api/v2/store-items';
+const apiRoute: string = 'api/v2/store-items';
 
 interface SettingsState {
   period: DateInterval;

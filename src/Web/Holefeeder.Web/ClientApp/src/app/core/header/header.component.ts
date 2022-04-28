@@ -10,6 +10,7 @@ import {SettingsService} from '../services/settings.service';
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "@app/core/services/user.service";
 import {User} from "@app/core/models/user.model";
+import {LoggerService} from "@app/core/logger/logger.service";
 
 
 @Component({
@@ -38,7 +39,8 @@ export class HeaderComponent implements OnInit {
     private settingsService: SettingsService,
     private router: Router,
     private userService: UserService,
-    private authService: MsalService
+    private authService: MsalService,
+    private logger: LoggerService
   ) {
     this.isNavbarCollapsed = true;
 
@@ -66,7 +68,7 @@ export class HeaderComponent implements OnInit {
 
   nextPeriod() {
     if (this.toDate === undefined) {
-      console.warn('No date defined');
+      this.logger.logWarning('No date defined');
       return;
     }
     const date = this.getDate(this.toDate!);
@@ -83,7 +85,7 @@ export class HeaderComponent implements OnInit {
 
   previousPeriod() {
     if (this.fromDate === undefined) {
-      console.warn('No date defined');
+      this.logger.logWarning('No date defined');
       return;
     }
     const date = this.getDate(this.fromDate!);
