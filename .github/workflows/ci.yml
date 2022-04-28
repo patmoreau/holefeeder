@@ -139,36 +139,23 @@ jobs:
         docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
         docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: ${{ always() }}
-      with:
-        check_name: "Test Results"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: ./tests-results/**/*.junit.xml
-
-    - name: Setup .NET core
-      uses: actions/setup-dotnet@v1
-      if: ${{ always() }}
-      with:
-        dotnet-version: 6.0.x
-
-    - name: Report generator
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
-      if: ${{ always() }}
-      with:
-        reports: 'tests-results/*/coverage.cobertura.xml'
-        targetdir: 'coveragereport'
-        sourcedirs: 'src/'
-        reporttypes: 'HtmlInline;Cobertura'
-        tag: '${{ github.run_number }}_${{ github.run_id }}'
-
-    - name: Upload coverage report artifacts
+    - name: Upload Test Results
+      if: always()
       uses: actions/upload-artifact@v2
-      if: ${{ always() }}
       with:
-        name: coverage-report
-        path: coveragereport
+        name: Unit Test Results
+        path: |
+          ./tests-results/**/*.xml
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
 
   package:
     name: Package
