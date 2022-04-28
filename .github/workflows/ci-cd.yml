@@ -1,13 +1,10 @@
-name: Continuous Integration
+name: CI/CD
 
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   pull_request:
-    branches: [main]
-    paths-ignore: ['docs/**', '.vscode/**', '**/cd.yml', 'kubernetes/**']
 
   workflow_dispatch:
 
@@ -15,10 +12,18 @@ env:
   DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
 
 jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug Action
+        uses: hmarr/debug-action@v2.0.1
 
   set-version:
     name: Set version
     runs-on: ubuntu-latest
+
     outputs:
       version: ${{ steps.gitversion.outputs.majorMinorPatch }}
       assembly-version: ${{ steps.gitversion.outputs.semVer }}
@@ -60,8 +65,9 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
     needs: set-version
+    runs-on: ubuntu-latest
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -109,8 +115,9 @@ jobs:
 
   tests:
     name: Tests
-    runs-on: ubuntu-latest
     needs: [set-version, build]
+    runs-on: ubuntu-latest
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -127,54 +134,36 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Api unit tests
-      if: ${{ success() }}
-      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
+      run: |
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
 
     - name: Api functional tests
-      if: ${{ success() }}
-      run: docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+      run: |
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
 
     - name: Tests cleanup
       run: |
         docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
         docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: ${{ always() }}
-      with:
-        check_name: "Test Results"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        files: ./tests-results/**/*.junit.xml
-
-    - name: Setup .NET core
-      uses: actions/setup-dotnet@v1
-      if: ${{ always() }}
-      with:
-        dotnet-version: 6.0.x
-
-    - name: Report generator
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
-      if: ${{ always() }}
-      with:
-        reports: 'tests-results/*/coverage.cobertura.xml'
-        targetdir: 'coveragereport'
-        sourcedirs: 'src/'
-        reporttypes: 'HtmlInline;Cobertura'
-        tag: '${{ github.run_number }}_${{ github.run_id }}'
-
-    - name: Upload coverage report artifacts
+    - name: Upload Test Results
+      if: always()
       uses: actions/upload-artifact@v2
-      if: ${{ always() }}
       with:
-        name: coverage-report
-        path: coveragereport
+        name: Unit Test Results
+        path: |
+          ./tests-results/**/*.xml
 
-  package:
-    name: Package
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
-    runs-on: ubuntu-latest
+  publish-docker-images:
+    name: Publish Docker Images
     needs: [set-version, tests]
+    if: >
+      always() &&
+      github.event.sender.login != 'dependabot[bot]' &&
+      github.event_name != 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -247,3 +236,60 @@ jobs:
             ref: "refs/tags/${{ env.VERSION }}",
             sha: context.sha
           })
+
+  deploy:
+    name: Deploy to DigitalOcean
+    needs: [set-version, tests, publish-docker-images]
+    if: github.repository_owner == 'DrifterApps'
+    runs-on: ubuntu-latest
+    
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}
+      ENVIRONMENT: Production
+      POD_KUBECONFIG: '${{ github.workspace }}/.kube/pod-kubeconfig'
+    
+    environment:
+      name: production
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - uses: yokawasa/action-setup-kube-tools@v0.8.0
+      with:
+        kubectl: '1.22.2'
+        kustomize: '4.4.0'
+        skaffold: '1.32.0'
+
+    - name: Create kube config
+      run: |
+        mkdir -p '${{ github.workspace }}/.kube' \
+          && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
+
+    - name: Create .env.secrets file
+      run: |
+        printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
+        OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
+        MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_USER=${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+        AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+
+    - name: Set image tags
+      run: |
+        cd $GITHUB_WORKSPACE/kubernetes/prd
+        kustomize edit set image holefeeder/holefeeder-api=${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
+        kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+
+    - name: Deploy to DigitalOcean Kubernetes
+      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
