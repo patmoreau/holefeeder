@@ -152,7 +152,7 @@ jobs:
       with:
         name: Unit Test Results
         path: |
-          ./tests-results/**/*.xml
+          ./tests-results/*.junit.xml
 
   publish-docker-images:
     name: Publish Docker Images
