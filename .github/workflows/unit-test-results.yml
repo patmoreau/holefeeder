@@ -38,9 +38,15 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
+        id: test-results
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           check_name: Test Results
           event_file: artifacts/Event File/event.json
           event_name: ${{ github.event.workflow_run.event }}
           files: "artifacts/**/*.xml"
+
+      - name: Conclusion
+        run: |
+          echo "Conclusion is ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}"
+          exit ${{ fromJSON( steps.test-results.outputs.json ).conclusion }} !== 'success'
