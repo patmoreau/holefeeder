@@ -6,13 +6,12 @@ import {APP_INITIALIZER, FactoryProvider} from "@angular/core";
 function loadConfigFactory(http: HttpClient, config: ConfigService): () => Observable<boolean> {
   return () => http.get('/config')
     .pipe(
-      tap(console.log),
-      map(c => {
-        config.loggingLevel = c.loggingLevel;
+      map((c: any) => {
+        config.setLoggingLevel(c.loggingLevel);
         return true;
       }),
       catchError((err: HttpErrorResponse) => {
-        config.loggingLevel = LoggingLevel.None;
+        config.setLoggingLevel(LoggingLevel.None);
         return throwError(() => new Error(err.message));
       })
     );

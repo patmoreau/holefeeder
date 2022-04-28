@@ -65,7 +65,8 @@ jobs:
         OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
         MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
         MYSQL_USER=${{ secrets.MYSQL_USER }}
-        MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+        MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+        AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
 
     - name: Set image tags
       run: |

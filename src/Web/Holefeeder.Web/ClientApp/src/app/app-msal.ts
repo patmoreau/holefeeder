@@ -15,6 +15,7 @@ import {
 } from "@azure/msal-angular";
 import {ClassProvider, FactoryProvider} from "@angular/core";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {LoggerService} from "@app/core/logger/logger.service";
 
 export const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1;
 
@@ -43,11 +44,19 @@ export const apiConfig: { scopes: string[]; uri: string } = {
   uri: "https://holefeeder.onmicrosoft.com/holefeeder.api"
 };
 
-export function loggerCallback(logLevel: LogLevel, message: string) {
-  console.log(message);
-}
+export function MSALInstanceFactory(logger: LoggerService): IPublicClientApplication {
+  function loggerCallback(logLevel: LogLevel, message: string) {
+    if (logLevel === LogLevel.Error) {
+      logger.logError(message);
+    } else if (logLevel === LogLevel.Warning) {
+      logger.logWarning(message);
+    } else if (logLevel === LogLevel.Info) {
+      logger.logInfo(message);
+    } else {
+      logger.logVerbose(message);
+    }
+  }
 
-export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
       clientId: '9814ecda-b8db-4775-a361-714af29fe486',
@@ -97,7 +106,8 @@ export const msalInterceptorProvider: ClassProvider = {
 
 export const msalInstanceProvider: FactoryProvider = {
   provide: MSAL_INSTANCE,
-  useFactory: MSALInstanceFactory
+  useFactory: MSALInstanceFactory,
+  deps: [LoggerService]
 };
 
 export const msalGuardConfigProvider: FactoryProvider = {

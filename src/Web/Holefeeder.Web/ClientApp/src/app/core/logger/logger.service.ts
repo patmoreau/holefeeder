@@ -1,26 +1,22 @@
 import {Injectable} from "@angular/core";
 import {ConfigService, LoggingLevel} from "@app/core/services/config.service";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class LoggerService {
 
-  private readonly _level: LoggingLevel = LoggingLevel.Warnings;
+  private _level: LoggingLevel = LoggingLevel.None;
 
   constructor(config: ConfigService) {
-    if (config.loggingLevel) {
-      this._level = config.loggingLevel;
-    }
+    config.loggingLevel$.subscribe((loggingLevel: LoggingLevel) => this._level = loggingLevel);
   }
 
-  log(message: any, level = LoggingLevel.Warnings, ...optionalParams: any[]) {
+  log(message: any, level = LoggingLevel.Warning, ...optionalParams: any[]) {
     if (this.shouldLog(level)) {
       switch (level) {
         case LoggingLevel.Errors:
           console.error(message, optionalParams);
           break;
-        case LoggingLevel.Warnings:
+        case LoggingLevel.Warning:
           console.warn(message, optionalParams);
           break;
         case LoggingLevel.Info:
@@ -37,7 +33,7 @@ export class LoggerService {
   }
 
   logWarning(message: any, ...optionalParams: any[]) {
-    this.log(message, LoggingLevel.Warnings, optionalParams);
+    this.log(message, LoggingLevel.Warning, optionalParams);
   }
 
   logInfo(message: any, ...optionalParams: any[]) {
@@ -53,10 +49,10 @@ export class LoggerService {
       return false;
     } else if (this._level === LoggingLevel.Errors) {
       return level === LoggingLevel.Errors;
-    } else if (this._level === LoggingLevel.Warnings) {
-      return level === LoggingLevel.Errors || level === LoggingLevel.Warnings;
+    } else if (this._level === LoggingLevel.Warning) {
+      return level === LoggingLevel.Errors || level === LoggingLevel.Warning;
     } else if (this._level === LoggingLevel.Info) {
-      return level === LoggingLevel.Errors || level === LoggingLevel.Warnings || level === LoggingLevel.Info;
+      return level === LoggingLevel.Errors || level === LoggingLevel.Warning || level === LoggingLevel.Info;
     } else {
       return true;
     }

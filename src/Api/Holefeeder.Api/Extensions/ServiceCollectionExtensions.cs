@@ -94,10 +94,13 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy())
+            .AddCheck("api", () => HealthCheckResult.Healthy(), tags: new[] {"holefeeder", "api", "service"})
             .AddMySql(configuration["ObjectStoreDatabaseSettings:ConnectionString"],
-                "ObjectStoreDB-check",
-                tags: new[] {"object-store-db"});
+                "object-store-db-check",
+                tags: new[] {"holefeeder", "api", "mysql"})
+            .AddMySql(configuration["HolefeederDatabaseSettings:ConnectionString"],
+                "budgeting-db-check",
+                tags: new[] {"holefeeder", "api", "mysql"});
 
         return services;
     }

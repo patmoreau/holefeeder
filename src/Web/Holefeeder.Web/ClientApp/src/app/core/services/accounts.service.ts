@@ -8,7 +8,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {formatErrors, mapToPagingInfo} from "../utils/api.utils";
 import {filterNullish} from "@app/shared/rxjs.helper";
 
-const apiRoute: string = 'budgeting/api/v2/accounts';
+const apiRoute: string = 'api/v2/accounts';
 
 interface AccountState {
   accounts: Account[];

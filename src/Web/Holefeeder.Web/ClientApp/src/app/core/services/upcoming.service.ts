@@ -9,7 +9,7 @@ import {DateInterval, Upcoming, UpcomingAdapter} from "@app/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {format} from "date-fns";
 
-const apiRoute: string = 'budgeting/api/v2/cashflows/get-upcoming';
+const apiRoute: string = 'api/v2/cashflows/get-upcoming';
 
 interface UpcomingState {
   upcoming: Upcoming[];

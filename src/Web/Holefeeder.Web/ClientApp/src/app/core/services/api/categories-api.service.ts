@@ -3,7 +3,7 @@ import {Inject, Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
 import {Category, CategoryAdapter} from '../../models/category.model';
 
-const apiRoute: string = 'budgeting/api/v2/categories';
+const apiRoute: string = 'api/v2/categories';
 
 @Injectable({providedIn: 'root'})
 export class CategoriesApiService {

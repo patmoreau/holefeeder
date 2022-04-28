@@ -51,7 +51,7 @@ public static class WebApplicationExtensions
                 PerformMigration(databaseSettings, name);
                 completed = true;
             }
-            catch (SocketException e)
+            catch (Exception e)
             {
                 logger.LogInformation("{DatabaseName} - Migration attempt #{TryCount} - error {Error}", name, tryCount,
                     e);

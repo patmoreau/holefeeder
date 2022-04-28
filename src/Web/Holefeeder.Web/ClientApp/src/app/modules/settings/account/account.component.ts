@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {LoggerService} from "@app/core/logger/logger.service";
 
 @Component({
   selector: 'app-account',
@@ -10,7 +11,7 @@ import {Router} from '@angular/router';
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private logger: LoggerService) {
   }
 
   get firstName() {
@@ -29,7 +30,7 @@ export class AccountComponent implements OnInit {
   }
 
   saveProfile(formValues: any): void {
-    console.debug(formValues);
+    this.logger.logVerbose(formValues);
   }
 
   cancel() {

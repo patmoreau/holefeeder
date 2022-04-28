@@ -16,7 +16,7 @@ import {
   TransferMoneyCommand
 } from "@app/core";
 
-const apiRoute: string = 'budgeting/api/v2/transactions';
+const apiRoute: string = 'api/v2/transactions';
 
 @Injectable({providedIn: 'root'})
 export class TransactionsService {
