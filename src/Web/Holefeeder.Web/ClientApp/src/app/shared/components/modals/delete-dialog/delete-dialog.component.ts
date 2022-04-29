@@ -15,13 +15,14 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
     </div>
     <div class="modal-footer">
       <button (click)="activeModal.close(false)" class="btn btn-secondary" ngbAutofocus type="button">Cancel</button>
-      <button (click)="activeModal.close(true)" class="btn btn-danger" type="button">Deactivate</button>
+      <button (click)="activeModal.close(true)" class="btn btn-danger" type="button">{{action}}</button>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeactivateDialogComponent {
-  title: string = 'Title placeholder';
-  prompt: string = 'Prompt placeholder';
+export class DeleteDialogComponent {
+  title!: string;
+  prompt!: string;
+  action!: string;
 
   constructor(public activeModal: NgbActiveModal) {
   }

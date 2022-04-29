@@ -5,7 +5,7 @@ import {catchError} from 'rxjs/operators';
 import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dialog/confirm-dialog.component";
 import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
 import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
-import {DeactivateDialogComponent} from "@app/shared/components/modals/deactivate-dialog/deactivate-dialog.component";
+import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog/delete-dialog.component";
 
 @Injectable({providedIn: 'root'})
 export class ModalService {
@@ -18,7 +18,11 @@ export class ModalService {
   }
 
   deactivate(prompt = 'Deactivate?', title = 'Confirmation'): Observable<boolean | undefined> {
-    return this.custom<DeactivateDialogComponent, boolean>(DeactivateDialogComponent, {title, prompt});
+    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {title, prompt, action: 'Deactivate'});
+  }
+
+  delete(prompt = 'Delete?', title = 'Confirmation'): Observable<boolean | undefined> {
+    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {title, prompt, action: 'Delete'});
   }
 
   input(message: string, initialValue: string, title = 'Input'): Observable<string | undefined> {
@@ -45,7 +49,6 @@ export class ModalService {
     return from(modal.result).pipe(
       take(1), // take() manages unsubscription for us
       catchError(error => {
-        console.warn(error);
         return of(undefined);
       })
     );

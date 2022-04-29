@@ -3,10 +3,11 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Location} from '@angular/common';
 import {filter, Observable, switchMap, tap} from 'rxjs';
-import {ModalService} from '@app/shared/services/modal.service';
 import {TransactionsService} from '@app/core/services/transactions.service';
 import {ModifyTransactionCommandAdapter} from '@app/core/models/modify-transaction-command.model';
 import {TransactionDetail} from '@app/core/models/transaction-detail.model';
+import {ModalService} from "@app/core/modals/modal.service";
+import {filterTrue} from "@app/shared/rxjs.helper";
 
 const transactionIdParamName = 'transactionId';
 
@@ -70,12 +71,13 @@ export class ModifyTransactionComponent implements OnInit {
       }))).subscribe(_ => this.location.back());
   }
 
-  onDelete(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-delete-title'})
-      .pipe(
-        switchMap(_ => this.transactionsService.delete(this.transactionId))
-      )
-      .subscribe(_ => this.location.back());
+  onDelete() {
+    this.modalService.delete(
+      'Are you sure you want to delete this transaction?'
+    ).pipe(
+      filterTrue(),
+      switchMap(_ => this.transactionsService.delete(this.transactionId))
+    ).subscribe(_ => this.location.back());
   }
 
   goBack(): void {

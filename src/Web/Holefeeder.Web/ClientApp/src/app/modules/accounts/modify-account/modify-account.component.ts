@@ -72,7 +72,7 @@ export class ModifyAccountComponent implements OnInit {
       }))).subscribe(id => this.router.navigate(['accounts', id]));
   }
 
-  openDeactivate() {
+  onDeactivate() {
     this.modalService.deactivate(
       'Are you sure you want to deactivate this account?'
     ).pipe(
