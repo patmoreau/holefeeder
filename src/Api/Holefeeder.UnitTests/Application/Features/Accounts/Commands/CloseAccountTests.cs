@@ -94,14 +94,14 @@ public class CloseAccountTests
     }
 
     [Fact]
-    public async Task GivenHandler_WhenObjectStoreDomainException_ThenRollbackTransaction()
+    public async Task GivenHandler_WhenAccountDomainException_ThenRollbackTransaction()
     {
         // arrange
         var request = _faker.Generate();
         _repositoryMock.FindByIdAsync(Arg.Is(request.Id), Arg.Is(_userContextMock.UserId), Arg.Any<CancellationToken>())
             .Returns(_accountFactory.Generate());
         _repositoryMock.SaveAsync(Arg.Any<Account>(), Arg.Any<CancellationToken>()).Throws(
-            new AccountDomainException(nameof(GivenHandler_WhenObjectStoreDomainException_ThenRollbackTransaction)));
+            new AccountDomainException(nameof(GivenHandler_WhenAccountDomainException_ThenRollbackTransaction)));
 
         var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
 

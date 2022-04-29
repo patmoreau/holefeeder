@@ -21,7 +21,7 @@ public class ScenarioGetStoreItem : BaseScenario
     public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
     {
         _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
-        _objectStoreDatabaseDriver.ResetState().Wait();
+        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

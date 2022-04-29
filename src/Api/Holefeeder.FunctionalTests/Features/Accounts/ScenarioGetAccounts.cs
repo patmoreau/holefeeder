@@ -21,7 +21,7 @@ public class ScenarioGetAccounts : BaseScenario
     public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
     {
         _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _holefeederDatabaseDriver.ResetState().Wait();
+        _holefeederDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

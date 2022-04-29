@@ -9,7 +9,7 @@ internal static class EntityBuilderExtensions
         where T : class
     {
         var entity = builder.Build();
-        await databaseDriver.Save(entity);
+        await databaseDriver.SaveAsync(entity);
         return entity;
     }
 }

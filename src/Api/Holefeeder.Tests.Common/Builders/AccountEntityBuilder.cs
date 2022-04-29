@@ -14,6 +14,12 @@ internal class AccountEntityBuilder : IEntityBuilder<AccountEntity>
 
     private AccountEntityBuilder(bool inactive) => _entity = new AccountEntityFactory(inactive).Generate();
 
+    public AccountEntityBuilder WithId(Guid id)
+    {
+        _entity = _entity with {Id = id};
+        return this;
+    }
+
     public AccountEntityBuilder OfType(AccountType type)
     {
         _entity = _entity with {Type = type};

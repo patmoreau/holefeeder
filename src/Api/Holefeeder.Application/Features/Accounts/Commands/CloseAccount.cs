@@ -68,7 +68,7 @@ public class CloseAccount : ICarterModule
             {
                 _logger.LogInformation("----- Closing Account - Account: {@Account}", account);
 
-                account.Close();
+                account = account.Close();
 
                 await _repository.SaveAsync(account, cancellationToken);
 
