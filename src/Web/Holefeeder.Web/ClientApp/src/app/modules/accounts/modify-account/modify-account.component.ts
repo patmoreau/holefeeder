@@ -1,14 +1,14 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {ModalService} from '@app/shared/services/modal.service';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, switchMap, tap} from 'rxjs';
 import {Location} from '@angular/common';
 import {ModifyAccountAdapter} from '../models/modify-account-command.model';
-import {filterNullish} from '@app/shared/rxjs.helper';
+import {filterNullish, filterTrue} from '@app/shared/rxjs.helper';
 import {AccountCommandsService} from '../services/account-commands.service';
 import {AccountsService} from "@app/core";
+import {CloseAccountAdapter} from "@app/modules/accounts/models/close-account-command.model";
+import {ModalService} from "@app/core/modals/modal.service";
 
 const accountIdParamName = 'accountId';
 
@@ -21,9 +21,6 @@ export class ModifyAccountComponent implements OnInit {
 
   @ViewChild('confirm', {static: true})
   confirmModalElement!: ElementRef;
-  confirmModal!: NgbModalRef;
-  confirmMessages!: string;
-
   form!: FormGroup;
 
   accountId!: string;
@@ -38,7 +35,8 @@ export class ModifyAccountComponent implements OnInit {
     private accountsService: AccountsService,
     private commandsService: AccountCommandsService,
     private adapter: ModifyAccountAdapter,
-    private modalService: ModalService,
+    private closeAdapter: CloseAccountAdapter,
+    private modalService: ModalService
   ) {
   }
 
@@ -74,9 +72,15 @@ export class ModifyAccountComponent implements OnInit {
       }))).subscribe(id => this.router.navigate(['accounts', id]));
   }
 
-  onDeactivate(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-deactivate-title'})
-      .subscribe(_ => this.location.back());
+  openDeactivate() {
+    this.modalService.deactivate(
+      'Are you sure you want to deactivate this account?'
+    ).pipe(
+      filterTrue(),
+      switchMap(_ => this.commandsService.close(this.closeAdapter.adapt({id: this.accountId})))
+    ).subscribe(_ => {
+      this.router.navigate(['accounts']).then();
+    });
   }
 
   goBack(): void {

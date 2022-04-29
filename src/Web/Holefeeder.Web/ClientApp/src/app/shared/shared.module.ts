@@ -12,6 +12,10 @@ import {UpcomingListComponent} from './components/upcoming-list/upcoming-list.co
 import {AutofocusDirective} from './directives/autofocus.directive';
 import {ModalService} from './services/modal.service';
 import {ToastViewComponent} from "@app/shared/components/toast-view/toast-view.component";
+import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dialog/confirm-dialog.component";
+import {DeactivateDialogComponent} from "@app/shared/components/modals/deactivate-dialog/deactivate-dialog.component";
+import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
+import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
 
 const COMPONENTS = [
   DateViewComponent,
@@ -21,7 +25,11 @@ const COMPONENTS = [
   TransactionListItemComponent,
   TransactionsListComponent,
   UpcomingListComponent,
-  AutofocusDirective
+  AutofocusDirective,
+  ConfirmDialogComponent,
+  InputDialogComponent,
+  MessageDialogComponent,
+  DeactivateDialogComponent
 ];
 
 @NgModule({
