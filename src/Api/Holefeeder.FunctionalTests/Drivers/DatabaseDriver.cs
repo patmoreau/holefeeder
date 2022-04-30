@@ -13,10 +13,13 @@ public abstract class DatabaseDriver
 
     protected abstract Checkpoint Checkpoint { get; }
 
-    public async Task ResetState()
+    public async Task ResetStateAsync()
     {
         await Checkpoint.Reset((DbConnection)DbContext.Connection);
     }
 
-    public async Task Save<T>(T entity) where T : class => await DbContext.Connection.InsertAsync(entity);
+    public async Task SaveAsync<T>(T entity) where T : class => await DbContext.Connection.InsertAsync(entity);
+
+    public async Task<T?> FindByIdAsync<T>(Guid id, Guid userId) where T : class =>
+        await DbContext.Connection.FindByIdAsync<T>(new {Id = id, UserId = userId});
 }

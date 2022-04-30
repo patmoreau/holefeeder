@@ -1,16 +1,20 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {Observable, of, tap} from 'rxjs';
 import {OpenAccountCommand} from '../models/open-account-command.model';
 import {formatErrors} from '@app/core/utils/api.utils';
 import {ModifyAccountCommand} from '../models/modify-account-command.model';
+import {CloseAccountCommand} from "@app/modules/accounts/models/close-account-command.model";
+import {MessageService} from "@app/core";
+import {MessageType} from "@app/shared/enums/message-type.enum";
+import {MessageAction} from "@app/shared/enums/message-action.enum";
 
 const apiRoute: string = 'api/v2/accounts';
 
 @Injectable()
 export class AccountCommandsService {
-  constructor(private http: HttpClient, @Inject('BASE_API_URL') private apiUrl: string) {
+  constructor(private http: HttpClient, @Inject('BASE_API_URL') private apiUrl: string, private messages: MessageService) {
   }
 
   open(account: OpenAccountCommand): Observable<string> {
@@ -18,6 +22,7 @@ export class AccountCommandsService {
       .post(`${this.apiUrl}/${apiRoute}/open-account`, account)
       .pipe(
         map((data: any) => data.id),
+        tap((id: string) => this.messages.sendMessage(MessageType.account, MessageAction.post, id)),
         catchError(formatErrors)
       );
   }
@@ -26,6 +31,17 @@ export class AccountCommandsService {
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify-account`, account)
       .pipe(
+        tap(_ => this.messages.sendMessage(MessageType.account, MessageAction.post, account.id)),
+        switchMap(_ => of(void 0)),
+        catchError(formatErrors)
+      );
+  }
+
+  close(account: CloseAccountCommand): Observable<void> {
+    return this.http
+      .post(`${this.apiUrl}/${apiRoute}/close-account`, account)
+      .pipe(
+        tap(_ => this.messages.sendMessage(MessageType.account, MessageAction.post, account.id)),
         switchMap(_ => of(void 0)),
         catchError(formatErrors)
       );

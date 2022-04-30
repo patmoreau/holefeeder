@@ -9,7 +9,7 @@
           <app-transaction-edit></app-transaction-edit>
 
           <div class="d-flex justify-content-end mt-4">
-            <button (click)="onDelete(confirmDelete)" class="btn btn-danger me-2" title="Delete"
+            <button (click)="onDelete()" class="btn btn-danger me-2" title="Delete"
                     type="button">Delete
             </button>
             <button (click)="goBack()" class="btn btn-secondary me-2" title="Cancel" type="button">
@@ -26,25 +26,6 @@
     </div>
   </div>
 </ng-container>
-<ng-template #confirmDelete let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title text-danger" id="modal-delete-title">Confirmation</h4>
-    <button (click)="modal.dismiss()" aria-label="Close" class="close" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <strong>Are you sure you want to delete this transaction?</strong>
-  </div>
-  <div class="modal-footer">
-    <button (click)="modal.dismiss()" class="btn btn-secondary" ngbAutofocus type="button">
-      Cancel
-    </button>
-    <button (click)="modal.close()" class="btn btn-danger" type="button">
-      Delete
-    </button>
-  </div>
-</ng-template>
 <ng-template #loader>
   <app-loader></app-loader>
 </ng-template>

@@ -1,4 +1,4 @@
-import {EMPTY, filter, map, Observable, OperatorFunction, pipe, tap, UnaryFunction} from "rxjs";
+import {EMPTY, filter, map, Observable, OperatorFunction, pipe, take, tap, UnaryFunction} from "rxjs";
 
 export function filterNullish<T>(): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
   return pipe(
@@ -20,5 +20,11 @@ export function errorIfNullish<T>(): UnaryFunction<Observable<T | null | undefin
       }
       return x;
     }) as OperatorFunction<T | null | undefined, T>
+  );
+}
+
+export function filterTrue(): UnaryFunction<Observable<boolean | undefined>, Observable<boolean>> {
+  return pipe(
+    filter(x => x === true) as OperatorFunction<boolean | undefined, boolean>
   );
 }

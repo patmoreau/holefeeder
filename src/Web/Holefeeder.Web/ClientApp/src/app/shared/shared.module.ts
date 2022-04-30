@@ -10,8 +10,11 @@ import {SubscriberService} from './services/subscriber.service';
 import {TransactionListItemComponent} from './components/transaction-list-item/transaction-list-item.component';
 import {UpcomingListComponent} from './components/upcoming-list/upcoming-list.component';
 import {AutofocusDirective} from './directives/autofocus.directive';
-import {ModalService} from './services/modal.service';
 import {ToastViewComponent} from "@app/shared/components/toast-view/toast-view.component";
+import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dialog/confirm-dialog.component";
+import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog/delete-dialog.component";
+import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
+import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
 
 const COMPONENTS = [
   DateViewComponent,
@@ -21,7 +24,11 @@ const COMPONENTS = [
   TransactionListItemComponent,
   TransactionsListComponent,
   UpcomingListComponent,
-  AutofocusDirective
+  AutofocusDirective,
+  ConfirmDialogComponent,
+  InputDialogComponent,
+  MessageDialogComponent,
+  DeleteDialogComponent
 ];
 
 @NgModule({
@@ -34,8 +41,7 @@ const COMPONENTS = [
   exports: [COMPONENTS],
   declarations: [COMPONENTS],
   providers: [
-    SubscriberService,
-    ModalService
+    SubscriberService
   ]
 })
 export class SharedModule {
