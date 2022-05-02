@@ -8,6 +8,8 @@ public enum ApiResources
     GetAccount,
     [ResourceRoute("api/v2/accounts/close-account")]
     CloseAccount,
+    [ResourceRoute("api/v2/accounts/modify-account")]
+    ModifyAccount,
     [ResourceRoute("api/v2/store-items")]
     GetStoreItems,
     [ResourceRoute("api/v2/store-items/{0}")]

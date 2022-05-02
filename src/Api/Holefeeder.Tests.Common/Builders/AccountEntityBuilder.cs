@@ -12,7 +12,11 @@ internal class AccountEntityBuilder : IEntityBuilder<AccountEntity>
 
     public static AccountEntityBuilder GivenAnInactiveAccount() => new(true);
 
+    public static AccountEntityBuilder GivenAnExistingAccount(AccountEntity entity) => new(entity);
+
     private AccountEntityBuilder(bool inactive) => _entity = new AccountEntityFactory(inactive).Generate();
+
+    private AccountEntityBuilder(AccountEntity entity) => _entity = entity;
 
     public AccountEntityBuilder WithId(Guid id)
     {
@@ -29,6 +33,18 @@ internal class AccountEntityBuilder : IEntityBuilder<AccountEntity>
     public AccountEntityBuilder WithName(string name)
     {
         _entity = _entity with {Name = name};
+        return this;
+    }
+
+    public AccountEntityBuilder WithDescription(string description)
+    {
+        _entity = _entity with {Description = description};
+        return this;
+    }
+
+    public AccountEntityBuilder WithOpenBalance(decimal openBalance)
+    {
+        _entity = _entity with {OpenBalance = openBalance};
         return this;
     }
 
