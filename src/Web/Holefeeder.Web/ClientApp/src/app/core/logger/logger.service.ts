@@ -8,9 +8,15 @@ export class LoggerService {
 
   constructor(config: ConfigService) {
     config.loggingLevel$.subscribe((loggingLevel: LoggingLevel) => this._level = loggingLevel);
+    this.log = this.log.bind(this);
+    this.logError = this.logError.bind(this);
+    this.logWarning = this.logWarning.bind(this);
+    this.logInfo = this.logInfo.bind(this);
+    this.logVerbose = this.logVerbose.bind(this);
+    this.shouldLog = this.shouldLog.bind(this);
   }
 
-  log(message: any, level = LoggingLevel.Warning, ...optionalParams: any[]) {
+  private log(message: any, level = LoggingLevel.Warning, ...optionalParams: any[]): void {
     if (this.shouldLog(level)) {
       switch (level) {
         case LoggingLevel.Errors:
@@ -28,23 +34,27 @@ export class LoggerService {
     }
   }
 
-  logError(message: any, ...optionalParams: any[]) {
+  logError(message: any, ...optionalParams: any[]): void {
+    console.log(message);
     this.log(message, LoggingLevel.Errors, optionalParams);
   }
 
-  logWarning(message: any, ...optionalParams: any[]) {
+  logWarning(message: any, ...optionalParams: any[]): void {
+    console.log(message);
     this.log(message, LoggingLevel.Warning, optionalParams);
   }
 
-  logInfo(message: any, ...optionalParams: any[]) {
+  logInfo(message: any, ...optionalParams: any[]): void {
+    console.log(message);
     this.log(message, LoggingLevel.Info, optionalParams);
   }
 
-  logVerbose(message: any, ...optionalParams: any[]) {
+  logVerbose(message: any, ...optionalParams: any[]): void {
+    console.log(message);
     this.log(message, LoggingLevel.Verbose, optionalParams);
   }
 
-  private shouldLog(level: LoggingLevel) {
+  private shouldLog(level: LoggingLevel): boolean {
     if (this._level === LoggingLevel.None) {
       return false;
     } else if (this._level === LoggingLevel.Errors) {

@@ -69,7 +69,7 @@ export class ModifyAccountComponent implements OnInit {
     this.commandsService.modify(
       this.adapter.adapt(Object.assign({}, this.form.value, {
         id: this.accountId
-      }))).subscribe(id => this.router.navigate(['accounts', id]));
+      }))).subscribe(_ => this.router.navigate(['accounts', this.accountId]));
   }
 
   onDeactivate() {

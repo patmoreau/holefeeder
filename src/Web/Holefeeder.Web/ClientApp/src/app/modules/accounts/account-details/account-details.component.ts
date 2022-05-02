@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from '@angular/router';
 import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
 import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
-import {filter, from, map, Observable, scan, switchMap} from 'rxjs';
+import {filter, from, map, Observable, scan, switchMap, tap} from 'rxjs';
 import {Account, AccountsService, UpcomingService} from "@app/core";
+import {LoggerService} from "@app/core/logger/logger.service";
 
 @Component({
   selector: 'app-account-details',
@@ -18,7 +19,8 @@ export class AccountDetailsComponent implements OnInit {
     private accountsService: AccountsService,
     private upcomingService: UpcomingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private logger: LoggerService
   ) {
   }
 
@@ -34,6 +36,7 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.account$ = this.route.data.pipe(
+      tap(this.logger.logVerbose),
       map((data: Data) => data['account']),
     );
 

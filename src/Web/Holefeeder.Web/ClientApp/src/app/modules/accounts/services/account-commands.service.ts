@@ -9,12 +9,17 @@ import {CloseAccountCommand} from "@app/modules/accounts/models/close-account-co
 import {MessageService} from "@app/core";
 import {MessageType} from "@app/shared/enums/message-type.enum";
 import {MessageAction} from "@app/shared/enums/message-action.enum";
+import {LoggerService} from "@app/core/logger/logger.service";
 
 const apiRoute: string = 'api/v2/accounts';
 
 @Injectable()
 export class AccountCommandsService {
-  constructor(private http: HttpClient, @Inject('BASE_API_URL') private apiUrl: string, private messages: MessageService) {
+  constructor(private http: HttpClient,
+              @Inject('BASE_API_URL') private apiUrl: string,
+              private messages: MessageService,
+              private logger: LoggerService
+  ) {
   }
 
   open(account: OpenAccountCommand): Observable<string> {
@@ -28,6 +33,7 @@ export class AccountCommandsService {
   }
 
   modify(account: ModifyAccountCommand): Observable<void> {
+    this.logger.logInfo(account);
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify-account`, account)
       .pipe(

@@ -4,11 +4,13 @@ import {catchError, first, Observable, tap} from 'rxjs';
 import {filterNullish} from "@app/shared/rxjs.helper";
 import {AccountsService} from "@app/core/services/accounts.service";
 import {Account} from '../models/account.model';
+import {LoggerService} from "@app/core/logger/logger.service";
 
 @Injectable({providedIn: 'root'})
 export class AccountResolver implements Resolve<Account> {
   constructor(
     private accountsService: AccountsService,
+    private logger: LoggerService,
     private router: Router
   ) {
   }
