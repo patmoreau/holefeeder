@@ -10,6 +10,10 @@ public enum ApiResources
     CloseAccount,
     [ResourceRoute("api/v2/accounts/modify-account")]
     ModifyAccount,
+    [ResourceRoute("api/v2/accounts/open-account")]
+    OpenAccount,
+    [ResourceRoute("api/v2/accounts/favorite-account")]
+    FavoriteAccount,
     [ResourceRoute("api/v2/store-items")]
     GetStoreItems,
     [ResourceRoute("api/v2/store-items/{0}")]
