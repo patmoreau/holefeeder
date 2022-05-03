@@ -1,8 +1,12 @@
 ﻿using System;
 
+using Bogus;
+using Bogus.Extensions;
+
 using FluentAssertions;
 
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.SeedWork;
 
 using Xunit;
 
@@ -10,6 +14,105 @@ namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
 public class AccountTests
 {
+    private readonly Faker _faker = new();
+
+    [Fact]
+    public void GivenConstructor_WhenIdEmpty_ThenThrowException()
+    {
+        // arrange
+
+        // act
+        Action action = () => _ = new Account(Guid.Empty,
+            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.Random.Word(),
+            _faker.Date.Recent(),
+            _faker.Random.Guid());
+
+        // assert
+        action.Should().Throw<AccountDomainException>()
+            .WithMessage("Id is required")
+            .And
+            .Context.Should().Be(nameof(Account));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string name)
+    {
+        // arrange
+
+        // act
+        Action action = () => _ = new Account(_faker.Random.Guid(),
+            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            name,
+            _faker.Date.Recent(),
+            _faker.Random.Guid());
+
+        // assert
+        action.Should().Throw<AccountDomainException>()
+            .WithMessage("Name must be from 1 to 255 characters")
+            .And
+            .Context.Should().Be(nameof(Account));
+    }
+
+    [Fact]
+    public void GivenConstructor_WhenNameIsTooLong_ThenThrowException()
+    {
+        // arrange
+
+        // act
+        Action action = () => _ = new Account(_faker.Random.Guid(),
+            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.Random.Words().ClampLength(256),
+            _faker.Date.Recent(),
+            _faker.Random.Guid());
+
+        // assert
+        action.Should().Throw<AccountDomainException>()
+            .WithMessage("Name must be from 1 to 255 characters")
+            .And
+            .Context.Should().Be(nameof(Account));
+    }
+
+    [Fact]
+    public void GivenConstructor_WhenOpenDateIsMissing_ThenThrowException()
+    {
+        // arrange
+
+        // act
+        Action action = () => _ = new Account(_faker.Random.Guid(),
+            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.Random.Word(),
+            default,
+            _faker.Random.Guid());
+
+        // assert
+        action.Should().Throw<AccountDomainException>()
+            .WithMessage("OpenDate is required")
+            .And
+            .Context.Should().Be(nameof(Account));
+    }
+
+    [Fact]
+    public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
+    {
+        // arrange
+
+        // act
+        Action action = () => _ = new Account(_faker.Random.Guid(),
+            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.Random.Word(),
+            _faker.Date.Recent(),
+            Guid.Empty);
+
+        // assert
+        action.Should().Throw<AccountDomainException>()
+            .WithMessage("UserId is required")
+            .And
+            .Context.Should().Be(nameof(Account));
+    }
+
     [Fact]
     public void GivenCloseAccount_WhenClosing_ThenThrowException()
     {
@@ -29,7 +132,9 @@ public class AccountTests
 
         // assert
         action.Should().Throw<AccountDomainException>()
-            .WithMessage("Account already closed");
+            .WithMessage("Account already closed")
+            .And
+            .Context.Should().Be(nameof(Account));
     }
 
     [Fact]
@@ -51,7 +156,9 @@ public class AccountTests
 
         // assert
         action.Should().Throw<AccountDomainException>()
-            .WithMessage("Account has active cashflows");
+            .WithMessage("Account has active cashflows")
+            .And
+            .Context.Should().Be(nameof(Account));
     }
 
     [Theory]

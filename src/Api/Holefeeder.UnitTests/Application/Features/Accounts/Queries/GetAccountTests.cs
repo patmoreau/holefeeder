@@ -74,6 +74,6 @@ public class GetAccountTests
         var result = await handler.Handle(request, default);
 
         // assert
-        result.Should().Be(_dummy);
+        result.Should().BeEquivalentTo(_dummy);
     }
 }

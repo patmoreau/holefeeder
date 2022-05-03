@@ -107,21 +107,20 @@ ORDER BY row_nb;
     private static AccountViewModel BuildAccountViewModel(AccountEntity account,
         ICollection<TransactionEntity> transactions)
     {
-        return new()
-        {
-            Id = account.Id,
-            OpenBalance = account.OpenBalance,
-            OpenDate = account.OpenDate,
-            Balance = account.OpenBalance +
-                      transactions.Sum(t => t.Amount * t.Category.Type.Multiplier * account.Type.Multiplier),
-            Description = account.Description,
-            Favorite = account.Favorite,
-            Name = account.Name,
-            TransactionCount = transactions.Count,
-            Updated = transactions.Any() ? transactions.Max(t => t.Date) : account.OpenDate,
-            Type = account.Type,
-            Inactive = account.Inactive
-        };
+        return new AccountViewModel(
+            account.Id,
+            account.Type,
+            account.Name,
+            account.OpenBalance,
+            account.OpenDate,
+            transactions.Count,
+            account.OpenBalance +
+            transactions.Sum(t => t.Amount * t.Category.Type.Multiplier * account.Type.Multiplier),
+            transactions.Any() ? transactions.Max(t => t.Date) : account.OpenDate,
+            account.Description,
+            account.Favorite,
+            account.Inactive
+        );
     }
 
     private static async Task<IList<TransactionEntity>> GetTransactions(IDbConnection connection,

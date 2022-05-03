@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -107,13 +108,18 @@ public abstract class BaseScenario
         problemDetails?.Title.Should().Be(errorMessage);
     }
 
-    public void ThenShouldGetTheRouteOfTheNewResourceInTheHeader()
+    public Guid ThenShouldGetTheRouteOfTheNewResourceInTheHeader()
     {
         var headers = HttpClientDriver.ResponseMessage!.Headers;
 
         headers.Should()
             .ContainKey(
                 "Location"); //.And.ContainValue(new[] {"http://localhost/api/v2/store-items/df865211-60cc-4dcd-ad59-865352e446df"});
+
+        var responseString = headers.GetValues("Location").Single();
+        var match = Regex.Match(responseString, @"[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?");
+
+        return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
 
     protected void ThenAssertAll(Action assertions)

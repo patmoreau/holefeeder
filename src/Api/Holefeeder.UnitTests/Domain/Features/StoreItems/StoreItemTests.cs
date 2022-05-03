@@ -15,7 +15,7 @@ namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 public class StoreItemTests
 {
     [Fact]
-    public async Task GivenStoreItem_WhenIdIsNull_ThenThrowException()
+    public void GivenStoreItem_WhenIdIsNull_ThenThrowException()
     {
         // arrange
         var id = Guid.Empty;
@@ -23,31 +23,39 @@ public class StoreItemTests
         var userId = AutoFaker.Generate<Guid>();
 
         // act
-        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
+        Action action = () => _ = new StoreItem(id, code, userId);
 
         // assert
-        await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'Id' is required");
+        action.Should()
+            .Throw<ObjectStoreDomainException>()
+            .WithMessage("'Id' is required")
+            .And
+            .Context.Should().Be(nameof(StoreItem));
     }
 
     [Theory]
     [InlineData("")]
     [InlineData(null)]
     [InlineData(" ")]
-    public async Task GivenStoreItem_WhenCodeIsNull_ThenThrowException(string code)
+    public void GivenStoreItem_WhenCodeIsNull_ThenThrowException(string code)
     {
         // arrange
         var id = AutoFaker.Generate<Guid>();
         var userId = AutoFaker.Generate<Guid>();
 
         // act
-        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
+        Action action = () => _ = new StoreItem(id, code, userId);
 
         // assert
-        await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'Code' is required");
+        action.Should()
+            .Throw<ObjectStoreDomainException>()
+            .WithMessage("'Code' is required")
+            .And
+            .Context.Should().Be(nameof(StoreItem));
     }
 
     [Fact]
-    public async Task GivenStoreItem_WhenUserIdIsNull_ThenThrowException()
+    public void GivenStoreItem_WhenUserIdIsNull_ThenThrowException()
     {
         // arrange
         var id = AutoFaker.Generate<Guid>();
@@ -55,10 +63,14 @@ public class StoreItemTests
         var userId = Guid.Empty;
 
         // act
-        Func<Task> action = () => Task.FromResult(new StoreItem(id, code, userId));
+        Action action = () => _ = new StoreItem(id, code, userId);
 
         // assert
-        await action.Should().ThrowAsync<ObjectStoreDomainException>().WithMessage("'UserId' is required");
+        action.Should()
+            .Throw<ObjectStoreDomainException>()
+            .WithMessage("'UserId' is required")
+            .And
+            .Context.Should().Be(nameof(StoreItem));
     }
 
     [Fact]
@@ -74,10 +86,7 @@ public class StoreItemTests
         StoreItem item = null!;
         Func<Task> action = () =>
         {
-            item = new StoreItem(id, code, userId)
-            {
-                Data = data
-            };
+            item = new StoreItem(id, code, userId) {Data = data};
             return Task.CompletedTask;
         };
 

@@ -30,6 +30,12 @@ internal class AccountEntityBuilder : IEntityBuilder<AccountEntity>
         return this;
     }
 
+    public AccountEntityBuilder IsFavorite(bool favorite)
+    {
+        _entity = _entity with {Favorite = favorite};
+        return this;
+    }
+
     public AccountEntityBuilder WithName(string name)
     {
         _entity = _entity with {Name = name};
