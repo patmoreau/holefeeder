@@ -2,6 +2,8 @@ namespace Holefeeder.FunctionalTests.Infrastructure;
 
 public enum ApiResources
 {
+    [ResourceRoute("api/v2/categories")]
+    GetCategories,
     [ResourceRoute("api/v2/accounts")]
     GetAccounts,
     [ResourceRoute("api/v2/accounts/{0}")]

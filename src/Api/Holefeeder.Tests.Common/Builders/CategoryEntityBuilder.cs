@@ -17,6 +17,13 @@ internal class CategoryEntityBuilder : IEntityBuilder<CategoryEntity>
         _entity = _entity with {Type = type};
         return this;
     }
+
+    public CategoryEntityBuilder WithName(string name)
+    {
+        _entity = _entity with {Name = name};
+        return this;
+    }
+
     public CategoryEntityBuilder ForUser(Guid userId)
     {
         _entity = _entity with {UserId = userId};
