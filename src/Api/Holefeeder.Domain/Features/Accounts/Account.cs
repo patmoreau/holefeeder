@@ -17,9 +17,9 @@ public record Account : IAggregateRoot
 
         Type = type;
 
-        if (string.IsNullOrWhiteSpace(name) || name.Length > 255)
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
         {
-            throw new AccountDomainException($"{nameof(Name)} must be from 1 to 255 characters");
+            throw new AccountDomainException($"{nameof(Name)} must be from 1 to 100 characters");
         }
 
         Name = name;
