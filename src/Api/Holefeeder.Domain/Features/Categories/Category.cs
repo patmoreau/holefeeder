@@ -57,7 +57,7 @@ public record Category : IAggregateRoot
     public Guid UserId
     {
         get => _userId;
-        init
+        private init
         {
             if (value.Equals(default))
             {

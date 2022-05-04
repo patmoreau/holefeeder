@@ -51,7 +51,7 @@ public class AccountTests
 
         // assert
         action.Should().Throw<AccountDomainException>()
-            .WithMessage("Name must be from 1 to 255 characters")
+            .WithMessage("Name must be from 1 to 100 characters")
             .And
             .Context.Should().Be(nameof(Account));
     }
@@ -70,7 +70,7 @@ public class AccountTests
 
         // assert
         action.Should().Throw<AccountDomainException>()
-            .WithMessage("Name must be from 1 to 255 characters")
+            .WithMessage("Name must be from 1 to 100 characters")
             .And
             .Context.Should().Be(nameof(Account));
     }
