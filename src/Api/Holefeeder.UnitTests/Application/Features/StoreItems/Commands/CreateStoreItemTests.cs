@@ -34,7 +34,7 @@ public class CreateStoreItemTests
     private readonly IStoreItemsRepository _repositoryMock = Substitute.For<IStoreItemsRepository>();
 
     [Fact]
-    public void GivenValidator_WhenCodeIsEmpty_ThenError()
+    public async Task GivenValidator_WhenCodeIsEmpty_ThenError()
     {
         // arrange
         var request = _faker.RuleFor(x => x.Code, string.Empty).Generate();
@@ -42,14 +42,14 @@ public class CreateStoreItemTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Code);
     }
 
     [Fact]
-    public void GivenValidator_WhenCodeAlreadyExists_ThenError()
+    public async Task GivenValidator_WhenCodeAlreadyExists_ThenError()
     {
         // arrange
         var code = AutoFaker.Generate<string>();
@@ -61,14 +61,14 @@ public class CreateStoreItemTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Code);
     }
 
     [Fact]
-    public void GivenValidator_WhenDataIsEmpty_ThenError()
+    public async Task GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
         var request = _faker.RuleFor(x => x.Data, string.Empty).Generate();
@@ -76,14 +76,14 @@ public class CreateStoreItemTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Data);
     }
 
     [Fact]
-    public void GivenValidator_WhenRequestValid_ThenNoErrors()
+    public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
         var request = _faker.Generate();
@@ -91,7 +91,7 @@ public class CreateStoreItemTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();
