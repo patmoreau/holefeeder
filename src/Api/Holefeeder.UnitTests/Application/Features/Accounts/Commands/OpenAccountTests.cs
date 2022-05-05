@@ -44,7 +44,7 @@ public class OpenAccountTests
     }
 
     [Fact]
-    public void GivenValidator_WhenTypeIsNull_ThenError()
+    public async Task GivenValidator_WhenTypeIsNull_ThenError()
     {
         // arrange
         var request = _faker.RuleFor(x => x.Type, _ => null!).Generate();
@@ -52,7 +52,7 @@ public class OpenAccountTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Type);
@@ -62,7 +62,7 @@ public class OpenAccountTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public void GivenValidator_WhenNameIsInvalid_ThenError(string name)
+    public async Task GivenValidator_WhenNameIsInvalid_ThenError(string name)
     {
         // arrange
         var request = _faker.RuleFor(x => x.Name, _ => name).Generate();
@@ -70,14 +70,14 @@ public class OpenAccountTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Name);
     }
 
     [Fact]
-    public void GivenValidator_WhenNameAlreadyExists_ThenError()
+    public async Task GivenValidator_WhenNameAlreadyExists_ThenError()
     {
         // arrange
         var request = _faker.RuleFor(x => x.Name, _ => _name).Generate();
@@ -88,14 +88,14 @@ public class OpenAccountTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Name);
     }
 
     [Fact]
-    public void GivenValidator_WhenOpenDateIsInvalid_ThenError()
+    public async Task GivenValidator_WhenOpenDateIsInvalid_ThenError()
     {
         // arrange
         var request = _faker.RuleFor(x => x.OpenDate, _ => DateTime.MinValue).Generate();
@@ -103,14 +103,14 @@ public class OpenAccountTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.OpenDate);
     }
 
     [Fact]
-    public void GivenValidator_WhenRequestValid_ThenNoErrors()
+    public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
         var request = _faker.Generate();
@@ -118,7 +118,7 @@ public class OpenAccountTests
         var validator = new Validator(_userContextMock, _repositoryMock);
 
         // act
-        var result = validator.TestValidate(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

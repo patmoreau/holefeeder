@@ -8,12 +8,11 @@
 
     <ItemGroup>
       <PackageReference Include="Carter" Version="6.0.0" />
-      <PackageReference Include="FluentValidation" Version="10.4.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-      <PackageReference Include="Microsoft.Identity.Web" Version="1.24.0" />
+      <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
     </ItemGroup>
 
     <ItemGroup>
