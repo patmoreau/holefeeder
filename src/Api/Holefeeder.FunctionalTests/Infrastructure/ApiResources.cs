@@ -30,4 +30,6 @@ public enum ApiResources
     GetCategoryTypes,
     [ResourceRoute("api/v2/enumerations/get-date-interval-types")]
     GetDateIntervalTypes,
+    [ResourceRoute("api/v2/transactions/make-purchase")]
+    MakePurchase,
 }

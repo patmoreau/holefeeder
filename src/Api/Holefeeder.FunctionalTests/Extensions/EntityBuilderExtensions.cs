@@ -5,7 +5,7 @@ namespace Holefeeder.FunctionalTests.Extensions;
 
 internal static class EntityBuilderExtensions
 {
-    public static async Task<T> SavedInDb<T>(this IEntityBuilder<T> builder, DatabaseDriver databaseDriver)
+    public static async Task<T> SavedInDb<T>(this IBuilder<T> builder, DatabaseDriver databaseDriver)
         where T : class
     {
         var entity = builder.Build();

@@ -4,7 +4,7 @@ using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class CategoryEntityBuilder : IEntityBuilder<CategoryEntity>
+internal class CategoryEntityBuilder : IBuilder<CategoryEntity>
 {
     private CategoryEntity _entity;
 

@@ -1,12 +1,9 @@
 using System.Net;
 using System.Text.Json;
 
-using AutoBogus;
-
 using FluentAssertions;
 
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 

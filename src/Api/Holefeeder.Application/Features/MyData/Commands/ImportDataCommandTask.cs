@@ -224,7 +224,7 @@ public partial class ImportData
                             AccountId = element.AccountId,
                             Inactive = element.Inactive
                         };
-                        cashflow = cashflow.AddTags(element.Tags);
+                        cashflow = cashflow.SetTags(element.Tags);
                         _logger.LogInformation("----- Modify Cashflow - Cashflow: {@Cashflow}", cashflow);
                     }
                     else
@@ -234,18 +234,21 @@ public partial class ImportData
                 }
                 else
                 {
-                    cashflow = new Cashflow(element.Id, element.EffectiveDate, element.Amount, userId)
+                    cashflow = new()
                     {
+                        Id = element.Id,
+                        EffectiveDate = element.EffectiveDate,
+                        Amount = element.Amount,
+                        UserId = userId,
                         IntervalType = element.IntervalType,
                         Frequency = element.Frequency,
                         Recurrence = element.Recurrence,
-                        Amount = element.Amount,
                         Description = element.Description,
                         CategoryId = element.CategoryId,
                         AccountId = element.AccountId,
                         Inactive = element.Inactive
                     };
-                    cashflow = cashflow.AddTags(element.Tags);
+                    cashflow = cashflow.SetTags(element.Tags);
                     _logger.LogInformation("----- Create Cashflow - Cashflow: {@Cashflow}", cashflow);
                 }
 
@@ -292,11 +295,9 @@ public partial class ImportData
                             Description = element.Description,
                             CategoryId = element.CategoryId,
                             AccountId = element.AccountId,
-                            CashflowId = element.CashflowId,
-                            CashflowDate = element.CashflowDate,
                             UserId = userId
                         };
-                        transaction = transaction.AddTags(element.Tags);
+                        transaction = transaction.SetTags(element.Tags);
                         _logger.LogInformation("----- Modify Transaction - Transaction: {@Transaction}", transaction);
                     }
                     else
@@ -306,19 +307,21 @@ public partial class ImportData
                 }
                 else
                 {
-                    transaction = new Transaction
+                    transaction = Transaction.Create(element.Id,
+                        element.Date,
+                        element.Amount,
+                        element.Description,
+                        element.AccountId,
+                        element.CategoryId,
+                        userId);
+
+                    if (element.CashflowId is not null)
                     {
-                        Id = element.Id,
-                        Date = element.Date,
-                        Amount = element.Amount,
-                        Description = element.Description,
-                        CategoryId = element.CategoryId,
-                        AccountId = element.AccountId,
-                        CashflowId = element.CashflowId,
-                        CashflowDate = element.CashflowDate,
-                        UserId = userId
-                    };
-                    transaction = transaction.AddTags(element.Tags);
+                        transaction = transaction.ApplyCashflow(element.CashflowId.GetValueOrDefault(),
+                            element.CashflowDate.GetValueOrDefault());
+                    }
+
+                    transaction = transaction.SetTags(element.Tags);
                     _logger.LogInformation("----- Create Transaction - Transaction: {@Transaction}", transaction);
                 }
 

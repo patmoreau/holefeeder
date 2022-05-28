@@ -16,7 +16,7 @@ internal sealed class AccountViewModelFactory : AutoFaker<AccountViewModel>
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.Type, faker => faker.PickRandom(Enumeration.GetAll<AccountType>()));
-        RuleFor(x => x.Name, faker => faker.Random.Words().ClampLength(min: 1, max:100));
+        RuleFor(x => x.Name, faker => faker.Random.String2(minLength: 1, maxLength: 100));
         RuleFor(x => x.Favorite, faker => faker.Random.Bool());
         RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX));
         RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date);

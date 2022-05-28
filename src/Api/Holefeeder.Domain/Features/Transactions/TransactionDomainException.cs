@@ -6,9 +6,10 @@ namespace Holefeeder.Domain.Features.Transactions;
 
 public class TransactionDomainException : DomainException
 {
-    public TransactionDomainException(string message) : base(StatusCodes.Status422UnprocessableEntity, message)
+    public TransactionDomainException(string message, string context) : base(StatusCodes.Status422UnprocessableEntity, message)
     {
+        Context = context;
     }
 
-    public override string Context => nameof(Transaction);
+    public override string Context { get; }
 }

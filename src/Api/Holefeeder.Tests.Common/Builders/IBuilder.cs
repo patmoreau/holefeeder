@@ -1,6 +1,6 @@
 namespace Holefeeder.Tests.Common.Builders;
 
-internal interface IEntityBuilder<out T> where T : class
+internal interface IBuilder<out T> where T : class
 {
     T Build();
 }

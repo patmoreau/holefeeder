@@ -6,6 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <NoWarn>1701;1702;S3925</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="Carter" Version="6.0.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />

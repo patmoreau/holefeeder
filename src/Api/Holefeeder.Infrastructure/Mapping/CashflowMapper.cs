@@ -27,8 +27,9 @@ internal class CashflowMapper
             return null;
         }
 
-        var model = new Cashflow(entity.Id, entity.EffectiveDate, entity.Amount, entity.UserId)
+        var model = new Cashflow()
         {
+            Id=entity.Id,
             AccountId = entity.AccountId,
             Amount = entity.Amount,
             CategoryId = entity.CategoryId,
@@ -41,7 +42,7 @@ internal class CashflowMapper
             UserId = entity.UserId
         };
 
-        return model.AddTags(_tagsMapper.Map(entity.Tags));
+        return model.SetTags(_tagsMapper.Map(entity.Tags));
     }
 
     public CashflowInfoViewModel? MapToDtoOrNull(CashflowEntity? entity)

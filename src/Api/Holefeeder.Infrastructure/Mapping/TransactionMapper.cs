@@ -27,20 +27,15 @@ internal class TransactionMapper
             return null;
         }
 
-        var model = new Transaction
-        {
-            Id = entity.Id,
-            AccountId = entity.AccountId,
-            Amount = entity.Amount,
-            CashflowDate = entity.CashflowDate,
-            CashflowId = entity.CashflowId,
-            CategoryId = entity.CategoryId,
-            Date = entity.Date,
-            Description = entity.Description,
-            UserId = entity.UserId
-        };
+        var model = Transaction.Create(entity.Id, entity.Date, entity.Amount, entity.Description, entity.AccountId,
+            entity.CategoryId, entity.UserId);
 
-        return model.AddTags(_tagsMapper.Map(entity.Tags));
+        if (entity.CashflowId is not null)
+        {
+            model = model.ApplyCashflow(entity.CashflowId.GetValueOrDefault(), entity.CashflowDate.GetValueOrDefault());
+        }
+
+        return model.SetTags(_tagsMapper.Map(entity.Tags));
     }
 
     public TransactionInfoViewModel? MapToDtoOrNull(TransactionEntity? entity)

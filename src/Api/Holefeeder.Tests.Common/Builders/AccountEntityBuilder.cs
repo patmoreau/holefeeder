@@ -4,7 +4,7 @@ using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class AccountEntityBuilder : IEntityBuilder<AccountEntity>
+internal class AccountEntityBuilder : IBuilder<AccountEntity>
 {
     private AccountEntity _entity;
 
