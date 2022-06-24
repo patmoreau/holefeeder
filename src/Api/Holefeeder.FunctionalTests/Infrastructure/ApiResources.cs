@@ -32,4 +32,6 @@ public enum ApiResources
     GetDateIntervalTypes,
     [ResourceRoute("api/v2/transactions/make-purchase")]
     MakePurchase,
+    [ResourceRoute("api/v2/cashflows/modify")]
+    ModifyCashflow,
 }

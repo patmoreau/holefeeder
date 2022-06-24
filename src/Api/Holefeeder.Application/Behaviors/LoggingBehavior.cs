@@ -19,13 +19,13 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         TRequest request, CancellationToken cancellationToken,
         RequestHandlerDelegate<TResponse> next)
     {
-        var requestName = typeof(TRequest).Name;
+        var requestName = typeof(TRequest).FullName;
 
         using var scope = _logger.BeginScope(request);
 
         _logger.LogInformation("API Request: {Name} {@Request}", requestName, request);
         var response = await next();
-        _logger.LogInformation("API Request: {Name} with result {Response}", requestName, response);
+        _logger.LogInformation("API Request: {Name} with result {@Response}", requestName, response);
         return response;
     }
 }

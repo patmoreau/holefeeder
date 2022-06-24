@@ -156,6 +156,16 @@ public record Cashflow : IAggregateRoot
         };
     }
 
+    public Cashflow Cancel()
+    {
+        if (Inactive)
+        {
+            throw new TransactionDomainException($"Cashflow {Id} already inactive", nameof(Cashflow));
+        }
+
+        return this with {Inactive = true};
+    }
+
     public Cashflow SetTags(params string[] tags)
     {
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();

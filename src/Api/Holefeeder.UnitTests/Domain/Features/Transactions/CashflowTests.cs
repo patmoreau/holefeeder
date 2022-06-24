@@ -3,6 +3,7 @@
 using AutoBogus;
 
 using FluentAssertions;
+using FluentAssertions.Execution;
 
 using Holefeeder.Domain.Features.Transactions;
 
@@ -143,6 +144,37 @@ public class CashflowTests
             .WithMessage("UserId is required")
             .And
             .Context.Should().Be(nameof(Cashflow));
+    }
+
+    [Fact]
+    public void GivenCancel_WhenCashflowInactive_ThenThrowException()
+    {
+        // arrange
+        var cashflow = _faker.RuleFor(cashflow => cashflow.Inactive, true).Generate();
+
+        // act
+        Action action = () => _ = cashflow.Cancel();
+
+        // assert
+        action.Should().Throw<TransactionDomainException>()
+            .WithMessage($"Cashflow {cashflow.Id} already inactive")
+            .And
+            .Context.Should().Be(nameof(Cashflow));
+    }
+
+    [Fact]
+    public void GivenCancel_WhenCashflowActive_ThenCashflowIsInactive()
+    {
+        // arrange
+        var cashflow = _faker.RuleFor(cashflow => cashflow.Inactive, false).Generate();
+
+        // act
+        var result = cashflow.Cancel();
+
+        // assert
+        using var scope = new AssertionScope();
+        result.Should().NotBeNull();
+        result.Inactive.Should().BeTrue();
     }
 
     [Fact]

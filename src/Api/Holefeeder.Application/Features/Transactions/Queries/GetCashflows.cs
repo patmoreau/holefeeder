@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Holefeeder.Application.Features.Cashflows.Queries;
+namespace Holefeeder.Application.Features.Transactions.Queries;
 
 public class GetCashflows : ICarterModule
 {
@@ -30,7 +30,7 @@ public class GetCashflows : ICarterModule
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithMetadata(nameof(IRequestQuery))
-            .WithTags(nameof(Cashflows))
+            .WithTags(nameof(Transactions))
             .WithName(nameof(GetCashflows))
             .RequireAuthorization();
     }

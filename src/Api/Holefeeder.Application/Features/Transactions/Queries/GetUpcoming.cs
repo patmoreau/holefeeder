@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Holefeeder.Application.Features.Cashflows.Queries;
+namespace Holefeeder.Application.Features.Transactions.Queries;
 
 public class GetUpcoming : ICarterModule
 {
@@ -30,7 +30,7 @@ public class GetUpcoming : ICarterModule
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
-            .WithTags(nameof(Cashflows))
+            .WithTags(nameof(Transactions))
             .WithName(nameof(GetUpcoming))
             .RequireAuthorization();
     }

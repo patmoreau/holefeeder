@@ -11,7 +11,7 @@ using FluentAssertions;
 
 using FluentValidation.TestHelper;
 
-using Holefeeder.Application.Features.Cashflows;
+using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Extensions;
@@ -23,7 +23,7 @@ using NSubstitute;
 
 using Xunit;
 
-using static Holefeeder.Application.Features.Cashflows.Queries.GetUpcoming;
+using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
 

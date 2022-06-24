@@ -3,7 +3,7 @@ using Holefeeder.Domain.SeedWork;
 
 using Microsoft.AspNetCore.Http;
 
-namespace Holefeeder.Application.Features.Cashflows.Exceptions;
+namespace Holefeeder.Application.Features.Transactions.Exceptions;
 
 public class CashflowNotFoundException : DomainException
 {
@@ -12,5 +12,5 @@ public class CashflowNotFoundException : DomainException
     {
     }
 
-    public override string Context => nameof(CashflowNotFoundException);
+    public override string Context => nameof(Transactions);
 }

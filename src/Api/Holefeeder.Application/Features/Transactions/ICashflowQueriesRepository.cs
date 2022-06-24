@@ -1,7 +1,7 @@
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
-namespace Holefeeder.Application.Features.Cashflows;
+namespace Holefeeder.Application.Features.Transactions;
 
 public interface ICashflowQueriesRepository
 {
