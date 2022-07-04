@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Globalization;
 
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.SeedWork;
@@ -138,8 +137,7 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency,
-        int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
     {
         return new()
         {

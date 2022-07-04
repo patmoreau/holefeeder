@@ -76,7 +76,7 @@ public abstract class DateIntervalType : Enumeration
         return dates;
     }
 
-    private class WeeklyDateIntervalType : DateIntervalType
+    private sealed class WeeklyDateIntervalType : DateIntervalType
     {
         public WeeklyDateIntervalType(int id, string name) : base(id, name) { }
 
@@ -109,7 +109,7 @@ public abstract class DateIntervalType : Enumeration
         }
     }
 
-    private class MonthlyDateIntervalType : DateIntervalType
+    private sealed class MonthlyDateIntervalType : DateIntervalType
     {
         public MonthlyDateIntervalType(int id, string name) : base(id, name) { }
 
@@ -137,7 +137,7 @@ public abstract class DateIntervalType : Enumeration
         }
     }
 
-    private class YearlyDateIntervalType : DateIntervalType
+    private sealed class YearlyDateIntervalType : DateIntervalType
     {
         public YearlyDateIntervalType(int id, string name) : base(id, name) { }
 
@@ -165,7 +165,7 @@ public abstract class DateIntervalType : Enumeration
         }
     }
 
-    private class OneTimeDateIntervalType : DateIntervalType
+    private sealed class OneTimeDateIntervalType : DateIntervalType
     {
         public OneTimeDateIntervalType(int id, string name) : base(id, name) { }
 
