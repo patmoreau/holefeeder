@@ -29,7 +29,7 @@ public class CancelCashflow : ICarterModule
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
-            .WithName(nameof(ModifyCashflow))
+            .WithName(nameof(CancelCashflow))
             .RequireAuthorization();
     }
 

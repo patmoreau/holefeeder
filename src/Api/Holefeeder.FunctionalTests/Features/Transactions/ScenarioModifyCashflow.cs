@@ -13,6 +13,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -26,7 +27,8 @@ public class ScenarioModifyCashflow : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _databaseDriver;
 
-    public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
@@ -43,7 +45,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         await WhenUserModifiedACashflow(MapToRequest(entity));
 
-        ThenShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
 
     [Fact]
@@ -67,7 +69,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         await WhenUserModifiedACashflow(MapToRequest(entity));
 
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        ShouldBeForbiddenToAccessEndpoint();
     }
 
     [Fact]
@@ -79,7 +81,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         await WhenUserModifiedACashflow(MapToRequest(entity));
 
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]

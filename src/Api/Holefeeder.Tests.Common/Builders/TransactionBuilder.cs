@@ -8,7 +8,7 @@ internal class TransactionBuilder : IBuilder<Transaction>
 {
     private Transaction _entity;
 
-    public static TransactionBuilder GivenATransaction() => new();
+    public static TransactionBuilder ATransaction() => new();
 
     private TransactionBuilder() => _entity = new TransactionFactory().Generate();
 

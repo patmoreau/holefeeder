@@ -9,6 +9,7 @@ using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -19,7 +20,8 @@ public class ScenarioGetCategories : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
 
-    public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
         _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _holefeederDatabaseDriver.ResetStateAsync().Wait();
@@ -42,7 +44,7 @@ public class ScenarioGetCategories : BaseScenario
 
         await WhenUserGetCategories();
 
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        ShouldBeForbiddenToAccessEndpoint();
     }
 
     [Fact]
@@ -52,7 +54,7 @@ public class ScenarioGetCategories : BaseScenario
 
         await WhenUserGetCategories();
 
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]

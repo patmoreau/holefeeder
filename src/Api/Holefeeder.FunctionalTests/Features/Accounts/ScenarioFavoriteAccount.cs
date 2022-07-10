@@ -11,6 +11,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -21,7 +22,8 @@ public class ScenarioFavoriteAccount : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _databaseDriver;
 
-    public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
@@ -38,7 +40,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         await WhenUserSetsFavoriteAccount(entity);
 
-        ThenShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
 
     [Fact]
@@ -74,7 +76,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         await WhenUserSetsFavoriteAccount(entity);
 
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        ShouldBeForbiddenToAccessEndpoint();
     }
 
     [Fact]
@@ -86,7 +88,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         await WhenUserSetsFavoriteAccount(entity);
 
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]

@@ -11,11 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
+using Xunit.Abstractions;
+
 namespace Holefeeder.FunctionalTests.Drivers;
 
 public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 {
-    public HttpClientDriver CreateHttpClientDriver() => new(new Lazy<HttpClient>(CreateClient));
+    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
+        new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

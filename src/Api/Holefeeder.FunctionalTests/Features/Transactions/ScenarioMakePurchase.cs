@@ -1,16 +1,15 @@
 using System.Net;
-using System.Text.Json;
 
 using FluentAssertions;
 
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
-using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Infrastructure.Mapping;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
 using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
@@ -19,111 +18,102 @@ using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioMakePurchase : BaseScenario
+public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
 {
     private readonly TransactionMapper _mapper = new(new TagsMapper(), new AccountMapper(), new CategoryMapper());
     private readonly HolefeederDatabaseDriver _databaseDriver;
 
-    public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
+        apiApplicationDriver, testOutputHelper)
     {
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
-    public async Task WhenInvalidRequest()
+    public async Task InvalidRequest()
     {
-        var entity = GivenATransaction()
-            .OfAmount(0)
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserMakesAPurchase(entity);
-
-        ThenShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        Transaction entity = default!;
+        await Given(() =>
+            {
+                entity = ATransaction()
+                    .OfAmount(0)
+                    .Build();
+            })
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(
+                () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."))
+            .RunScenarioAsync();
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
+    public async Task AuthorizedUser()
     {
-        var entity = GivenATransaction().Build();
+        Transaction entity = null!;
 
-        GivenUserIsAuthorized();
-
-        await WhenUserMakesAPurchase(entity);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ThenUserShouldBeAuthorizedToAccessEndpoint)
+            .RunScenarioAsync();
     }
 
     [Fact]
-    public async Task WhenForbiddenUser()
+    public async Task ForbiddenUser()
     {
-        var entity = GivenATransaction().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserMakesAPurchase(entity);
-
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        Transaction entity = null!;
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsForbidden())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ShouldBeForbiddenToAccessEndpoint)
+            .RunScenarioAsync();
     }
 
     [Fact]
-    public async Task WhenUnauthorizedUser()
+    public async Task UnauthorizedUser()
     {
-        var entity = GivenATransaction().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserMakesAPurchase(entity);
-
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        Transaction entity = null!;
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsUnauthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ShouldNotBeAuthorizedToAccessEndpoint)
+            .RunScenarioAsync();
     }
 
     [Fact]
-    public async Task WhenMakePurchase()
+    public async Task ValidRequest()
     {
-        var account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+        AccountEntity account = null!;
+        CategoryEntity category = null!;
+        Transaction entity = null!;
+        Guid id = Guid.Empty;
 
-        var category = await GivenACategory()
-            .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+        await Given(async () => account = await GivenAnActiveAccount()
+                .ForUser(AuthorizedUserId)
+                .SavedInDb(_databaseDriver))
+            .Given(async () => category = await GivenACategory()
+                .ForUser(AuthorizedUserId)
+                .SavedInDb(_databaseDriver))
+            .Given(() => entity = ATransaction()
+                .ForAccount(account)
+                .ForCategory(category)
+                .ForUser(AuthorizedUserId)
+                .Build())
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+            .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+            .Then(async () =>
+            {
+                var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(id, entity.UserId);
 
-        var entity = GivenATransaction()
-            .ForAccount(account)
-            .ForCategory(category)
-            .ForUser(AuthorizedUserId)
-            .Build();
+                _mapper.MapToModelOrNull(result).Should()
+                    .NotBeNull()
+                    .And
+                    .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));
 
-        GivenUserIsAuthorized();
-
-        await WhenUserMakesAPurchase(entity);
-
-        ThenShouldExpectStatusCode(HttpStatusCode.Created);
-
-        var id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
-
-        var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(id, entity.UserId);
-
-        _mapper.MapToModelOrNull(result).Should()
-            .NotBeNull()
-            .And
-            .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));
-    }
-
-    private async Task WhenUserMakesAPurchase(Transaction entity)
-    {
-        var json = JsonSerializer.Serialize(new
-        {
-            entity.Date,
-            entity.Amount,
-            entity.Description,
-            entity.AccountId,
-            entity.CategoryId,
-            entity.Tags
-        });
-        await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
+            })
+            .RunScenarioAsync();
     }
 }
