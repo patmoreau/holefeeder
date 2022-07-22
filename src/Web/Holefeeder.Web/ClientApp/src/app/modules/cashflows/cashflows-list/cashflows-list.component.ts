@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 import {CashflowsService} from '@app/core/services/cashflows.service';
 import {CashflowDetail} from '@app/core/models/cashflow-detail.model';
-import {PagingInfo} from '@app/core/models/paging-info.model';
 
 @Component({
   selector: 'app-cashflows-list',
@@ -11,7 +10,7 @@ import {PagingInfo} from '@app/core/models/paging-info.model';
   styleUrls: ['./cashflows-list.component.scss']
 })
 export class CashflowsListComponent implements OnInit {
-  cashflows$!: Observable<PagingInfo<CashflowDetail>>;
+  cashflows$!: Observable<CashflowDetail[]>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
 
@@ -19,19 +18,16 @@ export class CashflowsListComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.$showInactive.subscribe(async (showInactive) => {
-      this.cashflows$ = this.cashflowsService.find(0, 0, [
-        'description'
-      ], [
-        showInactive ? 'inactive:eq:true' : 'inactive:eq:false'
-      ]);
-    });
-    this.$showInactive.next(this.showInactive);
+      this.cashflows$ = this.cashflowsService.activeCashflows$;
   }
 
   inactiveChange() {
     this.showInactive = !this.showInactive;
-    this.$showInactive.next(this.showInactive);
+    if (this.showInactive) {
+      this.cashflows$ = this.cashflowsService.inactiveCashflows$;
+    } else {
+      this.cashflows$ = this.cashflowsService.activeCashflows$;
+    }
   }
 
   click(id: string) {

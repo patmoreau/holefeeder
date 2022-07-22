@@ -61,6 +61,7 @@ internal class CashflowMapper
             Frequency = entity.Frequency,
             IntervalType = entity.IntervalType,
             Recurrence = entity.Recurrence,
+            Inactive = entity.Inactive,
             Tags = _tagsMapper.Map(entity.Tags).ToImmutableArray(),
             Account = _accountMapper.MapToAccountInfoViewModel(entity.Account),
             Category = _categoryMapper.MapToCategoryInfoViewModel(entity.Category)

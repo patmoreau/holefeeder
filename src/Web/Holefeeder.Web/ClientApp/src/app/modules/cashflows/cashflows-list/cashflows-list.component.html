@@ -1,38 +1,31 @@
-<ng-container *ngIf="cashflows$ | async as cashflows; else loader">
   <div class="container pt-3 pb-4">
     <div class="d-flex flex-wrap justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <h1 class="mb-0 line-height-1 text-truncate d-none d-lg-block">
-          Cashflows
-        </h1>
-        <h4 class="mb-0 line-height-1 text-truncate d-lg-none">
-          Cashflows
-        </h4>
-        <p>
-          <strong class="ms-3 text-muted">{{ cashflows.totalCount }} results</strong>
-        </p>
+        <h4 class="mb-0 line-height-1 text-truncate">Cashflows</h4>
+        <span>
+        <ng-container *ngIf="cashflows$ | async as cashflows; else loader">
+          <ng-container *ngIf="cashflows.length; else noItems">
+            <strong class="ms-3 text-muted">{{ cashflows.length }} results</strong>
+          </ng-container>
+        </ng-container>
+      </span>
       </div>
       <div class="actions p-0 d-flex align-items-center">
         <div class="form-check form-switch">
           <input (change)="inactiveChange()" class="form-check-input" id="inactive" type="checkbox"/>
           <label class="custom-control-label" for="inactive">Inactive</label>
         </div>
-
-        <button aria-label="create cashflow" class="btn btn-link" routerLink="create" type="button">
-          <em class="bi bi-plus-square"></em>
-        </button>
       </div>
     </div>
   </div>
   <div class="container">
-    <app-transaction-list-item (click)="click(cashflow.id)" *ngFor="let cashflow of cashflows.items"
+    <app-transaction-list-item (click)="click(cashflow.id)" *ngFor="let cashflow of cashflows$ | async"
                                [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [description]="
         cashflow.description ? cashflow.description : cashflow.category.name
       "
                                [tags]="cashflow.tags"></app-transaction-list-item>
   </div>
   <ng-template #noItems>No cashflows defined!</ng-template>
-</ng-container>
 <ng-template #loader>
   <app-loader [small]="true"></app-loader>
 </ng-template>

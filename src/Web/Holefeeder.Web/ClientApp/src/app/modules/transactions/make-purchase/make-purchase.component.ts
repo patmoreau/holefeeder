@@ -9,6 +9,7 @@ import {TransferMoneyCommandAdapter} from "@app/core/models/transfer-money-comma
 import {combineLatest, filter, Observable, tap} from "rxjs";
 import {TransactionsService} from "@app/core/services/transactions.service";
 import {MakePurchaseCommandAdapter} from "@app/core/models/make-purchase-command.model";
+import {DateIntervalType} from "@app/shared/enums/date-interval-type.enum";
 
 const accountIdParamName = 'accountId';
 
@@ -18,6 +19,8 @@ const accountIdParamName = 'accountId';
   styleUrls: ['./make-purchase.component.scss']
 })
 export class MakePurchaseComponent implements OnInit {
+
+  public isNotRecurring = true;
 
   formPurchase!: FormGroup;
   formTransfer!: FormGroup;
@@ -44,7 +47,13 @@ export class MakePurchaseComponent implements OnInit {
       account: ['', [Validators.required]],
       category: ['', [Validators.required]],
       description: [''],
-      tags: this.formBuilder.array([])
+      tags: this.formBuilder.array([]),
+      isRecurring: [''],
+      cashflow: this.formBuilder.group({
+        intervalType: [''],
+        effectiveDate: [''],
+        frequency: ['']
+      })
     });
 
     this.formTransfer = this.formBuilder.group({
@@ -66,7 +75,13 @@ export class MakePurchaseComponent implements OnInit {
         this.formPurchase.patchValue({
           date: startOfToday(),
           account: fromAccount,
-          category: this.categoriesService.findOneByIndex(0)?.id
+          category: this.categoriesService.findOneByIndex(0)?.id,
+          isRecurring: false,
+          cashflow: {
+            intervalType: DateIntervalType.monthly,
+            frequency: 1,
+            effectiveDate: startOfToday()
+          }
         });
         this.formTransfer.patchValue({
           date: startOfToday(),
@@ -79,7 +94,10 @@ export class MakePurchaseComponent implements OnInit {
 
   onMakePurchase(): void {
     this.transactionsService.makePurchase(
-      this.adapterPurchase.adapt(this.formPurchase.value))
+      this.adapterPurchase.adapt(
+        Object.assign({},
+          this.formPurchase.value,
+          {cashflow: this.formPurchase.get('isRecurring')!.value === true ? this.formPurchase.get('cashflow')?.value : null })))
       .subscribe(_ => this.location.back());
   }
 

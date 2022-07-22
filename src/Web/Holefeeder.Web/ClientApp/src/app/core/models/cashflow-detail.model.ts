@@ -16,6 +16,7 @@ export class CashflowDetail {
     public description: string,
     public category: ICategoryInfo,
     public account: IAccountInfo,
+    public inactive: boolean,
     public tags: string[]
   ) {
   }
@@ -25,6 +26,6 @@ export class CashflowDetail {
 export class CashflowDetailAdapter implements Adapter<CashflowDetail> {
   adapt(item: any): CashflowDetail {
     return new CashflowDetail(item.id, dateFromUtc(item.effectiveDate), item.amount, item.intervalType,
-      item.frequency, item.recurrence, item.description, item.category, item.account, item.tags);
+      item.frequency, item.recurrence, item.description, item.category, item.account, item.inactive, item.tags);
   }
 }

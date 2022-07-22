@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {dateToUtc} from "@app/shared/date-parser.helper";
 import {Adapter} from "@app/shared/interfaces/adapter.interface";
+import {CashflowRequest, CashflowRequestAdapter} from "@app/core/models/cashflow-request.model";
 
 export class MakePurchaseCommand {
   constructor(
@@ -9,15 +10,19 @@ export class MakePurchaseCommand {
     public description: string,
     public accountId: string,
     public categoryId: string,
-    public tags: string[]
+    public tags: string[],
+    public cashflow: CashflowRequest | null
   ) {
   }
 }
 
 @Injectable({providedIn: 'root'})
 export class MakePurchaseCommandAdapter implements Adapter<MakePurchaseCommand> {
+  constructor(private adapter: CashflowRequestAdapter) {
+  }
+
   adapt(item: any): MakePurchaseCommand {
     return new MakePurchaseCommand(dateToUtc(item.date), item.amount, item.description,
-      item.account, item.category, item.tags);
+      item.account, item.category, item.tags, item.cashflow !== null ? this.adapter.adapt(item.cashflow) : null);
   }
 }

@@ -20,7 +20,7 @@ const routes: Routes = [
         component: AccountsListComponent,
         canActivate: [MsalGuard],
         runGuardsAndResolvers: 'always',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'create',
@@ -40,7 +40,6 @@ const routes: Routes = [
           account: AccountResolver
         },
         children: [
-          {path: '', redirectTo: 'upcoming'},
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,
@@ -50,7 +49,8 @@ const routes: Routes = [
             path: 'transactions',
             component: AccountTransactionsComponent,
             canActivate: [MsalGuard]
-          }
+          },
+          // {path: '', redirectTo: 'upcoming'},
         ]
       },
     ]

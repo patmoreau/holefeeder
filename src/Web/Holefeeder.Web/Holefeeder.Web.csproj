@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
-    <SpaProxyServerUrl>https://localhost:4200</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://localhost:44418</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>yarn start</SpaProxyLaunchCommand>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -15,14 +15,14 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.4" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.4" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.6" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.7" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-    <PackageReference Include="Yarp.ReverseProxy" Version="1.1.0" />
-    <PackageReference Include="Yarp.Telemetry.Consumption" Version="1.1.0" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="1.1.1" />
+    <PackageReference Include="Yarp.Telemetry.Consumption" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

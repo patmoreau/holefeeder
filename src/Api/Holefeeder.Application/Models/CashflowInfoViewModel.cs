@@ -23,6 +23,8 @@ public record CashflowInfoViewModel
 
     public string Description { get; init; } = null!;
 
+    public bool Inactive { get; init; }
+
     public ImmutableArray<string> Tags
     {
         get => _tags;

@@ -23,6 +23,18 @@
           <div aria-labelledby="purchase-tab" class="tab-pane fade show active" id="purchase" role="tabpanel">
             <form (ngSubmit)="onMakePurchase()" [formGroup]="formPurchase">
               <app-transaction-edit></app-transaction-edit>
+              <div class="form-check form-switch mb-5 mt-5 me-5">
+                <input class="form-check-input" id="recurringCashflow" type="checkbox" formControlName="isRecurring"
+                       (click)="collapse.toggle()" [attr.aria-expanded]="!isNotRecurring" />
+                <label class="custom-control-label" for="recurringCashflow">Recurring cashflow</label>
+                <div #collapse="ngbCollapse" [(ngbCollapse)]="isNotRecurring">
+                  <div class="card">
+                    <div class="card-body">
+                      <app-recurring-cashflow formGroupName="cashflow"></app-recurring-cashflow>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="d-flex justify-content-end mt-4">
                 <button (click)="goBack()" class="btn btn-secondary me-2" type="button">
                   Cancel
