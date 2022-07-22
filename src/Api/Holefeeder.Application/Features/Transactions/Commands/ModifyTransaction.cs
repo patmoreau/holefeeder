@@ -22,7 +22,7 @@ public class ModifyTransaction : ICarterModule
         app.MapPost("api/v2/transactions/modify",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    await mediator.Send(request, cancellationToken);
                     return Results.NoContent();
                 })
             .Produces(StatusCodes.Status204NoContent)
@@ -95,7 +95,7 @@ public class ModifyTransaction : ICarterModule
                     AccountId = request.AccountId
                 };
 
-                transaction = transaction.AddTags(request.Tags);
+                transaction = transaction.SetTags(request.Tags);
 
                 _logger.LogInformation("----- Modifying - Transaction: {@Transaction}", transaction);
 

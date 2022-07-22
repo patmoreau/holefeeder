@@ -15,6 +15,7 @@ import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dial
 import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog/delete-dialog.component";
 import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
 import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
+import { RecurringCashflowComponent } from './components/recurring-cashflow/recurring-cashflow.component';
 
 const COMPONENTS = [
   DateViewComponent,
@@ -38,8 +39,8 @@ const COMPONENTS = [
     ReactiveFormsModule,
     NgbModule
   ],
-  exports: [COMPONENTS],
-  declarations: [COMPONENTS],
+    exports: [COMPONENTS, RecurringCashflowComponent],
+  declarations: [COMPONENTS, RecurringCashflowComponent],
   providers: [
     SubscriberService
   ]

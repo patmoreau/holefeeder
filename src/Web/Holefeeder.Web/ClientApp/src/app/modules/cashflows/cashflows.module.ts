@@ -5,12 +5,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SharedModule} from '@app/shared/shared.module';
 import {CashflowsRoutingModule} from './cashflows-routing.module';
-import {CashflowEditComponent} from './cashflow-edit/cashflow-edit.component';
+import {ModifyCashflowComponent} from './modify-cashflow/modify-cashflow.component';
 import {CashflowsComponent} from './cashflows/cashflows.component';
 
 const COMPONENTS = [
   CashflowsListComponent,
-  CashflowEditComponent,
+  ModifyCashflowComponent,
   CashflowsComponent
 ];
 

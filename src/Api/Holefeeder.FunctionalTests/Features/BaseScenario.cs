@@ -5,13 +5,14 @@ using System.Text.RegularExpressions;
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using Holefeeder.Application.SeedWork;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.FunctionalTests.StepDefinitions;
 
 using Microsoft.AspNetCore.Mvc;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Holefeeder.FunctionalTests.Features;
 
@@ -20,9 +21,15 @@ public abstract class BaseScenario
 {
     protected HttpClientDriver HttpClientDriver { get; }
 
-    protected BaseScenario(ApiApplicationDriver apiApplicationDriver)
+    protected readonly UserStepDefinition User;
+    protected readonly TransactionStepDefinition Transaction;
+
+    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
-        HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver();
+        HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver(testOutputHelper);
+
+        User = new UserStepDefinition(HttpClientDriver);
+        Transaction = new TransactionStepDefinition(HttpClientDriver);
     }
 
     protected void GivenUserIsUnauthorized()
@@ -84,12 +91,12 @@ public abstract class BaseScenario
         CheckAuthorizationStatus(true);
     }
 
-    protected void ThenUserShouldBeForbiddenToAccessEndpoint()
+    protected void ShouldBeForbiddenToAccessEndpoint()
     {
         CheckAuthorizationStatus(false);
     }
 
-    protected void ThenUserShouldNotBeAuthorizedToAccessEndpoint()
+    protected void ShouldNotBeAuthorizedToAccessEndpoint()
     {
         CheckAuthorizationStatus(false);
     }
@@ -99,7 +106,7 @@ public abstract class BaseScenario
         HttpClientDriver.ShouldHaveResponseWithStatus(expectedStatusCode);
     }
 
-    protected void ThenShouldReceiveValidationProblemDetailsWithErrorMessage(string errorMessage)
+    protected void ShouldReceiveValidationProblemDetailsWithErrorMessage(string errorMessage)
     {
         ThenShouldExpectStatusCode(HttpStatusCode.UnprocessableEntity);
 
@@ -108,13 +115,11 @@ public abstract class BaseScenario
         problemDetails?.Title.Should().Be(errorMessage);
     }
 
-    public Guid ThenShouldGetTheRouteOfTheNewResourceInTheHeader()
+    protected Guid ThenShouldGetTheRouteOfTheNewResourceInTheHeader()
     {
         var headers = HttpClientDriver.ResponseMessage!.Headers;
 
-        headers.Should()
-            .ContainKey(
-                "Location"); //.And.ContainValue(new[] {"http://localhost/api/v2/store-items/df865211-60cc-4dcd-ad59-865352e446df"});
+        headers.Should().ContainKey("Location");
 
         var responseString = headers.GetValues("Location").Single();
         var match = Regex.Match(responseString, @"[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?");
@@ -135,5 +140,103 @@ public abstract class BaseScenario
             : statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized;
 
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
+    }
+}
+
+public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
+{
+    private readonly ITestOutputHelper _testOutputHelper;
+    private readonly List<Func<Task>> _tasks = new();
+    private int _taskCount = 0;
+
+    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
+    protected T Given(Action action) => Given(string.Empty, action);
+
+    protected T Given(string message, Action action)
+    {
+        AddTask(nameof(Given), message, action);
+        return (T)this;
+    }
+
+    protected T Given(Func<Task> action) => Given(string.Empty, action);
+
+    protected T Given(string message, Func<Task> action)
+    {
+        AddTask(nameof(Given), message, action);
+
+        return (T)this;
+    }
+
+    protected T When(Action action) => When(string.Empty, action);
+
+    protected T When(string message, Action action)
+    {
+        AddTask(nameof(When), message, action);
+
+        return (T)this;
+    }
+
+    protected T When(Func<Task> action) => When(string.Empty, action);
+
+    protected T When(string message, Func<Task> action)
+    {
+        AddTask(nameof(When), message, action);
+
+        return (T)this;
+    }
+
+    protected T Then(Action action) => Then(string.Empty, action);
+
+    protected T Then(string message, Action action)
+    {
+        AddTask(nameof(Then), message, () =>
+        {
+            using var scope = new AssertionScope();
+            return Task.Run(action);
+
+        });
+
+        return (T)this;
+    }
+
+    protected T Then(Func<Task> action) => Then(string.Empty, action);
+
+    protected T Then(string message, Func<Task> action)
+    {
+        AddTask(nameof(Then), message, () =>
+        {
+            using var scope = new AssertionScope();
+            return action();
+
+        });
+
+        return (T)this;
+    }
+
+    protected async Task RunScenarioAsync()
+    {
+        var tasks = _tasks.ToArray();
+        _tasks.Clear();
+
+        foreach (var task in tasks)
+        {
+            await task();
+        }
+    }
+
+    private void AddTask(string command, string message, Action action) =>
+        AddTask(command, message, () => Task.Run(action));
+
+    private void AddTask(string command, string message, Func<Task> action)
+    {
+        _taskCount++;
+        var text = string.IsNullOrWhiteSpace(message) ? $"task #{_taskCount}" : message;
+        _tasks.Add(() => Task.Run(() => _testOutputHelper.WriteLine($"{command} {text}")));
+        _tasks.Add(() => Task.Run(action));
     }
 }

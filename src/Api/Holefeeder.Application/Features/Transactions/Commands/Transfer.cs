@@ -92,15 +92,14 @@ public class Transfer : ICarterModule
                 await _categoriesRepository.FindByNameAsync(_userContext.UserId, "Transfer Out", cancellationToken);
 
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                transferFrom!.Id,
-                request.FromAccountId, _userContext.UserId);
+                request.FromAccountId, transferFrom!.Id, _userContext.UserId);
 
             _logger.LogInformation("----- Transfer Money from Account - Transaction: {@Transaction}", transactionFrom);
 
             await _transactionRepository.SaveAsync(transactionFrom, cancellationToken);
 
-            var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description, transferTo!.Id,
-                request.ToAccountId, _userContext.UserId);
+            var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
+                request.ToAccountId, transferTo!.Id, _userContext.UserId);
 
             _logger.LogInformation("----- Transfer Money to Account - Transaction: {@Transaction}", transactionTo);
 

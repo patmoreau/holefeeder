@@ -1,0 +1,119 @@
+using System.Net;
+
+using FluentAssertions;
+
+using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Extensions;
+using Holefeeder.Infrastructure.Entities;
+using Holefeeder.Infrastructure.Mapping;
+
+using Xunit;
+using Xunit.Abstractions;
+
+using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.TransactionBuilder;
+using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
+
+namespace Holefeeder.FunctionalTests.Features.Transactions;
+
+public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
+{
+    private readonly TransactionMapper _mapper = new(new TagsMapper(), new AccountMapper(), new CategoryMapper());
+    private readonly HolefeederDatabaseDriver _databaseDriver;
+
+    public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
+        apiApplicationDriver, testOutputHelper)
+    {
+        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _databaseDriver.ResetStateAsync().Wait();
+    }
+
+    [Fact]
+    public async Task InvalidRequest()
+    {
+        Transaction entity = default!;
+        await Given(() =>
+            {
+                entity = ATransaction()
+                    .OfAmount(0)
+                    .Build();
+            })
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(
+                () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."))
+            .RunScenarioAsync();
+    }
+
+    [Fact]
+    public async Task AuthorizedUser()
+    {
+        Transaction entity = null!;
+
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ThenUserShouldBeAuthorizedToAccessEndpoint)
+            .RunScenarioAsync();
+    }
+
+    [Fact]
+    public async Task ForbiddenUser()
+    {
+        Transaction entity = null!;
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsForbidden())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ShouldBeForbiddenToAccessEndpoint)
+            .RunScenarioAsync();
+    }
+
+    [Fact]
+    public async Task UnauthorizedUser()
+    {
+        Transaction entity = null!;
+        await Given(() => entity = ATransaction().Build())
+            .Given(() => User.IsUnauthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(ShouldNotBeAuthorizedToAccessEndpoint)
+            .RunScenarioAsync();
+    }
+
+    [Fact]
+    public async Task ValidRequest()
+    {
+        AccountEntity account = null!;
+        CategoryEntity category = null!;
+        Transaction entity = null!;
+        Guid id = Guid.Empty;
+
+        await Given(async () => account = await GivenAnActiveAccount()
+                .ForUser(AuthorizedUserId)
+                .SavedInDb(_databaseDriver))
+            .Given(async () => category = await GivenACategory()
+                .ForUser(AuthorizedUserId)
+                .SavedInDb(_databaseDriver))
+            .Given(() => entity = ATransaction()
+                .ForAccount(account)
+                .ForCategory(category)
+                .ForUser(AuthorizedUserId)
+                .Build())
+            .Given(() => User.IsAuthorized())
+            .When(() => Transaction.MakesPurchase(entity))
+            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+            .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+            .Then(async () =>
+            {
+                var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(id, entity.UserId);
+
+                _mapper.MapToModelOrNull(result).Should()
+                    .NotBeNull()
+                    .And
+                    .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));
+
+            })
+            .RunScenarioAsync();
+    }
+}

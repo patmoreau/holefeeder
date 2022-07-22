@@ -7,15 +7,19 @@ using FluentAssertions;
 
 using Holefeeder.FunctionalTests.Infrastructure;
 
+using Xunit.Abstractions;
+
 namespace Holefeeder.FunctionalTests.Drivers;
 
 public class HttpClientDriver
 {
     private readonly Lazy<HttpClient> _httpClient;
+    private readonly ITestOutputHelper _testOutputHelper;
 
-    public HttpClientDriver(Lazy<HttpClient> httpClient)
+    public HttpClientDriver(Lazy<HttpClient> httpClient, ITestOutputHelper testOutputHelper)
     {
         _httpClient = httpClient;
+        _testOutputHelper = testOutputHelper;
     }
 
     public HttpResponseMessage? ResponseMessage { get; private set; }
@@ -23,9 +27,11 @@ public class HttpClientDriver
     private async Task SendRequest(HttpRequestMessage requestMessage)
     {
         ResponseMessage = await _httpClient.Value.SendAsync(requestMessage);
+
+        LogUnexpectedErrors();
     }
 
-    internal Task SendGetRequest(ApiResources apiResource, string? query = null)
+    public Task SendGetRequest(ApiResources apiResource, string? query = null)
     {
         var baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
         var fullUri = baseUri;
@@ -39,7 +45,7 @@ public class HttpClientDriver
         return SendRequest(request);
     }
 
-    internal Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
+    public Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
         HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
@@ -47,7 +53,7 @@ public class HttpClientDriver
         return SendRequest(request);
     }
 
-    internal Task SendPostRequest(ApiResources apiResource, string? body = null)
+    public Task SendPostRequest(ApiResources apiResource, string? body = null)
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
 
@@ -99,5 +105,17 @@ public class HttpClientDriver
     public void UnAuthenticate()
     {
         _httpClient.Value.DefaultRequestHeaders.Authorization = null;
+    }
+
+    private void LogUnexpectedErrors()
+    {
+        if (ResponseMessage?.StatusCode != HttpStatusCode.InternalServerError)
+        {
+            return;
+        }
+
+        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+
+        _testOutputHelper.WriteLine($"HTTP 500 Response: {resultAsString ?? "<unknown>"}");
     }
 }

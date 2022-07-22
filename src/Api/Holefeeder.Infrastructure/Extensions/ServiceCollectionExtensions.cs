@@ -3,7 +3,6 @@
 using Dapper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Cashflows;
 using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.StoreItems.Queries;

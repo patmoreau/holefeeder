@@ -7,6 +7,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -17,7 +18,8 @@ public class ScenarioModifyStoreItem : BaseScenario
 {
     private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
 
-    public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
         _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
         _objectStoreDatabaseDriver.ResetStateAsync().Wait();
@@ -34,7 +36,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         await WhenUserModifyStoreItem(storeItem);
 
-        ThenShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
 
     [Fact]
@@ -58,7 +60,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         await WhenUserModifyStoreItem(storeItem);
 
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        ShouldBeForbiddenToAccessEndpoint();
     }
 
     [Fact]
@@ -70,7 +72,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         await WhenUserModifyStoreItem(storeItem);
 
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]

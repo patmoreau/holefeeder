@@ -84,7 +84,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
     interactionType: InteractionType.Redirect,
     protectedResourceMap: new Map([
       // ['https://graph.microsoft.com/v1.0/me', ['https://graph.microsoft.com/User.Read']],
-      ['/gateway', [...apiConfig.scopes]],
+      ['/api', [...apiConfig.scopes]],
     ])
   };
 }

@@ -22,7 +22,7 @@ public class DeleteTransaction : ICarterModule
         app.MapDelete("api/v2/transactions/{id:guid}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(id), cancellationToken);
+                    await mediator.Send(new Request(id), cancellationToken);
                     return Results.NoContent();
                 })
             .Produces(StatusCodes.Status204NoContent)

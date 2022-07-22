@@ -2,7 +2,7 @@ using Carter;
 
 using FluentValidation;
 
-using Holefeeder.Application.Features.Cashflows.Exceptions;
+using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Holefeeder.Application.Features.Cashflows.Queries;
+namespace Holefeeder.Application.Features.Transactions.Queries;
 
 public class GetCashflow : ICarterModule
 {
@@ -27,7 +27,7 @@ public class GetCashflow : ICarterModule
             .Produces<CashflowInfoViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .WithTags(nameof(Cashflows))
+            .WithTags(nameof(Transactions))
             .WithName(nameof(GetCashflow))
             .RequireAuthorization();
     }

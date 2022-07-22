@@ -3,13 +3,19 @@ using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class TransactionEntityBuilder : IEntityBuilder<TransactionEntity>
+internal class TransactionEntityBuilder : IBuilder<TransactionEntity>
 {
     private TransactionEntity _entity;
 
     public static TransactionEntityBuilder GivenATransaction() => new();
 
     private TransactionEntityBuilder() => _entity = new TransactionEntityFactory().Generate();
+
+    public TransactionEntityBuilder OfAmount(decimal amount)
+    {
+        _entity = _entity with {Amount = amount};
+        return this;
+    }
 
     public TransactionEntityBuilder ForAccount(AccountEntity entity)
     {

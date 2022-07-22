@@ -59,7 +59,7 @@ public record Category : IAggregateRoot
         get => _userId;
         private init
         {
-            if (value.Equals(default))
+            if (value.Equals(default(Guid)))
             {
                 throw new CategoryDomainException($"{nameof(UserId)} is required");
             }

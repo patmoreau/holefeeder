@@ -1,6 +1,6 @@
 ﻿using Holefeeder.Application.Models;
 
-namespace Holefeeder.Application.Features.Cashflows;
+namespace Holefeeder.Application.Features.Transactions;
 
 public interface IUpcomingQueriesRepository
 {

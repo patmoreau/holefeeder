@@ -8,6 +8,7 @@ using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Xunit;
+using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -18,7 +19,8 @@ public class ScenarioGetAccounts : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
 
-    public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
         _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _holefeederDatabaseDriver.ResetStateAsync().Wait();
@@ -31,7 +33,7 @@ public class ScenarioGetAccounts : BaseScenario
 
         await WhenUserTriesToQuery(ApiResources.GetAccounts, offset: -1);
 
-        ThenShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
 
     [Fact]
@@ -51,7 +53,7 @@ public class ScenarioGetAccounts : BaseScenario
 
         await WhenUserTriesToQuery(ApiResources.GetAccounts);
 
-        ThenUserShouldBeForbiddenToAccessEndpoint();
+        ShouldBeForbiddenToAccessEndpoint();
     }
 
     [Fact]
@@ -61,7 +63,7 @@ public class ScenarioGetAccounts : BaseScenario
 
         await WhenUserTriesToQuery(ApiResources.GetAccounts);
 
-        ThenUserShouldNotBeAuthorizedToAccessEndpoint();
+        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]

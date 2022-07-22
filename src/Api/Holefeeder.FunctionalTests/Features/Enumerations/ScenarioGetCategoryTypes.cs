@@ -9,12 +9,14 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetCategoryTypes : BaseScenario
 {
-    public ScenarioGetCategoryTypes(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioGetCategoryTypes(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
     }
 

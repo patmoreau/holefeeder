@@ -3,7 +3,7 @@
 using Dapper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Cashflows;
+using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.Models;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Entities;

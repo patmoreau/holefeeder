@@ -3,7 +3,7 @@ using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class StoreItemEntityBuilder : IEntityBuilder<StoreItemEntity>
+internal class StoreItemEntityBuilder : IBuilder<StoreItemEntity>
 {
     private StoreItemEntity _entity;
 

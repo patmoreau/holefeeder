@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Globalization;
 
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.SeedWork;
@@ -8,41 +7,43 @@ namespace Holefeeder.Domain.Features.Transactions;
 
 public record Cashflow : IAggregateRoot
 {
-    private readonly decimal _amount;
+    private readonly Guid _id;
+    private readonly DateTime _effectiveDate;
     private readonly int _frequency;
     private readonly int _recurrence;
+    private readonly decimal _amount;
+    private readonly Guid _accountId;
+    private readonly Guid _categoryId;
+    private readonly Guid _userId;
 
-    public Cashflow(Guid id, DateTime effectiveDate, decimal amount, Guid userId)
+    public Guid Id
     {
-        if (id.Equals(default))
+        get => _id;
+        init
         {
-            throw new TransactionDomainException($"{nameof(Id)} is required");
+            if (value.Equals(Guid.Empty))
+            {
+                throw new TransactionDomainException($"{nameof(Id)} is required", nameof(Cashflow));
+            }
+
+            _id = value;
         }
-
-        Id = id;
-
-        if (effectiveDate.Equals(default))
-        {
-            throw new TransactionDomainException($"{nameof(EffectiveDate)} is required");
-        }
-
-        EffectiveDate = effectiveDate;
-
-        Amount = amount;
-
-        if (userId.Equals(default))
-        {
-            throw new TransactionDomainException($"{nameof(UserId)} is required");
-        }
-
-        UserId = userId;
-
-        Tags = ImmutableList<string>.Empty;
     }
 
-    public Guid Id { get; }
+    public DateTime EffectiveDate
+    {
+        get => _effectiveDate;
+        init
+        {
+            if (value.Equals(default))
+            {
+                throw new TransactionDomainException($"{nameof(EffectiveDate)} is required", nameof(Cashflow));
+            }
 
-    public DateTime EffectiveDate { get; init; }
+            _effectiveDate = value;
+        }
+    }
+
 
     public DateIntervalType IntervalType { get; init; } = DateIntervalType.Weekly;
 
@@ -53,7 +54,7 @@ public record Cashflow : IAggregateRoot
         {
             if (value <= 0)
             {
-                throw new TransactionDomainException($"{nameof(Frequency)} must be positive");
+                throw new TransactionDomainException($"{nameof(Frequency)} must be positive", nameof(Cashflow));
             }
 
             _frequency = value;
@@ -67,7 +68,7 @@ public record Cashflow : IAggregateRoot
         {
             if (value < 0)
             {
-                throw new TransactionDomainException($"{nameof(Recurrence)} cannot be negative");
+                throw new TransactionDomainException($"{nameof(Recurrence)} cannot be negative", nameof(Cashflow));
             }
 
             _recurrence = value;
@@ -81,7 +82,7 @@ public record Cashflow : IAggregateRoot
         {
             if (value < 0m)
             {
-                throw new TransactionDomainException($"{nameof(Amount)} cannot be negative");
+                throw new TransactionDomainException($"{nameof(Amount)} cannot be negative", nameof(Cashflow));
             }
 
             _amount = value;
@@ -90,21 +91,60 @@ public record Cashflow : IAggregateRoot
 
     public string Description { get; init; } = string.Empty;
 
-    public Guid AccountId { get; init; }
+    public Guid AccountId
+    {
+        get => _accountId;
+        init
+        {
+            if (value.Equals(Guid.Empty))
+            {
+                throw new TransactionDomainException($"{nameof(AccountId)} is required", nameof(Cashflow));
+            }
 
-    public Guid CategoryId { get; init; }
+            _accountId = value;
+        }
+    }
 
-    public IReadOnlyList<string> Tags { get; private init; }
+    public Guid CategoryId
+    {
+        get => _categoryId;
+        init
+        {
+            if (value.Equals(Guid.Empty))
+            {
+                throw new TransactionDomainException($"{nameof(CategoryId)} is required", nameof(Cashflow));
+            }
+
+            _categoryId = value;
+        }
+    }
+
+    public IReadOnlyList<string> Tags { get; private init; } = ImmutableList<string>.Empty;
 
     public bool Inactive { get; init; }
 
-    public Guid UserId { get; init; }
-
-    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency,
-        int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+    public Guid UserId
     {
-        return new(Guid.NewGuid(), effectiveDate, amount, userId)
+        get => _userId;
+        init
         {
+            if (value.Equals(Guid.Empty))
+            {
+                throw new TransactionDomainException($"{nameof(UserId)} is required", nameof(Cashflow));
+            }
+
+            _userId = value;
+        }
+    }
+
+    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+    {
+        return new()
+        {
+            Id = Guid.NewGuid(),
+            EffectiveDate = effectiveDate,
+            Amount = amount,
+            UserId = userId,
             IntervalType = intervalType,
             Frequency = frequency,
             Recurrence = recurrence,
@@ -114,18 +154,19 @@ public record Cashflow : IAggregateRoot
         };
     }
 
-    public Cashflow AddTags(params string[] tags)
+    public Cashflow Cancel()
     {
-        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t) &&
-                                      !Tags.Contains(t,
-                                          StringComparer.Create(CultureInfo.InvariantCulture,
-                                              CompareOptions.IgnoreCase)))
-            .ToList();
-
-        if (!newTags.Any())
+        if (Inactive)
         {
-            return this;
+            throw new TransactionDomainException($"Cashflow {Id} already inactive", nameof(Cashflow));
         }
+
+        return this with {Inactive = true};
+    }
+
+    public Cashflow SetTags(params string[] tags)
+    {
+        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
         return this with {Tags = newTags.ToImmutableArray()};
     }

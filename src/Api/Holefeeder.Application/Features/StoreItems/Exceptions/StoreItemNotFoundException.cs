@@ -12,5 +12,5 @@ public class StoreItemNotFoundException : DomainException
     {
     }
 
-    public override string Context => nameof(StoreItemNotFoundException);
+    public override string Context => nameof(StoreItems);
 }

@@ -74,10 +74,10 @@ public class PayCashflow : ICarterModule
             }
 
             var transaction = Transaction.Create(request.Date, request.Amount, cashflow.Description,
-                cashflow.CategoryId, cashflow.AccountId, request.CashflowId, request.CashflowDate,
-                _userContext.UserId);
+                    cashflow.AccountId, cashflow.CategoryId, _userContext.UserId)
+                .ApplyCashflow(request.CashflowId, request.CashflowDate);
 
-            transaction = transaction.AddTags(cashflow.Tags.ToArray());
+            transaction = transaction.SetTags(cashflow.Tags.ToArray());
 
             _logger.LogInformation("----- Pay Cashflow - Transaction: {@Transaction}", transaction);
 

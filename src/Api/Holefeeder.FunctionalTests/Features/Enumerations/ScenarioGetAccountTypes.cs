@@ -8,12 +8,14 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetAccountTypes : BaseScenario
 {
-    public ScenarioGetAccountTypes(ApiApplicationDriver apiApplicationDriver) : base(apiApplicationDriver)
+    public ScenarioGetAccountTypes(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, testOutputHelper)
     {
     }
 

@@ -4,6 +4,7 @@ using FluentValidation;
 
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
 
 using MediatR;
@@ -46,15 +47,32 @@ public class MakePurchase : ICarterModule
         public Guid CategoryId { get; init; }
 
         public string[] Tags { get; init; } = null!;
+
+        public CashflowRequest? Cashflow { get; init; }
+
+        public record CashflowRequest(DateTime EffectiveDate, DateIntervalType IntervalType, int Frequency,
+            int Recurrence);
     }
 
     public class Validator : AbstractValidator<Request>
     {
-        public Validator()
+        public Validator(IUserContext userContext, ITransactionRepository repository)
         {
-            RuleFor(command => command.AccountId).NotNull().NotEmpty();
-            RuleFor(command => command.CategoryId).NotNull().NotEmpty();
-            RuleFor(command => command.Date).NotNull();
+            RuleFor(command => command.AccountId)
+                .NotNull()
+                .NotEmpty()
+                .MustAsync(async (id, cancellation) =>
+                    (await repository.AccountExists(id, userContext.UserId, cancellation)))
+                .WithMessage(x => $"Account '{x.AccountId}' does not exists.")
+                .WithErrorCode("NotExistsValidator");
+            RuleFor(command => command.CategoryId)
+                .NotNull()
+                .NotEmpty()
+                .MustAsync(async (id, cancellation) =>
+                    (await repository.CategoryExists(id, userContext.UserId, cancellation)))
+                .WithMessage(x => $"Category '{x.CategoryId}' does not exists.")
+                .WithErrorCode("NotExistsValidator");
+            RuleFor(command => command.Date).NotEmpty();
             RuleFor(command => command.Amount).GreaterThan(0);
         }
     }
@@ -64,11 +82,14 @@ public class MakePurchase : ICarterModule
         private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly ICashflowRepository _cashflowRepository;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
+            ICashflowRepository cashflowRepository, ILogger<Handler> logger)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
+            _cashflowRepository = cashflowRepository;
             _logger = logger;
         }
 
@@ -76,11 +97,17 @@ public class MakePurchase : ICarterModule
         {
             try
             {
-                var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
-                    request.CategoryId,
-                    request.AccountId, _userContext.UserId);
+                var cashflowId = await HandleCashflow(request, cancellationToken);
 
-                transaction = transaction.AddTags(request.Tags);
+                var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
+                        request.AccountId, request.CategoryId, _userContext.UserId);
+
+                if (cashflowId is not null)
+                {
+                    transaction = transaction.ApplyCashflow(cashflowId.Value, request.Date);
+                }
+
+                transaction = transaction.SetTags(request.Tags);
 
                 _logger.LogInformation("----- Making Purchase - Transaction: {@Transaction}", transaction);
 
@@ -95,6 +122,25 @@ public class MakePurchase : ICarterModule
                 _transactionRepository.UnitOfWork.Dispose();
                 throw;
             }
+        }
+
+        private async Task<Guid?> HandleCashflow(Request request, CancellationToken cancellationToken)
+        {
+            if (request.Cashflow is null)
+            {
+                return null;
+            }
+
+            var cashflowRequest = request.Cashflow;
+            var cashflow = Cashflow.Create(cashflowRequest.EffectiveDate, cashflowRequest.IntervalType,
+                cashflowRequest.Frequency, cashflowRequest.Recurrence, request.Amount, request.Description,
+                request.CategoryId, request.AccountId, _userContext.UserId);
+
+            cashflow = cashflow.SetTags(request.Tags);
+
+            await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
+
+            return cashflow.Id;
         }
     }
 }

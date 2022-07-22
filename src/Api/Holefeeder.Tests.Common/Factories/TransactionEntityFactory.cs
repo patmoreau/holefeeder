@@ -18,7 +18,7 @@ internal sealed class TransactionEntityFactory : AutoFaker<TransactionEntity>
         RuleFor(x => x.CategoryId, faker => faker.Random.Guid());
         RuleFor(x => x.CashflowId, _ => null);
         RuleFor(x => x.CashflowDate, _ => null);
-        RuleFor(x => x.Tags, faker => string.Join(';', faker.Random.WordsArray(0,5)));
+        RuleFor(x => x.Tags, faker => string.Join(',', faker.Random.WordsArray(0,5)));
         RuleFor(x => x.UserId, faker => faker.Random.Guid());
     }
 }
