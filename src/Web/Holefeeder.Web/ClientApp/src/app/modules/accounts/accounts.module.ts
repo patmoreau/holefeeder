@@ -14,6 +14,7 @@ import {ModifyAccountAdapter} from './models/modify-account-command.model';
 import {OpenAccountComponent} from './open-account/open-account.component';
 import {ModifyAccountComponent} from './modify-account/modify-account.component';
 import {AccountCommandsService} from "@app/modules/accounts/services/account-commands.service";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -32,6 +33,7 @@ const COMPONENTS = [
     ReactiveFormsModule,
     FormsModule,
     SharedModule,
+    NgbModule,
     AccountsRoutingModule
   ],
   declarations: [COMPONENTS],

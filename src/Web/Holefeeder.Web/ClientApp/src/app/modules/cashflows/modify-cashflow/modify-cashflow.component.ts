@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params} from '@angular/router';
-import {NgbDateAdapter, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, switchMap, tap} from 'rxjs';
 import {Category} from '@app/core/models/category.model';
 import {CashflowDetail} from '@app/core/models/cashflow-detail.model';
@@ -12,15 +12,14 @@ import {ModalService} from "@app/core/modals/modal.service";
 import {ModifyCashflowCommandAdapter} from "@app/core/models/modify-cashflow-command.model";
 import {AccountsService} from "@app/core";
 import {CategoriesService} from "@app/core/services/categories.service";
-import {DateIntervalTypeNames, filterNullish, filterTrue, NgbDateParserAdapter} from "@app/shared";
+import {DateIntervalTypeNames, filterNullish, filterTrue} from "@app/shared";
 
 const cashflowIdParamName = 'cashflowId';
 
 @Component({
   selector: 'app-cashflow-edit',
   templateUrl: './modify-cashflow.component.html',
-  styleUrls: ['./modify-cashflow.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateParserAdapter}]
+  styleUrls: ['./modify-cashflow.component.scss']
 })
 export class ModifyCashflowComponent implements OnInit {
 

@@ -1,5 +1,4 @@
-import {BehaviorSubject, Observable} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import {BehaviorSubject, distinctUntilChanged, map, Observable} from 'rxjs';
 
 export abstract class StateService<T> {
   private state$: BehaviorSubject<T>;
