@@ -11,18 +11,5 @@
     <label for="frequency">Frequency</label>
     <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"/>
   </div>
-  <div class="form-group">
-    <label for="datepicker">Effective date</label>
-    <div class="input-group mb-2">
-      <input #date="ngbDatepicker" (click)="date.toggle()" [firstDayOfWeek]=7 class="form-control"
-             formControlName="effectiveDate"
-             id="datepicker" ngbDatepicker placeholder="yyyy-mm-dd"/>
-      <div class="input-group-append">
-        <a (click)="date.toggle()" class="btn btn-outline-secondary text-secondary">
-          <em class="bi bi-calendar-event"></em>
-        </a>
-      </div>
-    </div>
-    <em *ngIf="form.get('effectiveDate')?.invalid && form.get('effectiveDate')?.dirty" class="form-text text-danger">Required</em>
-  </div>
+  <app-date-select label="Effective date" formControlName="effectiveDate"></app-date-select>
 </div>

@@ -15,19 +15,7 @@
     <input class="form-control" formControlName="openBalance" id="openBalance" placeholder="amount..." required
            type="number"/>
   </div>
-  <div class="form-group">
-    <label for="openDate">Opening date</label>
-    <div class="input-group mb-2">
-      <input #date="ngbDatepicker" (click)="date.toggle()" [firstDayOfWeek]=7 class="form-control"
-             formControlName="openDate"
-             id="openDate" ngbDatepicker placeholder="yyyy-mm-dd"/>
-      <div class="input-group-append">
-        <a (click)="date.toggle()" class="btn btn-outline-secondary">
-          <em class="bi bi-calendar-event"></em>
-        </a>
-      </div>
-    </div>
-  </div>
+  <app-date-select label="Opening date" formControlName="openDate"></app-date-select>
   <div class="form-group">
     <label for="description">Description</label>
     <input class="form-control" formControlName="description" id="description" placeholder="description..."

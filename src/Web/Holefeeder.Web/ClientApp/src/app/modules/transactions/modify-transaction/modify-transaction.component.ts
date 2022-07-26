@@ -38,7 +38,7 @@ export class ModifyTransactionComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
-      date: [''],
+      date: ['', [Validators.required]],
       account: ['', [Validators.required]],
       category: ['', [Validators.required]],
       description: [''],

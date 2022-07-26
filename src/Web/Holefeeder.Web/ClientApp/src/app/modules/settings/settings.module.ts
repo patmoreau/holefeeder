@@ -6,14 +6,14 @@ import {SettingsComponent} from './settings.component';
 import {AccountComponent} from './account/account.component';
 import {GeneralComponent} from './general/general.component';
 import {SettingsRoutingModule} from './settings-routing.module';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {SharedModule} from "@app/shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule,
+    SharedModule,
     SettingsRoutingModule
   ],
   declarations: [SettingsComponent, AccountComponent, GeneralComponent],

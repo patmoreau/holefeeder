@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormGroup, FormGroupDirective} from '@angular/forms';
-import {NgbDateAdapter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateParserAdapter} from '@app/shared/ngb-date-parser.adapter';
 import {combineLatest, Observable} from 'rxjs';
 import {CategoriesService} from '@app/core/services/categories.service';
 import {Category} from '@app/core/models/category.model';
@@ -11,8 +9,7 @@ import {AccountsService} from '@app/core/services/accounts.service';
 @Component({
   selector: 'app-transaction-edit',
   templateUrl: './transaction-edit.component.html',
-  styleUrls: ['./transaction-edit.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateParserAdapter}]
+  styleUrls: ['./transaction-edit.component.scss']
 })
 export class TransactionEditComponent implements OnInit {
 
