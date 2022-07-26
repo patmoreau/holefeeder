@@ -3,8 +3,6 @@ import {Location} from '@angular/common';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params} from '@angular/router';
 import {NgbDateAdapter, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateParserAdapter} from '@app/shared/ngb-date-parser.adapter';
-import {DateIntervalTypeNames} from '@app/shared/enums/date-interval-type.enum';
 import {Observable, switchMap, tap} from 'rxjs';
 import {Category} from '@app/core/models/category.model';
 import {CashflowDetail} from '@app/core/models/cashflow-detail.model';
@@ -12,9 +10,9 @@ import {CashflowsService} from '@app/core/services/cashflows.service';
 import {Account} from '@app/core/models/account.model';
 import {ModalService} from "@app/core/modals/modal.service";
 import {ModifyCashflowCommandAdapter} from "@app/core/models/modify-cashflow-command.model";
-import {filterNullish, filterTrue} from "@app/shared/rxjs.helper";
 import {AccountsService} from "@app/core";
 import {CategoriesService} from "@app/core/services/categories.service";
+import {DateIntervalTypeNames, filterNullish, filterTrue, NgbDateParserAdapter} from "@app/shared";
 
 const cashflowIdParamName = 'cashflowId';
 

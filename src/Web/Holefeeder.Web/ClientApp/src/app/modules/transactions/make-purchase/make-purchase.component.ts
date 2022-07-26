@@ -9,7 +9,7 @@ import {TransferMoneyCommandAdapter} from "@app/core/models/transfer-money-comma
 import {combineLatest, filter, Observable, tap} from "rxjs";
 import {TransactionsService} from "@app/core/services/transactions.service";
 import {MakePurchaseCommandAdapter} from "@app/core/models/make-purchase-command.model";
-import {DateIntervalType} from "@app/shared/enums/date-interval-type.enum";
+import {DateIntervalType} from "@app/shared";
 
 const accountIdParamName = 'accountId';
 

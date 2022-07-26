@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ControlContainer, FormGroup} from "@angular/forms";
-import {DateIntervalTypeNames} from "@app/shared/enums/date-interval-type.enum";
+import {DateIntervalTypeNames, NgbDateParserAdapter} from "@app/shared";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateParserAdapter} from "@app/shared/ngb-date-parser.adapter";
 
 @Component({
   selector: '[formGroup] app-recurring-cashflow,[formGroupName] app-recurring-cashflow',

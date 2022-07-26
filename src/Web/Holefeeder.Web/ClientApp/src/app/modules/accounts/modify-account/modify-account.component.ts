@@ -4,7 +4,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable, switchMap, tap} from 'rxjs';
 import {Location} from '@angular/common';
 import {ModifyAccountAdapter} from '../models/modify-account-command.model';
-import {filterNullish, filterTrue} from '@app/shared/rxjs.helper';
+import {filterNullish, filterTrue} from '@app/shared';
 import {AccountCommandsService} from '../services/account-commands.service';
 import {AccountsService} from "@app/core";
 import {CloseAccountAdapter} from "@app/modules/accounts/models/close-account-command.model";

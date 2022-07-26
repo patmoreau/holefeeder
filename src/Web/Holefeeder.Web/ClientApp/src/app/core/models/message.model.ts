@@ -1,5 +1,4 @@
-import {MessageAction} from "@app/shared/enums/message-action.enum";
-import {MessageType} from "@app/shared/enums/message-type.enum";
+import {MessageAction, MessageType} from "@app/shared";
 
 export class Message {
   static Empty = new Message(MessageType.general, MessageAction.noAction);

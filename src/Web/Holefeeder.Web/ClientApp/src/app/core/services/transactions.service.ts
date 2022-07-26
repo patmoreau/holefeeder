@@ -1,8 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import {MessageService} from "@app/core/services/message.service";
 import {Observable, of, tap} from "rxjs";
-import {MessageAction} from "@app/shared/enums/message-action.enum";
-import {MessageType} from "@app/shared/enums/message-type.enum";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {formatErrors, mapToPagingInfo} from "@app/core/utils/api.utils";
@@ -15,6 +13,7 @@ import {
   TransactionDetailAdapter,
   TransferMoneyCommand
 } from "@app/core";
+import {MessageAction, MessageType} from "@app/shared";
 
 const apiRoute: string = 'api/v2/transactions';
 

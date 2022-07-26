@@ -3,10 +3,9 @@ import {MessageService} from "@app/core/services/message.service";
 import {StateService} from "@app/core/services/state.service";
 import {catchError, filter, map, Observable, Subject, take} from "rxjs";
 import {Account, AccountAdapter, PagingInfo} from "@app/core";
-import {MessageType} from "@app/shared/enums/message-type.enum";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {formatErrors, mapToPagingInfo} from "../utils/api.utils";
-import {filterNullish} from "@app/shared/rxjs.helper";
+import {filterNullish, MessageType} from "@app/shared";
 
 const apiRoute: string = 'api/v2/accounts';
 

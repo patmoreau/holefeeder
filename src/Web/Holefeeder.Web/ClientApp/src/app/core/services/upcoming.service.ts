@@ -1,12 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
-import {StateService} from '@app/core/services/state.service';
-import {MessageType} from '@app/shared/enums/message-type.enum';
-import {filterNullish} from '@app/shared/rxjs.helper';
-import {combineLatest, filter, map, Observable, Subject, switchMap, take} from 'rxjs';
-import {MessageService} from './message.service';
-import {SettingsService} from './settings.service';
-import {DateInterval, Upcoming, UpcomingAdapter} from "@app/core";
+import {DateInterval, MessageService, Upcoming, UpcomingAdapter} from "@app/core";
+import {Inject, Injectable} from "@angular/core";
+import {switchMap} from "rxjs/operators";
+import {StateService} from "@app/core/services/state.service";
+import {combineLatest, filter, map, Observable, Subject, take} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
+import {filterNullish, MessageType} from "@app/shared";
+import {SettingsService} from "@app/core/services/settings.service";
 import {format} from "date-fns";
 
 const apiRoute: string = 'api/v2/cashflows/get-upcoming';

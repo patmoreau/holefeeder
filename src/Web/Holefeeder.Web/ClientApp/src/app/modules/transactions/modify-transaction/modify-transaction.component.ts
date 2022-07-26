@@ -7,7 +7,7 @@ import {TransactionsService} from '@app/core/services/transactions.service';
 import {ModifyTransactionCommandAdapter} from '@app/core/models/modify-transaction-command.model';
 import {TransactionDetail} from '@app/core/models/transaction-detail.model';
 import {ModalService} from "@app/core/modals/modal.service";
-import {filterTrue} from "@app/shared/rxjs.helper";
+import {filterTrue} from "@app/shared";
 
 const transactionIdParamName = 'transactionId';
 

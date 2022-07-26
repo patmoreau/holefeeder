@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
-import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
-import {AccountTypeNames} from '@app/shared/enums/account-type.enum';
+import {accountTypeMultiplier, AccountTypeNames, categoryTypeMultiplier} from '@app/shared';
 import {Account, AccountsService, Upcoming, UpcomingService} from "@app/core";
 
 @Component({

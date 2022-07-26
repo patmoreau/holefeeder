@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
-import {dateToUtc} from "@app/shared/date-parser.helper";
-import {Adapter} from "@app/shared/interfaces/adapter.interface";
+import {Adapter, dateToUtc} from "@app/shared";
 
 export class ModifyTransactionCommand {
   constructor(

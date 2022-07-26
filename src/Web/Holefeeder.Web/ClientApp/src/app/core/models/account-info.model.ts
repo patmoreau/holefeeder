@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Adapter} from '@app/shared/interfaces/adapter.interface';
+import {Adapter} from '@app/shared';
 
 export class AccountInfo {
   constructor(

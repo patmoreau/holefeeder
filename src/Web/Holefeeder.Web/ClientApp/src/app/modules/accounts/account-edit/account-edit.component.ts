@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormGroupDirective} from '@angular/forms';
-import {AccountTypeNames} from '@app/shared/enums/account-type.enum';
+import {AccountTypeNames, NgbDateParserAdapter} from '@app/shared';
 import {NgbDateAdapter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateParserAdapter} from '@app/shared/ngb-date-parser.adapter';
 
 @Component({
   selector: 'app-account-edit',

@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {MessageType} from '@app/shared/enums/message-type.enum';
-import {MessageAction} from '@app/shared/enums/message-action.enum';
 import {MessageService, PayCashflowCommandAdapter, TransactionsService, Upcoming, UpcomingService} from "@app/core";
+import {MessageAction, MessageType} from "@app/shared";
 
 @Component({
   selector: 'app-upcoming-list',

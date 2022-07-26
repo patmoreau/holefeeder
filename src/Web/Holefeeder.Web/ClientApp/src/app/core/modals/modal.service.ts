@@ -2,10 +2,7 @@ import {Injectable, Type} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, from, of, take} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dialog/confirm-dialog.component";
-import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
-import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
-import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog/delete-dialog.component";
+import {ConfirmDialogComponent, DeleteDialogComponent, InputDialogComponent, MessageDialogComponent} from "@app/shared";
 
 @Injectable({providedIn: 'root'})
 export class ModalService {

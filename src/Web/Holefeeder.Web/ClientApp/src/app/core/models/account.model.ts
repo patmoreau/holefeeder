@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {dateFromUtc} from '@app/shared/date-parser.helper';
-import {AccountType} from '@app/shared/enums/account-type.enum';
-import {Adapter} from '@app/shared/interfaces/adapter.interface';
+import {AccountType, Adapter, dateFromUtc} from "@app/shared";
 
 export class Account {
   constructor(
