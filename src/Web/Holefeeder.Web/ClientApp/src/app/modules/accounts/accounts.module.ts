@@ -1,7 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AccountsListComponent} from './accounts-list/accounts-list.component';
 import {AccountDetailsComponent} from './account-details/account-details.component';
 import {AccountsRoutingModule} from './accounts-routing.module';
@@ -15,6 +14,7 @@ import {ModifyAccountAdapter} from './models/modify-account-command.model';
 import {OpenAccountComponent} from './open-account/open-account.component';
 import {ModifyAccountComponent} from './modify-account/modify-account.component';
 import {AccountCommandsService} from "@app/modules/accounts/services/account-commands.service";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 const COMPONENTS = [
   AccountsListComponent,
@@ -22,7 +22,9 @@ const COMPONENTS = [
   AccountDetailsComponent,
   AccountsComponent,
   AccountUpcomingComponent,
-  AccountTransactionsComponent
+  AccountTransactionsComponent,
+  OpenAccountComponent,
+  ModifyAccountComponent
 ];
 
 @NgModule({
@@ -30,11 +32,11 @@ const COMPONENTS = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    NgbModule,
     SharedModule,
+    NgbModule,
     AccountsRoutingModule
   ],
-  declarations: [COMPONENTS, OpenAccountComponent, ModifyAccountComponent],
+  declarations: [COMPONENTS],
   providers: [
     OpenAccountAdapter,
     ModifyAccountAdapter,

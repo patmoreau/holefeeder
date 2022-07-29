@@ -1,8 +1,8 @@
 import {Inject, Injectable} from '@angular/core';
-import {ICategoryInfo} from '@app/shared/interfaces/category-info.interface';
+import {ICategoryInfo} from '@app/shared';
 import {Settings} from '@app/core/models/settings.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Statistics, StatisticsAdapter} from '../../models/statistics.model';
+import {Statistics, StatisticsAdapter} from '@app/core';
 import {catchError, map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {BaseApiService} from './base-api.service';

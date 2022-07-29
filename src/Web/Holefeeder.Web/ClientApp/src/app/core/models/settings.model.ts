@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DateIntervalType} from '@app/shared/enums/date-interval-type.enum';
-import {Adapter} from '@app/shared/interfaces/adapter.interface';
-import {nameofFactory} from '@app/shared/nameof-factory.helper';
 import {startOfToday} from 'date-fns';
+import {Adapter, DateIntervalType, nameofFactory} from "@app/shared";
 
 const nameof = nameofFactory<Settings>();
 

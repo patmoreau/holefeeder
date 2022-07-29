@@ -1,7 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Adapter} from "@app/shared/interfaces/adapter.interface";
-import {DateIntervalType} from "@app/shared/enums/date-interval-type.enum";
-import {dateToUtc} from "@app/shared/date-parser.helper";
+import {Adapter, DateIntervalType, dateToUtc} from "@app/shared";
 
 export class CashflowRequest {
   constructor(

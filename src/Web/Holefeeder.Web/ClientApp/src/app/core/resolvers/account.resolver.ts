@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
-import {catchError, first, Observable, tap} from 'rxjs';
-import {filterNullish} from "@app/shared/rxjs.helper";
-import {AccountsService} from "@app/core/services/accounts.service";
-import {Account} from '../models/account.model';
+import {Injectable} from "@angular/core";
+import {Account, AccountsService} from "@app/core";
+import {catchError, first, Observable, tap} from "rxjs";
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from "@angular/router";
+import {filterNullish} from "@app/shared";
 import {LoggerService} from "@app/core/logger/logger.service";
 
 @Injectable({providedIn: 'root'})

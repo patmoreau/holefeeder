@@ -1,8 +1,5 @@
-import {dateFromUtc} from "@app/shared/date-parser.helper";
-import {Adapter} from '@app/shared/interfaces/adapter.interface';
-import {Injectable} from '@angular/core';
-import {ICategoryInfo} from "@app/shared/interfaces/category-info.interface";
-import {IAccountInfo} from "@app/shared/interfaces/account-info.interface";
+import {Injectable} from "@angular/core";
+import {Adapter, dateFromUtc, IAccountInfo, ICategoryInfo} from "@app/shared";
 
 export class Upcoming {
   constructor(

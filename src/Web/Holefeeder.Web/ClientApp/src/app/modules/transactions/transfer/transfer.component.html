@@ -6,20 +6,7 @@
       <input class="form-control" dftaAutofocus formControlName="amount" id="amount" placeholder="transaction amount..."
              required type="number"/>
     </div>
-    <div class="form-group">
-      <label for="datepicker">Date</label>
-      <div class="input-group mb-2">
-        <input #date="ngbDatepicker" (click)="date.toggle()" [firstDayOfWeek]=7 class="form-control"
-               formControlName="date"
-               id="datepicker" ngbDatepicker placeholder="yyyy-mm-dd"/>
-        <div class="input-group-append">
-          <a (click)="date.toggle()" class="btn btn-outline-secondary text-secondary">
-            <em class="bi bi-calendar-event"></em>
-          </a>
-        </div>
-      </div>
-      <em *ngIf="form.get('date')?.invalid && form.get('date')?.dirty" class="form-text text-danger">Required</em>
-    </div>
+    <app-date-picker label="Date" formControlName="date" [required]="true"></app-date-picker>
     <div class="form-group">
       <label for="fromAccount">From</label>
       <select class="form-control" formControlName="fromAccount" id="fromAccount" required>

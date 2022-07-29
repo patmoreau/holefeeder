@@ -1,8 +1,7 @@
 import {ErrorHandler, Injectable} from '@angular/core';
-import {MessageAction} from '@app/shared/enums/message-action.enum';
-import {MessageType} from '@app/shared/enums/message-type.enum';
 import {MessageService} from '@app/core';
 import {LoggerService} from "@app/core/logger/logger.service";
+import {MessageAction, MessageType} from "@app/shared";
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

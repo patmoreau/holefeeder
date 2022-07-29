@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from '@angular/router';
-import {categoryTypeMultiplier} from '@app/shared/interfaces/category-type.interface';
-import {accountTypeMultiplier} from '@app/shared/interfaces/account-type.interface';
 import {filter, from, map, Observable, scan, switchMap, tap} from 'rxjs';
 import {Account, AccountsService, UpcomingService} from "@app/core";
 import {LoggerService} from "@app/core/logger/logger.service";
+import {accountTypeMultiplier, categoryTypeMultiplier} from "@app/shared";
 
 @Component({
   selector: 'app-account-details',

@@ -1,11 +1,8 @@
-import {Injectable} from '@angular/core';
-import {StateService} from '@app/core/services/state.service';
-import {MessageType} from '@app/shared/enums/message-type.enum';
-import {filter, Observable} from 'rxjs';
-import {MessageService} from './message.service';
-import {ToastItem, ToastItemAdapter, ToastType} from "@app/core/models/toast-item.model";
-import {MessageAction} from "@app/shared/enums/message-action.enum";
-import {Message} from "@app/core/models/message.model";
+import {filter, Observable} from "rxjs";
+import {Injectable} from "@angular/core";
+import {Message, MessageService, ToastItem, ToastItemAdapter, ToastType} from "@app/core";
+import {StateService} from "@app/core/services/state.service";
+import {MessageAction, MessageType} from "@app/shared";
 
 interface ToastsState {
   toasts: ToastItem[];

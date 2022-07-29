@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
-import {CategoryType} from "@app/shared/enums/category-type.enum";
-import {Adapter} from "@app/shared/interfaces/adapter.interface";
+import {Adapter, CategoryType} from "@app/shared";
 
 export class Category {
   constructor(

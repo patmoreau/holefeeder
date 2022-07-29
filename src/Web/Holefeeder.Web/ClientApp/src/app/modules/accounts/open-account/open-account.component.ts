@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {AccountType} from '@app/shared/enums/account-type.enum';
+import {AccountType} from '@app/shared';
 import {startOfToday} from 'date-fns';
 import {OpenAccountAdapter} from '../models/open-account-command.model';
 import {Location} from '@angular/common';

@@ -7,9 +7,8 @@ import {formatErrors} from '@app/core/utils/api.utils';
 import {ModifyAccountCommand} from '../models/modify-account-command.model';
 import {CloseAccountCommand} from "@app/modules/accounts/models/close-account-command.model";
 import {MessageService} from "@app/core";
-import {MessageType} from "@app/shared/enums/message-type.enum";
-import {MessageAction} from "@app/shared/enums/message-action.enum";
 import {LoggerService} from "@app/core/logger/logger.service";
+import {MessageAction, MessageType} from "@app/shared";
 
 const apiRoute: string = 'api/v2/accounts';
 

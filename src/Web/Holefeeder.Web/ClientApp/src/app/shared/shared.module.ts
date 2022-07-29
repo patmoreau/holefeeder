@@ -1,21 +1,25 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {DateViewComponent} from './components/date-view/date-view.component';
-import {TagsInputComponent} from './tags-input/tags-input.component';
-import {LoaderComponent} from './components/loader/loader.component';
-import {TransactionsListComponent} from './components/transactions-list/transactions-list.component';
-import {SubscriberService} from './services/subscriber.service';
-import {TransactionListItemComponent} from './components/transaction-list-item/transaction-list-item.component';
-import {UpcomingListComponent} from './components/upcoming-list/upcoming-list.component';
-import {AutofocusDirective} from './directives/autofocus.directive';
+import {TagsInputComponent} from "@app/shared/tags-input/tags-input.component";
+import {LoaderComponent} from "@app/shared/components/loader/loader.component";
+import {RecurringCashflowComponent} from "@app/shared/components/recurring-cashflow/recurring-cashflow.component";
+import {
+  TransactionListItemComponent
+} from "@app/shared/components/transaction-list-item/transaction-list-item.component";
+import {TransactionsListComponent} from "@app/shared/components/transactions-list/transactions-list.component";
+import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
+import {CommonModule} from "@angular/common";
 import {ToastViewComponent} from "@app/shared/components/toast-view/toast-view.component";
+import {NgModule} from "@angular/core";
+import {UpcomingListComponent} from "@app/shared/components/upcoming-list/upcoming-list.component";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
+import {DatePickerComponent} from "@app/shared/components/date-picker/date-picker.component";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmDialogComponent} from "@app/shared/components/modals/confirm-dialog/confirm-dialog.component";
 import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog/delete-dialog.component";
-import {MessageDialogComponent} from "@app/shared/components/modals/message-dialog/message-dialog.component";
-import {InputDialogComponent} from "@app/shared/components/modals/input-dialog/input-dialog.component";
-import { RecurringCashflowComponent } from './components/recurring-cashflow/recurring-cashflow.component';
+import {AutofocusDirective} from "@app/shared/directives/autofocus.directive";
+import {DateViewComponent} from "@app/shared/components/date-view/date-view.component";
+import {SubscriberService} from "@app/shared/services/subscriber.service";
+import {DateValidator, DateValidatorDirective} from "@app/shared/directives/date-validator.directive";
 
 const COMPONENTS = [
   DateViewComponent,
@@ -29,7 +33,10 @@ const COMPONENTS = [
   ConfirmDialogComponent,
   InputDialogComponent,
   MessageDialogComponent,
-  DeleteDialogComponent
+  DeleteDialogComponent,
+  RecurringCashflowComponent,
+  DatePickerComponent,
+  DateValidatorDirective
 ];
 
 @NgModule({
@@ -39,11 +46,9 @@ const COMPONENTS = [
     ReactiveFormsModule,
     NgbModule
   ],
-    exports: [COMPONENTS, RecurringCashflowComponent],
-  declarations: [COMPONENTS, RecurringCashflowComponent],
-  providers: [
-    SubscriberService
-  ]
+  exports: [COMPONENTS],
+  declarations: [COMPONENTS],
+  providers: [SubscriberService, DateValidator]
 })
 export class SharedModule {
 }

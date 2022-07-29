@@ -1,18 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {DateIntervalTypeNames} from '@app/shared/enums/date-interval-type.enum';
-import {NgbDateAdapter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateParserAdapter} from '@app/shared/ngb-date-parser.adapter';
 import {Observable, tap} from 'rxjs';
 import {SettingsService} from '@app/core/services/settings.service';
 import {Settings, SettingsAdapter} from '@app/core/models/settings.model';
+import {DateIntervalTypeNames} from "@app/shared";
 
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
-  styleUrls: ['./general.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateParserAdapter}]
+  styleUrls: ['./general.component.scss']
 })
 export class GeneralComponent implements OnInit {
   settings$: Observable<Settings> | undefined;

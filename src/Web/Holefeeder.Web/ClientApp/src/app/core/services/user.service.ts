@@ -1,13 +1,11 @@
 import {Injectable} from "@angular/core";
-import {MessageService} from "@app/core/services/message.service";
+import {MessageService, User, UserAdapter} from "@app/core";
 import {StateService} from "@app/core/services/state.service";
 import {filter, map, Observable, of} from "rxjs";
-import {MessageType} from "@app/shared/enums/message-type.enum";
-import {HttpClient} from "@angular/common/http";
-import {User, UserAdapter} from "@app/core/models/user.model";
-import {MsalBroadcastService, MsalService} from "@azure/msal-angular";
 import {AuthenticationResult, EventMessage, EventType, InteractionStatus} from "@azure/msal-browser";
-import {MessageAction} from "@app/shared/enums/message-action.enum";
+import {MsalBroadcastService, MsalService} from "@azure/msal-angular";
+import {HttpClient} from "@angular/common/http";
+import {MessageAction, MessageType} from "@app/shared";
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 

@@ -3,11 +3,9 @@ import {StateService} from '@app/core/services/state.service';
 import {mergeMap, Observable, of} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {addDays, addMonths, addWeeks, addYears, compareAsc, startOfDay, startOfToday} from 'date-fns';
-import {DateIntervalType} from '@app/shared/enums/date-interval-type.enum';
-import {MessageType} from "@app/shared/enums/message-type.enum";
-import {MessageAction} from "@app/shared/enums/message-action.enum";
 import {HttpClient} from "@angular/common/http";
 import {DateInterval, MessageService, Settings, SettingsStoreItemAdapter, StoreItem, StoreItemAdapter} from "@app/core";
+import {DateIntervalType, MessageAction, MessageType} from "@app/shared";
 
 const apiRoute: string = 'api/v2/store-items';
 

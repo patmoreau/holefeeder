@@ -1,6 +1,6 @@
 import {HttpResponse} from '@angular/common/http';
 import {PagingInfo} from '@app/core/models/paging-info.model';
-import {Adapter} from '@app/shared/interfaces/adapter.interface';
+import {Adapter} from '@app/shared';
 import {throwError} from 'rxjs';
 
 export abstract class BaseApiService {

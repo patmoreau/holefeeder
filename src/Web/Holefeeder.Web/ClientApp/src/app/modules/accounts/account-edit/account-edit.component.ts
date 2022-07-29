@@ -1,14 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormGroupDirective} from '@angular/forms';
-import {AccountTypeNames} from '@app/shared/enums/account-type.enum';
-import {NgbDateAdapter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateParserAdapter} from '@app/shared/ngb-date-parser.adapter';
+import {AccountTypeNames} from '@app/shared';
 
 @Component({
   selector: 'app-account-edit',
   templateUrl: './account-edit.component.html',
-  styleUrls: ['./account-edit.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateParserAdapter}]
+  styleUrls: ['./account-edit.component.scss']
 })
 export class AccountEditComponent implements OnInit {
 
