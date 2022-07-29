@@ -1,13 +1,24 @@
 <div class="form-group">
   <label for="dateSelect">{{label}}</label>
   <div class="input-group mb-2">
-    <input id="dateSelect" class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="value" ngbDatepicker
-           #datePicker="ngbDatepicker" container="body" (click)="datePicker.open()" (ngModelChange)="update($event)"
-           [firstDayOfWeek]=7 [required]="required" [autoClose]="true">
+    <input id="dateSelect" class="form-control" ngbDatepicker #datePicker="ngbDatepicker" container="body"
+           [firstDayOfWeek]=7
+           [autoClose]="true"
+           [placeholder]="placeholder"
+           [required]="required"
+           [disabled]="disabled"
+           [(ngModel)]="data"
+           [ngModelOptions]="{standalone: true}"
+           (click)="datePicker.open()"
+           (ngModelChange)="onChange()"
+           (blur)="onTouchedFn()">
     <div class="input-group-append">
       <a (click)="datePicker.toggle()" class="btn btn-outline-secondary text-secondary">
         <em class="bi bi-calendar-event"></em>
       </a>
+    </div>
+    <div class="error-message" *ngIf="showError">
+      {{errors[0]}}
     </div>
   </div>
 </div>

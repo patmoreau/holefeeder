@@ -1,7 +1,7 @@
 <ng-container *ngIf="settings$ | async; else loader">
   <div class="container pt-3 mb-5">
     <form (ngSubmit)="onSubmit()" [formGroup]="settingsForm">
-      <app-date-picker label="Date" formControlName="effectiveDate"></app-date-picker>
+      <app-date-picker label="Date" formControlName="effectiveDate" [required]="true"></app-date-picker>
       <div class="form-group">
         <label for="interval">Interval type</label>
         <select [compareWith]="compareFn" class="form-control" formControlName="intervalType" id="interval" required>

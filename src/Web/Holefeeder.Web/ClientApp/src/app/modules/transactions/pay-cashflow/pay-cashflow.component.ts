@@ -37,7 +37,7 @@ export class PayCashflowComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
-      date: [''],
+      date: ['', [Validators.required]],
       account: [{value: '', disabled: true}, [Validators.required]],
       category: [{value: '', disabled: true}, [Validators.required]],
       description: [{value: '', disabled: true}],

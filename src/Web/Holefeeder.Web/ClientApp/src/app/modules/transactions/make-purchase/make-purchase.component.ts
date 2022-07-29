@@ -43,7 +43,7 @@ export class MakePurchaseComponent implements OnInit {
 
     this.formPurchase = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
-      date: [''],
+      date: ['', [Validators.required]],
       account: ['', [Validators.required]],
       category: ['', [Validators.required]],
       description: [''],
@@ -58,7 +58,7 @@ export class MakePurchaseComponent implements OnInit {
 
     this.formTransfer = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],
-      date: [''],
+      date: ['', [Validators.required]],
       fromAccount: ['', [Validators.required]],
       toAccount: ['', [Validators.required]],
       description: ['']

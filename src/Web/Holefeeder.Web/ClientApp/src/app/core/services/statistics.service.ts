@@ -1,3 +1,8 @@
+import {Injectable} from "@angular/core";
+import {StatisticsApiService} from "@app/core/services/api/statistics-api.service";
+import {Settings, Statistics} from "@app/core";
+import {Observable} from "rxjs";
+import {ICategoryInfo} from "@app/shared";
 
 @Injectable({providedIn: 'root'})
 export class StatisticsService {

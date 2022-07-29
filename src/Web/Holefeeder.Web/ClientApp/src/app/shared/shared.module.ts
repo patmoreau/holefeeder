@@ -19,6 +19,7 @@ import {DeleteDialogComponent} from "@app/shared/components/modals/delete-dialog
 import {AutofocusDirective} from "@app/shared/directives/autofocus.directive";
 import {DateViewComponent} from "@app/shared/components/date-view/date-view.component";
 import {SubscriberService} from "@app/shared/services/subscriber.service";
+import {DateValidator, DateValidatorDirective} from "@app/shared/directives/date-validator.directive";
 
 const COMPONENTS = [
   DateViewComponent,
@@ -34,7 +35,8 @@ const COMPONENTS = [
   MessageDialogComponent,
   DeleteDialogComponent,
   RecurringCashflowComponent,
-  DatePickerComponent
+  DatePickerComponent,
+  DateValidatorDirective
 ];
 
 @NgModule({
@@ -46,9 +48,7 @@ const COMPONENTS = [
   ],
   exports: [COMPONENTS],
   declarations: [COMPONENTS],
-  providers: [
-    SubscriberService
-  ]
+  providers: [SubscriberService, DateValidator]
 })
 export class SharedModule {
 }

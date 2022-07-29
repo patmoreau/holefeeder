@@ -15,7 +15,7 @@
     <input class="form-control" formControlName="openBalance" id="openBalance" placeholder="amount..." required
            type="number"/>
   </div>
-  <app-date-picker label="Opening date" formControlName="openDate"></app-date-picker>
+  <app-date-picker label="Opening date" formControlName="openDate" [required]="true"></app-date-picker>
   <div class="form-group">
     <label for="description">Description</label>
     <input class="form-control" formControlName="description" id="description" placeholder="description..."
