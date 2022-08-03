@@ -1,3 +1,4 @@
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 using System.Reflection;
@@ -55,13 +56,13 @@ public static class WebApplicationExtensions
             {
                 logger.LogInformation("{DatabaseName} - Migration attempt #{TryCount} - error {Error}", name, tryCount,
                     e);
-                Task.Delay(10000);
+                Thread.Sleep(10000);
             }
         }
 
         if (!completed)
         {
-            throw new Exception($"{name} - Unable to perform database migration, no connection to server was found.");
+            throw new DataException($"{name} - Unable to perform database migration, no connection to server was found.");
         }
 
         logger.LogInformation("{DatabaseName} - Migration completed successfully", name);
