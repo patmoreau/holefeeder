@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data} from '@angular/router';
 import {map, Observable} from 'rxjs';
-import {Account} from "@app/core";
+import {Account, AccountsService} from "@app/core";
+import {filterNullish} from "@app/shared";
 
 @Component({
   selector: 'app-account-transactions',
@@ -11,14 +12,12 @@ import {Account} from "@app/core";
 export class AccountTransactionsComponent implements OnInit {
   account$!: Observable<Account>;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private accountsService: AccountsService) {
   }
 
   ngOnInit() {
-    if (this.route.parent) {
-      this.account$ = this.route.parent.data.pipe(
-        map((data: Data) => data['account']),
-      );
-    }
+    this.account$ = this.accountsService.selectedAccount$.pipe(
+      filterNullish()
+    );
   }
 }

@@ -2,7 +2,7 @@ import {DateInterval, MessageService, Upcoming, UpcomingAdapter} from "@app/core
 import {Inject, Injectable} from "@angular/core";
 import {switchMap} from "rxjs/operators";
 import {StateService} from "@app/core/services/state.service";
-import {combineLatest, filter, map, Observable, Subject, take} from "rxjs";
+import {filter, map, Observable, take} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {filterNullish, MessageType} from "@app/shared";
 import {SettingsService} from "@app/core/services/settings.service";
@@ -21,7 +21,6 @@ const initialState: UpcomingState = {
 @Injectable({providedIn: 'root'})
 export class UpcomingService extends StateService<UpcomingState> {
   upcoming$: Observable<Upcoming[]> = this.select((state) => state.upcoming);
-  private refresh$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -35,17 +34,9 @@ export class UpcomingService extends StateService<UpcomingState> {
     this.messages.listen
       .pipe(
         filter(message => message.type === MessageType.transaction || message.type === MessageType.cashflow)
-      ).subscribe(_ => this.refresh());
+      ).subscribe(_ => this.load());
 
-    combineLatest([
-      this.settingsService.period$,
-      this.refresh$,
-    ]).pipe(
-      map(([period, _]) => period),
-      switchMap(period => this.getAll(period)),
-    ).subscribe(items => this.setState({upcoming: items}));
-
-    this.refresh();
+    this.load();
   }
 
   getUpcoming(accountId: string): Observable<Upcoming[]> {
@@ -60,8 +51,10 @@ export class UpcomingService extends StateService<UpcomingState> {
       );
   }
 
-  private refresh() {
-    this.refresh$.next();
+  private load() {
+    this.settingsService.period$.pipe(
+      switchMap(period => this.getAll(period)),
+    ).subscribe(items => this.setState({upcoming: items}));
   }
 
   private getAll(period: DateInterval): Observable<Upcoming[]> {

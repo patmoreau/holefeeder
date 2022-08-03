@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Data, Router} from '@angular/router';
-import {filter, from, map, Observable, scan, switchMap, tap} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {from, Observable, scan, switchMap, tap} from 'rxjs';
 import {Account, AccountsService, UpcomingService} from "@app/core";
-import {LoggerService} from "@app/core/logger/logger.service";
-import {accountTypeMultiplier, categoryTypeMultiplier} from "@app/shared";
+import {accountTypeMultiplier, categoryTypeMultiplier, filterNullish} from "@app/shared";
 
 @Component({
   selector: 'app-account-details',
@@ -18,8 +17,7 @@ export class AccountDetailsComponent implements OnInit {
     private accountsService: AccountsService,
     private upcomingService: UpcomingService,
     private router: Router,
-    private route: ActivatedRoute,
-    private logger: LoggerService
+    private route: ActivatedRoute
   ) {
   }
 
@@ -34,18 +32,21 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.account$ = this.route.data.pipe(
-      tap(this.logger.logVerbose),
-      map((data: Data) => data['account']),
+    this.account$ = this.route.paramMap.pipe(
+      switchMap(params => this.accountsService.findById(params.get('accountId')!)),
+      filterNullish(),
+      tap(account => this.accountsService.selectAccount(account)),
+      switchMap(_ => this.accountsService.selectedAccount$),
+      filterNullish()
     );
 
     this.upcomingBalance$ = this.account$.pipe(
-      filter(account => account !== undefined),
-      switchMap(account => this.upcomingService.getUpcoming(account!.id)
+      filterNullish(),
+      switchMap(account => this.upcomingService.getUpcoming(account.id)
         .pipe(
           switchMap(cashflows => from(cashflows)),
           scan((sum, cashflow) => sum + (cashflow.amount *
-            categoryTypeMultiplier(cashflow.category.type) * accountTypeMultiplier(account!.type)), account!.balance)
+            categoryTypeMultiplier(cashflow.category.type) * accountTypeMultiplier(account.type)), account.balance)
         ))
     );
   }
