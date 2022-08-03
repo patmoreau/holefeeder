@@ -11,15 +11,22 @@
            [ngModelOptions]="{standalone: true}"
            (click)="datePicker.open()"
            (ngModelChange)="onChange()"
-           (blur)="onTouchedFn()">
+           (blur)="onTouchFn()"
+           [class.valid]="control.valid && (control.dirty || control.touched)"
+           [class.invalid]="control.invalid && (control.dirty || control.touched)">
     <div class="input-group-append">
       <a (click)="datePicker.toggle()" class="btn btn-outline-secondary text-secondary">
         <em class="bi bi-calendar-event"></em>
       </a>
     </div>
-    <div class="error-message" *ngIf="showError">
-      {{errors[0]}}
-    </div>
   </div>
+</div>
+<div *ngIf="control.invalid && control.errors && (control.dirty || control.touched)">
+  <small class="text-danger" *ngIf="control.hasError('required')">
+    The date is required.
+  </small>
+  <small class="text-danger" *ngIf="control.hasError('invalidDate')">
+    The '{{control.errors.invalidDate.value}}' date is not valid.
+  </small>
 </div>
 
