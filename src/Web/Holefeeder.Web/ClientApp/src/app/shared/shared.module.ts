@@ -1,4 +1,4 @@
-import {TagsInputComponent} from "@app/shared/tags-input/tags-input.component";
+import {TagsInputComponent} from "@app/shared/components/tags-input/tags-input.component";
 import {LoaderComponent} from "@app/shared/components/loader/loader.component";
 import {RecurringCashflowComponent} from "@app/shared/components/recurring-cashflow/recurring-cashflow.component";
 import {

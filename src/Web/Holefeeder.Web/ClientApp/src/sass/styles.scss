@@ -31,3 +31,11 @@ body {
   min-height: 75rem;
   padding-top: 4.5rem;
 }
+
+.invalid {
+  border: 1px solid red;
+}
+
+.form-control.ng-invalid {
+  border: 1px solid red;
+}

@@ -8,7 +8,6 @@ import {AccountUpcomingComponent} from './account-upcoming/account-upcoming.comp
 import {AccountTransactionsComponent} from './account-transactions/account-transactions.component';
 import {OpenAccountComponent} from './open-account/open-account.component';
 import {ModifyAccountComponent} from './modify-account/modify-account.component';
-import {AccountResolver} from "@app/core/resolvers/account.resolver";
 
 const routes: Routes = [
   {
@@ -36,9 +35,6 @@ const routes: Routes = [
         path: ':accountId',
         component: AccountDetailsComponent,
         canActivate: [MsalGuard],
-        resolve: {
-          account: AccountResolver
-        },
         children: [
           {
             path: 'upcoming',

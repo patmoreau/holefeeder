@@ -26,7 +26,6 @@ export class AccountsService extends StateService<AccountState> {
   activeAccounts$: Observable<Account[]> = this.select((state) => state.accounts.filter(x => !x.inactive));
   count$: Observable<number> = this.select((state) => state.accounts.length);
   selectedAccount$: Observable<Account | null> = this.select((state) => state.selected);
-  private refresh$ = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,

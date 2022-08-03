@@ -1,19 +1,26 @@
-import {Component, forwardRef, Input, Optional, Self} from '@angular/core';
+import {Component, forwardRef, Inject, Injector, Input} from '@angular/core';
 import {NgbDateAdapter, NgbDateNativeAdapter} from "@ng-bootstrap/ng-bootstrap";
-import {ControlValueAccessor, NgControl, NG_VALIDATORS} from "@angular/forms";
-import {startOfToday} from "date-fns";
-import {DateValidator} from "@app/shared";
+import {
+  AbstractControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+} from "@angular/forms";
+import {isValid, startOfToday} from "date-fns";
+import {BaseFormControlWithValidatorComponent} from "@app/shared/components/base-form-control-with-validator.component";
 
 @Component({
   selector: 'app-date-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
   providers: [
-    {provide: NG_VALIDATORS, useExisting: forwardRef(() => DateValidator), multi: true},
+    {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DatePickerComponent), multi: true},
+    {provide: NG_VALIDATORS, useExisting: forwardRef(() => DatePickerComponent), multi: true},
     {provide: NgbDateAdapter, useClass: NgbDateNativeAdapter}
   ]
 })
-export class DatePickerComponent implements ControlValueAccessor {
+export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
+
   @Input()
   public label = 'Date';
 
@@ -26,63 +33,17 @@ export class DatePickerComponent implements ControlValueAccessor {
   @Input()
   public disabled = false;
 
-  @Input()
-  public data: Date = startOfToday();
+  constructor(@Inject(Injector) protected injector: Injector) {
+    super(injector);
 
-  private errorMessages = new Map<string, () => string>();
-
-  public onChangeFn = (_: any) => {
-  };
-
-  public onTouchedFn = () => {
-  };
-
-  constructor(@Self() @Optional() public control: NgControl) {
-    this.control && (this.control.valueAccessor = this);
-    this.errorMessages.set('required', () => `${this.label} is required.`);
-    this.errorMessages.set('invalidDate', () => `${this.label} is invalid.`);
+    this.data = startOfToday();
   }
 
-  public get invalid(): boolean {
-    return this.control?.invalid ?? false;
-  }
-
-  public get showError(): boolean {
-    if (!this.control) {
-      return false;
+  public override validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    if(control.value === null) {
+      return null;
     }
-
-    const {dirty, touched} = this.control;
-
-    return this.invalid ? ((dirty || touched) ?? false) : false;
-  }
-
-  public get errors(): Array<string> {
-    if (!this.control) {
-      return [];
-    }
-
-    const {errors} = this.control;
-    return Object.keys(errors!).map(key => this.errorMessages.has(key) ? this.errorMessages.get(key)!() : <string>errors![key] || key);
-  }
-
-  public registerOnChange(fn: any): void {
-    this.onChangeFn = fn;
-  }
-
-  public registerOnTouched(fn: any): void {
-    this.onTouchedFn = fn;
-  }
-
-  public setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  public writeValue(obj: any): void {
-    this.data = obj || null;
-  }
-
-  public onChange() {
-    this.onChangeFn(this.data);
+    const valid = isValid(control.value);
+    return valid ? null : {invalidDate: {value: control.value}};
   }
 }
