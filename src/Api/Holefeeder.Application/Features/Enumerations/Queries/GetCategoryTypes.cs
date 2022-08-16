@@ -3,7 +3,6 @@ using Carter;
 using FluentValidation;
 
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.SeedWork;
 
 using MediatR;
 
@@ -28,17 +27,17 @@ public class GetCategoryTypes : ICarterModule
             .WithName(nameof(GetCategoryTypes));
     }
 
-    public record Request : IRequest<IEnumerable<CategoryType>>;
+    public record Request : IRequest<IReadOnlyCollection<CategoryType>>;
 
     public class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IEnumerable<CategoryType>>
+    public class Handler : IRequestHandler<Request, IReadOnlyCollection<CategoryType>>
     {
-        public Task<IEnumerable<CategoryType>> Handle(Request query, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<CategoryType>> Handle(Request query, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Enumeration.GetAll<CategoryType>());
+            return Task.FromResult(CategoryType.List);
         }
     }
 }

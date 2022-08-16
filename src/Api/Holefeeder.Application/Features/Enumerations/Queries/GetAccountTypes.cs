@@ -3,7 +3,6 @@ using Carter;
 using FluentValidation;
 
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 
 using MediatR;
 
@@ -28,17 +27,17 @@ public class GetAccountTypes : ICarterModule
             .WithName(nameof(GetAccountTypes));
     }
 
-    public record Request : IRequest<IEnumerable<AccountType>>;
+    public record Request : IRequest<IReadOnlyCollection<AccountType>>;
 
     public class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IEnumerable<AccountType>>
+    public class Handler : IRequestHandler<Request, IReadOnlyCollection<AccountType>>
     {
-        public Task<IEnumerable<AccountType>> Handle(Request query, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<AccountType>> Handle(Request query, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Enumeration.GetAll<AccountType>());
+            return Task.FromResult(AccountType.List);
         }
     }
 }

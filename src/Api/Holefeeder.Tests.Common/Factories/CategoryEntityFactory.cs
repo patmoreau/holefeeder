@@ -16,7 +16,7 @@ internal sealed class CategoryEntityFactory : AutoFaker<CategoryEntity>
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.Name, faker => faker.Random.String2(minLength: 1, maxLength: 100));
-        RuleFor(x => x.Type, faker => faker.PickRandom(Enumeration.GetAll<CategoryType>()));
+        RuleFor(x => x.Type, faker => faker.PickRandom(CategoryType.List.ToArray()));
         RuleFor(x => x.Color, faker => faker.Random.String2(minLength: 0, maxLength: 25));
         RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount(max: BUDGET_AMOUNT_MAX));
         RuleFor(x => x.Favorite, faker => faker.Random.Bool());

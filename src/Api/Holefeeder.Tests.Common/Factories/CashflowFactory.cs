@@ -17,7 +17,7 @@ internal sealed class CashflowFactory : AutoFaker<Cashflow>
 
         CustomInstantiator(faker => Cashflow.Create(
             faker.Date.Past().Date,
-            faker.PickRandom(Enumeration.GetAll<DateIntervalType>()),
+            faker.PickRandom(DateIntervalType.List.ToArray()),
             faker.Random.Int(1),
             faker.Random.Int(0),
             faker.Finance.Amount(0),

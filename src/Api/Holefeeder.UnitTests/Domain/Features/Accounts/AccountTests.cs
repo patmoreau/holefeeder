@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Bogus;
 using Bogus.Extensions;
@@ -23,7 +24,7 @@ public class AccountTests
 
         // act
         Action action = () => _ = new Account(Guid.Empty,
-            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.PickRandom(AccountType.List.ToArray()),
             _faker.Random.Word(),
             _faker.Date.Recent(),
             _faker.Random.Guid());
@@ -44,7 +45,7 @@ public class AccountTests
 
         // act
         Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.PickRandom(AccountType.List.ToArray()),
             name,
             _faker.Date.Recent(),
             _faker.Random.Guid());
@@ -63,7 +64,7 @@ public class AccountTests
 
         // act
         Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.PickRandom(AccountType.List.ToArray()),
             _faker.Random.Words().ClampLength(256),
             _faker.Date.Recent(),
             _faker.Random.Guid());
@@ -82,7 +83,7 @@ public class AccountTests
 
         // act
         Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.PickRandom(AccountType.List.ToArray()),
             _faker.Random.Word(),
             default,
             _faker.Random.Guid());
@@ -101,7 +102,7 @@ public class AccountTests
 
         // act
         Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<AccountType>()),
+            _faker.PickRandom(AccountType.List.ToArray()),
             _faker.Random.Word(),
             _faker.Date.Recent(),
             Guid.Empty);

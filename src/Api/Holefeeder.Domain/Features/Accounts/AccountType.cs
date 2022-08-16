@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 
-using Holefeeder.Domain.SeedWork;
-using Holefeeder.Domain.SeedWork.Converters;
+using Ardalis.SmartEnum;
+using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-[JsonConverter(typeof(EnumerationJsonConverter<AccountType>))]
-public abstract class AccountType : Enumeration
+[JsonConverter(typeof(SmartEnumValueConverter<AccountType,int>))]
+public abstract class AccountType : SmartEnum<AccountType>
 {
     public static readonly AccountType Checking = new DebitAccountType(1, nameof(Checking));
     public static readonly AccountType CreditCard = new CreditAccountType(2, nameof(CreditCard));
@@ -16,20 +16,20 @@ public abstract class AccountType : Enumeration
     public static readonly AccountType Mortgage = new CreditAccountType(6, nameof(Mortgage));
     public static readonly AccountType Savings = new DebitAccountType(7, nameof(Savings));
 
-    private AccountType(int id, string name) : base(id, name)
+    private AccountType(int id, string name) : base(name, id)
     {
     }
 
     public abstract int Multiplier { get; }
 
-    private class CreditAccountType : AccountType
+    private sealed class CreditAccountType : AccountType
     {
         public CreditAccountType(int id, string name) : base(id, name) { }
 
         public override int Multiplier => -1;
     }
 
-    private class DebitAccountType : AccountType
+    private sealed class DebitAccountType : AccountType
     {
         public DebitAccountType(int id, string name) : base(id, name) { }
 

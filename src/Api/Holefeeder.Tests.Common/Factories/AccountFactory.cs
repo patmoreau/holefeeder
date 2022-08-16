@@ -1,9 +1,6 @@
 using AutoBogus;
 
-using Bogus.Extensions;
-
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 
 namespace Holefeeder.Tests.Common.Factories;
 
@@ -13,15 +10,19 @@ internal sealed class AccountFactory : AutoFaker<Account>
 
     public AccountFactory()
     {
-        RuleFor(x => x.Id, faker => faker.Random.Guid());
-        RuleFor(x => x.Type, faker => faker.PickRandom(Enumeration.GetAll<AccountType>()));
-        RuleFor(x => x.Name, faker => faker.Random.String2(minLength: 1, maxLength: 100));
+        CustomInstantiator(faker => new Account(
+            faker.Random.Guid(),
+            faker.PickRandom(AccountType.List.ToArray()),
+            faker.Random.String2(minLength: 1, maxLength: 100),
+            faker.Date.Past().Date,
+            faker.Random.Guid()));
+        Ignore(x => x.Type);
+        Ignore(x => x.Name);
+        Ignore(x => x.OpenDate);
         RuleFor(x => x.Favorite, faker => faker.Random.Bool());
         RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX));
-        RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date);
         RuleFor(x => x.Description, faker => faker.Random.Words());
         RuleFor(x => x.Inactive, false);
-        RuleFor(x => x.UserId, faker => faker.Random.Guid());
         RuleFor(x => x.Cashflows, Array.Empty<Guid>());
     }
 }

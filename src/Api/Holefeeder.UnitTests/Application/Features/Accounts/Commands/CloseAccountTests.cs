@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,7 +44,7 @@ public class CloseAccountTests
     public CloseAccountTests()
     {
         _faker = new AutoFaker<Request>().RuleForType(typeof(AccountType),
-            faker => faker.PickRandom(Enumeration.GetAll<AccountType>()));
+            faker => faker.PickRandom(AccountType.List.ToArray()));
     }
 
     [Fact]

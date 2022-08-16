@@ -31,7 +31,7 @@ public class ScenarioGetDateIntervalTypes : BaseScenario
         var result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
         ThenAssertAll(() =>
         {
-            result.Should().NotBeNull().And.HaveCount(Enumeration.GetAll<DateIntervalType>().Count());
+            result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count);
         });
     }
 

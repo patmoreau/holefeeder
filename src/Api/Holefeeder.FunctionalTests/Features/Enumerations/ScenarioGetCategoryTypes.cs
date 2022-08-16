@@ -31,7 +31,7 @@ public class ScenarioGetCategoryTypes : BaseScenario
         var result = HttpClientDriver.DeserializeContent<CategoryType[]>();
         ThenAssertAll(() =>
         {
-            result.Should().NotBeNull().And.HaveCount(Enumeration.GetAll<CategoryType>().Count());
+            result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count);
         });
     }
 
