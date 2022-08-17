@@ -5,7 +5,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Enumerations;
 
-[JsonConverter(typeof(SmartEnumValueConverter<DateIntervalType,int>))]
+[JsonConverter(typeof(SmartEnumNameConverter<DateIntervalType, int>))]
 public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 {
     public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(nameof(Weekly), 1);

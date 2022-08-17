@@ -5,7 +5,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-[JsonConverter(typeof(SmartEnumValueConverter<AccountType,int>))]
+[JsonConverter(typeof(SmartEnumNameConverter<AccountType, int>))]
 public abstract class AccountType : SmartEnum<AccountType>
 {
     public static readonly AccountType Checking = new DebitAccountType(1, nameof(Checking));

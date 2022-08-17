@@ -5,7 +5,7 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Features.Categories;
 
-[JsonConverter(typeof(SmartEnumValueConverter<CategoryType,int>))]
+[JsonConverter(typeof(SmartEnumNameConverter<CategoryType, int>))]
 public abstract class CategoryType : SmartEnum<CategoryType>
 {
     public static readonly CategoryType Expense = new ExpenseCategoryType(1, nameof(Expense));
