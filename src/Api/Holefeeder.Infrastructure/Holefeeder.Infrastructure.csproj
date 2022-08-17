@@ -31,7 +31,7 @@
       <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
-      <PackageReference Include="MySqlConnector" Version="2.1.11" />
+      <PackageReference Include="MySqlConnector" Version="2.1.12" />
       <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     </ItemGroup>
 
