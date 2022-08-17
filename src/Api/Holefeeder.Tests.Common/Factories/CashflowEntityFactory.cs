@@ -14,7 +14,7 @@ internal sealed class CashflowEntityFactory : AutoFaker<CashflowEntity>
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date);
-        RuleFor(x => x.IntervalType, faker => faker.PickRandom(Enumeration.GetAll<DateIntervalType>()));
+        RuleFor(x => x.IntervalType, faker => faker.PickRandom(DateIntervalType.List.ToArray()));
         RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: decimal.Zero, max: AMOUNT_MAX));
         RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1));
         RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0));

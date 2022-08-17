@@ -1,19 +1,19 @@
 using System.Text.Json.Serialization;
 
-using Holefeeder.Domain.SeedWork;
-using Holefeeder.Domain.SeedWork.Converters;
+using Ardalis.SmartEnum;
+using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Enumerations;
 
-[JsonConverter(typeof(EnumerationJsonConverter<DateIntervalType>))]
-public abstract class DateIntervalType : Enumeration
+[JsonConverter(typeof(SmartEnumNameConverter<DateIntervalType, int>))]
+public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 {
-    public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(1, nameof(Weekly));
-    public static readonly DateIntervalType Monthly = new MonthlyDateIntervalType(2, nameof(Monthly));
-    public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(3, nameof(Yearly));
-    public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(4, nameof(OneTime));
+    public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(nameof(Weekly), 1);
+    public static readonly DateIntervalType Monthly = new MonthlyDateIntervalType(nameof(Monthly), 2);
+    public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(nameof(Yearly), 3);
+    public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(nameof(OneTime), 4);
 
-    private DateIntervalType(int id, string name) : base(id, name) { }
+    private DateIntervalType(string name, int id) : base(name, id) { }
 
     protected abstract DateTime AddIteration(DateTime date, int iteration);
 
@@ -78,7 +78,7 @@ public abstract class DateIntervalType : Enumeration
 
     private sealed class WeeklyDateIntervalType : DateIntervalType
     {
-        public WeeklyDateIntervalType(int id, string name) : base(id, name) { }
+        public WeeklyDateIntervalType(string name, int id) : base(name, id) { }
 
         protected override DateTime AddIteration(DateTime date, int iteration)
         {
@@ -111,7 +111,7 @@ public abstract class DateIntervalType : Enumeration
 
     private sealed class MonthlyDateIntervalType : DateIntervalType
     {
-        public MonthlyDateIntervalType(int id, string name) : base(id, name) { }
+        public MonthlyDateIntervalType(string name, int id) : base(name, id) { }
 
         protected override DateTime AddIteration(DateTime date, int iteration)
         {
@@ -139,7 +139,7 @@ public abstract class DateIntervalType : Enumeration
 
     private sealed class YearlyDateIntervalType : DateIntervalType
     {
-        public YearlyDateIntervalType(int id, string name) : base(id, name) { }
+        public YearlyDateIntervalType(string name, int id) : base(name, id) { }
 
         protected override DateTime AddIteration(DateTime date, int iteration)
         {
@@ -167,7 +167,7 @@ public abstract class DateIntervalType : Enumeration
 
     private sealed class OneTimeDateIntervalType : DateIntervalType
     {
-        public OneTimeDateIntervalType(int id, string name) : base(id, name) { }
+        public OneTimeDateIntervalType(string name, int id) : base(name, id) { }
 
         protected override DateTime AddIteration(DateTime date, int iteration)
         {

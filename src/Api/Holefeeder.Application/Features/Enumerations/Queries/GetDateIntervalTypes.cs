@@ -23,22 +23,22 @@ public class GetDateIntervalTypes : ICarterModule
                     var result = await mediator.Send(new Request());
                     return Results.Ok(result);
                 })
-            .Produces<IEnumerable<DateIntervalType>>()
+            .Produces<IReadOnlyCollection<DateIntervalType>>()
             .WithTags(nameof(Enumerations))
             .WithName(nameof(GetDateIntervalTypes));
     }
 
-    public record Request : IRequest<IEnumerable<DateIntervalType>>;
+    public record Request : IRequest<IReadOnlyCollection<DateIntervalType>>;
 
     public class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IEnumerable<DateIntervalType>>
+    public class Handler : IRequestHandler<Request, IReadOnlyCollection<DateIntervalType>>
     {
-        public Task<IEnumerable<DateIntervalType>> Handle(Request query, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<DateIntervalType>> Handle(Request query, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Enumeration.GetAll<DateIntervalType>());
+            return Task.FromResult(DateIntervalType.List);
         }
     }
 }

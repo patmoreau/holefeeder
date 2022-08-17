@@ -3,7 +3,6 @@ using System.Net;
 using FluentAssertions;
 
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
@@ -30,7 +29,7 @@ public class ScenarioGetAccountTypes : BaseScenario
         var result = HttpClientDriver.DeserializeContent<AccountType[]>();
         ThenAssertAll(() =>
         {
-            result.Should().NotBeNull().And.HaveCount(Enumeration.GetAll<AccountType>().Count());
+            result.Should().NotBeNull().And.HaveCount(AccountType.List.Count);
         });
     }
 

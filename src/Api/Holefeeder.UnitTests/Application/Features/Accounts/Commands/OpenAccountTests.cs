@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +14,6 @@ using FluentValidation.TestHelper;
 
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 
 using Microsoft.Extensions.Logging;
 
@@ -40,7 +40,7 @@ public class OpenAccountTests
     public OpenAccountTests()
     {
         _faker = new AutoFaker<Request>()
-            .RuleForType(typeof(AccountType), faker => faker.PickRandom(Enumeration.GetAll<AccountType>()));
+            .RuleForType(typeof(AccountType), faker => faker.PickRandom(AccountType.List.ToArray()));
     }
 
     [Fact]

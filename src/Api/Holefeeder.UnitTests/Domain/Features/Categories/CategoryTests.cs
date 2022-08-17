@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using Bogus;
 using Bogus.Extensions;
@@ -23,7 +24,7 @@ public class CategoryTests
 
         // act
         Action action = () => _ = new Category(Guid.Empty,
-            _faker.PickRandom(Enumeration.GetAll<CategoryType>()),
+            _faker.PickRandom(CategoryType.List.ToArray()),
             _faker.Random.Word(),
             _faker.Random.Guid());
 
@@ -43,7 +44,7 @@ public class CategoryTests
 
         // act
         Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<CategoryType>()),
+            _faker.PickRandom(CategoryType.List.ToArray()),
             name,
             _faker.Random.Guid());
 
@@ -61,7 +62,7 @@ public class CategoryTests
 
         // act
         Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<CategoryType>()),
+            _faker.PickRandom(CategoryType.List.ToArray()),
             _faker.Random.Words().ClampLength(256),
             _faker.Random.Guid());
 
@@ -79,7 +80,7 @@ public class CategoryTests
 
         // act
         Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(Enumeration.GetAll<CategoryType>()),
+            _faker.PickRandom(CategoryType.List.ToArray()),
             _faker.Random.Word(),
             Guid.Empty);
 

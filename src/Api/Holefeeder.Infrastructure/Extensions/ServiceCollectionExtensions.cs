@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Ardalis.SmartEnum.Dapper;
+
 using Dapper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
@@ -7,6 +9,7 @@ using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Features.Transactions;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
@@ -73,9 +76,9 @@ public static class ServiceCollectionExtensions
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        SqlMapper.AddTypeHandler(new AccountTypeHandler());
-        SqlMapper.AddTypeHandler(new CategoryTypeHandler());
-        SqlMapper.AddTypeHandler(new DateIntervalTypeHandler());
+        SqlMapper.AddTypeHandler(typeof(AccountType), new SmartEnumByNameTypeHandler<AccountType>());
+        SqlMapper.AddTypeHandler(typeof(CategoryType), new SmartEnumByNameTypeHandler<CategoryType>());
+        SqlMapper.AddTypeHandler(typeof(DateIntervalType), new SmartEnumByNameTypeHandler<DateIntervalType>());
         SqlMapper.AddTypeHandler(new TagsHandler());
 
         return services;
