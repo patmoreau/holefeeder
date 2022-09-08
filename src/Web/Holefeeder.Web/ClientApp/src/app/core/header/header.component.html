@@ -37,13 +37,13 @@
             </li>
           </ul>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <ng-container *ngIf="period$ | async as period">
-              <li class="nav-item">
+            <li class="nav-item">
+              <ng-container *ngIf="period$ | async as period">
                 <button (click)="open(datePicker, period)" class="btn btn-outline-secondary" type="button">
                   <em class="bi bi-calendar-range"></em>&nbsp;{{ period.start | date }} - {{ period.end | date }}
                 </button>
-              </li>
-            </ng-container>
+              </ng-container>
+            </li>
             <li class="nav-item dropdown">
               <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
                 id="offcanvasNavbarDropdown" role="button">
