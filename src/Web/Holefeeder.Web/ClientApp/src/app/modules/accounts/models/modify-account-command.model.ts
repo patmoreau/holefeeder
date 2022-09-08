@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {Adapter} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
 
 export class ModifyAccountCommand {
   constructor(
@@ -7,13 +7,17 @@ export class ModifyAccountCommand {
     public name: string,
     public openBalance: number,
     public description: string
-  ) {
-  }
+  ) {}
 }
 
 @Injectable()
 export class ModifyAccountAdapter implements Adapter<ModifyAccountCommand> {
   adapt(item: any): ModifyAccountCommand {
-    return new ModifyAccountCommand(item.id, item.name, item.openBalance, item.description);
+    return new ModifyAccountCommand(
+      item.id,
+      item.name,
+      item.openBalance,
+      item.description
+    );
   }
 }

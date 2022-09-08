@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {Message} from '@app/core';
-import {MessageAction, MessageType} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { MessageAction, MessageType } from '@app/shared/models';
+import { Observable, Subject } from 'rxjs';
+import { Message } from '../models';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class MessageService {
   private dispatcher = new Subject<Message>();
 
@@ -11,7 +11,15 @@ export class MessageService {
     return this.dispatcher.asObservable();
   }
 
-  sendMessage(type: MessageType, action: MessageAction, content?: any) {
+  sendMessage({
+    type,
+    action,
+    content,
+  }: {
+    type: MessageType;
+    action: MessageAction;
+    content?: any;
+  }): void {
     this.dispatcher.next(new Message(type, action, content));
   }
 

@@ -1,22 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {addDays, startOfToday} from 'date-fns';
-import {NgbDate, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {Observable} from 'rxjs';
-import {MsalService} from "@azure/msal-angular";
-import {Settings} from '@app/core/models/settings.model';
-import {DateInterval} from '@app/core/models/date-interval.model';
-import {SettingsService} from '../services/settings.service';
-import {HttpClient} from "@angular/common/http";
-import {UserService} from "@app/core/services/user.service";
-import {User} from "@app/core/models/user.model";
-import {LoggerService} from "@app/core/logger/logger.service";
-
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoggerService } from '@app/core/logger/logger.service';
+import { DateInterval } from '@app/core/models/date-interval.model';
+import { Settings } from '@app/core/models/settings.model';
+import { User } from '@app/core/models/user.model';
+import { UserService } from '@app/core/services/user.service';
+import { MsalService } from '@azure/msal-angular';
+import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { addDays, startOfToday } from 'date-fns';
+import { Observable } from 'rxjs';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
@@ -50,20 +49,23 @@ export class HeaderComponent implements OnInit {
     this.period$ = this.settingsService.period$;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   open(content: any, period: DateInterval) {
     this.setCalendar(period);
     this.modalService
-      .open(content, {ariaLabelledBy: 'modal-basic-title'})
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
-      _ => {
-        this.settingsService.setPeriod(new DateInterval(this.getDate(this.fromDate!), this.getDate(this.toDate!)));
-      },
-      _ => {
-      }
-    );
+        _ => {
+          this.settingsService.setPeriod(
+            new DateInterval(
+              this.getDate(this.fromDate!),
+              this.getDate(this.toDate!)
+            )
+          );
+        },
+        _ => {}
+      );
   }
 
   nextPeriod() {
@@ -133,13 +135,12 @@ export class HeaderComponent implements OnInit {
     );
   }
 
-  login() {
-  }
+  login() {}
 
   logout(popup?: boolean) {
     if (popup) {
       this.authService.logoutPopup({
-        mainWindowRedirectUri: "/"
+        mainWindowRedirectUri: '/',
       });
     } else {
       this.authService.logoutRedirect();

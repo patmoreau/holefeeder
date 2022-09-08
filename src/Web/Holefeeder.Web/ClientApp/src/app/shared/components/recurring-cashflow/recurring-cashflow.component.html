@@ -1,15 +1,14 @@
 <div [formGroup]="form" class="container mt-2">
   <div class="form-group">
     <label for="interval">Interval type</label>
-    <select [compareWith]="compareFn" class="form-control" formControlName="intervalType" id="interval"
-            required>
+    <select [compareWith]="compareFn" class="form-control" formControlName="intervalType" id="interval" required>
       <option *ngFor="let interval of (intervalTypesNames | keyvalue)" [ngValue]="interval.key">
         {{ interval.value }}</option>
     </select>
   </div>
   <div class="form-group">
     <label for="frequency">Frequency</label>
-    <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"/>
+    <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number" />
   </div>
   <app-date-picker label="Effective date" formControlName="effectiveDate" [required]="true"></app-date-picker>
 </div>

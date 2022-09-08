@@ -1,6 +1,8 @@
-import {Injectable} from '@angular/core';
-import {startOfToday} from 'date-fns';
-import {Adapter, DateIntervalType, nameofFactory} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
+import { nameofFactory } from '@app/shared/helpers';
+import { DateIntervalType } from '@app/shared/models';
+import { startOfToday } from 'date-fns';
 
 const nameof = nameofFactory<Settings>();
 
@@ -9,11 +11,10 @@ export class Settings {
     public effectiveDate: Date,
     public intervalType: DateIntervalType,
     public frequency: number
-  ) {
-  }
+  ) {}
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class SettingsStoreItemAdapter implements Adapter<Settings> {
   adapt(item: any): Settings {
     if (item?.data === undefined) {
@@ -25,15 +26,23 @@ export class SettingsStoreItemAdapter implements Adapter<Settings> {
           +value.substring(0, 4),
           +value.substring(5, 7) - 1,
           +value.substring(8, 10),
-          0, 0, 0, 0);
+          0,
+          0,
+          0,
+          0
+        );
       }
       return value;
-    })
-    return new Settings(object.effectiveDate, object.intervalType, object.frequency);
+    });
+    return new Settings(
+      object.effectiveDate,
+      object.intervalType,
+      object.frequency
+    );
   }
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class SettingsAdapter implements Adapter<Settings> {
   adapt(item: any): Settings {
     return new Settings(item.effectiveDate, item.intervalType, item.frequency);

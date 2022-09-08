@@ -1,5 +1,6 @@
-import {Injectable} from "@angular/core";
-import {Adapter, dateToUtc} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
+import { dateToUtc } from '@app/shared/helpers';
 
 export class TransferMoneyCommand {
   constructor(
@@ -8,13 +9,20 @@ export class TransferMoneyCommand {
     public description: string,
     public fromAccountId: string,
     public toAccountId: string
-  ) {
-  }
+  ) {}
 }
 
-@Injectable({providedIn: 'root'})
-export class TransferMoneyCommandAdapter implements Adapter<TransferMoneyCommand> {
+@Injectable({ providedIn: 'root' })
+export class TransferMoneyCommandAdapter
+  implements Adapter<TransferMoneyCommand>
+{
   adapt(item: any): TransferMoneyCommand {
-    return new TransferMoneyCommand(dateToUtc(item.date), item.amount, item.description, item.fromAccount, item.toAccount);
+    return new TransferMoneyCommand(
+      dateToUtc(item.date),
+      item.amount,
+      item.description,
+      item.fromAccount,
+      item.toAccount
+    );
   }
 }

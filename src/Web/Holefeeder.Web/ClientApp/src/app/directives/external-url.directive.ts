@@ -1,12 +1,11 @@
-import {Directive, ElementRef, HostListener} from '@angular/core';
-import {Router} from '@angular/router';
+import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: 'a[appExternalUrl]',
 })
 export class ExternalUrlDirective {
-  constructor(private el: ElementRef, private router: Router) {
-  }
+  constructor(private el: ElementRef, private router: Router) {}
 
   @HostListener('click', ['$event'])
   clicked(event: Event) {
@@ -15,7 +14,7 @@ export class ExternalUrlDirective {
       return;
     }
 
-    this.router.navigate(['/externalRedirect', {externalUrl: url}], {
+    this.router.navigate(['/externalRedirect', { externalUrl: url }], {
       skipLocationChange: true,
     });
 

@@ -1,21 +1,19 @@
-import {Injectable} from '@angular/core';
-import {Adapter} from '@app/shared';
-import {Series, SeriesAdapter} from './series.model';
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
+import { Series, SeriesAdapter } from './series.model';
 
 export class Statistics<T> {
   constructor(
     public item: T,
     public yearly: Series[],
     public monthly: Series[],
-    public period: Series[],
-  ) {
-  }
+    public period: Series[]
+  ) {}
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class StatisticsAdapter<T> implements Adapter<Statistics<T>> {
-  constructor(private adapter: SeriesAdapter) {
-  }
+  constructor(private adapter: SeriesAdapter) {}
 
   adapt(item: any): Statistics<T> {
     return new Statistics<T>(

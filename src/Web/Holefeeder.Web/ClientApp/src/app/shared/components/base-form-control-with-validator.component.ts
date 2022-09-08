@@ -1,10 +1,12 @@
-import {AbstractControl, ValidationErrors, Validator} from "@angular/forms";
-import {Component, Inject, Injector} from "@angular/core";
-import {BaseFormControlComponent} from "@app/shared/components/base-form-control.component";
+import { Component, Inject, Injector } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validator } from '@angular/forms';
+import { BaseFormControlComponent } from '@app/shared/components/base-form-control.component';
 
-@Component({template: ""})
-export abstract class BaseFormControlWithValidatorComponent<T> extends BaseFormControlComponent<T> implements Validator {
-  
+@Component({ template: '' })
+export abstract class BaseFormControlWithValidatorComponent<T>
+  extends BaseFormControlComponent<T>
+  implements Validator
+{
   protected constructor(@Inject(Injector) protected injector: Injector) {
     super(injector);
   }
@@ -12,17 +14,22 @@ export abstract class BaseFormControlWithValidatorComponent<T> extends BaseFormC
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.control.setValidators(this.control.validator ? [this.control.validator, this.validate] : this.validate);
+    this.control.setValidators(
+      this.control.validator
+        ? [this.control.validator, this.validate]
+        : this.validate
+    );
   }
 
-  public abstract validate(control: AbstractControl<any, any>): ValidationErrors | null;
+  public abstract validate(
+    control: AbstractControl<any, any>
+  ): ValidationErrors | null;
 
   public registerOnValidatorChange?(fn: () => void): void {
     this.onValidationChangeFn = fn;
   }
 
-  public onValidationChangeFn: any = () => {
-  };
+  public onValidationChangeFn: any = () => {};
 
   public onChange() {
     super.onChange();

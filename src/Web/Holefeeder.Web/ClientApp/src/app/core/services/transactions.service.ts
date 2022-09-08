@@ -1,9 +1,10 @@
-import {Inject, Injectable} from "@angular/core";
-import {MessageService} from "@app/core/services/message.service";
-import {Observable, of, tap} from "rxjs";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map, switchMap} from "rxjs/operators";
-import {formatErrors, mapToPagingInfo} from "@app/core/utils/api.utils";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { MessageService } from '@app/core/services/message.service';
+import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
+import { MessageAction, MessageType } from '@app/shared/models';
+import { Observable, of, tap } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import {
   MakePurchaseCommand,
   ModifyTransactionCommand,
@@ -11,23 +12,26 @@ import {
   PayCashflowCommand,
   TransactionDetail,
   TransactionDetailAdapter,
-  TransferMoneyCommand
-} from "@app/core";
-import {MessageAction, MessageType} from "@app/shared";
+  TransferMoneyCommand,
+} from '../models';
 
 const apiRoute: string = 'api/v2/transactions';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TransactionsService {
-
   constructor(
     private http: HttpClient,
     @Inject('BASE_API_URL') private apiUrl: string,
     private adapter: TransactionDetailAdapter,
-    private messages: MessageService) {
-  }
+    private messages: MessageService
+  ) {}
 
-  find(accountId: string, offset: number, limit: number, sort: string[]): Observable<PagingInfo<TransactionDetail>> {
+  find(
+    accountId: string,
+    offset: number,
+    limit: number,
+    sort: string[]
+  ): Observable<PagingInfo<TransactionDetail>> {
     let params = new HttpParams();
     if (accountId) {
       params = params.set('filter', `account_id:eq:${accountId}`);
@@ -46,8 +50,9 @@ export class TransactionsService {
     return this.http
       .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
-        params: params
-      }).pipe(
+        params: params,
+      })
+      .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
         catchError(formatErrors)
       );
@@ -56,10 +61,7 @@ export class TransactionsService {
   findById(id: string): Observable<TransactionDetail> {
     return this.http
       .get(`${this.apiUrl}/${apiRoute}/${id}`)
-      .pipe(
-        map(this.adapter.adapt),
-        catchError(formatErrors)
-      );
+      .pipe(map(this.adapter.adapt), catchError(formatErrors));
   }
 
   payCashflow(transaction: PayCashflowCommand): Observable<string> {
@@ -68,7 +70,13 @@ export class TransactionsService {
       .pipe(
         map((data: any) => data.id),
         catchError(formatErrors),
-        tap(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, {id: id}))
+        tap(id =>
+          this.messages.sendMessage({
+            type: MessageType.transaction,
+            action: MessageAction.post,
+            content: { id: id },
+          })
+        )
       );
   }
 
@@ -78,7 +86,13 @@ export class TransactionsService {
       .pipe(
         map((data: any) => data.id),
         catchError(formatErrors),
-        tap(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, {id: id}))
+        tap(id =>
+          this.messages.sendMessage({
+            type: MessageType.transaction,
+            action: MessageAction.post,
+            content: { id: id },
+          })
+        )
       );
   }
 
@@ -88,7 +102,13 @@ export class TransactionsService {
       .pipe(
         map((data: any) => data.id),
         catchError(formatErrors),
-        tap(id => this.messages.sendMessage(MessageType.transaction, MessageAction.post, {id: id}))
+        tap(id =>
+          this.messages.sendMessage({
+            type: MessageType.transaction,
+            action: MessageAction.post,
+            content: { id: id },
+          })
+        )
       );
   }
 
@@ -98,17 +118,27 @@ export class TransactionsService {
       .pipe(
         switchMap(_ => of(void 0)),
         catchError(formatErrors),
-        tap(_ => this.messages.sendMessage(MessageType.transaction, MessageAction.post, {id: transaction.id}))
+        tap(_ =>
+          this.messages.sendMessage({
+            type: MessageType.transaction,
+            action: MessageAction.post,
+            content: { id: transaction.id },
+          })
+        )
       );
   }
 
   delete(id: string): Observable<void> {
-    return this.http
-      .delete(`${this.apiUrl}/${apiRoute}/${id}`)
-      .pipe(
-        switchMap(_ => of(void 0)),
-        catchError(formatErrors),
-        tap(_ => this.messages.sendMessage(MessageType.transaction, MessageAction.delete, {id: id}))
-      );
+    return this.http.delete(`${this.apiUrl}/${apiRoute}/${id}`).pipe(
+      switchMap(_ => of(void 0)),
+      catchError(formatErrors),
+      tap(_ =>
+        this.messages.sendMessage({
+          type: MessageType.transaction,
+          action: MessageAction.delete,
+          content: { id: id },
+        })
+      )
+    );
   }
 }

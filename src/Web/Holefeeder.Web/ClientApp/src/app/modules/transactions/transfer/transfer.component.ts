@@ -1,16 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormGroupDirective} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {AccountsService} from '@app/core/services/accounts.service';
-import {AccountInfo} from "@app/core/models/account-info.model";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { AccountInfo } from '@app/core/models';
+import { AccountsService } from '@app/core/services';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-transfer',
   templateUrl: './transfer.component.html',
-  styleUrls: ['./transfer.component.scss']
+  styleUrls: ['./transfer.component.scss'],
 })
 export class TransferComponent implements OnInit {
-
   form!: FormGroup;
 
   values$!: Observable<AccountInfo[]>;
@@ -18,8 +17,7 @@ export class TransferComponent implements OnInit {
   constructor(
     private rootFormGroup: FormGroupDirective,
     private accountsService: AccountsService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.form = this.rootFormGroup.control;

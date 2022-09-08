@@ -1,5 +1,6 @@
-import {Injectable} from "@angular/core";
-import {Adapter, CategoryType} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
+import { CategoryType } from '@app/shared/models';
 
 export class Category {
   constructor(
@@ -9,13 +10,19 @@ export class Category {
     public color: string,
     public budgetAmount: number,
     public favorite: boolean
-  ) {
-  }
+  ) {}
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class CategoryAdapter implements Adapter<Category> {
   adapt(item: any): Category {
-    return new Category(item.id, item.name, item.type, item.color, item.budgetAmount, item.favorite);
+    return new Category(
+      item.id,
+      item.name,
+      item.type,
+      item.color,
+      item.budgetAmount,
+      item.favorite
+    );
   }
 }

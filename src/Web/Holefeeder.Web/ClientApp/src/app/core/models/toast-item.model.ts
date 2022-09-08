@@ -1,12 +1,8 @@
-import {Injectable} from "@angular/core";
-import {Adapter} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
 
 export abstract class ToastItem {
-  constructor(
-    public message: string,
-    public delay: number
-  ) {
-  }
+  constructor(public message: string, public delay: number) {}
 
   public abstract get className(): string;
 
@@ -14,11 +10,8 @@ export abstract class ToastItem {
 }
 
 export class InfoToastItem extends ToastItem {
-  constructor(
-    message: string,
-    delay: number = 5000
-  ) {
-    super(message, delay)
+  constructor(message: string, delay: number = 5000) {
+    super(message, delay);
   }
 
   public get className(): string {
@@ -31,11 +24,8 @@ export class InfoToastItem extends ToastItem {
 }
 
 export class WarningToastItem extends ToastItem {
-  constructor(
-    message: string,
-    delay: number = 5000
-  ) {
-    super(message, delay)
+  constructor(message: string, delay: number = 5000) {
+    super(message, delay);
   }
 
   public get className(): string {
@@ -48,11 +38,8 @@ export class WarningToastItem extends ToastItem {
 }
 
 export class DangerToastItem extends ToastItem {
-  constructor(
-    message: string,
-    delay: number = 5000
-  ) {
-    super(message, delay)
+  constructor(message: string, delay: number = 5000) {
+    super(message, delay);
   }
 
   public get className(): string {
@@ -67,10 +54,10 @@ export class DangerToastItem extends ToastItem {
 export enum ToastType {
   info = 'info',
   warning = 'warning',
-  danger = 'danger'
+  danger = 'danger',
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class ToastItemAdapter implements Adapter<ToastItem> {
   adapt(item: any): ToastItem {
     if (item.type === ToastType.danger) {

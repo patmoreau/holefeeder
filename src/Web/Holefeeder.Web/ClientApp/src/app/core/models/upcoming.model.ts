@@ -1,5 +1,6 @@
-import {Injectable} from "@angular/core";
-import {Adapter, dateFromUtc, IAccountInfo, ICategoryInfo} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter, IAccountInfo, ICategoryInfo } from '@app/shared';
+import { dateFromUtc } from '@app/shared/helpers';
 
 export class Upcoming {
   constructor(
@@ -10,13 +11,20 @@ export class Upcoming {
     public tags: string[],
     public category: ICategoryInfo,
     public account: IAccountInfo
-  ) {
-  }
+  ) {}
 }
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: 'root' })
 export class UpcomingAdapter implements Adapter<Upcoming> {
   adapt(item: any): Upcoming {
-    return new Upcoming(item.id, dateFromUtc(item.date), item.amount, item.description, item.tags, item.category, item.account);
+    return new Upcoming(
+      item.id,
+      dateFromUtc(item.date),
+      item.amount,
+      item.description,
+      item.tags,
+      item.category,
+      item.account
+    );
   }
 }

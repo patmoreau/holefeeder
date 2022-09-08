@@ -1,15 +1,18 @@
-import {Directive, ElementRef, Inject, Input, OnInit} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { DOCUMENT } from '@angular/common';
+import { Directive, ElementRef, Inject, Input, OnInit } from '@angular/core';
 
 @Directive({
-  selector: '[dftaAutofocus]'
+  selector: '[dftaAutofocus]',
 })
 export class AutofocusDirective implements OnInit {
   private host: HTMLInputElement;
   private focused: Element | null;
   private autoFocus = true;
 
-  constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    private elRef: ElementRef,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.host = this.elRef.nativeElement;
     this.focused = this.document.activeElement;
   }

@@ -12,14 +12,13 @@
               <div class="form-group">
                 <label for="amount">Amount</label>
                 <input class="form-control" dftaAutofocus formControlName="amount" id="amount"
-                       placeholder="cashflow amount..."
-                       required type="number"/>
+                  placeholder="cashflow amount..." required type="number" />
               </div>
               <div class="form-group">
                 <label for="category">Category</label>
                 <select class="form-control" formControlName="category" id="category" required>
-                  <option *ngFor="let category of categories$ | async"
-                          [ngValue]="category.id">{{ category.name }}</option>
+                  <option *ngFor="let category of categories$ | async" [ngValue]="category.id">{{ category.name }}
+                  </option>
                 </select>
               </div>
               <div class="form-group">
@@ -36,29 +35,27 @@
               </div>
               <div class="form-group">
                 <label for="interval">Interval type</label>
-                <select class="form-control" formControlName="intervalType" id="interval"
-                        required>
+                <select class="form-control" formControlName="intervalType" id="interval" required>
                   <option *ngFor="let interval of (intervalTypesNames | keyvalue)" [ngValue]="interval.key">
                     {{ interval.value }}</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="frequency">Frequency</label>
-                <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"/>
+                <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number" />
               </div>
-              <app-date-picker label="Effective date" formControlName="effectiveDate" [required]="true"></app-date-picker>
+              <app-date-picker label="Effective date" formControlName="effectiveDate" [required]="true">
+              </app-date-picker>
               <div class="form-group">
                 <label for="description">Note</label>
                 <input [placeholder]="'transaction note...'" class="form-control" formControlName="description"
-                       id="description"
-                       type="text"/>
+                  id="description" type="text" />
               </div>
             </div>
           </ng-container>
 
           <div class="d-flex justify-content-end mt-4">
-            <button (click)="onCancel()" class="btn btn-danger me-2" title="Disable"
-                    type="button">Disable
+            <button (click)="onCancel()" class="btn btn-danger me-2" title="Disable" type="button">Disable
             </button>
             <button (click)="goBack()" class="btn btn-secondary me-2" title="Cancel" type="button">
               Cancel

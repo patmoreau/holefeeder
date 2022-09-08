@@ -1,8 +1,8 @@
-import { environment } from '@env/environment';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from '@app/app.module';
-import { MsalGuard, MsalInterceptor, MsalService } from '@azure/msal-angular';
+import { MsalGuard, MsalInterceptor } from '@azure/msal-angular';
+import { environment } from '@env/environment';
 import { of } from 'rxjs';
 
 MsalGuard.prototype.canActivate = () => of(true);
@@ -33,4 +33,4 @@ if (environment.production) {
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
-  .catch((err) => console.error(err));
+  .catch(err => console.error(err));

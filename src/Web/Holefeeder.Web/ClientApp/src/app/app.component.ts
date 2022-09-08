@@ -1,15 +1,20 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {filter, Subject} from "rxjs";
-import {MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService} from "@azure/msal-angular";
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  MsalBroadcastService,
+  MsalGuardConfiguration,
+  MsalService,
+  MSAL_GUARD_CONFIG,
+} from '@azure/msal-angular';
 import {
   AuthenticationResult,
   EventMessage,
   EventType,
   InteractionStatus,
   PopupRequest,
-  RedirectRequest
-} from "@azure/msal-browser";
-import {takeUntil} from "rxjs/operators";
+  RedirectRequest,
+} from '@azure/msal-browser';
+import { filter, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
@@ -34,11 +38,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authService.instance.enableAccountStorageEvents(); // Optional - This will enable ACCOUNT_ADDED and ACCOUNT_REMOVED events emitted when a user logs in or out of another tab or window
     this.msalBroadcastService.msalSubject$
       .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED),
+        filter(
+          (msg: EventMessage) =>
+            msg.eventType === EventType.ACCOUNT_ADDED ||
+            msg.eventType === EventType.ACCOUNT_REMOVED
+        )
       )
       .subscribe((result: EventMessage) => {
         if (this.authService.instance.getAllAccounts().length === 0) {
-          window.location.pathname = "/";
+          window.location.pathname = '/';
         } else {
           this.setLoginDisplay();
         }
@@ -46,13 +54,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.msalBroadcastService.inProgress$
       .pipe(
-        filter((status: InteractionStatus) => status === InteractionStatus.None),
+        filter(
+          (status: InteractionStatus) => status === InteractionStatus.None
+        ),
         takeUntil(this._destroying$)
       )
       .subscribe(() => {
         this.setLoginDisplay();
         // this.checkAndSetActiveAccount();
-      })
+      });
   }
 
   setLoginDisplay() {
@@ -67,7 +77,10 @@ export class AppComponent implements OnInit, OnDestroy {
      */
     let activeAccount = this.authService.instance.getActiveAccount();
 
-    if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
+    if (
+      !activeAccount &&
+      this.authService.instance.getAllAccounts().length > 0
+    ) {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
     }
@@ -75,7 +88,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loginRedirect() {
     if (this.msalGuardConfig.authRequest) {
-      this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
+      this.authService.loginRedirect({
+        ...this.msalGuardConfig.authRequest,
+      } as RedirectRequest);
     } else {
       this.authService.loginRedirect();
     }
@@ -83,12 +98,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loginPopup() {
     if (this.msalGuardConfig.authRequest) {
-      this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
+      this.authService
+        .loginPopup({ ...this.msalGuardConfig.authRequest } as PopupRequest)
         .subscribe((response: AuthenticationResult) => {
           this.authService.instance.setActiveAccount(response.account);
         });
     } else {
-      this.authService.loginPopup()
+      this.authService
+        .loginPopup()
         .subscribe((response: AuthenticationResult) => {
           this.authService.instance.setActiveAccount(response.account);
         });
@@ -98,7 +115,7 @@ export class AppComponent implements OnInit, OnDestroy {
   logout(popup?: boolean) {
     if (popup) {
       this.authService.logoutPopup({
-        mainWindowRedirectUri: "/"
+        mainWindowRedirectUri: '/',
       });
     } else {
       this.authService.logoutRedirect();

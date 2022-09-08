@@ -1,50 +1,57 @@
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ClassProvider, FactoryProvider } from '@angular/core';
+import { LoggerService } from '@app/core/logger/logger.service';
+import {
+  MsalGuardConfiguration,
+  MsalInterceptor,
+  MsalInterceptorConfiguration,
+  MSAL_GUARD_CONFIG,
+  MSAL_INSTANCE,
+  MSAL_INTERCEPTOR_CONFIG,
+} from '@azure/msal-angular';
 import {
   BrowserCacheLocation,
   InteractionType,
   IPublicClientApplication,
   LogLevel,
-  PublicClientApplication
-} from "@azure/msal-browser";
-import {
-  MSAL_GUARD_CONFIG,
-  MSAL_INSTANCE,
-  MSAL_INTERCEPTOR_CONFIG,
-  MsalGuardConfiguration,
-  MsalInterceptor,
-  MsalInterceptorConfiguration
-} from "@azure/msal-angular";
-import {ClassProvider, FactoryProvider} from "@angular/core";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {LoggerService} from "@app/core/logger/logger.service";
+  PublicClientApplication,
+} from '@azure/msal-browser';
 
-export const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1;
+export const isIE =
+  window.navigator.userAgent.indexOf('MSIE ') > -1 ||
+  window.navigator.userAgent.indexOf('Trident/') > -1;
 
 export const b2cPolicies = {
   names: {
-    signUpSignIn: "B2C_1A_signup_signin_drifterapps",
-    forgotPassword: "B2C_1A_PasswordReset",
-    editProfile: "B2C_1A_ProfileEdit"
+    signUpSignIn: 'B2C_1A_signup_signin_drifterapps',
+    forgotPassword: 'B2C_1A_PasswordReset',
+    editProfile: 'B2C_1A_ProfileEdit',
   },
   authorities: {
     signUpSignIn: {
-      authority: "https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_signup_signin_drifterapps"
+      authority:
+        'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_signup_signin_drifterapps',
     },
     forgotPassword: {
-      authority: "https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_PasswordReset"
+      authority:
+        'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_PasswordReset',
     },
     editProfile: {
-      authority: "https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_ProfileEdit"
-    }
+      authority:
+        'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1A_ProfileEdit',
+    },
   },
-  authorityDomain: "holefeeder.b2clogin.com"
+  authorityDomain: 'holefeeder.b2clogin.com',
 };
 
 export const apiConfig: { scopes: string[]; uri: string } = {
-  scopes: ["https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user"],
-  uri: "https://holefeeder.onmicrosoft.com/holefeeder.api"
+  scopes: ['https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user'],
+  uri: 'https://holefeeder.onmicrosoft.com/holefeeder.api',
 };
 
-export function MSALInstanceFactory(logger: LoggerService): IPublicClientApplication {
+export function MSALInstanceFactory(
+  logger: LoggerService
+): IPublicClientApplication {
   function loggerCallback(logLevel: LogLevel, message: string) {
     if (logLevel === LogLevel.Error) {
       logger.logError(message);
@@ -63,7 +70,7 @@ export function MSALInstanceFactory(logger: LoggerService): IPublicClientApplica
       authority: b2cPolicies.authorities.signUpSignIn.authority,
       redirectUri: '/',
       postLogoutRedirectUri: '/',
-      knownAuthorities: [b2cPolicies.authorityDomain]
+      knownAuthorities: [b2cPolicies.authorityDomain],
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -73,9 +80,9 @@ export function MSALInstanceFactory(logger: LoggerService): IPublicClientApplica
       loggerOptions: {
         loggerCallback,
         logLevel: LogLevel.Info,
-        piiLoggingEnabled: false
-      }
-    }
+        piiLoggingEnabled: false,
+      },
+    },
   });
 }
 
@@ -85,7 +92,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
     protectedResourceMap: new Map([
       // ['https://graph.microsoft.com/v1.0/me', ['https://graph.microsoft.com/User.Read']],
       ['/api', [...apiConfig.scopes]],
-    ])
+    ]),
   };
 }
 
@@ -101,21 +108,21 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
 export const msalInterceptorProvider: ClassProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: MsalInterceptor,
-  multi: true
+  multi: true,
 };
 
 export const msalInstanceProvider: FactoryProvider = {
   provide: MSAL_INSTANCE,
   useFactory: MSALInstanceFactory,
-  deps: [LoggerService]
+  deps: [LoggerService],
 };
 
 export const msalGuardConfigProvider: FactoryProvider = {
   provide: MSAL_GUARD_CONFIG,
-  useFactory: MSALGuardConfigFactory
+  useFactory: MSALGuardConfigFactory,
 };
 
 export const msalInterceptorConfigProvider: FactoryProvider = {
   provide: MSAL_INTERCEPTOR_CONFIG,
-  useFactory: MSALInterceptorConfigFactory
+  useFactory: MSALInterceptorConfigFactory,
 };

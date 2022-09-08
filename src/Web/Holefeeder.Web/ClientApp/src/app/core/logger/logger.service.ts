@@ -1,13 +1,14 @@
-import {Injectable} from "@angular/core";
-import {ConfigService, LoggingLevel} from "@app/core/services/config.service";
+import { Injectable } from '@angular/core';
+import { ConfigService, LoggingLevel } from '@app/core/services/config.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class LoggerService {
-
   private _level: LoggingLevel = LoggingLevel.None;
 
   constructor(config: ConfigService) {
-    config.loggingLevel$.subscribe((loggingLevel: LoggingLevel) => this._level = loggingLevel);
+    config.loggingLevel$.subscribe(
+      (loggingLevel: LoggingLevel) => (this._level = loggingLevel)
+    );
     this.log = this.log.bind(this);
     this.logError = this.logError.bind(this);
     this.logWarning = this.logWarning.bind(this);
@@ -16,7 +17,11 @@ export class LoggerService {
     this.shouldLog = this.shouldLog.bind(this);
   }
 
-  private log(message: any, level = LoggingLevel.Warning, ...optionalParams: any[]): void {
+  private log(
+    message: any,
+    level = LoggingLevel.Warning,
+    ...optionalParams: any[]
+  ): void {
     if (this.shouldLog(level)) {
       switch (level) {
         case LoggingLevel.Errors:
@@ -62,7 +67,11 @@ export class LoggerService {
     } else if (this._level === LoggingLevel.Warning) {
       return level === LoggingLevel.Errors || level === LoggingLevel.Warning;
     } else if (this._level === LoggingLevel.Info) {
-      return level === LoggingLevel.Errors || level === LoggingLevel.Warning || level === LoggingLevel.Info;
+      return (
+        level === LoggingLevel.Errors ||
+        level === LoggingLevel.Warning ||
+        level === LoggingLevel.Info
+      );
     } else {
       return true;
     }

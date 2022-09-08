@@ -2,18 +2,10 @@
   <label for="dateSelect">{{label}}</label>
   <div class="input-group mb-2">
     <input id="dateSelect" class="form-control" ngbDatepicker #datePicker="ngbDatepicker" container="body"
-           [firstDayOfWeek]=7
-           [autoClose]="true"
-           [placeholder]="placeholder"
-           [required]="required"
-           [disabled]="disabled"
-           [(ngModel)]="data"
-           [ngModelOptions]="{standalone: true}"
-           (click)="datePicker.open()"
-           (ngModelChange)="onChange()"
-           (blur)="onTouchFn()"
-           [class.valid]="control.valid && (control.dirty || control.touched)"
-           [class.invalid]="control.invalid && (control.dirty || control.touched)">
+      [firstDayOfWeek]=7 [autoClose]="true" [placeholder]="placeholder" [required]="required" [disabled]="disabled"
+      [(ngModel)]="data" [ngModelOptions]="{standalone: true}" (click)="datePicker.open()" (ngModelChange)="onChange()"
+      (blur)="onTouchFn()" [class.valid]="control.valid && (control.dirty || control.touched)"
+      [class.invalid]="control.invalid && (control.dirty || control.touched)">
     <div class="input-group-append">
       <a (click)="datePicker.toggle()" class="btn btn-outline-secondary text-secondary">
         <em class="bi bi-calendar-event"></em>
@@ -29,4 +21,3 @@
     The '{{control.errors.invalidDate.value}}' date is not valid.
   </small>
 </div>
-

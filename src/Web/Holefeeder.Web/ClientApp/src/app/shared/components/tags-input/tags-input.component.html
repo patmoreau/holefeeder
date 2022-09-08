@@ -1,7 +1,6 @@
 <div class="input-group mb-2">
   <input #newTag (blur)="addTag(newTag.value); newTag.value = ''" (keyup.enter)="addTag(newTag.value)"
-         [readonly]="isReadonly"
-         class="form-control" type="text"/>
+    [readonly]="isReadonly" class="form-control" type="text" />
   <div class="input-group-append">
     <a (click)="addTag(newTag.value)" class="btn btn-outline-secondary text-secondary">
       <em class="bi bi-plus"></em>

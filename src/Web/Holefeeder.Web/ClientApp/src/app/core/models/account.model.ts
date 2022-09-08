@@ -1,5 +1,7 @@
-import {Injectable} from '@angular/core';
-import {AccountType, Adapter, dateFromUtc} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { Adapter } from '@app/shared';
+import { dateFromUtc } from '@app/shared/helpers';
+import { AccountType } from '@app/shared/models';
 
 export class Account {
   constructor(
@@ -14,14 +16,24 @@ export class Account {
     public description: string,
     public favorite: boolean,
     public inactive: boolean
-  ) {
-  }
+  ) {}
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AccountAdapter implements Adapter<Account> {
   adapt(item: any): Account {
-    return new Account(item.id, item.name, item.type, item.openBalance, dateFromUtc(item.openDate),
-      item.transactionCount, item.balance, dateFromUtc(item.updated), item.description, item.favorite, item.inactive);
+    return new Account(
+      item.id,
+      item.name,
+      item.type,
+      item.openBalance,
+      dateFromUtc(item.openDate),
+      item.transactionCount,
+      item.balance,
+      dateFromUtc(item.updated),
+      item.description,
+      item.favorite,
+      item.inactive
+    );
   }
 }

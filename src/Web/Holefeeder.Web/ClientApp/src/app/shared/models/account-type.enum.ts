@@ -5,7 +5,7 @@ export enum AccountType {
   investment = 'Investment',
   loan = 'Loan',
   mortgage = 'Mortgage',
-  savings = 'Savings'
+  savings = 'Savings',
 }
 
 export const AccountTypeNames = new Map<string, string>([
@@ -15,7 +15,7 @@ export const AccountTypeNames = new Map<string, string>([
   [AccountType.investment, 'Investment'],
   [AccountType.loan, 'Loan'],
   [AccountType.mortgage, 'Mortgage'],
-  [AccountType.savings, 'Savings']
+  [AccountType.savings, 'Savings'],
 ]);
 
 export function accountTypeMultiplier(type: AccountType): number {

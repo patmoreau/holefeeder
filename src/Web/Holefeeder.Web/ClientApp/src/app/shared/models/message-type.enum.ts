@@ -4,5 +4,5 @@ export enum MessageType {
   category = 'category',
   transaction = 'transaction',
   general = 'general',
-  error = 'error'
+  error = 'error',
 }

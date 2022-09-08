@@ -1,10 +1,10 @@
-import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {ErrorHandler, NgModule} from '@angular/core';
-import {GlobalErrorHandler} from './errors/global-error-handler';
-import {HttpLoadingInterceptor} from './errors/http-loading.interceptor';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {SharedModule} from "@app/shared/shared.module";
+import { CommonModule } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { SharedModule } from '@app/shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GlobalErrorHandler } from './errors/global-error-handler';
+import { HttpLoadingInterceptor } from './errors/http-loading.interceptor';
 
 @NgModule({
   declarations: [],
@@ -21,5 +21,4 @@ import {SharedModule} from "@app/shared/shared.module";
     },
   ],
 })
-export class CoreModule {
-}
+export class CoreModule {}

@@ -1,12 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {accountTypeMultiplier, AccountTypeNames, categoryTypeMultiplier} from '@app/shared';
-import {Account, AccountsService, Upcoming, UpcomingService} from "@app/core";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Account, Upcoming } from '@app/core/models';
+import { AccountsService, UpcomingService } from '@app/core/services';
+import {
+  accountTypeMultiplier,
+  AccountTypeNames,
+  categoryTypeMultiplier,
+} from '@app/shared/models';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './accounts-list.component.html',
-  styleUrls: ['./accounts-list.component.scss']
+  styleUrls: ['./accounts-list.component.scss'],
 })
 export class AccountsListComponent implements OnInit {
   accounts$!: Observable<Account[]>;
@@ -45,17 +50,18 @@ export class AccountsListComponent implements OnInit {
   getUpcomingBalance(account: Account, cashflows: Upcoming[]): number {
     return (
       account.balance +
-      (cashflows ?
-        cashflows
-          .filter(cashflow => cashflow.account.id === account.id)
-          .map(
-            cashflow => {
-              return cashflow.amount *
+      (cashflows
+        ? cashflows
+            .filter(cashflow => cashflow.account.id === account.id)
+            .map(cashflow => {
+              return (
+                cashflow.amount *
                 categoryTypeMultiplier(cashflow.category.type) *
                 accountTypeMultiplier(account.type)
-            }
-          )
-          .reduce((sum, current) => sum + current, 0) : 0)
+              );
+            })
+            .reduce((sum, current) => sum + current, 0)
+        : 0)
     );
   }
 

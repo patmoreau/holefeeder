@@ -1,33 +1,67 @@
-import {Injectable, Type} from '@angular/core';
-import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, from, of, take} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {ConfirmDialogComponent, DeleteDialogComponent, InputDialogComponent, MessageDialogComponent} from "@app/shared";
+import { Injectable, Type } from '@angular/core';
+import {
+  ConfirmDialogComponent,
+  DeleteDialogComponent,
+  InputDialogComponent,
+  MessageDialogComponent,
+} from '@app/shared';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { from, Observable, of, take } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ModalService {
+  constructor(private ngbModal: NgbModal) {}
 
-  constructor(private ngbModal: NgbModal) {
+  confirm(
+    prompt = 'Really?',
+    title = 'Confirmation'
+  ): Observable<boolean | undefined> {
+    return this.custom<ConfirmDialogComponent, boolean>(
+      ConfirmDialogComponent,
+      { title, prompt }
+    );
   }
 
-  confirm(prompt = 'Really?', title = 'Confirmation'): Observable<boolean | undefined> {
-    return this.custom<ConfirmDialogComponent, boolean>(ConfirmDialogComponent, {title, prompt});
+  deactivate(
+    prompt = 'Deactivate?',
+    title = 'Confirmation'
+  ): Observable<boolean | undefined> {
+    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {
+      title,
+      prompt,
+      action: 'Deactivate',
+    });
   }
 
-  deactivate(prompt = 'Deactivate?', title = 'Confirmation'): Observable<boolean | undefined> {
-    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {title, prompt, action: 'Deactivate'});
+  delete(
+    prompt = 'Delete?',
+    title = 'Confirmation'
+  ): Observable<boolean | undefined> {
+    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {
+      title,
+      prompt,
+      action: 'Delete',
+    });
   }
 
-  delete(prompt = 'Delete?', title = 'Confirmation'): Observable<boolean | undefined> {
-    return this.custom<DeleteDialogComponent, boolean>(DeleteDialogComponent, {title, prompt, action: 'Delete'});
-  }
-
-  input(message: string, initialValue: string, title = 'Input'): Observable<string | undefined> {
-    return this.custom<InputDialogComponent, string>(InputDialogComponent, {title, initialValue, message});
+  input(
+    message: string,
+    initialValue: string,
+    title = 'Input'
+  ): Observable<string | undefined> {
+    return this.custom<InputDialogComponent, string>(InputDialogComponent, {
+      title,
+      initialValue,
+      message,
+    });
   }
 
   message(message: string, title = 'Message'): Observable<boolean | undefined> {
-    return this.custom<MessageDialogComponent, boolean>(MessageDialogComponent, {title, message});
+    return this.custom<MessageDialogComponent, boolean>(
+      MessageDialogComponent,
+      { title, message }
+    );
   }
 
   custom<T, R>(
@@ -37,8 +71,10 @@ export class ModalService {
   ): Observable<R | undefined> {
     // we use a static backdrop by default,
     // but allow the user to set anything in the options
-    const modal = this.ngbModal.open(content, {backdrop: 'static', ...options}
-    );
+    const modal = this.ngbModal.open(content, {
+      backdrop: 'static',
+      ...options,
+    });
 
     // copy the config values (if any) into the component
     Object.assign(modal.componentInstance, config);

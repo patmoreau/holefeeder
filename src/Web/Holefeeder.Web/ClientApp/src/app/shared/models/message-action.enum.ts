@@ -4,5 +4,5 @@ export enum MessageAction {
   noAction = 'no-action',
   error = 'error',
   userLogOn = 'user-log-on',
-  userLogOff = 'user-log-off'
+  userLogOff = 'user-log-off',
 }

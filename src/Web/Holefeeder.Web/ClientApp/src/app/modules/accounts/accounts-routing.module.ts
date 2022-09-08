@@ -1,13 +1,13 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {MsalGuard} from '@azure/msal-angular';
-import {AccountsListComponent} from './accounts-list/accounts-list.component';
-import {AccountDetailsComponent} from './account-details/account-details.component';
-import {AccountsComponent} from './accounts/accounts.component';
-import {AccountUpcomingComponent} from './account-upcoming/account-upcoming.component';
-import {AccountTransactionsComponent} from './account-transactions/account-transactions.component';
-import {OpenAccountComponent} from './open-account/open-account.component';
-import {ModifyAccountComponent} from './modify-account/modify-account.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MsalGuard } from '@azure/msal-angular';
+import { AccountDetailsComponent } from './account-details/account-details.component';
+import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
+import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
+import { AccountsListComponent } from './accounts-list/accounts-list.component';
+import { AccountsComponent } from './accounts/accounts.component';
+import { ModifyAccountComponent } from './modify-account/modify-account.component';
+import { OpenAccountComponent } from './open-account/open-account.component';
 
 const routes: Routes = [
   {
@@ -36,26 +36,25 @@ const routes: Routes = [
         component: AccountDetailsComponent,
         canActivate: [MsalGuard],
         children: [
-          {path: '', redirectTo: 'upcoming', pathMatch: 'full'},
+          { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,
-            canActivate: [MsalGuard]
+            canActivate: [MsalGuard],
           },
           {
             path: 'transactions',
             component: AccountTransactionsComponent,
-            canActivate: [MsalGuard]
-          }
-        ]
+            canActivate: [MsalGuard],
+          },
+        ],
       },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AccountsRoutingModule {
-}
+export class AccountsRoutingModule {}

@@ -1,4 +1,4 @@
-import {CategoryType} from "@app/shared";
+import { CategoryType } from '../models';
 
 export interface ICategoryInfo {
   id: string;
