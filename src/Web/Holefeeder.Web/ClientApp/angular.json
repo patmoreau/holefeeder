@@ -44,7 +44,10 @@
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules/bootstrap/scss"]
             },
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.min.js"]
+            "scripts": [
+              "node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -93,12 +96,6 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/main.ts",
-                  "with": "src/main-skip.login.ts"
                 }
               ],
               "outputHashing": "all",

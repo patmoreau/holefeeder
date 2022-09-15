@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BrowserUtils } from '@azure/msal-browser';
+import { environment } from '@env/environment';
 import { ErrorNotfoundComponent } from './core/error-notfound/error-notfound.component';
 
 const routes: Routes = [
@@ -42,10 +42,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      initialNavigation:
-        !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()
-          ? 'enabledBlocking'
-          : 'disabled',
+      enableTracing: !environment.production,
     }),
   ],
   exports: [RouterModule],

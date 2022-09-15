@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { MsalGuard } from '@azure/msal-angular';
+import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { AccountComponent } from './account/account.component';
 import { GeneralComponent } from './general/general.component';
 import { SettingsComponent } from './settings.component';
@@ -11,17 +10,17 @@ const settingsRoutes: Routes = [
   {
     path: '',
     component: SettingsComponent,
-    canActivate: [MsalGuard],
+    canActivate: [AutoLoginAllRoutesGuard],
     children: [
       {
         path: 'account',
         component: AccountComponent,
-        canActivateChild: [MsalGuard],
+        canActivateChild: [AutoLoginAllRoutesGuard],
       },
       {
         path: 'general',
         component: GeneralComponent,
-        canActivateChild: [MsalGuard],
+        canActivateChild: [AutoLoginAllRoutesGuard],
       },
     ],
   },

@@ -7,7 +7,6 @@
   },
   "files": [
     "src/main.ts",
-    "src/main-skip.login.ts",
     "src/polyfills.ts"
   ],
   "include": [

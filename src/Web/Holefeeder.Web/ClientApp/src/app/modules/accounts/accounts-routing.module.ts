@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
+import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { AccountTransactionsComponent } from './account-transactions/account-transactions.component';
 import { AccountUpcomingComponent } from './account-upcoming/account-upcoming.component';
@@ -17,35 +17,35 @@ const routes: Routes = [
       {
         path: '',
         component: AccountsListComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
         runGuardsAndResolvers: 'always',
         pathMatch: 'full',
       },
       {
         path: 'create',
         component: OpenAccountComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
       },
       {
         path: ':accountId/edit',
         component: ModifyAccountComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
       },
       {
         path: ':accountId',
         component: AccountDetailsComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
         children: [
           { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
           {
             path: 'upcoming',
             component: AccountUpcomingComponent,
-            canActivate: [MsalGuard],
+            canActivate: [AutoLoginAllRoutesGuard],
           },
           {
             path: 'transactions',
             component: AccountTransactionsComponent,
-            canActivate: [MsalGuard],
+            canActivate: [AutoLoginAllRoutesGuard],
           },
         ],
       },

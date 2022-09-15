@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UpcomingResolverService } from '@app/core/resolvers/upcoming-resolver.service';
-import { MsalGuard } from '@azure/msal-angular';
+import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { MakePurchaseComponent } from './make-purchase/make-purchase.component';
 import { ModifyTransactionComponent } from './modify-transaction/modify-transaction.component';
 import { PayCashflowComponent } from './pay-cashflow/pay-cashflow.component';
@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'pay-cashflow/:cashflowId',
     component: PayCashflowComponent,
-    canActivate: [MsalGuard],
+    canActivate: [AutoLoginAllRoutesGuard],
     resolve: {
       cashflow: UpcomingResolverService,
     },
@@ -18,17 +18,17 @@ const routes: Routes = [
   {
     path: 'make-purchase',
     component: MakePurchaseComponent,
-    canActivate: [MsalGuard],
+    canActivate: [AutoLoginAllRoutesGuard],
   },
   {
     path: 'make-purchase/:accountId',
     component: MakePurchaseComponent,
-    canActivate: [MsalGuard],
+    canActivate: [AutoLoginAllRoutesGuard],
   },
   {
     path: ':transactionId',
     component: ModifyTransactionComponent,
-    canActivate: [MsalGuard],
+    canActivate: [AutoLoginAllRoutesGuard],
   },
 ];
 

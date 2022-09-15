@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
+import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { CashflowsListComponent } from './cashflows-list/cashflows-list.component';
 import { CashflowsComponent } from './cashflows/cashflows.component';
 import { ModifyCashflowComponent } from './modify-cashflow/modify-cashflow.component';
@@ -13,14 +13,14 @@ const routes: Routes = [
       {
         path: '',
         component: CashflowsListComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
         runGuardsAndResolvers: 'always',
         pathMatch: 'full',
       },
       {
         path: ':cashflowId',
         component: ModifyCashflowComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AutoLoginAllRoutesGuard],
       },
     ],
   },

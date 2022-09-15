@@ -6,8 +6,8 @@ import { DateInterval } from '@app/core/models/date-interval.model';
 import { Settings } from '@app/core/models/settings.model';
 import { User } from '@app/core/models/user.model';
 import { UserService } from '@app/core/services/user.service';
-import { MsalService } from '@azure/msal-angular';
 import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { addDays, startOfToday } from 'date-fns';
 import { Observable } from 'rxjs';
 import { SettingsService } from '../services/settings.service';
@@ -34,11 +34,11 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
+    public oidcSecurityService: OidcSecurityService,
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private router: Router,
     private userService: UserService,
-    private authService: MsalService,
     private logger: LoggerService
   ) {
     this.isNavbarCollapsed = true;
@@ -135,16 +135,18 @@ export class HeaderComponent implements OnInit {
     );
   }
 
-  login() {}
+  login() {
+    this.oidcSecurityService.authorize();
+  }
 
-  logout(popup?: boolean) {
-    if (popup) {
-      this.authService.logoutPopup({
-        mainWindowRedirectUri: '/',
-      });
-    } else {
-      this.authService.logoutRedirect();
-    }
+  refreshSession() {
+    this.oidcSecurityService
+      .forceRefreshSession()
+      .subscribe(result => console.log(result));
+  }
+
+  logout() {
+    this.oidcSecurityService.logoff();
   }
 
   private setCalendar(period: DateInterval) {
