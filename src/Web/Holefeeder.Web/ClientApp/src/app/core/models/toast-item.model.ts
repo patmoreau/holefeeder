@@ -1,6 +1,3 @@
-import { Injectable } from '@angular/core';
-import { Adapter } from '@app/shared';
-
 export abstract class ToastItem {
   constructor(public message: string, public delay: number) {}
 
@@ -57,15 +54,3 @@ export enum ToastType {
   danger = 'danger',
 }
 
-@Injectable({ providedIn: 'root' })
-export class ToastItemAdapter implements Adapter<ToastItem> {
-  adapt(item: any): ToastItem {
-    if (item.type === ToastType.danger) {
-      return new DangerToastItem(item.message, item.delay);
-    } else if (item.type === ToastType.warning) {
-      return new WarningToastItem(item.message, item.delay);
-    } else {
-      return new InfoToastItem(item.message, item.delay);
-    }
-  }
-}

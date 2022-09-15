@@ -1,6 +1,4 @@
-import { Injectable } from '@angular/core';
-import { Adapter, IAccountInfo, ICategoryInfo } from '@app/shared';
-import { dateFromUtc } from '@app/shared/helpers';
+import { IAccountInfo, ICategoryInfo } from '@app/shared';
 import { DateIntervalType } from '@app/shared/models';
 
 export class CashflowDetail {
@@ -19,21 +17,3 @@ export class CashflowDetail {
   ) {}
 }
 
-@Injectable({ providedIn: 'root' })
-export class CashflowDetailAdapter implements Adapter<CashflowDetail> {
-  adapt(item: any): CashflowDetail {
-    return new CashflowDetail(
-      item.id,
-      dateFromUtc(item.effectiveDate),
-      item.amount,
-      item.intervalType,
-      item.frequency,
-      item.recurrence,
-      item.description,
-      item.category,
-      item.account,
-      item.inactive,
-      item.tags
-    );
-  }
-}

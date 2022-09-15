@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Settings, SettingsAdapter } from '@app/core/models/settings.model';
+import { Settings } from '@app/core/models/settings.model';
 import { SettingsService } from '@app/core/services/settings.service';
 import { DateIntervalTypeNames } from '@app/shared/models';
 import { Observable, tap } from 'rxjs';
+import { SettingsAdapter } from '@app/core/models/settings-adapter.service';
 
 @Component({
   selector: 'app-general',

@@ -6,7 +6,6 @@ import { ModalService } from '@app/core/modals/modal.service';
 import { Account } from '@app/core/models/account.model';
 import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
 import { Category } from '@app/core/models/category.model';
-import { ModifyCashflowCommandAdapter } from '@app/core/models/modify-cashflow-command.model';
 import { AccountsService } from '@app/core/services';
 import { CashflowsService } from '@app/core/services/cashflows.service';
 import { CategoriesService } from '@app/core/services/categories.service';
@@ -14,6 +13,7 @@ import { filterNullish, filterTrue } from '@app/shared/helpers';
 import { DateIntervalTypeNames } from '@app/shared/models';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, switchMap, tap } from 'rxjs';
+import { ModifyCashflowCommandAdapter } from '@app/core/models/modify-cashflow-command-adapter.service';
 
 const cashflowIdParamName = 'cashflowId';
 

@@ -1,7 +1,3 @@
-import { Injectable } from '@angular/core';
-import { Adapter } from '@app/shared';
-import { dateToUtc } from '@app/shared/helpers';
-
 export class TransferMoneyCommand {
   constructor(
     public date: Date,
@@ -12,17 +8,3 @@ export class TransferMoneyCommand {
   ) {}
 }
 
-@Injectable({ providedIn: 'root' })
-export class TransferMoneyCommandAdapter
-  implements Adapter<TransferMoneyCommand>
-{
-  adapt(item: any): TransferMoneyCommand {
-    return new TransferMoneyCommand(
-      dateToUtc(item.date),
-      item.amount,
-      item.description,
-      item.fromAccount,
-      item.toAccount
-    );
-  }
-}

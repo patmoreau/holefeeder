@@ -9,3 +9,4 @@ export * from './statistics.service';
 export * from './toasts.service';
 export * from './transactions.service';
 export * from './upcoming.service';
+export * from './user.service';
