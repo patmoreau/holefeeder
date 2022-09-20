@@ -5,8 +5,9 @@ import { StateService } from '@app/core/services/state.service';
 import { filterNullish } from '@app/shared/helpers';
 import { MessageType } from '@app/shared/models';
 import { catchError, filter, map, Observable, take } from 'rxjs';
-import { Account, AccountAdapter, PagingInfo } from '../models';
+import { Account, PagingInfo } from '../models';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
+import { AccountAdapter } from './account-adapter.service';
 
 const apiRoute: string = 'api/v2/accounts';
 

@@ -1,19 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoggerService } from '@app/core/logger/logger.service';
+import { Router, RouterModule } from '@angular/router';
+import { logger } from '@app/core';
 import { DateInterval } from '@app/core/models/date-interval.model';
 import { Settings } from '@app/core/models/settings.model';
 import { User } from '@app/core/models/user.model';
-import { UserService } from '@app/core/services/user.service';
-import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  SettingsService,
+  SubscriberService,
+  UserService,
+} from '@app/core/services';
+import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { addDays, startOfToday } from 'date-fns';
 import { Observable } from 'rxjs';
-import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
+  imports: [CommonModule, RouterModule, NgbModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -39,7 +45,7 @@ export class HeaderComponent implements OnInit {
     private settingsService: SettingsService,
     private router: Router,
     private userService: UserService,
-    private logger: LoggerService
+    private subService: SubscriberService
   ) {
     this.isNavbarCollapsed = true;
 
@@ -70,7 +76,7 @@ export class HeaderComponent implements OnInit {
 
   nextPeriod() {
     if (this.toDate === undefined) {
-      this.logger.logWarning('No date defined');
+      logger.error('No date defined');
       return;
     }
     const date = this.getDate(this.toDate!);
@@ -87,7 +93,7 @@ export class HeaderComponent implements OnInit {
 
   previousPeriod() {
     if (this.fromDate === undefined) {
-      this.logger.logWarning('No date defined');
+      logger.error('No date defined');
       return;
     }
     const date = this.getDate(this.fromDate!);
@@ -140,9 +146,11 @@ export class HeaderComponent implements OnInit {
   }
 
   refreshSession() {
-    this.oidcSecurityService
-      .forceRefreshSession()
-      .subscribe(result => console.log(result));
+    this.subService.add(
+      this.oidcSecurityService
+        .forceRefreshSession()
+        .subscribe(result => console.log(result))
+    );
   }
 
   logout() {

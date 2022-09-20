@@ -1,6 +1,11 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   MakePurchaseCommandAdapter,
@@ -14,6 +19,10 @@ import {
 import { DateIntervalType } from '@app/shared/models';
 import { startOfToday } from 'date-fns';
 import { combineLatest, filter, Observable, tap } from 'rxjs';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
+import { LoaderComponent, RecurringCashflowComponent } from '@app/shared';
+import { TransferComponent } from '@app/modules/transactions/transfer/transfer.component';
 
 const accountIdParamName = 'accountId';
 
@@ -21,6 +30,16 @@ const accountIdParamName = 'accountId';
   selector: 'app-make-purchase',
   templateUrl: './make-purchase.component.html',
   styleUrls: ['./make-purchase.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgbCollapseModule,
+    TransactionEditComponent,
+    TransferComponent,
+    RecurringCashflowComponent,
+    LoaderComponent,
+  ],
 })
 export class MakePurchaseComponent implements OnInit {
   public isNotRecurring = true;

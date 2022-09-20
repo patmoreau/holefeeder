@@ -8,11 +8,16 @@ import {
 } from '@app/core/services';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { TransactionListItemComponent } from '@app/shared';
 
 @Component({
   selector: 'app-upcoming-list',
   templateUrl: './upcoming-list.component.html',
   styleUrls: ['./upcoming-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
 })
 export class UpcomingListComponent implements OnInit {
   @Input() accountId: string | undefined;

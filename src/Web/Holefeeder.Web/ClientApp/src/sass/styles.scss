@@ -20,6 +20,7 @@ $theme-colors: map-merge($theme-colors, $custom-theme-colors);
 @import "utilities";
 @import "root";
 @import "reboot";
+//@import '~ngx-toastr/toastr-bs4-alert';
 
 // Add additional custom code here
 body {

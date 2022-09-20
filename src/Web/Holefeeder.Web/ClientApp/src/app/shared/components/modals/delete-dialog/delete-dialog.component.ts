@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { AutofocusDirective } from '@app/shared';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -34,6 +35,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [AutofocusDirective],
 })
 export class DeleteDialogComponent {
   title!: string;

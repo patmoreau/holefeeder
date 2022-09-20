@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ControlContainer, FormGroup } from '@angular/forms';
+import {
+  ControlContainer,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { DateIntervalTypeNames } from '@app/shared/models';
+import { CommonModule } from '@angular/common';
+import { DatePickerComponent } from '@app/shared';
 
 @Component({
   selector:
     '[formGroup] app-recurring-cashflow,[formGroupName] app-recurring-cashflow',
   templateUrl: './recurring-cashflow.component.html',
   styleUrls: ['./recurring-cashflow.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, DatePickerComponent],
 })
 export class RecurringCashflowComponent implements OnInit {
   form!: FormGroup;

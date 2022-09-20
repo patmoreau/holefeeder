@@ -26,6 +26,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     </div>
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ConfirmDialogComponent {
   title: string = 'Title placeholder';

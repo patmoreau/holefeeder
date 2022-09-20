@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { StateService } from '@app/core/services/state.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { filter, Observable } from 'rxjs';
+import { logger } from '@app/core';
 import { User, UserAdapter } from '../models';
 import { MessageService } from './message.service';
 
@@ -34,7 +35,7 @@ export class UserService extends StateService<UserState> {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated }) => {
         this.setState({ loggedOn: true });
-        console.warn('authenticated: ', isAuthenticated);
+        logger.verbose('authenticated: ', isAuthenticated);
       }
     );
 

@@ -1,9 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { trace } from '@app/core';
 
 @Component({
   selector: 'app-transaction-list-item',
   templateUrl: './transaction-list-item.component.html',
   styleUrls: ['./transaction-list-item.component.scss'],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class TransactionListItemComponent implements OnInit {
   @Input() description!: string;
@@ -17,6 +21,7 @@ export class TransactionListItemComponent implements OnInit {
 
   ngOnInit() {}
 
+  @trace()
   click(action: string) {
     this.action.emit(action);
   }

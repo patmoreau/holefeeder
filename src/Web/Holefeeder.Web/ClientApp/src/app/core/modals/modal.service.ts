@@ -8,11 +8,13 @@ import {
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { from, Observable, of, take } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { trace } from '@app/core';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
   constructor(private ngbModal: NgbModal) {}
 
+  @trace()
   confirm(
     prompt = 'Really?',
     title = 'Confirmation'
@@ -23,6 +25,7 @@ export class ModalService {
     );
   }
 
+  @trace()
   deactivate(
     prompt = 'Deactivate?',
     title = 'Confirmation'
@@ -34,6 +37,7 @@ export class ModalService {
     });
   }
 
+  @trace()
   delete(
     prompt = 'Delete?',
     title = 'Confirmation'
@@ -45,6 +49,7 @@ export class ModalService {
     });
   }
 
+  @trace()
   input(
     message: string,
     initialValue: string,
@@ -57,6 +62,7 @@ export class ModalService {
     });
   }
 
+  @trace()
   message(message: string, title = 'Message'): Observable<boolean | undefined> {
     return this.custom<MessageDialogComponent, boolean>(
       MessageDialogComponent,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account, Upcoming } from '@app/core/models';
 import { AccountsService, UpcomingService } from '@app/core/services';
 import {
@@ -8,10 +8,14 @@ import {
   categoryTypeMultiplier,
 } from '@app/shared/models';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { LoaderComponent } from '@app/shared';
 
 @Component({
   templateUrl: './accounts-list.component.html',
   styleUrls: ['./accounts-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule, LoaderComponent],
 })
 export class AccountsListComponent implements OnInit {
   accounts$!: Observable<Account[]>;

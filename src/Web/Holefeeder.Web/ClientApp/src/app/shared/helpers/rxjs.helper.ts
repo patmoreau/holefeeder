@@ -1,3 +1,4 @@
+import { logger } from '@app/core';
 import {
   EMPTY,
   filter,
@@ -8,6 +9,17 @@ import {
   tap,
   UnaryFunction,
 } from 'rxjs';
+
+export function trace<T>(
+  message: string = 'observe'
+): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
+  return pipe(
+    tap(x => logger.verbose(message, x)) as OperatorFunction<
+      T | null | undefined,
+      T
+    >
+  );
+}
 
 export function filterNullish<T>(): UnaryFunction<
   Observable<T | null | undefined>,

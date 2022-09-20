@@ -7,9 +7,8 @@
       ],
       "extends": [
         "plugin:prettier/recommended"
-      ],
+      ]
     },
-    // NOTE: WE ARE NOT APPLYING PRETTIER IN THIS OVERRIDE, ONLY @ANGULAR-ESLINT/TEMPLATE
     {
       "files": [
         "*.html"
@@ -19,7 +18,6 @@
       ],
       "rules": {}
     },
-    // NOTE: WE ARE NOT APPLYING @ANGULAR-ESLINT/TEMPLATE IN THIS OVERRIDE, ONLY PRETTIER
     {
       "files": [
         "*.html"
@@ -31,7 +29,6 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
-        // NOTE: WE ARE OVERRIDING THE DEFAULT CONFIG TO ALWAYS SET THE PARSER TO ANGULAR (SEE BELOW)
         "prettier/prettier": [
           "error",
           {

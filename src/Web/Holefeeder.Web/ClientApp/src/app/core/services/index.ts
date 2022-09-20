@@ -1,3 +1,4 @@
+export { AccountAdapter } from './account-adapter.service';
 export * from './accounts.service';
 export * from './cashflows.service';
 export * from './categories.service';
@@ -6,6 +7,7 @@ export * from './message.service';
 export * from './settings.service';
 export * from './state.service';
 export * from './statistics.service';
+export * from './subscriber.service';
 export * from './toasts.service';
 export * from './transactions.service';
 export * from './upcoming.service';

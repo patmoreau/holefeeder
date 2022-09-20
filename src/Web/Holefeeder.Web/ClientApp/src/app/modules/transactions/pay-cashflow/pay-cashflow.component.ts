@@ -1,10 +1,18 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
 import { TransactionsService, UpcomingService } from '@app/core/services';
 import { map, Observable, tap } from 'rxjs';
+import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
+import { LoaderComponent } from '@app/shared';
 
 const cashflowIdParamName = 'cashflowId';
 
@@ -12,6 +20,13 @@ const cashflowIdParamName = 'cashflowId';
   selector: 'app-pay-cashflow',
   templateUrl: './pay-cashflow.component.html',
   styleUrls: ['./pay-cashflow.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TransactionEditComponent,
+    LoaderComponent,
+  ],
 })
 export class PayCashflowComponent implements OnInit {
   form!: FormGroup;

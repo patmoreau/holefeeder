@@ -10,7 +10,7 @@ export class ModifyAccountCommand {
   ) {}
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ModifyAccountAdapter implements Adapter<ModifyAccountCommand> {
   adapt(item: any): ModifyAccountCommand {
     return new ModifyAccountCommand(

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { StateService } from '@app/core/services/state.service';
+import { StateService, SubscriberService } from '@app/core/services';
+import { trace } from '@app/shared/helpers';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { filter, Observable } from 'rxjs';
 import { Message, ToastItem, ToastItemAdapter, ToastType } from '../models';
@@ -15,16 +16,20 @@ const initialState: ToastsState = {
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService extends StateService<ToastsState> {
-  toasts$: Observable<ToastItem[]> = this.select(state => state.toasts);
+  toasts$: Observable<ToastItem[]> = this.select(state => state.toasts).pipe(
+    trace()
+  );
 
   constructor(
     private messages: MessageService,
-    private adapter: ToastItemAdapter
+    private adapter: ToastItemAdapter,
+    private subscriptions: SubscriberService
   ) {
     super(initialState);
 
-    this.messages.listen
+    let subscription = this.messages.listen
       .pipe(
+        trace(),
         filter(
           message =>
             message.type === MessageType.error &&
@@ -42,6 +47,7 @@ export class ToastsService extends StateService<ToastsState> {
           ],
         });
       });
+    this.subscriptions.add(subscription);
   }
 
   show(type: ToastType, message: string): void {

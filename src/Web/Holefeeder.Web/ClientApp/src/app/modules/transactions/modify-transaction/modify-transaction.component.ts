@@ -1,6 +1,12 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ModalService } from '@app/core/modals/modal.service';
 import {
@@ -10,6 +16,8 @@ import {
 import { TransactionsService } from '@app/core/services';
 import { filterTrue } from '@app/shared/helpers';
 import { filter, Observable, switchMap, tap } from 'rxjs';
+import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
+import { LoaderComponent } from '@app/shared';
 
 const transactionIdParamName = 'transactionId';
 
@@ -17,6 +25,13 @@ const transactionIdParamName = 'transactionId';
   selector: 'app-modify-transaction',
   templateUrl: './modify-transaction.component.html',
   styleUrls: ['./modify-transaction.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TransactionEditComponent,
+    LoaderComponent,
+  ],
 })
 export class ModifyTransactionComponent implements OnInit {
   form!: FormGroup;

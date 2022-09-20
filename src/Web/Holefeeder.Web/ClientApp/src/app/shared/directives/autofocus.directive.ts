@@ -3,6 +3,7 @@ import { Directive, ElementRef, Inject, Input, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[dftaAutofocus]',
+  standalone: true,
 })
 export class AutofocusDirective implements OnInit {
   private host: HTMLInputElement;

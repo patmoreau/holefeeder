@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ToastItem, ToastType } from '@app/core/models/toast-item.model';
 import { ToastsService } from '@app/core/services/toasts.service';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-toast-view',
+  standalone: true,
+  imports: [CommonModule, NgbToastModule],
   templateUrl: './toast-view.component.html',
   styleUrls: ['./toast-view.component.scss'],
   host: {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account } from '@app/core/models';
 import { AccountsService, UpcomingService } from '@app/core/services';
 import { filterNullish } from '@app/shared/helpers';
@@ -8,11 +8,15 @@ import {
   categoryTypeMultiplier,
 } from '@app/shared/models';
 import { from, Observable, scan, switchMap, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { LoaderComponent } from '@app/shared';
 
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.component.html',
   styleUrls: ['./account-details.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule, LoaderComponent],
 })
 export class AccountDetailsComponent implements OnInit {
   account$!: Observable<Account | undefined>;

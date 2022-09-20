@@ -8,6 +8,9 @@ import {
 import { Injectable } from '@angular/core';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 
+const retryCount = 3;
+const retryWaitMilliSeconds = 5000;
+
 @Injectable()
 export class HttpLoadingInterceptor implements HttpInterceptor {
   constructor() {}
@@ -17,7 +20,7 @@ export class HttpLoadingInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      retry(3),
+      retry({ count: retryCount, delay: retryWaitMilliSeconds }),
       catchError((err: HttpErrorResponse) => {
         let errorMessage = '';
         if (err.error instanceof ErrorEvent) {

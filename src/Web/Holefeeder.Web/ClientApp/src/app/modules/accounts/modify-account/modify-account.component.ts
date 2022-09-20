@@ -1,6 +1,11 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ModalService } from '@app/core/modals/modal.service';
 import { AccountsService } from '@app/core/services';
@@ -9,6 +14,8 @@ import { filterNullish, filterTrue } from '@app/shared/helpers';
 import { Observable, switchMap, tap } from 'rxjs';
 import { ModifyAccountAdapter } from '../models/modify-account-command.model';
 import { AccountCommandsService } from '../services/account-commands.service';
+import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
+import { LoaderComponent } from '@app/shared';
 
 const accountIdParamName = 'accountId';
 
@@ -16,6 +23,13 @@ const accountIdParamName = 'accountId';
   selector: 'app-modify-account',
   templateUrl: './modify-account.component.html',
   styleUrls: ['./modify-account.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoaderComponent,
+    AccountEditComponent,
+  ],
 })
 export class ModifyAccountComponent implements OnInit {
   @ViewChild('confirm', { static: true })

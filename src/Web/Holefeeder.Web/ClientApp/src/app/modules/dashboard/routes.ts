@@ -1,13 +1,12 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 
-const routes: Routes = [
+export const DASHBOARD_ROUTES: Routes = [
   {
     path: '',
-    component: DashboardComponent,
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AutoLoginAllRoutesGuard],
     children: [
       {
@@ -18,9 +17,3 @@ const routes: Routes = [
     ],
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class DashboardRoutingModule {}

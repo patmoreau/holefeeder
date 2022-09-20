@@ -1,4 +1,5 @@
 {
   "/gateway/api/v2/store-items?filter=code:eq:settings": "/store-items",
+  "/gateway/api/v2/cashflows/*": "/$1",
   "/gateway/api/v2/*": "/$1"
 }

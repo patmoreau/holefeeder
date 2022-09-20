@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss'],
+  standalone: true,
 })
 export class LoaderComponent implements OnInit {
   @Input() small: boolean = false;

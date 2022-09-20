@@ -1,10 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tags-input',
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss'],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class TagsInputComponent implements OnInit {
   @Input() tagsArray: FormArray<any> = new FormArray<any>([]);

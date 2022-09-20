@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { LoggerService } from '@app/core/logger/logger.service';
 import { MessageService } from '@app/core/services';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { CloseAccountCommand } from '@app/modules/accounts/models/close-account-command.model';
@@ -9,16 +8,16 @@ import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { OpenAccountCommand } from '../models/open-account-command.model';
+import { trace } from '@app/core';
 
 const apiRoute: string = 'api/v2/accounts';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AccountCommandsService {
   constructor(
     private http: HttpClient,
     @Inject('BASE_API_URL') private apiUrl: string,
-    private messages: MessageService,
-    private logger: LoggerService
+    private messages: MessageService
   ) {}
 
   open(account: OpenAccountCommand): Observable<string> {
@@ -37,8 +36,8 @@ export class AccountCommandsService {
       );
   }
 
+  @trace()
   modify(account: ModifyAccountCommand): Observable<void> {
-    this.logger.logInfo(account);
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify-account`, account)
       .pipe(

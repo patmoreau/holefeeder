@@ -1,16 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { Settings } from '@app/core/models/settings.model';
 import { SettingsService } from '@app/core/services/settings.service';
 import { DateIntervalTypeNames } from '@app/shared/models';
 import { Observable, tap } from 'rxjs';
 import { SettingsAdapter } from '@app/core/models/settings-adapter.service';
+import { CommonModule } from '@angular/common';
+import { DatePickerComponent } from '@app/shared';
 
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    DatePickerComponent,
+  ],
 })
 export class GeneralComponent implements OnInit {
   settings$: Observable<Settings> | undefined;

@@ -5,11 +5,16 @@ import { TransactionDetail } from '@app/core/models/transaction-detail.model';
 import { TransactionsService } from '@app/core/services/transactions.service';
 import { Observable, of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
+import { TransactionListItemComponent } from '@app/shared';
+import { CommonModule } from '@angular/common';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transactions-list',
   templateUrl: './transactions-list.component.html',
   styleUrls: ['./transactions-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
 })
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string | undefined;

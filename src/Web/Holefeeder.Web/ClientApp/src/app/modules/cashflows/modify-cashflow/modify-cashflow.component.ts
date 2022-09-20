@@ -1,6 +1,12 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ModalService } from '@app/core/modals/modal.service';
 import { Account } from '@app/core/models/account.model';
@@ -14,6 +20,12 @@ import { DateIntervalTypeNames } from '@app/shared/models';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, switchMap, tap } from 'rxjs';
 import { ModifyCashflowCommandAdapter } from '@app/core/models/modify-cashflow-command-adapter.service';
+import {
+  AutofocusDirective,
+  DatePickerComponent,
+  LoaderComponent,
+  TagsInputComponent,
+} from '@app/shared';
 
 const cashflowIdParamName = 'cashflowId';
 
@@ -21,6 +33,15 @@ const cashflowIdParamName = 'cashflowId';
   selector: 'app-cashflow-edit',
   templateUrl: './modify-cashflow.component.html',
   styleUrls: ['./modify-cashflow.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TagsInputComponent,
+    AutofocusDirective,
+    DatePickerComponent,
+    LoaderComponent,
+  ],
 })
 export class ModifyCashflowComponent implements OnInit {
   form!: FormGroup;

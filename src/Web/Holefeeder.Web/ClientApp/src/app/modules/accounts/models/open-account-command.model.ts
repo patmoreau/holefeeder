@@ -13,7 +13,7 @@ export class OpenAccountCommand {
   ) {}
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class OpenAccountAdapter implements Adapter<OpenAccountCommand> {
   adapt(item: any): OpenAccountCommand {
     return new OpenAccountCommand(

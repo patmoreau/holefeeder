@@ -1,13 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
+import {
+  FormArray,
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AccountInfo, Category } from '@app/core/models';
 import { AccountsService, CategoriesService } from '@app/core/services';
 import { combineLatest, Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+  AutofocusDirective,
+  DatePickerComponent,
+  TagsInputComponent,
+} from '@app/shared';
 
 @Component({
   selector: 'app-transaction-edit',
   templateUrl: './transaction-edit.component.html',
   styleUrls: ['./transaction-edit.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DatePickerComponent,
+    TagsInputComponent,
+    AutofocusDirective,
+  ],
 })
 export class TransactionEditComponent implements OnInit {
   form!: FormGroup;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
 import {
   MessageService,
@@ -8,11 +8,22 @@ import {
 } from '@app/core/services';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
+import { LoaderComponent, TransactionListItemComponent } from '@app/shared';
 
 @Component({
   selector: 'app-dashboard-home',
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TransactionsListComponent,
+    TransactionListItemComponent,
+    LoaderComponent,
+  ],
 })
 export class DashboardHomeComponent implements OnInit {
   upcoming$!: Observable<Upcoming[]>;

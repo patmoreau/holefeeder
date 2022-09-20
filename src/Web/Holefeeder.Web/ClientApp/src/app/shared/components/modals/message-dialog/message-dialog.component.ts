@@ -20,6 +20,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     </div>
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class MessageDialogComponent {
   title!: string;

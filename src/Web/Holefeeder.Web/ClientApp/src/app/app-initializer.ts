@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { APP_INITIALIZER, FactoryProvider } from '@angular/core';
-import { ConfigService, LoggingLevel } from '@app/core/services/config.service';
+import { LoggingLevel } from '@app/core';
+import { ConfigService } from '@app/core/services/config.service';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, throwError } from 'rxjs';
 

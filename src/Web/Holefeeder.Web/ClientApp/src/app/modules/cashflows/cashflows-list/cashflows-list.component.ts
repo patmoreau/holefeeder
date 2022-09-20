@@ -3,11 +3,21 @@ import { Router } from '@angular/router';
 import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
 import { CashflowsService } from '@app/core/services/cashflows.service';
 import { Observable, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
+import { LoaderComponent, TransactionListItemComponent } from '@app/shared';
 
 @Component({
   selector: 'app-cashflows-list',
   templateUrl: './cashflows-list.component.html',
   styleUrls: ['./cashflows-list.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TransactionsListComponent,
+    TransactionListItemComponent,
+    LoaderComponent,
+  ],
 })
 export class CashflowsListComponent implements OnInit {
   cashflows$!: Observable<CashflowDetail[]>;

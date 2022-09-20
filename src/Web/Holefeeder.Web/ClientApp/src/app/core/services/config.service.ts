@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { LoggingLevel } from '@app/core';
 import { StateService } from './state.service';
-
-export class LoggingLevel {
-  public static None = 'None';
-  public static Verbose = 'Verbose';
-  public static Info = 'Info';
-  public static Warning = 'Warning';
-  public static Errors = 'Errors';
-}
 
 interface ConfigState {
   loggingLevel: LoggingLevel;
@@ -20,10 +12,6 @@ const initialState: ConfigState = {
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService extends StateService<ConfigState> {
-  loggingLevel$: Observable<LoggingLevel> = this.select(
-    state => state.loggingLevel
-  );
-
   constructor() {
     super(initialState);
   }

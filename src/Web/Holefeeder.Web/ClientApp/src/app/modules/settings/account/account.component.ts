@@ -1,21 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoggerService } from '@app/core/logger/logger.service';
+import { trace } from '@app/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private logger: LoggerService
-  ) {}
+  constructor(private formBuilder: FormBuilder, private router: Router) {}
 
   get firstName() {
     return this.profileForm.get('firstName');
@@ -35,9 +39,8 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  saveProfile(formValues: any): void {
-    this.logger.logVerbose(formValues);
-  }
+  @trace()
+  saveProfile(formValues: any): void {}
 
   cancel() {
     this.router.navigate(['/accounts']);

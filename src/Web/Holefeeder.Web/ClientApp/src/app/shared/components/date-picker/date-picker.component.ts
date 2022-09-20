@@ -1,6 +1,7 @@
 import { Component, forwardRef, Inject, Injector, Input } from '@angular/core';
 import {
   AbstractControl,
+  FormsModule,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
@@ -9,8 +10,10 @@ import { BaseFormControlWithValidatorComponent } from '@app/shared/components/ba
 import {
   NgbDateAdapter,
   NgbDateNativeAdapter,
+  NgbDatepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { isValid, startOfToday } from 'date-fns';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-date-picker',
@@ -29,6 +32,8 @@ import { isValid, startOfToday } from 'date-fns';
     },
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter },
   ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgbDatepickerModule],
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
   @Input()

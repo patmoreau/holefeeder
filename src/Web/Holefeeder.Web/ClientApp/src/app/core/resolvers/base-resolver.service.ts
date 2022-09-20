@@ -12,7 +12,7 @@ import { ToastType } from '../models/toast-item.model';
 import { ToastsService } from '../services/toasts.service';
 
 export abstract class BaseResolverService {
-  constructor(
+  protected constructor(
     private router: Router,
     private toasts: ToastsService,
     protected barService: LoadingBarService
