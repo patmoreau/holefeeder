@@ -1,32 +1,28 @@
-// src/sass/styles.scss
-
-@import './variables';
-@import './mixins';
-
-// Custom.scss
-// Option B: Include parts of Bootstrap
-
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import "~bootstrap/scss/functions";
+@import "functions";
 
-// 2. Include any default variable overrides here
+$custom-color: #df711b;
+$custom-theme-colors: (
+  "custom": $custom-color,
+);
 
-// 3. Include remainder of required Bootstrap stylesheets
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+// Variables come next
+@import "variables";
 
-// 4. Include any optional Bootstrap components as you like
-@import "~bootstrap/scss/root";
-@import "~bootstrap/scss/reboot";
-@import "~bootstrap/scss/type";
-@import "~bootstrap/scss/images";
-@import "~bootstrap/scss/containers";
-@import "~bootstrap/scss/grid";
-@import "~bootstrap/scss/navbar";
-@import "~bootstrap/scss/offcanvas";
+// Optional Sass map overrides here
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
 
-// 5. Add additional custom code here
+// Followed by our default maps
+@import "maps";
 
+// Rest of our imports
+@import "mixins";
+@import "utilities";
+@import "root";
+@import "reboot";
+//@import '~ngx-toastr/toastr-bs4-alert';
+
+// Add additional custom code here
 body {
   min-height: 75rem;
   padding-top: 4.5rem;

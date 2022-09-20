@@ -1,18 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {LoggerService} from "@app/core/logger/logger.service";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { trace } from '@app/core/logger';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  styleUrls: ['./account.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private logger: LoggerService) {
-  }
+  constructor(private formBuilder: FormBuilder, private router: Router) {}
 
   get firstName() {
     return this.profileForm.get('firstName');
@@ -24,14 +31,16 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.profileForm = this.formBuilder.group({
-      firstName: ['Patrick', [Validators.required, Validators.pattern('[a-zA-Z].*')]],
-      lastName: ['Moreau', [Validators.required]]
+      firstName: [
+        'Patrick',
+        [Validators.required, Validators.pattern('[a-zA-Z].*')],
+      ],
+      lastName: ['Moreau', [Validators.required]],
     });
   }
 
-  saveProfile(formValues: any): void {
-    this.logger.logVerbose(formValues);
-  }
+  @trace()
+  saveProfile(formValues: any): void {}
 
   cancel() {
     this.router.navigate(['/accounts']);

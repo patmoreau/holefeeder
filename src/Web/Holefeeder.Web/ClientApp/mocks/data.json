@@ -1,0 +1,336 @@
+{
+  "config": {
+    "loggingLevel": "Verbose"
+  },
+  "users": [
+    {
+      "email": "test@drifterapps.tst",
+      "password": "$2a$10$dZRJktgbyRXZidn4n.sL8eshyRA1gojUkkz8lTBmI6RLKAS0TDKuC",
+      "id": 1
+    }
+  ],
+  "store-items": [
+    {
+      "id": "093e9b28-3b51-40fb-9472-cf73d192b027",
+      "code": "settings",
+      "data": "{\"effectiveDate\":\"2014-01-09T05:00:00.000Z\",\"intervalType\":\"Weekly\",\"frequency\":2}"
+    }
+  ],
+  "get-upcoming": [
+    {
+      "id": "dfb0a88c-0129-4978-96e1-3be5b7c9a3e2",
+      "date": "2022-09-27T00:00:00",
+      "amount": 34.02,
+      "description": "Happy hour",
+      "tags": ["fun"],
+      "category": {
+        "id": "ff6b0d92-5432-44f2-8c7b-f36a49315e39",
+        "name": "Food and Drinks",
+        "color": "#1B5088",
+        "type": "Expense"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "62b80af1-4337-4508-b1fb-fed84467d381",
+      "date": "2022-09-29T00:00:00",
+      "amount": 100.0,
+      "description": "Investment plan",
+      "tags": [],
+      "category": {
+        "id": "edcddaca-a31a-4c85-809a-96e2c4887455",
+        "name": "Investment",
+        "type": "Expense",
+        "color": "#878A28"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+      "type": "Checking",
+      "name": "Checking account",
+      "openBalance": 0.0,
+      "openDate": "2014-10-01T00:00:00",
+      "transactionCount": 1866,
+      "balance": 774.08,
+      "updated": "2022-08-27T00:00:00",
+      "description": "",
+      "favorite": true,
+      "inactive": false
+    },
+    {
+      "id": "821ec1a6-7cb0-4e34-b485-41a3aef216c1",
+      "type": "CreditCard",
+      "name": "Credit card account",
+      "openBalance": 0.0,
+      "openDate": "2015-12-02T00:00:00",
+      "transactionCount": 2560,
+      "balance": 1256.53,
+      "updated": "2022-08-26T00:00:00",
+      "description": "",
+      "favorite": true,
+      "inactive": false
+    }
+  ],
+  "categories": [
+    {
+      "id": "36f5a52c-b699-46db-8922-5efc47648f60",
+      "name": "Banking",
+      "color": "#FF0000",
+      "budgetAmount": 0.0,
+      "favorite": false
+    },
+    {
+      "id": "ff6b0d92-5432-44f2-8c7b-f36a49315e39",
+      "name": "Food and Drinks",
+      "color": "#1B5088",
+      "budgetAmount": 350.0,
+      "favorite": false
+    },
+    {
+      "id": "914ecc7a-9e82-490f-a82e-ad914a7aa53d",
+      "name": "Income",
+      "color": "#1C621B",
+      "budgetAmount": 0.0,
+      "favorite": false
+    },
+    {
+      "id": "96556555-3239-4c49-9d94-f68b9ff5c311",
+      "name": "Transfer In",
+      "color": "#888888",
+      "budgetAmount": 0.0,
+      "favorite": false
+    },
+    {
+      "id": "9ee40a01-6e19-4b44-aa01-1189c950c1c9",
+      "name": "Transfer Out",
+      "color": "#888888",
+      "budgetAmount": 0.0,
+      "favorite": false
+    }
+  ],
+  "cashflows": [
+    {
+      "id": "3d40e740-882e-493f-a275-a05a19d4aa46",
+      "effectiveDate": "2015-03-27T00:00:00",
+      "amount": 25.0,
+      "intervalType": "Monthly",
+      "frequency": 1,
+      "recurrence": 0,
+      "description": "Monthly fees",
+      "inactive": false,
+      "tags": ["fees"],
+      "category": {
+        "id": "36f5a52c-b699-46db-8922-5efc47648f60",
+        "name": "Banking",
+        "type": "Expense",
+        "color": "#FF0000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "db8ef0d5-bb96-4da1-a054-34c491a15378",
+      "effectiveDate": "2019-06-28T00:00:00",
+      "amount": 32.46,
+      "intervalType": "Weekly",
+      "frequency": 2,
+      "recurrence": 0,
+      "description": "pizza",
+      "inactive": true,
+      "tags": ["restaurant"],
+      "category": {
+        "id": "ff6b0d92-5432-44f2-8c7b-f36a49315e39",
+        "name": "Food and Drinks",
+        "type": "Expense",
+        "color": "#1B5088"
+      },
+      "account": {
+        "id": "821ec1a6-7cb0-4e34-b485-41a3aef216c1",
+        "name": "Credit card account"
+      }
+    }
+  ],
+  "transactions": [
+    {
+      "id": "5059586c-090d-4880-89e7-aba0d4ab1102",
+      "date": "2022-08-27T00:00:00",
+      "amount": 100.0,
+      "description": "Celi",
+      "tags": [],
+      "category": {
+        "id": "edcddaca-a31a-4c85-809a-96e2c4887455",
+        "name": "Investment",
+        "type": "Expense",
+        "color": "#878A28"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "f98ef56f-b29e-419e-bf25-8e69b78fa6e7",
+      "date": "2022-08-06T00:00:00",
+      "amount": 192.0,
+      "description": "FTQ REER",
+      "tags": [],
+      "category": {
+        "id": "edcddaca-a31a-4c85-809a-96e2c4887455",
+        "name": "Investment",
+        "type": "Expense",
+        "color": "#878A28"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "ffd3274e-e291-4148-b096-370dea9bd732",
+      "date": "2022-08-06T00:00:00",
+      "amount": 33.58,
+      "description": "Life Insurance",
+      "tags": ["insurance"],
+      "category": {
+        "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
+        "name": "Health",
+        "type": "Expense",
+        "color": "#000000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "f14e1e66-9021-4c6d-b6f7-0b6284bc10db",
+      "date": "2022-08-02T00:00:00",
+      "amount": 10000.0,
+      "description": "",
+      "tags": [],
+      "category": {
+        "id": "914ecc7a-9e82-490f-a82e-ad914a7aa53d",
+        "name": "Income",
+        "type": "Gain",
+        "color": "#1C621B"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "8c15e823-3f9f-4bab-aa23-de88aa35690d",
+      "date": "2022-07-21T00:00:00",
+      "amount": 123.45,
+      "description": "test 123.45",
+      "tags": [],
+      "category": {
+        "id": "36f5a52c-b699-46db-8922-5efc47648f60",
+        "name": "Banking",
+        "type": "Expense",
+        "color": "#FF0000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "3f1d3469-2099-4c87-a42e-e4859a2dd0ee",
+      "date": "2022-07-20T00:00:00",
+      "amount": 123.0,
+      "description": "123",
+      "tags": [],
+      "category": {
+        "id": "36f5a52c-b699-46db-8922-5efc47648f60",
+        "name": "Banking",
+        "type": "Expense",
+        "color": "#FF0000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "8425ad55-9afe-45d4-bb91-0cbcf168ee8e",
+      "date": "2022-07-20T00:00:00",
+      "amount": 12345.0,
+      "description": "12345",
+      "tags": [],
+      "category": {
+        "id": "36f5a52c-b699-46db-8922-5efc47648f60",
+        "name": "Banking",
+        "type": "Expense",
+        "color": "#FF0000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "9a36d689-1bda-4612-8da2-dea7e20f98b3",
+      "date": "2022-06-02T00:00:00",
+      "amount": 2449.99,
+      "description": "Paycheck",
+      "tags": [],
+      "category": {
+        "id": "914ecc7a-9e82-490f-a82e-ad914a7aa53d",
+        "name": "Income",
+        "type": "Gain",
+        "color": "#1C621B"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "97c20cff-ca78-45b5-9db5-4cc260fc79dd",
+      "date": "2022-05-27T00:00:00",
+      "amount": 34.02,
+      "description": "Life Insurance Steph",
+      "tags": ["insurance"],
+      "category": {
+        "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
+        "name": "Health",
+        "type": "Expense",
+        "color": "#000000"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    },
+    {
+      "id": "4ce56af4-b13e-4ff4-95e0-5acebc8513bc",
+      "date": "2022-05-24T00:00:00",
+      "amount": 21.83,
+      "description": "Netflix",
+      "tags": ["electronics & software"],
+      "category": {
+        "id": "2a2b7acf-c9e3-4e02-82c9-139026a3eeed",
+        "name": "Leisure",
+        "type": "Expense",
+        "color": "#9C4981"
+      },
+      "account": {
+        "id": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+        "name": "Checking account"
+      }
+    }
+  ]
+}

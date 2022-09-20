@@ -1,15 +1,19 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {filter, switchMap} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
-import {TransactionsService} from '@app/core/services/transactions.service';
-import {TransactionDetail} from '@app/core/models/transaction-detail.model';
-import {PagingInfo} from '@app/core/models/paging-info.model';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TransactionsService } from '@app/core/services';
+import { TransactionListItemComponent } from '@app/shared/components';
+import { PagingInfo, TransactionDetail } from '@app/shared/models';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, of } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-transactions-list',
   templateUrl: './transactions-list.component.html',
-  styleUrls: ['./transactions-list.component.scss']
+  styleUrls: ['./transactions-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
 })
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string | undefined;
@@ -24,21 +28,21 @@ export class TransactionsListComponent implements OnInit {
     private transactionsService: TransactionsService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
       filter(params => params !== null),
       switchMap(params => {
         this.page = +(params.get('page') ?? 1);
-        return this.accountId ?
-          this.transactionsService.find(
-            this.accountId,
-            (this.page - 1) * this.limit,
-            this.limit,
-            ['-date']) :
-          of(new PagingInfo<TransactionDetail>(0, []));
+        return this.accountId
+          ? this.transactionsService.find(
+              this.accountId,
+              (this.page - 1) * this.limit,
+              this.limit,
+              ['-date']
+            )
+          : of(new PagingInfo<TransactionDetail>(0, []));
       })
     );
   }
@@ -48,6 +52,9 @@ export class TransactionsListComponent implements OnInit {
   }
 
   pageChange() {
-    this.router.navigate(['./'], {queryParams: {page: this.page}, relativeTo: this.route});
+    this.router.navigate(['./'], {
+      queryParams: { page: this.page },
+      relativeTo: this.route,
+    });
   }
 }

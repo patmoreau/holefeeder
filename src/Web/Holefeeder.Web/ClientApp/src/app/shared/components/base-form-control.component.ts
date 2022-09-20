@@ -1,3 +1,4 @@
+import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -5,23 +6,22 @@ import {
   FormControlName,
   FormGroupDirective,
   NgControl,
-  NgModel
-} from "@angular/forms";
-import {takeUntil} from "rxjs/operators";
-import {Subject, tap} from "rxjs";
-import {Component, Inject, Injector, OnDestroy, OnInit} from "@angular/core";
+  NgModel,
+} from '@angular/forms';
+import { Subject, tap } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-@Component({template: ""})
-export abstract class BaseFormControlComponent<T> implements OnInit, ControlValueAccessor, OnDestroy {
-
+@Component({ template: '' })
+export abstract class BaseFormControlComponent<T>
+  implements OnInit, ControlValueAccessor, OnDestroy
+{
   public control!: FormControl;
 
   public data!: T;
 
   protected readonly destroy = new Subject<void>();
 
-  protected constructor(@Inject(Injector) protected injector: Injector) {
-  }
+  protected constructor(@Inject(Injector) protected injector: Injector) {}
 
   public ngOnInit(): void {
     this.setComponentControl();
@@ -45,8 +45,7 @@ export abstract class BaseFormControlComponent<T> implements OnInit, ControlValu
 
   public onChangeFn = (value: T | null): T | null => value;
 
-  public onTouchFn = (): void => {
-  };
+  public onTouchFn = (): void => {};
 
   public ngOnDestroy(): void {
     this.destroy.next();
@@ -59,24 +58,27 @@ export abstract class BaseFormControlComponent<T> implements OnInit, ControlValu
 
       switch (formControl.constructor) {
         case NgModel: {
-          const {control, update} = formControl as NgModel;
+          const { control, update } = formControl as NgModel;
 
           this.control = control;
 
           this.control.valueChanges
             .pipe(
               tap((value: T) => update.emit(value)),
-              takeUntil(this.destroy),
+              takeUntil(this.destroy)
             )
             .subscribe();
           break;
         }
         case FormControlName: {
-          this.control = this.injector.get(FormGroupDirective).getControl(formControl as FormControlName);
+          this.control = this.injector
+            .get(FormGroupDirective)
+            .getControl(formControl as FormControlName);
           break;
         }
         default: {
-          this.control = (formControl as FormControlDirective).form as FormControl;
+          this.control = (formControl as FormControlDirective)
+            .form as FormControl;
           break;
         }
       }

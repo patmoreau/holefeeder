@@ -14,7 +14,7 @@
         <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number">
       </div>
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-primary me-2" routerLink="../">Cancel</button>
+        <button type="button" class="btn btn-primary me-2" routerLink="../">Cancel</button>
         <button [disabled]="!settingsForm.valid" class="btn btn-danger" type="submit">Save</button>
       </div>
     </form>

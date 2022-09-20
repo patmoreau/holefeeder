@@ -1,15 +1,26 @@
-import {catchError, Observable, retry, throwError} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError, Observable, retry, throwError } from 'rxjs';
 
-@Injectable()
+const retryCount = 3;
+const retryWaitMilliSeconds = 5000;
+
+@Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
-  constructor() {
-  }
+  constructor() {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      retry(3),
+      retry({ count: retryCount, delay: retryWaitMilliSeconds }),
       catchError((err: HttpErrorResponse) => {
         let errorMessage = '';
         if (err.error instanceof ErrorEvent) {

@@ -1,0 +1,124 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+    <a aria-label="home" class="navbar-brand" href="#">
+      <em class="bi bi-safe"></em>
+    </a>
+    <ng-container *ngIf="logged$ | async; else loginNavBar">
+      <button aria-controls="offcanvasNavbar" aria-label="navbar-toggler" class="navbar-toggler"
+        data-bs-target="#offcanvasNavbar" data-bs-toggle="offcanvas" type="button">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div aria-labelledby="offcanvasNavbarLabel" class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+          <button aria-label="Close" class="btn-close text-reset" data-bs-dismiss="offcanvas" type="button"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-begin flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a [routerLink]="['/dashboard']" class="nav-link" routerLinkActive="active">
+                <em class="bi bi-speedometer2"></em>&nbsp;Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/accounts']" class="nav-link" routerLinkActive="active">
+                <em class="bi bi-wallet2"></em>&nbsp;Accounts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/cashflows']" class="nav-link" routerLinkActive="active">
+                <em class="bi bi-cash-coin"></em>&nbsp;Cashflows
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/statistics']" class="nav-link" routerLinkActive="active">
+                <em class="bi bi-graph-up"></em>&nbsp;Statistics
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <ng-container *ngIf="period$ | async as period">
+                <button (click)="open(datePicker, period)" class="btn btn-outline-secondary" type="button">
+                  <em class="bi bi-calendar-range"></em>&nbsp;{{ period.start | date }} - {{ period.end | date }}
+                </button>
+              </ng-container>
+            </li>
+            <li class="nav-item dropdown">
+              <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                id="offcanvasNavbarDropdown" role="button">
+                <em class="bi bi-person-circle"></em>&nbsp;{{(user$ | async)?.userPrincipalName}}
+              </a>
+              <ul aria-labelledby="offcanvasNavbarDropdown" class="dropdown-menu dropdown-menu-end">
+                <li><a [routerLink]="['/settings']" class="dropdown-item"><em class="bi bi-gear"></em>&nbsp;Settings</a>
+                </li>
+                <li><a [routerLink]="['/hc-ui']" class="dropdown-item" target="_blank"><em
+                      class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a (click)="logout()" class="dropdown-item"><em class="bi bi-box-arrow-left"></em>&nbsp;Log out</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</nav>
+<ng-template #loginNavBar>
+  <button (click)="login()" class="btn btn-outline-secondary" type="button">
+    <em class="bi bi-box-arrow-in-right"></em>&nbsp;Log in
+  </button>
+</ng-template>
+<ng-template #datePicker let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title text-dark" id="modal-basic-title">Period selection</h4>
+    <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="close" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <div class="d-md-none d-flex justify-content-center">
+          <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [dayTemplate]="t" [displayMonths]="1"
+            [firstDayOfWeek]=7 outsideDays="hidden">
+          </ngb-datepicker>
+        </div>
+        <div class="d-none d-md-block">
+          <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [dayTemplate]="t" [displayMonths]="2"
+            [firstDayOfWeek]=7 outsideDays="hidden">
+          </ngb-datepicker>
+        </div>
+        <div class="d-flex p-1 justify-content-center">
+          <button (click)="previousPeriod()" aria-label="previous-period" class="btn btn-outline"
+            ngbTooltip="Previous period" type="button">
+            <em class="bi bi-calendar-minus"></em>
+          </button>
+          <button (click)="currentPeriod()" aria-label="current-period" class="btn btn-outline ms-3"
+            ngbTooltip="Current period" type="button">
+            <em class="bi bi-calendar-check"></em>
+          </button>
+          <button (click)="nextPeriod()" aria-label="next-period" class="btn btn-outline ms-3" ngbTooltip="Next period"
+            type="button">
+            <em class="bi bi-calendar-plus"></em>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button (click)="modal.close('Set click')" class="btn btn-primary" type="button">
+      Set
+    </button>
+  </div>
+</ng-template>
+<ng-template #t let-date let-focused="focused">
+  <span (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null"
+    [class.faded]="isHovered(date) || isInside(date)" [class.focused]="focused" [class.range]="isRange(date)"
+    class="custom-day">
+    {{ date.day }}
+  </span>
+</ng-template>

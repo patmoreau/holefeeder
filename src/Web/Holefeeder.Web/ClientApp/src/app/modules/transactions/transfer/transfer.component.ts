@@ -1,16 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormGroupDirective} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {AccountsService} from '@app/core/services/accounts.service';
-import {AccountInfo} from "@app/core/models/account-info.model";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { AccountsService } from '@app/core/services';
+import { DatePickerComponent } from '@app/shared/components';
+import { AutofocusDirective } from '@app/shared/directives';
+import { AccountInfo } from '@app/shared/models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-transfer',
   templateUrl: './transfer.component.html',
-  styleUrls: ['./transfer.component.scss']
+  styleUrls: ['./transfer.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DatePickerComponent,
+    AutofocusDirective,
+  ],
 })
 export class TransferComponent implements OnInit {
-
   form!: FormGroup;
 
   values$!: Observable<AccountInfo[]>;
@@ -18,8 +31,7 @@ export class TransferComponent implements OnInit {
   constructor(
     private rootFormGroup: FormGroupDirective,
     private accountsService: AccountsService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.form = this.rootFormGroup.control;

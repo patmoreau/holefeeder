@@ -1,8 +1,17 @@
-import {filter, Observable} from "rxjs";
-import {Injectable} from "@angular/core";
-import {Message, MessageService, ToastItem, ToastItemAdapter, ToastType} from "@app/core";
-import {StateService} from "@app/core/services/state.service";
-import {MessageAction, MessageType} from "@app/shared";
+import { Injectable } from '@angular/core';
+import { SubscriberService } from '@app/core/services';
+import { trace } from '@app/shared/helpers';
+import {
+  Message,
+  MessageAction,
+  MessageType,
+  ToastItem,
+  ToastType,
+} from '@app/shared/models';
+import { filter, Observable } from 'rxjs';
+import { ToastItemAdapter } from '../adapters';
+import { MessageService } from './message.service';
+import { StateService } from './state.service';
 
 interface ToastsState {
   toasts: ToastItem[];
@@ -12,32 +21,52 @@ const initialState: ToastsState = {
   toasts: [],
 };
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ToastsService extends StateService<ToastsState> {
-  toasts$: Observable<ToastItem[]> = this.select((state) => state.toasts);
+  toasts$: Observable<ToastItem[]> = this.select(state => state.toasts).pipe(
+    trace()
+  );
 
-  constructor(private messages: MessageService, private adapter: ToastItemAdapter) {
+  constructor(
+    private messages: MessageService,
+    private adapter: ToastItemAdapter,
+    private subscriptions: SubscriberService
+  ) {
     super(initialState);
 
-    this.messages.listen
+    let subscription = this.messages.listen
       .pipe(
-        filter(message => message.type === MessageType.error && message.action === MessageAction.error),
-      ).subscribe((message: Message) => {
+        trace(),
+        filter(
+          message =>
+            message.type === MessageType.error &&
+            message.action === MessageAction.error
+        )
+      )
+      .subscribe((message: Message) => {
         this.setState({
-          toasts: [...this.state.toasts, this.adapter.adapt({
-            type: ToastType.danger,
-            message: message.content
-          })]
+          toasts: [
+            ...this.state.toasts,
+            this.adapter.adapt({
+              type: ToastType.danger,
+              message: message.content,
+            }),
+          ],
         });
-      }
-    );
+      });
+    this.subscriptions.add(subscription);
   }
 
   show(type: ToastType, message: string): void {
-    this.setState({toasts: [...this.state.toasts, this.adapter.adapt({type: type, message: message})]});
+    this.setState({
+      toasts: [
+        ...this.state.toasts,
+        this.adapter.adapt({ type: type, message: message }),
+      ],
+    });
   }
 
   remove(toast: ToastItem): void {
-    this.setState({toasts: [...this.state.toasts.filter(t => t !== toast)]});
+    this.setState({ toasts: [...this.state.toasts.filter(t => t !== toast)] });
   }
 }

@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/DrifterApps.Holefeeder.ServicesHosts.API/DrifterApps.Holefeeder.ServicesHosts.API.csproj",
+                "${workspaceFolder}/src/Api/Holefeeder.Api/Holefeeder.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/DrifterApps.Holefeeder.ServicesHosts.API/DrifterApps.Holefeeder.ServicesHosts.API.csproj",
+                "${workspaceFolder}/src/Api/Holefeeder.Api/Holefeeder.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,9 +32,8 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/DrifterApps.Holefeeder.ServicesHosts.API/DrifterApps.Holefeeder.ServicesHosts.API.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "--project",
+                "${workspaceFolder}/src/Api/Holefeeder.Api/Holefeeder.Api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

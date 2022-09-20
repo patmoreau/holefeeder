@@ -1,19 +1,13 @@
 <ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loader">
   <ng-container *ngIf="upcomingCashflows.length; else noItems">
     <div class="container">
-      <app-transaction-list-item
-        (action)="action($event, upcomingCashflow)"
-        *ngFor="let upcomingCashflow of upcomingCashflows"
-        [allowSave]="true"
-        [amount]="upcomingCashflow.amount"
-        [date]="upcomingCashflow.date"
-        [description]="
+      <app-transaction-list-item (action)="action($event, upcomingCashflow)"
+        *ngFor="let upcomingCashflow of upcomingCashflows" [allowSave]="true" [amount]="upcomingCashflow.amount"
+        [date]="upcomingCashflow.date" [description]="
       upcomingCashflow.description
           ? upcomingCashflow.description
           : upcomingCashflow.category.name
-      "
-        [tags]="upcomingCashflow.tags"
-      ></app-transaction-list-item>
+      " [tags]="upcomingCashflow.tags"></app-transaction-list-item>
     </div>
   </ng-container>
   <ng-template #noItems>Nothing to show!</ng-template>
