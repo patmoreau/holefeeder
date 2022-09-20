@@ -11,7 +11,7 @@ import { catchError, Observable, retry, throwError } from 'rxjs';
 const retryCount = 3;
 const retryWaitMilliSeconds = 5000;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
   constructor() {}
 
