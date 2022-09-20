@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { trace } from '@app/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { trace } from '@app/core/logger';
 
 @Component({
   selector: 'app-transaction-list-item',

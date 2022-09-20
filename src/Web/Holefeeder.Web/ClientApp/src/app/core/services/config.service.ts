@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoggingLevel } from '@app/core';
+import { LoggingLevel } from '@app/core/logger';
 import { StateService } from './state.service';
 
 interface ConfigState {

@@ -1,5 +1,3 @@
-export * from './base-form-control-with-validator.component';
-export * from './base-form-control.component';
 export * from './date-picker/date-picker.component';
 export * from './date-view/date-view.component';
 export * from './error-notfound/error-notfound.component';

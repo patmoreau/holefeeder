@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { StateService } from '@app/core/services';
 import {
   DateInterval,
   DateIntervalType,
@@ -21,6 +20,7 @@ import {
 import { mergeMap, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { SettingsStoreItemAdapter, StoreItemAdapter } from '../adapters';
+import { StateService } from './state.service';
 
 import { MessageService } from './message.service';
 

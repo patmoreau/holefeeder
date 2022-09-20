@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { logger } from '@app/core';
+import { logger } from '@app/core/logger';
 import {
   SettingsService,
   SubscriberService,

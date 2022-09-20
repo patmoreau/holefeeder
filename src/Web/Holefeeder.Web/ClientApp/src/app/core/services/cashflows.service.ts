@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { MessageService, StateService } from '@app/core/services';
+import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
 import {
   CashflowDetail,
@@ -12,6 +12,7 @@ import {
 import { filter, Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { CashflowDetailAdapter } from '../adapters';
+import { StateService } from './state.service';
 
 const apiRoute: string = 'api/v2/cashflows';
 

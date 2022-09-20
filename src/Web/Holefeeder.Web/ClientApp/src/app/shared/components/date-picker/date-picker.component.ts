@@ -7,13 +7,13 @@ import {
   NG_VALUE_ACCESSOR,
   ValidationErrors,
 } from '@angular/forms';
-import { BaseFormControlWithValidatorComponent } from '@app/shared/components';
 import {
   NgbDateAdapter,
   NgbDateNativeAdapter,
   NgbDatepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { isValid, startOfToday } from 'date-fns';
+import { BaseFormControlWithValidatorComponent } from '../base-form-control-with-validator.component';
 
 @Component({
   selector: 'app-date-picker',

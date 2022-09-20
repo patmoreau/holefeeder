@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { trace } from '@app/core';
+import { trace } from '@app/core/logger';
 import { Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'any' })

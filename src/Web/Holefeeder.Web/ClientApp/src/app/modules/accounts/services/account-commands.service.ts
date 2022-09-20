@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { trace } from '@app/core/logger';
 import { MessageService } from '@app/core/services';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { CloseAccountCommand } from '@app/modules/accounts/models/close-account-command.model';
@@ -8,7 +9,6 @@ import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { OpenAccountCommand } from '../models/open-account-command.model';
-import { trace } from '@app/core';
 
 const apiRoute: string = 'api/v2/accounts';
 

@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { trace } from '@app/core';
+import { trace } from '@app/core/logger';
 import {
   ConfirmDialogComponent,
   DeleteDialogComponent,

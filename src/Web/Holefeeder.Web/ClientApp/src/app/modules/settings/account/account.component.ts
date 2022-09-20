@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -6,8 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { trace } from '@app/core';
-import { CommonModule } from '@angular/common';
+import { trace } from '@app/core/logger';
 
 @Component({
   selector: 'app-account',

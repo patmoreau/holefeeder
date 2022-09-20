@@ -1,4 +1,4 @@
-import { logger } from '@app/core';
+import { logger } from '@app/core/logger';
 import {
   EMPTY,
   filter,

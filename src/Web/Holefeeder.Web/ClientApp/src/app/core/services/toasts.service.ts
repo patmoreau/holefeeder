@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StateService, SubscriberService } from '@app/core/services';
+import { SubscriberService } from '@app/core/services';
 import { trace } from '@app/shared/helpers';
 import {
   Message,
@@ -11,6 +11,7 @@ import {
 import { filter, Observable } from 'rxjs';
 import { ToastItemAdapter } from '../adapters';
 import { MessageService } from './message.service';
+import { StateService } from './state.service';
 
 interface ToastsState {
   toasts: ToastItem[];

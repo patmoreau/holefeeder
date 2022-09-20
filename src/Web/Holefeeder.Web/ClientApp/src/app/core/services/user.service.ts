@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { logger } from '@app/core';
-import { StateService } from '@app/core/services';
+import { logger } from '@app/core/logger';
 import { User } from '@app/shared/models';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { filter, Observable } from 'rxjs';
 import { UserAdapter } from '../adapters';
 import { MessageService } from './message.service';
+import { StateService } from './state.service';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 
