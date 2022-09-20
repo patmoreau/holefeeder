@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Category } from '@app/core/models/category.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, Category } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryAdapter implements Adapter<Category> {

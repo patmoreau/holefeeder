@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MessageAction, MessageType } from '@app/shared/models';
+import { Message, MessageAction, MessageType } from '@app/shared/models';
 import { Observable, Subject } from 'rxjs';
-import { Message } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {

@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   MakePurchaseCommandAdapter,
   TransferMoneyCommandAdapter,
-} from '@app/core/models';
+} from '@app/core/adapters';
 import {
   AccountsService,
   CategoriesService,

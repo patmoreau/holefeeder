@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StoreItem } from '@app/core/models/store-item.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, StoreItem } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class StoreItemAdapter implements Adapter<StoreItem> {

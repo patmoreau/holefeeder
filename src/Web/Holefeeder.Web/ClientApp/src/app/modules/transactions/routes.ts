@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { UpcomingResolverService } from '@app/core/resolvers/upcoming-resolver.service';
+import { UpcomingResolverService } from '@app/core/resolvers';
 import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 
 export const TRANSACTIONS_ROUTES: Routes = [

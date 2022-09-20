@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Category } from '@app/shared/models';
 import { filter, mergeMap, Observable } from 'rxjs';
-import { Category } from '../models/category.model';
 import { CategoriesApiService } from './api/categories-api.service';
 import { StateService } from './state.service';
 

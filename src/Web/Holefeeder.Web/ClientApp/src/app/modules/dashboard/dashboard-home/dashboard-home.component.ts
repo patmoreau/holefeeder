@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
+import { PayCashflowCommandAdapter } from '@app/core/adapters';
 import {
   MessageService,
   TransactionsService,
@@ -10,9 +10,9 @@ import {
 import {
   LoaderComponent,
   TransactionListItemComponent,
+  TransactionsListComponent,
 } from '@app/shared/components';
-import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
-import { MessageAction, MessageType } from '@app/shared/models';
+import { MessageAction, MessageType, Upcoming } from '@app/shared/models';
 import { Observable } from 'rxjs';
 
 @Component({

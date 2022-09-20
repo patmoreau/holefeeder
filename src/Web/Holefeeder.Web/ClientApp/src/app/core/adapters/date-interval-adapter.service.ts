@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DateInterval } from '@app/core/models/date-interval.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, DateInterval } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class DateIntervalAdapter implements Adapter<DateInterval> {

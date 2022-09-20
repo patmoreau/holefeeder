@@ -1,4 +1,5 @@
 import { Router } from '@angular/router';
+import { ToastType } from '@app/shared/models';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import {
   EMPTY,
@@ -8,7 +9,6 @@ import {
   pipe,
   UnaryFunction,
 } from 'rxjs';
-import { ToastType } from '../models/toast-item.model';
 import { ToastsService } from '../services/toasts.service';
 
 export abstract class BaseResolverService {

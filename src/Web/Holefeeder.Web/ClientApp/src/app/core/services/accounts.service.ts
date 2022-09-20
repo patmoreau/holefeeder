@@ -1,13 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { MessageService } from '@app/core/services/message.service';
-import { StateService } from '@app/core/services/state.service';
+import { MessageService, StateService } from '@app/core/services';
 import { filterNullish } from '@app/shared/helpers';
-import { MessageType } from '@app/shared/models';
+import { Account, MessageType, PagingInfo } from '@app/shared/models';
 import { catchError, filter, map, Observable, take } from 'rxjs';
-import { Account, PagingInfo } from '../models';
+import { AccountAdapter } from '../adapters/account-adapter.service';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
-import { AccountAdapter } from './account-adapter.service';
 
 const apiRoute: string = 'api/v2/accounts';
 

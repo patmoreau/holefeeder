@@ -5,8 +5,8 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Upcoming } from '@app/core/models/upcoming.model';
-import { UpcomingService } from '@app/core/services/upcoming.service';
+import { UpcomingService } from '@app/core/services';
+import { Upcoming } from '@app/shared/models';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { map, Observable, take } from 'rxjs';
 import { ToastsService } from '../services/toasts.service';

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ToastItem, ToastType } from '@app/core/models/toast-item.model';
-import { ToastsService } from '@app/core/services/toasts.service';
+import { ToastsService } from '@app/core/services';
+import { ToastItem, ToastType } from '@app/shared/models';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 

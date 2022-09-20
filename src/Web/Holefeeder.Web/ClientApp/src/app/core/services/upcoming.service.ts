@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { SettingsService } from '@app/core/services/settings.service';
-import { StateService } from '@app/core/services/state.service';
 import { filterNullish } from '@app/shared/helpers';
-import { MessageType } from '@app/shared/models';
+import { DateInterval, MessageType, Upcoming } from '@app/shared/models';
 import { format } from 'date-fns';
 import { filter, map, Observable, take } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { DateInterval, Upcoming, UpcomingAdapter } from '../models';
+import { UpcomingAdapter } from '../adapters';
 import { MessageService } from './message.service';
+import { SettingsService } from './settings.service';
+import { StateService } from './state.service';
 
 const apiRoute: string = 'api/v2/cashflows/get-upcoming';
 

@@ -1,14 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { ModifyCashflowCommand } from '@app/core/models/modify-cashflow-command.model';
-import { PagingInfo } from '@app/core/models/paging-info.model';
-import { MessageService } from '@app/core/services/message.service';
-import { StateService } from '@app/core/services/state.service';
+import { MessageService, StateService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
-import { MessageAction, MessageType } from '@app/shared/models';
+import {
+  CashflowDetail,
+  MessageAction,
+  MessageType,
+  ModifyCashflowCommand,
+  PagingInfo,
+} from '@app/shared/models';
 import { filter, Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { CashflowDetail, CashflowDetailAdapter } from '../models';
+import { CashflowDetailAdapter } from '../adapters';
 
 const apiRoute: string = 'api/v2/cashflows';
 

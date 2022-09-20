@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '@app/core/models/settings.model';
 import { nameofFactory } from '@app/shared/helpers';
-import { Adapter, DateIntervalType } from '@app/shared/models';
+import { Adapter, DateIntervalType, Settings } from '@app/shared/models';
 import { startOfToday } from 'date-fns';
 
 const nameof = nameofFactory<Settings>();

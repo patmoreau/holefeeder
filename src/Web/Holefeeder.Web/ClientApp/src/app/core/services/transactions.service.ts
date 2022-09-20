@@ -1,19 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { MessageService } from '@app/core/services/message.service';
+import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
-import { MessageAction, MessageType } from '@app/shared/models';
-import { Observable, of, tap } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
 import {
   MakePurchaseCommand,
+  MessageAction,
+  MessageType,
   ModifyTransactionCommand,
   PagingInfo,
   PayCashflowCommand,
   TransactionDetail,
-  TransactionDetailAdapter,
   TransferMoneyCommand,
-} from '../models';
+} from '@app/shared/models';
+import { Observable, of, tap } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { TransactionDetailAdapter } from '../adapters';
 
 const apiRoute: string = 'api/v2/transactions';
 

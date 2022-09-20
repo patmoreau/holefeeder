@@ -8,10 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
-import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
+import { PayCashflowCommandAdapter } from '@app/core/adapters';
 import { TransactionsService, UpcomingService } from '@app/core/services';
 import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
 import { LoaderComponent } from '@app/shared/components';
+import { Upcoming } from '@app/shared/models';
 import { map, Observable, tap } from 'rxjs';
 
 const cashflowIdParamName = 'cashflowId';

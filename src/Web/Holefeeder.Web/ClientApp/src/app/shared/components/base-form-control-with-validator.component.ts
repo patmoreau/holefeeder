@@ -1,6 +1,6 @@
 import { Component, Inject, Injector } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validator } from '@angular/forms';
-import { BaseFormControlComponent } from '@app/shared/components/base-form-control.component';
+import { BaseFormControlComponent } from '@app/shared/components';
 
 @Component({ template: '' })
 export abstract class BaseFormControlWithValidatorComponent<T>

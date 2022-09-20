@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SeriesAdapter } from '@app/core/models/series-adapter.service';
+import { SeriesAdapter } from '@app/core/adapters';
 import { Adapter } from '@app/shared/models';
 import { Series } from './series.model';
 

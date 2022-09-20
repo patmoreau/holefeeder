@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
+  Adapter,
   DangerToastItem,
   InfoToastItem,
   ToastItem,
   ToastType,
   WarningToastItem,
-} from '@app/core/models/toast-item.model';
-import { Adapter } from '@app/shared/models';
+} from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class ToastItemAdapter implements Adapter<ToastItem> {

@@ -1,4 +1,4 @@
-import { CashflowRequest } from '@app/core/models/cashflow-request.model';
+import { CashflowRequest } from '@app/shared/models';
 
 export class MakePurchaseCommand {
   constructor(
@@ -11,4 +11,3 @@ export class MakePurchaseCommand {
     public cashflow: CashflowRequest | null
   ) {}
 }
-

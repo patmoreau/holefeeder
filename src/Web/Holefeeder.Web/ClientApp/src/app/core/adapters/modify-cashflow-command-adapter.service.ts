@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModifyCashflowCommand } from '@app/core/models/modify-cashflow-command.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, ModifyCashflowCommand } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class ModifyCashflowCommandAdapter

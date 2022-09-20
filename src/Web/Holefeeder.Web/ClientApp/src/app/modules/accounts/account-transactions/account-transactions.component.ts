@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Account } from '@app/core/models';
-import { AccountsService } from '@app/core/services';
-import { filterNullish } from '@app/shared/helpers';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
+import { Component, OnInit } from '@angular/core';
+import { AccountsService } from '@app/core/services';
+import { TransactionsListComponent } from '@app/shared/components';
+import { filterNullish } from '@app/shared/helpers';
+import { Account } from '@app/shared/models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-account-transactions',

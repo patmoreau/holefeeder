@@ -8,15 +8,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ModalService } from '@app/core/modals/modal.service';
-import {
-  ModifyTransactionCommandAdapter,
-  TransactionDetail,
-} from '@app/core/models';
-import { TransactionsService } from '@app/core/services';
+import { ModifyTransactionCommandAdapter } from '@app/core/adapters';
+import { ModalService, TransactionsService } from '@app/core/services';
 import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
 import { LoaderComponent } from '@app/shared/components';
 import { filterTrue } from '@app/shared/helpers';
+import { TransactionDetail } from '@app/shared/models';
 import { filter, Observable, switchMap, tap } from 'rxjs';
 
 const transactionIdParamName = 'transactionId';

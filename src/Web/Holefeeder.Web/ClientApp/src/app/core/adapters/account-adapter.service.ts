@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Account } from '@app/core/models/account.model';
 import { dateFromUtc } from '@app/shared/helpers';
-import { Adapter } from '@app/shared/models';
+import { Account, Adapter } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class AccountAdapter implements Adapter<Account> {

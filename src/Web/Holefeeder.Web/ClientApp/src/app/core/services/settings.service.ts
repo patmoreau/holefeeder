@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { StateService } from '@app/core/services/state.service';
+import { StateService } from '@app/core/services';
 import {
+  DateInterval,
   DateIntervalType,
   MessageAction,
   MessageType,
+  Settings,
+  StoreItem,
 } from '@app/shared/models';
 import {
   addDays,
@@ -17,13 +20,8 @@ import {
 } from 'date-fns';
 import { mergeMap, Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import {
-  DateInterval,
-  Settings,
-  SettingsStoreItemAdapter,
-  StoreItem,
-  StoreItemAdapter,
-} from '../models';
+import { SettingsStoreItemAdapter, StoreItemAdapter } from '../adapters';
+
 import { MessageService } from './message.service';
 
 const apiRoute: string = 'api/v2/store-items';

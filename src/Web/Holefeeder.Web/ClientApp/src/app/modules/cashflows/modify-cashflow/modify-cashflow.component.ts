@@ -8,14 +8,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ModalService } from '@app/core/modals/modal.service';
-import { Account } from '@app/core/models/account.model';
-import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
-import { Category } from '@app/core/models/category.model';
-import { ModifyCashflowCommandAdapter } from '@app/core/models/modify-cashflow-command-adapter.service';
-import { AccountsService } from '@app/core/services';
-import { CashflowsService } from '@app/core/services/cashflows.service';
-import { CategoriesService } from '@app/core/services/categories.service';
+import { ModifyCashflowCommandAdapter } from '@app/core/adapters';
+import {
+  AccountsService,
+  CashflowsService,
+  CategoriesService,
+  ModalService,
+} from '@app/core/services';
 import {
   DatePickerComponent,
   LoaderComponent,
@@ -23,7 +22,12 @@ import {
 } from '@app/shared/components';
 import { AutofocusDirective } from '@app/shared/directives';
 import { filterNullish, filterTrue } from '@app/shared/helpers';
-import { DateIntervalTypeNames } from '@app/shared/models';
+import {
+  Account,
+  CashflowDetail,
+  Category,
+  DateIntervalTypeNames,
+} from '@app/shared/models';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, switchMap, tap } from 'rxjs';
 

@@ -7,11 +7,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { SettingsAdapter } from '@app/core/models/settings-adapter.service';
-import { Settings } from '@app/core/models/settings.model';
-import { SettingsService } from '@app/core/services/settings.service';
+import { SettingsAdapter } from '@app/core/adapters';
+import { SettingsService } from '@app/core/services';
 import { DatePickerComponent } from '@app/shared/components';
-import { DateIntervalTypeNames } from '@app/shared/models';
+import { DateIntervalTypeNames, Settings } from '@app/shared/models';
 import { Observable, tap } from 'rxjs';
 
 @Component({

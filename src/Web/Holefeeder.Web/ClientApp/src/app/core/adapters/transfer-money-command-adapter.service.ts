@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TransferMoneyCommand } from '@app/core/models/transfer-money-command.model';
 import { dateToUtc } from '@app/shared/helpers';
-import { Adapter } from '@app/shared/models';
+import { Adapter, TransferMoneyCommand } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class TransferMoneyCommandAdapter

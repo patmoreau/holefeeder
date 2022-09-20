@@ -7,8 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ModalService } from '@app/core/modals/modal.service';
-import { AccountsService } from '@app/core/services';
+import { AccountsService, ModalService } from '@app/core/services';
 import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
 import { CloseAccountAdapter } from '@app/modules/accounts/models/close-account-command.model';
 import { LoaderComponent } from '@app/shared/components';

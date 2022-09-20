@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '@app/core/models/user.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, User } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class UserAdapter implements Adapter<User> {

@@ -6,7 +6,9 @@ import {
 } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { loadConfigProvider } from '@app/app-initializer';
 import { AppComponent } from '@app/app.component';
+import { GlobalErrorHandler, HttpLoadingInterceptor } from '@app/core/errors';
 import { ROUTES } from '@app/routes';
 import { environment } from '@env/environment';
 import {
@@ -14,9 +16,6 @@ import {
   AuthModule,
   LogLevel,
 } from 'angular-auth-oidc-client';
-import { GlobalErrorHandler } from '@app/core/errors/global-error-handler';
-import { HttpLoadingInterceptor } from '@app/core/errors/http-loading.interceptor';
-import { loadConfigProvider } from '@app/app-initializer';
 
 if (environment.production) {
   enableProdMode();

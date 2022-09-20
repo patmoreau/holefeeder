@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
+import { PayCashflowCommandAdapter } from '@app/core/adapters';
 import {
   MessageService,
   TransactionsService,
   UpcomingService,
 } from '@app/core/services';
 import { TransactionListItemComponent } from '@app/shared/components';
-import { MessageAction, MessageType } from '@app/shared/models';
+import { MessageAction, MessageType, Upcoming } from '@app/shared/models';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 

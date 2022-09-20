@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Series } from '@app/core/models/series.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, Series } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class SeriesAdapter implements Adapter<Series> {

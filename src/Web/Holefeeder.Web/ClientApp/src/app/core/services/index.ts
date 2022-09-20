@@ -1,9 +1,9 @@
-export { AccountAdapter } from './account-adapter.service';
 export * from './accounts.service';
 export * from './cashflows.service';
 export * from './categories.service';
 export * from './config.service';
 export * from './message.service';
+export * from './modal.service';
 export * from './settings.service';
 export * from './state.service';
 export * from './statistics.service';

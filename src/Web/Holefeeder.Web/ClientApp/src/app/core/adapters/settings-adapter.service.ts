@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '@app/core/models/settings.model';
-import { Adapter } from '@app/shared/models';
+import { Adapter, Settings } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsAdapter implements Adapter<Settings> {

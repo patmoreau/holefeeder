@@ -3,14 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { logger } from '@app/core';
-import { DateInterval } from '@app/core/models/date-interval.model';
-import { Settings } from '@app/core/models/settings.model';
-import { User } from '@app/core/models/user.model';
 import {
   SettingsService,
   SubscriberService,
   UserService,
 } from '@app/core/services';
+import { DateInterval, Settings, User } from '@app/shared/models';
 import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { addDays, startOfToday } from 'date-fns';

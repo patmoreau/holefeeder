@@ -6,13 +6,13 @@ import {
   FormGroupDirective,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AccountInfo, Category } from '@app/core/models';
 import { AccountsService, CategoriesService } from '@app/core/services';
 import {
   DatePickerComponent,
   TagsInputComponent,
 } from '@app/shared/components';
 import { AutofocusDirective } from '@app/shared/directives';
+import { AccountInfo, Category } from '@app/shared/models';
 import { combineLatest, Observable } from 'rxjs';
 
 @Component({

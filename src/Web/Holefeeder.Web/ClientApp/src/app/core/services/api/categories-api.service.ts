@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { CategoryAdapter } from '@app/core/adapters';
+import { Category } from '@app/shared/models';
 import { map, Observable } from 'rxjs';
-import { Category } from '../../models/category.model';
-import { CategoryAdapter } from '@app/core/models/category-adapter.service';
 
 const apiRoute: string = 'api/v2/categories';
 

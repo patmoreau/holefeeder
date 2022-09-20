@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ICategoryInfo } from '@app/shared/models';
+import { ICategoryInfo, Settings, Statistics } from '@app/shared/models';
 import { Observable } from 'rxjs';
-import { Settings, Statistics } from '../models';
 import { StatisticsApiService } from './api/statistics-api.service';
 
 @Injectable({ providedIn: 'root' })

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
 import { dateFromUtc } from '@app/shared/helpers';
-import { Adapter } from '@app/shared/models';
+import { Adapter, CashflowDetail } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class CashflowDetailAdapter implements Adapter<CashflowDetail> {
