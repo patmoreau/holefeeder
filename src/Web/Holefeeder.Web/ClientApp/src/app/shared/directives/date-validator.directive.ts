@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { isValid } from 'date-fns';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DateValidator implements Validator {
   validate(control: AbstractControl<any, any>): ValidationErrors | null {
     const invalid = isValid(control.value);
@@ -24,6 +24,7 @@ export class DateValidator implements Validator {
       multi: true,
     },
   ],
+  standalone: true,
 })
 export class DateValidatorDirective implements Validator {
   constructor(private validator: DateValidator) {}

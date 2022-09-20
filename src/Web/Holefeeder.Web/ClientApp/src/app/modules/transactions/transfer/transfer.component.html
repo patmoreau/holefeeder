@@ -3,7 +3,7 @@
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
-      <input class="form-control" dftaAutofocus formControlName="amount" id="amount" placeholder="transaction amount..."
+      <input class="form-control" appAutofocus formControlName="amount" id="amount" placeholder="transaction amount..."
         required type="number" />
     </div>
     <app-date-picker label="Date" formControlName="date" [required]="true"></app-date-picker>

@@ -1,5 +1,9 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import {
+  enableProdMode,
+  ErrorHandler,
+  importProvidersFrom,
+} from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from '@app/app.component';
@@ -10,6 +14,9 @@ import {
   AuthModule,
   LogLevel,
 } from 'angular-auth-oidc-client';
+import { GlobalErrorHandler } from '@app/core/errors/global-error-handler';
+import { HttpLoadingInterceptor } from '@app/core/errors/http-loading.interceptor';
+import { loadConfigProvider } from '@app/app-initializer';
 
 if (environment.production) {
   enableProdMode();
@@ -18,6 +25,13 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}/gateway` },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingInterceptor,
+      multi: true,
+    },
+    loadConfigProvider,
     importProvidersFrom(
       RouterModule.forRoot(ROUTES, {
         enableTracing: !environment.production && environment.enableTracing,
