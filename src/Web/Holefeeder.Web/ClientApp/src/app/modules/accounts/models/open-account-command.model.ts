@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Adapter } from '@app/shared';
 import { dateToUtc } from '@app/shared/helpers';
-import { AccountType } from '@app/shared/models';
+import { AccountType, Adapter } from '@app/shared/models';
 
 export class OpenAccountCommand {
   constructor(

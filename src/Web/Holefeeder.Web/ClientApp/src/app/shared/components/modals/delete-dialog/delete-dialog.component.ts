@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AutofocusDirective } from '@app/shared/directives';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AutofocusDirective } from '@app/shared';
 
 @Component({
   selector: 'app-confirm-dialog',

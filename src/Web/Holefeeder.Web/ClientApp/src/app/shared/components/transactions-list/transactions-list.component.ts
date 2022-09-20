@@ -1,13 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagingInfo } from '@app/core/models/paging-info.model';
 import { TransactionDetail } from '@app/core/models/transaction-detail.model';
 import { TransactionsService } from '@app/core/services/transactions.service';
+import { TransactionListItemComponent } from '@app/shared/components';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
-import { TransactionListItemComponent } from '@app/shared';
-import { CommonModule } from '@angular/common';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-transactions-list',

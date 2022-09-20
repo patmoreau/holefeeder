@@ -16,13 +16,16 @@ import {
   CategoriesService,
   TransactionsService,
 } from '@app/core/services';
+import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
+import { TransferComponent } from '@app/modules/transactions/transfer/transfer.component';
+import {
+  LoaderComponent,
+  RecurringCashflowComponent,
+} from '@app/shared/components';
 import { DateIntervalType } from '@app/shared/models';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { startOfToday } from 'date-fns';
 import { combineLatest, filter, Observable, tap } from 'rxjs';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
-import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
-import { LoaderComponent, RecurringCashflowComponent } from '@app/shared';
-import { TransferComponent } from '@app/modules/transactions/transfer/transfer.component';
 
 const accountIdParamName = 'accountId';
 

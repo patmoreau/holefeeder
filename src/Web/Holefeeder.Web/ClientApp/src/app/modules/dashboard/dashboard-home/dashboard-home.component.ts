@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
@@ -6,11 +7,13 @@ import {
   TransactionsService,
   UpcomingService,
 } from '@app/core/services';
+import {
+  LoaderComponent,
+  TransactionListItemComponent,
+} from '@app/shared/components';
+import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
-import { LoaderComponent, TransactionListItemComponent } from '@app/shared';
 
 @Component({
   selector: 'app-dashboard-home',

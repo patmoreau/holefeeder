@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
-import { dateToUtc } from "@app/shared/helpers";
-import { PayCashflowCommand } from "@app/core/models/pay-cashflow-command.model";
+import { Injectable } from '@angular/core';
+import { PayCashflowCommand } from '@app/core/models/pay-cashflow-command.model';
+import { dateToUtc } from '@app/shared/helpers';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class PayCashflowCommandAdapter implements Adapter<PayCashflowCommand> {
   adapt(item: any): PayCashflowCommand {
     return new PayCashflowCommand(

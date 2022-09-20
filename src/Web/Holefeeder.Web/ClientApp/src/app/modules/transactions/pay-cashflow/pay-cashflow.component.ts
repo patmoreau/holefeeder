@@ -10,9 +10,9 @@ import {
 import { ActivatedRoute, Data } from '@angular/router';
 import { PayCashflowCommandAdapter, Upcoming } from '@app/core/models';
 import { TransactionsService, UpcomingService } from '@app/core/services';
-import { map, Observable, tap } from 'rxjs';
 import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
-import { LoaderComponent } from '@app/shared';
+import { LoaderComponent } from '@app/shared/components';
+import { map, Observable, tap } from 'rxjs';
 
 const cashflowIdParamName = 'cashflowId';
 

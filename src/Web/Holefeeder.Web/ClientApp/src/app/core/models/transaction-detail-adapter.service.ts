@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
-import { dateFromUtc } from "@app/shared/helpers";
-import { TransactionDetail } from "@app/core/models/transaction-detail.model";
+import { Injectable } from '@angular/core';
+import { TransactionDetail } from '@app/core/models/transaction-detail.model';
+import { dateFromUtc } from '@app/shared/helpers';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class TransactionDetailAdapter implements Adapter<TransactionDetail> {
   adapt(item: any): TransactionDetail {
     return new TransactionDetail(

@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
+import { Injectable } from '@angular/core';
 import {
   DangerToastItem,
   InfoToastItem,
   ToastItem,
   ToastType,
-  WarningToastItem
-} from "@app/core/models/toast-item.model";
+  WarningToastItem,
+} from '@app/core/models/toast-item.model';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class ToastItemAdapter implements Adapter<ToastItem> {
   adapt(item: any): ToastItem {
     if (item.type === ToastType.danger) {

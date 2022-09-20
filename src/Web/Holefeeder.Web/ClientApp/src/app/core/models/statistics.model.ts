@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Adapter } from '@app/shared';
-import { Series } from './series.model';
 import { SeriesAdapter } from '@app/core/models/series-adapter.service';
+import { Adapter } from '@app/shared/models';
+import { Series } from './series.model';
 
 export class Statistics<T> {
   constructor(

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -6,13 +7,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { SettingsAdapter } from '@app/core/models/settings-adapter.service';
 import { Settings } from '@app/core/models/settings.model';
 import { SettingsService } from '@app/core/services/settings.service';
+import { DatePickerComponent } from '@app/shared/components';
 import { DateIntervalTypeNames } from '@app/shared/models';
 import { Observable, tap } from 'rxjs';
-import { SettingsAdapter } from '@app/core/models/settings-adapter.service';
-import { CommonModule } from '@angular/common';
-import { DatePickerComponent } from '@app/shared';
 
 @Component({
   selector: 'app-general',

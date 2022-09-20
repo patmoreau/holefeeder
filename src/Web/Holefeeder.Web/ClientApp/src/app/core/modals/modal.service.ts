@@ -1,14 +1,14 @@
 import { Injectable, Type } from '@angular/core';
+import { trace } from '@app/core';
 import {
   ConfirmDialogComponent,
   DeleteDialogComponent,
   InputDialogComponent,
   MessageDialogComponent,
-} from '@app/shared';
+} from '@app/shared/components';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { from, Observable, of, take } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { trace } from '@app/core';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {

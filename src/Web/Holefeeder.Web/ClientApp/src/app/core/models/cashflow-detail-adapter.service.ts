@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
-import { dateFromUtc } from "@app/shared/helpers";
-import { CashflowDetail } from "@app/core/models/cashflow-detail.model";
+import { Injectable } from '@angular/core';
+import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
+import { dateFromUtc } from '@app/shared/helpers';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class CashflowDetailAdapter implements Adapter<CashflowDetail> {
   adapt(item: any): CashflowDetail {
     return new CashflowDetail(

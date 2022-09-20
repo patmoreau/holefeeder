@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   ControlContainer,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { DatePickerComponent } from '@app/shared/components';
 import { DateIntervalTypeNames } from '@app/shared/models';
-import { CommonModule } from '@angular/common';
-import { DatePickerComponent } from '@app/shared';
 
 @Component({
   selector:

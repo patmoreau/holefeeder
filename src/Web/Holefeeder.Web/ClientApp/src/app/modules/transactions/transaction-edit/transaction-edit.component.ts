@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -7,13 +8,12 @@ import {
 } from '@angular/forms';
 import { AccountInfo, Category } from '@app/core/models';
 import { AccountsService, CategoriesService } from '@app/core/services';
-import { combineLatest, Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import {
-  AutofocusDirective,
   DatePickerComponent,
   TagsInputComponent,
-} from '@app/shared';
+} from '@app/shared/components';
+import { AutofocusDirective } from '@app/shared/directives';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-edit',

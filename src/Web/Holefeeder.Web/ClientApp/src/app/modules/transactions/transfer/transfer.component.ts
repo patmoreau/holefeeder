@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -6,9 +7,9 @@ import {
 } from '@angular/forms';
 import { AccountInfo } from '@app/core/models';
 import { AccountsService } from '@app/core/services';
+import { DatePickerComponent } from '@app/shared/components';
+import { AutofocusDirective } from '@app/shared/directives';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { AutofocusDirective, DatePickerComponent } from '@app/shared';
 
 @Component({
   selector: 'app-transfer',

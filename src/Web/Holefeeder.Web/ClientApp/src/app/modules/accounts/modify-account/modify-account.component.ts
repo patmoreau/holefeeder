@@ -9,13 +9,13 @@ import {
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ModalService } from '@app/core/modals/modal.service';
 import { AccountsService } from '@app/core/services';
+import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
 import { CloseAccountAdapter } from '@app/modules/accounts/models/close-account-command.model';
+import { LoaderComponent } from '@app/shared/components';
 import { filterNullish, filterTrue } from '@app/shared/helpers';
 import { Observable, switchMap, tap } from 'rxjs';
 import { ModifyAccountAdapter } from '../models/modify-account-command.model';
 import { AccountCommandsService } from '../services/account-commands.service';
-import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
-import { LoaderComponent } from '@app/shared';
 
 const accountIdParamName = 'accountId';
 

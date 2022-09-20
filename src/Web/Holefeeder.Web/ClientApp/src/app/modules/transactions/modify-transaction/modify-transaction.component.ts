@@ -14,10 +14,10 @@ import {
   TransactionDetail,
 } from '@app/core/models';
 import { TransactionsService } from '@app/core/services';
+import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
+import { LoaderComponent } from '@app/shared/components';
 import { filterTrue } from '@app/shared/helpers';
 import { filter, Observable, switchMap, tap } from 'rxjs';
-import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
-import { LoaderComponent } from '@app/shared';
 
 const transactionIdParamName = 'transactionId';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ICategoryInfo } from '@app/shared';
+import { ICategoryInfo } from '@app/shared/models';
 import { Observable } from 'rxjs';
 import { Settings, Statistics } from '../models';
 import { StatisticsApiService } from './api/statistics-api.service';

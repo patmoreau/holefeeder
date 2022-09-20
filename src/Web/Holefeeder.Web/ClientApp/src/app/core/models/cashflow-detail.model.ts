@@ -1,5 +1,8 @@
-import { IAccountInfo, ICategoryInfo } from '@app/shared';
-import { DateIntervalType } from '@app/shared/models';
+import {
+  DateIntervalType,
+  IAccountInfo,
+  ICategoryInfo,
+} from '@app/shared/models';
 
 export class CashflowDetail {
   constructor(
@@ -16,4 +19,3 @@ export class CashflowDetail {
     public tags: string[]
   ) {}
 }
-

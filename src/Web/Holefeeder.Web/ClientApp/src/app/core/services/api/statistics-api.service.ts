@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Statistics, StatisticsAdapter } from '@app/core/models';
 import { Settings } from '@app/core/models/settings.model';
-import { ICategoryInfo } from '@app/shared';
+import { ICategoryInfo } from '@app/shared/models';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BaseApiService } from './base-api.service';

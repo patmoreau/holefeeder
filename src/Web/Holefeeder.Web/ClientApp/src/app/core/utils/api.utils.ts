@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { PagingInfo } from '@app/core/models/paging-info.model';
-import { Adapter } from '@app/shared';
+import { Adapter } from '@app/shared/models';
 import { throwError } from 'rxjs';
 
 export function mapToPagingInfo<T>(

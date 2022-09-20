@@ -1,10 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Account } from '@app/core/models';
 import { AccountsService } from '@app/core/services';
+import { UpcomingListComponent } from '@app/shared/components';
 import { filterNullish } from '@app/shared/helpers';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { UpcomingListComponent } from '@app/shared';
 
 @Component({
   selector: 'app-account-upcoming',

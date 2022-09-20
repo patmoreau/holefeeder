@@ -1,4 +1,4 @@
-import { IAccountInfo, ICashflowInfo, ICategoryInfo } from '@app/shared';
+import { IAccountInfo, ICashflowInfo, ICategoryInfo } from '@app/shared/models';
 
 export class TransactionDetail {
   constructor(
@@ -12,4 +12,3 @@ export class TransactionDetail {
     public tags: string[]
   ) {}
 }
-

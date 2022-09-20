@@ -1,4 +1,4 @@
-import { IAccountInfo, ICategoryInfo } from '@app/shared';
+import { IAccountInfo, ICategoryInfo } from '@app/shared/models';
 
 export class Upcoming {
   constructor(
@@ -11,4 +11,3 @@ export class Upcoming {
     public account: IAccountInfo
   ) {}
 }
-

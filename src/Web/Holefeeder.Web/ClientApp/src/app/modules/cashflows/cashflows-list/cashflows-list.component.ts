@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CashflowDetail } from '@app/core/models/cashflow-detail.model';
 import { CashflowsService } from '@app/core/services/cashflows.service';
-import { Observable, Subject } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import {
+  LoaderComponent,
+  TransactionListItemComponent,
+} from '@app/shared/components';
 import { TransactionsListComponent } from '@app/shared/components/transactions-list/transactions-list.component';
-import { LoaderComponent, TransactionListItemComponent } from '@app/shared';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cashflows-list',

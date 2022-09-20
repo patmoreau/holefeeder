@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
-import { Category } from "@app/core/models/category.model";
+import { Injectable } from '@angular/core';
+import { Category } from '@app/core/models/category.model';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class CategoryAdapter implements Adapter<Category> {
   adapt(item: any): Category {
     return new Category(

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Adapter } from "@app/shared";
-import { dateFromUtc } from "@app/shared/helpers";
-import { Upcoming } from "@app/core/models/upcoming.model";
+import { Injectable } from '@angular/core';
+import { Upcoming } from '@app/core/models/upcoming.model';
+import { dateFromUtc } from '@app/shared/helpers';
+import { Adapter } from '@app/shared/models';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class UpcomingAdapter implements Adapter<Upcoming> {
   adapt(item: any): Upcoming {
     return new Upcoming(
