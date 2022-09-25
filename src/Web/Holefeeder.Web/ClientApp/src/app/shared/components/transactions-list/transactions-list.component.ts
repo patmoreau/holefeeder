@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { trace } from '@app/core/logger';
 import { TransactionsService } from '@app/core/services';
 import { TransactionListItemComponent } from '@app/shared/components';
+import { tapTrace } from '@app/shared/helpers';
 import { PagingInfo, TransactionDetail } from '@app/shared/models';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
@@ -20,9 +22,8 @@ export class TransactionsListComponent implements OnInit {
 
   transactions$: Observable<PagingInfo<TransactionDetail>> | undefined;
 
-  page = 1;
-
-  private limit = 10;
+  currentPage = 1;
+  limit = 15;
 
   constructor(
     private transactionsService: TransactionsService,
@@ -33,12 +34,13 @@ export class TransactionsListComponent implements OnInit {
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
       filter(params => params !== null),
+      tapTrace(),
       switchMap(params => {
-        this.page = +(params.get('page') ?? 1);
+        this.currentPage = +(params.get('page') ?? 1);
         return this.accountId
           ? this.transactionsService.find(
               this.accountId,
-              (this.page - 1) * this.limit,
+              (this.currentPage - 1) * this.limit,
               this.limit,
               ['-date']
             )
@@ -48,13 +50,16 @@ export class TransactionsListComponent implements OnInit {
   }
 
   click(transaction: TransactionDetail) {
-    this.router.navigate(['transactions', transaction.id]);
+    this.router.navigate(['transactions', transaction.id]).then();
   }
 
-  pageChange() {
-    this.router.navigate(['./'], {
-      queryParams: { page: this.page },
-      relativeTo: this.route,
-    });
+  @trace()
+  pageChanged(page: number) {
+    this.router
+      .navigate(['./'], {
+        queryParams: { page: this.currentPage },
+        relativeTo: this.route,
+      })
+      .then();
   }
 }

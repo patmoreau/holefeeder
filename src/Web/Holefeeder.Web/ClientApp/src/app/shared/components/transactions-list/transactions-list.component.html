@@ -8,10 +8,10 @@
             : transaction.category.name
         " [tags]="transaction.tags"></app-transaction-list-item>
     </div>
+    <ngb-pagination [(page)]="currentPage" [boundaryLinks]="true" (pageChange)="pageChanged($event)" [maxSize]="7"
+      [pageSize]="limit" [collectionSize]="transactions.totalCount" class="d-flex justify-content-center">
+    </ngb-pagination>
   </ng-container>
-  <ngb-pagination (pageChange)="pageChange()" [(page)]="page" [boundaryLinks]="true"
-    [collectionSize]="transactions.totalCount" [ellipses]="false" [maxSize]="5" [rotate]="true"
-    class="d-flex justify-content-center"></ngb-pagination>
   <ng-template #noItems>Nothing to show!</ng-template>
 </ng-container>
 <ng-template #loader>
