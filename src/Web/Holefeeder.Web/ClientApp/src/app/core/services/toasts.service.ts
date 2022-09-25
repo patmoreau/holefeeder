@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SubscriberService } from '@app/core/services';
-import { trace } from '@app/shared/helpers';
+import { tapTrace } from '@app/shared/helpers';
 import {
   Message,
   MessageAction,
@@ -24,7 +24,7 @@ const initialState: ToastsState = {
 @Injectable({ providedIn: 'root' })
 export class ToastsService extends StateService<ToastsState> {
   toasts$: Observable<ToastItem[]> = this.select(state => state.toasts).pipe(
-    trace()
+    tapTrace()
   );
 
   constructor(
@@ -36,7 +36,7 @@ export class ToastsService extends StateService<ToastsState> {
 
     let subscription = this.messages.listen
       .pipe(
-        trace(),
+        tapTrace(),
         filter(
           message =>
             message.type === MessageType.error &&

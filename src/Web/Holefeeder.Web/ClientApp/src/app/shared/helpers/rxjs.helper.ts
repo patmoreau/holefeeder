@@ -10,7 +10,7 @@ import {
   UnaryFunction,
 } from 'rxjs';
 
-export function trace<T>(
+export function tapTrace<T>(
   message: string = 'observe'
 ): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
   return pipe(
