@@ -1,11 +1,11 @@
-apiVersion: skaffold/v2beta24
+apiVersion: skaffold/v2beta29
 kind: Config
 metadata:
   name: holefeeder
 build:
   tagPolicy:
     envTemplate:
-      template: '{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}'
+      template: "{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}"
   artifacts:
     - image: holefeeder/holefeeder-web
       context: .
@@ -13,22 +13,22 @@ build:
         dockerfile: src/Web/Holefeeder.Web/Dockerfile
         target: final
         buildArgs:
-          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
+          BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
     - image: holefeeder/holefeeder-api
       context: .
       docker:
         dockerfile: src/Api/Holefeeder.Api/Dockerfile
         target: final
         buildArgs:
-          BUILD_VERSION: '{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}'
+          BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
 profiles:
-  - name: dev-docker
+  - name: dev-rancher
     activation:
-      - kubeContext: docker-desktop
+      - kubeContext: rancher-desktop
     deploy:
       kustomize:
         paths: [ "kubernetes/dev" ]
-  - name: dev-k3d
+  - name: dev
     activation:
       - kubeContext: k3d-*
     deploy:
