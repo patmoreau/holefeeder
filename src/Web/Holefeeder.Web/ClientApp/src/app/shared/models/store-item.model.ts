@@ -5,4 +5,3 @@ export class StoreItem {
     public data: string
   ) {}
 }
-

@@ -3,10 +3,10 @@
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
-      <input class="form-control" appAutofocus formControlName="amount" id="amount" placeholder="transaction amount..."
-        required type="number" />
+      <input appAutofocus class="form-control" formControlName="amount" id="amount" placeholder="transaction amount..."
+             required type="number" />
     </div>
-    <app-date-picker label="Date" formControlName="date" [required]="true"></app-date-picker>
+    <app-date-picker [required]="true" formControlName="date" label="Date"></app-date-picker>
     <div class="form-group">
       <label for="fromAccount">From</label>
       <select class="form-control" formControlName="fromAccount" id="fromAccount" required>
@@ -24,7 +24,7 @@
     <div class="form-group">
       <label for="description">Note</label>
       <input [placeholder]="'transaction note...'" class="form-control" formControlName="description" id="description"
-        type="text" />
+             type="text" />
     </div>
   </div>
 </ng-container>

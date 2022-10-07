@@ -9,4 +9,3 @@ export class ModifyTransactionCommand {
     public tags: string[]
   ) {}
 }
-

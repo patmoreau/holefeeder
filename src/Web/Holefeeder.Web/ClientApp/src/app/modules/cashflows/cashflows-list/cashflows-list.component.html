@@ -20,7 +20,7 @@
 </div>
 <div class="container">
   <app-transaction-list-item (click)="click(cashflow.id)" *ngFor="let cashflow of cashflows$ | async"
-    [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [description]="
+                             [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [description]="
         cashflow.description ? cashflow.description : cashflow.category.name
       " [tags]="cashflow.tags"></app-transaction-list-item>
 </div>

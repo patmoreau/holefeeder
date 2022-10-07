@@ -5,7 +5,7 @@
     </a>
     <ng-container *ngIf="logged$ | async; else loginNavBar">
       <button aria-controls="offcanvasNavbar" aria-label="navbar-toggler" class="navbar-toggler"
-        data-bs-target="#offcanvasNavbar" data-bs-toggle="offcanvas" type="button">
+              data-bs-target="#offcanvasNavbar" data-bs-toggle="offcanvas" type="button">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div aria-labelledby="offcanvasNavbarLabel" class="offcanvas offcanvas-end" id="offcanvasNavbar" tabindex="-1">
@@ -46,14 +46,14 @@
             </li>
             <li class="nav-item dropdown">
               <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                id="offcanvasNavbarDropdown" role="button">
+                 id="offcanvasNavbarDropdown" role="button">
                 <em class="bi bi-person-circle"></em>&nbsp;{{(user$ | async)?.userPrincipalName}}
               </a>
               <ul aria-labelledby="offcanvasNavbarDropdown" class="dropdown-menu dropdown-menu-end">
                 <li><a [routerLink]="['/settings']" class="dropdown-item"><em class="bi bi-gear"></em>&nbsp;Settings</a>
                 </li>
                 <li><a [routerLink]="['/hc-ui']" class="dropdown-item" target="_blank"><em
-                      class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
+                  class="bi bi-file-medical"></em>&nbsp;Health Checks</a></li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
@@ -84,25 +84,25 @@
       <div class="form-group">
         <div class="d-md-none d-flex justify-content-center">
           <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [dayTemplate]="t" [displayMonths]="1"
-            [firstDayOfWeek]=7 outsideDays="hidden">
+                          [firstDayOfWeek]=7 outsideDays="hidden">
           </ngb-datepicker>
         </div>
         <div class="d-none d-md-block">
           <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [dayTemplate]="t" [displayMonths]="2"
-            [firstDayOfWeek]=7 outsideDays="hidden">
+                          [firstDayOfWeek]=7 outsideDays="hidden">
           </ngb-datepicker>
         </div>
         <div class="d-flex p-1 justify-content-center">
           <button (click)="previousPeriod()" aria-label="previous-period" class="btn btn-outline"
-            ngbTooltip="Previous period" type="button">
+                  ngbTooltip="Previous period" type="button">
             <em class="bi bi-calendar-minus"></em>
           </button>
           <button (click)="currentPeriod()" aria-label="current-period" class="btn btn-outline ms-3"
-            ngbTooltip="Current period" type="button">
+                  ngbTooltip="Current period" type="button">
             <em class="bi bi-calendar-check"></em>
           </button>
           <button (click)="nextPeriod()" aria-label="next-period" class="btn btn-outline ms-3" ngbTooltip="Next period"
-            type="button">
+                  type="button">
             <em class="bi bi-calendar-plus"></em>
           </button>
         </div>
@@ -117,8 +117,8 @@
 </ng-template>
 <ng-template #t let-date let-focused="focused">
   <span (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null"
-    [class.faded]="isHovered(date) || isInside(date)" [class.focused]="focused" [class.range]="isRange(date)"
-    class="custom-day">
+        [class.faded]="isHovered(date) || isInside(date)" [class.focused]="focused" [class.range]="isRange(date)"
+        class="custom-day">
     {{ date.day }}
   </span>
 </ng-template>

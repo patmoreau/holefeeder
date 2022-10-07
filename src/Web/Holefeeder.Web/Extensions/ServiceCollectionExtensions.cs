@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
                 Match = new RouteMatch
                 {
                     // Path or Hosts are required for each route. This catch-all pattern matches all request paths.
-                    Path = $"/gateway/{{**remainder}}"
+                    Path = "/gateway/{**remainder}"
                 }
             }.WithTransformPathRemovePrefix("/gateway")
         };
@@ -39,7 +39,7 @@ public static class ServiceCollectionExtensions
         {
             new ClusterConfig
             {
-                ClusterId = $"api-cluster",
+                ClusterId = "api-cluster",
                 Destinations =
                     new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
                     {

@@ -1,11 +1,12 @@
 <div class="form-group">
   <label for="dateSelect">{{label}}</label>
   <div class="input-group mb-2">
-    <input id="dateSelect" class="form-control" ngbDatepicker #datePicker="ngbDatepicker" container="body"
-      [firstDayOfWeek]=7 [autoClose]="true" [placeholder]="placeholder" [required]="required" [disabled]="disabled"
-      [(ngModel)]="data" [ngModelOptions]="{standalone: true}" (click)="datePicker.open()" (ngModelChange)="onChange()"
-      (blur)="onTouchFn()" [class.valid]="control.valid && (control.dirty || control.touched)"
-      [class.invalid]="control.invalid && (control.dirty || control.touched)">
+    <input #datePicker="ngbDatepicker" (blur)="onTouchFn()" (click)="datePicker.open()" (ngModelChange)="onChange()" [(ngModel)]="data"
+           [autoClose]="true" [class.invalid]="control.invalid && (control.dirty || control.touched)" [class.valid]="control.valid && (control.dirty || control.touched)" [disabled]="disabled" [firstDayOfWeek]=7
+           [ngModelOptions]="{standalone: true}" [placeholder]="placeholder" [required]="required"
+           class="form-control"
+           container="body" id="dateSelect"
+           ngbDatepicker>
     <div class="input-group-append">
       <a (click)="datePicker.toggle()" class="btn btn-outline-secondary text-secondary">
         <em class="bi bi-calendar-event"></em>
@@ -14,10 +15,10 @@
   </div>
 </div>
 <div *ngIf="control.invalid && control.errors && (control.dirty || control.touched)">
-  <small class="text-danger" *ngIf="control.hasError('required')">
+  <small *ngIf="control.hasError('required')" class="text-danger">
     The date is required.
   </small>
-  <small class="text-danger" *ngIf="control.hasError('invalidDate')">
+  <small *ngIf="control.hasError('invalidDate')" class="text-danger">
     The '{{control.errors.invalidDate.value}}' date is not valid.
   </small>
 </div>

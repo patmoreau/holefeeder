@@ -6,4 +6,3 @@ export class PayCashflowCommand {
     public cashflowDate: Date
   ) {}
 }
-

@@ -1,8 +1,8 @@
 <div class="form-group">
   <div class="input-group mb-2">
     <label for="tags">Tags</label>
-    <input id="tags" #newTag (blur)="addTag(newTag.value); newTag.value = ''" (keyup.enter)="addTag(newTag.value)"
-      [readonly]="isReadonly" class="form-control" type="text" />
+    <input #newTag (blur)="addTag(newTag.value); newTag.value = ''" (keyup.enter)="addTag(newTag.value)" [readonly]="isReadonly"
+           class="form-control" id="tags" type="text" />
     <div class="input-group-append">
       <a (click)="addTag(newTag.value)" class="btn btn-outline-secondary text-secondary">
         <em class="bi bi-plus"></em>

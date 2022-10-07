@@ -40,7 +40,7 @@ builder.Services
     .AddInMemoryStorage();
 
 builder.Services.AddHealthChecks()
-    .AddCheck("web", () => HealthCheckResult.Healthy(), tags: new[] {"holefeeder", "web", "service"});
+    .AddCheck("web", () => HealthCheckResult.Healthy(), new[] {"holefeeder", "web", "service"});
 
 builder.Services.AddAuthorization(options =>
 {

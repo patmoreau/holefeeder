@@ -8,12 +8,12 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button aria-controls="purchase" aria-selected="true" class="nav-link active" data-bs-target="#purchase"
-              data-bs-toggle="tab" id="purchase-tab" role="tab" type="button">Purchase
+                    data-bs-toggle="tab" id="purchase-tab" role="tab" type="button">Purchase
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button aria-controls="transfer" aria-selected="false" class="nav-link" data-bs-target="#transfer"
-              data-bs-toggle="tab" id="transfer-tab" role="tab" type="button">Transfer
+                    data-bs-toggle="tab" id="transfer-tab" role="tab" type="button">Transfer
             </button>
           </li>
         </ul>
@@ -22,8 +22,8 @@
             <form (ngSubmit)="onMakePurchase()" [formGroup]="formPurchase">
               <app-transaction-edit></app-transaction-edit>
               <div class="form-check form-switch mb-5 mt-5 me-5">
-                <input class="form-check-input" id="recurringCashflow" type="checkbox" formControlName="isRecurring"
-                  (click)="collapse.toggle()" [attr.aria-expanded]="!isNotRecurring" />
+                <input (click)="collapse.toggle()" [attr.aria-expanded]="!isNotRecurring" class="form-check-input" formControlName="isRecurring"
+                       id="recurringCashflow" type="checkbox" />
                 <label class="custom-control-label" for="recurringCashflow">Recurring cashflow</label>
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isNotRecurring">
                   <div class="card">
