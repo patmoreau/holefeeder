@@ -16,8 +16,6 @@ using Holefeeder.Tests.Common.Factories;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -33,7 +31,6 @@ public class ModifyCashflowTests
     private readonly CashflowFactory _factory = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
 
     public ModifyCashflowTests()
@@ -96,7 +93,7 @@ public class ModifyCashflowTests
         _cashflowRepositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(_factory.Generate());
 
-        var handler = new Handler(_userContextMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _cashflowRepositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -114,7 +111,7 @@ public class ModifyCashflowTests
         _cashflowRepositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns((Cashflow?) null);
 
-        var handler = new Handler(_userContextMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _cashflowRepositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);
@@ -136,7 +133,7 @@ public class ModifyCashflowTests
             .Throws(new TransactionDomainException(
                 nameof(GivenHandler_WhenTransactionDomainException_ThenRollbackTransaction), nameof(Transaction)));
 
-        var handler = new Handler(_userContextMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _cashflowRepositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

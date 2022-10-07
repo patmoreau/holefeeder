@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,12 +32,12 @@ public class CancelCashflow : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<Unit>
+    internal record Request : IRequest<Unit>
     {
         public Guid Id { get; init; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -46,17 +45,15 @@ public class CancelCashflow : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ICashflowRepository _cashflowRepository;
 
-        public Handler(IUserContext userContext, ICashflowRepository cashflowRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, ICashflowRepository cashflowRepository)
         {
             _userContext = userContext;
             _cashflowRepository = cashflowRepository;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
@@ -70,11 +67,7 @@ public class CancelCashflow : ICarterModule
                     throw new CashflowNotFoundException(request.Id);
                 }
 
-                _logger.LogTrace("Existing {@Cashflow}", exists);
-
                 var cashflow = exists.Cancel();
-
-                _logger.LogTrace("Canceling {@Cashflow}", cashflow);
 
                 await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
 

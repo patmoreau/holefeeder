@@ -10,19 +10,17 @@ namespace Holefeeder.Infrastructure.Repositories;
 internal class TransactionRepository : ITransactionRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly TransactionMapper _transactionMapper;
 
-    public TransactionRepository(IHolefeederContext context, TransactionMapper transactionMapper)
+    public TransactionRepository(IHolefeederContext context)
     {
         _context = context;
-        _transactionMapper = transactionMapper;
     }
 
     public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return _transactionMapper.MapToModelOrNull(await _context.Connection
+        return TransactionMapper.MapToModelOrNull(await _context.Connection
             .FindByIdAsync<TransactionEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false));
     }
@@ -39,12 +37,12 @@ internal class TransactionRepository : ITransactionRepository
 
         if (entity is null)
         {
-            entity = _transactionMapper.MapToEntity(transaction);
+            entity = TransactionMapper.MapToEntity(transaction);
             await _context.Transaction.InsertAsync(entity).ConfigureAwait(false);
         }
         else
         {
-            entity = _transactionMapper.MapToEntity(transaction);
+            entity = TransactionMapper.MapToEntity(transaction);
             await _context.Transaction.UpdateAsync(entity).ConfigureAwait(false);
         }
     }

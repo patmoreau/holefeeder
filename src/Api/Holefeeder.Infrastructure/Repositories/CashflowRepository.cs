@@ -9,13 +9,11 @@ namespace Holefeeder.Infrastructure.Repositories;
 
 internal class CashflowRepository : ICashflowRepository
 {
-    private readonly CashflowMapper _cashflowMapper;
     private readonly IHolefeederContext _context;
 
-    public CashflowRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
+    public CashflowRepository(IHolefeederContext context)
     {
         _context = context;
-        _cashflowMapper = cashflowMapper;
     }
 
     public IUnitOfWork UnitOfWork => _context;
@@ -32,7 +30,7 @@ internal class CashflowRepository : ICashflowRepository
             return null;
         }
 
-        var cashflow = _cashflowMapper.MapToModelOrNull(entity);
+        var cashflow = CashflowMapper.MapToModelOrNull(entity);
 
         return cashflow;
     }
@@ -48,12 +46,12 @@ internal class CashflowRepository : ICashflowRepository
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_cashflowMapper.MapToEntity(cashflow))
+            await transaction.InsertAsync(CashflowMapper.MapToEntity(cashflow))
                 .ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_cashflowMapper.MapToEntity(cashflow)).ConfigureAwait(false);
+            await transaction.UpdateAsync(CashflowMapper.MapToEntity(cashflow)).ConfigureAwait(false);
         }
     }
 }

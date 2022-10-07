@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Accounts.Commands;
 
@@ -33,10 +32,10 @@ public class OpenAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
+    internal record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
         : IRequest<Guid>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator(IUserContext userContext, IAccountRepository repository)
         {
@@ -53,17 +52,15 @@ public class OpenAccount : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly ILogger<Handler> _logger;
         private readonly IUserContext _userContext;
         private readonly IAccountRepository _repository;
 
-        public Handler(IUserContext userContext, IAccountRepository repository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, IAccountRepository repository)
         {
             _userContext = userContext;
             _repository = repository;
-            _logger = logger;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
@@ -72,8 +69,6 @@ public class OpenAccount : ICarterModule
             {
                 var account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
                     request.Description, _userContext.UserId);
-
-                _logger.LogInformation("----- Opening Account - Account: {@Account}", account);
 
                 await _repository.SaveAsync(account, cancellationToken);
 

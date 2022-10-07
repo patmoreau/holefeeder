@@ -4,9 +4,9 @@ namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
 public class LongRunningService : BackgroundService
 {
-    private readonly BackgroundWorkerQueue _queue;
+    private readonly BackgroundWorkers _queue;
 
-    public LongRunningService(BackgroundWorkerQueue queue)
+    public LongRunningService(BackgroundWorkers queue)
     {
         _queue = queue;
     }

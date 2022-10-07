@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
-namespace Holefeeder.Application.SeedWork.BackgroundRequest;
+using System.Collections.Concurrent;
 
-public class BackgroundWorkerQueue
+public class BackgroundWorkers
 {
     private readonly SemaphoreSlim _signal = new(0);
     private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems = new();

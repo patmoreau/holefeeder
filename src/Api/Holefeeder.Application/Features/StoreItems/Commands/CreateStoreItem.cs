@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands;
 
@@ -33,9 +32,9 @@ public class CreateStoreItem : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(string Code, string Data) : IRequest<Guid>;
+    internal record Request(string Code, string Data) : IRequest<Guid>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator(IUserContext userContext, IStoreItemsRepository itemsRepository)
         {
@@ -49,17 +48,15 @@ public class CreateStoreItem : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
         private readonly IUserContext _userContext;
         private readonly IStoreItemsRepository _itemsRepository;
-        private readonly ILogger _logger;
 
-        public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository)
         {
             _userContext = userContext;
             _itemsRepository = itemsRepository;
-            _logger = logger;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
@@ -67,8 +64,6 @@ public class CreateStoreItem : ICarterModule
             try
             {
                 var storeItem = StoreItem.Create(request.Code, request.Data, _userContext.UserId);
-
-                _logger.LogInformation("----- Create Store Item - StoreItem: {@StoreItem}", storeItem);
 
                 await _itemsRepository.SaveAsync(storeItem, cancellationToken);
 

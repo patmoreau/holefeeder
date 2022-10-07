@@ -16,6 +16,11 @@ public class HolefeederDatabaseDriver : DatabaseDriver
 
     public HolefeederDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
         var settings = apiApplicationDriver.Services.GetRequiredService<HolefeederDatabaseSettings>();
         var context = new HolefeederContext(settings);
 

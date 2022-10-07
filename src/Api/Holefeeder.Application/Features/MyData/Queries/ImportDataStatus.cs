@@ -32,9 +32,9 @@ public class ImportDataStatus : ICarterModule
             .WithName(nameof(ImportDataStatus))
             .RequireAuthorization();
     }
-    public record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
+    internal record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -42,7 +42,7 @@ public class ImportDataStatus : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, ImportDataStatusDto>
+    internal class Handler : IRequestHandler<Request, ImportDataStatusDto>
     {
         private readonly IMemoryCache _memoryCache;
 

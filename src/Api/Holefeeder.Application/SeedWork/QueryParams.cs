@@ -49,6 +49,11 @@ public class QueryParams
 
     public static QueryParams Create(IRequestQuery requestQuery)
     {
+        if (requestQuery == null)
+        {
+            throw new ArgumentNullException(nameof(requestQuery));
+        }
+
         return new QueryParams(requestQuery.Offset, requestQuery.Limit, requestQuery.Sort, requestQuery.Filter);
     }
 }

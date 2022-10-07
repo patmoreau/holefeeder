@@ -4,26 +4,26 @@ using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Infrastructure.Mapping;
 
-internal class StoreItemMapper
+internal static class StoreItemMapper
 {
-    public StoreItemViewModel? MapToDtoOrNull(StoreItemEntity? entity)
+    public static StoreItemViewModel? MapToDtoOrNull(StoreItemEntity? entity)
     {
         return entity is null ? null : MapToDto(entity);
     }
 
-    public StoreItemViewModel MapToDto(StoreItemEntity entity)
+    public static StoreItemViewModel MapToDto(StoreItemEntity entity)
     {
         var dto = new StoreItemViewModel(entity.Id, entity.Code, entity.Data);
 
         return dto;
     }
 
-    public IEnumerable<StoreItemViewModel> MapToDto(IEnumerable<StoreItemEntity> entities)
+    public static IEnumerable<StoreItemViewModel> MapToDto(IEnumerable<StoreItemEntity> entities)
     {
         return entities.Select(MapToDto);
     }
 
-    public StoreItem? MapToModelOrNull(StoreItemEntity? entity)
+    public static StoreItem? MapToModelOrNull(StoreItemEntity? entity)
     {
         if (entity is null)
         {
@@ -35,7 +35,7 @@ internal class StoreItemMapper
         return model;
     }
 
-    public StoreItemEntity MapToEntity(StoreItem model)
+    public static StoreItemEntity MapToEntity(StoreItem model)
     {
         return new StoreItemEntity {Id = model.Id, Code = model.Code, Data = model.Data, UserId = model.UserId};
     }

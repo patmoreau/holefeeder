@@ -34,7 +34,7 @@ public class GetStoreItems : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<StoreItemViewModel>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
@@ -43,11 +43,11 @@ public class GetStoreItems : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<StoreItemViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<StoreItemViewModel>>
     {
         private readonly IStoreItemsQueriesRepository _repository;
         private readonly IUserContext _userContext;

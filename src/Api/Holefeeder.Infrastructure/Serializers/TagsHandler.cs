@@ -4,7 +4,7 @@ using Dapper;
 
 namespace Holefeeder.Infrastructure.Serializers;
 
-public class TagsHandler : SqlMapper.TypeHandler<string[]>
+internal class TagsHandler : SqlMapper.TypeHandler<string[]>
 {
     public override void SetValue(IDbDataParameter parameter, string[] value)
     {

@@ -15,12 +15,10 @@ internal class StoreItemsRepository : IStoreItemsRepository
         "SELECT id, code, data, user_id FROM store_items WHERE lower(code) = lower(@Code) AND user_id = @UserId;";
 
     private readonly IObjectStoreContext _context;
-    private readonly StoreItemMapper _storeItemMapper;
 
-    public StoreItemsRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
+    public StoreItemsRepository(IObjectStoreContext context)
     {
         _context = context;
-        _storeItemMapper = storeItemMapper;
     }
 
     public IUnitOfWork UnitOfWork => _context;
@@ -32,7 +30,7 @@ internal class StoreItemsRepository : IStoreItemsRepository
         var schema = await connection.FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
-        return _storeItemMapper.MapToModelOrNull(schema);
+        return StoreItemMapper.MapToModelOrNull(schema);
     }
 
     public async Task<StoreItem?> FindByCodeAsync(Guid userId, string code, CancellationToken cancellationToken)
@@ -43,7 +41,7 @@ internal class StoreItemsRepository : IStoreItemsRepository
             .QuerySingleOrDefaultAsync<StoreItemEntity>(SELECT_CODE, new {Code = code, UserId = userId})
             .ConfigureAwait(false);
 
-        return _storeItemMapper.MapToModelOrNull(schema);
+        return StoreItemMapper.MapToModelOrNull(schema);
     }
 
     public async Task SaveAsync(StoreItem model, CancellationToken cancellationToken)
@@ -58,11 +56,11 @@ internal class StoreItemsRepository : IStoreItemsRepository
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_storeItemMapper.MapToEntity(model)).ConfigureAwait(false);
+            await transaction.InsertAsync(StoreItemMapper.MapToEntity(model)).ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_storeItemMapper.MapToEntity(model)).ConfigureAwait(false);
+            await transaction.UpdateAsync(StoreItemMapper.MapToEntity(model)).ConfigureAwait(false);
         }
     }
 }

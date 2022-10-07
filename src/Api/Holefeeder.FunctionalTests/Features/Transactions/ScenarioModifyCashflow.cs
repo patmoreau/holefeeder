@@ -30,6 +30,11 @@ public class ScenarioModifyCashflow : BaseScenario
     public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
     }

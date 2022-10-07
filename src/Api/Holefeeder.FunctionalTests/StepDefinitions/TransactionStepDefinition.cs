@@ -18,6 +18,11 @@ public class TransactionStepDefinition
 
     public async Task MakesPurchase(Transaction entity)
     {
+        if (entity == null)
+        {
+            throw new ArgumentNullException(nameof(entity));
+        }
+
         var json = JsonSerializer.Serialize(new
         {
             entity.Date,

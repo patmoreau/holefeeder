@@ -6,7 +6,7 @@ using Holefeeder.Application.SeedWork;
 
 namespace Holefeeder.Infrastructure.Extensions;
 
-public static class SqlBuilderExtensions
+internal static class SqlBuilderExtensions
 {
     private static readonly IDictionary<string, string> _operators =
         new Dictionary<string, string>

@@ -34,7 +34,7 @@ public class GetAccounts : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<AccountViewModel>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
@@ -43,11 +43,11 @@ public class GetAccounts : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<AccountViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<AccountViewModel>>
     {
         private readonly IUserContext _userContext;
         private readonly IAccountQueriesRepository _repository;

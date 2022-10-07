@@ -10,17 +10,17 @@ public abstract class
     where TRequest : IRequest<Guid>
     where TBackgroundTask : IBackgroundTask<TRequest, TResponse>
 {
-    private readonly BackgroundWorkerQueue _backgroundWorkerQueue;
+    private readonly BackgroundWorkers _backgroundWorkers;
 
     private readonly Guid _id = Guid.NewGuid();
     private readonly IMemoryCache _memoryCache;
     private readonly IServiceProvider _serviceProvider;
 
     protected BackgroundRequestHandler(IServiceProvider serviceProvider,
-        BackgroundWorkerQueue backgroundWorkerQueue, IMemoryCache memoryCache)
+        BackgroundWorkers backgroundWorkers, IMemoryCache memoryCache)
     {
         _serviceProvider = serviceProvider;
-        _backgroundWorkerQueue = backgroundWorkerQueue;
+        _backgroundWorkers = backgroundWorkers;
         _memoryCache = memoryCache;
     }
 
@@ -28,7 +28,7 @@ public abstract class
 
     public Task<Guid> Handle(TRequest request, CancellationToken cancellationToken)
     {
-        _backgroundWorkerQueue.QueueBackgroundWorkItem(async token =>
+        _backgroundWorkers.QueueBackgroundWorkItem(async token =>
         {
             using var scope = _serviceProvider.CreateScope();
 

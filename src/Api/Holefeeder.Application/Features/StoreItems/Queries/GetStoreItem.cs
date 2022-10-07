@@ -32,9 +32,9 @@ public class GetStoreItem : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<StoreItemViewModel>;
+    internal record Request(Guid Id) : IRequest<StoreItemViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -42,7 +42,7 @@ public class GetStoreItem : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, StoreItemViewModel>
+    internal class Handler : IRequestHandler<Request, StoreItemViewModel>
     {
         private readonly IStoreItemsQueriesRepository _repository;
         private readonly IUserContext _userContext;

@@ -28,13 +28,13 @@ public class GetDateIntervalTypes : ICarterModule
             .WithName(nameof(GetDateIntervalTypes));
     }
 
-    public record Request : IRequest<IReadOnlyCollection<DateIntervalType>>;
+    internal record Request : IRequest<IReadOnlyCollection<DateIntervalType>>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IReadOnlyCollection<DateIntervalType>>
+    internal class Handler : IRequestHandler<Request, IReadOnlyCollection<DateIntervalType>>
     {
         public Task<IReadOnlyCollection<DateIntervalType>> Handle(Request query, CancellationToken cancellationToken)
         {

@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,7 +32,7 @@ public class ModifyTransaction : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<Unit>
+    internal record Request : IRequest<Unit>
     {
         public Guid Id { get; init; }
 
@@ -50,7 +49,7 @@ public class ModifyTransaction : ICarterModule
         public string[] Tags { get; init; } = null!;
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -62,21 +61,24 @@ public class ModifyTransaction : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, ITransactionRepository transactionRepository)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             try
             {
                 var exists =
@@ -96,8 +98,6 @@ public class ModifyTransaction : ICarterModule
                 };
 
                 transaction = transaction.SetTags(request.Tags);
-
-                _logger.LogInformation("----- Modifying - Transaction: {@Transaction}", transaction);
 
                 await _transactionRepository.SaveAsync(transaction, cancellationToken);
 

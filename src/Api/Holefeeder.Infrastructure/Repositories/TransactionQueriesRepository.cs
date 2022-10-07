@@ -13,12 +13,10 @@ namespace Holefeeder.Infrastructure.Repositories;
 internal class TransactionQueriesRepository : ITransactionQueriesRepository
 {
     private readonly IHolefeederContext _context;
-    private readonly TransactionMapper _transactionMapper;
 
-    public TransactionQueriesRepository(IHolefeederContext context, TransactionMapper transactionMapper)
+    public TransactionQueriesRepository(IHolefeederContext context)
     {
         _context = context;
-        _transactionMapper = transactionMapper;
     }
 
     public async Task<(int Total, IEnumerable<TransactionInfoViewModel> Items)> FindAsync(Guid userId,
@@ -59,7 +57,7 @@ ORDER BY row_nb;
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
         return new ValueTuple<int, IEnumerable<TransactionInfoViewModel>>(count,
-            _transactionMapper.MapToDto(transactions));
+            TransactionMapper.MapToDto(transactions));
     }
 
     public async Task<TransactionInfoViewModel?> FindByIdAsync(Guid userId, Guid id,
@@ -88,6 +86,6 @@ INNER JOIN categories CA on CA.id = T.category_id
                 splitOn: "id,id")
             .ConfigureAwait(false);
 
-        return _transactionMapper.MapToDtoOrNull(transactions.FirstOrDefault());
+        return TransactionMapper.MapToDtoOrNull(transactions.FirstOrDefault());
     }
 }

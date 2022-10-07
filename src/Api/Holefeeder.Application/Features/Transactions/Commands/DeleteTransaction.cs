@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,9 +32,9 @@ public class DeleteTransaction : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<Unit>;
+    internal record Request(Guid Id) : IRequest<Unit>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -43,17 +42,15 @@ public class DeleteTransaction : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, ITransactionRepository transactionRepository)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
-            _logger = logger;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
@@ -64,8 +61,6 @@ public class DeleteTransaction : ICarterModule
             {
                 throw new TransactionNotFoundException(request.Id);
             }
-
-            _logger.LogInformation("----- Deleting - Transaction: {@Transaction}", transaction);
 
             await _transactionRepository.DeleteAsync(request.Id, _userContext.UserId, cancellationToken);
 

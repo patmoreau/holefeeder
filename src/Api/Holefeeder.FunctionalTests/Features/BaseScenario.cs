@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,11 +22,16 @@ public abstract class BaseScenario
 {
     protected HttpClientDriver HttpClientDriver { get; }
 
-    protected readonly UserStepDefinition User;
-    protected readonly TransactionStepDefinition Transaction;
+    protected UserStepDefinition User { get; }
+    protected TransactionStepDefinition Transaction { get; }
 
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
         HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver(testOutputHelper);
 
         User = new UserStepDefinition(HttpClientDriver);
@@ -53,19 +59,19 @@ public abstract class BaseScenario
         var sb = new StringBuilder();
         if (offset is not null)
         {
-            sb.Append($"offset={offset}&");
+            sb.Append(CultureInfo.InvariantCulture, $"offset={offset}&");
         }
 
         if (limit is not null)
         {
-            sb.Append($"limit={limit}&");
+            sb.Append(CultureInfo.InvariantCulture, $"limit={limit}&");
         }
 
         if (!string.IsNullOrWhiteSpace(sorts))
         {
             foreach (var sort in sorts.Split(';'))
             {
-                sb.Append($"sort={sort}&");
+                sb.Append(CultureInfo.InvariantCulture, $"sort={sort}&");
             }
         }
 
@@ -73,7 +79,7 @@ public abstract class BaseScenario
         {
             foreach (var filter in filters.Split(';'))
             {
-                sb.Append($"filter={filter}&");
+                sb.Append(CultureInfo.InvariantCulture, $"filter={filter}&");
             }
         }
 
@@ -127,8 +133,15 @@ public abstract class BaseScenario
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
 
+#pragma warning disable CA1822
     protected void ThenAssertAll(Action assertions)
+#pragma warning restore CA1822
     {
+        if (assertions == null)
+        {
+            throw new ArgumentNullException(nameof(assertions));
+        }
+
         using var scope = new AssertionScope();
         assertions();
     }
@@ -147,7 +160,7 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
 {
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly List<Func<Task>> _tasks = new();
-    private int _taskCount = 0;
+    private int _taskCount;
 
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
@@ -198,7 +211,6 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         {
             using var scope = new AssertionScope();
             return Task.Run(action);
-
         });
 
         return (T)this;
@@ -212,7 +224,6 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         {
             using var scope = new AssertionScope();
             return action();
-
         });
 
         return (T)this;

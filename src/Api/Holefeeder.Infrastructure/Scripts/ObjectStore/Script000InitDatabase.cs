@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using System.Text;
 
 using DbUp.Engine;
@@ -25,7 +26,8 @@ public class Script000InitDatabase : IScript
 
         var scriptBuilder = new StringBuilder();
 
-        scriptBuilder.AppendLine($"GRANT ALL ON {builder.Database}.* TO '{builder.UserID}'@'%' WITH GRANT OPTION;");
+        scriptBuilder.AppendLine(CultureInfo.InvariantCulture,
+            $"GRANT ALL ON {builder.Database}.* TO '{builder.UserID}'@'%' WITH GRANT OPTION;");
 
         return scriptBuilder.ToString();
     }

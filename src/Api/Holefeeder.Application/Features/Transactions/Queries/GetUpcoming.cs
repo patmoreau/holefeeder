@@ -35,7 +35,7 @@ public class GetUpcoming : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(DateTime From, DateTime To) : IRequest<QueryResult<UpcomingViewModel>>
+    internal record Request(DateTime From, DateTime To) : IRequest<QueryResult<UpcomingViewModel>>
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
@@ -51,7 +51,7 @@ public class GetUpcoming : ICarterModule
         }
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -63,7 +63,7 @@ public class GetUpcoming : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
     {
         private readonly IUserContext _userContext;
         private readonly IUpcomingQueriesRepository _repository;

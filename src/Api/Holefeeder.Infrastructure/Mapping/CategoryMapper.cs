@@ -1,23 +1,23 @@
-﻿using Holefeeder.Application.Features.MyData.Models;
+﻿namespace Holefeeder.Infrastructure.Mapping;
+
+using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
 
-namespace Holefeeder.Infrastructure.Mapping;
-
-internal class CategoryMapper
+internal static class CategoryMapper
 {
-    public CategoryInfoViewModel MapToCategoryInfoViewModel(CategoryEntity entity)
+    public static CategoryInfoViewModel MapToCategoryInfoViewModel(CategoryEntity entity)
     {
         return new(entity.Id, entity.Name, entity.Type, entity.Color);
     }
 
-    public CategoryViewModel? MapToDtoOrNull(CategoryEntity? entity)
+    public static CategoryViewModel? MapToDtoOrNull(CategoryEntity? entity)
     {
         return entity is null ? null : MapToDto(entity);
     }
 
-    public CategoryViewModel MapToDto(CategoryEntity entity)
+    public static CategoryViewModel MapToDto(CategoryEntity entity)
     {
         var dto = new CategoryViewModel
         {
@@ -31,12 +31,12 @@ internal class CategoryMapper
         return dto;
     }
 
-    public IEnumerable<CategoryViewModel> MapToDto(IEnumerable<CategoryEntity> entities)
+    public static IEnumerable<CategoryViewModel> MapToDto(IEnumerable<CategoryEntity> entities)
     {
         return entities.Select(MapToDto);
     }
 
-    public Category? MapToModelOrNull(CategoryEntity? entity)
+    public static Category? MapToModelOrNull(CategoryEntity? entity)
     {
         if (entity is null)
         {
@@ -54,7 +54,7 @@ internal class CategoryMapper
         return model;
     }
 
-    public CategoryEntity MapToEntity(Category model)
+    public static CategoryEntity MapToEntity(Category model)
     {
         return new CategoryEntity
         {
@@ -69,7 +69,7 @@ internal class CategoryMapper
         };
     }
 
-    public MyDataCategoryDto MapToMyDataCategoryDto(CategoryEntity entity)
+    public static MyDataCategoryDto MapToMyDataCategoryDto(CategoryEntity entity)
     {
         var dto = new MyDataCategoryDto
         {

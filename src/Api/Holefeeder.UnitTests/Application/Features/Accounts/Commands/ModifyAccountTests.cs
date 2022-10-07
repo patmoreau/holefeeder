@@ -18,8 +18,6 @@ using Holefeeder.Tests.Common.Factories;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -36,7 +34,6 @@ public class ModifyAccountTests
     private readonly AccountFactory _accountFactory = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     public ModifyAccountTests()
@@ -65,7 +62,7 @@ public class ModifyAccountTests
         // arrange
         var request = _faker.Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);
@@ -82,7 +79,7 @@ public class ModifyAccountTests
         _repositoryMock.FindByIdAsync(Arg.Is(request.Id), Arg.Is(_userContextMock.UserId), Arg.Any<CancellationToken>())
             .Returns(_accountFactory.Generate());
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -101,7 +98,7 @@ public class ModifyAccountTests
         _repositoryMock.SaveAsync(Arg.Any<Account>(), Arg.Any<CancellationToken>()).Throws(
             new AccountDomainException(nameof(GivenHandler_WhenObjectStoreDomainException_ThenRollbackTransaction)));
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

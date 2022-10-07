@@ -12,13 +12,11 @@ namespace Holefeeder.Infrastructure.Repositories;
 
 internal class CashflowQueriesRepository : ICashflowQueriesRepository
 {
-    private readonly CashflowMapper _cashflowMapper;
     private readonly IHolefeederContext _context;
 
-    public CashflowQueriesRepository(IHolefeederContext context, CashflowMapper cashflowMapper)
+    public CashflowQueriesRepository(IHolefeederContext context)
     {
         _context = context;
-        _cashflowMapper = cashflowMapper;
     }
 
     public async Task<(int Total, IEnumerable<CashflowInfoViewModel> Items)> FindAsync(Guid userId,
@@ -59,7 +57,7 @@ ORDER BY row_nb;
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
         return new ValueTuple<int, IEnumerable<CashflowInfoViewModel>>(count,
-            _cashflowMapper.MapToDto(cashflows));
+            CashflowMapper.MapToDto(cashflows));
     }
 
     public async Task<CashflowInfoViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
@@ -86,6 +84,6 @@ INNER JOIN categories CA on CA.id = C.category_id
                 selectTemplate.Parameters,
                 splitOn: "id,id")
             .ConfigureAwait(false);
-        return _cashflowMapper.MapToDtoOrNull(cashflows.FirstOrDefault());
+        return CashflowMapper.MapToDtoOrNull(cashflows.FirstOrDefault());
     }
 }

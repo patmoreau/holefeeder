@@ -31,9 +31,9 @@ public class GetAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<AccountViewModel>;
+    internal record Request(Guid Id) : IRequest<AccountViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -41,7 +41,7 @@ public class GetAccount : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, AccountViewModel>
+    internal class Handler : IRequestHandler<Request, AccountViewModel>
     {
         private readonly IUserContext _userContext;
         private readonly IAccountQueriesRepository _repository;

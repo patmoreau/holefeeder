@@ -13,4 +13,16 @@ public class ImportIdNotFoundException : DomainException
     }
 
     public override string Context => nameof(ImportIdNotFoundException);
+
+    public ImportIdNotFoundException()
+    {
+    }
+
+    public ImportIdNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public ImportIdNotFoundException(string message) : base(message)
+    {
+    }
 }

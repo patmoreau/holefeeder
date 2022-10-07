@@ -12,8 +12,6 @@ using FluentValidation.TestHelper;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.StoreItem;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -30,7 +28,6 @@ public class CreateStoreItemTests
     private readonly StoreItem _storeItemDummy = AutoFaker.Generate<StoreItem>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly IStoreItemsRepository _repositoryMock = Substitute.For<IStoreItemsRepository>();
 
     [Fact]
@@ -103,7 +100,7 @@ public class CreateStoreItemTests
         // arrange
         var request = _faker.Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -122,7 +119,7 @@ public class CreateStoreItemTests
             .Throws(new ObjectStoreDomainException(
                 nameof(GivenHandler_WhenObjectStoreDomainException_ThenRollbackTransaction)));
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

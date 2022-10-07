@@ -10,7 +10,9 @@ public record MyDataTransactionDto
 
     public string Description { get; init; } = null!;
 
+#pragma warning disable CA1819
     public string[] Tags { get; init; } = Array.Empty<string>();
+#pragma warning restore CA1819
 
     public Guid CategoryId { get; init; }
 

@@ -1,9 +1,9 @@
+namespace Holefeeder.Domain.Features.Accounts;
+
 using System.Text.Json.Serialization;
 
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
-
-namespace Holefeeder.Domain.Features.Accounts;
 
 [JsonConverter(typeof(SmartEnumNameConverter<AccountType, int>))]
 public abstract class AccountType : SmartEnum<AccountType>

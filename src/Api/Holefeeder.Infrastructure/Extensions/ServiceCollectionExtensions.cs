@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace Holefeeder.Infrastructure.Extensions;
+
+using System.Diagnostics.CodeAnalysis;
 
 using Ardalis.SmartEnum.Dapper;
 
@@ -15,7 +17,6 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Infrastructure.Context;
-using Holefeeder.Infrastructure.Mapping;
 using Holefeeder.Infrastructure.Repositories;
 using Holefeeder.Infrastructure.Scripts.ObjectStore;
 using Holefeeder.Infrastructure.Serializers;
@@ -23,8 +24,6 @@ using Holefeeder.Infrastructure.Serializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
-namespace Holefeeder.Infrastructure.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
@@ -48,13 +47,6 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
         services.AddSingleton(sp =>
             sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
-
-        services.AddSingleton<AccountMapper>();
-        services.AddSingleton<CashflowMapper>();
-        services.AddSingleton<CategoryMapper>();
-        services.AddSingleton<StoreItemMapper>();
-        services.AddSingleton<TransactionMapper>();
-        services.AddSingleton<TagsMapper>();
 
         services.AddScoped<IHolefeederContext, HolefeederContext>();
         services.AddScoped<IObjectStoreContext, ObjectStoreContext>();

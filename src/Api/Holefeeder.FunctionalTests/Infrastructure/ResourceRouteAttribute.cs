@@ -1,9 +1,10 @@
+using System.Globalization;
 using System.Reflection;
 
 namespace Holefeeder.FunctionalTests.Infrastructure;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class ResourceRouteAttribute : Attribute
+public sealed class ResourceRouteAttribute : Attribute
 {
     public string Endpoint { get; }
 
@@ -23,6 +24,6 @@ public class ResourceRouteAttribute : Attribute
     {
         FieldInfo fieldInfo = typeof(ApiResources).GetField(resource.ToString())!;
         ResourceRouteAttribute attribute = fieldInfo.GetCustomAttribute<ResourceRouteAttribute>()!;
-        return new Uri(string.Format(attribute.Endpoint, parameters), UriKind.Relative);
+        return new Uri(string.Format(CultureInfo.InvariantCulture, attribute.Endpoint, parameters), UriKind.Relative);
     }
 }

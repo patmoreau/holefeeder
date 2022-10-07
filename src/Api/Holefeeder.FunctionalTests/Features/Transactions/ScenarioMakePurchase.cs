@@ -20,12 +20,16 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
 {
-    private readonly TransactionMapper _mapper = new(new TagsMapper(), new AccountMapper(), new CategoryMapper());
     private readonly HolefeederDatabaseDriver _databaseDriver;
 
     public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
         apiApplicationDriver, testOutputHelper)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
     }
@@ -108,7 +112,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
             {
                 var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(id, entity.UserId);
 
-                _mapper.MapToModelOrNull(result).Should()
+                TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()
                     .And
                     .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));

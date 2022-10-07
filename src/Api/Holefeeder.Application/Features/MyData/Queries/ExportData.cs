@@ -31,9 +31,9 @@ public class ExportData : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<ExportDataDto>;
+    internal record Request : IRequest<ExportDataDto>;
 
-    public class Handler
+    internal class Handler
         : IRequestHandler<Request, ExportDataDto>
     {
         private readonly IUserContext _userContext;

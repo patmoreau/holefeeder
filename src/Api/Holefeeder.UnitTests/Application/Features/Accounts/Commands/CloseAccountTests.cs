@@ -12,6 +12,8 @@ using FluentAssertions.Execution;
 
 using FluentValidation.TestHelper;
 
+using Holefeeder.Application.Features.Accounts.CloseAccount;
+using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
@@ -20,14 +22,12 @@ using Holefeeder.Tests.Common.Factories;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
 using Xunit;
 
-using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
+using static Holefeeder.Application.Features.Accounts.CloseAccount.CloseAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
@@ -38,7 +38,6 @@ public class CloseAccountTests
     private readonly AccountFactory _accountFactory = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     public CloseAccountTests()
@@ -68,7 +67,7 @@ public class CloseAccountTests
         // arrange
         var request = _faker.Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);
@@ -85,7 +84,7 @@ public class CloseAccountTests
         _repositoryMock.FindByIdAsync(Arg.Is(request.Id), Arg.Is(_userContextMock.UserId), Arg.Any<CancellationToken>())
             .Returns(_accountFactory.Generate());
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -104,7 +103,7 @@ public class CloseAccountTests
         _repositoryMock.SaveAsync(Arg.Any<Account>(), Arg.Any<CancellationToken>()).Throws(
             new AccountDomainException(nameof(GivenHandler_WhenAccountDomainException_ThenRollbackTransaction)));
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

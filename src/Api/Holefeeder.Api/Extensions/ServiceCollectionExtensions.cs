@@ -15,7 +15,7 @@ using Microsoft.OpenApi.Models;
 namespace Holefeeder.Api.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(
                 options => options.TokenValidationParameters =
-                    new TokenValidationParameters {ValidateIssuer = false},
+                    new TokenValidationParameters {ValidateIssuer = true},
                 options => configuration.Bind("AzureAdB2C", options));
 
         services.AddAuthorization(o =>

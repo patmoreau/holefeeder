@@ -13,4 +13,16 @@ public class TransactionNotFoundException : DomainException
     }
 
     public override string Context => nameof(Transactions);
+
+    public TransactionNotFoundException()
+    {
+    }
+
+    public TransactionNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public TransactionNotFoundException(string message) : base(message)
+    {
+    }
 }

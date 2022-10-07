@@ -2,10 +2,7 @@ using System.Reflection;
 
 using Carter;
 
-using FluentValidation.Results;
-
 using Holefeeder.Application.Extensions;
-using Holefeeder.Application.Features.Categories.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
@@ -38,7 +35,7 @@ public class GetTransactions : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<TransactionInfoViewModel>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
@@ -47,11 +44,11 @@ public class GetTransactions : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
     {
         private readonly IUserContext _userContext;
         private readonly ITransactionQueriesRepository _repository;

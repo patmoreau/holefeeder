@@ -12,13 +12,11 @@ namespace Holefeeder.Infrastructure.Repositories;
 
 internal class CategoriesQueriesRepository : ICategoryQueriesRepository, ICategoriesRepository
 {
-    private readonly CategoryMapper _categoryMapper;
     private readonly IHolefeederContext _context;
 
-    public CategoriesQueriesRepository(IHolefeederContext context, CategoryMapper categoryMapper)
+    public CategoriesQueriesRepository(IHolefeederContext context)
     {
         _context = context;
-        _categoryMapper = categoryMapper;
     }
 
     public async Task<CategoryViewModel?> FindByNameAsync(Guid userId, string name,
@@ -30,7 +28,7 @@ internal class CategoriesQueriesRepository : ICategoryQueriesRepository, ICatego
                 .ConfigureAwait(false))
             .SingleOrDefault();
 
-        return _categoryMapper.MapToDtoOrNull(category);
+        return CategoryMapper.MapToDtoOrNull(category);
     }
 
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync(Guid userId,
@@ -44,6 +42,6 @@ internal class CategoriesQueriesRepository : ICategoryQueriesRepository, ICatego
             .QueryAsync<CategoryEntity>(select, new {UserId = userId})
             .ConfigureAwait(false);
 
-        return _categoryMapper.MapToDto(results);
+        return CategoryMapper.MapToDto(results);
     }
 }

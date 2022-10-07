@@ -40,7 +40,7 @@ public class HttpClientDriver
             fullUri = new Uri($"{fullUri}?{query}", fullUri.IsAbsoluteUri ? UriKind.Absolute : UriKind.Relative);
         }
 
-        HttpRequestMessage request = new(HttpMethod.Get, fullUri);
+        using HttpRequestMessage request = new(HttpMethod.Get, fullUri);
 
         return SendRequest(request);
     }
@@ -48,7 +48,7 @@ public class HttpClientDriver
     public Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
-        HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
+        using HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
 
         return SendRequest(request);
     }
@@ -57,7 +57,7 @@ public class HttpClientDriver
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
 
-        HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
+        using HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
         if (body is not null)
         {
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -74,6 +74,11 @@ public class HttpClientDriver
 
     public void ShouldHaveResponseWithStatus(Func<HttpStatusCode?, bool> httpStatusPredicate)
     {
+        if (httpStatusPredicate == null)
+        {
+            throw new ArgumentNullException(nameof(httpStatusPredicate));
+        }
+
         ResponseMessage.Should().NotBeNull();
         httpStatusPredicate(ResponseMessage?.StatusCode).Should().BeTrue();
     }

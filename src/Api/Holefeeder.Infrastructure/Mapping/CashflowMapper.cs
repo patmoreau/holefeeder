@@ -7,20 +7,9 @@ using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Infrastructure.Mapping;
 
-internal class CashflowMapper
+internal static class CashflowMapper
 {
-    private readonly AccountMapper _accountMapper;
-    private readonly CategoryMapper _categoryMapper;
-    private readonly TagsMapper _tagsMapper;
-
-    public CashflowMapper(TagsMapper tagsMapper, AccountMapper accountMapper, CategoryMapper categoryMapper)
-    {
-        _tagsMapper = tagsMapper;
-        _accountMapper = accountMapper;
-        _categoryMapper = categoryMapper;
-    }
-
-    public Cashflow? MapToModelOrNull(CashflowEntity? entity)
+    public static Cashflow? MapToModelOrNull(CashflowEntity? entity)
     {
         if (entity is null)
         {
@@ -29,7 +18,7 @@ internal class CashflowMapper
 
         var model = new Cashflow()
         {
-            Id=entity.Id,
+            Id = entity.Id,
             AccountId = entity.AccountId,
             Amount = entity.Amount,
             CategoryId = entity.CategoryId,
@@ -42,15 +31,15 @@ internal class CashflowMapper
             UserId = entity.UserId
         };
 
-        return model.SetTags(_tagsMapper.Map(entity.Tags));
+        return model.SetTags(TagsMapper.Map(entity.Tags));
     }
 
-    public CashflowInfoViewModel? MapToDtoOrNull(CashflowEntity? entity)
+    public static CashflowInfoViewModel? MapToDtoOrNull(CashflowEntity? entity)
     {
         return entity is null ? null : MapToDto(entity);
     }
 
-    public CashflowInfoViewModel MapToDto(CashflowEntity entity)
+    public static CashflowInfoViewModel MapToDto(CashflowEntity entity)
     {
         var dto = new CashflowInfoViewModel
         {
@@ -62,20 +51,20 @@ internal class CashflowMapper
             IntervalType = entity.IntervalType,
             Recurrence = entity.Recurrence,
             Inactive = entity.Inactive,
-            Tags = _tagsMapper.Map(entity.Tags).ToImmutableArray(),
-            Account = _accountMapper.MapToAccountInfoViewModel(entity.Account),
-            Category = _categoryMapper.MapToCategoryInfoViewModel(entity.Category)
+            Tags = TagsMapper.Map(entity.Tags).ToImmutableArray(),
+            Account = AccountMapper.MapToAccountInfoViewModel(entity.Account),
+            Category = CategoryMapper.MapToCategoryInfoViewModel(entity.Category)
         };
 
         return dto;
     }
 
-    public IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<CashflowEntity> entities)
+    public static IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<CashflowEntity> entities)
     {
         return entities.Select(MapToDto);
     }
 
-    public CashflowEntity MapToEntity(Cashflow model)
+    public static CashflowEntity MapToEntity(Cashflow model)
     {
         var entity = new CashflowEntity
         {
@@ -89,14 +78,14 @@ internal class CashflowMapper
             Inactive = model.Inactive,
             IntervalType = model.IntervalType,
             Recurrence = model.Recurrence,
-            Tags = _tagsMapper.Map(model.Tags),
+            Tags = TagsMapper.Map(model.Tags),
             UserId = model.UserId
         };
 
         return entity;
     }
 
-    public MyDataCashflowDto MapToMyDataCashflowDto(CashflowEntity entity)
+    public static MyDataCashflowDto MapToMyDataCashflowDto(CashflowEntity entity)
     {
         var dto = new MyDataCashflowDto
         {
@@ -107,7 +96,7 @@ internal class CashflowMapper
             Frequency = entity.Frequency,
             IntervalType = entity.IntervalType,
             Recurrence = entity.Recurrence,
-            Tags = _tagsMapper.Map(entity.Tags).ToArray(),
+            Tags = TagsMapper.Map(entity.Tags).ToArray(),
             AccountId = entity.AccountId,
             CategoryId = entity.CategoryId,
             Inactive = entity.Inactive

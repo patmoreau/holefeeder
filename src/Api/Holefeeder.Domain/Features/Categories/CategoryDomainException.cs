@@ -11,4 +11,12 @@ public class CategoryDomainException : DomainException
     }
 
     public override string Context => nameof(Category);
+
+    public CategoryDomainException()
+    {
+    }
+
+    public CategoryDomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

@@ -15,8 +15,6 @@ using FluentValidation.TestHelper;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -34,7 +32,6 @@ public class OpenAccountTests
     private readonly Account _dummy = new AutoFaker<Account>().Generate();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     public OpenAccountTests()
@@ -130,7 +127,7 @@ public class OpenAccountTests
         // arrange
         var request = _faker.Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -147,7 +144,7 @@ public class OpenAccountTests
         _repositoryMock.SaveAsync(Arg.Any<Account>(), Arg.Any<CancellationToken>()).Throws(
             new AccountDomainException(nameof(GivenHandler_WhenObjectStoreDomainException_ThenRollbackTransaction)));
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

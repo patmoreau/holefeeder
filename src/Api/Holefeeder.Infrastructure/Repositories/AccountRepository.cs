@@ -11,13 +11,11 @@ namespace Holefeeder.Infrastructure.Repositories;
 
 internal class AccountRepository : IAccountRepository
 {
-    private readonly AccountMapper _accountMapper;
     private readonly IHolefeederContext _context;
 
-    public AccountRepository(IHolefeederContext context, AccountMapper accountMapper)
+    public AccountRepository(IHolefeederContext context)
     {
         _context = context;
-        _accountMapper = accountMapper;
     }
 
     public IUnitOfWork UnitOfWork => _context;
@@ -51,7 +49,7 @@ WHERE a.id = @Id AND a.user_id = @UserId;
             .Distinct()
             .SingleOrDefault();
 
-        return _accountMapper.MapToModelOrNull(account, cashflows);
+        return AccountMapper.MapToModelOrNull(account, cashflows);
     }
 
     public async Task<Account?> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
@@ -62,7 +60,7 @@ WHERE a.id = @Id AND a.user_id = @UserId;
             .FindAsync<AccountEntity>(new {Name = name, UserId = userId})
             .ConfigureAwait(false);
 
-        return _accountMapper.MapToModelOrNull(schema.FirstOrDefault());
+        return AccountMapper.MapToModelOrNull(schema.FirstOrDefault());
     }
 
     public async Task SaveAsync(Account account, CancellationToken cancellationToken)
@@ -76,12 +74,12 @@ WHERE a.id = @Id AND a.user_id = @UserId;
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_accountMapper.MapToEntity(account))
+            await transaction.InsertAsync(AccountMapper.MapToEntity(account))
                 .ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_accountMapper.MapToEntity(account)).ConfigureAwait(false);
+            await transaction.UpdateAsync(AccountMapper.MapToEntity(account)).ConfigureAwait(false);
         }
     }
 }

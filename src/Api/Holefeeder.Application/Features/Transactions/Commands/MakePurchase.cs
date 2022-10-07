@@ -12,7 +12,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -34,7 +33,7 @@ public class MakePurchase : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<Guid>
+    internal record Request : IRequest<Guid>
     {
         public DateTime Date { get; init; }
 
@@ -54,7 +53,7 @@ public class MakePurchase : ICarterModule
             int Recurrence);
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator(IUserContext userContext, ITransactionRepository repository)
         {
@@ -77,20 +76,18 @@ public class MakePurchase : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
         private readonly ICashflowRepository _cashflowRepository;
 
         public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
-            ICashflowRepository cashflowRepository, ILogger<Handler> logger)
+            ICashflowRepository cashflowRepository)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
             _cashflowRepository = cashflowRepository;
-            _logger = logger;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
@@ -108,8 +105,6 @@ public class MakePurchase : ICarterModule
                 }
 
                 transaction = transaction.SetTags(request.Tags);
-
-                _logger.LogInformation("----- Making Purchase - Transaction: {@Transaction}", transaction);
 
                 await _transactionRepository.SaveAsync(transaction, cancellationToken);
 

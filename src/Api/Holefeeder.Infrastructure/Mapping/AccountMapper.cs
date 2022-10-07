@@ -7,9 +7,9 @@ using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Infrastructure.Mapping;
 
-internal class AccountMapper
+internal static class AccountMapper
 {
-    public MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity)
+    public static MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity)
     {
         return new()
         {
@@ -24,12 +24,12 @@ internal class AccountMapper
         };
     }
 
-    public AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity)
+    public static AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity)
     {
         return new(entity.Id, entity.Name);
     }
 
-    public Account? MapToModelOrNull(AccountEntity? entity, IEnumerable<Guid>? cashflows = null)
+    public static Account? MapToModelOrNull(AccountEntity? entity, IEnumerable<Guid>? cashflows = null)
     {
         if (entity is null)
         {
@@ -48,7 +48,7 @@ internal class AccountMapper
         return model;
     }
 
-    public AccountEntity MapToEntity(Account model)
+    public static AccountEntity MapToEntity(Account model)
     {
         return new AccountEntity
         {

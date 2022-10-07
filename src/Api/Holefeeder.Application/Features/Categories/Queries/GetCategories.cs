@@ -32,13 +32,13 @@ public class GetCategories : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<QueryResult<CategoryViewModel>>;
+    internal record Request : IRequest<QueryResult<CategoryViewModel>>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {
         private readonly IUserContext _userContext;
         private readonly ICategoryQueriesRepository _categoryQueriesRepository;

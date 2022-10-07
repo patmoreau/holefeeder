@@ -9,13 +9,11 @@ namespace Holefeeder.Infrastructure.Repositories;
 
 internal class CategoryRepository : ICategoryRepository
 {
-    private readonly CategoryMapper _categoryMapper;
     private readonly IHolefeederContext _context;
 
-    public CategoryRepository(IHolefeederContext context, CategoryMapper categoryMapper)
+    public CategoryRepository(IHolefeederContext context)
     {
         _context = context;
-        _categoryMapper = categoryMapper;
     }
 
     public IUnitOfWork UnitOfWork => _context;
@@ -27,7 +25,7 @@ internal class CategoryRepository : ICategoryRepository
         var category = await connection.FindByIdAsync<CategoryEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
-        return _categoryMapper.MapToModelOrNull(category);
+        return CategoryMapper.MapToModelOrNull(category);
     }
 
     public async Task<Category?> FindByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
@@ -38,7 +36,7 @@ internal class CategoryRepository : ICategoryRepository
             .FindAsync<CategoryEntity>(new {Name = name, UserId = userId})
             .ConfigureAwait(false);
 
-        return _categoryMapper.MapToModelOrNull(schema.FirstOrDefault());
+        return CategoryMapper.MapToModelOrNull(schema.FirstOrDefault());
     }
 
     public async Task SaveAsync(Category category, CancellationToken cancellationToken)
@@ -52,12 +50,12 @@ internal class CategoryRepository : ICategoryRepository
 
         if (entity is null)
         {
-            await transaction.InsertAsync(_categoryMapper.MapToEntity(category))
+            await transaction.InsertAsync(CategoryMapper.MapToEntity(category))
                 .ConfigureAwait(false);
         }
         else
         {
-            await transaction.UpdateAsync(_categoryMapper.MapToEntity(category)).ConfigureAwait(false);
+            await transaction.UpdateAsync(CategoryMapper.MapToEntity(category)).ConfigureAwait(false);
         }
     }
 }

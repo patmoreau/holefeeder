@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Holefeeder.Application.Extensions;
+namespace Holefeeder.Api.Extensions;
 
-public static class ValidationExtensions
+internal static class ValidationExtensions
 {
-    public static IDictionary<string, string[]> ToDictionary(this ValidationException exception)
+    internal static IDictionary<string, string[]> ToDictionary(this ValidationException exception)
     {
         return exception.Errors
             .GroupBy(x => x.PropertyName)

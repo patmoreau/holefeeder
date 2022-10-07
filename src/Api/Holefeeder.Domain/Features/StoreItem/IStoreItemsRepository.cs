@@ -2,7 +2,7 @@
 
 namespace Holefeeder.Domain.Features.StoreItem;
 
-public interface IStoreItemsRepository : IRepository<StoreItem>
+public interface IStoreItemsRepository : IRepository
 {
     Task<StoreItem?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
     Task<StoreItem?> FindByCodeAsync(Guid userId, string code, CancellationToken cancellationToken);

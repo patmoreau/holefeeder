@@ -13,4 +13,16 @@ public class CashflowNotFoundException : DomainException
     }
 
     public override string Context => nameof(Transactions);
+
+    public CashflowNotFoundException()
+    {
+    }
+
+    public CashflowNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public CashflowNotFoundException(string message) : base(message)
+    {
+    }
 }

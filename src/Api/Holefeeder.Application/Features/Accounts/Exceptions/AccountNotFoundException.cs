@@ -13,4 +13,16 @@ public class AccountNotFoundException : DomainException
     }
 
     public override string Context => nameof(AccountNotFoundException);
+
+    public AccountNotFoundException()
+    {
+    }
+
+    public AccountNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public AccountNotFoundException(string message) : base(message)
+    {
+    }
 }

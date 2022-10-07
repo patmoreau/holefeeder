@@ -60,7 +60,9 @@ public class AuthenticationSystemDriver
             {
                 return WireMockServer.Start(port);
             }
+#pragma warning disable CA1031
             catch (Exception)
+#pragma warning restore CA1031
             {
                 Thread.Sleep(250);
                 retryCount--;

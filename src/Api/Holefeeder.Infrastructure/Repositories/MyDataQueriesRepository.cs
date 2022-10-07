@@ -1,29 +1,19 @@
-﻿using Holefeeder.Application.Features.MyData;
+﻿namespace Holefeeder.Infrastructure.Repositories;
+
+using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.Mapping;
 
-namespace Holefeeder.Infrastructure.Repositories;
-
 internal class MyDataQueriesRepository : IMyDataQueriesRepository
 {
-    private readonly AccountMapper _accountMapper;
-    // private readonly CashflowMapper _cashflowMapper;
-    // private readonly CategoryMapper _categoryMapper;
     private readonly IHolefeederContext _context;
-    // private readonly TransactionMapper _transactionMapper;
 
-    public MyDataQueriesRepository(IHolefeederContext context, AccountMapper accountMapper
-        // CategoryMapper categoryMapper, CashflowMapper cashflowMapper, TransactionMapper transactionMapper
-        )
+    public MyDataQueriesRepository(IHolefeederContext context)
     {
         _context = context;
-        _accountMapper = accountMapper;
-        // _categoryMapper = categoryMapper;
-        // _cashflowMapper = cashflowMapper;
-        // _transactionMapper = transactionMapper;
     }
 
     public async Task<IEnumerable<MyDataAccountDto>> ExportAccountsAsync(Guid userId,
@@ -35,7 +25,7 @@ internal class MyDataQueriesRepository : IMyDataQueriesRepository
             .FindAsync<AccountEntity>(new {UserId = userId})
             .ConfigureAwait(false);
 
-        return schema.Select(_accountMapper.MapToMyDataAccountDto);
+        return schema.Select(AccountMapper.MapToMyDataAccountDto);
     }
 
     // public async Task<IEnumerable<MyDataCategoryDto>> ExportCategoriesAsync(Guid userId,

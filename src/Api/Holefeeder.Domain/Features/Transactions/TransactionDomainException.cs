@@ -11,5 +11,17 @@ public class TransactionDomainException : DomainException
         Context = context;
     }
 
-    public override string Context { get; }
+    public override string Context { get; } = nameof(Transaction);
+
+    public TransactionDomainException()
+    {
+    }
+
+    public TransactionDomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public TransactionDomainException(string message) : base(message)
+    {
+    }
 }

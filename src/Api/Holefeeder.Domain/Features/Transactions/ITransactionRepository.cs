@@ -2,7 +2,7 @@
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public interface ITransactionRepository : IRepository<Transaction>
+public interface ITransactionRepository : IRepository
 {
     Task<Transaction?> FindByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken);
     Task SaveAsync(Transaction transaction, CancellationToken cancellationToken);

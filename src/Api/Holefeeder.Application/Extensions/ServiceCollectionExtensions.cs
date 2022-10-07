@@ -23,14 +23,14 @@ public static class ServiceCollectionExtensions
 
         // For all the validators, register them with dependency injection as scoped
         AssemblyScanner
-            .FindValidatorsInAssembly(typeof(Application).Assembly)
+            .FindValidatorsInAssembly(typeof(Application).Assembly, includeInternalTypes: true)
             .ForEach(item => services.AddTransient(item.InterfaceType, item.ValidatorType));
 
         services.AddMemoryCache();
 
         services
             .AddMediatR(typeof(Application).Assembly)
-            .AddSingleton<BackgroundWorkerQueue>()
+            .AddSingleton<BackgroundWorkers>()
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddTransient<ImportData.BackgroundTask>();

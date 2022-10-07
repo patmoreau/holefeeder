@@ -27,13 +27,13 @@ public class GetCategoryTypes : ICarterModule
             .WithName(nameof(GetCategoryTypes));
     }
 
-    public record Request : IRequest<IReadOnlyCollection<CategoryType>>;
+    internal record Request : IRequest<IReadOnlyCollection<CategoryType>>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IReadOnlyCollection<CategoryType>>
+    internal class Handler : IRequestHandler<Request, IReadOnlyCollection<CategoryType>>
     {
         public Task<IReadOnlyCollection<CategoryType>> Handle(Request query, CancellationToken cancellationToken)
         {

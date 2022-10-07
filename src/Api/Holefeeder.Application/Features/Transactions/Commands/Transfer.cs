@@ -12,7 +12,6 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -34,10 +33,10 @@ public class Transfer : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request
+    internal record Request
         (DateTime Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<Guid>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -48,11 +47,10 @@ public class Transfer : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
         private readonly IAccountQueriesRepository _accountQueriesRepository;
         private readonly ICategoriesRepository _categoriesRepository;
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
 
@@ -60,14 +58,12 @@ public class Transfer : ICarterModule
             IUserContext userContext,
             ITransactionRepository transactionRepository,
             IAccountQueriesRepository accountQueriesRepository,
-            ICategoriesRepository categoriesRepository,
-            ILogger<Handler> logger)
+            ICategoriesRepository categoriesRepository)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
             _accountQueriesRepository = accountQueriesRepository;
             _categoriesRepository = categoriesRepository;
-            _logger = logger;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
@@ -94,14 +90,10 @@ public class Transfer : ICarterModule
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
                 request.FromAccountId, transferFrom!.Id, _userContext.UserId);
 
-            _logger.LogInformation("----- Transfer Money from Account - Transaction: {@Transaction}", transactionFrom);
-
             await _transactionRepository.SaveAsync(transactionFrom, cancellationToken);
 
             var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
                 request.ToAccountId, transferTo!.Id, _userContext.UserId);
-
-            _logger.LogInformation("----- Transfer Money to Account - Transaction: {@Transaction}", transactionTo);
 
             await _transactionRepository.SaveAsync(transactionTo, cancellationToken);
 

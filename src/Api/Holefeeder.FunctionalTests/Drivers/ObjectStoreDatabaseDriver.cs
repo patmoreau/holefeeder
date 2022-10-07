@@ -16,6 +16,11 @@ public class ObjectStoreDatabaseDriver : DatabaseDriver
 
     public ObjectStoreDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
         var settings = apiApplicationDriver.Services.GetRequiredService<ObjectStoreDatabaseSettings>();
         var context = new ObjectStoreContext(settings);
 

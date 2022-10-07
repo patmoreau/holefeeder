@@ -1,4 +1,5 @@
-﻿using Holefeeder.Application.Features.MyData.Models;
+﻿using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Domain.Features.Accounts;
@@ -13,7 +14,7 @@ namespace Holefeeder.Application.Features.MyData.Commands;
 
 public partial class ImportData
 {
-    public class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
+    internal partial class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
     {
         private readonly IAccountRepository _accountsRepository;
 
@@ -54,10 +55,12 @@ public partial class ImportData
 
                 updateProgress(_importDataStatus with {Status = CommandStatus.Completed});
             }
+#pragma warning disable CA1031
             catch (Exception e)
             {
                 updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.Message});
             }
+#pragma warning restore CA1031
         }
 
         private async Task ImportAccountsAsync(Guid userId, Request request, Action<ImportDataStatusDto> updateProgress,
@@ -95,11 +98,11 @@ public partial class ImportData
                             Description = element.Description,
                             Inactive = element.Inactive
                         };
-                        _logger.LogInformation("----- Modify Account - Account: {@Account}", account);
+                        _logger.LogAccount("Modify", account);
                     }
                     else
                     {
-                        _logger.LogInformation("----- Ignore Account - Account: {@Account}", exists);
+                        _logger.LogAccount("Ignore", exists);
                     }
                 }
                 else
@@ -111,7 +114,7 @@ public partial class ImportData
                         Description = element.Description,
                         Inactive = element.Inactive
                     };
-                    _logger.LogInformation("----- Create Account - Account: {@Account}", account);
+                    _logger.LogAccount("Create", account);
                 }
 
                 await _accountsRepository.SaveAsync(account, cancellationToken);
@@ -158,11 +161,11 @@ public partial class ImportData
                             BudgetAmount = element.BudgetAmount,
                             Color = element.Color
                         };
-                        _logger.LogInformation("----- Modify Category - Category: {@Category}", category);
+                        _logger.LogCategory("Modify", category);
                     }
                     else
                     {
-                        _logger.LogInformation("----- Ignore Category - Category: {@Category}", exists);
+                        _logger.LogCategory("Ignore", exists);
                     }
                 }
                 else
@@ -174,7 +177,7 @@ public partial class ImportData
                         BudgetAmount = element.BudgetAmount,
                         Color = element.Color
                     };
-                    _logger.LogInformation("----- Create Category - Category: {@Category}", category);
+                    _logger.LogCategory("Create", category);
                 }
 
                 await _categoriesRepository.SaveAsync(category, cancellationToken);
@@ -225,11 +228,11 @@ public partial class ImportData
                             Inactive = element.Inactive
                         };
                         cashflow = cashflow.SetTags(element.Tags);
-                        _logger.LogInformation("----- Modify Cashflow - Cashflow: {@Cashflow}", cashflow);
+                        _logger.LogCashflow("Modify", cashflow);
                     }
                     else
                     {
-                        _logger.LogInformation("----- Ignore Cashflow - Cashflow: {@Cashflow}", exists);
+                        _logger.LogCashflow("Ignore", exists);
                     }
                 }
                 else
@@ -249,7 +252,7 @@ public partial class ImportData
                         Inactive = element.Inactive
                     };
                     cashflow = cashflow.SetTags(element.Tags);
-                    _logger.LogInformation("----- Create Cashflow - Cashflow: {@Cashflow}", cashflow);
+                    _logger.LogCashflow("Create", cashflow);
                 }
 
                 await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
@@ -298,11 +301,11 @@ public partial class ImportData
                             UserId = userId
                         };
                         transaction = transaction.SetTags(element.Tags);
-                        _logger.LogInformation("----- Modify Transaction - Transaction: {@Transaction}", transaction);
+                        _logger.LogTransaction("Modify", transaction);
                     }
                     else
                     {
-                        _logger.LogInformation("----- Ignore Transaction - Transaction: {@Transaction}", exists);
+                        _logger.LogTransaction("Ignore", exists);
                     }
                 }
                 else
@@ -322,7 +325,7 @@ public partial class ImportData
                     }
 
                     transaction = transaction.SetTags(element.Tags);
-                    _logger.LogInformation("----- Create Transaction - Transaction: {@Transaction}", transaction);
+                    _logger.LogTransaction("Create", transaction);
                 }
 
                 await _transactionRepository.SaveAsync(transaction, cancellationToken);

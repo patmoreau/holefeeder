@@ -12,8 +12,6 @@ using FluentValidation.TestHelper;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
 
-using Microsoft.Extensions.Logging;
-
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -28,7 +26,6 @@ public class MakePurchaseTests
     private readonly AutoFaker<Request> _faker = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ILogger<Handler> _loggerMock = MockHelper.CreateLogger<Handler>();
     private readonly ITransactionRepository _repositoryMock = Substitute.For<ITransactionRepository>();
     private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
 
@@ -154,7 +151,7 @@ public class MakePurchaseTests
         // arrange
         var request = _faker.RuleFor(x => x.Cashflow, _ => null).Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -169,7 +166,7 @@ public class MakePurchaseTests
         // arrange
         var request = _faker.Generate();
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock);
 
         // act
         var result = await handler.Handle(request, default);
@@ -188,7 +185,7 @@ public class MakePurchaseTests
             .Throws(new TransactionDomainException(
                 nameof(GivenHandler_WhenTransactionDomainException_ThenRollbackTransaction), nameof(Transaction)));
 
-        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock, _loggerMock);
+        var handler = new Handler(_userContextMock, _repositoryMock, _cashflowRepositoryMock);
 
         // act
         Func<Task> action = () => handler.Handle(request, default);

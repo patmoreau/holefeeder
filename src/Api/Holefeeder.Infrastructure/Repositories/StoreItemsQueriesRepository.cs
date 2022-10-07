@@ -24,12 +24,10 @@ WHERE RowNumber BETWEEN @offset AND @limit";
 
     private const string QUERY_COUNT_TEMPLATE = @"SELECT COUNT(*) FROM store_items /**where**/";
     private readonly IObjectStoreContext _context;
-    private readonly StoreItemMapper _storeItemMapper;
 
-    public StoreItemsQueriesRepository(IObjectStoreContext context, StoreItemMapper storeItemMapper)
+    public StoreItemsQueriesRepository(IObjectStoreContext context)
     {
         _context = context;
-        _storeItemMapper = storeItemMapper;
     }
 
     public Task<(int Total, IEnumerable<StoreItemViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
@@ -52,7 +50,7 @@ WHERE RowNumber BETWEEN @offset AND @limit";
             .FindByIdAsync<StoreItemEntity>(new {Id = id, UserId = userId})
             .ConfigureAwait(false);
 
-        return _storeItemMapper.MapToDtoOrNull(item);
+        return StoreItemMapper.MapToDtoOrNull(item);
     }
 
     public Task<bool> AnyCodeAsync(Guid userId, string code, CancellationToken cancellationToken)
@@ -93,7 +91,7 @@ WHERE RowNumber BETWEEN @offset AND @limit";
         var count = await connection.ExecuteScalarAsync<int>(countTemplate.RawSql, countTemplate.Parameters);
 
         return new ValueTuple<int, IEnumerable<StoreItemViewModel>>(count,
-            _storeItemMapper.MapToDto(items));
+            StoreItemMapper.MapToDto(items));
     }
 
     private async Task<bool> AnyCodeInternalAsync(Guid userId, string code)

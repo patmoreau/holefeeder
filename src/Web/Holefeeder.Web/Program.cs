@@ -28,7 +28,7 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
         options => options.TokenValidationParameters =
-            new TokenValidationParameters {ValidateIssuer = false},
+            new TokenValidationParameters {ValidateIssuer = true},
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
 builder.Services

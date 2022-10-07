@@ -33,9 +33,9 @@ public class GetTransaction : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
+    internal record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -43,7 +43,7 @@ public class GetTransaction : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, TransactionInfoViewModel>
+    internal class Handler : IRequestHandler<Request, TransactionInfoViewModel>
     {
         private readonly IUserContext _userContext;
         private readonly ITransactionQueriesRepository _repository;

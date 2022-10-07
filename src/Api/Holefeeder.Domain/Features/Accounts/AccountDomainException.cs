@@ -11,4 +11,12 @@ public class AccountDomainException : DomainException
     }
 
     public override string Context => nameof(Account);
+
+    public AccountDomainException()
+    {
+    }
+
+    public AccountDomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }
