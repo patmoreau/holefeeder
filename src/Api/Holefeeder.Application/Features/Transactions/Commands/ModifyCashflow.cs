@@ -54,8 +54,8 @@ public class ModifyCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly ICashflowRepository _cashflowRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ICashflowRepository cashflowRepository)
         {
@@ -74,11 +74,7 @@ public class ModifyCashflow : ICarterModule
                     throw new CashflowNotFoundException(request.Id);
                 }
 
-                var cashflow = exists with
-                {
-                    Amount = request.Amount,
-                    Description = request.Description,
-                };
+                var cashflow = exists with {Amount = request.Amount, Description = request.Description};
 
                 cashflow = cashflow.SetTags(request.Tags);
 

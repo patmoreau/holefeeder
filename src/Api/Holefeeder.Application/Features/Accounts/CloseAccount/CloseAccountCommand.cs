@@ -1,13 +1,9 @@
-﻿namespace Holefeeder.Application.Features.Accounts.CloseAccount;
-
-using Carter;
+﻿using Carter;
 
 using FluentValidation;
 
-using Exceptions;
-
-using SeedWork;
-
+using Holefeeder.Application.Features.Accounts.Exceptions;
+using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 
 using MediatR;
@@ -15,6 +11,8 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+
+namespace Holefeeder.Application.Features.Accounts.CloseAccount;
 
 public class CloseAccount : ICarterModule
 {
@@ -37,8 +35,8 @@ public class CloseAccount : ICarterModule
 
 internal class Handler : IRequestHandler<Request, Unit>
 {
-    private readonly IUserContext _userContext;
     private readonly IAccountRepository _repository;
+    private readonly IUserContext _userContext;
 
     public Handler(IUserContext userContext, IAccountRepository repository)
     {

@@ -13,7 +13,7 @@ internal sealed class AccountFactory : AutoFaker<Account>
         CustomInstantiator(faker => new Account(
             faker.Random.Guid(),
             faker.PickRandom(AccountType.List.ToArray()),
-            faker.Random.String2(minLength: 1, maxLength: 100),
+            faker.Random.String2(1, 100),
             faker.Date.Past().Date,
             faker.Random.Guid()));
         Ignore(x => x.Type);

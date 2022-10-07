@@ -8,6 +8,13 @@ public record StoreItem : IAggregateRoot
     private readonly Guid _id;
     private readonly Guid _userId;
 
+    public StoreItem(Guid id, string code, Guid userId)
+    {
+        Id = id;
+        Code = code;
+        UserId = userId;
+    }
+
     public Guid Id
     {
         get => _id;
@@ -50,13 +57,6 @@ public record StoreItem : IAggregateRoot
 
             _userId = value;
         }
-    }
-
-    public StoreItem(Guid id, string code, Guid userId)
-    {
-        Id = id;
-        Code = code;
-        UserId = userId;
     }
 
     public static StoreItem Create(string code, string data, Guid userId)

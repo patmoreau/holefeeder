@@ -64,7 +64,10 @@ public record Account : IAggregateRoot
     public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
         string description, Guid userId)
     {
-        return new(Guid.NewGuid(), type, name, openDate, userId) {OpenBalance = openBalance, Description = description};
+        return new Account(Guid.NewGuid(), type, name, openDate, userId)
+        {
+            OpenBalance = openBalance, Description = description
+        };
     }
 
     public Account Close()

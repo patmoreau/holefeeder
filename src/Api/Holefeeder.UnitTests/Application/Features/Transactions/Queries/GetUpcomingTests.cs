@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,11 +29,11 @@ namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
 public class GetUpcomingTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly UpcomingViewModelFactory _viewModelFactory = new();
+    private readonly IUpcomingQueriesRepository _repositoryMock = Substitute.For<IUpcomingQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IUpcomingQueriesRepository _repositoryMock = Substitute.For<IUpcomingQueriesRepository>();
+
+    private readonly UpcomingViewModelFactory _viewModelFactory = new();
 
     public GetUpcomingTests()
     {
@@ -50,7 +49,11 @@ public class GetUpcomingTests
         var request = _faker.Generate();
         var httpContext = new DefaultHttpContext
         {
-            Request = {QueryString = new QueryString($"?from={request.From.ToPersistent()}&to={request.To.ToPersistent()}")}
+            Request =
+            {
+                QueryString =
+                    new QueryString($"?from={request.From.ToPersistent()}&to={request.To.ToPersistent()}")
+            }
         };
 
         // act
@@ -83,7 +86,8 @@ public class GetUpcomingTests
         var count = new Faker().Random.Number(100);
         var models = _viewModelFactory.Generate(count);
 
-        _repositoryMock.GetUpcomingAsync(Arg.Is(_userContextMock.UserId), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+        _repositoryMock.GetUpcomingAsync(Arg.Is(_userContextMock.UserId), Arg.Any<DateTime>(), Arg.Any<DateTime>(),
+                Arg.Any<CancellationToken>())
             .Returns(models);
 
         var handler = new Handler(_userContextMock, _repositoryMock);

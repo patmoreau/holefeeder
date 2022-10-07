@@ -12,6 +12,6 @@ public record ImportDataStatusDto(
 {
     public static ImportDataStatusDto Init()
     {
-        return new(CommandStatus.Initializing);
+        return new ImportDataStatusDto(CommandStatus.Initializing);
     }
 }

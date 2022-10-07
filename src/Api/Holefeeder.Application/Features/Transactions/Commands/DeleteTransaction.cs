@@ -44,8 +44,8 @@ public class DeleteTransaction : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ITransactionRepository transactionRepository)
         {

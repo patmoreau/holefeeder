@@ -8,20 +8,18 @@ using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.Extensions.Logging;
 
-using Category = Holefeeder.Domain.Features.Categories.Category;
-
 namespace Holefeeder.Application.Features.MyData.Commands;
 
 public partial class ImportData
 {
-    internal partial class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
+    internal class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
     {
         private readonly IAccountRepository _accountsRepository;
 
         private readonly ICashflowRepository _cashflowRepository;
         private readonly ICategoryRepository _categoriesRepository;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly ILogger<BackgroundTask> _logger;
+        private readonly ITransactionRepository _transactionRepository;
 
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
@@ -237,7 +235,7 @@ public partial class ImportData
                 }
                 else
                 {
-                    cashflow = new()
+                    cashflow = new Cashflow
                     {
                         Id = element.Id,
                         EffectiveDate = element.EffectiveDate,

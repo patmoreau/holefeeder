@@ -50,8 +50,8 @@ public class PayCashflow : ICarterModule
     internal class Handler : IRequestHandler<Request, Guid>
     {
         private readonly ICashflowRepository _cashflowRepository;
-        private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
             ICashflowRepository cashflowRepository)

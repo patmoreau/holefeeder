@@ -17,8 +17,10 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 {
-    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
-        new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
+    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper)
+    {
+        return new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -57,7 +59,13 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
             });
     }
 
-    public HolefeederDatabaseDriver CreateHolefeederDatabaseDriver() => new(this);
+    public HolefeederDatabaseDriver CreateHolefeederDatabaseDriver()
+    {
+        return new(this);
+    }
 
-    public ObjectStoreDatabaseDriver CreateObjectStoreDatabaseDriver() => new(this);
+    public ObjectStoreDatabaseDriver CreateObjectStoreDatabaseDriver()
+    {
+        return new(this);
+    }
 }

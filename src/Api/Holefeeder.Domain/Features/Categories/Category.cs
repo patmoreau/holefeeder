@@ -59,7 +59,7 @@ public record Category : IAggregateRoot
         get => _userId;
         private init
         {
-            if (value.Equals(default(Guid)))
+            if (value.Equals(default))
             {
                 throw new CategoryDomainException($"{nameof(UserId)} is required");
             }
@@ -71,6 +71,6 @@ public record Category : IAggregateRoot
     public static Category Create(CategoryType type, string name, decimal budgetAmount,
         string description, Guid userId)
     {
-        return new(Guid.NewGuid(), type, name, userId) {BudgetAmount = budgetAmount};
+        return new Category(Guid.NewGuid(), type, name, userId) {BudgetAmount = budgetAmount};
     }
 }

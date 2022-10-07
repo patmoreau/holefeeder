@@ -8,9 +8,20 @@ internal class TransactionBuilder : IBuilder<Transaction>
 {
     private Transaction _entity;
 
-    public static TransactionBuilder ATransaction() => new();
+    private TransactionBuilder()
+    {
+        _entity = new TransactionFactory().Generate();
+    }
 
-    private TransactionBuilder() => _entity = new TransactionFactory().Generate();
+    public Transaction Build()
+    {
+        return _entity;
+    }
+
+    public static TransactionBuilder ATransaction()
+    {
+        return new();
+    }
 
     public TransactionBuilder OfAmount(decimal amount)
     {
@@ -35,6 +46,4 @@ internal class TransactionBuilder : IBuilder<Transaction>
         _entity = _entity with {UserId = userId};
         return this;
     }
-
-    public Transaction Build() => _entity;
 }

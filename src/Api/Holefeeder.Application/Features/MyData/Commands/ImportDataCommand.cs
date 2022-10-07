@@ -25,7 +25,8 @@ public partial class ImportData : ICarterModule
         app.MapPost("api/v2/my-data/import-data", async (Request request, IMediator mediator) =>
             {
                 var requestResult = await mediator.Send(request);
-                return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestResult}, new {Id = requestResult});
+                return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestResult},
+                    new {Id = requestResult});
             })
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)

@@ -12,8 +12,6 @@ public class AccountNotFoundException : DomainException
     {
     }
 
-    public override string Context => nameof(AccountNotFoundException);
-
     public AccountNotFoundException()
     {
     }
@@ -25,4 +23,6 @@ public class AccountNotFoundException : DomainException
     public AccountNotFoundException(string message) : base(message)
     {
     }
+
+    public override string Context => nameof(AccountNotFoundException);
 }

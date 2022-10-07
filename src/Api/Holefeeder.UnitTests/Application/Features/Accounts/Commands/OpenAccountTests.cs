@@ -26,13 +26,13 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
 public class OpenAccountTests
 {
+    private readonly Account _dummy = new AutoFaker<Account>().Generate();
     private readonly Faker<Request> _faker;
 
     private readonly string _name = AutoFaker.Generate<string>();
-    private readonly Account _dummy = new AutoFaker<Account>().Generate();
+    private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     public OpenAccountTests()
     {

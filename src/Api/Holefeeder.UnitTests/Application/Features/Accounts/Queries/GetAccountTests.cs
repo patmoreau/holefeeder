@@ -22,12 +22,11 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
 public class GetAccountTests
 {
-    private readonly AutoFaker<Request> _faker = new();
-
     private readonly AccountViewModel _dummy = new AutoFaker<AccountViewModel>().Generate();
+    private readonly AutoFaker<Request> _faker = new();
+    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

@@ -1,15 +1,15 @@
-﻿namespace Holefeeder.Infrastructure.Mapping;
-
-using Holefeeder.Application.Features.MyData.Models;
+﻿using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
+
+namespace Holefeeder.Infrastructure.Mapping;
 
 internal static class CategoryMapper
 {
     public static CategoryInfoViewModel MapToCategoryInfoViewModel(CategoryEntity entity)
     {
-        return new(entity.Id, entity.Name, entity.Type, entity.Color);
+        return new CategoryInfoViewModel(entity.Id, entity.Name, entity.Type, entity.Color);
     }
 
     public static CategoryViewModel? MapToDtoOrNull(CategoryEntity? entity)

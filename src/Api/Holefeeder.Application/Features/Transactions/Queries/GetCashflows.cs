@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Reflection;
 
 using Carter;
@@ -51,8 +50,8 @@ public class GetCashflows : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly ICashflowQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
         {

@@ -50,8 +50,8 @@ public class GetTransactions : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly ITransactionQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ITransactionQueriesRepository repository)
         {

@@ -23,11 +23,11 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
 public class MakePurchaseTests
 {
+    private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
     private readonly AutoFaker<Request> _faker = new();
+    private readonly ITransactionRepository _repositoryMock = Substitute.For<ITransactionRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ITransactionRepository _repositoryMock = Substitute.For<ITransactionRepository>();
-    private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
 
     public MakePurchaseTests()
     {

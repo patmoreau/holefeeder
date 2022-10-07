@@ -1,6 +1,4 @@
-﻿namespace Holefeeder.Infrastructure.Extensions;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 using Ardalis.SmartEnum.Dapper;
 
@@ -24,6 +22,8 @@ using Holefeeder.Infrastructure.Serializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+
+namespace Holefeeder.Infrastructure.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions

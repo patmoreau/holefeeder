@@ -10,8 +10,6 @@ public class CategoryDomainException : DomainException
     {
     }
 
-    public override string Context => nameof(Category);
-
     public CategoryDomainException()
     {
     }
@@ -19,4 +17,6 @@ public class CategoryDomainException : DomainException
     public CategoryDomainException(string message, Exception innerException) : base(message, innerException)
     {
     }
+
+    public override string Context => nameof(Category);
 }

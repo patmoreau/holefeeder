@@ -3,7 +3,6 @@
 using FluentValidation;
 
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.SeedWork;
 
 using MediatR;
@@ -18,11 +17,12 @@ public class GetAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v2/accounts/{id:guid}", async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
-            {
-                var requestResult = await mediator.Send(new Request(id), cancellationToken);
-                return Results.Ok(requestResult);
-            })
+        app.MapGet("api/v2/accounts/{id:guid}",
+                async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
+                {
+                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
+                    return Results.Ok(requestResult);
+                })
             .Produces<AccountViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -43,8 +43,8 @@ public class GetAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, AccountViewModel>
     {
-        private readonly IUserContext _userContext;
         private readonly IAccountQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IAccountQueriesRepository repository)
         {

@@ -4,12 +4,12 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class UserStepDefinition
 {
-    private HttpClientDriver HttpClientDriver { get; }
-
     public UserStepDefinition(HttpClientDriver httpClientDriver)
     {
         HttpClientDriver = httpClientDriver;
     }
+
+    private HttpClientDriver HttpClientDriver { get; }
 
     public void IsUnauthorized()
     {

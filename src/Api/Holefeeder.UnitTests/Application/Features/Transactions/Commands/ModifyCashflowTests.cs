@@ -27,11 +27,11 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
 public class ModifyCashflowTests
 {
-    private readonly AutoFaker<Request> _faker = new();
+    private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
     private readonly CashflowFactory _factory = new();
+    private readonly AutoFaker<Request> _faker = new();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ICashflowRepository _cashflowRepositoryMock = Substitute.For<ICashflowRepository>();
 
     public ModifyCashflowTests()
     {
@@ -109,7 +109,7 @@ public class ModifyCashflowTests
         var request = _faker.Generate();
 
         _cashflowRepositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns((Cashflow?) null);
+            .Returns((Cashflow?)null);
 
         var handler = new Handler(_userContextMock, _cashflowRepositoryMock);
 

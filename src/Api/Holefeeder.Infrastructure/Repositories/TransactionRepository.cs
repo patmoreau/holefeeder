@@ -57,13 +57,13 @@ internal class TransactionRepository : ITransactionRepository
 
     public async Task<bool> AccountExists(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return (await _context.Connection.FindByIdAsync<AccountEntity>(new {Id = id, UserId = userId})
-            .ConfigureAwait(false)) is not null;
+        return await _context.Connection.FindByIdAsync<AccountEntity>(new {Id = id, UserId = userId})
+            .ConfigureAwait(false) is not null;
     }
 
     public async Task<bool> CategoryExists(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return (await _context.Connection.FindByIdAsync<CategoryEntity>(new {Id = id, UserId = userId})
-            .ConfigureAwait(false)) is not null;
+        return await _context.Connection.FindByIdAsync<CategoryEntity>(new {Id = id, UserId = userId})
+            .ConfigureAwait(false) is not null;
     }
 }

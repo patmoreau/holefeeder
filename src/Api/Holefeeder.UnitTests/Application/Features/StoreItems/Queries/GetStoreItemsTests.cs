@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,13 +25,12 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
 public class GetStoreItemsTests
 {
-    private readonly Faker<Request> _faker;
-
     private readonly int _countDummy;
     private readonly IEnumerable<StoreItemViewModel> _dummy;
+    private readonly Faker<Request> _faker;
+    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
 
     public GetStoreItemsTests()
     {

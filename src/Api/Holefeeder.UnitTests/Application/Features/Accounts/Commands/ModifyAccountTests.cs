@@ -29,12 +29,11 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
 public class ModifyAccountTests
 {
-    private readonly Faker<Request> _faker;
-
     private readonly AccountFactory _accountFactory = new();
+    private readonly Faker<Request> _faker;
+    private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IAccountRepository _repositoryMock = Substitute.For<IAccountRepository>();
 
     public ModifyAccountTests()
     {

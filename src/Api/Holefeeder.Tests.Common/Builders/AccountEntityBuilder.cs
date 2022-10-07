@@ -8,15 +8,35 @@ internal class AccountEntityBuilder : IBuilder<AccountEntity>
 {
     private AccountEntity _entity;
 
-    public static AccountEntityBuilder GivenAnActiveAccount() => new(false);
+    private AccountEntityBuilder(bool inactive)
+    {
+        _entity = new AccountEntityFactory(inactive).Generate();
+    }
 
-    public static AccountEntityBuilder GivenAnInactiveAccount() => new(true);
+    private AccountEntityBuilder(AccountEntity entity)
+    {
+        _entity = entity;
+    }
 
-    public static AccountEntityBuilder GivenAnExistingAccount(AccountEntity entity) => new(entity);
+    public AccountEntity Build()
+    {
+        return _entity;
+    }
 
-    private AccountEntityBuilder(bool inactive) => _entity = new AccountEntityFactory(inactive).Generate();
+    public static AccountEntityBuilder GivenAnActiveAccount()
+    {
+        return new(false);
+    }
 
-    private AccountEntityBuilder(AccountEntity entity) => _entity = entity;
+    public static AccountEntityBuilder GivenAnInactiveAccount()
+    {
+        return new(true);
+    }
+
+    public static AccountEntityBuilder GivenAnExistingAccount(AccountEntity entity)
+    {
+        return new(entity);
+    }
 
     public AccountEntityBuilder WithId(Guid id)
     {
@@ -59,6 +79,4 @@ internal class AccountEntityBuilder : IBuilder<AccountEntity>
         _entity = _entity with {UserId = userId};
         return this;
     }
-
-    public AccountEntity Build() => _entity;
 }

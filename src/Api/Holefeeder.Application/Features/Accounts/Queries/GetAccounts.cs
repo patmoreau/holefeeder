@@ -49,8 +49,8 @@ public class GetAccounts : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<AccountViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly IAccountQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IAccountQueriesRepository repository)
         {

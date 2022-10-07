@@ -1,9 +1,9 @@
-namespace Holefeeder.Domain.Enumerations;
-
 using System.Text.Json.Serialization;
 
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
+
+namespace Holefeeder.Domain.Enumerations;
 
 [JsonConverter(typeof(SmartEnumNameConverter<DateIntervalType, int>))]
 public abstract class DateIntervalType : SmartEnum<DateIntervalType>
@@ -30,7 +30,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         var count = 0;
         while (start < next)
         {
-            start = this.AddIteration(effectiveDate, frequency * count);
+            start = AddIteration(effectiveDate, frequency * count);
             count++;
         }
 
@@ -50,10 +50,10 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         while (start < fromDate)
         {
             count++;
-            start = this.AddIteration(effectiveDate, frequency * count);
+            start = AddIteration(effectiveDate, frequency * count);
         }
 
-        return this.AddIteration(effectiveDate, frequency * (count - 1));
+        return AddIteration(effectiveDate, frequency * (count - 1));
     }
 
     public virtual IEnumerable<DateTime> DatesInRange(DateTime effectiveDate, DateTime fromDate, DateTime toDate,

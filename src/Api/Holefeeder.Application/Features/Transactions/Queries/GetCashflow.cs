@@ -44,8 +44,8 @@ public class GetCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, CashflowInfoViewModel>
     {
-        private readonly IUserContext _userContext;
         private readonly ICashflowQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
         {

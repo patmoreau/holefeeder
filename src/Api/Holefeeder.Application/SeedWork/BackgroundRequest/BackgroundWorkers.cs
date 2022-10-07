@@ -1,6 +1,6 @@
-﻿namespace Holefeeder.Application.SeedWork.BackgroundRequest;
+﻿using System.Collections.Concurrent;
 
-using System.Collections.Concurrent;
+namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
 public class BackgroundWorkers
 {

@@ -9,10 +9,6 @@ public class DomainException : Exception
         StatusCode = statusCode;
     }
 
-    public int StatusCode { get; }
-
-    public virtual string Context => nameof(DomainException);
-
     protected DomainException()
     {
         StatusCode = StatusCodes.Status500InternalServerError;
@@ -26,4 +22,8 @@ public class DomainException : Exception
     protected DomainException(string message, Exception innerException) : base(message, innerException)
     {
     }
+
+    public int StatusCode { get; }
+
+    public virtual string Context => nameof(DomainException);
 }

@@ -10,8 +10,6 @@ public class ObjectStoreDomainException : DomainException
     {
     }
 
-    public override string Context => nameof(StoreItem);
-
     public ObjectStoreDomainException()
     {
     }
@@ -19,4 +17,6 @@ public class ObjectStoreDomainException : DomainException
     public ObjectStoreDomainException(string message, Exception innerException) : base(message, innerException)
     {
     }
+
+    public override string Context => nameof(StoreItem);
 }

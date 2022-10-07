@@ -7,7 +7,6 @@ using Bogus.Extensions;
 using FluentAssertions;
 
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 
 using Xunit;
 

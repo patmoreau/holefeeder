@@ -108,11 +108,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         GivenUserIsAuthorized();
 
-        cashflow = cashflow with
-        {
-            Amount = new Faker().Finance.Amount(),
-            Description = AutoFaker.Generate<string>()
-        };
+        cashflow = cashflow with {Amount = new Faker().Finance.Amount(), Description = AutoFaker.Generate<string>()};
 
         await WhenUserModifiedACashflow(MapToRequest(cashflow));
 
@@ -136,12 +132,14 @@ public class ScenarioModifyCashflow : BaseScenario
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
     }
 
-    private static Request MapToRequest(dynamic cashflow) =>
-        new()
+    private static Request MapToRequest(dynamic cashflow)
+    {
+        return new()
         {
             Id = cashflow.Id,
             Amount = cashflow.Amount,
             Description = cashflow.Description,
             Tags = cashflow.Tags is string ? cashflow.Tags.Split(";") : cashflow.Tags.ToArray()
         };
+    }
 }

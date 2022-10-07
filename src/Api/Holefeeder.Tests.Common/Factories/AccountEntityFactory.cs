@@ -1,9 +1,6 @@
 using AutoBogus;
 
-using Bogus.Extensions;
-
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
 using Holefeeder.Infrastructure.Entities;
 
 namespace Holefeeder.Tests.Common.Factories;
@@ -16,7 +13,7 @@ internal sealed class AccountEntityFactory : AutoFaker<AccountEntity>
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.Type, faker => faker.PickRandom(AccountType.List.ToArray()));
-        RuleFor(x => x.Name, faker => faker.Random.String2(minLength:1, maxLength: 100));
+        RuleFor(x => x.Name, faker => faker.Random.String2(1, 100));
         RuleFor(x => x.Favorite, faker => faker.Random.Bool());
         RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX));
         RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date);

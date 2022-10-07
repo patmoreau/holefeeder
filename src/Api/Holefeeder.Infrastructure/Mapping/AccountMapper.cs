@@ -11,7 +11,7 @@ internal static class AccountMapper
 {
     public static MyDataAccountDto MapToMyDataAccountDto(AccountEntity entity)
     {
-        return new()
+        return new MyDataAccountDto
         {
             Id = entity.Id,
             Description = entity.Description,
@@ -26,7 +26,7 @@ internal static class AccountMapper
 
     public static AccountInfoViewModel MapToAccountInfoViewModel(AccountEntity entity)
     {
-        return new(entity.Id, entity.Name);
+        return new AccountInfoViewModel(entity.Id, entity.Name);
     }
 
     public static Account? MapToModelOrNull(AccountEntity? entity, IEnumerable<Guid>? cashflows = null)

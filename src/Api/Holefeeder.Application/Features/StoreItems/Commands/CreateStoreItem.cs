@@ -41,7 +41,7 @@ public class CreateStoreItem : ICarterModule
             RuleFor(x => x.Code)
                 .NotEmpty()
                 .MustAsync(async (code, cancellation) =>
-                    (await itemsRepository.FindByCodeAsync(userContext.UserId, code, cancellation)) is null)
+                    await itemsRepository.FindByCodeAsync(userContext.UserId, code, cancellation) is null)
                 .WithMessage(x => $"Code '{x.Code}' already exists.")
                 .WithErrorCode("AlreadyExistsValidator");
             RuleFor(x => x.Data).NotEmpty();
@@ -50,8 +50,8 @@ public class CreateStoreItem : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
         private readonly IStoreItemsRepository _itemsRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository)
         {

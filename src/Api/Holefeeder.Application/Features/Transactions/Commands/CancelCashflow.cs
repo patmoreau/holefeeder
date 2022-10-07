@@ -47,8 +47,8 @@ public class CancelCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly ICashflowRepository _cashflowRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ICashflowRepository cashflowRepository)
         {

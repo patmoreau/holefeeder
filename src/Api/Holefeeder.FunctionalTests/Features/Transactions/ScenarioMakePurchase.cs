@@ -91,7 +91,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
         AccountEntity account = null!;
         CategoryEntity category = null!;
         Transaction entity = null!;
-        Guid id = Guid.Empty;
+        var id = Guid.Empty;
 
         await Given(async () => account = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
@@ -116,7 +116,6 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
                     .NotBeNull()
                     .And
                     .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));
-
             })
             .RunScenarioAsync();
     }

@@ -45,8 +45,8 @@ public class ModifyAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly IAccountRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IAccountRepository repository)
         {

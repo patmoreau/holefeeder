@@ -47,7 +47,7 @@ await app.RunAsync();
 namespace Holefeeder.Api
 {
     [ExcludeFromCodeCoverage]
-    public partial class Program
+    public class Program
     {
     }
 }

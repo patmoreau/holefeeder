@@ -27,11 +27,11 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 public class ModifyStoreItemTests
 {
     private readonly AutoFaker<Request> _faker = new();
+    private readonly IStoreItemsRepository _repositoryMock = Substitute.For<IStoreItemsRepository>();
 
     private readonly StoreItem _storeItemDummy = AutoFaker.Generate<StoreItem>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IStoreItemsRepository _repositoryMock = Substitute.For<IStoreItemsRepository>();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

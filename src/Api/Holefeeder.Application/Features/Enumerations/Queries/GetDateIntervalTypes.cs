@@ -3,7 +3,6 @@ using Carter;
 using FluentValidation;
 
 using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.SeedWork;
 
 using MediatR;
 

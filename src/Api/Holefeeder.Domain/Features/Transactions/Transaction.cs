@@ -6,11 +6,11 @@ namespace Holefeeder.Domain.Features.Transactions;
 
 public record Transaction : IAggregateRoot
 {
-    private readonly Guid _id;
-    private readonly DateTime _date;
-    private readonly decimal _amount;
     private readonly Guid _accountId;
+    private readonly decimal _amount;
     private readonly Guid _categoryId;
+    private readonly DateTime _date;
+    private readonly Guid _id;
     private readonly Guid _userId;
 
     private Transaction(Guid id, DateTime date, decimal amount, Guid accountId, Guid categoryId, Guid userId)
@@ -118,13 +118,13 @@ public record Transaction : IAggregateRoot
     public static Transaction Create(Guid id, DateTime date, decimal amount, string description, Guid accountId,
         Guid categoryId, Guid userId)
     {
-        return new(id, date, amount, accountId, categoryId, userId) {Description = description};
+        return new Transaction(id, date, amount, accountId, categoryId, userId) {Description = description};
     }
 
     public static Transaction Create(DateTime date, decimal amount, string description, Guid accountId, Guid categoryId,
         Guid userId)
     {
-        return new(Guid.NewGuid(), date, amount, accountId, categoryId, userId) {Description = description};
+        return new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) {Description = description};
     }
 
     public Transaction SetTags(params string[] tags)

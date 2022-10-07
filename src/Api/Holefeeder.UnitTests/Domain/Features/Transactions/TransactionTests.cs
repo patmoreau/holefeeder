@@ -14,7 +14,7 @@ namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 public class TransactionTests
 {
-    private readonly TransactionFactory _factory = new ();
+    private readonly TransactionFactory _factory = new();
 
     [Fact]
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
@@ -163,7 +163,7 @@ public class TransactionTests
         var transaction = _factory.Generate();
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(AutoFaker.Generate<Guid>(), default(DateTime));
+        Action action = () => _ = transaction.ApplyCashflow(AutoFaker.Generate<Guid>(), default);
 
         // assert
         action.Should().Throw<TransactionDomainException>()

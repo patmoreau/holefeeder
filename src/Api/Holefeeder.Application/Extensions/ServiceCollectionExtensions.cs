@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 
         // For all the validators, register them with dependency injection as scoped
         AssemblyScanner
-            .FindValidatorsInAssembly(typeof(Application).Assembly, includeInternalTypes: true)
+            .FindValidatorsInAssembly(typeof(Application).Assembly, true)
             .ForEach(item => services.AddTransient(item.InterfaceType, item.ValidatorType));
 
         services.AddMemoryCache();

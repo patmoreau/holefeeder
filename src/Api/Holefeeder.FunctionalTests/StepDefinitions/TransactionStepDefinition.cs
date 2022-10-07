@@ -8,12 +8,12 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class TransactionStepDefinition
 {
-    private HttpClientDriver HttpClientDriver { get; }
-
     public TransactionStepDefinition(HttpClientDriver httpClientDriver)
     {
         HttpClientDriver = httpClientDriver;
     }
+
+    private HttpClientDriver HttpClientDriver { get; }
 
 
     public async Task MakesPurchase(Transaction entity)

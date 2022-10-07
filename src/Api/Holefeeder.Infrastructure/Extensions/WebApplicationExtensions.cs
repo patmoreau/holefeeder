@@ -18,7 +18,7 @@ using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectio
 namespace Holefeeder.Infrastructure.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static partial class WebApplicationExtensions
+public static class WebApplicationExtensions
 {
     private static readonly object Locker = new();
 

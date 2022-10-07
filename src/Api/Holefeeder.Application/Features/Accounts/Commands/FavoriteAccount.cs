@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Holefeeder.Application.Features.Accounts.Commands;
 
-public  class FavoriteAccount : ICarterModule
+public class FavoriteAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -44,8 +44,8 @@ public  class FavoriteAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly IAccountRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IAccountRepository repository)
         {

@@ -12,8 +12,6 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public class HolefeederDatabaseDriver : DatabaseDriver
 {
-    protected override MySqlDbContext DbContext { get; }
-
     public HolefeederDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
     {
         if (apiApplicationDriver == null)
@@ -26,6 +24,8 @@ public class HolefeederDatabaseDriver : DatabaseDriver
 
         DbContext = context;
     }
+
+    protected override MySqlDbContext DbContext { get; }
 
     protected override async Task<Respawner> CreateStateAsync(DbConnection connection)
     {

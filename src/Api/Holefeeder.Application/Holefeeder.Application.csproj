@@ -1,26 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <NoWarn>1701;1702;S3925</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;S3925</NoWarn>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Carter" Version="6.1.1" />
-      <PackageReference Include="MediatR" Version="11.0.0" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
-      <PackageReference Include="Microsoft.Identity.Web" Version="1.25.3" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Carter" Version="6.1.1"/>
+    <PackageReference Include="MediatR" Version="11.0.0"/>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2"/>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.3"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj"/>
+  </ItemGroup>
 
 </Project>

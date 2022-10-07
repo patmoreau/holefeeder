@@ -24,11 +24,11 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 public class GetTransactionTests
 {
     private readonly AutoFaker<Request> _faker = new();
-
-    private readonly TransactionInfoViewModelFactory _viewModelFactory = new();
+    private readonly ITransactionQueriesRepository _repositoryMock = Substitute.For<ITransactionQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ITransactionQueriesRepository _repositoryMock = Substitute.For<ITransactionQueriesRepository>();
+
+    private readonly TransactionInfoViewModelFactory _viewModelFactory = new();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

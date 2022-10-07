@@ -61,14 +61,14 @@ public class MakePurchase : ICarterModule
                 .NotNull()
                 .NotEmpty()
                 .MustAsync(async (id, cancellation) =>
-                    (await repository.AccountExists(id, userContext.UserId, cancellation)))
+                    await repository.AccountExists(id, userContext.UserId, cancellation))
                 .WithMessage(x => $"Account '{x.AccountId}' does not exists.")
                 .WithErrorCode("NotExistsValidator");
             RuleFor(command => command.CategoryId)
                 .NotNull()
                 .NotEmpty()
                 .MustAsync(async (id, cancellation) =>
-                    (await repository.CategoryExists(id, userContext.UserId, cancellation)))
+                    await repository.CategoryExists(id, userContext.UserId, cancellation))
                 .WithMessage(x => $"Category '{x.CategoryId}' does not exists.")
                 .WithErrorCode("NotExistsValidator");
             RuleFor(command => command.Date).NotEmpty();
@@ -78,9 +78,9 @@ public class MakePurchase : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly ICashflowRepository _cashflowRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
             ICashflowRepository cashflowRepository)
@@ -97,7 +97,7 @@ public class MakePurchase : ICarterModule
                 var cashflowId = await HandleCashflow(request, cancellationToken);
 
                 var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
-                        request.AccountId, request.CategoryId, _userContext.UserId);
+                    request.AccountId, request.CategoryId, _userContext.UserId);
 
                 if (cashflowId is not null)
                 {

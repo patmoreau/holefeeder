@@ -20,11 +20,6 @@ namespace Holefeeder.FunctionalTests.Features;
 [Collection("Api collection")]
 public abstract class BaseScenario
 {
-    protected HttpClientDriver HttpClientDriver { get; }
-
-    protected UserStepDefinition User { get; }
-    protected TransactionStepDefinition Transaction { get; }
-
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
         if (apiApplicationDriver == null)
@@ -37,6 +32,11 @@ public abstract class BaseScenario
         User = new UserStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);
     }
+
+    protected HttpClientDriver HttpClientDriver { get; }
+
+    protected UserStepDefinition User { get; }
+    protected TransactionStepDefinition Transaction { get; }
 
     protected void GivenUserIsUnauthorized()
     {
@@ -148,9 +148,12 @@ public abstract class BaseScenario
 
     private void CheckAuthorizationStatus(bool isAuthorized)
     {
-        bool IsExpectedStatus(HttpStatusCode? statusCode) => isAuthorized
-            ? statusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
-            : statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized;
+        bool IsExpectedStatus(HttpStatusCode? statusCode)
+        {
+            return isAuthorized
+                ? statusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
+                : statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized;
+        }
 
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
     }
@@ -158,8 +161,8 @@ public abstract class BaseScenario
 
 public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private readonly List<Func<Task>> _tasks = new();
+    private readonly ITestOutputHelper _testOutputHelper;
     private int _taskCount;
 
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
@@ -168,7 +171,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         _testOutputHelper = testOutputHelper;
     }
 
-    protected T Given(Action action) => Given(string.Empty, action);
+    protected T Given(Action action)
+    {
+        return Given(string.Empty, action);
+    }
 
     protected T Given(string message, Action action)
     {
@@ -176,7 +182,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         return (T)this;
     }
 
-    protected T Given(Func<Task> action) => Given(string.Empty, action);
+    protected T Given(Func<Task> action)
+    {
+        return Given(string.Empty, action);
+    }
 
     protected T Given(string message, Func<Task> action)
     {
@@ -185,7 +194,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         return (T)this;
     }
 
-    protected T When(Action action) => When(string.Empty, action);
+    protected T When(Action action)
+    {
+        return When(string.Empty, action);
+    }
 
     protected T When(string message, Action action)
     {
@@ -194,7 +206,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         return (T)this;
     }
 
-    protected T When(Func<Task> action) => When(string.Empty, action);
+    protected T When(Func<Task> action)
+    {
+        return When(string.Empty, action);
+    }
 
     protected T When(string message, Func<Task> action)
     {
@@ -203,7 +218,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         return (T)this;
     }
 
-    protected T Then(Action action) => Then(string.Empty, action);
+    protected T Then(Action action)
+    {
+        return Then(string.Empty, action);
+    }
 
     protected T Then(string message, Action action)
     {
@@ -216,7 +234,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         return (T)this;
     }
 
-    protected T Then(Func<Task> action) => Then(string.Empty, action);
+    protected T Then(Func<Task> action)
+    {
+        return Then(string.Empty, action);
+    }
 
     protected T Then(string message, Func<Task> action)
     {
@@ -240,8 +261,10 @@ public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
         }
     }
 
-    private void AddTask(string command, string message, Action action) =>
+    private void AddTask(string command, string message, Action action)
+    {
         AddTask(command, message, () => Task.Run(action));
+    }
 
     private void AddTask(string command, string message, Func<Task> action)
     {

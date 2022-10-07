@@ -1,6 +1,6 @@
-﻿namespace Holefeeder.Domain.Extensions;
+﻿using System.Globalization;
 
-using System.Globalization;
+namespace Holefeeder.Domain.Extensions;
 
 public static class DateExtensions
 {

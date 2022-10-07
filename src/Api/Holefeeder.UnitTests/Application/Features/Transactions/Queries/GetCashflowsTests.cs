@@ -27,11 +27,11 @@ namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
 public class GetCashflowsTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly CashflowInfoViewModelFactory _viewModelFactory = new();
+    private readonly ICashflowQueriesRepository _repositoryMock = Substitute.For<ICashflowQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ICashflowQueriesRepository _repositoryMock = Substitute.For<ICashflowQueriesRepository>();
+
+    private readonly CashflowInfoViewModelFactory _viewModelFactory = new();
 
     public GetCashflowsTests()
     {

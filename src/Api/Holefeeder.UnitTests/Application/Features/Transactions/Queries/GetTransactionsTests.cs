@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using AutoBogus;
@@ -28,11 +27,11 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 public class GetTransactionsTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly TransactionInfoViewModelFactory _viewModelFactory = new();
+    private readonly ITransactionQueriesRepository _repositoryMock = Substitute.For<ITransactionQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly ITransactionQueriesRepository _repositoryMock = Substitute.For<ITransactionQueriesRepository>();
+
+    private readonly TransactionInfoViewModelFactory _viewModelFactory = new();
 
     public GetTransactionsTests()
     {

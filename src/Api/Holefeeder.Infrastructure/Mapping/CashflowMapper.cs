@@ -16,7 +16,7 @@ internal static class CashflowMapper
             return null;
         }
 
-        var model = new Cashflow()
+        var model = new Cashflow
         {
             Id = entity.Id,
             AccountId = entity.AccountId,

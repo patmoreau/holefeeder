@@ -51,8 +51,8 @@ public class Transfer : ICarterModule
     {
         private readonly IAccountQueriesRepository _accountQueriesRepository;
         private readonly ICategoriesRepository _categoriesRepository;
-        private readonly IUserContext _userContext;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(
             IUserContext userContext,

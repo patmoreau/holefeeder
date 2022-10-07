@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace Holefeeder.Application.SeedWork;
+﻿namespace Holefeeder.Application.SeedWork;
 
 public interface IRequestQuery
 {

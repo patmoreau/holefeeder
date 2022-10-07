@@ -31,7 +31,7 @@ public class ScenarioGetAccounts : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetAccounts, offset: -1);
+        await WhenUserTriesToQuery(ApiResources.GetAccounts, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }

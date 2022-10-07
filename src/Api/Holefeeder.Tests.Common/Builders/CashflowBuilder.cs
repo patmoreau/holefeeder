@@ -8,9 +8,20 @@ internal class CashflowBuilder : IBuilder<Cashflow>
 {
     private Cashflow _entity;
 
-    public static CashflowBuilder GivenACashflow() => new();
+    private CashflowBuilder()
+    {
+        _entity = new CashflowFactory().Generate();
+    }
 
-    private CashflowBuilder() => _entity = new CashflowFactory().Generate();
+    public Cashflow Build()
+    {
+        return _entity;
+    }
+
+    public static CashflowBuilder GivenACashflow()
+    {
+        return new();
+    }
 
     public CashflowBuilder OfAmount(decimal amount)
     {
@@ -35,6 +46,4 @@ internal class CashflowBuilder : IBuilder<Cashflow>
         _entity = _entity with {UserId = userId};
         return this;
     }
-
-    public Cashflow Build() => _entity;
 }

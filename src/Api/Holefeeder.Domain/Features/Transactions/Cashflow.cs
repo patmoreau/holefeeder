@@ -7,13 +7,13 @@ namespace Holefeeder.Domain.Features.Transactions;
 
 public record Cashflow : IAggregateRoot
 {
-    private readonly Guid _id;
+    private readonly Guid _accountId;
+    private readonly decimal _amount;
+    private readonly Guid _categoryId;
     private readonly DateTime _effectiveDate;
     private readonly int _frequency;
+    private readonly Guid _id;
     private readonly int _recurrence;
-    private readonly decimal _amount;
-    private readonly Guid _accountId;
-    private readonly Guid _categoryId;
     private readonly Guid _userId;
 
     public Guid Id
@@ -137,9 +137,10 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
+        decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
     {
-        return new()
+        return new Cashflow
         {
             Id = Guid.NewGuid(),
             EffectiveDate = effectiveDate,

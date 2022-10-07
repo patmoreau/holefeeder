@@ -18,10 +18,10 @@ public class ExportData : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v2/my-data/export-data", async (IMediator mediator) =>
-        {
-            var requestResult = await mediator.Send(new Request());
-            return Results.Ok(requestResult);
-        })
+            {
+                var requestResult = await mediator.Send(new Request());
+                return Results.Ok(requestResult);
+            })
             .Produces<IEnumerable<ExportDataDto>>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -36,8 +36,8 @@ public class ExportData : ICarterModule
     internal class Handler
         : IRequestHandler<Request, ExportDataDto>
     {
-        private readonly IUserContext _userContext;
         private readonly IMyDataQueriesRepository _myDataRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IMyDataQueriesRepository myDataRepository)
         {

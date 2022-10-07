@@ -65,8 +65,8 @@ public class GetUpcoming : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly IUpcomingQueriesRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IUpcomingQueriesRepository repository)
         {

@@ -8,9 +8,20 @@ internal class CategoryEntityBuilder : IBuilder<CategoryEntity>
 {
     private CategoryEntity _entity;
 
-    public static CategoryEntityBuilder GivenACategory() => new();
+    private CategoryEntityBuilder()
+    {
+        _entity = new CategoryEntityFactory().Generate();
+    }
 
-    private CategoryEntityBuilder() => _entity = new CategoryEntityFactory().Generate();
+    public CategoryEntity Build()
+    {
+        return _entity;
+    }
+
+    public static CategoryEntityBuilder GivenACategory()
+    {
+        return new();
+    }
 
     public CategoryEntityBuilder OfType(CategoryType type)
     {
@@ -29,6 +40,4 @@ internal class CategoryEntityBuilder : IBuilder<CategoryEntity>
         _entity = _entity with {UserId = userId};
         return this;
     }
-
-    public CategoryEntity Build() => _entity;
 }

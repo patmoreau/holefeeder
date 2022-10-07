@@ -84,7 +84,7 @@ public class StoreItemTests
 
         // act
         StoreItem item = null!;
-        Func<Task> action = () =>
+        var action = () =>
         {
             item = new StoreItem(id, code, userId) {Data = data};
             return Task.CompletedTask;

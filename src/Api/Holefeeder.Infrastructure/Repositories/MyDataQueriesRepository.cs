@@ -1,11 +1,11 @@
-﻿namespace Holefeeder.Infrastructure.Repositories;
-
-using Holefeeder.Application.Features.MyData;
+﻿using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.Mapping;
+
+namespace Holefeeder.Infrastructure.Repositories;
 
 internal class MyDataQueriesRepository : IMyDataQueriesRepository
 {

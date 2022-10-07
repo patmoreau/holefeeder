@@ -31,7 +31,7 @@ public class ScenarioGetStoreItems : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems, offset: -1);
+        await WhenUserTriesToQuery(ApiResources.GetStoreItems, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }

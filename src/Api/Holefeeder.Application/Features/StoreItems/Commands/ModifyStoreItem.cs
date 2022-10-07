@@ -45,8 +45,8 @@ public class ModifyStoreItem : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly IStoreItemsRepository _itemsRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository)
         {

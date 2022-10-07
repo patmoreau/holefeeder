@@ -25,11 +25,11 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 public class GetStoreItemTests
 {
     private readonly Faker<Request> _faker = new AutoFaker<Request>();
+    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
 
     private readonly StoreItemViewModel _storeItemDummy = AutoFaker.Generate<StoreItemViewModel>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

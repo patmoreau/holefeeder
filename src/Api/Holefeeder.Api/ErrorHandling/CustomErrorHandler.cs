@@ -5,7 +5,6 @@ using System.Text.Json;
 using FluentValidation;
 
 using Holefeeder.Api.Extensions;
-using Holefeeder.Application.Extensions;
 using Holefeeder.Domain.SeedWork;
 
 using Microsoft.AspNetCore.Diagnostics;
@@ -65,7 +64,7 @@ public static class CustomErrorHandler
 
     private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details)
     {
-        return new() {Status = statusCode, Title = title, Detail = details};
+        return new ProblemDetails {Status = statusCode, Title = title, Detail = details};
     }
 
     private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors)

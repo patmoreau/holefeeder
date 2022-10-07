@@ -7,9 +7,20 @@ internal class StoreItemEntityBuilder : IBuilder<StoreItemEntity>
 {
     private StoreItemEntity _entity;
 
-    public static StoreItemEntityBuilder GivenAStoreItem() => new();
+    private StoreItemEntityBuilder()
+    {
+        _entity = new StoreItemEntityFactory().Generate();
+    }
 
-    private StoreItemEntityBuilder() => _entity = new StoreItemEntityFactory().Generate();
+    public StoreItemEntity Build()
+    {
+        return _entity;
+    }
+
+    public static StoreItemEntityBuilder GivenAStoreItem()
+    {
+        return new();
+    }
 
     public StoreItemEntityBuilder WithId(Guid id)
     {
@@ -28,6 +39,4 @@ internal class StoreItemEntityBuilder : IBuilder<StoreItemEntity>
         _entity = _entity with {UserId = userId};
         return this;
     }
-
-    public StoreItemEntity Build() => _entity;
 }

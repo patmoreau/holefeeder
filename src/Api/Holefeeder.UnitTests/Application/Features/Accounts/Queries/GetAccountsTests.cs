@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using AutoBogus;
@@ -27,11 +26,11 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 public class GetAccountsTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly AccountViewModelFactory _viewModelFactory = new();
+    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
 
     private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
+
+    private readonly AccountViewModelFactory _viewModelFactory = new();
 
     public GetAccountsTests()
     {

@@ -1,11 +1,11 @@
-﻿namespace Holefeeder.Infrastructure.Mapping;
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Infrastructure.Entities;
+
+namespace Holefeeder.Infrastructure.Mapping;
 
 internal static class TransactionMapper
 {

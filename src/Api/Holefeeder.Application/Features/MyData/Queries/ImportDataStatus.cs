@@ -2,7 +2,6 @@
 
 using FluentValidation;
 
-using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 
@@ -32,6 +31,7 @@ public class ImportDataStatus : ICarterModule
             .WithName(nameof(ImportDataStatus))
             .RequireAuthorization();
     }
+
     internal record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
 
     internal class Validator : AbstractValidator<Request>

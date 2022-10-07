@@ -2,7 +2,6 @@ using System.Net;
 
 using FluentAssertions;
 
-using Holefeeder.Application.Features.Categories.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;

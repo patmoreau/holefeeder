@@ -40,8 +40,8 @@ public class GetCategories : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly ICategoryQueriesRepository _categoryQueriesRepository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, ICategoryQueriesRepository categoryQueriesRepository)
         {

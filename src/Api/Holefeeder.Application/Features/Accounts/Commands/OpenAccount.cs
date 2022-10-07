@@ -45,7 +45,7 @@ public class OpenAccount : ICarterModule
                 .NotEmpty()
                 .Length(1, 255)
                 .MustAsync(async (name, cancellation) =>
-                    (await repository.FindByNameAsync(name, userContext.UserId, cancellation)) is null)
+                    await repository.FindByNameAsync(name, userContext.UserId, cancellation) is null)
                 .WithMessage(x => $"Name '{x.Name}' already exists.")
                 .WithErrorCode("AlreadyExistsValidator");
             RuleFor(command => command.OpenDate).NotEmpty();
@@ -54,8 +54,8 @@ public class OpenAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
         private readonly IAccountRepository _repository;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, IAccountRepository repository)
         {
