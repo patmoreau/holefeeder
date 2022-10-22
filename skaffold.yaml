@@ -22,19 +22,13 @@ build:
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
 profiles:
-  - name: dev-rancher
-    activation:
-      - kubeContext: rancher-desktop
-    deploy:
-      kustomize:
-        paths: [ "kubernetes/dev" ]
   - name: dev
     activation:
-      - kubeContext: k3d-*
+      - kubeContext: k3d-dev
     deploy:
       kustomize:
-        paths: [ "kubernetes/dev" ]
+        paths: ["kubernetes/dev"]
   - name: prd
     deploy:
       kustomize:
-        paths: [ "kubernetes/prd" ]
+        paths: ["kubernetes/prd"]

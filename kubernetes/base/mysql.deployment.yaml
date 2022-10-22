@@ -19,7 +19,7 @@ metadata:
     app: mysql
 spec:
   ports:
-  - port: 3306
+    - port: 3306
   selector:
     app: mysql
     tier: mysql
@@ -45,39 +45,39 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: mariadb:10.5.13
-        name: mysql
-        ports:
-        - containerPort: 3306
+        - image: mariadb:10.5.13
           name: mysql
-        resources:
-          requests:
-            memory: 128Mi
-            cpu: 100m
-          limits:
-            memory: 500Mi
-            cpu: 500m
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: holefeeder-secrets
-              key: MYSQL_ROOT_PASSWORD
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-        - name: mysql-initdb
-          mountPath: /docker-entrypoint-initdb.d
-        - name: mysql-credentials-volume
-          mountPath: /etc/mysql/credentials
+          ports:
+            - containerPort: 3306
+              name: mysql
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: holefeeder-secrets
+                  key: MYSQL_ROOT_PASSWORD
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-initdb
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-credentials-volume
+              mountPath: /etc/mysql/credentials
       volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
-      - name: mysql-initdb
-        configMap:
-          name: mysql-initdb-scripts
-          defaultMode: 0777
-      - name: mysql-credentials-volume
-        secret:
-          secretName: holefeeder-secrets
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-scripts
+            defaultMode: 0777
+        - name: mysql-credentials-volume
+          secret:
+            secretName: holefeeder-secrets

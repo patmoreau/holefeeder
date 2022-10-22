@@ -4,14 +4,14 @@ kind: Kustomization
 namespace: holefeeder
 
 resources:
-- adminer.deployment.yaml
-- api.deployment.yaml
-- ingress.deployment.yaml
-- mysql.deployment.yaml
-- ui.deployment.yaml
-- namespace.yaml
+  - adminer.deployment.yaml
+  - api.deployment.yaml
+  - ingress.deployment.yaml
+  - mysql.deployment.yaml
+  - ui.deployment.yaml
+  - namespace.yaml
 
 configMapGenerator:
-- name: mysql-initdb-scripts
-  files:
-  - init/mysql-initdb.sh
+  - name: mysql-initdb-scripts
+    files:
+      - init/mysql-initdb.sh

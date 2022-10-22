@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 16m
 spec:
   rules:
-    - host: holefeeder.test
+    - host: holefeeder.localhost
       http:
         paths:
           - pathType: Prefix
@@ -16,7 +16,7 @@ spec:
                 name: ui
                 port:
                   number: 80
-    - host: adminer.test
+    - host: adminer.localhost
       http:
         paths:
           - pathType: Prefix
@@ -26,7 +26,7 @@ spec:
                 name: adminer
                 port:
                   number: 80
-    - host: mysql.test
+    - host: mysql.localhost
       http:
         paths:
           - pathType: Prefix
@@ -36,9 +36,9 @@ spec:
                 name: mysql
                 port:
                   number: 30306
-  tls: 
-  - hosts: 
-    - holefeeder.test 
-    - adminer.test
-    - mysql.test
-    secretName: holefeeder-tls
+  tls:
+    - hosts:
+        - holefeeder.localhost
+        - adminer.localhost
+        - mysql.localhost
+      secretName: holefeeder-tls

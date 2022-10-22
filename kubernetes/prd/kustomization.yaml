@@ -1,32 +1,32 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 bases:
-- ../base
+  - ../base
 nameSuffix: -prd
 
 namespace: holefeeder
 
 resources:
-- cluster-issuer.yaml
+  - cluster-issuer.yaml
 
 patchesStrategicMerge:
-- api.env.yaml
-- ui.env.yaml
+  - api.env.yaml
+  - ui.env.yaml
 
 patchesJson6902:
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: holefeeder
-  path: ingress.patch.yaml
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: holefeeder
+    path: ingress.patch.yaml
 
 secretGenerator:
-- name: holefeeder-secrets
-  behavior: create
-  envs:
-  - .env.secrets
-- name: dockerconfigjson-github-com
-  behavior: create
-  literals:
-  - .dockerconfigjson=eyJhdXRocyI6eyJnaGNyLmlvIjp7ImF1dGgiOiJiVzl5YVc1a2FXNDZaMmh3WDI0d1YzVlZjRmRFU2tsNlFtSkNkWEZ2VTI1elJtdHlaM2hZU1ZZMlp6RnlOVkZpVlE9PSJ9fX0=
+  - name: holefeeder-secrets
+    behavior: create
+    envs:
+      - .env.secrets
+  - name: dockerconfigjson-github-com
+    behavior: create
+    literals:
+      - .dockerconfigjson=eyJhdXRocyI6eyJnaGNyLmlvIjp7ImF1dGgiOiJiVzl5YVc1a2FXNDZaMmh3WDI0d1YzVlZjRmRFU2tsNlFtSkNkWEZ2VTI1elJtdHlaM2hZU1ZZMlp6RnlOVkZpVlE9PSJ9fX0=

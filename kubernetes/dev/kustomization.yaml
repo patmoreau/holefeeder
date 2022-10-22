@@ -1,30 +1,30 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 bases:
-- ../base
+  - ../base
 
 nameSuffix: -dev
 
 namespace: holefeeder
 
 resources:
-- cluster-issuer.yaml
+  - cluster-issuer.yaml
 
 patchesStrategicMerge:
-- api.env.yaml
-- mysql.deployment.yaml
-- ui.env.yaml
+  - api.env.yaml
+  - mysql.deployment.yaml
+  - ui.env.yaml
 
 patchesJson6902:
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: holefeeder
-  path: ingress.patch.yaml
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: holefeeder
+    path: ingress.patch.yaml
 
 secretGenerator:
-- name: holefeeder-secrets
-  behavior: create
-  envs:
-  - .env.secrets
+  - name: holefeeder-secrets
+    behavior: create
+    envs:
+      - .env.secrets

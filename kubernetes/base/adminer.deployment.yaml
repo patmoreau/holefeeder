@@ -33,15 +33,15 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: adminer
-        name: adminer
-        ports:
-        - containerPort: 8080
+        - image: adminer
           name: adminer
-        resources:
-          requests:
-            memory: 64Mi
-            cpu: 10m
-          limits:
-            memory: 64Mi
-            cpu: 50m
+          ports:
+            - containerPort: 8080
+              name: adminer
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 10m
+            limits:
+              memory: 64Mi
+              cpu: 50m

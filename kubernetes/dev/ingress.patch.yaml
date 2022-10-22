@@ -3,19 +3,19 @@
   value: selfsigned-issuer
 - op: replace
   path: /spec/rules/0/host
-  value: holefeeder.test
+  value: holefeeder.localhost
 - op: replace
   path: /spec/rules/1/host
-  value: adminer.test
+  value: adminer.localhost
 - op: replace
   path: /spec/rules/2/host
-  value: mysql.test
+  value: mysql.localhost
 - op: replace
   path: /spec/tls/0/hosts/0
-  value: holefeeder.test
+  value: holefeeder.localhost
 - op: replace
   path: /spec/tls/0/hosts/1
-  value: adminer.test
+  value: adminer.localhost
 - op: replace
   path: /spec/tls/0/hosts/2
-  value: mysql.test
+  value: mysql.localhost

@@ -12,7 +12,6 @@ using FluentAssertions.Execution;
 
 using FluentValidation.TestHelper;
 
-using Holefeeder.Application.Features.Accounts.CloseAccount;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
@@ -24,6 +23,8 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
 using Xunit;
+
+using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 

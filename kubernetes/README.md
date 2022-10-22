@@ -11,7 +11,7 @@ helm repo update
 
 ## Setting up the cluster using no LoadBalancer
 
-1) DO's firewall for your cluster doesn't have 80/443 inbound open by default.
+1. DO's firewall for your cluster doesn't have 80/443 inbound open by default.
 
 ```bash
 doctl compute firewall create \
@@ -22,21 +22,21 @@ doctl compute firewall create \
 
 (Get the CLUSTER_UUID value from the dashboard or the ID column from doctl kubernetes cluster list)
 
-2) Create the nginx ingress using the host network.
+2. Create the nginx ingress using the host network.
 
 ```bash
 helm install custom-ingress ingress-nginx/ingress-nginx -f custom-ingress.values.yaml
 ```
 
-3) You should be able to access the cluster on :80 and :443 via any worker node IP and it'll route traffic to your ingress.
+3. You should be able to access the cluster on :80 and :443 via any worker node IP and it'll route traffic to your ingress.
 
-4) Since node IPs can & do change, look at deploying external-dns to manage DNS entries to point to your worker nodes. Again, using the helm chart and assuming your DNS domain is hosted by DigitalOcean (though any supported DNS provider will work):
+4. Since node IPs can & do change, look at deploying external-dns to manage DNS entries to point to your worker nodes. Again, using the helm chart and assuming your DNS domain is hosted by DigitalOcean (though any supported DNS provider will work):
 
 ```bash
 helm install external-dns bitnami/external-dns -f external-dns.values.yaml
 ```
 
-5) After a minute or so you should see the DNS records appear and be resolvable:
+5. After a minute or so you should see the DNS records appear and be resolvable:
 
 ```bash
 dig adminer.drifterapps.app             # should return worker IP address
@@ -45,13 +45,13 @@ curl -v http://adminer.drifterapps.app  # should send the request through the In
 
 ## Setting up a certificate manager
 
-1) Before installing Cert-Manager to your cluster via Helm, you’ll manually create a namespace for it by running the following command:
+1. Before installing Cert-Manager to your cluster via Helm, you’ll manually create a namespace for it by running the following command:
 
 ```bash
 kubectl create namespace cert-manager
 ```
 
-2) Finally, install Cert-Manager into the cert-manager namespace by running the following command:
+2. Finally, install Cert-Manager into the cert-manager namespace by running the following command:
 
 ```bash
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.5.4 --set installCRDs=true
@@ -61,22 +61,23 @@ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6
 ## creating github registry secret for kubernetes
 
 Encode github username and PAT
+
 ```bash
 echo -n "username:123123adsfasdf123123" | base64
 ```
 
 Create and encode .dockerconfigjson
+
 ```json
 {
-    "auths":
-    {
-        "ghcr.io":
-            {
-                "auth":"dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="
-            }
+  "auths": {
+    "ghcr.io": {
+      "auth": "dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="
     }
+  }
 }
 ```
+
 ```bash
 echo -n '{"auths":{"ghcr.io":{"auth":"dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="}}}' | base64
 ```

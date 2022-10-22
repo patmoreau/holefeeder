@@ -11,16 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carter" Version="6.1.1"/>
-    <PackageReference Include="MediatR" Version="11.0.0"/>
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2"/>
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.3"/>
+    <PackageReference Include="Carter" Version="6.1.1" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj"/>
+    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
   </ItemGroup>
 
 </Project>

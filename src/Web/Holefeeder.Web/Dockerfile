@@ -40,6 +40,8 @@ WORKDIR /src/src/Web/Holefeeder.Web
 RUN dotnet build /property:Version=${VERSION} --no-restore -c Release
 
 FROM build AS publish
+ARG BUILD_VERSION=99.99.99
+ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /src/src/Web/Holefeeder.Web
 RUN dotnet publish /property:Version=${VERSION} --no-restore --no-build -c Release -o /app
 

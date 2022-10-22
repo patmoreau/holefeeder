@@ -32,15 +32,15 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: holefeeder/holefeeder-web
-        name: ui
-        ports:
-        - containerPort: 80
+        - image: holefeeder/holefeeder-web
           name: ui
-        resources:
-          requests:
-            memory: 64Mi
-            cpu: 50m
-          limits:
-            memory: 128Mi
-            cpu: 150m
+          ports:
+            - containerPort: 80
+              name: ui
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 50m
+            limits:
+              memory: 128Mi
+              cpu: 150m
