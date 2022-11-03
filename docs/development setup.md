@@ -9,10 +9,11 @@
 ```bash
 k3d cluster create dev \
   --api-port 6550 \
+  --port 443:443@loadbalancer \
+  --port 30306:30306@loadbalancer \
+  --k3s-arg '--no-deploy=traefik@server:*' \
   --server 1 \
   --agents 3 \
-  --port 443:443@loadbalancer \
-  --port 30306:30306@loadbalancer
 ```
 
 ### create a simple prd cluster
