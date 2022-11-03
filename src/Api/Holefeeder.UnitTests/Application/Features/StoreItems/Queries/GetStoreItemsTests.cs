@@ -28,9 +28,9 @@ public class GetStoreItemsTests
     private readonly int _countDummy;
     private readonly IEnumerable<StoreItemViewModel> _dummy;
     private readonly Faker<Request> _faker;
-    private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
+    // private readonly IStoreItemsQueriesRepository _repositoryMock = Substitute.For<IStoreItemsQueriesRepository>();
 
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
+    // private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
 
     public GetStoreItemsTests()
     {
@@ -88,21 +88,21 @@ public class GetStoreItemsTests
         result.ShouldHaveValidationErrorFor(r => r.Limit);
     }
 
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-
-        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((_countDummy, _dummy));
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().Be(new QueryResult<StoreItemViewModel>(_countDummy, _dummy));
-    }
+    // [Fact]
+    // public async Task GivenHandler_WhenIdFound_ThenReturnResult()
+    // {
+    //     // arrange
+    //     var request = _faker.Generate();
+    //
+    //     _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
+    //         .Returns((_countDummy, _dummy));
+    //
+    //     var handler = new Handler(_userContextMock, _repositoryMock);
+    //
+    //     // act
+    //     var result = await handler.Handle(request, default);
+    //
+    //     // assert
+    //     result.Should().Be(new QueryResult<StoreItemViewModel>(_countDummy, _dummy));
+    // }
 }

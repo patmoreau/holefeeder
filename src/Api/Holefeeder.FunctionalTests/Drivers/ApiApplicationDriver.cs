@@ -1,5 +1,6 @@
 using Dapper;
 
+using Holefeeder.Application.Context;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Context;
 
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -35,6 +37,9 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
         builder
             .ConfigureTestServices(services =>
             {
+                var connection = configuration.GetConnectionString("ObjectStoreConnectionString");
+                services.AddDbContext<StoreItemContext>(options => options.UseMySQL(connection));
+                // services.AddDbContextPool<StoreItemContext>(options => options.UseMySQL(connection));
                 services
                     .AddOptions<ObjectStoreDatabaseSettings>()
                     .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));

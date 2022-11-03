@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj"/>
+    <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoBogus" Version="2.13.1"/>
+    <PackageReference Include="AutoBogus" Version="2.13.1" />
   </ItemGroup>
 
 </Project>

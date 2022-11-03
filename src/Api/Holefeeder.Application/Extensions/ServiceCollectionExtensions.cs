@@ -3,21 +3,33 @@ using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 
 using Holefeeder.Application.Behaviors;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Application.SeedWork.BackgroundRequest;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Holefeeder.Application.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddEntityFrameworkMySql();
+
+        var connectionString = configuration.GetConnectionString("ObjectStoreConnectionString");
+        services.AddDbContext<StoreItemContext>(options =>
+        {
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        });
+
         services.AddHttpContextAccessor();
         services.AddTransient<IUserContext, UserContext>();
 
@@ -33,7 +45,10 @@ public static class ServiceCollectionExtensions
             .AddSingleton<BackgroundWorkers>()
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>))
             .AddTransient<ImportData.BackgroundTask>();
+
+        //services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting();
 
         return services;
     }

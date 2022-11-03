@@ -10,7 +10,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
-using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;

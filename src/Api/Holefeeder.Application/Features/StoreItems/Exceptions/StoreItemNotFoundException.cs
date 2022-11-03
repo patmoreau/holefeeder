@@ -1,28 +1,13 @@
-using Holefeeder.Domain.Features.StoreItem;
-using Holefeeder.Domain.SeedWork;
-
-using Microsoft.AspNetCore.Http;
+using Holefeeder.Application.Domain.StoreItem;
+using Holefeeder.Application.Exceptions;
 
 namespace Holefeeder.Application.Features.StoreItems.Exceptions;
 
-public class StoreItemNotFoundException : DomainException
+#pragma warning disable CA1032
+public class StoreItemNotFoundException : NotFoundException<StoreItem>
+#pragma warning restore CA1032
 {
-    public StoreItemNotFoundException(Guid id) : base(StatusCodes.Status404NotFound,
-        $"{nameof(StoreItem)} '{id}' not found")
+    public StoreItemNotFoundException(Guid id) : base(id)
     {
     }
-
-    public StoreItemNotFoundException()
-    {
-    }
-
-    public StoreItemNotFoundException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
-
-    public StoreItemNotFoundException(string message) : base(message)
-    {
-    }
-
-    public override string Context => nameof(StoreItems);
 }

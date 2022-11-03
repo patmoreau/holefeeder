@@ -1,12 +1,12 @@
 using AutoBogus;
 
-using Holefeeder.Infrastructure.Entities;
+using Holefeeder.Application.Domain.StoreItem;
 
-namespace Holefeeder.Tests.Common.Factories;
+namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
-internal sealed class StoreItemEntityFactory : AutoFaker<StoreItemEntity>
+internal sealed class StoreItemFactory : AutoFaker<StoreItem>
 {
-    public StoreItemEntityFactory()
+    public StoreItemFactory()
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.Code, faker => faker.Random.String2(1, 100));

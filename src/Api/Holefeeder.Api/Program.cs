@@ -15,7 +15,7 @@ builder.Services
     .AddSwagger(builder.Environment)
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
-    .AddApplication()
+    .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddHostedService<LongRunningService>();
 
@@ -33,6 +33,7 @@ if (!app.Environment.IsDevelopment())
 app.UseSerilog()
     .MapSwagger(builder.Environment)
     .MapHealthChecks()
+    .MapCore()
     .MapCarter();
 
 app.UseAuthentication()

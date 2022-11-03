@@ -1,7 +1,6 @@
 using System.Data.Common;
 
-using Holefeeder.Infrastructure.Context;
-using Holefeeder.Infrastructure.SeedWork;
+using Holefeeder.Application.Context;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,22 +9,24 @@ using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public class ObjectStoreDatabaseDriver : DatabaseDriver
+public sealed class ObjectStoreDatabaseDriver : DbContextDriver, IDisposable
 {
+    private IServiceScope _scope;
     public ObjectStoreDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
+        _scope = apiApplicationDriver.Server.Services
+            .GetService<IServiceScopeFactory>()!.CreateScope();
 
-        var settings = apiApplicationDriver.Services.GetRequiredService<ObjectStoreDatabaseSettings>();
-        var context = new ObjectStoreContext(settings);
+        var context = _scope.ServiceProvider.GetRequiredService<StoreItemContext>();
 
         DbContext = context;
     }
 
-    protected override MySqlDbContext DbContext { get; }
+    protected override StoreItemContext DbContext { get; }
 
     protected override async Task<Respawner> CreateStateAsync(DbConnection connection)
     {
@@ -37,5 +38,11 @@ public class ObjectStoreDatabaseDriver : DatabaseDriver
                 TablesToInclude = new Table[] {"store_items"},
                 TablesToIgnore = new Table[] {"schema_versions"}
             });
+    }
+
+    public void Dispose()
+    {
+        DbContext.Dispose();
+        _scope.Dispose();
     }
 }

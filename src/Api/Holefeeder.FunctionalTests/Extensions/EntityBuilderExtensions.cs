@@ -12,4 +12,12 @@ internal static class EntityBuilderExtensions
         await databaseDriver.SaveAsync(entity);
         return entity;
     }
+
+    public static async Task<T> SavedInDb<T>(this IBuilder<T> builder, DbContextDriver databaseDriver)
+        where T : class
+    {
+        var entity = builder.Build();
+        await databaseDriver.SaveAsync(entity);
+        return entity;
+    }
 }

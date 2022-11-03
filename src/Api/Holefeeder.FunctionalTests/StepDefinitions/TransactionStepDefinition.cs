@@ -15,7 +15,6 @@ public class TransactionStepDefinition
 
     private HttpClientDriver HttpClientDriver { get; }
 
-
     public async Task MakesPurchase(Transaction entity)
     {
         if (entity == null)
