@@ -4,19 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Holefeeder.Domain.Features.Categories;
 
-public class CategoryDomainException : DomainException
+#pragma warning disable CA1032
+public class CategoryDomainException : DomainException<Category>
+#pragma warning restore CA1032
 {
-    public CategoryDomainException(string message) : base(StatusCodes.Status422UnprocessableEntity, message)
-    {
-    }
-
-    public CategoryDomainException()
+    public CategoryDomainException(string message) : base(message)
     {
     }
 
     public CategoryDomainException(string message, Exception innerException) : base(message, innerException)
     {
     }
-
-    public override string Context => nameof(Category);
 }

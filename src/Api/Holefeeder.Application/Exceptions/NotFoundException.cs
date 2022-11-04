@@ -1,5 +1,7 @@
 using DrifterApps.Holefeeder.Core.Domain;
 
+using Holefeeder.Domain.SeedWork;
+
 namespace Holefeeder.Application.Exceptions;
 
 #pragma warning disable CA1032
@@ -15,7 +17,7 @@ public abstract class NotFoundException : Exception
 }
 
 #pragma warning disable CA1032
-public class NotFoundException<TContext> : NotFoundException where TContext : IEntity
+public class NotFoundException<TContext> : NotFoundException where TContext : IAggregateRoot
 #pragma warning restore CA1032
 {
     public NotFoundException(Guid id) : base(id, nameof(TContext))

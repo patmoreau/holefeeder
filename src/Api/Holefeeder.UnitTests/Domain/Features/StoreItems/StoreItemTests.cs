@@ -6,7 +6,7 @@ using AutoBogus;
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.Application.Domain.StoreItem;
 
 using Xunit;
 

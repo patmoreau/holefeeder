@@ -1,8 +1,10 @@
 ﻿using DrifterApps.Holefeeder.Core.Domain;
 
+using Holefeeder.Domain.SeedWork;
+
 namespace Holefeeder.Application.Domain.StoreItem;
 
-public record StoreItem : IEntity
+public record StoreItem : IEntity, IAggregateRoot
 {
     private readonly string _code = null!;
     private readonly Guid _id;

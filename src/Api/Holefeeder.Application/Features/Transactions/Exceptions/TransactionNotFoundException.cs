@@ -1,28 +1,13 @@
+using Holefeeder.Application.Exceptions;
 using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Domain.SeedWork;
-
-using Microsoft.AspNetCore.Http;
 
 namespace Holefeeder.Application.Features.Transactions.Exceptions;
 
-public class TransactionNotFoundException : DomainException
+#pragma warning disable CA1032
+public class TransactionNotFoundException : NotFoundException<Transaction>
+#pragma warning restore CA1032
 {
-    public TransactionNotFoundException(Guid id) : base(StatusCodes.Status404NotFound,
-        $"{nameof(Transaction)} '{id}' not found")
+    public TransactionNotFoundException(Guid id) : base(id)
     {
     }
-
-    public TransactionNotFoundException()
-    {
-    }
-
-    public TransactionNotFoundException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
-
-    public TransactionNotFoundException(string message) : base(message)
-    {
-    }
-
-    public override string Context => nameof(Transactions);
 }

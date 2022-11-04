@@ -4,19 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-public class AccountDomainException : DomainException
+#pragma warning disable CA1032
+public class AccountDomainException : DomainException<Account>
+#pragma warning restore CA1032
 {
-    public AccountDomainException(string message) : base(StatusCodes.Status422UnprocessableEntity, message)
-    {
-    }
-
-    public AccountDomainException()
+    public AccountDomainException(string message) : base(message)
     {
     }
 
     public AccountDomainException(string message, Exception innerException) : base(message, innerException)
     {
     }
-
-    public override string Context => nameof(Account);
 }

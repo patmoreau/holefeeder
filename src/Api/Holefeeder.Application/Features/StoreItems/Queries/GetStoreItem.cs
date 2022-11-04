@@ -2,6 +2,7 @@
 
 using FluentValidation;
 
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
 
@@ -10,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Queries;
 
@@ -44,25 +46,27 @@ public class GetStoreItem : ICarterModule
 
     internal class Handler : IRequestHandler<Request, StoreItemViewModel>
     {
-        private readonly IStoreItemsQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly StoreItemContext _context;
 
-        public Handler(IUserContext userContext, IStoreItemsQueriesRepository repository)
+        public Handler(IUserContext userContext, StoreItemContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result =
-                await _repository.FindByIdAsync(_userContext.UserId, request.Id, cancellationToken);
+            var result = await _context.StoreItems.AsQueryable()
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
+                    cancellationToken: cancellationToken);
+
             if (result is null)
             {
                 throw new StoreItemNotFoundException(request.Id);
             }
 
-            return result;
+            return StoreItemMapper.MapToDto(result);
         }
     }
 }
