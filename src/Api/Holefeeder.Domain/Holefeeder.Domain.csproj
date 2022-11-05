@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="2.1.0" />
     <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="2.1.0" />
+    <PackageReference Include="MediatR.Contracts" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
 

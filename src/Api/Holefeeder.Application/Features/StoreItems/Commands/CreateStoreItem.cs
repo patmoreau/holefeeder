@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
-using StoreItem = Holefeeder.Application.Domain.StoreItem.StoreItem;
+using StoreItem = Holefeeder.Domain.Features.StoreItem.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands;
 

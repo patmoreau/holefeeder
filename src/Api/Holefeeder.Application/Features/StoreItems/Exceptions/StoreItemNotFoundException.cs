@@ -1,5 +1,6 @@
 using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Application.Exceptions;
+using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems.Exceptions;
 

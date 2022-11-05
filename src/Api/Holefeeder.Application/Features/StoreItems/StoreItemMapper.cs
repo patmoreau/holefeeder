@@ -1,5 +1,6 @@
 ﻿using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems;
 

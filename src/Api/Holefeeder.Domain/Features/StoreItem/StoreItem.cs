@@ -1,10 +1,9 @@
-﻿using DrifterApps.Holefeeder.Core.Domain;
-
+﻿using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Domain.SeedWork;
 
-namespace Holefeeder.Application.Domain.StoreItem;
+namespace Holefeeder.Domain.Features.StoreItem;
 
-public record StoreItem : IEntity, IAggregateRoot
+public record StoreItem : Entity, IAggregateRoot
 {
     private readonly string _code = null!;
     private readonly Guid _id;
@@ -17,7 +16,7 @@ public record StoreItem : IEntity, IAggregateRoot
         UserId = userId;
     }
 
-    public Guid Id
+    public sealed override Guid Id
     {
         get => _id;
         init

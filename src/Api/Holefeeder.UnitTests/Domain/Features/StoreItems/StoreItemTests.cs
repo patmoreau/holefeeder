@@ -7,6 +7,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 
 using Holefeeder.Application.Domain.StoreItem;
+using Holefeeder.Domain.Features.StoreItem;
 
 using Xunit;
 

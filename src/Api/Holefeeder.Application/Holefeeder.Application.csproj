@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain" />
+  </ItemGroup>
+
 </Project>

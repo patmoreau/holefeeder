@@ -94,7 +94,7 @@ public class ScenarioGetStoreItem : BaseScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId));
+                .BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId).Excluding(x => x.DomainEvents));
         });
     }
 

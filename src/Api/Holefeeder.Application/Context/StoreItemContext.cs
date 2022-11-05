@@ -1,6 +1,6 @@
 using System.Data;
 
-using Holefeeder.Application.Domain.StoreItem;
+using Holefeeder.Domain.Features.StoreItem;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
