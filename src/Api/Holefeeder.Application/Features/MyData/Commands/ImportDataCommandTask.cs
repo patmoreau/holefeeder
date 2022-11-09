@@ -1,4 +1,5 @@
-﻿using Holefeeder.Application.Extensions;
+﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Application.SeedWork.BackgroundRequest;
@@ -6,6 +7,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Features.MyData.Commands;
@@ -17,24 +19,24 @@ public partial class ImportData
         private readonly IAccountRepository _accountsRepository;
 
         private readonly ICashflowRepository _cashflowRepository;
-        private readonly ICategoryRepository _categoriesRepository;
         private readonly ILogger<BackgroundTask> _logger;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly BudgetingContext _context;
 
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
         public BackgroundTask(
             IAccountRepository accountsRepository,
-            ICategoryRepository categoriesRepository,
             ICashflowRepository cashflowRepository,
             ITransactionRepository transactionRepository,
+            BudgetingContext context,
             ILogger<BackgroundTask> logger
         )
         {
             _accountsRepository = accountsRepository;
-            _categoriesRepository = categoriesRepository;
             _cashflowRepository = cashflowRepository;
             _transactionRepository = transactionRepository;
+            _context = context;
             _logger = logger;
         }
 
@@ -145,7 +147,8 @@ public partial class ImportData
             {
                 Category category = null!;
 
-                var exists = await _categoriesRepository.FindByIdAsync(element.Id, userId, cancellationToken);
+                var exists = await _context.Categories.AsQueryable()
+                    .FirstOrDefaultAsync(x => x.Id == element.Id && x.UserId == userId, cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
@@ -176,9 +179,8 @@ public partial class ImportData
                         Color = element.Color
                     };
                     _logger.LogCategory("Create", category);
+                    await _context.Categories.AddAsync(category, cancellationToken);
                 }
-
-                await _categoriesRepository.SaveAsync(category, cancellationToken);
 
                 _importDataStatus = _importDataStatus with
                 {

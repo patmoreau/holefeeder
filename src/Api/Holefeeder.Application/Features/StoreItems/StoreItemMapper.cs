@@ -1,5 +1,4 @@
-﻿using Holefeeder.Application.Domain.StoreItem;
-using Holefeeder.Application.Features.StoreItems.Queries;
+﻿using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems;
@@ -22,21 +21,4 @@ internal static class StoreItemMapper
     {
         return entities.Select(MapToDto);
     }
-
-    public static StoreItem? MapToModelOrNull(StoreItem? entity)
-    {
-        if (entity is null)
-        {
-            return null;
-        }
-
-        var model = new StoreItem(entity.Id, entity.Code, entity.UserId) {Data = entity.Data};
-
-        return model;
-    }
-    //
-    // public static StoreItem MapToEntity(StoreItem model)
-    // {
-    //     return new StoreItem {Id = model.Id, Code = model.Code, Data = model.Data, UserId = model.UserId};
-    // }
 }

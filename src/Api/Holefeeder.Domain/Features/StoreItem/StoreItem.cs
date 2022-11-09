@@ -3,7 +3,7 @@ using Holefeeder.Domain.SeedWork;
 
 namespace Holefeeder.Domain.Features.StoreItem;
 
-public record StoreItem : Entity, IAggregateRoot
+public sealed record StoreItem : Entity, IAggregateRoot
 {
     private readonly string _code = null!;
     private readonly Guid _id;
@@ -16,7 +16,7 @@ public record StoreItem : Entity, IAggregateRoot
         UserId = userId;
     }
 
-    public sealed override Guid Id
+    public override Guid Id
     {
         get => _id;
         init

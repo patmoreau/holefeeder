@@ -1,15 +1,14 @@
 using AutoBogus;
 
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Infrastructure.Entities;
 
-namespace Holefeeder.Tests.Common.Factories;
+namespace Holefeeder.Tests.Common.Builders.Categories;
 
-internal sealed class CategoryEntityFactory : AutoFaker<CategoryEntity>
+internal sealed class CategoryFactory : AutoFaker<Category>
 {
     private const decimal BUDGET_AMOUNT_MAX = 100m;
 
-    public CategoryEntityFactory()
+    public CategoryFactory()
     {
         RuleFor(x => x.Id, faker => faker.Random.Guid());
         RuleFor(x => x.Name, faker => faker.Random.String2(1, 100));

@@ -1,3 +1,4 @@
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Tests.Common.Factories;
 
@@ -34,7 +35,7 @@ internal class CashflowEntityBuilder : IBuilder<CashflowEntity>
         return this;
     }
 
-    public CashflowEntityBuilder ForCategory(CategoryEntity entity)
+    public CashflowEntityBuilder ForCategory(Category entity)
     {
         _entity = _entity with {CategoryId = entity.Id};
         return this;

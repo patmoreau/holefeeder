@@ -13,7 +13,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.TransactionEntityBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
@@ -22,11 +22,13 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 public class ScenarioGetAccount : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
 
     public ScenarioGetAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
         _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
         _holefeederDatabaseDriver.ResetStateAsync().Wait();
     }
 
@@ -91,7 +93,7 @@ public class ScenarioGetAccount : BaseScenario
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_budgetingDatabaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
@@ -126,7 +128,7 @@ public class ScenarioGetAccount : BaseScenario
         var category = await GivenACategory()
             .OfType(CategoryType.Gain)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_budgetingDatabaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)

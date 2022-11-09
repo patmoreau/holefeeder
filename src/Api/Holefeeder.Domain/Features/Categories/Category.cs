@@ -2,7 +2,7 @@ using Holefeeder.Domain.SeedWork;
 
 namespace Holefeeder.Domain.Features.Categories;
 
-public record Category : IAggregateRoot
+public sealed record Category : Entity, IAggregateRoot
 {
     private readonly Guid _id;
     private readonly string _name = string.Empty;
@@ -16,10 +16,10 @@ public record Category : IAggregateRoot
         UserId = userId;
     }
 
-    public Guid Id
+    public override Guid Id
     {
         get => _id;
-        private init
+        init
         {
             if (value.Equals(default))
             {
@@ -57,7 +57,7 @@ public record Category : IAggregateRoot
     public Guid UserId
     {
         get => _userId;
-        private init
+        init
         {
             if (value.Equals(default))
             {

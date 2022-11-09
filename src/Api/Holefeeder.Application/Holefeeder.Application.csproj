@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="2.1.0" />
     <PackageReference Include="Carter" Version="6.1.1" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.1.1" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.15.0" />
@@ -27,10 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain" />
   </ItemGroup>
 
 </Project>

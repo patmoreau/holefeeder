@@ -2,6 +2,7 @@
 
 using FluentValidation;
 
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
@@ -12,6 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -50,7 +52,7 @@ public class Transfer : ICarterModule
     internal class Handler : IRequestHandler<Request, Guid>
     {
         private readonly IAccountQueriesRepository _accountQueriesRepository;
-        private readonly ICategoriesRepository _categoriesRepository;
+        private readonly BudgetingContext _context;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IUserContext _userContext;
 
@@ -58,12 +60,12 @@ public class Transfer : ICarterModule
             IUserContext userContext,
             ITransactionRepository transactionRepository,
             IAccountQueriesRepository accountQueriesRepository,
-            ICategoriesRepository categoriesRepository)
+            BudgetingContext context)
         {
             _userContext = userContext;
             _transactionRepository = transactionRepository;
             _accountQueriesRepository = accountQueriesRepository;
-            _categoriesRepository = categoriesRepository;
+            _context = context;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
@@ -83,17 +85,19 @@ public class Transfer : ICarterModule
             }
 
             var transferTo =
-                await _categoriesRepository.FindByNameAsync(_userContext.UserId, "Transfer In", cancellationToken);
+                await _context.Categories.AsQueryable()
+                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer In", cancellationToken);
             var transferFrom =
-                await _categoriesRepository.FindByNameAsync(_userContext.UserId, "Transfer Out", cancellationToken);
+                await _context.Categories.AsQueryable()
+                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer Out", cancellationToken);
 
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, transferFrom!.Id, _userContext.UserId);
+                request.FromAccountId, transferFrom.Id, _userContext.UserId);
 
             await _transactionRepository.SaveAsync(transactionFrom, cancellationToken);
 
             var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.ToAccountId, transferTo!.Id, _userContext.UserId);
+                request.ToAccountId, transferTo.Id, _userContext.UserId);
 
             await _transactionRepository.SaveAsync(transactionTo, cancellationToken);
 

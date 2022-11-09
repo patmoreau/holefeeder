@@ -39,7 +39,8 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
             {
                 var connection = configuration.GetConnectionString("ObjectStoreConnectionString");
                 services.AddDbContext<StoreItemContext>(options => options.UseMySQL(connection));
-                // services.AddDbContextPool<StoreItemContext>(options => options.UseMySQL(connection));
+                var holefeederConnection = configuration.GetConnectionString("HolefeederConnectionString");
+                services.AddDbContext<BudgetingContext>(options => options.UseMySQL(holefeederConnection));
                 services
                     .AddOptions<ObjectStoreDatabaseSettings>()
                     .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));
@@ -52,7 +53,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
                 services.AddSingleton(sp =>
                     sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
-                services.AddScoped<HolefeederContext>();
+                services.AddScoped<BudgetingContext>();
                 services.AddScoped<ObjectStoreContext>();
 
                 services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
@@ -65,6 +66,11 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
     }
 
     public HolefeederDatabaseDriver CreateHolefeederDatabaseDriver()
+    {
+        return new(this);
+    }
+
+    public BudgetingDatabaseDriver CreateBudgetingDatabaseDriver()
     {
         return new(this);
     }

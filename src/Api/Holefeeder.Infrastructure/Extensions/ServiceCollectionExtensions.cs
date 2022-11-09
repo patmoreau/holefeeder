@@ -5,7 +5,6 @@ using Ardalis.SmartEnum.Dapper;
 using Dapper;
 
 using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData;
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Enumerations;
@@ -54,9 +53,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAccountRepository, AccountRepository>();
         services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
         services.AddTransient<ICashflowRepository, CashflowRepository>();
-        services.AddTransient<ICategoryRepository, CategoryRepository>();
-        services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
-        services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
         services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
         services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
         services.AddTransient<ITransactionRepository, TransactionRepository>();

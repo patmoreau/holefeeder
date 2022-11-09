@@ -18,7 +18,7 @@ using Xunit.Abstractions;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.CashflowEntityBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
@@ -26,6 +26,7 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 public class ScenarioModifyCashflow : BaseScenario
 {
     private readonly HolefeederDatabaseDriver _databaseDriver;
+    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
 
     public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
@@ -36,6 +37,7 @@ public class ScenarioModifyCashflow : BaseScenario
         }
 
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
     }
 
@@ -98,7 +100,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         var category = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(_budgetingDatabaseDriver);
 
         var cashflow = await GivenACashflowEntity()
             .ForAccount(account)

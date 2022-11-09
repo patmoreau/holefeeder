@@ -2,6 +2,7 @@ using System.Net;
 
 using FluentAssertions;
 
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
@@ -12,7 +13,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.TransactionBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
@@ -21,6 +22,7 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
 {
     private readonly HolefeederDatabaseDriver _databaseDriver;
+    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
 
     public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
         apiApplicationDriver, testOutputHelper)
@@ -31,6 +33,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
         }
 
         _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
         _databaseDriver.ResetStateAsync().Wait();
     }
 
@@ -89,7 +92,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
     public async Task ValidRequest()
     {
         AccountEntity account = null!;
-        CategoryEntity category = null!;
+        Category category = null!;
         Transaction entity = null!;
         var id = Guid.Empty;
 
@@ -98,7 +101,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
                 .SavedInDb(_databaseDriver))
             .Given(async () => category = await GivenACategory()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(_databaseDriver))
+                .SavedInDb(_budgetingDatabaseDriver))
             .Given(() => entity = ATransaction()
                 .ForAccount(account)
                 .ForCategory(category)

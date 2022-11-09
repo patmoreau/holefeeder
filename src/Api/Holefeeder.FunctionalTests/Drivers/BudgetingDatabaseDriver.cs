@@ -9,11 +9,11 @@ using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public sealed class ObjectStoreDatabaseDriver : DbContextDriver, IDisposable
+public sealed class BudgetingDatabaseDriver : DbContextDriver, IDisposable
 {
     private readonly IServiceScope _scope;
 
-    public ObjectStoreDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
+    public BudgetingDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
     {
         if (apiApplicationDriver == null)
         {
@@ -22,21 +22,21 @@ public sealed class ObjectStoreDatabaseDriver : DbContextDriver, IDisposable
         _scope = apiApplicationDriver.Server.Services
             .GetService<IServiceScopeFactory>()!.CreateScope();
 
-        var context = _scope.ServiceProvider.GetRequiredService<StoreItemContext>();
+        var context = _scope.ServiceProvider.GetRequiredService<BudgetingContext>();
 
         DbContext = context;
     }
 
-    protected override StoreItemContext DbContext { get; }
+    protected override BudgetingContext DbContext { get; }
 
     protected override async Task<Respawner> CreateStateAsync(DbConnection connection)
     {
         return await Respawner.CreateAsync(connection,
             new RespawnerOptions
             {
-                SchemasToInclude = new[] {"object_store_functional_tests"},
+                SchemasToInclude = new[] {"budgeting_functional_tests"},
                 DbAdapter = DbAdapter.MySql,
-                TablesToInclude = new Table[] {"store_items"},
+                TablesToInclude = new Table[] {"accounts", "cashflows", "categories", "transactions"},
                 TablesToIgnore = new Table[] {"schema_versions"}
             });
     }

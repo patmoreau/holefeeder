@@ -1,3 +1,4 @@
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Infrastructure.Entities;
 using Holefeeder.Tests.Common.Factories;
@@ -35,7 +36,7 @@ internal class TransactionBuilder : IBuilder<Transaction>
         return this;
     }
 
-    public TransactionBuilder ForCategory(CategoryEntity entity)
+    public TransactionBuilder ForCategory(Category entity)
     {
         _entity = _entity with {CategoryId = entity.Id};
         return this;

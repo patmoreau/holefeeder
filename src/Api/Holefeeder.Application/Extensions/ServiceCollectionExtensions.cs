@@ -24,10 +24,16 @@ public static class ServiceCollectionExtensions
     {
         services.AddEntityFrameworkMySql();
 
-        var connectionString = configuration.GetConnectionString("ObjectStoreConnectionString");
+        var storeItemConnectionString = configuration.GetConnectionString("ObjectStoreConnectionString");
         services.AddDbContext<StoreItemContext>(options =>
         {
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            options.UseMySql(storeItemConnectionString, ServerVersion.AutoDetect(storeItemConnectionString));
+        });
+
+        var holefeederConnectionString = configuration.GetConnectionString("HolefeederConnectionString");
+        services.AddDbContext<BudgetingContext>(options =>
+        {
+            options.UseMySql(holefeederConnectionString, ServerVersion.AutoDetect(holefeederConnectionString));
         });
 
         services.AddHttpContextAccessor();
