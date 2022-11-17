@@ -1,10 +1,13 @@
 namespace Holefeeder.Domain.SeedWork;
 
-#pragma warning disable CA1032
 public class DomainException<TContext> : DomainException
-#pragma warning restore CA1032
 {
-    public DomainException(string message) : base(message)
+    protected DomainException()
+    {
+        Context = typeof(TContext).Name;
+    }
+
+    protected DomainException(string message) : base(message)
     {
         Context = typeof(TContext).Name;
     }

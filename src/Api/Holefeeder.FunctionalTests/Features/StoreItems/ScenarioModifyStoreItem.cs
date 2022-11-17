@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -94,7 +95,7 @@ public class ScenarioModifyStoreItem : BaseScenario
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
     }
 
-    private async Task WhenUserModifyStoreItem(ModifyStoreItem.Request request)
+    private async Task WhenUserModifyStoreItem(Request request)
     {
         var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);

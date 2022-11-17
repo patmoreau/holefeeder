@@ -4,9 +4,9 @@ using AutoBogus;
 
 using FluentValidation.TestHelper;
 
-using Xunit;
+using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 
-using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using Xunit;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 

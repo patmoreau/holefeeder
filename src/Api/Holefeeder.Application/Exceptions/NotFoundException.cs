@@ -2,9 +2,7 @@ using Holefeeder.Domain.SeedWork;
 
 namespace Holefeeder.Application.Exceptions;
 
-#pragma warning disable CA1032
 public abstract class NotFoundException : Exception
-#pragma warning restore CA1032
 {
     protected NotFoundException(Guid id, string context) : base($"'{id}' not found")
     {
@@ -12,13 +10,38 @@ public abstract class NotFoundException : Exception
     }
 
     public string Context { get; }
+
+    protected NotFoundException()
+    {
+        Context = String.Empty;
+    }
+
+    protected NotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+        Context = String.Empty;
+    }
+
+    protected NotFoundException(string message) : base(message)
+    {
+        Context = String.Empty;
+    }
 }
 
-#pragma warning disable CA1032
 public class NotFoundException<TContext> : NotFoundException where TContext : IAggregateRoot
-#pragma warning restore CA1032
 {
     public NotFoundException(Guid id) : base(id, nameof(TContext))
+    {
+    }
+
+    public NotFoundException() : base()
+    {
+    }
+
+    public NotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public NotFoundException(string message) : base(message)
     {
     }
 }

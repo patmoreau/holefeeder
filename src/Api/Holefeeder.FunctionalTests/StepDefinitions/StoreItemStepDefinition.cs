@@ -1,9 +1,13 @@
 using System.Text.Json;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.StoreItems;
+
+using Request = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -19,7 +23,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
 
     private HttpClientDriver HttpClientDriver { get; }
 
-    internal StoreItemStepDefinition GetsCreated(CreateStoreItem.Request? request = null)
+    internal StoreItemStepDefinition GetsCreated(Request? request = null)
     {
         AddStep(() =>
         {
@@ -30,7 +34,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
         return this;
     }
 
-    internal StoreItemStepDefinition GetsModified(ModifyStoreItem.Request? request = null)
+    internal StoreItemStepDefinition GetsModified(Application.Features.StoreItems.Commands.ModifyStoreItem.Request? request = null)
     {
         AddStep(() =>
         {

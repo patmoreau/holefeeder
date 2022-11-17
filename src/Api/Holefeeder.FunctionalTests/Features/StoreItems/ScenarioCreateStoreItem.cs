@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -106,7 +107,7 @@ public class ScenarioCreateStoreItem : BaseScenario
         ThenShouldExpectStatusCode(HttpStatusCode.BadRequest);
     }
 
-    private async Task WhenUserCreateStoreItem(CreateStoreItem.Request request)
+    private async Task WhenUserCreateStoreItem(Request request)
     {
         var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);

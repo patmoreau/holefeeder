@@ -3,7 +3,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <AnalysisMode>All</AnalysisMode>
-    <NoWarn>CA1032</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

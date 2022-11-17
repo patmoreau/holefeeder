@@ -1,6 +1,8 @@
 using FluentAssertions;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Features;
@@ -10,6 +12,8 @@ using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
+
+using Request = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.Scenarios;
 
@@ -33,7 +37,7 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
     public async Task UserCreatesStoreItem()
     {
         Guid id = Guid.Empty;
-        CreateStoreItem.Request createRequest = null!;
+        Request createRequest = null!;
         StoreItemViewModel storeItem = null!;
 
         await Given(() => User.IsAuthorized())
@@ -53,7 +57,7 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
     public async Task UserModifiesStoreItem()
     {
         Guid id = Guid.Empty;
-        ModifyStoreItem.Request request = null!;
+        Application.Features.StoreItems.Commands.ModifyStoreItem.Request request = null!;
         StoreItemViewModel storeItem = null!;
 
         await Given(() => User.IsAuthorized())
