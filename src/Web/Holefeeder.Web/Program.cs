@@ -79,19 +79,19 @@ app.MapHealthChecks("/healthz",
     new HealthCheckOptions {Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse}
 );
 app.UseHttpLogging();
-app.UseEndpoints(config =>
-{
-    config.MapReverseProxy();
-    config.MapHealthChecksUI(config =>
-    {
-        config.UIPath = "/hc-ui";
-        config.ResourcesPath = "/hc-ui/resources";
-        config.ApiPath = "/hc-ui/api";
-        config.WebhookPath = "/hc-ui/webhooks";
-        config.UseRelativeApiPath = true;
-        config.UseRelativeResourcesPath = true;
-        config.UseRelativeWebhookPath = true;
-    });
-});
+// app.UseEndpoints(config =>
+// {
+//     config.MapReverseProxy();
+//     config.MapHealthChecksUI(config =>
+//     {
+//         config.UIPath = "/hc-ui";
+//         config.ResourcesPath = "/hc-ui/resources";
+//         config.ApiPath = "/hc-ui/api";
+//         config.WebhookPath = "/hc-ui/webhooks";
+//         config.UseRelativeApiPath = true;
+//         config.UseRelativeResourcesPath = true;
+//         config.UseRelativeWebhookPath = true;
+//     });
+// });
 
 app.Run();

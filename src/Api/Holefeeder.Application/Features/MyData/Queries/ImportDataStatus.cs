@@ -55,7 +55,7 @@ public class ImportDataStatus : ICarterModule
         {
             if (_memoryCache.TryGetValue(request.RequestId, out var status))
             {
-                return Task.FromResult((ImportDataStatusDto)status);
+                return Task.FromResult((ImportDataStatusDto)status!);
             }
 
             throw new ImportIdNotFoundException(request.RequestId);

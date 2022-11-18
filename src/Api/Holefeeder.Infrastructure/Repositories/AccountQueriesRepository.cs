@@ -19,7 +19,7 @@ public class AccountQueriesRepository : IAccountQueriesRepository
         _context = context;
     }
 
-    public Task<(int Total, IEnumerable<AccountViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
+    public async Task<(int Total, IEnumerable<AccountViewModel> Items)> FindAsync(Guid userId, QueryParams queryParams,
         CancellationToken cancellationToken)
     {
         if (queryParams is null)
@@ -27,7 +27,7 @@ public class AccountQueriesRepository : IAccountQueriesRepository
             throw new ArgumentNullException(nameof(queryParams));
         }
 
-        return FindInternalAsync(userId, queryParams);
+        return await FindInternalAsync(userId, queryParams);
     }
 
     public async Task<AccountViewModel?> FindByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)

@@ -31,7 +31,7 @@ public class HttpClientDriver
         LogUnexpectedErrors();
     }
 
-    public Task SendGetRequest(ApiResources apiResource, string? query = null)
+    public async Task SendGetRequest(ApiResources apiResource, string? query = null)
     {
         var baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
         var fullUri = baseUri;
@@ -42,18 +42,18 @@ public class HttpClientDriver
 
         using HttpRequestMessage request = new(HttpMethod.Get, fullUri);
 
-        return SendRequest(request);
+        await SendRequest(request);
     }
 
-    public Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
+    public async Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
         using HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
 
-        return SendRequest(request);
+        await SendRequest(request);
     }
 
-    public Task SendPostRequest(ApiResources apiResource, string? body = null)
+    public async Task SendPostRequest(ApiResources apiResource, string? body = null)
     {
         var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
 
@@ -63,7 +63,7 @@ public class HttpClientDriver
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
         }
 
-        return SendRequest(request);
+        await SendRequest(request);
     }
 
     public void ShouldHaveResponseWithStatus(HttpStatusCode httpStatus)

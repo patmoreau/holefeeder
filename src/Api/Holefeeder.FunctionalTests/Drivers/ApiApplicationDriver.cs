@@ -37,9 +37,9 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
         builder
             .ConfigureTestServices(services =>
             {
-                var connection = configuration.GetConnectionString("ObjectStoreConnectionString");
+                var connection = configuration.GetConnectionString("ObjectStoreConnectionString")!;
                 services.AddDbContext<StoreItemContext>(options => options.UseMySQL(connection));
-                var holefeederConnection = configuration.GetConnectionString("HolefeederConnectionString");
+                var holefeederConnection = configuration.GetConnectionString("HolefeederConnectionString")!;
                 services.AddDbContext<BudgetingContext>(options => options.UseMySQL(holefeederConnection));
                 services
                     .AddOptions<ObjectStoreDatabaseSettings>()
