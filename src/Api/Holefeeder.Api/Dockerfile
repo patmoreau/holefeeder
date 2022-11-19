@@ -11,6 +11,7 @@ WORKDIR /src
 # to take advantage of Docker's build cache, to speed up local container builds
 COPY DrifterApps.Holefeeder.sln ./
 COPY Directory.Build.props ./
+COPY nuget.config ./
 
 COPY src/Api/Holefeeder.Api/*.csproj src/Api/Holefeeder.Api/
 COPY src/Api/Holefeeder.Application/*.csproj src/Api/Holefeeder.Application/
