@@ -38,9 +38,9 @@ jobs:
           echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
 
       - name: Ensure .NET Installed
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.10
