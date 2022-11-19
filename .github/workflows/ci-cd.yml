@@ -129,18 +129,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Setup docker compose .env
+        run: |
+          printf "COMPOSE_DOCKER_CLI_BUILD=1
+          DOCKER_BUILDKIT=1" > .env
+
       - name: Api unit tests
         run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
 
       - name: Api functional tests
         run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
 
       - name: Tests cleanup
         run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
       - name: Upload Test Results
         if: always()
