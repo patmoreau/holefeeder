@@ -20,7 +20,7 @@ public static class HttpContextExtensions
         var filter = context.Request.Query[filterKey].ToArray();
 
         var result = createInstance(hasOffset ? offset : QueryParams.DEFAULT_OFFSET,
-            hasLimit ? limit : QueryParams.DEFAULT_LIMIT, sort, filter);
+            hasLimit ? limit : QueryParams.DEFAULT_LIMIT, sort!, filter!);
 
         return ValueTask.FromResult(result);
     }

@@ -11,11 +11,14 @@ public abstract class DatabaseDriver
 {
     protected abstract MySqlDbContext DbContext { get; }
 
-    protected abstract Checkpoint Checkpoint { get; }
+    private Respawner? Checkpoint { get; set; }
+
+    protected abstract Task<Respawner> CreateStateAsync(DbConnection connection);
 
     public async Task ResetStateAsync()
     {
-        await Checkpoint.Reset((DbConnection)DbContext.Connection);
+        Checkpoint ??= await CreateStateAsync((DbConnection)DbContext.Connection);
+        await Checkpoint.ResetAsync((DbConnection)DbContext.Connection);
     }
 
     public async Task SaveAsync<T>(T entity) where T : class => await DbContext.Connection.InsertAsync(entity);
