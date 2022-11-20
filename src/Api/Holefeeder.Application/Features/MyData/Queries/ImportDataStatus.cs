@@ -53,9 +53,9 @@ public class ImportDataStatus : ICarterModule
 
         public Task<ImportDataStatusDto> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (_memoryCache.TryGetValue(request.RequestId, out var status))
+            if (_memoryCache.TryGetValue(request.RequestId, out var status) && status is ImportDataStatusDto dto)
             {
-                return Task.FromResult((ImportDataStatusDto)status);
+                return Task.FromResult(dto);
             }
 
             throw new ImportIdNotFoundException(request.RequestId);
