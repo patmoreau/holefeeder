@@ -1,33 +1,54 @@
+using AutoBogus;
+
+using Bogus;
+
 using Holefeeder.Infrastructure.Entities;
-using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class TransactionEntityBuilder : IBuilder<TransactionEntity>
+internal class TransactionEntityBuilder : IBuilder<TransactionEntity>, ICollectionBuilder<TransactionEntity>
 {
-    private TransactionEntity _entity;
+    private const decimal AMOUNT_MAX = 100m;
+
+    private readonly Faker<TransactionEntity> _faker = new AutoFaker<TransactionEntity>()
+        .RuleFor(x => x.Date, faker => faker.Date.Past().Date)
+        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: Decimal.Zero, max: AMOUNT_MAX))
+        .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
+        .RuleFor(x => x.CashflowId, _ => null)
+        .RuleFor(x => x.CashflowDate, _ => null)
+        .RuleFor(x => x.Tags, faker => string.Join(',', faker.Random.WordsArray(0, 5)));
 
     public static TransactionEntityBuilder GivenATransaction() => new();
 
-    private TransactionEntityBuilder() => _entity = new TransactionEntityFactory().Generate();
-
     public TransactionEntityBuilder OfAmount(decimal amount)
     {
-        _entity = _entity with {Amount = amount};
+        _faker.RuleFor(f => f.Amount, amount);
         return this;
     }
 
     public TransactionEntityBuilder ForAccount(AccountEntity entity)
     {
-        _entity = _entity with {AccountId = entity.Id, UserId = entity.UserId};
+        _faker
+            .RuleFor(f => f.AccountId, entity.Id)
+            .RuleFor(f => f.UserId, entity.UserId);
         return this;
     }
 
     public TransactionEntityBuilder ForCategory(CategoryEntity entity)
     {
-        _entity = _entity with {CategoryId = entity.Id};
+        _faker.RuleFor(f => f.CategoryId, entity.Id);
         return this;
     }
 
-    public TransactionEntity Build() => _entity;
+    public TransactionEntity Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public TransactionEntity[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
 }
