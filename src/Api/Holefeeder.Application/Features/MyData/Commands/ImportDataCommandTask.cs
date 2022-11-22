@@ -56,7 +56,7 @@ public partial class ImportData
             }
             catch (Exception e)
             {
-                updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.Message});
+                updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.ToString()});
             }
         }
 

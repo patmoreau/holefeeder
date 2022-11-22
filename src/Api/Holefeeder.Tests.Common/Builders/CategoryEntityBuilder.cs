@@ -1,34 +1,51 @@
+using AutoBogus;
+
+using Bogus;
+
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
-using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class CategoryEntityBuilder : IBuilder<CategoryEntity>
+internal class CategoryEntityBuilder : IBuilder<CategoryEntity>, ICollectionBuilder<CategoryEntity>
 {
-    private CategoryEntity _entity;
+    private const decimal BUDGET_AMOUNT_MAX = 100m;
+
+    private readonly Faker<CategoryEntity> _faker = new AutoFaker<CategoryEntity>()
+        .RuleFor(x => x.Name, faker => faker.Lorem.Word())
+        .RuleFor(x => x.Type, faker => faker.PickRandom(CategoryType.List.ToArray()))
+        .RuleFor(x => x.Color, faker => faker.Internet.Color())
+        .RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount(max: BUDGET_AMOUNT_MAX));
 
     public static CategoryEntityBuilder GivenACategory() => new();
 
-    private CategoryEntityBuilder() => _entity = new CategoryEntityFactory().Generate();
-
     public CategoryEntityBuilder OfType(CategoryType type)
     {
-        _entity = _entity with {Type = type};
+        _faker.RuleFor(f => f.Type, type);
         return this;
     }
 
     public CategoryEntityBuilder WithName(string name)
     {
-        _entity = _entity with {Name = name};
+        _faker.RuleFor(f => f.Name, name);
         return this;
     }
 
     public CategoryEntityBuilder ForUser(Guid userId)
     {
-        _entity = _entity with {UserId = userId};
+        _faker.RuleFor(f => f.UserId, userId);
         return this;
     }
 
-    public CategoryEntity Build() => _entity;
+    public CategoryEntity Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public CategoryEntity[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
 }
