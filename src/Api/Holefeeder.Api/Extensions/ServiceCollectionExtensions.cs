@@ -95,10 +95,10 @@ internal static class ServiceCollectionExtensions
         services
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), new[] {"holefeeder", "api", "service"})
-            .AddMySql(configuration["ObjectStoreDatabaseSettings:ConnectionString"]!,
+            .AddMySql(configuration["ObjectStoreDatabaseSettings:ConnectionString"],
                 "object-store-db-check",
                 tags: new[] {"holefeeder", "api", "mysql"})
-            .AddMySql(configuration["HolefeederDatabaseSettings:ConnectionString"]!,
+            .AddMySql(configuration["HolefeederDatabaseSettings:ConnectionString"],
                 "budgeting-db-check",
                 tags: new[] {"holefeeder", "api", "mysql"});
 

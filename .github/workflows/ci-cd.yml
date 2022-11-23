@@ -45,7 +45,7 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.10
         with:
-          versionSpec: "5.x"
+          versionSpec: '5.x'
 
       - name: Determine Version
         id: gitversion
@@ -73,44 +73,45 @@ jobs:
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v2
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+    - uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
 
-      - name: Build Holefeeder.Api container
-        uses: docker/build-push-action@v2
-        with:
-          load: true
-          context: .
-          file: ./src/Api/Holefeeder.Api/Dockerfile
-          target: build
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: false
-          tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-          cache-to: |
-            type=gha,scope=api-build,mode=max
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
 
-      - name: Build Holefeeder.Web container
-        uses: docker/build-push-action@v2
-        with:
-          load: true
-          context: .
-          file: ./src/Web/Holefeeder.Web/Dockerfile
-          target: build
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: false
-          tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-          cache-to: |
-            type=gha,scope=ui-build,mode=max
+    - name: Build Holefeeder.Api container
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Api/Holefeeder.Api/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: holefeeder/holefeeder-api:${{ env.VERSION }}
+        cache-from: |
+          type=gha,scope=api-build
+        cache-to: |
+          type=gha,scope=api-build,mode=max
+
+    - name: Build Holefeeder.Web container
+      uses: docker/build-push-action@v2
+      with:
+        load: true
+        context: .
+        file: ./src/Web/Holefeeder.Web/Dockerfile
+        target: build
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: false
+        tags: holefeeder/holefeeder-web:${{ env.VERSION }}
+        cache-from: |
+          type=gha,scope=ui-build
+        cache-to: |
+          type=gha,scope=ui-build,mode=max
 
   tests:
     name: Tests
@@ -122,35 +123,36 @@ jobs:
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v2
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+    - uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
 
-      - name: Api unit tests
-        run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
+    - name: Api unit tests
+      run: |
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
 
-      - name: Api functional tests
-        run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+    - name: Api functional tests
+      run: |
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
 
-      - name: Tests cleanup
-        run: |
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
-          docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+    - name: Tests cleanup
+      run: |
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
+        docker-compose -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Unit Test Results
-          path: |
-            ./tests-results/*.junit.xml
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Unit Test Results
+        path: |
+          ./tests-results/*.junit.xml
 
   publish-docker-images:
     name: Publish Docker Images
@@ -160,132 +162,133 @@ jobs:
       github.event.sender.login != 'dependabot[bot]' &&
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v2
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+    - uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
 
-      - name: Login to GHCR
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to GHCR
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ env.DOCKER_REGISTRY }}
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Holefeeder.Api container
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./src/Api/Holefeeder.Api/Dockerfile
-          target: final
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-            type=gha,scope=api-final
-          cache-to: |
-            type=gha,scope=api-final,mode=max
+    - name: Build Holefeeder.Api container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Api/Holefeeder.Api/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
+        cache-from: |
+          type=gha,scope=api-build
+          type=gha,scope=api-final
+        cache-to: |
+          type=gha,scope=api-final,mode=max
 
-      - name: Build Holefeeder.Web container
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./src/Web/Holefeeder.Web/Dockerfile
-          target: final
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-            type=gha,scope=ui-final
-          cache-to: |
-            type=gha,scope=ui-final,mode=max
+    - name: Build Holefeeder.Web container
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./src/Web/Holefeeder.Web/Dockerfile
+        target: final
+        build-args: BUILD_VERSION=${{ env.VERSION }}
+        push: true
+        tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+        cache-from: |
+          type=gha,scope=ui-build
+          type=gha,scope=ui-final
+        cache-to: |
+          type=gha,scope=ui-final,mode=max
 
-      - name: Tag version
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              await github.git.deleteRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: "tags/${{ env.VERSION }}"
-              })
-            } catch (e) {
-              console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
-            }
-            await github.git.createRef({
+    - name: Tag version
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}          
+        script: |
+          try {
+            await github.git.deleteRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/${{ env.VERSION }}",
-              sha: context.sha
+              ref: "tags/${{ env.VERSION }}"
             })
+          } catch (e) {
+            console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
+          }
+          await github.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "refs/tags/${{ env.VERSION }}",
+            sha: context.sha
+          })
 
   deploy:
     name: Deploy to DigitalOcean
     needs: [set-version, tests, publish-docker-images]
     if: github.repository_owner == 'DrifterApps'
     runs-on: ubuntu-latest
-
+    
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
-      POD_KUBECONFIG: "${{ github.workspace }}/.kube/pod-kubeconfig"
-
+      POD_KUBECONFIG: '${{ github.workspace }}/.kube/pod-kubeconfig'
+    
     environment:
       name: production
 
     steps:
-      - uses: actions/checkout@v2
 
-      - uses: yokawasa/action-setup-kube-tools@v0.8.0
-        with:
-          kubectl: "1.22.2"
-          kustomize: "4.4.0"
-          skaffold: "1.32.0"
+    - uses: actions/checkout@v2
 
-      - name: Create kube config
-        run: |
-          mkdir -p '${{ github.workspace }}/.kube' \
-            && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
+    - uses: yokawasa/action-setup-kube-tools@v0.8.0
+      with:
+        kubectl: '1.22.2'
+        kustomize: '4.4.0'
+        skaffold: '1.32.0'
 
-      - name: Create .env.secrets file
-        run: |
-          printf "EF_BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;GuidFormat=Binary16;
-          EF_OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;GuidFormat=Binary16;
-          BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
-          OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
-          MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_USER=${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+    - name: Create kube config
+      run: |
+        mkdir -p '${{ github.workspace }}/.kube' \
+          && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
 
-      - name: Set image tags
-        run: |
-          cd $GITHUB_WORKSPACE/kubernetes/prd
-          kustomize edit set image holefeeder/holefeeder-api=${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+    - name: Create .env.secrets file
+      run: |
+        printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
+        OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
+        MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_USER=${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+        AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
 
-      - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
+    - name: Set image tags
+      run: |
+        cd $GITHUB_WORKSPACE/kubernetes/prd
+        kustomize edit set image holefeeder/holefeeder-api=${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
+        kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+
+    - name: Deploy to DigitalOcean Kubernetes
+      run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
 
   event_file:
     name: "Event File"
     runs-on: ubuntu-latest
     steps:
-      - name: Upload
-        uses: actions/upload-artifact@v2
-        with:
-          name: Event File
-          path: ${{ github.event_path }}
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: Event File
+        path: ${{ github.event_path }}
