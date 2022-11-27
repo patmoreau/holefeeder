@@ -3,8 +3,6 @@ using System.Data.Common;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.SeedWork;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Respawn;
 using Respawn.Graph;
 
@@ -12,20 +10,12 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public class HolefeederDatabaseDriver : DatabaseDriver
 {
-    public HolefeederDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
+    protected override MySqlDbContext DbContext { get; }
+
+    public HolefeederDatabaseDriver(HolefeederContext context)
     {
-        if (apiApplicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
-        }
-
-        var settings = apiApplicationDriver.Services.GetRequiredService<HolefeederDatabaseSettings>();
-        var context = new HolefeederContext(settings);
-
         DbContext = context;
     }
-
-    protected override MySqlDbContext DbContext { get; }
 
     protected override async Task<Respawner> CreateStateAsync(DbConnection connection)
     {

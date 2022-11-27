@@ -58,7 +58,7 @@ public partial class ImportData
 #pragma warning disable CA1031
             catch (Exception e)
             {
-                updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.Message});
+                updateProgress(_importDataStatus with {Status = CommandStatus.Error, Message = e.ToString()});
             }
 #pragma warning restore CA1031
         }

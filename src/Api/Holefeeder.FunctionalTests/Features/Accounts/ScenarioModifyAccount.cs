@@ -23,7 +23,7 @@ public class ScenarioModifyAccount : BaseScenario
     public ScenarioModifyAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _databaseDriver = HolefeederDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

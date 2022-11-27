@@ -67,8 +67,7 @@ public partial class ImportData : ICarterModule
         }
     }
 
-    internal class Handler
-        : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
+    internal class Handler : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
     {
         public Handler(
             IUserContext userContext,

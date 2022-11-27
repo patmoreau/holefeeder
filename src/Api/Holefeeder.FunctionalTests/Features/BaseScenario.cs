@@ -11,6 +11,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -18,7 +19,7 @@ using Xunit.Abstractions;
 namespace Holefeeder.FunctionalTests.Features;
 
 [Collection("Api collection")]
-public abstract class BaseScenario
+public abstract class BaseScenario : IDisposable
 {
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
@@ -27,11 +28,33 @@ public abstract class BaseScenario
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
+        Scope = apiApplicationDriver.Services.CreateScope();
+
         HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver(testOutputHelper);
 
         StoreItem = new StoreItemStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);
         User = new UserStepDefinition(HttpClientDriver);
+    }
+
+    protected IServiceScope Scope { get; }
+
+    private HolefeederDatabaseDriver? _holefeederDatabaseDriver = null;
+    protected HolefeederDatabaseDriver HolefeederDatabaseDriver
+    {
+        get => _holefeederDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<HolefeederDatabaseDriver>();
+    }
+
+    private BudgetingDatabaseDriver? _budgetingDatabaseDriver = null;
+    protected BudgetingDatabaseDriver BudgetingDatabaseDriver
+    {
+        get => _budgetingDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
+    }
+
+    private ObjectStoreDatabaseDriver? _objectStoreDatabaseDriver = null;
+    protected ObjectStoreDatabaseDriver ObjectStoreDatabaseDriver
+    {
+        get => _objectStoreDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseDriver>();
     }
 
     protected HttpClientDriver HttpClientDriver { get; }
@@ -158,5 +181,11 @@ public abstract class BaseScenario
         }
 
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
+    }
+
+    public void Dispose()
+    {
+        Scope.Dispose();
+        GC.SuppressFinalize(Scope);
     }
 }

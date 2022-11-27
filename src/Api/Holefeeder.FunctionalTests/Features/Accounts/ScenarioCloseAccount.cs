@@ -23,7 +23,7 @@ public class ScenarioCloseAccount : BaseScenario
     public ScenarioCloseAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _databaseDriver = HolefeederDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

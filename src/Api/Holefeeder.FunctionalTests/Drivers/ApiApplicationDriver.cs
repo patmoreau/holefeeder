@@ -19,10 +19,8 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 {
-    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper)
-    {
-        return new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
-    }
+    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
+        new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -38,9 +36,11 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
             .ConfigureTestServices(services =>
             {
                 var connection = configuration.GetConnectionString("ObjectStoreConnectionString");
-                services.AddDbContext<StoreItemContext>(options => options.UseMySQL(connection));
+                services.AddDbContext<StoreItemContext>(options =>
+                    options.UseMySql(ServerVersion.AutoDetect(connection)));
                 var holefeederConnection = configuration.GetConnectionString("HolefeederConnectionString");
-                services.AddDbContext<BudgetingContext>(options => options.UseMySQL(holefeederConnection));
+                services.AddDbContext<BudgetingContext>(options =>
+                    options.UseMySql(ServerVersion.AutoDetect(holefeederConnection)));
                 services
                     .AddOptions<ObjectStoreDatabaseSettings>()
                     .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));
@@ -53,8 +53,10 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
                 services.AddSingleton(sp =>
                     sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
 
-                services.AddScoped<BudgetingContext>();
-                services.AddScoped<ObjectStoreContext>();
+                services.AddScoped<HolefeederContext>();
+                services.AddScoped<HolefeederDatabaseDriver>();
+                services.AddScoped<BudgetingDatabaseDriver>();
+                services.AddScoped<ObjectStoreDatabaseDriver>();
 
                 services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
                 services.AddAuthentication(MockAuthenticationHandler.AUTHENTICATION_SCHEME)
@@ -63,20 +65,5 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
             });
-    }
-
-    public HolefeederDatabaseDriver CreateHolefeederDatabaseDriver()
-    {
-        return new(this);
-    }
-
-    public BudgetingDatabaseDriver CreateBudgetingDatabaseDriver()
-    {
-        return new(this);
-    }
-
-    public ObjectStoreDatabaseDriver CreateObjectStoreDatabaseDriver()
-    {
-        return new(this);
     }
 }

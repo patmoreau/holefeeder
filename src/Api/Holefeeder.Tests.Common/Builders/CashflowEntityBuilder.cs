@@ -1,49 +1,62 @@
+using AutoBogus;
+
+using Bogus;
+
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
-using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.Tests.Common.Builders;
 
-internal class CashflowEntityBuilder : IBuilder<CashflowEntity>
+internal class CashflowEntityBuilder : IBuilder<CashflowEntity>, ICollectionBuilder<CashflowEntity>
 {
-    private CashflowEntity _entity;
+    private const decimal AMOUNT_MAX = 100m;
 
-    private CashflowEntityBuilder()
-    {
-        _entity = new CashflowEntityFactory().Generate();
-    }
+    private readonly Faker<CashflowEntity> _faker = new AutoFaker<CashflowEntity>()
+        .RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date)
+        .RuleFor(x => x.IntervalType, faker => faker.PickRandom(DateIntervalType.List.ToArray()))
+        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: decimal.Zero, max: AMOUNT_MAX))
+        .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
+        .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0))
+        .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
+        .RuleFor(x => x.Tags, faker => string.Join(',', faker.Random.WordsArray(0, 5)));
 
-    public CashflowEntity Build()
-    {
-        return _entity;
-    }
-
-    public static CashflowEntityBuilder GivenACashflowEntity()
-    {
-        return new();
-    }
+    public static CashflowEntityBuilder GivenACashflow() => new();
 
     public CashflowEntityBuilder OfAmount(decimal amount)
     {
-        _entity = _entity with {Amount = amount};
+        _faker.RuleFor(f => f.Amount, amount);
         return this;
     }
 
     public CashflowEntityBuilder ForAccount(AccountEntity entity)
     {
-        _entity = _entity with {AccountId = entity.Id, UserId = entity.UserId};
+        _faker.RuleFor(f => f.AccountId, entity.Id)
+            .RuleFor(f => f.UserId, entity.UserId);
         return this;
     }
 
     public CashflowEntityBuilder ForCategory(Category entity)
     {
-        _entity = _entity with {CategoryId = entity.Id};
+        _faker.RuleFor(f => f.CategoryId, entity.Id);
         return this;
     }
 
     public CashflowEntityBuilder ForUser(Guid userId)
     {
-        _entity = _entity with {UserId = userId};
+        _faker.RuleFor(f => f.UserId, userId);
         return this;
+    }
+
+    public CashflowEntity Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public CashflowEntity[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
     }
 }

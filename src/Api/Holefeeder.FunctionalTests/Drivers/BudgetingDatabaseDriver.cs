@@ -2,28 +2,15 @@ using System.Data.Common;
 
 using Holefeeder.Application.Context;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Respawn;
 using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public sealed class BudgetingDatabaseDriver : DbContextDriver, IDisposable
+public sealed class BudgetingDatabaseDriver : DbContextDriver
 {
-    private readonly IServiceScope _scope;
-
-    public BudgetingDatabaseDriver(ApiApplicationDriver apiApplicationDriver)
+    public BudgetingDatabaseDriver(BudgetingContext context)
     {
-        if (apiApplicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
-        }
-        _scope = apiApplicationDriver.Server.Services
-            .GetService<IServiceScopeFactory>()!.CreateScope();
-
-        var context = _scope.ServiceProvider.GetRequiredService<BudgetingContext>();
-
         DbContext = context;
     }
 
@@ -39,11 +26,5 @@ public sealed class BudgetingDatabaseDriver : DbContextDriver, IDisposable
                 TablesToInclude = new Table[] {"accounts", "cashflows", "categories", "transactions"},
                 TablesToIgnore = new Table[] {"schema_versions"}
             });
-    }
-
-    public void Dispose()
-    {
-        DbContext.Dispose();
-        _scope.Dispose();
     }
 }

@@ -36,15 +36,15 @@ public class ScenarioModifyCashflow : BaseScenario
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
+        _databaseDriver = HolefeederDatabaseDriver;
+        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenACashflowEntity()
+        var entity = GivenACashflow()
             .OfAmount(Decimal.MinusOne)
             .Build();
 
@@ -58,7 +58,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var entity = GivenACashflowEntity().Build();
+        var entity = GivenACashflow().Build();
 
         GivenUserIsAuthorized();
 
@@ -70,7 +70,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenACashflowEntity().Build();
+        var entity = GivenACashflow().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -82,7 +82,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenACashflowEntity().Build();
+        var entity = GivenACashflow().Build();
 
         GivenUserIsUnauthorized();
 
@@ -102,7 +102,7 @@ public class ScenarioModifyCashflow : BaseScenario
             .ForUser(AuthorizedUserId)
             .SavedInDb(_budgetingDatabaseDriver);
 
-        var cashflow = await GivenACashflowEntity()
+        var cashflow = await GivenACashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)

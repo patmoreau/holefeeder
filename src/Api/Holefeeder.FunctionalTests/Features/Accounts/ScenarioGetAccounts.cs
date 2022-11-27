@@ -22,7 +22,7 @@ public class ScenarioGetAccounts : BaseScenario
     public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _holefeederDatabaseDriver = HolefeederDatabaseDriver;
         _holefeederDatabaseDriver.ResetStateAsync().Wait();
     }
 

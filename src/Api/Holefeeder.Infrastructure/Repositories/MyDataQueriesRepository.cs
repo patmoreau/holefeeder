@@ -28,39 +28,39 @@ internal class MyDataQueriesRepository : IMyDataQueriesRepository
         return schema.Select(AccountMapper.MapToMyDataAccountDto);
     }
 
-    // public async Task<IEnumerable<MyDataCategoryDto>> ExportCategoriesAsync(Guid userId,
-    //     CancellationToken cancellationToken = default)
-    // {
-    //     var connection = _context.Connection;
-    //
-    //     var schema = await connection
-    //         .FindAsync<CategoryEntity>(new {UserId = userId})
-    //         .ConfigureAwait(false);
-    //
-    //     return schema.Select(_categoryMapper.MapToMyDataCategoryDto);
-    // }
-    //
-    // public async Task<IEnumerable<MyDataCashflowDto>> ExportCashflowsAsync(Guid userId,
-    //     CancellationToken cancellationToken = default)
-    // {
-    //     var connection = _context.Connection;
-    //
-    //     var schema = await connection
-    //         .FindAsync<CashflowEntity>(new {UserId = userId})
-    //         .ConfigureAwait(false);
-    //
-    //     return schema.Select(_cashflowMapper.MapToMyDataCashflowDto);
-    // }
-    //
-    // public async Task<IEnumerable<MyDataTransactionDto>> ExportTransactionsAsync(Guid userId,
-    //     CancellationToken cancellationToken = default)
-    // {
-    //     var connection = _context.Connection;
-    //
-    //     var schema = await connection
-    //         .FindAsync<TransactionEntity>(new {UserId = userId})
-    //         .ConfigureAwait(false);
-    //
-    //     return schema.Select(_transactionMapper.MapToMyDataTransactionDto);
-    // }
+    public async Task<IEnumerable<MyDataCategoryDto>> ExportCategoriesAsync(Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var connection = _context.Connection;
+
+        var schema = await connection
+            .FindAsync<CategoryEntity>(new {UserId = userId})
+            .ConfigureAwait(false);
+
+        return schema.Select(CategoryMapper.MapToMyDataCategoryDto);
+    }
+
+    public async Task<IEnumerable<MyDataCashflowDto>> ExportCashflowsAsync(Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var connection = _context.Connection;
+
+        var schema = await connection
+            .FindAsync<CashflowEntity>(new {UserId = userId})
+            .ConfigureAwait(false);
+
+        return schema.Select(CashflowMapper.MapToMyDataCashflowDto);
+    }
+
+    public async Task<IEnumerable<MyDataTransactionDto>> ExportTransactionsAsync(Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var connection = _context.Connection;
+
+        var schema = await connection
+            .FindAsync<TransactionEntity>(new {UserId = userId})
+            .ConfigureAwait(false);
+
+        return schema.Select(TransactionMapper.MapToMyDataTransactionDto);
+    }
 }

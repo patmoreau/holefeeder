@@ -3,6 +3,8 @@ kind: Config
 metadata:
   name: holefeeder
 build:
+  local:
+    useBuildkit: true # We use BuildKit
   tagPolicy:
     envTemplate:
       template: "{{if .VERSION}}{{.VERSION}}{{else}}99.99.99{{end}}"
@@ -11,20 +13,24 @@ build:
       context: .
       docker:
         dockerfile: src/Web/Holefeeder.Web/Dockerfile
-        target: final
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
     - image: holefeeder/holefeeder-api
       context: .
       docker:
         dockerfile: src/Api/Holefeeder.Api/Dockerfile
-        target: final
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
 profiles:
   - name: dev
     activation:
       - kubeContext: k3d-dev
+    deploy:
+      kustomize:
+        paths: ["kubernetes/dev"]
+  - name: dev-k3d
+    activation:
+      - kubeContext: k3d-*
     deploy:
       kustomize:
         paths: ["kubernetes/dev"]

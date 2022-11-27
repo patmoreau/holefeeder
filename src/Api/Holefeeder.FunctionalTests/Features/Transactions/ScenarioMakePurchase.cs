@@ -32,8 +32,8 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
+        _databaseDriver = HolefeederDatabaseDriver;
+        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

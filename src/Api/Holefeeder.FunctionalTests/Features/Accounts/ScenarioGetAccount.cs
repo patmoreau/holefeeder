@@ -27,8 +27,8 @@ public class ScenarioGetAccount : BaseScenario
     public ScenarioGetAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _budgetingDatabaseDriver = apiApplicationDriver.CreateBudgetingDatabaseDriver();
+        _holefeederDatabaseDriver = HolefeederDatabaseDriver;
+        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
         _holefeederDatabaseDriver.ResetStateAsync().Wait();
     }
 

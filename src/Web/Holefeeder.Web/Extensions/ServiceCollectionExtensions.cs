@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
                     {
                         {
                             "api-cluster-destination",
-                            new DestinationConfig {Address = builderConfiguration.GetValue<string>("Api:Url")}
+                            new DestinationConfig {Address = builderConfiguration.GetValue<string>("Api:Url")!}
                         }
                     },
                 HealthCheck = new HealthCheckConfig

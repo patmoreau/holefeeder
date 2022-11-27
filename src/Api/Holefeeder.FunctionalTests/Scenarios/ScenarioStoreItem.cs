@@ -29,7 +29,7 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
+        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
         _objectStoreDatabaseDriver.ResetStateAsync().Wait();
     }
 

@@ -7,21 +7,28 @@ namespace Holefeeder.Application.Behaviors;
 internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IValidator<TRequest> _validator;
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationBehavior(IValidator<TRequest> validator)
+    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
-        _validator = validator;
+        _validators = validators;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var result = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!result.IsValid)
+        if (!_validators.Any())
         {
-            throw new ValidationException(result.Errors);
+            return await next();
+        }
+
+        var context = new ValidationContext<TRequest>(request);
+        var validationResults =
+            await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+        var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
+        if (failures.Count != 0)
+        {
+            throw new ValidationException(failures);
         }
 
         return await next();

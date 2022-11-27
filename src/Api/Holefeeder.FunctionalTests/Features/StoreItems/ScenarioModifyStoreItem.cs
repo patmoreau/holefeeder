@@ -23,7 +23,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
+        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
         _objectStoreDatabaseDriver.ResetStateAsync().Wait();
     }
 
