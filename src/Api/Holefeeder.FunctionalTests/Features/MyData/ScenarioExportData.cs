@@ -119,7 +119,9 @@ public class ScenarioExportData : BaseScenario
 
         void AssertCategories(ExportDataDto exported, IEnumerable<Category> expected)
         {
-            exported.Categories.Should().BeEquivalentTo(expected, options => options.Excluding(info => info.UserId));
+            exported.Categories.Should().BeEquivalentTo(expected, options =>
+                options.Excluding(info => info.UserId)
+                    .Excluding(info => info.DomainEvents));
         }
 
         void AssertTransactions(ExportDataDto exported, IEnumerable<TransactionEntity> expected)

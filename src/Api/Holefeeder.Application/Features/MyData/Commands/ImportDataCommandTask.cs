@@ -14,7 +14,7 @@ namespace Holefeeder.Application.Features.MyData.Commands;
 
 public partial class ImportData
 {
-    internal class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
+    public class BackgroundTask : IBackgroundTask<Request, ImportDataStatusDto>
     {
         private readonly IAccountRepository _accountsRepository;
 

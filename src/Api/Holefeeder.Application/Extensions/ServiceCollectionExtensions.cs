@@ -22,8 +22,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddEntityFrameworkMySql();
-
         var storeItemConnectionString = configuration.GetConnectionString("ObjectStoreConnectionString");
         services.AddDbContext<StoreItemContext>(options =>
         {

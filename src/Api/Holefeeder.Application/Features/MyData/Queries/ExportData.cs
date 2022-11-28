@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Holefeeder.Application.Features.MyData.Queries;
 
-internal sealed class ExportData : ICarterModule
+public sealed class ExportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -31,7 +31,7 @@ internal sealed class ExportData : ICarterModule
             .RequireAuthorization();
     }
 
-    internal record Request : IRequest<ExportDataDto>;
+    public record Request : IRequest<ExportDataDto>;
 
     public class Handler : IRequestHandler<Request, ExportDataDto>
     {

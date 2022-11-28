@@ -37,7 +37,7 @@ public partial class ImportData : ICarterModule
             .RequireAuthorization();
     }
 
-    internal record Request : IRequest<Guid>
+    public record Request : IRequest<Guid>
     {
         [Required] public bool UpdateExisting { get; init; }
 
@@ -52,7 +52,7 @@ public partial class ImportData : ICarterModule
         }
     }
 
-    internal class Validator : AbstractValidator<Request>
+    public class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -67,7 +67,7 @@ public partial class ImportData : ICarterModule
         }
     }
 
-    internal class Handler : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
+    public class Handler : BackgroundRequestHandler<Request, BackgroundTask, ImportDataStatusDto>
     {
         public Handler(
             IUserContext userContext,
