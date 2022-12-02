@@ -1,12 +1,6 @@
-﻿using Carter;
-
-using FluentValidation;
-
-using Holefeeder.Application.Features.Accounts.Exceptions;
+﻿using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

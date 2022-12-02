@@ -1,8 +1,4 @@
-﻿using Carter;
-
-using Holefeeder.Application.Models;
-
-using MediatR;
+﻿using Holefeeder.Application.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

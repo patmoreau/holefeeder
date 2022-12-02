@@ -1,10 +1,9 @@
-﻿using System.Collections.Immutable;
-
-using Holefeeder.Domain.SeedWork;
+﻿using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Transaction : IAggregateRoot
+public record Transaction : Entity, IAggregateRoot
 {
     private readonly Guid _accountId;
     private readonly decimal _amount;
@@ -23,7 +22,7 @@ public record Transaction : IAggregateRoot
         UserId = userId;
     }
 
-    public Guid Id
+    public sealed override Guid Id
     {
         get => _id;
         init
@@ -81,6 +80,8 @@ public record Transaction : IAggregateRoot
         }
     }
 
+    public Account? Account { get; init; }
+
     public Guid CategoryId
     {
         get => _categoryId;
@@ -94,6 +95,8 @@ public record Transaction : IAggregateRoot
             _categoryId = value;
         }
     }
+
+    public Category? Category { get; init; }
 
     public Guid? CashflowId { get; private init; }
 

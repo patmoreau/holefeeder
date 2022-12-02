@@ -1,11 +1,8 @@
-﻿using System.Collections.Immutable;
-
-using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.SeedWork;
+﻿using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Cashflow : IAggregateRoot
+public record Cashflow : Entity, IAggregateRoot
 {
     private readonly Guid _accountId;
     private readonly decimal _amount;
@@ -16,7 +13,7 @@ public record Cashflow : IAggregateRoot
     private readonly int _recurrence;
     private readonly Guid _userId;
 
-    public Guid Id
+    public sealed override Guid Id
     {
         get => _id;
         init

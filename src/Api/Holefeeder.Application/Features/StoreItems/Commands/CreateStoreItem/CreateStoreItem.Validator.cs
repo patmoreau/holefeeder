@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 
 internal class Validator : AbstractValidator<Request>

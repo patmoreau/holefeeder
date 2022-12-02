@@ -3,8 +3,6 @@ using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.StoreItem;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;

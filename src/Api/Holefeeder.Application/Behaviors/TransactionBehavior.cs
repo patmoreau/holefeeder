@@ -2,8 +2,6 @@
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.SeedWork;
 
-using MediatR;
-
 namespace Holefeeder.Application.Behaviors;
 
 internal class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>

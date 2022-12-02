@@ -1,5 +1,3 @@
-using Holefeeder.Domain.SeedWork;
-
 namespace Holefeeder.Domain.Features.Categories;
 
 public sealed record Category : Entity, IAggregateRoot

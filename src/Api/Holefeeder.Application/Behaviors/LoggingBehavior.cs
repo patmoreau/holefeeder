@@ -1,7 +1,5 @@
 ﻿using Holefeeder.Application.Extensions;
 
-using MediatR;
-
 using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Behaviors;

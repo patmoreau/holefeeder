@@ -16,7 +16,7 @@ using NSubstitute;
 
 using Xunit;
 
-using static Holefeeder.Application.Features.Accounts.Queries.GetAccount;
+using static Holefeeder.Application.Features.Accounts.Queries.GetAccount.GetAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
@@ -41,38 +41,5 @@ public class GetAccountTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdNotFound_ThenThrowException()
-    {
-        // arrange
-        var request = _faker.Generate();
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        Func<Task> action = () => handler.Handle(request, default);
-
-        // assert
-        await action.Should().ThrowAsync<AccountNotFoundException>();
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-
-        _repositoryMock.FindByIdAsync(Arg.Is(_userContextMock.UserId), Arg.Is(request.Id), Arg.Any<CancellationToken>())
-            .Returns(_dummy);
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().BeEquivalentTo(_dummy);
     }
 }

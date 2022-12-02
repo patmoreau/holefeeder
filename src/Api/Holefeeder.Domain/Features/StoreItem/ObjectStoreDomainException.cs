@@ -1,6 +1,4 @@
-﻿using Holefeeder.Domain.SeedWork;
-
-namespace Holefeeder.Application.Domain.StoreItem;
+﻿namespace Holefeeder.Application.Domain.StoreItem;
 
 #pragma warning disable CA1032
 public class ObjectStoreDomainException : DomainException<Holefeeder.Domain.Features.StoreItem.StoreItem>

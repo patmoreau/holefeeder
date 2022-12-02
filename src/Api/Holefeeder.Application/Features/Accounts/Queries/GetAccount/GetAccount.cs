@@ -1,17 +1,13 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
-namespace Holefeeder.Application.Features.Accounts.Queries;
+namespace Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 
 public class GetAccount : ICarterModule
 {
@@ -43,24 +39,39 @@ public class GetAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, AccountViewModel>
     {
-        private readonly IAccountQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<AccountViewModel> Handle(Request query, CancellationToken cancellationToken)
         {
-            var result = await _repository.FindByIdAsync(_userContext.UserId, query.Id, cancellationToken);
-            if (result is null)
+            var account = await _context.Accounts.AsQueryable()
+                .Include(e => e.Transactions).ThenInclude(e => e.Category)
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId,
+                    cancellationToken: cancellationToken);
+            if (account is null)
             {
                 throw new AccountNotFoundException(query.Id);
             }
 
-            return result;
+            return new AccountViewModel(
+                account.Id,
+                account.Type,
+                account.Name,
+                account.OpenBalance,
+                account.OpenDate,
+                account.Transactions.Count,
+                account.CalculateBalance(),
+                account.CalculateLastTransactionDate(),
+                account.Description,
+                account.Favorite,
+                account.Inactive
+            );
         }
     }
 }

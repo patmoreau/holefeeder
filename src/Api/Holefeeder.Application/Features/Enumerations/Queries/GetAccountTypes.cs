@@ -1,10 +1,4 @@
-using Carter;
-
-using FluentValidation;
-
 using Holefeeder.Domain.Features.Accounts;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

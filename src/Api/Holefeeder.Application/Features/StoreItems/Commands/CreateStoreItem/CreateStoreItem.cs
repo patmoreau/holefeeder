@@ -1,8 +1,4 @@
-﻿using Carter;
-
-using Holefeeder.Application.Features.StoreItems.Queries;
-
-using MediatR;
+﻿using Holefeeder.Application.Features.StoreItems.Queries;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

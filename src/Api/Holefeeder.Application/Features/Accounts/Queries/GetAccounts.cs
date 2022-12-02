@@ -1,11 +1,8 @@
 ﻿using System.Reflection;
 
-using Carter;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -51,10 +48,12 @@ public class GetAccounts : ICarterModule
     {
         private readonly IAccountQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context, IAccountQueriesRepository repository)
         {
             _userContext = userContext;
+            _context = context;
             _repository = repository;
         }
 

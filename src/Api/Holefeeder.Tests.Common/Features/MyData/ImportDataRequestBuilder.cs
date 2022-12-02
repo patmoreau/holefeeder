@@ -2,18 +2,16 @@ using AutoBogus;
 
 using Bogus;
 
+using Holefeeder.Application.Features.MyData.Commands.ImportData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Tests.Common.Builders;
-
-using static Holefeeder.Application.Features.MyData.Commands.ImportData;
-using static Holefeeder.Application.Features.MyData.Commands.ImportData.Request;
 
 namespace Holefeeder.Tests.Common.Features.MyData;
 
 internal class ImportDataRequestBuilder : IBuilder<Request>
 {
     private readonly Faker<Request> _faker = new AutoFaker<Request>();
-    private readonly Faker<Dto> _dtoFaker = new AutoFaker<Dto>();
+    private readonly Faker<Request.Dto> _dtoFaker = new AutoFaker<Request.Dto>();
 
     private ImportDataRequestBuilder()
     {

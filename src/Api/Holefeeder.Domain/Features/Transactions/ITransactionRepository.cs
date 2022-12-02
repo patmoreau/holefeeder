@@ -1,6 +1,4 @@
-﻿using Holefeeder.Domain.SeedWork;
-
-namespace Holefeeder.Domain.Features.Transactions;
+﻿namespace Holefeeder.Domain.Features.Transactions;
 
 public interface ITransactionRepository : IRepository
 {

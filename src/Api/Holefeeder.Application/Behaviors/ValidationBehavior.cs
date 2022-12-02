@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-
-using MediatR;
-
-namespace Holefeeder.Application.Behaviors;
+﻿namespace Holefeeder.Application.Behaviors;
 
 internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

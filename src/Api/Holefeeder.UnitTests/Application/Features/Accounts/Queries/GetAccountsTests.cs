@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using AutoBogus;
 
@@ -83,25 +82,5 @@ public class GetAccountsTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Limit);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-        var count = new Faker().Random.Number(100);
-        var models = _viewModelFactory.Generate(count);
-
-        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((count, models));
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().Be(new QueryResult<AccountViewModel>(count, models));
     }
 }

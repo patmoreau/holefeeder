@@ -2,8 +2,6 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Categories.Queries.GetCategories;

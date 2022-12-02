@@ -2,6 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 
 using Carter;
 
+using Hangfire;
+
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
@@ -16,8 +18,7 @@ builder.Services
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddApplication(builder.Configuration)
-    .AddInfrastructure(builder.Configuration)
-    .AddHostedService<LongRunningService>();
+    .AddInfrastructure(builder.Configuration);
 
 builder.Host.AddSerilog();
 
@@ -35,6 +36,9 @@ app.UseSerilog()
     .MapHealthChecks()
     .MapCore()
     .MapCarter();
+
+app.UseHangfireDashboard();
+app.MapHangfireDashboard();
 
 app.UseAuthentication()
     .UseAuthorization()

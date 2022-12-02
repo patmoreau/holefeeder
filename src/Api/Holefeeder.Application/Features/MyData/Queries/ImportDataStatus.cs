@@ -1,11 +1,5 @@
-﻿using Carter;
-
-using FluentValidation;
-
-using Holefeeder.Application.Features.MyData.Exceptions;
+﻿using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

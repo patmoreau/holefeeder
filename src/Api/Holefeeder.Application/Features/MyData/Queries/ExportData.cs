@@ -1,11 +1,7 @@
 ﻿using System.Collections.Immutable;
 
-using Carter;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

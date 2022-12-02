@@ -1,6 +1,8 @@
 using System.Data;
 
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -15,7 +17,10 @@ public class BudgetingContext : DbContext
     {
     }
 
+    public DbSet<Account> Accounts { get; set; } = default!;
+    public DbSet<Cashflow> Cashflows { get; set; } = default!;
     public DbSet<Category> Categories { get; set; } = default!;
+    public DbSet<Transaction> Transactions { get; set; } = default!;
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
@@ -23,19 +28,10 @@ public class BudgetingContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder?.Entity<Category>(entity =>
-        {
-            entity.ToTable("categories");
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Type).HasColumnName("type")
-                .HasConversion(p => p.Name, p => CategoryType.FromName(p, false));
-            entity.Property(e => e.Name).HasColumnName("name");
-            entity.Property(e => e.Color).HasColumnName("color");
-            entity.Property(e => e.Favorite).HasColumnName("favorite");
-            entity.Property(e => e.System).HasColumnName("system");
-            entity.Property(e => e.BudgetAmount).HasColumnName("budget_amount");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-        });
+        new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
+        new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
+        new CashflowEntityTypeConfiguration().Configure(modelBuilder.Entity<Cashflow>());
+        new TransactionEntityTypeConfiguration().Configure(modelBuilder.Entity<Transaction>());
     }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)

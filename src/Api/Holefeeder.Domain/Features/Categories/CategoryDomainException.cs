@@ -1,5 +1,3 @@
-using Holefeeder.Domain.SeedWork;
-
 using Microsoft.AspNetCore.Http;
 
 namespace Holefeeder.Domain.Features.Categories;

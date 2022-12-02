@@ -1,65 +1,93 @@
-using System.Collections.Immutable;
-
-using Holefeeder.Domain.SeedWork;
+using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-public record Account : IAggregateRoot
+public sealed record Account : Entity, IAggregateRoot
 {
+    private readonly Guid _id;
+    private readonly string _name = string.Empty;
+    private readonly DateTime _openDate;
+    private readonly Guid _userId;
+
     public Account(Guid id, AccountType type, string name, DateTime openDate, Guid userId)
     {
-        if (id.Equals(default))
-        {
-            throw new AccountDomainException($"{nameof(Id)} is required");
-        }
-
         Id = id;
-
         Type = type;
-
-        if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
-        {
-            throw new AccountDomainException($"{nameof(Name)} must be from 1 to 100 characters");
-        }
-
         Name = name;
-
-        if (openDate.Equals(default))
-        {
-            throw new AccountDomainException($"{nameof(OpenDate)} is required");
-        }
-
         OpenDate = openDate;
-
-        if (userId.Equals(default))
-        {
-            throw new AccountDomainException($"{nameof(UserId)} is required");
-        }
-
         UserId = userId;
 
         Cashflows = ImmutableList<Guid>.Empty;
     }
 
-    public Guid Id { get; }
+    public override Guid Id
+    {
+        get => _id;
+        init
+        {
+            if (value.Equals(default))
+            {
+                throw new AccountDomainException($"{nameof(Id)} is required");
+            }
+
+            _id = value;
+        }
+    }
 
     public AccountType Type { get; init; }
 
-    public string Name { get; init; }
+    public string Name
+    {
+        get => _name;
+        init
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length > 100)
+            {
+                throw new AccountDomainException($"{nameof(Name)} must be from 1 to 100 characters");
+            }
+
+            _name = value;
+        }
+    }
 
     public bool Favorite { get; init; }
 
     public decimal OpenBalance { get; init; }
 
-    public DateTime OpenDate { get; init; }
+    public DateTime OpenDate
+    {
+        get => _openDate;
+        init
+        {
+            if (value.Equals(default))
+            {
+                throw new AccountDomainException($"{nameof(OpenDate)} is required");
+            }
+
+            _openDate = value;
+        }
+    }
 
     public string Description { get; init; } = string.Empty;
 
     public bool Inactive { get; init; }
 
-    public Guid UserId { get; }
+    public Guid UserId
+    {
+        get => _userId;
+        init
+        {
+            if (value.Equals(default))
+            {
+                throw new AccountDomainException($"{nameof(UserId)} is required");
+            }
+
+            _userId = value;
+        }
+    }
 
     public IReadOnlyList<Guid> Cashflows { get; init; }
+    public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
     public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
         string description, Guid userId)
@@ -84,4 +112,9 @@ public record Account : IAggregateRoot
 
         return this with {Inactive = true};
     }
+
+    public decimal CalculateBalance() =>
+        OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
+
+    public DateTime CalculateLastTransactionDate() => Transactions.Any() ? Transactions.Max(t => t.Date) : OpenDate;
 }

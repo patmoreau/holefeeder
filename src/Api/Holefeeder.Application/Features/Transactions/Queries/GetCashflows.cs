@@ -1,12 +1,8 @@
 using System.Reflection;
 
-using Carter;
-
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -2,8 +2,6 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;

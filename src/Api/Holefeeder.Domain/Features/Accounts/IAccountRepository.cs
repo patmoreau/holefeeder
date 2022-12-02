@@ -1,5 +1,3 @@
-using Holefeeder.Domain.SeedWork;
-
 namespace Holefeeder.Domain.Features.Accounts;
 
 public interface IAccountRepository : IRepository
