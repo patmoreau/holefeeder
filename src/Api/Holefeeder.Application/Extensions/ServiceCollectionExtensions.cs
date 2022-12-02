@@ -5,14 +5,12 @@ using Hangfire.MemoryStorage;
 
 using Holefeeder.Application.Behaviors;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Application.SeedWork.BackgroundRequest;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace Holefeeder.Application.Extensions;
 
