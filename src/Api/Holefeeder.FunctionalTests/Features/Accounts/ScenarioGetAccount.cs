@@ -9,27 +9,22 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.TransactionEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioGetAccount : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
-    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioGetAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = HolefeederDatabaseDriver;
-        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
-        _holefeederDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -88,17 +83,17 @@ public class ScenarioGetAccount : BaseScenario
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_budgetingDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -111,7 +106,7 @@ public class ScenarioGetAccount : BaseScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(account, options => options.Excluding(x => x.UserId));
+                .BeEquivalentTo(account, options => options.ExcludingMissingMembers());
             result!.TransactionCount.Should().Be(1);
             result.Balance.Should().Be(account.OpenBalance - transaction.Amount);
         });
@@ -123,17 +118,17 @@ public class ScenarioGetAccount : BaseScenario
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Gain)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_budgetingDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -146,7 +141,7 @@ public class ScenarioGetAccount : BaseScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(account, options => options.Excluding(x => x.UserId));
+                .BeEquivalentTo(account, options => options.ExcludingMissingMembers());
             result!.TransactionCount.Should().Be(1);
             result.Balance.Should().Be(account.OpenBalance + transaction.Amount);
         });

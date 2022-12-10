@@ -3,40 +3,37 @@ using System.Text.Json;
 
 using FluentAssertions;
 
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioFavoriteAccount : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = HolefeederDatabaseDriver;
+        _databaseDriver = BudgetingDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenAnActiveAccount()
-            .WithId(Guid.Empty)
-            .Build();
+        var request = GivenAnInvalidFavoriteAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserSetsFavoriteAccount(entity);
+        await WhenUserSetsFavoriteAccount(request);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -44,11 +41,11 @@ public class ScenarioFavoriteAccount : BaseScenario
     [Fact]
     public async Task WhenAccountNotFound()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var request = GivenAFavoriteAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserSetsFavoriteAccount(entity);
+        await WhenUserSetsFavoriteAccount(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
@@ -56,11 +53,11 @@ public class ScenarioFavoriteAccount : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var request = GivenAFavoriteAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserSetsFavoriteAccount(entity);
+        await WhenUserSetsFavoriteAccount(request);
 
         ThenUserShouldBeAuthorizedToAccessEndpoint();
     }
@@ -68,7 +65,7 @@ public class ScenarioFavoriteAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = GivenAFavoriteAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -80,7 +77,7 @@ public class ScenarioFavoriteAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = GivenAFavoriteAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -93,28 +90,29 @@ public class ScenarioFavoriteAccount : BaseScenario
     public async Task WhenFavoriteAccount()
     {
         var entity = await GivenAnActiveAccount()
-            .IsFavorite(false)
             .ForUser(AuthorizedUserId)
+            .IsFavorite(false)
             .SavedInDb(_databaseDriver);
 
-        entity = GivenAnExistingAccount(entity)
-            .IsFavorite(true)
+        var request = GivenAFavoriteAccountRequest()
+            .WithId(entity.Id)
+            .IsFavorite()
             .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserSetsFavoriteAccount(entity);
+        await WhenUserSetsFavoriteAccount(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<AccountEntity>(entity.Id, entity.UserId);
+        var result = await _databaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
-        result!.Should().BeEquivalentTo(entity);
+        result!.Favorite.Should().BeTrue();
     }
 
-    private async Task WhenUserSetsFavoriteAccount(AccountEntity entity)
+    private async Task WhenUserSetsFavoriteAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(new {entity.Id, IsFavorite = entity.Favorite});
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.FavoriteAccount, json);
     }
 }

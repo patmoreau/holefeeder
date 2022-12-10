@@ -6,8 +6,6 @@ using AutoBogus;
 
 using FluentAssertions;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
@@ -15,11 +13,9 @@ using Holefeeder.Tests.Common.Factories;
 
 using NSubstitute;
 
-using Xunit;
-
 using static Holefeeder.Application.Features.Transactions.Queries.GetCashflow;
 
-namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
+namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
 public class GetCashflowTests
 {

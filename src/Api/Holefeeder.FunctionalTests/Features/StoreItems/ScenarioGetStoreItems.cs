@@ -7,9 +7,6 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
@@ -17,13 +14,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItems : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioGetStoreItems(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -75,15 +72,15 @@ public class ScenarioGetStoreItems : BaseScenario
         await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
             .WithCode(firstCode)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
             .WithCode(secondCode)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         await GivenAStoreItem()
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 

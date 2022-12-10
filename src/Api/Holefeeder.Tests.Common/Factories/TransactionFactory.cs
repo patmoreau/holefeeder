@@ -1,5 +1,3 @@
-using AutoBogus;
-
 using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Tests.Common.Factories;

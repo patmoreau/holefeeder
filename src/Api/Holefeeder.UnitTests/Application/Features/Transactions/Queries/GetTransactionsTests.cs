@@ -7,8 +7,6 @@ using Bogus;
 
 using FluentAssertions;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
@@ -17,8 +15,6 @@ using Holefeeder.Tests.Common.Factories;
 using Microsoft.AspNetCore.Http;
 
 using NSubstitute;
-
-using Xunit;
 
 using static Holefeeder.Application.Features.Transactions.Queries.GetTransactions;
 

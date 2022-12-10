@@ -1,7 +1,3 @@
-using AutoBogus;
-
-using Bogus;
-
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
@@ -14,7 +10,6 @@ internal class CashflowEntityBuilder : IBuilder<CashflowEntity>, ICollectionBuil
 
     private readonly Faker<CashflowEntity> _faker = new AutoFaker<CashflowEntity>()
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.IntervalType, faker => faker.PickRandom(DateIntervalType.List.ToArray()))
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: decimal.Zero, max: AMOUNT_MAX))
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0))

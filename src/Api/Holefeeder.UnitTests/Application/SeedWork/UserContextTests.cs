@@ -12,8 +12,6 @@ using Microsoft.Identity.Web;
 
 using NSubstitute;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Application.SeedWork;
 
 public class UserContextTests

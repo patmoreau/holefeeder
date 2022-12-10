@@ -31,37 +31,32 @@ public static class WebApplicationExtensions
 
         using var scope = app.ApplicationServices.CreateScope();
 
-        var objectStoreDatabaseSettings = scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseSettings>();
-        var objectStoreLogger = scope.ServiceProvider.GetRequiredService<ILogger<ObjectStoreContext>>();
-
-        MigrateDb(objectStoreDatabaseSettings, objectStoreLogger, "ObjectStore");
-
         var holefeederDatabaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
         var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<HolefeederContext>>();
 
-        MigrateDb(holefeederDatabaseSettings, holefeederLogger, "Holefeeder");
+        MigrateDb(holefeederDatabaseSettings, holefeederLogger);
 
         return app;
     }
 
-    private static void MigrateDb(MySqlDatabaseSettings databaseSettings, ILogger logger, string name)
+    private static void MigrateDb(MySqlDatabaseSettings databaseSettings, ILogger logger)
     {
         var completed = false;
         var tryCount = 0;
 
         while (tryCount++ < 3 && !completed)
         {
-            logger.LogMigrationAttempt(name, tryCount);
+            logger.LogMigrationAttempt(tryCount);
             try
             {
-                PerformMigration(databaseSettings, name);
+                PerformMigration(databaseSettings);
                 completed = true;
             }
 #pragma warning disable CA1031
             catch (Exception e)
 #pragma warning restore CA1031
             {
-                logger.LogMigrationError(name, tryCount, e);
+                logger.LogMigrationError(tryCount, e);
                 Thread.Sleep(10000);
             }
         }
@@ -69,13 +64,13 @@ public static class WebApplicationExtensions
         if (!completed)
         {
             throw new DataException(
-                $"{name} - Unable to perform database migration, no connection to server was found.");
+                $"Unable to perform database migration, no connection to server was found.");
         }
 
-        logger.LogMigrationSuccess(name);
+        logger.LogMigrationSuccess();
     }
 
-    private static void PerformMigration(MySqlDatabaseSettings databaseSettings, string name)
+    private static void PerformMigration(MySqlDatabaseSettings databaseSettings)
     {
         lock (Locker)
         {
@@ -85,8 +80,7 @@ public static class WebApplicationExtensions
 
             var upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
-                    s => s.Contains($"{nameof(Scripts)}.{name}", StringComparison.OrdinalIgnoreCase))
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .JournalTo(new MySqlTableJournal(
                     () => connectionManager,
                     () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database, "schema_versions"))

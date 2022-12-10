@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Holefeeder.Domain.Features.Categories;
 
 #pragma warning disable CA1032

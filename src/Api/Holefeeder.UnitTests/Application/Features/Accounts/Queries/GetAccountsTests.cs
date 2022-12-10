@@ -6,17 +6,7 @@ using Bogus;
 
 using FluentAssertions;
 
-using FluentValidation.TestHelper;
-
-using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Tests.Common.Factories;
-
 using Microsoft.AspNetCore.Http;
-
-using NSubstitute;
-
-using Xunit;
 
 using static Holefeeder.Application.Features.Accounts.Queries.GetAccounts;
 
@@ -25,11 +15,6 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 public class GetAccountsTests
 {
     private readonly Faker<Request> _faker;
-    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
-
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-
-    private readonly AccountViewModelFactory _viewModelFactory = new();
 
     public GetAccountsTests()
     {

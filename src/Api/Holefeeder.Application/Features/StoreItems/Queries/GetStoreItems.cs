@@ -50,9 +50,9 @@ public class GetStoreItems : ICarterModule
     internal class Handler : IRequestHandler<Request, QueryResult<Response>>
     {
         private readonly IUserContext _userContext;
-        private readonly StoreItemContext _context;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, StoreItemContext context)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
             _context = context;

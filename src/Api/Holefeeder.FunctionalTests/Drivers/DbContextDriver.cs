@@ -28,8 +28,18 @@ public abstract class DbContextDriver
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task<T?> FindByIdAsync<T>(Guid id, Guid userId) where T : class
+    public async Task<T?> FindByIdAsync<T>(Guid id) where T : class
     {
-        return await DbContext.FindAsync<T>(id, userId);
+        RefreshAll();
+        return await DbContext.FindAsync<T>(id);
+    }
+
+    private void RefreshAll()
+    {
+        var entitiesList = DbContext.ChangeTracker.Entries().ToList();
+        foreach (var entity in entitiesList)
+        {
+            entity.Reload();
+        }
     }
 }

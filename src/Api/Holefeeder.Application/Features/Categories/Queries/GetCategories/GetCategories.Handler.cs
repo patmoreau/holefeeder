@@ -19,7 +19,7 @@ internal class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>
 
     public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
     {
-        var result = await _context.Categories.AsQueryable()
+        var result = await _context.Categories
             .Where(x => x.UserId == _userContext.UserId)
             .ToListAsync(cancellationToken);
 

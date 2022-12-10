@@ -1,6 +1,4 @@
-﻿using Holefeeder.Application.Domain.StoreItem;
-
-namespace Holefeeder.Domain.Features.StoreItem;
+﻿namespace Holefeeder.Domain.Features.StoreItem;
 
 public sealed record StoreItem : Entity, IAggregateRoot
 {
@@ -43,7 +41,7 @@ public sealed record StoreItem : Entity, IAggregateRoot
         }
     }
 
-    public string Data { get; init; } = string.Empty;
+    public string Data { get; set; } = string.Empty;
 
     public Guid UserId
     {

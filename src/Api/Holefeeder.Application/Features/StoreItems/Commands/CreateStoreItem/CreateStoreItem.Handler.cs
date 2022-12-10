@@ -1,5 +1,4 @@
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.StoreItem;
 
@@ -10,9 +9,9 @@ namespace Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 internal class Handler : IRequestHandler<Request, Guid>
 {
     private readonly IUserContext _userContext;
-    private readonly StoreItemContext _context;
+    private readonly BudgetingContext _context;
 
-    public Handler(IUserContext userContext, StoreItemContext context)
+    public Handler(IUserContext userContext, BudgetingContext context)
     {
         _userContext = userContext;
         _context = context;
@@ -20,7 +19,7 @@ internal class Handler : IRequestHandler<Request, Guid>
 
     public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
     {
-        if (await _context.StoreItems.AsQueryable()
+        if (await _context.StoreItems
                 .AnyAsync(e => e.Code == request.Code, cancellationToken: cancellationToken))
         {
             throw new ObjectStoreDomainException($"Code '{request.Code}' already exists.");

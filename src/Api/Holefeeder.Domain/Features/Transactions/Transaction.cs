@@ -12,7 +12,7 @@ public record Transaction : Entity, IAggregateRoot
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    private Transaction(Guid id, DateTime date, decimal amount, Guid accountId, Guid categoryId, Guid userId)
+    public Transaction(Guid id, DateTime date, decimal amount, Guid accountId, Guid categoryId, Guid userId)
     {
         Id = id;
         Date = date;
@@ -98,11 +98,11 @@ public record Transaction : Entity, IAggregateRoot
 
     public Category? Category { get; init; }
 
-    public Guid? CashflowId { get; private init; }
+    public Guid? CashflowId { get; private set; }
 
-    public DateTime? CashflowDate { get; private init; }
+    public DateTime? CashflowDate { get; private set; }
 
-    public IReadOnlyList<string> Tags { get; private init; } = ImmutableList<string>.Empty;
+    public IReadOnlyList<string> Tags { get; private set; } = ImmutableList<string>.Empty;
 
     public Guid UserId
     {
@@ -134,7 +134,8 @@ public record Transaction : Entity, IAggregateRoot
     {
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
-        return this with {Tags = newTags.ToImmutableArray()};
+        Tags = newTags.ToImmutableArray();
+        return this;
     }
 
     public Transaction ApplyCashflow(Guid cashflowId, DateTime cashflowDate)
@@ -148,7 +149,8 @@ public record Transaction : Entity, IAggregateRoot
         {
             throw new TransactionDomainException($"{nameof(CashflowDate)} is required", nameof(Transaction));
         }
-
-        return this with {CashflowId = cashflowId, CashflowDate = cashflowDate};
+        CashflowId = cashflowId;
+        CashflowDate = cashflowDate;
+        return this;
     }
 }

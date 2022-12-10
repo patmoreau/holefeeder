@@ -1,4 +1,3 @@
-using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Application.Exceptions;
 using Holefeeder.Domain.Features.StoreItem;
 

@@ -6,9 +6,6 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetCategoryTypes : BaseScenario

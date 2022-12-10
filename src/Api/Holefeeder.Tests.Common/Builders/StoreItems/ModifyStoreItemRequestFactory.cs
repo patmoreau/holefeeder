@@ -1,8 +1,4 @@
-using AutoBogus;
-
 using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
-
-using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.ModifyStoreItem;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 

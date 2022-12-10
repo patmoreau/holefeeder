@@ -1,7 +1,5 @@
 using System.Collections.Immutable;
 
-using AutoBogus;
-
 using Holefeeder.Application.Models;
 
 namespace Holefeeder.Tests.Common.Factories;

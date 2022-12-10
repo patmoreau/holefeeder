@@ -1,4 +1,3 @@
-using Holefeeder.Application.Domain.StoreItem;
 using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;

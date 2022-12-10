@@ -7,7 +7,6 @@ using Hangfire;
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
-using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

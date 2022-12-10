@@ -1,8 +1,5 @@
 using System.Text.Json;
 
-using Holefeeder.Application.Features.StoreItems.Commands;
-using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
-using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.StoreItems;

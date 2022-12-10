@@ -6,9 +6,6 @@ using Holefeeder.Domain.Enumerations;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetDateIntervalTypes : BaseScenario

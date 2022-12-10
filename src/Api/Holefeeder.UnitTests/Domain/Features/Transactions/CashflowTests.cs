@@ -7,8 +7,6 @@ using FluentAssertions.Execution;
 
 using Holefeeder.Domain.Features.Transactions;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 public class CashflowTests

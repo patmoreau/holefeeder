@@ -6,23 +6,23 @@ using DbUp.Engine;
 
 using Holefeeder.Infrastructure.Context;
 
-namespace Holefeeder.Infrastructure.Scripts.ObjectStore;
+namespace Holefeeder.Infrastructure.Scripts;
 
 public class Script000InitDatabase : IScript
 {
     public static readonly string ScriptName =
         $"{typeof(Script000InitDatabase).Namespace}.000-InitDatabase.sql";
 
-    private readonly ObjectStoreDatabaseSettings _objectStoreDatabaseSettings;
+    private readonly HolefeederDatabaseSettings _holefeederDatabaseSettings;
 
-    public Script000InitDatabase(ObjectStoreDatabaseSettings objectStoreDatabaseSettings)
+    public Script000InitDatabase(HolefeederDatabaseSettings holefeederDatabaseSettings)
     {
-        _objectStoreDatabaseSettings = objectStoreDatabaseSettings;
+        _holefeederDatabaseSettings = holefeederDatabaseSettings;
     }
 
     public string ProvideScript(Func<IDbCommand> dbCommandFactory)
     {
-        var builder = _objectStoreDatabaseSettings.GetBuilder();
+        var builder = _holefeederDatabaseSettings.GetBuilder();
 
         var scriptBuilder = new StringBuilder();
 

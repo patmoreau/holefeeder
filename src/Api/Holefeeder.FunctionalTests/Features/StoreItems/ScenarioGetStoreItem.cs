@@ -7,9 +7,6 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
@@ -17,13 +14,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItem : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -81,7 +78,7 @@ public class ScenarioGetStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 

@@ -10,15 +10,11 @@ using Bogus;
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
-using Xunit;
 
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 

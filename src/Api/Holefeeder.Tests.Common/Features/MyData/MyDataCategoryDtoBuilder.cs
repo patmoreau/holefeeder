@@ -1,7 +1,3 @@
-using AutoBogus;
-
-using Bogus;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Tests.Common.Builders;

@@ -1,14 +1,8 @@
 using FluentAssertions;
 
-using Holefeeder.Application.Features.StoreItems.Commands;
-using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
-using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Features;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
@@ -19,8 +13,6 @@ namespace Holefeeder.FunctionalTests.Scenarios;
 
 public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
-
     public ScenarioStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
@@ -29,8 +21,7 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        BudgetingDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

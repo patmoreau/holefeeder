@@ -1,7 +1,3 @@
-using AutoBogus;
-
-using Bogus;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Infrastructure.Entities;
 
@@ -12,7 +8,6 @@ internal class AccountEntityBuilder : IBuilder<AccountEntity>, ICollectionBuilde
     private const decimal OPEN_BALANCE_MAX = 10000m;
 
     private readonly Faker<AccountEntity> _faker = new AutoFaker<AccountEntity>()
-        .RuleFor(x => x.Type, faker => faker.PickRandom(AccountType.List.ToArray()))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word())
         .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX))
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)

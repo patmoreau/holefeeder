@@ -5,8 +5,6 @@ using FluentAssertions;
 
 using Holefeeder.Domain.Extensions;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Extensions;
 
 public class DateHelperTests

@@ -1,7 +1,3 @@
-using AutoBogus;
-
-using Bogus;
-
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Tests.Common.Builders.Categories;
@@ -12,7 +8,6 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
 
     private readonly Faker<Category> _faker = new AutoFaker<Category>()
         .RuleFor(x => x.Name, faker => faker.Lorem.Word())
-        .RuleFor(x => x.Type, faker => faker.PickRandom(CategoryType.List.ToArray()))
         .RuleFor(x => x.Color, faker => faker.Internet.Color())
         .RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount(max: BUDGET_AMOUNT_MAX));
 
@@ -29,10 +24,7 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
         return _faker.Generate(count).ToArray();
     }
 
-    public static CategoryBuilder GivenACategory()
-    {
-        return new();
-    }
+    public static CategoryBuilder GivenACategory() => new();
 
     public CategoryBuilder OfType(CategoryType type)
     {

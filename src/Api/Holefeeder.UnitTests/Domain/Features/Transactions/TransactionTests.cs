@@ -8,8 +8,6 @@ using FluentAssertions.Execution;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Tests.Common.Factories;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 public class TransactionTests

@@ -1,14 +1,13 @@
 using System.Net;
 using System.Text.Json;
 
-using Holefeeder.Application.Features.StoreItems.Commands;
+using FluentAssertions;
+
 using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
@@ -18,13 +17,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioModifyStoreItem : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -82,7 +81,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var request = GivenAModifyStoreItemRequest()
             .WithId(storeItem.Id)
@@ -93,6 +92,11 @@ public class ScenarioModifyStoreItem : BaseScenario
         await WhenUserModifyStoreItem(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+
+        var result = await _databaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
+        result.Should().NotBeNull();
+        result!.Data.Should().BeEquivalentTo(request.Data);
+
     }
 
     private async Task WhenUserModifyStoreItem(Request request)

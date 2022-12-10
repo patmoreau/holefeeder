@@ -13,9 +13,6 @@ using Holefeeder.FunctionalTests.StepDefinitions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-using Xunit;
-using Xunit.Abstractions;
-
 namespace Holefeeder.FunctionalTests.Features;
 
 [Collection("Api collection")]
@@ -39,22 +36,16 @@ public abstract class BaseScenario : IDisposable
 
     protected IServiceScope Scope { get; }
 
-    private HolefeederDatabaseDriver? _holefeederDatabaseDriver = null;
+    private HolefeederDatabaseDriver? _holefeederDatabaseDriver;
     protected HolefeederDatabaseDriver HolefeederDatabaseDriver
     {
         get => _holefeederDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<HolefeederDatabaseDriver>();
     }
 
-    private BudgetingDatabaseDriver? _budgetingDatabaseDriver = null;
+    private BudgetingDatabaseDriver? _budgetingDatabaseDriver;
     protected BudgetingDatabaseDriver BudgetingDatabaseDriver
     {
         get => _budgetingDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
-    }
-
-    private ObjectStoreDatabaseDriver? _objectStoreDatabaseDriver = null;
-    protected ObjectStoreDatabaseDriver ObjectStoreDatabaseDriver
-    {
-        get => _objectStoreDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseDriver>();
     }
 
     protected HttpClientDriver HttpClientDriver { get; }
@@ -159,6 +150,19 @@ public abstract class BaseScenario : IDisposable
     }
 
 #pragma warning disable CA1822
+    protected void ThenAssertAll(Func<Task> assertions)
+#pragma warning restore CA1822
+    {
+        if (assertions == null)
+        {
+            throw new ArgumentNullException(nameof(assertions));
+        }
+
+        using var scope = new AssertionScope();
+        assertions();
+    }
+
+#pragma warning disable CA1822
     protected void ThenAssertAll(Action assertions)
 #pragma warning restore CA1822
     {
@@ -186,6 +190,6 @@ public abstract class BaseScenario : IDisposable
     public void Dispose()
     {
         Scope.Dispose();
-        GC.SuppressFinalize(Scope);
+        GC.SuppressFinalize(this);
     }
 }

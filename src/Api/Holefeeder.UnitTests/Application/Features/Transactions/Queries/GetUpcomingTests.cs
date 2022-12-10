@@ -8,8 +8,6 @@ using Bogus;
 
 using FluentAssertions;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
@@ -20,11 +18,9 @@ using Microsoft.AspNetCore.Http;
 
 using NSubstitute;
 
-using Xunit;
-
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
-namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
+namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
 public class GetUpcomingTests
 {

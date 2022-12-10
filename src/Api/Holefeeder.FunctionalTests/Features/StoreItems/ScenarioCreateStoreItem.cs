@@ -1,14 +1,10 @@
 using System.Net;
 using System.Text.Json;
 
-using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
@@ -17,13 +13,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioCreateStoreItem : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioCreateStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = ObjectStoreDatabaseDriver;
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -94,7 +90,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     public async Task WhenCodeAlreadyExist()
     {
         var existingItem = await GivenAStoreItem()
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var storeItem = GivenACreateStoreItemRequest()
             .WithCode(existingItem.Code)

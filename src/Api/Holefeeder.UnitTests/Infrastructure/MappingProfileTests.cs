@@ -1,5 +1,3 @@
-using Xunit;
-
 namespace Holefeeder.UnitTests.Infrastructure;
 
 public class MappingProfileTests

@@ -1,4 +1,6 @@
 ﻿using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
@@ -102,6 +104,8 @@ public record Cashflow : Entity, IAggregateRoot
         }
     }
 
+    public Account? Account { get; init; }
+
     public Guid CategoryId
     {
         get => _categoryId;
@@ -116,7 +120,9 @@ public record Cashflow : Entity, IAggregateRoot
         }
     }
 
-    public IReadOnlyList<string> Tags { get; private init; } = ImmutableList<string>.Empty;
+    public Category? Category { get; init; }
+
+    public IReadOnlyList<string> Tags { get; private set; } = ImmutableList<string>.Empty;
 
     public bool Inactive { get; init; }
 
@@ -165,7 +171,7 @@ public record Cashflow : Entity, IAggregateRoot
     public Cashflow SetTags(params string[] tags)
     {
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
-
-        return this with {Tags = newTags.ToImmutableArray()};
+        Tags = newTags.ToImmutableArray();
+        return this;
     }
 }

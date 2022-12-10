@@ -2,8 +2,6 @@ using FluentAssertions.Execution;
 
 using Holefeeder.FunctionalTests.Drivers;
 
-using Xunit.Abstractions;
-
 namespace Holefeeder.FunctionalTests.Features;
 
 public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>

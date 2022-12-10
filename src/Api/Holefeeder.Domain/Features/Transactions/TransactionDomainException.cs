@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Holefeeder.Domain.Features.Transactions;
 
 #pragma warning disable CA1032

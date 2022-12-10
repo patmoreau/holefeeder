@@ -64,7 +64,6 @@ public class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashflow
                 p => string.IsNullOrWhiteSpace(p)
                     ? Array.Empty<string>()
                     : p.Split(DELIMITER, StringSplitOptions.TrimEntries));
-        ;
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")

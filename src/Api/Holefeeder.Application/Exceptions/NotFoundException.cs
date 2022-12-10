@@ -33,7 +33,7 @@ public class NotFoundException<TContext> : NotFoundException where TContext : IA
     {
     }
 
-    public NotFoundException() : base()
+    public NotFoundException()
     {
     }
 

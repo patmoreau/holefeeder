@@ -7,8 +7,6 @@ using FluentAssertions;
 
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit.Abstractions;
-
 namespace Holefeeder.FunctionalTests.Drivers;
 
 public class HttpClientDriver

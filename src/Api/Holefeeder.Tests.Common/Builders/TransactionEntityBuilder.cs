@@ -1,7 +1,3 @@
-using AutoBogus;
-
-using Bogus;
-
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
 

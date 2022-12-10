@@ -50,7 +50,7 @@ public class GetAccount : ICarterModule
 
         public async Task<AccountViewModel> Handle(Request query, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.AsQueryable()
+            var account = await _context.Accounts
                 .Include(e => e.Transactions).ThenInclude(e => e.Category)
                 .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId,
                     cancellationToken: cancellationToken);

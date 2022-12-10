@@ -1,10 +1,11 @@
-﻿using Holefeeder.Application.Features.Accounts.Exceptions;
+﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Accounts;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Accounts.Commands;
 
@@ -28,40 +29,32 @@ public class CloseAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IAccountRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var account = await _repository.FindByIdAsync(request.Id, _userContext.UserId, cancellationToken);
+            var account = await _context.Accounts
+                // .AsNoTracking()
+                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == _userContext.UserId, cancellationToken);
             if (account is null)
             {
                 throw new AccountNotFoundException(request.Id);
             }
 
-            try
-            {
-                account = account.Close();
+            _context.Update(account.Close());
 
-                await _repository.SaveAsync(account, cancellationToken);
-
-                await _repository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
-            }
-            catch (AccountDomainException)
-            {
-                _repository.UnitOfWork.Dispose();
-                throw;
-            }
+            return Unit.Value;
         }
     }
+
+    internal record Request(Guid Id) : ICommandRequest<Unit>;
 
     internal class Validator : AbstractValidator<Request>
     {
@@ -70,6 +63,4 @@ public class CloseAccount : ICarterModule
             RuleFor(command => command.Id).NotNull().NotEmpty();
         }
     }
-
-    internal record Request(Guid Id) : IRequest<Unit>;
 }

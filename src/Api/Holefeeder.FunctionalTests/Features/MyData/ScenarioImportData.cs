@@ -10,9 +10,6 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
 using static Holefeeder.Tests.Common.Features.MyData.ImportDataRequestBuilder;
 using static Holefeeder.Tests.Common.Features.MyData.MyDataAccountDtoBuilder;
 using static Holefeeder.Tests.Common.Features.MyData.MyDataCashflowDtoBuilder;
@@ -23,12 +20,12 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioImportData : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = HolefeederDatabaseDriver;
+        _databaseDriver = BudgetingDatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 
@@ -131,36 +128,28 @@ public class ScenarioImportData : BaseScenario
 
         async Task AssertAccount(MyDataAccountDto account)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<AccountEntity>(account.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await _databaseDriver.FindByIdAsync<AccountEntity>(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
 
         async Task AssertCategory(MyDataCategoryDto category)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<CategoryEntity>(category.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await _databaseDriver.FindByIdAsync<CategoryEntity>(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
 
         async Task AssertCashflow(MyDataCashflowDto cashflow)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<CashflowEntity>(cashflow.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await _databaseDriver.FindByIdAsync<CashflowEntity>(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
 
         async Task AssertTransaction(MyDataTransactionDto transaction)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<TransactionEntity>(transaction.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }

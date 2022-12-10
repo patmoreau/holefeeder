@@ -9,9 +9,6 @@ using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
 using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
 using static Holefeeder.Tests.Common.Builders.CashflowEntityBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;

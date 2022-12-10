@@ -1,7 +1,9 @@
 using System.Data;
 
+using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.EntityFrameworkCore;
@@ -9,28 +11,27 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Holefeeder.Application.Context;
 
-public class BudgetingContext : DbContext
+public sealed class BudgetingContext : DbContext, IUnitOfWork
 {
     private IDbContextTransaction? _currentTransaction;
 
     public BudgetingContext(DbContextOptions<BudgetingContext> options) : base(options)
     {
+        this.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     public DbSet<Account> Accounts { get; set; } = default!;
     public DbSet<Cashflow> Cashflows { get; set; } = default!;
     public DbSet<Category> Categories { get; set; } = default!;
+    public DbSet<StoreItem> StoreItems { get; set; } = default!;
     public DbSet<Transaction> Transactions { get; set; } = default!;
-
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
         new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
         new CashflowEntityTypeConfiguration().Configure(modelBuilder.Entity<Cashflow>());
+        new StoreItemEntityTypeConfiguration().Configure(modelBuilder.Entity<StoreItem>());
         new TransactionEntityTypeConfiguration().Configure(modelBuilder.Entity<Transaction>());
     }
 

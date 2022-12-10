@@ -6,8 +6,6 @@ using FluentAssertions;
 
 using MediatR;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Application;
 
 public class HandlerRegistrationTests

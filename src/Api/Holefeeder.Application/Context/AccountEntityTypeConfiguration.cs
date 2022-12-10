@@ -38,7 +38,8 @@ public class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
             .HasColumnName("open_balance")
             .IsRequired();
         builder
-            .Property(e => e.OpenDate).HasColumnName("open_date")
+            .Property(e => e.OpenDate)
+            .HasColumnName("open_date")
             .IsRequired();
         builder
             .Property(e => e.Description)

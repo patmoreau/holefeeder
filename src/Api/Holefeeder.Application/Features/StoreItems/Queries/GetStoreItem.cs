@@ -41,9 +41,9 @@ public class GetStoreItem : ICarterModule
     internal class Handler : IRequestHandler<Request, StoreItemViewModel>
     {
         private readonly IUserContext _userContext;
-        private readonly StoreItemContext _context;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, StoreItemContext context)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
             _context = context;
@@ -51,7 +51,7 @@ public class GetStoreItem : ICarterModule
 
         public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result = await _context.StoreItems.AsQueryable()
+            var result = await _context.StoreItems
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
                     cancellationToken: cancellationToken);
 

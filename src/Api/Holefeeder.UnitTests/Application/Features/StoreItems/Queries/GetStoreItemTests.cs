@@ -4,10 +4,6 @@ using AutoBogus;
 
 using Bogus;
 
-using FluentValidation.TestHelper;
-
-using Xunit;
-
 using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;

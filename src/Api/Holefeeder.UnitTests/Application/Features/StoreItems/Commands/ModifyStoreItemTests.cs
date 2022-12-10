@@ -2,13 +2,7 @@ using System;
 
 using AutoBogus;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
-
-using Xunit;
-
-using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.ModifyStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 

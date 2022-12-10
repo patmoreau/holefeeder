@@ -8,8 +8,6 @@ using FluentAssertions;
 
 using Holefeeder.Domain.Features.Accounts;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
 public class AccountTests

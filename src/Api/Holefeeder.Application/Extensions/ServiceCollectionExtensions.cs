@@ -19,12 +19,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        var storeItemConnectionString = configuration.GetConnectionString("ObjectStoreConnectionString");
-        services.AddDbContext<StoreItemContext>(options =>
-        {
-            options.UseMySql(storeItemConnectionString, ServerVersion.AutoDetect(storeItemConnectionString));
-        });
-
         var holefeederConnectionString = configuration.GetConnectionString("HolefeederConnectionString");
         services.AddDbContext<BudgetingContext>(options =>
         {
@@ -56,7 +50,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    private static IServiceCollection AddHangfireServices(this IServiceCollection services)
+    private static void AddHangfireServices(this IServiceCollection services)
     {
         // Add Hangfire services.
         services.AddHangfire(globalConfiguration => globalConfiguration
@@ -67,7 +61,5 @@ public static class ServiceCollectionExtensions
 
         // Add the processing server as IHostedService
         services.AddHangfireServer();
-
-        return services;
     }
 }

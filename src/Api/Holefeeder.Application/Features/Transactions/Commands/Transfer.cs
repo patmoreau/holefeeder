@@ -79,10 +79,10 @@ public class Transfer : ICarterModule
             }
 
             var transferTo =
-                await _context.Categories.AsQueryable()
+                await _context.Categories
                     .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer In", cancellationToken);
             var transferFrom =
-                await _context.Categories.AsQueryable()
+                await _context.Categories
                     .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer Out", cancellationToken);
 
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,

@@ -74,7 +74,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
 
         foreach (var element in accounts)
         {
-            var exists = await _context.Accounts.AsQueryable()
+            var exists = await _context.Accounts
                 .SingleOrDefaultAsync(account => account.Id == element.Id && account.UserId == request.UserId,
                     cancellationToken);
             if (exists is not null)
@@ -92,6 +92,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
                         Inactive = element.Inactive
                     };
                     _logger.LogAccount("Modify", exists);
+                    _context.Update(exists);
                 }
                 else
                 {
@@ -135,7 +136,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
 
         foreach (var element in categories)
         {
-            var exists = await _context.Categories.AsQueryable()
+            var exists = await _context.Categories
                 .SingleOrDefaultAsync(category => category.Id == element.Id && category.UserId == request.UserId,
                     cancellationToken);
             if (exists is not null)
@@ -152,6 +153,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
                         Color = element.Color
                     };
                     _logger.LogCategory("Modify", exists);
+                    _context.Update(exists);
                 }
                 else
                 {
@@ -198,7 +200,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
 
         foreach (var element in cashflows)
         {
-            var exists = await _context.Cashflows.AsQueryable()
+            var exists = await _context.Cashflows
                 .SingleOrDefaultAsync(cashflow => cashflow.Id == element.Id && cashflow.UserId == request.UserId,
                     cancellationToken);
             if (exists is not null)
@@ -219,6 +221,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
                     };
                     exists = exists.SetTags(element.Tags);
                     _logger.LogCashflow("Modify", exists);
+                    _context.Update(exists);
                 }
                 else
                 {
@@ -271,7 +274,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
 
         foreach (var element in transactions)
         {
-            var exists = await _context.Transactions.AsQueryable()
+            var exists = await _context.Transactions
                 .SingleOrDefaultAsync(
                     transaction => transaction.Id == element.Id && transaction.UserId == request.UserId,
                     cancellationToken);
@@ -290,6 +293,7 @@ public class Handler : IRequestHandler<InternalRequest, Unit>
                     };
                     exists = exists.SetTags(element.Tags);
                     _logger.LogTransaction("Modify", exists);
+                    _context.Update(exists);
                 }
                 else
                 {

@@ -7,8 +7,6 @@ using AutoBogus;
 using FluentAssertions;
 using FluentAssertions.Execution;
 
-using FluentValidation.TestHelper;
-
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
@@ -18,8 +16,6 @@ using MediatR;
 
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-
-using Xunit;
 
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 

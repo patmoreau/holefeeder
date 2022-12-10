@@ -1,7 +1,5 @@
 using Holefeeder.FunctionalTests.Drivers;
 
-using Xunit;
-
 namespace Holefeeder.FunctionalTests;
 
 [CollectionDefinition("Api collection")]

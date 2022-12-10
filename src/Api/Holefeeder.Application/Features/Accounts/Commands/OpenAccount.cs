@@ -1,5 +1,4 @@
-﻿using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Accounts.Queries.GetAccount;
+﻿using Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 

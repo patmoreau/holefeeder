@@ -9,9 +9,9 @@ namespace Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 internal class Handler : IRequestHandler<Request, Unit>
 {
     private readonly IUserContext _userContext;
-    private readonly StoreItemContext _context;
+    private readonly BudgetingContext _context;
 
-    public Handler(IUserContext userContext, StoreItemContext context)
+    public Handler(IUserContext userContext, BudgetingContext context)
     {
         _userContext = userContext;
         _context = context;
@@ -19,14 +19,15 @@ internal class Handler : IRequestHandler<Request, Unit>
 
     public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
     {
-        var storeItem = await _context.StoreItems.AsQueryable()
+        var storeItem = await _context.StoreItems
+            // .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
         if (storeItem is null)
         {
             throw new StoreItemNotFoundException(request.Id);
         }
 
-        storeItem = storeItem with {Data = request.Data};
+        _context.Update(storeItem with {Data = request.Data});
 
         return Unit.Value;
     }

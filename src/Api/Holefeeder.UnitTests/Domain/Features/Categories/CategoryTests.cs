@@ -8,8 +8,6 @@ using FluentAssertions;
 
 using Holefeeder.Domain.Features.Categories;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
 public class CategoryTests

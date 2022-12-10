@@ -5,8 +5,6 @@ using FluentAssertions;
 
 using Holefeeder.Domain.Enumerations;
 
-using Xunit;
-
 namespace Holefeeder.UnitTests.Domain.Enumerations;
 
 public class DateIntervalTypeTests

@@ -23,7 +23,7 @@ public sealed class BudgetingDatabaseDriver : DbContextDriver
             {
                 SchemasToInclude = new[] {"budgeting_functional_tests"},
                 DbAdapter = DbAdapter.MySql,
-                TablesToInclude = new Table[] {"accounts", "cashflows", "categories", "transactions"},
+                TablesToInclude = new Table[] {"accounts", "cashflows", "categories", "store_items", "transactions"},
                 TablesToIgnore = new Table[] {"schema_versions"}
             });
     }
