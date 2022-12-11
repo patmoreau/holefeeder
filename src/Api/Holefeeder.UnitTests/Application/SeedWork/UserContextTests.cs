@@ -1,7 +1,4 @@
-using System;
 using System.Security.Claims;
-
-using AutoBogus;
 
 using FluentAssertions;
 

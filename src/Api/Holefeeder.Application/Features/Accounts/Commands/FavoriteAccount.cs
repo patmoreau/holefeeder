@@ -27,16 +27,6 @@ public class FavoriteAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    internal record Request(Guid Id, bool IsFavorite) : ICommandRequest<Unit>;
-
-    internal class Validator : AbstractValidator<Request>
-    {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEmpty();
-        }
-    }
-
     internal class Handler : IRequestHandler<Request, Unit>
     {
         private readonly IUserContext _userContext;
@@ -60,6 +50,16 @@ public class FavoriteAccount : ICarterModule
             _context.Update(account with {Favorite = request.IsFavorite});
 
             return Unit.Value;
+        }
+    }
+
+    internal record Request(Guid Id, bool IsFavorite) : ICommandRequest<Unit>;
+
+    internal class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(command => command.Id).NotNull().NotEmpty();
         }
     }
 }

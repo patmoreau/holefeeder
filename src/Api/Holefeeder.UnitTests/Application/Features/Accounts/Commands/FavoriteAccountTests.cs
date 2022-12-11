@@ -1,9 +1,3 @@
-using System;
-
-using AutoBogus;
-
-using Bogus;
-
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;

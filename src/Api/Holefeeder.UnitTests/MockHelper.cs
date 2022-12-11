@@ -1,7 +1,3 @@
-using System;
-
-using AutoBogus;
-
 using Holefeeder.Application.SeedWork;
 
 using Microsoft.Extensions.Logging;

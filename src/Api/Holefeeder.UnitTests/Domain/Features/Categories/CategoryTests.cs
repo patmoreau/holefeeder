@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 
-using Bogus;
 using Bogus.Extensions;
 
 using FluentAssertions;

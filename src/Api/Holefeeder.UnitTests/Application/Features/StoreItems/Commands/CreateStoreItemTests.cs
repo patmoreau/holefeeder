@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 
-using AutoBogus;
-
 using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;

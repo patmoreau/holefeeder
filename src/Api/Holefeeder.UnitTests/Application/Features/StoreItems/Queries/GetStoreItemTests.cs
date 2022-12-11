@@ -1,9 +1,3 @@
-using System;
-
-using AutoBogus;
-
-using Bogus;
-
 using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;

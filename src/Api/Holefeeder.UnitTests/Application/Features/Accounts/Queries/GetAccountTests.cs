@@ -1,7 +1,3 @@
-using System;
-
-using AutoBogus;
-
 using static Holefeeder.Application.Features.Accounts.Queries.GetAccount.GetAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
