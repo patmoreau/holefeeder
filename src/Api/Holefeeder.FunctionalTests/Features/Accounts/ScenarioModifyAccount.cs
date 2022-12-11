@@ -7,7 +7,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;

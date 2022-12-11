@@ -1,4 +1,3 @@
-using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Entities;
 
