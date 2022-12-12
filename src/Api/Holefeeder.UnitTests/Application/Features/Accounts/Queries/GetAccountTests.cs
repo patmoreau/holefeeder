@@ -1,4 +1,4 @@
-using static Holefeeder.Application.Features.Accounts.Queries.GetAccount.GetAccount;
+using static Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 

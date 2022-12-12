@@ -7,6 +7,7 @@ using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Accounts.Queries;
 
@@ -46,22 +47,28 @@ public class GetAccounts : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<AccountViewModel>>
     {
-        private readonly IAccountQueriesRepository _repository;
         private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, BudgetingContext context, IAccountQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
             _context = context;
-            _repository = repository;
         }
 
         public async Task<QueryResult<AccountViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            var (total, items) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request), cancellationToken);
+            var total = await _context.Accounts.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            var items = await _context.Accounts
+                .Include(e => e.Transactions).ThenInclude(x => x.Category)
+                .Where(e => e.UserId == _userContext.UserId)
+                .Filter(request.Filter)
+                .Sort(request.Sort)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(e => AccountMapper.MapToAccountViewModel(e))
+                .ToListAsync(cancellationToken);
 
             return new QueryResult<AccountViewModel>(total, items);
         }

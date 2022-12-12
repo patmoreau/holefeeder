@@ -28,6 +28,23 @@ internal static class AccountMapper
         return new AccountInfoViewModel(entity.Id, entity.Name);
     }
 
+    public static AccountViewModel MapToAccountViewModel(Account entity)
+    {
+        return new AccountViewModel(
+            entity.Id,
+            entity.Type,
+            entity.Name,
+            entity.OpenBalance,
+            entity.OpenDate,
+            entity.Transactions.Count,
+            entity.OpenBalance +
+            entity.Transactions.Sum(x => x.Amount * x.Category?.Type.Multiplier * entity.Type.Multiplier ?? 0),
+            entity.Transactions.Any() ? entity.Transactions.Max(x => x.Date) : entity.OpenDate,
+            entity.Description,
+            entity.Favorite,
+            entity.Inactive);
+    }
+
     public static Account? MapToModelOrNull(Account? entity, IEnumerable<Guid>? cashflows = null)
     {
         if (entity is null)

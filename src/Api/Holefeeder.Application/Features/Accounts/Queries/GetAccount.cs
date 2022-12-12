@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
-namespace Holefeeder.Application.Features.Accounts.Queries.GetAccount;
+namespace Holefeeder.Application.Features.Accounts.Queries;
 
 public class GetAccount : ICarterModule
 {
