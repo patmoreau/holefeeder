@@ -1,6 +1,7 @@
-using Holefeeder.Application.Features.MyData.Commands.ImportData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Tests.Common.Builders;
+
+using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 
 namespace Holefeeder.Tests.Common.Features.MyData;
 

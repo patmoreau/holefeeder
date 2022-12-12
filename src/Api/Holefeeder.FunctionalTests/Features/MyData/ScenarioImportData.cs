@@ -3,13 +3,13 @@ using System.Text.Json;
 
 using FluentAssertions;
 
-using Holefeeder.Application.Features.MyData.Commands.ImportData;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
+using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 using static Holefeeder.Tests.Common.Features.MyData.ImportDataRequestBuilder;
 using static Holefeeder.Tests.Common.Features.MyData.MyDataAccountDtoBuilder;
 using static Holefeeder.Tests.Common.Features.MyData.MyDataCashflowDtoBuilder;
