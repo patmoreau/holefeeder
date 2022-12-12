@@ -1,17 +1,14 @@
 using System.Text.Json;
 
+using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.StoreItems;
-
-using Request = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class StoreItemStepDefinition : BaseStepDefinition
 {
-    private readonly ModifyStoreItemRequestFactory _modifyStoreItemRequestFactory = new();
-
     public StoreItemStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
     {
         HttpClientDriver = httpClientDriver;
@@ -19,7 +16,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
 
     private HttpClientDriver HttpClientDriver { get; }
 
-    internal StoreItemStepDefinition GetsCreated(Request? request = null)
+    internal StoreItemStepDefinition GetsCreated(CreateStoreItem.Request? request = null)
     {
         AddStep(() =>
         {
@@ -30,11 +27,11 @@ public class StoreItemStepDefinition : BaseStepDefinition
         return this;
     }
 
-    internal StoreItemStepDefinition GetsModified(Application.Features.StoreItems.Commands.ModifyStoreItem.Request? request = null)
+    internal StoreItemStepDefinition GetsModified(ModifyStoreItem.Request? request = null)
     {
         AddStep(() =>
         {
-            var json = JsonSerializer.Serialize(request ?? _modifyStoreItemRequestFactory.Generate());
+            var json = JsonSerializer.Serialize(request ?? new ModifyStoreItemRequestBuilder().Build());
             return HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
         });
 

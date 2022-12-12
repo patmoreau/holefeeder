@@ -1,16 +1,16 @@
-using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+
+using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 
 public class ModifyStoreItemTests
 {
-    private readonly AutoFaker<Request> _faker = new();
-
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
+        var request = GivenAModifyStoreItemRequest().WithNoId().Build();
 
         var validator = new Validator();
 
@@ -25,7 +25,7 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Data, string.Empty).Generate();
+        var request = GivenAModifyStoreItemRequest().WithNoData().Build();
 
         var validator = new Validator();
 
@@ -40,7 +40,7 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = _faker.Generate();
+        var request = GivenAModifyStoreItemRequest().Build();
 
         var validator = new Validator();
 

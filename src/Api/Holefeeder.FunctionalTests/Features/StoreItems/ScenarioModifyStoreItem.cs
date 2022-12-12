@@ -3,12 +3,12 @@ using System.Text.Json;
 
 using FluentAssertions;
 
-using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
+using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
@@ -17,13 +17,11 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioModifyStoreItem : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = BudgetingDatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
+        BudgetingDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -81,7 +79,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(BudgetingDatabaseDriver);
 
         var request = GivenAModifyStoreItemRequest()
             .WithId(storeItem.Id)
@@ -93,7 +91,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
+        var result = await BudgetingDatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
         result!.Data.Should().BeEquivalentTo(request.Data);
 

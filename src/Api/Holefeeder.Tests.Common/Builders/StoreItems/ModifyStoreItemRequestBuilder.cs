@@ -1,35 +1,40 @@
-using Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
 internal class ModifyStoreItemRequestBuilder : IBuilder<Request>
 {
-    private Request _request;
-
-    private ModifyStoreItemRequestBuilder()
-    {
-        _request = new ModifyStoreItemRequestFactory().Generate();
-    }
+    private readonly Faker<Request> _faker = new AutoFaker<Request>();
 
     public Request Build()
     {
-        return _request;
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
     }
 
-    public static ModifyStoreItemRequestBuilder GivenAModifyStoreItemRequest()
-    {
-        return new();
-    }
+    public static ModifyStoreItemRequestBuilder GivenAModifyStoreItemRequest() => new();
 
     public ModifyStoreItemRequestBuilder WithId(Guid id)
     {
-        _request = _request with {Id = id};
+        _faker.RuleFor(x => x.Id, id);
+        return this;
+    }
+
+    public ModifyStoreItemRequestBuilder WithNoId()
+    {
+        _faker.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 
     public ModifyStoreItemRequestBuilder WithData(string data)
     {
-        _request = _request with {Data = data};
+        _faker.RuleFor(x => x.Data, data);
+        return this;
+    }
+
+    public ModifyStoreItemRequestBuilder WithNoData()
+    {
+        _faker.RuleFor(x => x.Data, string.Empty);
         return this;
     }
 }
