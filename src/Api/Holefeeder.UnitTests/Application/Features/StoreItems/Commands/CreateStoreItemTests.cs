@@ -1,18 +1,17 @@
 using System.Threading.Tasks;
 
-using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 
 public class CreateStoreItemTests
 {
-    private readonly AutoFaker<Request> _faker = new();
-
     [Fact]
     public async Task GivenValidator_WhenCodeIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Code, string.Empty).Generate();
+        var request = GivenACreateStoreItemRequest().WithNoCode().Build();
 
         var validator = new Validator();
 
@@ -27,7 +26,7 @@ public class CreateStoreItemTests
     public async Task GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Data, string.Empty).Generate();
+        var request = GivenACreateStoreItemRequest().WithNoData().Build();
 
         var validator = new Validator();
 
@@ -42,7 +41,7 @@ public class CreateStoreItemTests
     public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = _faker.Generate();
+        var request = GivenACreateStoreItemRequest().Build();
 
         var validator = new Validator();
 

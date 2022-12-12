@@ -1,19 +1,15 @@
-using Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
 internal class CreateStoreItemRequestBuilder : IBuilder<Request>
 {
-    private Request _request;
-
-    private CreateStoreItemRequestBuilder()
-    {
-        _request = new CreateStoreItemRequestFactory().Generate();
-    }
+    private readonly Faker<Request> _faker = new AutoFaker<Request>();
 
     public Request Build()
     {
-        return _request;
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
     }
 
     public static CreateStoreItemRequestBuilder GivenACreateStoreItemRequest()
@@ -23,7 +19,19 @@ internal class CreateStoreItemRequestBuilder : IBuilder<Request>
 
     public CreateStoreItemRequestBuilder WithCode(string code)
     {
-        _request = _request with {Code = code};
+        _faker.RuleFor(x => x.Code, code);
+        return this;
+    }
+
+    public CreateStoreItemRequestBuilder WithNoCode()
+    {
+        _faker.RuleFor(x => x.Code, string.Empty);
+        return this;
+    }
+
+    public CreateStoreItemRequestBuilder WithNoData()
+    {
+        _faker.RuleFor(x => x.Data, string.Empty);
         return this;
     }
 }

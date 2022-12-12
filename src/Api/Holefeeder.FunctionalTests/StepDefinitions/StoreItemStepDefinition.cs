@@ -10,7 +10,6 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class StoreItemStepDefinition : BaseStepDefinition
 {
-    private readonly CreateStoreItemRequestFactory _createStoreItemRequestFactory = new();
     private readonly ModifyStoreItemRequestFactory _modifyStoreItemRequestFactory = new();
 
     public StoreItemStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
@@ -24,7 +23,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
     {
         AddStep(() =>
         {
-            var json = JsonSerializer.Serialize(request ?? _createStoreItemRequestFactory.Generate());
+            var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
             return HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
         });
 
