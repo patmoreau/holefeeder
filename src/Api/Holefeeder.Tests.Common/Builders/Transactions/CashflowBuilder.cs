@@ -4,7 +4,7 @@ using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class CashflowBuilder : IBuilder<Cashflow>
+internal class CashflowBuilder : IBuilder<Cashflow>, ICollectionBuilder<Cashflow>
 {
     private const decimal AMOUNT_MAX = 100m;
 
@@ -20,6 +20,12 @@ internal class CashflowBuilder : IBuilder<Cashflow>
     {
         _faker.AssertConfigurationIsValid();
         return _faker.Generate();
+    }
+
+    public Cashflow[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
     }
 
     public static CashflowBuilder GivenAnActiveCashflow()

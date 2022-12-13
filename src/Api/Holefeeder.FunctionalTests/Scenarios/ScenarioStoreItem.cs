@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Features;

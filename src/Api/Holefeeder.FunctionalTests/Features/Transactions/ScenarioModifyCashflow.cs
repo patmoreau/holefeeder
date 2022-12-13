@@ -5,8 +5,6 @@ using AutoBogus;
 
 using Bogus;
 
-using FluentAssertions;
-
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;

@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 using Holefeeder.FunctionalTests.Drivers;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;

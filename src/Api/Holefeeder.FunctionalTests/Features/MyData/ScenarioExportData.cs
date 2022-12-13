@@ -1,33 +1,28 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CashflowEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.TransactionEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioExportData : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
-    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
 
     public ScenarioExportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = HolefeederDatabaseDriver;
-        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
-        _budgetingDatabaseDriver.ResetStateAsync().Wait();
+        BudgetingDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -65,21 +60,22 @@ public class ScenarioExportData : BaseScenario
     {
         var accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(_holefeederDatabaseDriver, 2);
+            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
 
         var categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(_budgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
 
-        var cashflows = await GivenACashflow()
+        var cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
-            .CollectionSavedInDb(_holefeederDatabaseDriver, 2);
+            .ForUser(AuthorizedUserId)
+            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
 
         var transactions = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
-            .CollectionSavedInDb(_holefeederDatabaseDriver, 2);
+            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
 
         GivenUserIsAuthorized();
 
@@ -96,40 +92,27 @@ public class ScenarioExportData : BaseScenario
             AssertTransactions(result!, transactions);
         });
 
-        void AssertAccounts(ExportDataDto exported, IEnumerable<AccountEntity> expected)
+        void AssertAccounts(ExportDataDto exported, IEnumerable<Account> expected)
         {
-            exported.Accounts.Should().BeEquivalentTo(expected, options => options.Excluding(info => info.UserId));
+            exported.Accounts.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
         }
 
-        void AssertCashflows(ExportDataDto exported, IEnumerable<CashflowEntity> expected)
+        void AssertCashflows(ExportDataDto exported, IEnumerable<Cashflow> expected)
         {
             exported.Cashflows.Should().BeEquivalentTo(expected, options =>
-                options
-                    .Excluding(info => info.UserId)
-                    .Excluding(info => info.LastPaidDate)
-                    .Excluding(info => info.LastCashflowDate)
-                    .Excluding(info => info.Account)
-                    .Excluding(info => info.Category)
-                    .Using<object>(ctx => string.Join(',', (string[])ctx.Subject).Should().Be((string)ctx.Expectation))
-                    .When(info => info.Path.EndsWith("Tags")));
+                options.ExcludingMissingMembers());
         }
 
         void AssertCategories(ExportDataDto exported, IEnumerable<Category> expected)
         {
             exported.Categories.Should().BeEquivalentTo(expected, options =>
-                options.Excluding(info => info.UserId)
-                    .Excluding(info => info.DomainEvents));
+                options.ExcludingMissingMembers());
         }
 
-        void AssertTransactions(ExportDataDto exported, IEnumerable<TransactionEntity> expected)
+        void AssertTransactions(ExportDataDto exported, IEnumerable<Transaction> expected)
         {
             exported.Transactions.Should().BeEquivalentTo(expected, options =>
-                options
-                    .Excluding(info => info.UserId)
-                    .Excluding(info => info.Account)
-                    .Excluding(info => info.Category)
-                    .Using<object>(ctx => string.Join(',', (string[])ctx.Subject).Should().Be((string)ctx.Expectation))
-                    .When(info => info.Path.EndsWith("Tags")));
+                options.ExcludingMissingMembers());
         }
     }
 

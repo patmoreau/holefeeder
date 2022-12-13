@@ -1,8 +1,6 @@
 using System.Net;
 using System.Text.Json;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.FunctionalTests.Drivers;

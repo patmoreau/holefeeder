@@ -1,7 +1,5 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;

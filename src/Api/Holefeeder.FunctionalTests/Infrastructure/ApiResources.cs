@@ -40,6 +40,9 @@ public enum ApiResources
     [ResourceRoute("api/v2/transactions/make-purchase")]
     MakePurchase,
 
+    [ResourceRoute("api/v2/transactions/{0}")]
+    DeleteTransaction,
+
     [ResourceRoute("api/v2/cashflows/modify")]
     ModifyCashflow,
 

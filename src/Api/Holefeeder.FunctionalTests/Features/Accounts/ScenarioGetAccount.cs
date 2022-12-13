@@ -1,7 +1,5 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;

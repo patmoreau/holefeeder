@@ -1,8 +1,6 @@
 using System.Net;
 using System.Text.Json;
 
-using FluentAssertions;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;

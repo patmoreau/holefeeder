@@ -1,24 +1,23 @@
 using System.Net;
-using System.Text.Json;
 
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Application.Features.Transactions.Commands.CancelCashflow;
+using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioCancelCashflow : BaseScenario
+public class ScenarioDeleteTransaction : BaseScenario
 {
 
-    public ScenarioCancelCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+    public ScenarioDeleteTransaction(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
         if (apiApplicationDriver == null)
@@ -32,11 +31,11 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidCancelCashflowRequest().Build();
+        var request = GivenAnInvalidDeleteTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserCancelsACashflow(request);
+        await WhenUserDeletesATransaction(request);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -44,11 +43,11 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        var request = GivenADeleteTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserCancelsACashflow(request);
+        await WhenUserDeletesATransaction(request);
 
         ThenUserShouldBeAuthorizedToAccessEndpoint();
     }
@@ -56,11 +55,11 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        var request = GivenADeleteTransactionRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
-        await WhenUserCancelsACashflow(request);
+        await WhenUserDeletesATransaction(request);
 
         ShouldBeForbiddenToAccessEndpoint();
     }
@@ -68,17 +67,17 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        var request = GivenADeleteTransactionRequest().Build();
 
         GivenUserIsUnauthorized();
 
-        await WhenUserCancelsACashflow(request);
+        await WhenUserDeletesATransaction(request);
 
         ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]
-    public async Task WhenCancellingACashflow()
+    public async Task WhenDeletingATransaction()
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
@@ -88,31 +87,26 @@ public class ScenarioCancelCashflow : BaseScenario
             .ForUser(AuthorizedUserId)
             .SavedInDb(BudgetingDatabaseDriver);
 
-        var cashflow = await GivenAnActiveCashflow()
+        var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .ForUser(AuthorizedUserId)
             .SavedInDb(BudgetingDatabaseDriver);
 
-        var request = GivenACancelCashflowRequest().WithId(cashflow.Id).Build();
+        var request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserCancelsACashflow(request);
+        await WhenUserDeletesATransaction(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+        var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
-        result.Should()
-            .NotBeNull()
-            .And
-            .BeEquivalentTo(cashflow, options => options.ExcludingMissingMembers());
+        result.Should().BeNull();
     }
 
-    private async Task WhenUserCancelsACashflow(Request request)
+    private async Task WhenUserDeletesATransaction(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.CancelCashflow, json);
+        await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
     }
 }

@@ -3,8 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-using FluentAssertions;
-
 using Holefeeder.FunctionalTests.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Drivers;
@@ -59,6 +57,13 @@ public class HttpClientDriver
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
         }
 
+        await SendRequest(request);
+    }
+
+    public async Task SendDeleteRequest(ApiResources apiResource, params object?[] parameters)
+    {
+        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        using HttpRequestMessage request = new(HttpMethod.Delete, endpointUri);
         await SendRequest(request);
     }
 

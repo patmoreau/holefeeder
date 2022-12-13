@@ -1,7 +1,5 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
