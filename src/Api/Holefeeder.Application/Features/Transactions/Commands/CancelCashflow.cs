@@ -1,10 +1,11 @@
-﻿using Holefeeder.Application.Features.Transactions.Exceptions;
+﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -26,10 +27,7 @@ public class CancelCashflow : ICarterModule
             .RequireAuthorization();
     }
 
-    internal record Request : IRequest<Unit>
-    {
-        public Guid Id { get; init; }
-    }
+    internal record Request(Guid Id) : ICommandRequest<Unit>;
 
     internal class Validator : AbstractValidator<Request>
     {
@@ -41,39 +39,28 @@ public class CancelCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ICashflowRepository _cashflowRepository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowRepository cashflowRepository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _cashflowRepository = cashflowRepository;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            var exists =
+                await _context.Cashflows.SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
+                    cancellationToken);
+            if (exists is null)
             {
-                var exists =
-                    await _cashflowRepository.FindByIdAsync(request.Id, _userContext.UserId, cancellationToken);
-                if (exists is null)
-                {
-                    throw new CashflowNotFoundException(request.Id);
-                }
-
-                var cashflow = exists.Cancel();
-
-                await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
-
-                await _cashflowRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
+                throw new CashflowNotFoundException(request.Id);
             }
-            catch (TransactionDomainException)
-            {
-                _cashflowRepository.UnitOfWork.Dispose();
-                throw;
-            }
+
+            _context.Update(exists.Cancel());
+
+            return Unit.Value;
         }
     }
 }

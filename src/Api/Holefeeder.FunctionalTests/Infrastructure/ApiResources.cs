@@ -42,10 +42,16 @@ public enum ApiResources
 
     [ResourceRoute("api/v2/cashflows/modify")]
     ModifyCashflow,
+
+    [ResourceRoute("api/v2/cashflows/cancel")]
+    CancelCashflow,
+
     [ResourceRoute("api/v2/my-data/export-data")]
     ExportData,
+
     [ResourceRoute("api/v2/my-data/import-data")]
     ImportData,
+
     [ResourceRoute("api/v2/my-data/import-status/{0}")]
     ImportDataStatus,
 }
