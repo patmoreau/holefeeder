@@ -1,4 +1,5 @@
-﻿using Holefeeder.Application.Features.Transactions.Queries;
+﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
@@ -6,6 +7,7 @@ using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -27,7 +29,7 @@ public class MakePurchase : ICarterModule
             .RequireAuthorization();
     }
 
-    internal record Request : IRequest<Guid>
+    internal record Request : ICommandRequest<Guid>
     {
         public DateTime Date { get; init; }
 
@@ -43,28 +45,16 @@ public class MakePurchase : ICarterModule
 
         public CashflowRequest? Cashflow { get; init; }
 
-        public record CashflowRequest(DateTime EffectiveDate, DateIntervalType IntervalType, int Frequency,
+        internal record CashflowRequest(DateTime EffectiveDate, DateIntervalType IntervalType, int Frequency,
             int Recurrence);
     }
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator(IUserContext userContext, ITransactionRepository repository)
+        public Validator()
         {
-            RuleFor(command => command.AccountId)
-                .NotNull()
-                .NotEmpty()
-                .MustAsync(async (id, cancellation) =>
-                    await repository.AccountExists(id, userContext.UserId, cancellation))
-                .WithMessage(x => $"Account '{x.AccountId}' does not exists.")
-                .WithErrorCode("NotExistsValidator");
-            RuleFor(command => command.CategoryId)
-                .NotNull()
-                .NotEmpty()
-                .MustAsync(async (id, cancellation) =>
-                    await repository.CategoryExists(id, userContext.UserId, cancellation))
-                .WithMessage(x => $"Category '{x.CategoryId}' does not exists.")
-                .WithErrorCode("NotExistsValidator");
+            RuleFor(command => command.AccountId).NotNull().NotEmpty();
+            RuleFor(command => command.CategoryId).NotNull().NotEmpty();
             RuleFor(command => command.Date).NotEmpty();
             RuleFor(command => command.Amount).GreaterThan(0);
         }
@@ -72,45 +62,42 @@ public class MakePurchase : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly ICashflowRepository _cashflowRepository;
-        private readonly ITransactionRepository _transactionRepository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
-            ICashflowRepository cashflowRepository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _transactionRepository = transactionRepository;
-            _cashflowRepository = cashflowRepository;
+            _context = context;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            if (!(await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
+                    cancellationToken)))
             {
-                var cashflowId = await HandleCashflow(request, cancellationToken);
-
-                var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
-                    request.AccountId, request.CategoryId, _userContext.UserId);
-
-                if (cashflowId is not null)
-                {
-                    transaction = transaction.ApplyCashflow(cashflowId.Value, request.Date);
-                }
-
-                transaction = transaction.SetTags(request.Tags);
-
-                await _transactionRepository.SaveAsync(transaction, cancellationToken);
-
-                await _transactionRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return transaction.Id;
+                throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
-            catch (TransactionDomainException)
+
+            if (!(await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
+                    cancellationToken)))
             {
-                _transactionRepository.UnitOfWork.Dispose();
-                throw;
+                throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
             }
+
+            var cashflowId = await HandleCashflow(request, cancellationToken);
+
+            var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
+                request.AccountId, request.CategoryId, _userContext.UserId);
+
+            if (cashflowId is not null)
+            {
+                transaction = transaction.ApplyCashflow(cashflowId.Value, request.Date);
+            }
+
+            transaction = transaction.SetTags(request.Tags);
+
+            return transaction.Id;
         }
 
         private async Task<Guid?> HandleCashflow(Request request, CancellationToken cancellationToken)
@@ -127,7 +114,7 @@ public class MakePurchase : ICarterModule
 
             cashflow = cashflow.SetTags(request.Tags);
 
-            await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
+            await _context.Cashflows.AddAsync(cashflow, cancellationToken);
 
             return cashflow.Id;
         }

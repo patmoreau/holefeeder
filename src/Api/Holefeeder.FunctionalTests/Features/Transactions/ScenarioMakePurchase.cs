@@ -1,23 +1,22 @@
 using System.Net;
 
+using Holefeeder.Application.Features.Transactions;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
-using Holefeeder.Infrastructure.Entities;
-using Holefeeder.Infrastructure.Mapping;
 
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.TransactionBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.MakePurchaseRequestBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
-    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
 
     public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
         apiApplicationDriver, testOutputHelper)
@@ -27,23 +26,21 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        _databaseDriver = HolefeederDatabaseDriver;
-        _budgetingDatabaseDriver = BudgetingDatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
+        BudgetingDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task InvalidRequest()
     {
-        Transaction entity = default!;
+        Request request = default!;
         await Given(() =>
             {
-                entity = ATransaction()
+                request = GivenAPurchase()
                     .OfAmount(0)
                     .Build();
             })
             .Given(() => User.IsAuthorized())
-            .When(() => Transaction.MakesPurchase(entity))
+            .When(() => Transaction.MakesPurchase(request))
             .Then(
                 () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."))
             .RunScenarioAsync();
@@ -52,11 +49,11 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
     [Fact]
     public async Task AuthorizedUser()
     {
-        Transaction entity = null!;
+        Request request = null!;
 
-        await Given(() => entity = ATransaction().Build())
+        await Given(() => request = GivenAPurchase().Build())
             .Given(() => User.IsAuthorized())
-            .When(() => Transaction.MakesPurchase(entity))
+            .When(() => Transaction.MakesPurchase(request))
             .Then(ThenUserShouldBeAuthorizedToAccessEndpoint)
             .RunScenarioAsync();
     }
@@ -64,10 +61,10 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
     [Fact]
     public async Task ForbiddenUser()
     {
-        Transaction entity = null!;
-        await Given(() => entity = ATransaction().Build())
+        Request request = null!;
+        await Given(() => request = GivenAPurchase().Build())
             .Given(() => User.IsForbidden())
-            .When(() => Transaction.MakesPurchase(entity))
+            .When(() => Transaction.MakesPurchase(request))
             .Then(ShouldBeForbiddenToAccessEndpoint)
             .RunScenarioAsync();
     }
@@ -75,8 +72,8 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
     [Fact]
     public async Task UnauthorizedUser()
     {
-        Transaction entity = null!;
-        await Given(() => entity = ATransaction().Build())
+        Request entity = null!;
+        await Given(() => entity = GivenAPurchase().Build())
             .Given(() => User.IsUnauthorized())
             .When(() => Transaction.MakesPurchase(entity))
             .Then(ShouldNotBeAuthorizedToAccessEndpoint)
@@ -86,34 +83,33 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
     [Fact]
     public async Task ValidRequest()
     {
-        AccountEntity account = null!;
+        Account account = null!;
         Category category = null!;
-        Transaction entity = null!;
+        Request request = null!;
         var id = Guid.Empty;
 
         await Given(async () => account = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(_databaseDriver))
+                .SavedInDb(BudgetingDatabaseDriver))
             .Given(async () => category = await GivenACategory()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(_budgetingDatabaseDriver))
-            .Given(() => entity = ATransaction()
+                .SavedInDb(BudgetingDatabaseDriver))
+            .Given(() => request = GivenAPurchase()
                 .ForAccount(account)
                 .ForCategory(category)
-                .ForUser(AuthorizedUserId)
                 .Build())
             .Given(() => User.IsAuthorized())
-            .When(() => Transaction.MakesPurchase(entity))
+            .When(() => Transaction.MakesPurchase(request))
             .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.Created))
             .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
             .Then(async () =>
             {
-                var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(id, entity.UserId);
+                var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(id);
 
                 TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()
                     .And
-                    .BeEquivalentTo(entity, options => options.Excluding(info => info.Id));
+                    .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
             })
             .RunScenarioAsync();
     }

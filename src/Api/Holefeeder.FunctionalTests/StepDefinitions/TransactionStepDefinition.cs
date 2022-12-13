@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
@@ -15,22 +15,14 @@ public class TransactionStepDefinition
 
     private HttpClientDriver HttpClientDriver { get; }
 
-    public async Task MakesPurchase(Transaction entity)
+    internal async Task MakesPurchase(MakePurchase.Request request)
     {
-        if (entity == null)
+        if (request == null)
         {
-            throw new ArgumentNullException(nameof(entity));
+            throw new ArgumentNullException(nameof(request));
         }
 
-        var json = JsonSerializer.Serialize(new
-        {
-            entity.Date,
-            entity.Amount,
-            entity.Description,
-            entity.AccountId,
-            entity.CategoryId,
-            entity.Tags
-        });
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
     }
 }
