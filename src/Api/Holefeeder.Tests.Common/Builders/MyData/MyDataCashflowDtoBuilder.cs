@@ -1,8 +1,7 @@
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Enumerations;
-using Holefeeder.Tests.Common.Builders;
 
-namespace Holefeeder.Tests.Common.Features.MyData;
+namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal sealed class MyDataCashflowDtoBuilder : IBuilder<MyDataCashflowDto>, ICollectionBuilder<MyDataCashflowDto>
 {

@@ -36,12 +36,14 @@ public abstract class BaseScenario : IDisposable
     protected IServiceScope Scope { get; }
 
     private HolefeederDatabaseDriver? _holefeederDatabaseDriver;
+
     protected HolefeederDatabaseDriver HolefeederDatabaseDriver
     {
         get => _holefeederDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<HolefeederDatabaseDriver>();
     }
 
     private BudgetingDatabaseDriver? _budgetingDatabaseDriver;
+
     protected BudgetingDatabaseDriver BudgetingDatabaseDriver
     {
         get => _budgetingDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
@@ -125,6 +127,16 @@ public abstract class BaseScenario : IDisposable
     protected void ThenShouldExpectStatusCode(HttpStatusCode expectedStatusCode)
     {
         HttpClientDriver.ShouldHaveResponseWithStatus(expectedStatusCode);
+    }
+
+    protected void ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode expectedStatusCode,
+        string errorMessage)
+    {
+        ThenShouldExpectStatusCode(expectedStatusCode);
+
+        var problemDetails = HttpClientDriver.DeserializeContent<ProblemDetails>();
+        problemDetails.Should().NotBeNull();
+        problemDetails?.Detail.Should().Be(errorMessage);
     }
 
     protected void ShouldReceiveValidationProblemDetailsWithErrorMessage(string errorMessage)

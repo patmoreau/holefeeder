@@ -8,11 +8,11 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.Entities;
 
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
-using static Holefeeder.Tests.Common.Features.MyData.ImportDataRequestBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataAccountDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataCashflowDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataCategoryDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataTransactionDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataAccountDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataCashflowDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataCategoryDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataTransactionDtoBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 

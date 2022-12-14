@@ -1,7 +1,6 @@
 using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Tests.Common.Builders;
 
-namespace Holefeeder.Tests.Common.Features.MyData;
+namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal sealed class MyDataTransactionDtoBuilder : IBuilder<MyDataTransactionDto>,
     ICollectionBuilder<MyDataTransactionDto>
