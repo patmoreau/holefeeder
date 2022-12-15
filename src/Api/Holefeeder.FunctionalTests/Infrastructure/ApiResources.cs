@@ -52,6 +52,12 @@ public enum ApiResources
     [ResourceRoute("api/v2/transactions/{0}")]
     DeleteTransaction,
 
+    [ResourceRoute("api/v2/cashflows")]
+    GetCashflows,
+
+    [ResourceRoute("api/v2/cashflows/{0}")]
+    GetCashflow,
+
     [ResourceRoute("api/v2/cashflows/modify")]
     ModifyCashflow,
 

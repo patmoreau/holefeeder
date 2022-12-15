@@ -1,3 +1,4 @@
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
@@ -5,6 +6,7 @@ using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -38,29 +40,26 @@ public class GetCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, CashflowInfoViewModel>
     {
-        private readonly ICashflowQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<CashflowInfoViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            var result = await _repository.FindByIdAsync(_userContext.UserId, request.Id, cancellationToken);
+            var result = await _context.Cashflows
+                .Include(x => x.Account).Include(x => x.Category)
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (result is null)
             {
                 throw new CashflowNotFoundException(request.Id);
             }
 
-            return result;
+            return CashflowMapper.MapToDto(result);
         }
     }
 }

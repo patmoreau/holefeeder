@@ -1,5 +1,6 @@
 using System.Reflection;
 
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
@@ -7,6 +8,7 @@ using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -46,20 +48,29 @@ public class GetCashflows : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
     {
-        private readonly ICashflowQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<QueryResult<CashflowInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            var (total, items) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request), cancellationToken);
+            var total = await _context.Cashflows.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            var items = await _context.Cashflows
+                .Include(e => e.Account)
+                .Include(e => e.Category)
+                .Where(e => e.UserId == _userContext.UserId)
+                .Filter(request.Filter)
+                .Sort(request.Sort)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(e => CashflowMapper.MapToDto(e))
+                .ToListAsync(cancellationToken);
 
             return new QueryResult<CashflowInfoViewModel>(total, items);
         }

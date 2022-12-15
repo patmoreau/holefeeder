@@ -1,24 +1,23 @@
 using System.Net;
 
+using Bogus;
+
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioGetAccounts : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
-
     public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = HolefeederDatabaseDriver;
-        _holefeederDatabaseDriver.ResetStateAsync().Wait();
+        BudgetingDatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -64,21 +63,15 @@ public class ScenarioGetAccounts : BaseScenario
     [Fact]
     public async Task WhenAccountsExistsSortedByNameDesc()
     {
-        const string firstName = nameof(firstName);
-        const string secondName = nameof(secondName);
+        var faker = new Faker();
+        var count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .WithName(firstName)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
 
         await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
-            .WithName(secondName)
-            .SavedInDb(_holefeederDatabaseDriver);
-
-        await GivenAnActiveAccount()
-            .SavedInDb(_holefeederDatabaseDriver);
+            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
 
         GivenUserIsAuthorized();
 
@@ -86,11 +79,6 @@ public class ScenarioGetAccounts : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         var result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
-        ThenAssertAll(() =>
-        {
-            result.Should().NotBeNull().And.HaveCount(2);
-            result![0].Name.Should().Be(secondName);
-            result[1].Name.Should().Be(firstName);
-        });
+        result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Name);
     }
 }
