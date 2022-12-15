@@ -43,11 +43,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<Script000InitDatabase>();
 
         services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
-        services.AddTransient<IAccountRepository, AccountRepository>();
         services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
-        services.AddTransient<ICashflowRepository, CashflowRepository>();
         services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
-        services.AddTransient<ITransactionRepository, TransactionRepository>();
         services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
