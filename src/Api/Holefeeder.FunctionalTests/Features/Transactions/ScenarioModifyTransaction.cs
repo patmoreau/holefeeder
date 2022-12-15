@@ -142,7 +142,7 @@ public class ScenarioModifyTransaction : BaseScenario
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
 
-        var Transaction = await GivenATransaction()
+        var transaction = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
             .SavedInDb(BudgetingDatabaseDriver);
@@ -150,7 +150,7 @@ public class ScenarioModifyTransaction : BaseScenario
         GivenUserIsAuthorized();
 
         var request = GivenAModifyTransactionRequest()
-            .WithId(Transaction.Id)
+            .WithId(transaction.Id)
             .WithAccount(accounts[1])
             .WithCategory(categories[1])
             .Build();
@@ -159,7 +159,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(Transaction.Id);
+        var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }

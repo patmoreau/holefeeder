@@ -43,6 +43,9 @@ public enum ApiResources
     [ResourceRoute("api/v2/transactions/pay-cashflow")]
     PayCashflow,
 
+    [ResourceRoute("api/v2/transactions/transfer")]
+    Transfer,
+
     [ResourceRoute("api/v2/transactions/modify")]
     ModifyTransaction,
 

@@ -124,6 +124,13 @@ public abstract class BaseScenario : IDisposable
         CheckAuthorizationStatus(false);
     }
 
+    protected T ThenShouldReceive<T>()
+    {
+        var result = HttpClientDriver.DeserializeContent<T>();
+        result.Should().NotBeNull();
+        return result!;
+    }
+
     protected void ThenShouldExpectStatusCode(HttpStatusCode expectedStatusCode)
     {
         HttpClientDriver.ShouldHaveResponseWithStatus(expectedStatusCode);
