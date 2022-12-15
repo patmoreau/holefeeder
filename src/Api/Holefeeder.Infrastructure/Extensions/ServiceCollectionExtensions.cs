@@ -9,7 +9,6 @@ using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.Repositories;
 using Holefeeder.Infrastructure.Scripts;
