@@ -25,4 +25,15 @@ public class TransactionStepDefinition
         var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
     }
+
+    internal async Task PayACashflow(PayCashflow.Request request)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var json = JsonSerializer.Serialize(request);
+        await HttpClientDriver.SendPostRequest(ApiResources.PayCashflow, json);
+    }
 }
