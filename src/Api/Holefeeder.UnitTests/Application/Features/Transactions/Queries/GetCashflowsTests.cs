@@ -1,16 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using FluentAssertions;
 
-using Holefeeder.Application.Features.Transactions;
-using Holefeeder.Application.Models;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Tests.Common.Factories;
-
 using Microsoft.AspNetCore.Http;
-
-using NSubstitute;
 
 using static Holefeeder.Application.Features.Transactions.Queries.GetCashflows;
 
@@ -19,11 +11,6 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 public class GetCashflowsTests
 {
     private readonly Faker<Request> _faker;
-    private readonly ICashflowQueriesRepository _repositoryMock = Substitute.For<ICashflowQueriesRepository>();
-
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-
-    private readonly CashflowInfoViewModelFactory _viewModelFactory = new();
 
     public GetCashflowsTests()
     {
@@ -76,25 +63,5 @@ public class GetCashflowsTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Limit);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-        var count = new Faker().Random.Number(100);
-        var models = _viewModelFactory.Generate(count);
-
-        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((count, models));
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().Be(new QueryResult<CashflowInfoViewModel>(count, models));
     }
 }

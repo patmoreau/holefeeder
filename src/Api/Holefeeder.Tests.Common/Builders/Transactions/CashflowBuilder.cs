@@ -14,7 +14,7 @@ internal class CashflowBuilder : IBuilder<Cashflow>, ICollectionBuilder<Cashflow
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-        .RuleFor(x => x.Tags, faker => faker.Random.WordsArray(0, 5));
+        .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public Cashflow Build()
     {

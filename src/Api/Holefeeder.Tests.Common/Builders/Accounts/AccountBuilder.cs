@@ -11,7 +11,7 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
         .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX))
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.Description, faker => faker.Random.Words())
+        .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Transactions, new List<Transaction>());
 
     public static AccountBuilder GivenAnActiveAccount()

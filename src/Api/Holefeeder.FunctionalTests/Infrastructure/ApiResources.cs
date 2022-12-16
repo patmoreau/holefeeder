@@ -2,9 +2,14 @@ namespace Holefeeder.FunctionalTests.Infrastructure;
 
 public enum ApiResources
 {
-    [ResourceRoute("api/v2/categories")] GetCategories,
-    [ResourceRoute("api/v2/accounts")] GetAccounts,
-    [ResourceRoute("api/v2/accounts/{0}")] GetAccount,
+    [ResourceRoute("api/v2/categories")]
+    GetCategories,
+
+    [ResourceRoute("api/v2/accounts")]
+    GetAccounts,
+
+    [ResourceRoute("api/v2/accounts/{0}")]
+    GetAccount,
 
     [ResourceRoute("api/v2/accounts/close-account")]
     CloseAccount,
@@ -51,6 +56,12 @@ public enum ApiResources
 
     [ResourceRoute("api/v2/transactions/{0}")]
     DeleteTransaction,
+
+    [ResourceRoute("api/v2/transactions/{0}")]
+    GetTransaction,
+
+    [ResourceRoute("api/v2/transactions")]
+    GetTransactions,
 
     [ResourceRoute("api/v2/cashflows")]
     GetCashflows,

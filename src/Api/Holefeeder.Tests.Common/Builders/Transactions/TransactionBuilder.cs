@@ -14,7 +14,7 @@ internal class TransactionBuilder : IBuilder<Transaction>, ICollectionBuilder<Tr
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.CashflowId, _ => null)
         .RuleFor(x => x.CashflowDate, _ => null)
-        .RuleFor(x => x.Tags, faker => faker.Random.WordsArray(0, 5));
+        .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public static TransactionBuilder GivenATransaction() => new();
 

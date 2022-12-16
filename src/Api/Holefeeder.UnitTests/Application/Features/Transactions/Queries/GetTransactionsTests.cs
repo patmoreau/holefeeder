@@ -1,16 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using FluentAssertions;
 
-using Holefeeder.Application.Features.Transactions;
-using Holefeeder.Application.Models;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Tests.Common.Factories;
-
 using Microsoft.AspNetCore.Http;
-
-using NSubstitute;
 
 using static Holefeeder.Application.Features.Transactions.Queries.GetTransactions;
 
@@ -19,11 +11,6 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 public class GetTransactionsTests
 {
     private readonly Faker<Request> _faker;
-    private readonly ITransactionQueriesRepository _repositoryMock = Substitute.For<ITransactionQueriesRepository>();
-
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-
-    private readonly TransactionInfoViewModelFactory _viewModelFactory = new();
 
     public GetTransactionsTests()
     {
@@ -76,25 +63,5 @@ public class GetTransactionsTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Limit);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-        var count = new Faker().Random.Number(100);
-        var models = _viewModelFactory.Generate(count);
-
-        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((count, models));
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().Be(new QueryResult<TransactionInfoViewModel>(count, models));
     }
 }

@@ -1,3 +1,4 @@
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
@@ -5,6 +6,7 @@ using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -39,25 +41,28 @@ public class GetTransaction : ICarterModule
 
     internal class Handler : IRequestHandler<Request, TransactionInfoViewModel>
     {
-        private readonly ITransactionQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<TransactionInfoViewModel> Handle(Request query,
             CancellationToken cancellationToken)
         {
-            var transaction = await _repository.FindByIdAsync(_userContext.UserId, query.Id, cancellationToken);
+            var transaction = await _context.Transactions
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(query.Id);
             }
 
-            return transaction;
+            return TransactionMapper.MapToDto(transaction);
         }
     }
 }
