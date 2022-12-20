@@ -47,8 +47,4 @@
     <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Context" />
-  </ItemGroup>
-
 </Project>

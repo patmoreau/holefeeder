@@ -33,7 +33,6 @@ if (!app.Environment.IsDevelopment())
 app.UseSerilog()
     .MapSwagger(builder.Environment)
     .MapHealthChecks()
-    .MapCore()
     .MapCarter();
 
 app.UseHangfireDashboard();

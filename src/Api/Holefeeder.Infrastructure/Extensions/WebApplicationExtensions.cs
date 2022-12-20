@@ -10,11 +10,8 @@ using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-using MySqlConnector;
 
 using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 

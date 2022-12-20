@@ -9,7 +9,7 @@ namespace Holefeeder.Application.Extensions;
 
 internal static class SqlBuilderExtensions
 {
-    private static readonly IDictionary<string, string> _operators =
+    private static readonly IDictionary<string, string> Operators =
         new Dictionary<string, string>
         {
             {":eq:", "=="},
@@ -34,7 +34,7 @@ internal static class SqlBuilderExtensions
             var op = match.Groups["operator"].Value;
             var value = match.Groups["value"].Value;
 
-            query = query.Where(BuildPredicate<T>(property, _operators[op], value));
+            query = query.Where(BuildPredicate<T>(property, Operators[op], value));
         }
 
         return query;

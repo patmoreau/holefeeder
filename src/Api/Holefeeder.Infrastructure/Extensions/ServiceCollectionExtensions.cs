@@ -1,16 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Ardalis.SmartEnum.Dapper;
-
-using Dapper;
-
 using Holefeeder.Application.Context;
-using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Infrastructure.Scripts;
 using Holefeeder.Infrastructure.SeedWork;
-using Holefeeder.Infrastructure.Serializers;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,13 +37,6 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<Script000InitDatabase>();
-
-        DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-        SqlMapper.AddTypeHandler(typeof(AccountType), new SmartEnumByNameTypeHandler<AccountType>());
-        SqlMapper.AddTypeHandler(typeof(CategoryType), new SmartEnumByNameTypeHandler<CategoryType>());
-        SqlMapper.AddTypeHandler(typeof(DateIntervalType), new SmartEnumByNameTypeHandler<DateIntervalType>());
-        SqlMapper.AddTypeHandler(new TagsHandler());
 
         return services;
     }
