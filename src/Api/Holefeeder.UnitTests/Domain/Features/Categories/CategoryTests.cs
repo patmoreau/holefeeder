@@ -1,9 +1,5 @@
 using System.Linq;
 
-using Bogus.Extensions;
-
-using FluentAssertions;
-
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;

@@ -83,4 +83,7 @@ public enum ApiResources
 
     [ResourceRoute("api/v2/my-data/import-status/{0}")]
     ImportDataStatus,
+
+    [ResourceRoute("api/v2/cashflows/get-upcoming?from={0}&to={1}")]
+    GetUpcoming,
 }

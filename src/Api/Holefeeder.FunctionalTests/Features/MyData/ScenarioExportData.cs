@@ -22,7 +22,7 @@ public class ScenarioExportData : BaseScenario
     public ScenarioExportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -60,22 +60,22 @@ public class ScenarioExportData : BaseScenario
     {
         var accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         var cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         var transactions = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         GivenUserIsAuthorized();
 

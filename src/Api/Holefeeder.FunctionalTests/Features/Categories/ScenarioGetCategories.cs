@@ -17,7 +17,7 @@ public class ScenarioGetCategories : BaseScenario
     public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver = DatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

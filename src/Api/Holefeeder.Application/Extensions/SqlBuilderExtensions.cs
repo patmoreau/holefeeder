@@ -20,7 +20,7 @@ internal static class SqlBuilderExtensions
             {":le:", "<="}
         };
 
-    public static IQueryable<T> Filter<T>(this IQueryable<T> query, IReadOnlyList<string> filter)
+    public static IQueryable<T> Filter<T>(this IQueryable<T> query, IReadOnlyCollection<string> filter)
     {
         if (!filter.Any())
         {
@@ -40,7 +40,7 @@ internal static class SqlBuilderExtensions
         return query;
     }
 
-    public static IQueryable<T> Sort<T>(this IQueryable<T> query, IReadOnlyList<string> sort)
+    public static IQueryable<T> Sort<T>(this IQueryable<T> query, IReadOnlyCollection<string> sort)
     {
         if (!sort.Any())
         {

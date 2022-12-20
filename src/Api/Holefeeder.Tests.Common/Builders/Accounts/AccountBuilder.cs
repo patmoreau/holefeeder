@@ -1,6 +1,8 @@
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 
+using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
+
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
@@ -12,7 +14,8 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX))
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-        .RuleFor(x => x.Transactions, new List<Transaction>());
+        .RuleFor(x => x.Transactions, new List<Transaction>())
+        .RuleFor(x => x.Cashflows, new List<Cashflow>());
 
     public static AccountBuilder GivenAnActiveAccount()
     {
@@ -50,9 +53,9 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         return this;
     }
 
-    public AccountBuilder WithNoCashflows()
+    public AccountBuilder WithActiveCashflows()
     {
-        _faker.RuleFor(f => f.Cashflows, Array.Empty<Guid>());
+        _faker.RuleFor(f => f.Cashflows, GivenAnActiveCashflow().Build);
         return this;
     }
 
@@ -86,6 +89,12 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         return this;
     }
 
+    public AccountBuilder WithOpenDate(DateTime openDate)
+    {
+        _faker.RuleFor(f => f.OpenDate, openDate);
+        return this;
+    }
+
     public AccountBuilder ForUser(Guid userId)
     {
         _faker.RuleFor(f => f.UserId, userId);
@@ -103,4 +112,6 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         _faker.AssertConfigurationIsValid();
         return _faker.Generate(count).ToArray();
     }
+
+    public Account[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

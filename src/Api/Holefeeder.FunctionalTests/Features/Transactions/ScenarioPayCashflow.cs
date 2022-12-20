@@ -27,7 +27,7 @@ public sealed class ScenarioPayCashflow : BaseScenario<ScenarioPayCashflow>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -90,15 +90,15 @@ public sealed class ScenarioPayCashflow : BaseScenario<ScenarioPayCashflow>
 
         await Given(async () => account = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => category = await GivenACategory()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => cashflow = await GivenAnActiveCashflow()
                 .ForAccount(account)
                 .ForCategory(category)
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(() => request = GivenACashflowPayment()
                 .ForCashflow(cashflow)
                 .Build())
@@ -108,7 +108,7 @@ public sealed class ScenarioPayCashflow : BaseScenario<ScenarioPayCashflow>
             .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
             .Then(async () =>
             {
-                var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(id);
+                var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
                 TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()

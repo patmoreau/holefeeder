@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using FluentAssertions;
-
 using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.UnitTests.Domain.Enumerations;

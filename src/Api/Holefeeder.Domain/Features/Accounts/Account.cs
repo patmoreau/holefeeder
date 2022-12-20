@@ -16,8 +16,6 @@ public sealed record Account : Entity, IAggregateRoot
         Name = name;
         OpenDate = openDate;
         UserId = userId;
-
-        Cashflows = ImmutableList<Guid>.Empty;
     }
 
     public override Guid Id
@@ -86,7 +84,7 @@ public sealed record Account : Entity, IAggregateRoot
         }
     }
 
-    public IReadOnlyList<Guid> Cashflows { get; init; }
+    public IReadOnlyCollection<Cashflow> Cashflows { get; init; } = new List<Cashflow>();
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
     public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,

@@ -34,4 +34,5 @@ internal sealed class MyDataTransactionDtoBuilder : IBuilder<MyDataTransactionDt
         _faker.AssertConfigurationIsValid();
         return _faker.Generate(count).ToArray();
     }
+    public MyDataTransactionDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

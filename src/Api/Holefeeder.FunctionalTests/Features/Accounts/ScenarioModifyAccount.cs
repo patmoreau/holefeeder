@@ -20,7 +20,7 @@ public class ScenarioModifyAccount : BaseScenario
     public ScenarioModifyAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver = DatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

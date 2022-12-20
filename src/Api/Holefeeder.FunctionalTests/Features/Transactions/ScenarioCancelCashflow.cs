@@ -26,7 +26,7 @@ public class ScenarioCancelCashflow : BaseScenario
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -82,17 +82,17 @@ public class ScenarioCancelCashflow : BaseScenario
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenACancelCashflowRequest().WithId(cashflow.Id).Build();
 
@@ -102,7 +102,7 @@ public class ScenarioCancelCashflow : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+        var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
 
         result.Should()
             .NotBeNull()

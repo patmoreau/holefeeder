@@ -1,11 +1,15 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 
+using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -59,19 +63,39 @@ public class GetUpcoming : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
     {
-        private readonly IUpcomingQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IUpcomingQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
-        public async Task<QueryResult<UpcomingViewModel>> Handle(Request query, CancellationToken cancellationToken)
+        public async Task<QueryResult<UpcomingViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var results =
-                (await _repository.GetUpcomingAsync(_userContext.UserId, query.From, query.To, cancellationToken))
+            var cashflows = await _context.Cashflows
+                .Where(c => c.UserId == _userContext.UserId)
+                .Include(c => c.Account)
+                .Include(c => c.Category)
+                .Include(c => c.Transactions)
+                .ToListAsync(cancellationToken);
+
+            var results = cashflows
+                .SelectMany(x => x.GetUpcoming(request.To)
+                    .Select(d => new UpcomingViewModel
+                    {
+                        Id = x.Id,
+                        Date = d,
+                        Amount = x.Amount,
+                        Description = x.Description,
+                        Tags = x.Tags.ToImmutableArray(),
+                        Category = new CategoryInfoViewModel(x.Category!.Id, x.Category.Name, x.Category.Type,
+                            x.Category.Color),
+                        Account = new AccountInfoViewModel(x.Account!.Id, x.Account.Name)
+                    }))
+                .Where(x => x.Date <= request.To)
+                .OrderBy(x => x.Date)
                 .ToList();
 
             return new QueryResult<UpcomingViewModel>(results.Count, results);

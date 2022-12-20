@@ -18,7 +18,7 @@ public class ScenarioOpenAccount : BaseScenario
     public ScenarioOpenAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class ScenarioOpenAccount : BaseScenario
     {
         var entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenAnOpenAccountRequest()
             .WithName(entity.Name)
@@ -102,7 +102,7 @@ public class ScenarioOpenAccount : BaseScenario
 
         var id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Account>(id);
+        var result = await DatabaseDriver.FindByIdAsync<Account>(id);
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 

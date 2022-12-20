@@ -20,7 +20,7 @@ public class ScenarioGetTransactions : BaseScenario
     public ScenarioGetTransactions(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -71,17 +71,17 @@ public class ScenarioGetTransactions : BaseScenario
 
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
+            .CollectionSavedInDb(DatabaseDriver, count);
 
         GivenUserIsAuthorized();
 

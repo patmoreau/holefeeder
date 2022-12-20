@@ -5,13 +5,16 @@ using System.Reflection;
 using DbUp;
 using DbUp.MySql;
 
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
-using Holefeeder.Infrastructure.Context;
 using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+using MySqlConnector;
 
 using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 
@@ -31,15 +34,15 @@ public static class WebApplicationExtensions
 
         using var scope = app.ApplicationServices.CreateScope();
 
-        var holefeederDatabaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
-        var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<HolefeederContext>>();
+        var connectionStringBuilder = scope.ServiceProvider.GetRequiredService<BudgetingConnectionStringBuilder>();
+        var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
 
-        MigrateDb(holefeederDatabaseSettings, holefeederLogger);
+        MigrateDb(connectionStringBuilder, holefeederLogger);
 
         return app;
     }
 
-    private static void MigrateDb(MySqlDatabaseSettings databaseSettings, ILogger logger)
+    private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
         var completed = false;
         var tryCount = 0;
@@ -49,7 +52,7 @@ public static class WebApplicationExtensions
             logger.LogMigrationAttempt(tryCount);
             try
             {
-                PerformMigration(databaseSettings);
+                PerformMigration(connectionStringBuilder);
                 completed = true;
             }
 #pragma warning disable CA1031
@@ -70,20 +73,22 @@ public static class WebApplicationExtensions
         logger.LogMigrationSuccess();
     }
 
-    private static void PerformMigration(MySqlDatabaseSettings databaseSettings)
+    private static void PerformMigration(BudgetingConnectionStringBuilder connectionStringBuilder)
     {
         lock (Locker)
         {
-            var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
+            var builder = connectionStringBuilder.CreateBuilder();
 
-            EnsureDatabase.For.MySqlDatabase(databaseSettings.GetBuilder(true).ConnectionString);
+            var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
+
+            EnsureDatabase.For.MySqlDatabase(builder.ConnectionString);
 
             var upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .JournalTo(new MySqlTableJournal(
                     () => connectionManager,
-                    () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database, "schema_versions"))
+                    () => MySqlConnectionManager.Log, builder.Database, "schema_versions"))
                 .LogToConsole()
                 .Build();
 

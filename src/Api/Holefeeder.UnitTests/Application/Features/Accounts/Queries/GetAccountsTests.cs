@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using FluentAssertions;
-
 using Microsoft.AspNetCore.Http;
 
 using static Holefeeder.Application.Features.Accounts.Queries.GetAccounts;

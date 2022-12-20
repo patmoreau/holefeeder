@@ -4,30 +4,30 @@ using System.Text;
 
 using DbUp.Engine;
 
-using Holefeeder.Infrastructure.Context;
+using Holefeeder.Infrastructure.SeedWork;
+
+using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.Scripts;
 
-public class Script000InitDatabase : IScript
+internal class Script000InitDatabase : IScript
 {
     public static readonly string ScriptName =
         $"{typeof(Script000InitDatabase).Namespace}.000-InitDatabase.sql";
 
-    private readonly HolefeederDatabaseSettings _holefeederDatabaseSettings;
+    private readonly MySqlConnectionStringBuilder _connectionStringBuilder;
 
-    public Script000InitDatabase(HolefeederDatabaseSettings holefeederDatabaseSettings)
+    public Script000InitDatabase(BudgetingConnectionStringBuilder connectionStringBuilder)
     {
-        _holefeederDatabaseSettings = holefeederDatabaseSettings;
+        _connectionStringBuilder = connectionStringBuilder.CreateBuilder();
     }
 
     public string ProvideScript(Func<IDbCommand> dbCommandFactory)
     {
-        var builder = _holefeederDatabaseSettings.GetBuilder();
-
         var scriptBuilder = new StringBuilder();
 
         scriptBuilder.AppendLine(CultureInfo.InvariantCulture,
-            $"GRANT ALL ON {builder.Database}.* TO '{builder.UserID}'@'%' WITH GRANT OPTION;");
+            $"GRANT ALL ON {_connectionStringBuilder.Database}.* TO '{_connectionStringBuilder.UserID}'@'%' WITH GRANT OPTION;");
 
         return scriptBuilder.ToString();
     }

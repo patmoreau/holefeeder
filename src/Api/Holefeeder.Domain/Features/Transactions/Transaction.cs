@@ -99,10 +99,11 @@ public record Transaction : Entity, IAggregateRoot
     public Category? Category { get; init; }
 
     public Guid? CashflowId { get; private set; }
+    public Cashflow? Cashflow { get; init; }
 
     public DateTime? CashflowDate { get; private set; }
 
-    public IReadOnlyList<string> Tags { get; private set; } = ImmutableList<string>.Empty;
+    public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
 
     public Guid UserId
     {

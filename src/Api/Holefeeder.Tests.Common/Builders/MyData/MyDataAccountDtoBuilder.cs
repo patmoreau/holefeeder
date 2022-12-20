@@ -21,4 +21,6 @@ internal sealed class MyDataAccountDtoBuilder : IBuilder<MyDataAccountDto>, ICol
         _faker.AssertConfigurationIsValid();
         return _faker.Generate(count).ToArray();
     }
+
+    public MyDataAccountDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

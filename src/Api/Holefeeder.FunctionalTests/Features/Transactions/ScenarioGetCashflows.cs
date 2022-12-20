@@ -1,7 +1,5 @@
 using System.Net;
 
-using AutoBogus;
-
 using Bogus;
 
 using Holefeeder.Application.Models;
@@ -22,7 +20,7 @@ public class ScenarioGetCashflows : BaseScenario
     public ScenarioGetCashflows(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -73,18 +71,18 @@ public class ScenarioGetCashflows : BaseScenario
 
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
+            .CollectionSavedInDb(DatabaseDriver, count);
 
         GivenUserIsAuthorized();
 

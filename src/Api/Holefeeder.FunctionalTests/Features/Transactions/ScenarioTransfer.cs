@@ -25,7 +25,7 @@ public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -87,18 +87,18 @@ public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
 
         await Given(async () => fromAccount = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => toAccount = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => await GivenACategory()
                 .WithName("Transfer In")
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => await GivenACategory()
                 .WithName("Transfer Out")
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(() => request = GivenATransfer()
                 .FromAccount(fromAccount)
                 .ToAccount(toAccount)
@@ -110,7 +110,7 @@ public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
             .Then(() => ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>())
             .Then(async () =>
             {
-                var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
+                var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
                 TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()
@@ -119,7 +119,7 @@ public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
             })
             .Then(async () =>
             {
-                var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
+                var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
 
                 TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()

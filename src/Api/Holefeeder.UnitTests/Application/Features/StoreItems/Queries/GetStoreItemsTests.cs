@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 
 using Microsoft.AspNetCore.Http;

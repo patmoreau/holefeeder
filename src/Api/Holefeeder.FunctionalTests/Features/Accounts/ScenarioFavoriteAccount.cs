@@ -20,7 +20,7 @@ public class ScenarioFavoriteAccount : BaseScenario
     public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = BudgetingDatabaseDriver;
+        _databaseDriver = DatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 

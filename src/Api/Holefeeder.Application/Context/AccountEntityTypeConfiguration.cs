@@ -13,9 +13,8 @@ public class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
             .ToTable("accounts")
             .HasKey(e => e.Id);
         builder
-            .HasIndex(e => new { e.Id, e.UserId })
+            .HasIndex(e => new {e.Id, e.UserId})
             .IsUnique();
-        builder.Ignore(e => e.Cashflows);
         builder
             .Property(e => e.Id)
             .HasColumnName("id")
@@ -52,5 +51,13 @@ public class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
             .Property(e => e.UserId)
             .HasColumnName("user_id")
             .IsRequired();
+        builder
+            .HasMany(e => e.Cashflows)
+            .WithOne(e => e.Account)
+            .HasForeignKey(x => x.AccountId);
+        builder
+            .HasMany(e => e.Transactions)
+            .WithOne(e => e.Account)
+            .HasForeignKey(x => x.AccountId);
     }
 }

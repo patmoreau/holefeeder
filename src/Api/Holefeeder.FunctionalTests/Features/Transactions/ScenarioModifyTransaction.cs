@@ -25,7 +25,7 @@ public class ScenarioModifyTransaction : BaseScenario
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
             .WithAccount(account).Build();
@@ -112,11 +112,11 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
             .WithAccount(account)
@@ -136,16 +136,16 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         var accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, 2);
+            .CollectionSavedInDb(DatabaseDriver, 2);
 
         var transaction = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -159,7 +159,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }

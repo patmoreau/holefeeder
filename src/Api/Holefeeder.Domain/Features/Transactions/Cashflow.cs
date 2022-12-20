@@ -122,7 +122,13 @@ public record Cashflow : Entity, IAggregateRoot
 
     public Category? Category { get; init; }
 
-    public IReadOnlyList<string> Tags { get; private set; } = ImmutableList<string>.Empty;
+    public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
+
+    public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
+
+    public DateTime? LastPaidDate => Transactions.Any() ? Transactions.Max(x => x.Date) : null;
+
+    public DateTime? LastCashflowDate => Transactions.Max(x => x.CashflowDate);
 
     public bool Inactive { get; init; }
 
@@ -173,5 +179,28 @@ public record Cashflow : Entity, IAggregateRoot
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
         Tags = newTags.ToImmutableArray();
         return this;
+    }
+
+    public IReadOnlyCollection<DateTime> GetUpcoming(DateTime to)
+    {
+        var dates = new List<DateTime>();
+
+        if (Inactive)
+        {
+            return dates;
+        }
+
+        dates.AddRange(IntervalType
+            .DatesInRange(EffectiveDate, EffectiveDate, to, Frequency)
+            .Where(futureDate => IsUnpaid(EffectiveDate, futureDate)));
+
+        return dates;
+    }
+
+    private bool IsUnpaid(DateTime effectiveDate, DateTime nextDate)
+    {
+        return LastPaidDate is null
+            ? nextDate >= effectiveDate
+            : nextDate > LastPaidDate && nextDate > LastCashflowDate;
     }
 }

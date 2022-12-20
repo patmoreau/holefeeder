@@ -26,7 +26,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -90,10 +90,10 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
 
         await Given(async () => account = await GivenAnActiveAccount()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(async () => category = await GivenACategory()
                 .ForUser(AuthorizedUserId)
-                .SavedInDb(BudgetingDatabaseDriver))
+                .SavedInDb(DatabaseDriver))
             .Given(() => request = GivenAPurchase()
                 .ForAccount(account)
                 .ForCategory(category)
@@ -104,7 +104,7 @@ public sealed class ScenarioMakePurchase : BaseScenario<ScenarioMakePurchase>
             .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
             .Then(async () =>
             {
-                var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(id);
+                var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
                 TransactionMapper.MapToModelOrNull(result).Should()
                     .NotBeNull()

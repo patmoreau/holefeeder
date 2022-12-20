@@ -21,4 +21,6 @@ internal sealed class MyDataCategoryDtoBuilder : IBuilder<MyDataCategoryDto>, IC
         _faker.AssertConfigurationIsValid();
         return _faker.Generate(count).ToArray();
     }
+
+    public MyDataCategoryDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

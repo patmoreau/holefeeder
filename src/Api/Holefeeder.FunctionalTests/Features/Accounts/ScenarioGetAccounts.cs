@@ -17,7 +17,7 @@ public class ScenarioGetAccounts : BaseScenario
     public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -68,10 +68,10 @@ public class ScenarioGetAccounts : BaseScenario
 
         await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
+            .CollectionSavedInDb(DatabaseDriver, count);
 
         await GivenAnActiveAccount()
-            .CollectionSavedInDb(BudgetingDatabaseDriver, count);
+            .CollectionSavedInDb(DatabaseDriver, count);
 
         GivenUserIsAuthorized();
 

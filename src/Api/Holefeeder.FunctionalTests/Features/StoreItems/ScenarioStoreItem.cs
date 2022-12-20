@@ -1,13 +1,12 @@
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Features;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
 using Request = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 
-namespace Holefeeder.FunctionalTests.Scenarios;
+namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
 {
@@ -19,7 +18,7 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

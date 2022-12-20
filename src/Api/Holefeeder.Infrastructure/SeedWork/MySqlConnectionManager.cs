@@ -6,13 +6,13 @@ using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.SeedWork;
 
-public class MySqlConnectionManager : DatabaseConnectionManager
+internal class MySqlConnectionManager : DatabaseConnectionManager
 {
-    public MySqlConnectionManager(string connectionString)
+    public MySqlConnectionManager(BudgetingConnectionStringBuilder connectionStringBuilder)
         : base(new DelegateConnectionFactory(log =>
         {
             Log = log;
-            return new MySqlConnection(connectionString);
+            return new MySqlConnection(connectionStringBuilder.ConnectionString);
         }))
     {
     }

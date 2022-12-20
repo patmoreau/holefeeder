@@ -3,6 +3,7 @@
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Application.Features.Accounts;
 
@@ -45,7 +46,7 @@ internal static class AccountMapper
             entity.Inactive);
     }
 
-    public static Account? MapToModelOrNull(Account? entity, IEnumerable<Guid>? cashflows = null)
+    public static Account? MapToModelOrNull(Account? entity, IEnumerable<Cashflow>? cashflows = null)
     {
         if (entity is null)
         {
@@ -55,7 +56,7 @@ internal static class AccountMapper
         var model = new Account(entity.Id, entity.Type, entity.Name, entity.OpenDate, entity.UserId)
         {
             Favorite = entity.Favorite,
-            Cashflows = cashflows?.ToImmutableArray() ?? ImmutableArray<Guid>.Empty,
+            Cashflows = cashflows?.ToImmutableArray() ?? ImmutableArray<Cashflow>.Empty,
             Description = entity.Description,
             Inactive = entity.Inactive,
             OpenBalance = entity.OpenBalance

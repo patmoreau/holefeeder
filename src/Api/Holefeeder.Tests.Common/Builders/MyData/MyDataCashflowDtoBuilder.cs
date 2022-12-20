@@ -35,4 +35,6 @@ internal sealed class MyDataCashflowDtoBuilder : IBuilder<MyDataCashflowDto>, IC
         _faker.AssertConfigurationIsValid();
         return _faker.Generate(count).ToArray();
     }
+
+    public MyDataCashflowDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

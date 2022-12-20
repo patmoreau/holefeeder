@@ -1,8 +1,5 @@
 using System.Threading.Tasks;
 
-using FluentAssertions;
-using FluentAssertions.Execution;
-
 using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;

@@ -19,7 +19,7 @@ internal static class SqlBuilderExtensions
             {":le:", "<="}
         };
 
-    public static SqlBuilder Filter(this SqlBuilder query, IReadOnlyList<string> filter)
+    public static SqlBuilder Filter(this SqlBuilder query, IReadOnlyCollection<string> filter)
     {
         if (!filter.Any())
         {
@@ -54,7 +54,7 @@ internal static class SqlBuilderExtensions
         return query;
     }
 
-    public static SqlBuilder Sort(this SqlBuilder query, IReadOnlyList<string>? sort)
+    public static SqlBuilder Sort(this SqlBuilder query, IReadOnlyCollection<string>? sort)
     {
         if (sort is null || !sort.Any())
         {

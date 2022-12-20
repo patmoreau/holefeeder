@@ -55,5 +55,15 @@ public class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Trans
             .Property(e => e.UserId)
             .HasColumnName("user_id")
             .IsRequired();
+        builder
+            .HasOne(e => e.Account)
+            .WithMany(e => e.Transactions)
+            .HasForeignKey(e => e.AccountId);
+        builder
+            .HasOne(e => e.Category);
+        builder
+            .HasOne(e => e.Cashflow)
+            .WithMany(e => e.Transactions)
+            .HasForeignKey(e => e.CashflowId);
     }
 }

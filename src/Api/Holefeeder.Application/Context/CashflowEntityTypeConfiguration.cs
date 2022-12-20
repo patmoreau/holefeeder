@@ -68,5 +68,13 @@ public class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashflow
             .Property(e => e.UserId)
             .HasColumnName("user_id")
             .IsRequired();
+        builder
+            .HasOne(c => c.Account)
+            .WithMany(e => e.Cashflows)
+            .HasForeignKey(x => x.AccountId);
+        builder.HasOne(c => c.Category);
+        builder.HasMany(c => c.Transactions)
+            .WithOne(c => c.Cashflow)
+            .HasForeignKey(x => x.CashflowId);
     }
 }

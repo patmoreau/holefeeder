@@ -1,7 +1,5 @@
 using System.Security.Claims;
 
-using FluentAssertions;
-
 using Holefeeder.Application.SeedWork;
 
 using Microsoft.AspNetCore.Http;

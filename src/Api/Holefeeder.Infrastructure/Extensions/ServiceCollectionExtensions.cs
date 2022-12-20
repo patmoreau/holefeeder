@@ -4,19 +4,19 @@ using Ardalis.SmartEnum.Dapper;
 
 using Dapper;
 
-using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Transactions;
+using Holefeeder.Application.Context;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Infrastructure.Context;
-using Holefeeder.Infrastructure.Repositories;
 using Holefeeder.Infrastructure.Scripts;
+using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Infrastructure.Serializers;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+
+using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.Extensions;
 
@@ -31,17 +31,20 @@ public static class ServiceCollectionExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        services.AddOptions<HolefeederDatabaseSettings>()
-            .Bind(configuration.GetSection(nameof(HolefeederDatabaseSettings)))
-            .ValidateDataAnnotations();
+        var mySqlDatabaseSettings = new BudgetingConnectionStringBuilder
+        {
+            ConnectionString = configuration.GetConnectionString("BudgetingConnectionString")!
+        };
 
-        services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
+        services.AddSingleton(mySqlDatabaseSettings);
 
-        services.AddScoped<IHolefeederContext, HolefeederContext>();
+        services.AddDbContext<BudgetingContext>(options =>
+        {
+            var connectionString = mySqlDatabaseSettings.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        });
+
         services.AddScoped<Script000InitDatabase>();
-
-        services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
 
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 

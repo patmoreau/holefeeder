@@ -33,20 +33,13 @@ public abstract class BaseScenario : IDisposable
         User = new UserStepDefinition(HttpClientDriver);
     }
 
-    protected IServiceScope Scope { get; }
+    private IServiceScope Scope { get; }
 
-    private HolefeederDatabaseDriver? _holefeederDatabaseDriver;
+    private BudgetingDatabaseDriver? _databaseDriver;
 
-    protected HolefeederDatabaseDriver HolefeederDatabaseDriver
+    protected BudgetingDatabaseDriver DatabaseDriver
     {
-        get => _holefeederDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<HolefeederDatabaseDriver>();
-    }
-
-    private BudgetingDatabaseDriver? _budgetingDatabaseDriver;
-
-    protected BudgetingDatabaseDriver BudgetingDatabaseDriver
-    {
-        get => _budgetingDatabaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
+        get => _databaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
     }
 
     protected HttpClientDriver HttpClientDriver { get; }

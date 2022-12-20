@@ -19,7 +19,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenAModifyStoreItemRequest()
             .WithId(storeItem.Id)
@@ -89,7 +89,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
+        var result = await DatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
         result!.Data.Should().BeEquivalentTo(request.Data);
 

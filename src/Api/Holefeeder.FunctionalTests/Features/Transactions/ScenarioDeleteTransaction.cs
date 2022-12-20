@@ -25,7 +25,7 @@ public class ScenarioDeleteTransaction : BaseScenario
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
-        BudgetingDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -81,16 +81,16 @@ public class ScenarioDeleteTransaction : BaseScenario
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(BudgetingDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
 
@@ -100,7 +100,7 @@ public class ScenarioDeleteTransaction : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await BudgetingDatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }

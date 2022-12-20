@@ -3,9 +3,11 @@ using System.Text.Json;
 
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
@@ -18,13 +20,10 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioImportData : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
     public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = BudgetingDatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -126,28 +125,28 @@ public class ScenarioImportData : BaseScenario
 
         async Task AssertAccount(MyDataAccountDto account)
         {
-            var result = await _databaseDriver.FindByIdAsync<AccountEntity>(account.Id);
+            var result = await DatabaseDriver.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
 
         async Task AssertCategory(MyDataCategoryDto category)
         {
-            var result = await _databaseDriver.FindByIdAsync<CategoryEntity>(category.Id);
+            var result = await DatabaseDriver.FindByIdAsync<Category>(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
 
         async Task AssertCashflow(MyDataCashflowDto cashflow)
         {
-            var result = await _databaseDriver.FindByIdAsync<CashflowEntity>(cashflow.Id);
+            var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
 
         async Task AssertTransaction(MyDataTransactionDto transaction)
         {
-            var result = await _databaseDriver.FindByIdAsync<TransactionEntity>(transaction.Id);
+            var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }
