@@ -2,8 +2,9 @@
 
 namespace Holefeeder.Infrastructure.SeedWork;
 
-internal class BudgetingConnectionStringBuilder
+public class BudgetingConnectionStringBuilder
 {
+    public const string BUDGETING_CONNECTION_STRING = "BudgetingConnectionString";
     public required string ConnectionString { get; init; }
 
     public MySqlConnectionStringBuilder CreateBuilder() => new(ConnectionString);

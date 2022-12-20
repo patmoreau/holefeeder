@@ -7,6 +7,7 @@ using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +47,8 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
         builder
             .ConfigureTestServices(services =>
             {
-                var holefeederConnection = configuration.GetConnectionString("HolefeederConnectionString");
+                var holefeederConnection =
+                    configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING);
                 services.AddDbContext<BudgetingContext>(options =>
                     options.UseMySql(ServerVersion.AutoDetect(holefeederConnection)));
 
