@@ -11,6 +11,9 @@
   path: /spec/rules/2/host
   value: mysql.test
 - op: replace
+  path: /spec/rules/3/host
+  value: seq.test
+- op: replace
   path: /spec/tls/0/hosts/0
   value: holefeeder.test
 - op: replace
@@ -19,3 +22,6 @@
 - op: replace
   path: /spec/tls/0/hosts/2
   value: mysql.test
+- op: replace
+  path: /spec/tls/0/hosts/3
+  value: seq.test

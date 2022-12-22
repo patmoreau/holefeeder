@@ -1,9 +1,33 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: gateway-stripprefix
+  namespace: holefeeder
+spec:
+  stripPrefix:
+    prefixes:
+      - /gateway
+    forceSlash: false
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: holefeeder
+  namespace: holefeeder
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 16m
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: le
+    traefik.ingress.kubernetes.io/router.middlewares: holefeeder-gateway-stripprefix@kubernetescrd
+    # nginx.ingress.kubernetes.io/proxy-body-size: 16m
+    # traefik.ingress.kubernetes.io/buffering: |
+    #   maxRequestBodyBytes = 15728640
+    #   memRequestBodyBytes = 2097152
+    #   maxResponseBodyBytes = 15728640
+    #   memResponseBodyBytes = 2097152
+    #   retryExpression = "IsNetworkError() && Attempts() <= 2"
+    # traefik.frontend.rule.type: PathPrefixStrip
+    # traefik.ingress.kubernetes.io/rewrite-target: /api # set path to result request
 spec:
   rules:
     - host: holefeeder.test
@@ -14,6 +38,13 @@ spec:
             backend:
               service:
                 name: ui
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /gateway
+            backend:
+              service:
+                name: api
                 port:
                   number: 80
     - host: adminer.test
@@ -36,9 +67,13 @@ spec:
                 name: mysql
                 port:
                   number: 30306
-  tls: 
-  - hosts: 
-    - holefeeder.test 
-    - adminer.test
-    - mysql.test
-    secretName: holefeeder-tls
+    - host: seq.test
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: seq
+                port:
+                  number: 80
