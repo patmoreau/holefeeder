@@ -11,9 +11,8 @@ k3d cluster create dev \
   --api-port 6550 \
   --port 443:443@loadbalancer \
   --port 30306:30306@loadbalancer \
-  --k3s-arg '--no-deploy=traefik@server:*' \
-  --server 1 \
-  --agents 3 \
+  --servers 3 \
+  --agents 3
 ```
 
 ### create a simple prd cluster
@@ -46,7 +45,7 @@ kubectl -n cert-manager rollout status deploy/cert-manager
 ```
 
 ```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
 ```
 
 ## dashboard

@@ -2,34 +2,35 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ui
+  namespace: holefeeder
   labels:
     app: ui
 spec:
   ports:
-    - port: 80
+    - name: ui
+      port: 80
+      targetPort: 80
   selector:
     app: ui
-    tier: frontend
-  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ui
+  namespace: holefeeder
   labels:
     app: ui
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: ui
-      tier: frontend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: ui
-        tier: frontend
     spec:
       containers:
         - image: holefeeder/holefeeder-web

@@ -3,25 +3,25 @@ kind: Kustomization
 bases:
   - ../base
 
-nameSuffix: -dev
+# nameSuffix: -dev
 
 namespace: holefeeder
 
 resources:
-  - cluster-issuer.yaml
+  - acme-config.yaml
 
 patchesStrategicMerge:
   - api.env.yaml
   - mysql.deployment.yaml
   - ui.env.yaml
 
-patchesJson6902:
-  - target:
-      group: networking.k8s.io
-      version: v1
-      kind: Ingress
-      name: holefeeder
-    path: ingress.patch.yaml
+# patchesJson6902:
+#   - target:
+#       group: networking.k8s.io
+#       version: v1
+#       kind: Ingress
+#       name: holefeeder
+#     path: ingress.patch.yaml
 
 secretGenerator:
   - name: holefeeder-secrets
