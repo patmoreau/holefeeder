@@ -8,12 +8,15 @@
 
 ```bash
 k3d cluster create dev \
-  --api-port 6550 \
+  --api-port 6443 \
   --port 443:443@loadbalancer \
+  --port 9443:9443@loadbalancer \
   --port 30306:30306@loadbalancer \
-  --servers 3 \
-  --agents 3
+  --port 30431:30431@loadbalancer
 ```
+
+install local certificate trust:
+mkcert <https://github.com/FiloSottile/mkcert>
 
 ### create a simple prd cluster
 
@@ -31,63 +34,6 @@ k3d cluster create prd \
 cp ~/.kube/config ~/.kube/config.bak && KUBECONFIG=~/.kube/config:./holefeeder-cluster-config.yaml kubectl config view --flatten > /tmp/config && mv /tmp/config ~/.kube/config
 ```
 
-## Cert-manager
-
-```bash
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-kubectl create namespace cert-manager
-helm install cert-manager jetstack/cert-manager \
-    --namespace cert-manager \
-    --version v1.9.1 \
-    --set installCRDs=true --wait --debug
-kubectl -n cert-manager rollout status deploy/cert-manager
-```
-
-```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
-```
-
 ## dashboard
 
-### 4. Install the helm repos for rancher
-
-```bash
-helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
-helm repo update
-kubectl create namespace cattle-system
-helm install rancher rancher-latest/rancher \
-    --namespace cattle-system \
-    --version=2.6.1 \
-    --set hostname=rancher.localhost \
-    --set bootstrapPassword=congratsthanandayme \
-    --wait --debug
-kubectl -n cattle-system rollout status deploy/rancher
-kubectl -n cattle-system get all,ing
-```
-
-```bash
-GITHUB_URL=https://github.com/kubernetes/dashboard/releases
-VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
-```
-
-### Dashboard RBAC Configuration
-
-```bash
-kubectl create -f dashboard.admin-user.yml -f dashboard.admin-user-role.yml
-```
-
-### Obtain bearer token
-
-```bash
-kubectl -n kubernetes-dashboard describe secret admin-user-token | grep '^token'
-```
-
-### Local Access to the Dashboard
-
-```bash
-kubectl proxy
-```
-
-<http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/>
+<https://docs.portainer.io/start/install/server/kubernetes/baremetal>

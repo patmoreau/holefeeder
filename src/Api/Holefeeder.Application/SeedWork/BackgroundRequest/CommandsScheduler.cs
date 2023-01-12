@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
-public class CommandsScheduler
+internal class CommandsScheduler
 {
     private readonly CommandsExecutor _commandsExecutor;
     private readonly IServiceProvider _serviceProvider;
@@ -61,7 +61,7 @@ public class CommandsScheduler
             TimeZoneInfo.Local);
     }
 
-    private MediatorSerializedObject SerializeObject(object mediatorObject, string description)
+    private static MediatorSerializedObject SerializeObject(object mediatorObject, string description)
     {
         string fullTypeName = mediatorObject.GetType().FullName ?? mediatorObject.GetType().Name;
         string data = JsonSerializer.Serialize(mediatorObject);

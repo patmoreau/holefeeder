@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Holefeeder.Application.Context;
 
-public class StoreItemEntityTypeConfiguration : IEntityTypeConfiguration<StoreItem>
+internal class StoreItemEntityTypeConfiguration : IEntityTypeConfiguration<StoreItem>
 {
     public void Configure(EntityTypeBuilder<StoreItem> builder)
     {

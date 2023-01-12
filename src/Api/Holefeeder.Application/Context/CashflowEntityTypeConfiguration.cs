@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Holefeeder.Application.Context;
 
-public class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashflow>
+internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashflow>
 {
     private const char DELIMITER = ',';
 

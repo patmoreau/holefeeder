@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Holefeeder.Application.Context;
 
-public class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
+internal class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
 {
     public void Configure(EntityTypeBuilder<Account> builder)
     {

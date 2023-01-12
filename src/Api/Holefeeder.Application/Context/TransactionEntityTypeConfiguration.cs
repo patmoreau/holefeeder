@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Holefeeder.Application.Context;
 
-public class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Transaction>
+internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Transaction>
 {
     private const char DELIMITER = ',';
 

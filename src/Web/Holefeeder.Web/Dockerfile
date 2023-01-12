@@ -8,6 +8,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update && apt-get install -y nodejs yarn build-essential
 
 COPY *.sln .
+COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .
 COPY nuget.config .

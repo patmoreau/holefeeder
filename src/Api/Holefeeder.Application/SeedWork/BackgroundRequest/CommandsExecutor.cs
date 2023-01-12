@@ -5,7 +5,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
-public class CommandsExecutor
+internal class CommandsExecutor
 {
     private readonly IMediator _mediator;
     public CommandsExecutor(IMediator mediator)

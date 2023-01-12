@@ -12,6 +12,7 @@ using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,7 +27,7 @@ public class ImportData : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("api/v2/my-data/import-data",
-                (Request request, IUserContext userContext, IValidator<Request> validator,
+                [DisableRequestSizeLimit] (Request request, IUserContext userContext, IValidator<Request> validator,
                     CommandsScheduler commandsScheduler) =>
                 {
                     var validation = validator.Validate(request);

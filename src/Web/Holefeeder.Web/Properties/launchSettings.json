@@ -6,7 +6,9 @@
       "applicationUrl": "https://localhost:7246;http://localhost:5085",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
+        "Serilog__WriteTo__1__Args__serverUrl": "https://seq-ingestion.127.0.0.1.nip.io",
+        "Serilog__WriteTo__1__Args__apiKey": "fPMB1qU9khTQtXE0AsxR"
       }
     }
   }

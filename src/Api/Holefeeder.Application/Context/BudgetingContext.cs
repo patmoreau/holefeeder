@@ -28,6 +28,11 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        if (modelBuilder == null)
+        {
+            throw new ArgumentNullException(nameof(modelBuilder));
+        }
+
         new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
         new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
         new CashflowEntityTypeConfiguration().Configure(modelBuilder.Entity<Cashflow>());

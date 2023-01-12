@@ -2,7 +2,6 @@ using HealthChecks.UI.Client;
 
 using Holefeeder.Web.Config;
 using Holefeeder.Web.Controllers;
-using Holefeeder.Web.Extensions;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -16,11 +15,10 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, _, configuration) => configuration
+builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddYarpReverseProxy(builder.Configuration);
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);
 
@@ -34,8 +32,8 @@ builder.Services
 builder.Services
     .AddHealthChecksUI(setup =>
     {
-        setup.AddHealthCheckEndpoint("web", "/healthz");
-        setup.AddHealthCheckEndpoint("api", "/gateway/healthz");
+        setup.AddHealthCheckEndpoint("web", "http://localhost/healthz");
+        setup.AddHealthCheckEndpoint("api", $"{builder.Configuration.GetValue<string>("Api:Url")!}/healthz");
     })
     .AddInMemoryStorage();
 
@@ -60,7 +58,6 @@ else
 }
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -79,7 +76,6 @@ app.MapHealthChecks("/healthz",
     new HealthCheckOptions {Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse}
 );
 app.UseHttpLogging();
-app.MapReverseProxy();
 app.MapHealthChecksUI(config =>
 {
     config.UIPath = "/hc-ui";

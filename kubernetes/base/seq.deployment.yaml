@@ -24,6 +24,9 @@ spec:
     - name: seq
       port: 80
       targetPort: 80
+    # - name: seq-ingestion
+    #   port: 5341
+    #   targetPort: 5341
   selector:
     app: seq
 ---
@@ -53,6 +56,7 @@ spec:
             - containerPort: 80
               name: seq
             - containerPort: 5341
+              name: seq-ingestion
           resources:
             requests:
               memory: 128Mi
