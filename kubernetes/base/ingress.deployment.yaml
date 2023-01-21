@@ -22,53 +22,71 @@ spec:
     memResponseBodyBytes: 31457280
     retryExpression: "IsNetworkError() && Attempts() <= 2"
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: holefeeder
   namespace: holefeeder
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: holefeeder-gateway-stripprefix@kubernetescrd, holefeeder-limit@kubernetescrd
 spec:
-  rules:
-    - host: holefeeder.127.0.0.1.nip.io
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: ui
-                port:
-                  number: 80
-          - pathType: Prefix
-            path: /gateway
-            backend:
-              service:
-                name: api
-                port:
-                  number: 80
-    - host: adminer.127.0.0.1.nip.io
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: adminer
-                port:
-                  number: 80
-    - host: seq.127.0.0.1.nip.io
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: seq
-                port:
-                  number: 80
-  tls:
-    - secretName: holefeeder-ca
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`holefeeder.127.0.0.1.nip.io`) && PathPrefix(`/gateway`)
+      services:
+        - name: api
+          port: 80
+      middlewares:
+        - name: gateway-stripprefix
+          namespace: holefeeder
+    - kind: Rule
+      match: Host(`holefeeder.127.0.0.1.nip.io`)
+      services:
+        - name: ui
+          port: 80
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: adminer
+  namespace: holefeeder
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`adminer.127.0.0.1.nip.io`)
+      services:
+        - name: adminer
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: seq
+  namespace: holefeeder
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`seq.127.0.0.1.nip.io`)
+      services:
+        - name: seq
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mysql
+  namespace: kube-system
+spec:
+  entryPoints:
+    - mysql
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: mysql
+          namespace: holefeeder
+          port: 3306
