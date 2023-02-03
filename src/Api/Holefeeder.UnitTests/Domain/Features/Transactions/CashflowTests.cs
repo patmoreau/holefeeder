@@ -286,6 +286,8 @@ public class CashflowTests
     {
         _testOutputHelper.WriteLine(testName);
 
+        ArgumentNullException.ThrowIfNull(expected);
+
         // arrange
         var cashflow = GivenAnActiveCashflow()
             .OfFrequency(info.IntervalType, info.Frequency)
@@ -309,6 +311,8 @@ public class CashflowTests
         IReadOnlyCollection<DateTime> expected)
     {
         _testOutputHelper.WriteLine(testName);
+
+        ArgumentNullException.ThrowIfNull(expected);
 
         // arrange
         var transaction = GivenATransaction()

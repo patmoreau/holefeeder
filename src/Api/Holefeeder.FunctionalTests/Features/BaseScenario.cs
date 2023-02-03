@@ -200,7 +200,24 @@ public abstract class BaseScenario : IDisposable
 
     public void Dispose()
     {
-        Scope.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            Scope.Dispose();
+        }
+
+        _disposed = true;
     }
 }
