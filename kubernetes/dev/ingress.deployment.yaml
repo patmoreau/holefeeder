@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: mysql
+  namespace: kube-system
+spec:
+  entryPoints:
+    - mysql
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: mysql
+          namespace: holefeeder
+          port: 3306

@@ -1,9 +1,12 @@
 - op: replace
-  path: /spec/rules/0/host
-  value: holefeeder.127.0.0.1.nip.io
+  path: /spec/routes/0/match
+  value: Host(`holefeeder.127.0.0.1.nip.io`) && PathPrefix(`/gateway`)
 - op: replace
-  path: /spec/rules/1/host
-  value: adminer.127.0.0.1.nip.io
+  path: /spec/routes/1/match
+  value: Host(`holefeeder.127.0.0.1.nip.io`)
 - op: replace
-  path: /spec/rules/2/host
-  value: seq.127.0.0.1.nip.io
+  path: /spec/routes/2/match
+  value: Host(`adminer.127.0.0.1.nip.io`)
+- op: replace
+  path: /spec/routes/3/match
+  value: Host(`seq.127.0.0.1.nip.io`)

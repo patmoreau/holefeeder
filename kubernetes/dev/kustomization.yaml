@@ -3,17 +3,28 @@ kind: Kustomization
 bases:
   - ../base
 
+resources:
+  - ingress.deployment.yaml
+
 patchesStrategicMerge:
   - api.env.yaml
   - seq.deployment.yaml
   - ui.env.yaml
+
+patchesJson6902:
+  - target:
+      group: traefik.containo.us
+      version: v1alpha1
+      kind: IngressRoute
+      name: holefeeder
+    path: ingress.patch.yaml
 
 secretGenerator:
   - name: holefeeder-secrets
     namespace: holefeeder
     behavior: create
     envs:
-      - .secrets/.env.secrets
+      - .env.secrets
 
 generatorOptions:
   disableNameSuffixHash: true

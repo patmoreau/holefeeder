@@ -32,7 +32,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`holefeeder.127.0.0.1.nip.io`) && PathPrefix(`/gateway`)
+      match: Host(``)
       services:
         - name: api
           port: 80
@@ -40,53 +40,17 @@ spec:
         - name: gateway-stripprefix
           namespace: holefeeder
     - kind: Rule
-      match: Host(`holefeeder.127.0.0.1.nip.io`)
+      match: Host(``)
       services:
         - name: ui
           port: 80
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: adminer
-  namespace: holefeeder
-spec:
-  entryPoints:
-    - websecure
-  routes:
     - kind: Rule
-      match: Host(`adminer.127.0.0.1.nip.io`)
+      match: Host(``)
       services:
         - name: adminer
           port: 80
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: seq
-  namespace: holefeeder
-spec:
-  entryPoints:
-    - websecure
-  routes:
     - kind: Rule
-      match: Host(`seq.127.0.0.1.nip.io`)
+      match: Host(``)
       services:
         - name: seq
           port: 80
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRouteTCP
-metadata:
-  name: mysql
-  namespace: kube-system
-spec:
-  entryPoints:
-    - mysql
-  routes:
-    - match: HostSNI(`*`)
-      services:
-        - name: mysql
-          namespace: holefeeder
-          port: 3306
