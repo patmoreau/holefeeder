@@ -204,7 +204,7 @@ public abstract class BaseScenario : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private bool _disposed = false;
+    private bool _disposed = default;
 
     protected virtual void Dispose(bool disposing)
     {
