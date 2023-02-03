@@ -259,7 +259,7 @@ jobs:
       - name: Create kube config
         run: |
           mkdir -p '${{ github.workspace }}/.kube' \
-            && echo '${{ secrets.KUBE_CONFIG}}' | base64 -d > $POD_KUBECONFIG
+            && echo '${{ secrets.KUBE_CONFIG}}' > $POD_KUBECONFIG
 
       - name: Create .env.secrets file
         run: |
@@ -271,7 +271,6 @@ jobs:
 
       - name: Create docker-github-config.yaml file
         run: |
-          READ_PACKAGES_TOKEN_ENCODED=$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)
           cat <<'EOF' >$GITHUB_WORKSPACE/kubernetes/prd/docker-github-config.yaml
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: SecretGenerator
@@ -279,7 +278,7 @@ jobs:
             name: dockerconfigjson-github-com
           data:
             literals:
-              - .dockerconfigjson=$READ_PACKAGES_TOKEN_ENCODED
+              - .dockerconfigjson=$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)
           EOF
 
       - name: Set image tags
