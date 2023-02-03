@@ -7,7 +7,6 @@ namespace: holefeeder
 
 resources:
   - certificates.yaml
-  - docker-github-config.yaml
 
 patchesStrategicMerge:
   - api.env.yaml
@@ -26,6 +25,10 @@ secretGenerator:
     behavior: create
     envs:
       - .env.secrets
+  - name: dockerconfigjson-github-com
+    behavior: create
+    envs:
+      - .env.token
 
 generatorOptions:
   disableNameSuffixHash: true
