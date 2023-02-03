@@ -279,7 +279,7 @@ jobs:
             name: dockerconfigjson-github-com
           data:
             literals:
-              - .dockerconfigjson=${{ env.READ_PACKAGES_TOKEN_ENCODED }}
+              - .dockerconfigjson=$READ_PACKAGES_TOKEN_ENCODED
           EOF
 
       - name: Set image tags
