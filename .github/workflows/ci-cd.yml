@@ -91,10 +91,10 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-          cache-to: |
-            type=gha,scope=api-build,mode=max
+          # cache-from: |
+          #   type=gha,scope=api-build
+          # cache-to: |
+          #   type=gha,scope=api-build,mode=max
 
       - name: Build Holefeeder.Web container
         uses: docker/build-push-action@v3
@@ -106,10 +106,10 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-          cache-to: |
-            type=gha,scope=ui-build,mode=max
+          # cache-from: |
+          #   type=gha,scope=ui-build
+          # cache-to: |
+          #   type=gha,scope=ui-build,mode=max
 
   tests:
     name: Tests
@@ -192,11 +192,11 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-            type=gha,scope=api-final
-          cache-to: |
-            type=gha,scope=api-final,mode=max
+          # cache-from: |
+          #   type=gha,scope=api-build
+          #   type=gha,scope=api-final
+          # cache-to: |
+          #   type=gha,scope=api-final,mode=max
 
       - name: Build Holefeeder.Web container
         uses: docker/build-push-action@v3
@@ -207,11 +207,11 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-            type=gha,scope=ui-final
-          cache-to: |
-            type=gha,scope=ui-final,mode=max
+          # cache-from: |
+          #   type=gha,scope=ui-build
+          #   type=gha,scope=ui-final
+          # cache-to: |
+          #   type=gha,scope=ui-final,mode=max
 
       - name: Tag version
         uses: actions/github-script@v3
