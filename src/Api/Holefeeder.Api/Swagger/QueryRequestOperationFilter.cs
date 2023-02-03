@@ -14,6 +14,16 @@ public class QueryRequestOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+        if (operation == null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
+
+        if (context == null)
+        {
+            throw new ArgumentNullException(nameof(context));
+        }
+
         operation.Parameters ??= new List<OpenApiParameter>();
 
         if (context.ApiDescription.ActionDescriptor is not { } descriptor ||
@@ -26,7 +36,7 @@ public class QueryRequestOperationFilter : IOperationFilter
         {
             operation.Parameters.Add(new OpenApiParameter
             {
-                Name = properties.Name.ToLower(),
+                Name = properties.Name.ToLowerInvariant(),
                 In = ParameterLocation.Query,
                 Required = false,
                 Schema = new OpenApiSchema {Type = properties.PropertyType.Name}

@@ -1,17 +1,21 @@
+using AutoBogus;
+
 using Dapper;
 
+using Holefeeder.Application.Context;
+using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Context;
+using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-
-using Xunit.Abstractions;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
@@ -22,6 +26,16 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        AutoFaker.Configure(configBuilder =>
+        {
+            configBuilder.WithOverride<AccountType>(context =>
+                context.Faker.PickRandom<AccountType>(AccountType.List));
+            configBuilder.WithOverride<CategoryType>(context =>
+                context.Faker.PickRandom<CategoryType>(CategoryType.List));
+            configBuilder.WithOverride<DateIntervalType>(context =>
+                context.Faker.PickRandom<DateIntervalType>(DateIntervalType.List));
+        });
+
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
             .AddUserSecrets<FunctionalTestMarker>()
@@ -33,20 +47,12 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
         builder
             .ConfigureTestServices(services =>
             {
-                services
-                    .AddOptions<ObjectStoreDatabaseSettings>()
-                    .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));
-                services.AddOptions<HolefeederDatabaseSettings>()
-                    .Bind(configuration.GetSection(nameof(HolefeederDatabaseSettings)))
-                    .ValidateDataAnnotations();
+                var holefeederConnection =
+                    configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING);
+                services.AddDbContext<BudgetingContext>(options =>
+                    options.UseMySql(ServerVersion.AutoDetect(holefeederConnection)));
 
-                services.AddSingleton(sp =>
-                    sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
-                services.AddSingleton(sp =>
-                    sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
-
-                services.AddScoped<HolefeederContext>();
-                services.AddScoped<ObjectStoreContext>();
+                services.AddScoped<BudgetingDatabaseDriver>();
 
                 services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
                 services.AddAuthentication(MockAuthenticationHandler.AUTHENTICATION_SCHEME)
@@ -56,8 +62,4 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
             });
     }
-
-    public HolefeederDatabaseDriver CreateHolefeederDatabaseDriver() => new(this);
-
-    public ObjectStoreDatabaseDriver CreateObjectStoreDatabaseDriver() => new(this);
 }

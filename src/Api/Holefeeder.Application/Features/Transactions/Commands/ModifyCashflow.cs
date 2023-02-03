@@ -1,17 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Transactions;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,7 +27,7 @@ public class ModifyCashflow : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<Unit>
+    internal record Request : ICommandRequest<Unit>
     {
         public Guid Id { get; init; }
 
@@ -44,7 +38,7 @@ public class ModifyCashflow : ICarterModule
         public string[] Tags { get; init; } = Array.Empty<string>();
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -53,53 +47,35 @@ public class ModifyCashflow : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
-        private readonly ICashflowRepository _cashflowRepository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowRepository cashflowRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _cashflowRepository = cashflowRepository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            var exists =
+                await _context.Cashflows.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == _userContext.UserId,
+                    cancellationToken);
+            if (exists is null)
             {
-                var exists =
-                    await _cashflowRepository.FindByIdAsync(request.Id, _userContext.UserId, cancellationToken);
-                if (exists is null)
-                {
-                    throw new CashflowNotFoundException(request.Id);
-                }
-
-                _logger.LogTrace("Existing {@Cashflow}", exists);
-
-                var cashflow = exists with
-                {
-                    Amount = request.Amount,
-                    Description = request.Description,
-                };
-
-                cashflow = cashflow.SetTags(request.Tags);
-
-                _logger.LogTrace("Modifying {@Cashflow}", cashflow);
-
-                await _cashflowRepository.SaveAsync(cashflow, cancellationToken);
-
-                await _cashflowRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
+                throw new CashflowNotFoundException(request.Id);
             }
-            catch (TransactionDomainException)
-            {
-                _cashflowRepository.UnitOfWork.Dispose();
-                throw;
-            }
+
+            var cashflow = exists with {Amount = request.Amount, Description = request.Description};
+
+            cashflow = cashflow.SetTags(request.Tags);
+
+            _context.Update(cashflow);
+
+            return Unit.Value;
         }
     }
 }

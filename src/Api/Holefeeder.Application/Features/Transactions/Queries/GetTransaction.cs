@@ -1,16 +1,12 @@
-using Carter;
-
-using FluentValidation;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -33,9 +29,9 @@ public class GetTransaction : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
+    internal record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -43,27 +39,30 @@ public class GetTransaction : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, TransactionInfoViewModel>
+    internal class Handler : IRequestHandler<Request, TransactionInfoViewModel>
     {
         private readonly IUserContext _userContext;
-        private readonly ITransactionQueriesRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<TransactionInfoViewModel> Handle(Request query,
             CancellationToken cancellationToken)
         {
-            var transaction = await _repository.FindByIdAsync(_userContext.UserId, query.Id, cancellationToken);
+            var transaction = await _context.Transactions
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(query.Id);
             }
 
-            return transaction;
+            return TransactionMapper.MapToDto(transaction);
         }
     }
 }

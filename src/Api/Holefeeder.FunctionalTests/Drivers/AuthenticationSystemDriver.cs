@@ -44,11 +44,11 @@ public class AuthenticationSystemDriver
     private void SetToken(string accessToken)
     {
         Debug.Assert(_azureB2C != null, nameof(_azureB2C) + " != null");
-        string token = "{\"access_token\": " +
-                       $"\"{accessToken}\"," +
-                       "\"expires_in\": 900," +
-                       "\"token_type\": \"Bearer\"," +
-                       "\"scope\": \"holefeeder.user\"}";
+        var token = "{\"access_token\": " +
+                    $"\"{accessToken}\"," +
+                    "\"expires_in\": 900," +
+                    "\"token_type\": \"Bearer\"," +
+                    "\"scope\": \"holefeeder.user\"}";
         _azureB2C.Given(Request.Create()).RespondWith(Response.Create().WithBody(token));
     }
 
@@ -60,7 +60,9 @@ public class AuthenticationSystemDriver
             {
                 return WireMockServer.Start(port);
             }
+#pragma warning disable CA1031
             catch (Exception)
+#pragma warning restore CA1031
             {
                 Thread.Sleep(250);
                 retryCount--;

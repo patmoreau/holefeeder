@@ -16,14 +16,15 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
-    <PackageReference Include="Carter" Version="6.1.1" />
+    <PackageReference Include="Carter" Version="7.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="5.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.7" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
   </ItemGroup>
@@ -43,5 +44,5 @@
       <DependentUpon>appsettings.json</DependentUpon>
     </None>
   </ItemGroup>
-  
+
 </Project>

@@ -4,7 +4,8 @@ using System.Text.Json;
 
 using FluentValidation;
 
-using Holefeeder.Application.Extensions;
+using Holefeeder.Api.Extensions;
+using Holefeeder.Application.Exceptions;
 using Holefeeder.Domain.SeedWork;
 
 using Microsoft.AspNetCore.Diagnostics;
@@ -48,7 +49,9 @@ public static class CustomErrorHandler
             {
                 ValidationException validationException => CreateValidationProblemDetails(validationException
                     .ToDictionary()),
-                DomainException domainException => CreateProblemDetails(domainException.StatusCode,
+                NotFoundException notFoundException => CreateProblemDetails(StatusCodes.Status404NotFound,
+                    $"A domain error occured: {notFoundException.Context}", notFoundException.Message),
+                DomainException domainException => CreateProblemDetails(StatusCodes.Status400BadRequest,
                     $"A domain error occured: {domainException.Context}", domainException.Message),
                 _ => CreateProblemDetails(httpContext.Response.StatusCode,
                     includeDetails ? "An error occured: " + ex.Message : "An error occured",
@@ -64,7 +67,7 @@ public static class CustomErrorHandler
 
     private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details)
     {
-        return new() {Status = statusCode, Title = title, Detail = details};
+        return new ProblemDetails {Status = statusCode, Title = title, Detail = details};
     }
 
     private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors)

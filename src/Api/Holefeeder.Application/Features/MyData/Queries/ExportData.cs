@@ -1,19 +1,20 @@
 ﻿using System.Collections.Immutable;
 
-using Carter;
-
+using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Accounts;
+using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.MyData.Queries;
 
-public class ExportData : ICarterModule
+public sealed class ExportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -31,26 +32,41 @@ public class ExportData : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<ExportDataDto>;
+    internal record Request : IRequest<ExportDataDto>;
 
-    public class Handler : IRequestHandler<Request, ExportDataDto>
+    internal class Handler : IRequestHandler<Request, ExportDataDto>
     {
         private readonly IUserContext _userContext;
-        private readonly IMyDataQueriesRepository _myDataRepository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IMyDataQueriesRepository myDataRepository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _myDataRepository = myDataRepository;
+            _context = context;
         }
 
         public async Task<ExportDataDto> Handle(Request request, CancellationToken cancellationToken)
         {
-            var accounts = await _myDataRepository.ExportAccountsAsync(_userContext.UserId, cancellationToken);
-            var categories = await _myDataRepository.ExportCategoriesAsync(_userContext.UserId, cancellationToken);
-            var cashflows = await _myDataRepository.ExportCashflowsAsync(_userContext.UserId, cancellationToken);
-            var transactions =
-                await _myDataRepository.ExportTransactionsAsync(_userContext.UserId, cancellationToken);
+            var accounts = (await _context.Accounts
+                    .Where(e => e.UserId == _userContext.UserId)
+                    .ToListAsync(cancellationToken))
+                .Select(AccountMapper.MapToMyDataAccountDto);
+            var categories = (await _context.Categories
+                    .Where(e => e.UserId == _userContext.UserId)
+                    .ToListAsync(cancellationToken))
+                .Select(CategoryMapper.MapToMyDataCategoryDto);
+            var cashflows = (await _context.Cashflows
+                    .Where(e => e.UserId == _userContext.UserId)
+                    .Include(e => e.Account)
+                    .Include(e => e.Category)
+                    .ToListAsync(cancellationToken))
+                .Select(CashflowMapper.MapToMyDataCashflowDto);
+            var transactions = (await _context.Transactions
+                    .Where(e => e.UserId == _userContext.UserId)
+                    .Include(e => e.Account)
+                    .Include(e => e.Category)
+                    .ToListAsync(cancellationToken))
+                .Select(TransactionMapper.MapToMyDataTransactionDto);
 
             return new ExportDataDto(accounts.ToImmutableArray(),
                 categories.ToImmutableArray(),

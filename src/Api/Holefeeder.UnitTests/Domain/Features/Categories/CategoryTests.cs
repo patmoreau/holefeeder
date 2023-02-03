@@ -1,15 +1,6 @@
-using System;
 using System.Linq;
 
-using Bogus;
-using Bogus.Extensions;
-
-using FluentAssertions;
-
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.SeedWork;
-
-using Xunit;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 

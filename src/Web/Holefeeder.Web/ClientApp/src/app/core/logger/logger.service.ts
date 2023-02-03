@@ -11,10 +11,15 @@ export enum LoggingLevel {
 
 export interface Logger {
   error(message: any, ...optionalParams: any[]): void;
+
   warning(message: any, ...optionalParams: any[]): void;
+
   info(message: any, ...optionalParams: any[]): void;
+
   verbose(message: any, ...optionalParams: any[]): void;
+
   debug(message: any, ...optionalParams: any[]): void;
+
   log(loggingLevel: LoggingLevel, message: any, ...optionalParams: any[]): void;
 }
 

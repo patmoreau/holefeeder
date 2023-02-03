@@ -1,24 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-using AutoBogus;
-
-using Bogus;
-
-using FluentAssertions;
-
-using FluentValidation.TestHelper;
-
-using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Tests.Common.Factories;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
-
-using NSubstitute;
-
-using Xunit;
 
 using static Holefeeder.Application.Features.Accounts.Queries.GetAccounts;
 
@@ -27,11 +9,6 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 public class GetAccountsTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly AccountViewModelFactory _viewModelFactory = new();
-
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IAccountQueriesRepository _repositoryMock = Substitute.For<IAccountQueriesRepository>();
 
     public GetAccountsTests()
     {
@@ -84,25 +61,5 @@ public class GetAccountsTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Limit);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-        var count = new Faker().Random.Number(100);
-        var models = _viewModelFactory.Generate(count);
-
-        _repositoryMock.FindAsync(Arg.Is(_userContextMock.UserId), Arg.Any<QueryParams>(), Arg.Any<CancellationToken>())
-            .Returns((count, models));
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().Be(new QueryResult<AccountViewModel>(count, models));
     }
 }

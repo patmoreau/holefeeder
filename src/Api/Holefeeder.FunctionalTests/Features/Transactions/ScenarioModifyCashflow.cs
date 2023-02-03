@@ -1,49 +1,43 @@
 using System.Net;
 using System.Text.Json;
 
-using AutoBogus;
-
-using Bogus;
-
-using FluentAssertions;
-
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
-using static Holefeeder.Tests.Common.Builders.CashflowEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.ModifyCashflowRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioModifyCashflow : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
-
     public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _databaseDriver.ResetStateAsync().Wait();
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenACashflow()
+        var request = GivenAnInvalidModifyCashflowRequest()
             .OfAmount(Decimal.MinusOne)
             .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserModifiedACashflow(MapToRequest(entity));
+        await WhenUserModifiedACashflow(request);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -51,11 +45,11 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var entity = GivenACashflow().Build();
+        var request = GivenAModifyCashflowRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserModifiedACashflow(MapToRequest(entity));
+        await WhenUserModifiedACashflow(request);
 
         ThenUserShouldBeAuthorizedToAccessEndpoint();
     }
@@ -63,11 +57,11 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenACashflow().Build();
+        var request = GivenAModifyCashflowRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
-        await WhenUserModifiedACashflow(MapToRequest(entity));
+        await WhenUserModifiedACashflow(request);
 
         ShouldBeForbiddenToAccessEndpoint();
     }
@@ -75,11 +69,11 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenACashflow().Build();
+        var request = GivenAModifyCashflowRequest().Build();
 
         GivenUserIsUnauthorized();
 
-        await WhenUserModifiedACashflow(MapToRequest(entity));
+        await WhenUserModifiedACashflow(request);
 
         ShouldNotBeAuthorizedToAccessEndpoint();
     }
@@ -89,40 +83,31 @@ public class ScenarioModifyCashflow : BaseScenario
     {
         var account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
-        var cashflow = await GivenACashflow()
+        var cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
-        cashflow = cashflow with
-        {
-            Amount = new Faker().Finance.Amount(),
-            Description = AutoFaker.Generate<string>()
-        };
+        var request = GivenAModifyCashflowRequest()
+            .WithId(cashflow.Id)
+            .Build();
 
-        await WhenUserModifiedACashflow(MapToRequest(cashflow));
+        await WhenUserModifiedACashflow(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<CashflowEntity>(cashflow.Id, cashflow.UserId);
+        var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
 
-        result.Should()
-            .NotBeNull()
-            .And
-            .BeEquivalentTo(cashflow, options =>
-                options.Excluding(info => info.LastPaidDate)
-                    .Excluding(info => info.LastCashflowDate)
-                    .Excluding(info => info.Account)
-                    .Excluding(info => info.Category));
+        result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
     private async Task WhenUserModifiedACashflow(Request request)
@@ -130,13 +115,4 @@ public class ScenarioModifyCashflow : BaseScenario
         var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
     }
-
-    private static Request MapToRequest(dynamic cashflow) =>
-        new()
-        {
-            Id = cashflow.Id,
-            Amount = cashflow.Amount,
-            Description = cashflow.Description,
-            Tags = cashflow.Tags is string ? cashflow.Tags.Split(";") : cashflow.Tags.ToArray()
-        };
 }

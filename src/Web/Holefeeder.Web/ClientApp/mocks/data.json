@@ -22,7 +22,9 @@
       "date": "2022-09-27T00:00:00",
       "amount": 34.02,
       "description": "Happy hour",
-      "tags": ["fun"],
+      "tags": [
+        "fun"
+      ],
       "category": {
         "id": "ff6b0d92-5432-44f2-8c7b-f36a49315e39",
         "name": "Food and Drinks",
@@ -127,7 +129,9 @@
       "recurrence": 0,
       "description": "Monthly fees",
       "inactive": false,
-      "tags": ["fees"],
+      "tags": [
+        "fees"
+      ],
       "category": {
         "id": "36f5a52c-b699-46db-8922-5efc47648f60",
         "name": "Banking",
@@ -148,7 +152,9 @@
       "recurrence": 0,
       "description": "pizza",
       "inactive": true,
-      "tags": ["restaurant"],
+      "tags": [
+        "restaurant"
+      ],
       "category": {
         "id": "ff6b0d92-5432-44f2-8c7b-f36a49315e39",
         "name": "Food and Drinks",
@@ -201,7 +207,9 @@
       "date": "2022-08-06T00:00:00",
       "amount": 33.58,
       "description": "Life Insurance",
-      "tags": ["insurance"],
+      "tags": [
+        "insurance"
+      ],
       "category": {
         "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
         "name": "Health",
@@ -303,7 +311,9 @@
       "date": "2022-05-27T00:00:00",
       "amount": 34.02,
       "description": "Life Insurance Steph",
-      "tags": ["insurance"],
+      "tags": [
+        "insurance"
+      ],
       "category": {
         "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
         "name": "Health",
@@ -320,7 +330,9 @@
       "date": "2022-05-24T00:00:00",
       "amount": 21.83,
       "description": "Netflix",
-      "tags": ["electronics & software"],
+      "tags": [
+        "electronics & software"
+      ],
       "category": {
         "id": "2a2b7acf-c9e3-4e02-82c9-139026a3eeed",
         "name": "Leisure",
@@ -371,7 +383,9 @@
       "date": "2022-08-06T00:00:00",
       "amount": 33.58,
       "description": "Life Insurance",
-      "tags": ["insurance"],
+      "tags": [
+        "insurance"
+      ],
       "category": {
         "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
         "name": "Health",
@@ -473,7 +487,9 @@
       "date": "2022-05-27T00:00:00",
       "amount": 34.02,
       "description": "Life Insurance Steph",
-      "tags": ["insurance"],
+      "tags": [
+        "insurance"
+      ],
       "category": {
         "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
         "name": "Health",
@@ -490,7 +506,9 @@
       "date": "2022-05-24T00:00:00",
       "amount": 21.83,
       "description": "Netflix",
-      "tags": ["electronics & software"],
+      "tags": [
+        "electronics & software"
+      ],
       "category": {
         "id": "2a2b7acf-c9e3-4e02-82c9-139026a3eeed",
         "name": "Leisure",

@@ -10,7 +10,4 @@ mysql -u root -p"$(cat /etc/mysql/credentials/MYSQL_ROOT_PASSWORD)" -e \
 mysql -u root -p"$(cat /etc/mysql/credentials/MYSQL_ROOT_PASSWORD)" -e \
   "GRANT ALL ON \`budgeting\_%\`.* TO '$(cat /etc/mysql/credentials/MYSQL_USER)'@'%';"
 
-mysql -u root -p"$(cat /etc/mysql/credentials/MYSQL_ROOT_PASSWORD)" -e \
-  "GRANT ALL ON \`object\_store\_%\`.* TO '$(cat /etc/mysql/credentials/MYSQL_USER)'@'%';"
-
 echo "** Finished creating users and privileges"

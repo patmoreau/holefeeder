@@ -7,4 +7,3 @@ export class TransferMoneyCommand {
     public toAccountId: string
   ) {}
 }
-

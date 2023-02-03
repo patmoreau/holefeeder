@@ -1,22 +1,21 @@
-﻿using System.Collections.Immutable;
-
-using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.SeedWork;
+﻿using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Cashflow : IAggregateRoot
+public record Cashflow : Entity, IAggregateRoot
 {
-    private readonly Guid _id;
+    private readonly Guid _accountId;
+    private readonly decimal _amount;
+    private readonly Guid _categoryId;
     private readonly DateTime _effectiveDate;
     private readonly int _frequency;
+    private readonly Guid _id;
     private readonly int _recurrence;
-    private readonly decimal _amount;
-    private readonly Guid _accountId;
-    private readonly Guid _categoryId;
     private readonly Guid _userId;
 
-    public Guid Id
+    public sealed override Guid Id
     {
         get => _id;
         init
@@ -105,6 +104,8 @@ public record Cashflow : IAggregateRoot
         }
     }
 
+    public Account? Account { get; init; }
+
     public Guid CategoryId
     {
         get => _categoryId;
@@ -119,7 +120,15 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public IReadOnlyList<string> Tags { get; private init; } = ImmutableList<string>.Empty;
+    public Category? Category { get; init; }
+
+    public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
+
+    public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
+
+    public DateTime? LastPaidDate => Transactions.Any() ? Transactions.Max(x => x.Date) : null;
+
+    public DateTime? LastCashflowDate => Transactions.Max(x => x.CashflowDate);
 
     public bool Inactive { get; init; }
 
@@ -137,9 +146,10 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence, decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
+    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
+        decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
     {
-        return new()
+        return new Cashflow
         {
             Id = Guid.NewGuid(),
             EffectiveDate = effectiveDate,
@@ -167,7 +177,30 @@ public record Cashflow : IAggregateRoot
     public Cashflow SetTags(params string[] tags)
     {
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+        Tags = newTags.ToImmutableArray();
+        return this;
+    }
 
-        return this with {Tags = newTags.ToImmutableArray()};
+    public IReadOnlyCollection<DateTime> GetUpcoming(DateTime to)
+    {
+        var dates = new List<DateTime>();
+
+        if (Inactive)
+        {
+            return dates;
+        }
+
+        dates.AddRange(IntervalType
+            .DatesInRange(EffectiveDate, EffectiveDate, to, Frequency)
+            .Where(futureDate => IsUnpaid(EffectiveDate, futureDate)));
+
+        return dates;
+    }
+
+    private bool IsUnpaid(DateTime effectiveDate, DateTime nextDate)
+    {
+        return LastPaidDate is null
+            ? nextDate >= effectiveDate
+            : nextDate > LastPaidDate && nextDate > LastCashflowDate;
     }
 }

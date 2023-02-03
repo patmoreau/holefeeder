@@ -1,17 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Accounts;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Accounts.Commands;
 
@@ -33,54 +27,40 @@ public class CloseAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<Unit>;
-
-    public class Validator : AbstractValidator<Request>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEmpty();
-        }
-    }
-
-    public class Handler : IRequestHandler<Request, Unit>
-    {
-        private readonly ILogger<Handler> _logger;
         private readonly IUserContext _userContext;
-        private readonly IAccountRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountRepository repository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var account = await _repository.FindByIdAsync(request.Id, _userContext.UserId, cancellationToken);
+            var account = await _context.Accounts
+                // .AsNoTracking()
+                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == _userContext.UserId, cancellationToken);
             if (account is null)
             {
                 throw new AccountNotFoundException(request.Id);
             }
 
-            try
-            {
-                _logger.LogInformation("----- Closing Account - Account: {@Account}", account);
+            _context.Update(account.Close());
 
-                account = account.Close();
+            return Unit.Value;
+        }
+    }
 
-                await _repository.SaveAsync(account, cancellationToken);
+    internal record Request(Guid Id) : ICommandRequest<Unit>;
 
-                await _repository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
-            }
-            catch (AccountDomainException)
-            {
-                _repository.UnitOfWork.Dispose();
-                throw;
-            }
+    internal class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(command => command.Id).NotNull().NotEmpty();
         }
     }
 }

@@ -6,4 +6,3 @@ export class ModifyCashflowCommand {
     public tags: string[]
   ) {}
 }
-

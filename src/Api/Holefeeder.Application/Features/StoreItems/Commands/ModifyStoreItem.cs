@@ -1,17 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.StoreItem;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands;
 
@@ -33,9 +27,7 @@ public class ModifyStoreItem : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id, string Data) : IRequest<Unit>;
-
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -44,45 +36,32 @@ public class ModifyStoreItem : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal record Request(Guid Id, string Data) : ICommandRequest<Unit>;
+
+    internal class Handler : IRequestHandler<Request, Unit>
     {
         private readonly IUserContext _userContext;
-        private readonly IStoreItemsRepository _itemsRepository;
-        private readonly ILogger _logger;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _itemsRepository = itemsRepository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            var storeItem = await _context.StoreItems
+                // .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+            if (storeItem is null)
             {
-                var storeItem =
-                    await _itemsRepository.FindByIdAsync(_userContext.UserId, request.Id, cancellationToken);
-                if (storeItem is null)
-                {
-                    throw new StoreItemNotFoundException(request.Id);
-                }
-
-                storeItem = storeItem with {Data = request.Data};
-
-                _logger.LogInformation("----- Modify Store Item - StoreItem: {@StoreItem}", storeItem);
-
-                await _itemsRepository.SaveAsync(storeItem, cancellationToken);
-
-                await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
+                throw new StoreItemNotFoundException(request.Id);
             }
-            catch (ObjectStoreDomainException)
-            {
-                _itemsRepository.UnitOfWork.Dispose();
-                throw;
-            }
+
+            _context.Update(storeItem with {Data = request.Data});
+
+            return Unit.Value;
         }
     }
 }

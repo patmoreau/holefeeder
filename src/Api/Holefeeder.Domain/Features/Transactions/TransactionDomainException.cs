@@ -1,15 +1,21 @@
-using Holefeeder.Domain.SeedWork;
-
-using Microsoft.AspNetCore.Http;
-
 namespace Holefeeder.Domain.Features.Transactions;
 
-public class TransactionDomainException : DomainException
+#pragma warning disable CA1032
+public class TransactionDomainException : DomainException<Transaction>
+#pragma warning restore CA1032
 {
-    public TransactionDomainException(string message, string context) : base(StatusCodes.Status422UnprocessableEntity, message)
+    public TransactionDomainException(string message, string context) : base(message)
     {
         Context = context;
     }
 
-    public override string Context { get; }
+    public TransactionDomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public TransactionDomainException(string message) : base(message)
+    {
+    }
+
+    public override string Context { get; } = nameof(Transaction);
 }

@@ -42,7 +42,9 @@
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/bootstrap/scss"]
+              "includePaths": [
+                "node_modules/bootstrap/scss"
+              ]
             },
             "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",
@@ -144,8 +146,13 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         },

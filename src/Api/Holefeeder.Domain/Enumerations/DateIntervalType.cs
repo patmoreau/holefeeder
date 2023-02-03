@@ -13,9 +13,12 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
     public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(nameof(Yearly), 3);
     public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(nameof(OneTime), 4);
 
-    private DateIntervalType(string name, int id) : base(name, id) { }
+    private DateIntervalType(string name, int id)
+        : base(name, id)
+    {
+    }
 
-    protected abstract DateTime AddIteration(DateTime date, int iteration);
+    protected abstract DateTime AddIteration(DateTime effectiveDate, int iteration);
 
     public abstract (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate, int frequency);
 
@@ -42,10 +45,9 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
 
         var start = effectiveDate;
-        var next = fromDate;
 
         var count = 0;
-        while (start < next)
+        while (start < fromDate)
         {
             count++;
             start = AddIteration(effectiveDate, frequency * count);
@@ -54,22 +56,23 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         return AddIteration(effectiveDate, frequency * (count - 1));
     }
 
-    public virtual IEnumerable<DateTime> DatesInRange(DateTime effective, DateTime from, DateTime to, int frequency)
+    public virtual IEnumerable<DateTime> DatesInRange(DateTime effectiveDate, DateTime fromDate, DateTime toDate,
+        int frequency)
     {
         var dates = new List<DateTime>();
-        var start = effective;
+        var start = effectiveDate;
 
         var iteration = 1;
-        while (start < from)
+        while (start < fromDate)
         {
-            start = AddIteration(effective, frequency * iteration);
+            start = AddIteration(effectiveDate, frequency * iteration);
             iteration++;
         }
 
-        while (start <= to)
+        while (start <= toDate)
         {
             dates.Add(start);
-            start = AddIteration(effective, frequency * iteration);
+            start = AddIteration(effectiveDate, frequency * iteration);
             iteration++;
         }
 
@@ -78,11 +81,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class WeeklyDateIntervalType : DateIntervalType
     {
-        public WeeklyDateIntervalType(string name, int id) : base(name, id) { }
-
-        protected override DateTime AddIteration(DateTime date, int iteration)
+        public WeeklyDateIntervalType(string name, int id)
+            : base(name, id)
         {
-            return AddWeeks(date, iteration);
+        }
+
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
+        {
+            return AddWeeks(effectiveDate, iteration);
         }
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
@@ -103,19 +109,22 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             return (start, end.AddDays(-1));
         }
 
-        private static DateTime AddWeeks(DateTime date, int weeks)
+        private static DateTime AddWeeks(DateTime effectiveDate, int weeks)
         {
-            return date.AddDays(7 * weeks);
+            return effectiveDate.AddDays(7 * weeks);
         }
     }
 
     private sealed class MonthlyDateIntervalType : DateIntervalType
     {
-        public MonthlyDateIntervalType(string name, int id) : base(name, id) { }
-
-        protected override DateTime AddIteration(DateTime date, int iteration)
+        public MonthlyDateIntervalType(string name, int id)
+            : base(name, id)
         {
-            return date.AddMonths(iteration);
+        }
+
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
+        {
+            return effectiveDate.AddMonths(iteration);
         }
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
@@ -139,11 +148,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class YearlyDateIntervalType : DateIntervalType
     {
-        public YearlyDateIntervalType(string name, int id) : base(name, id) { }
-
-        protected override DateTime AddIteration(DateTime date, int iteration)
+        public YearlyDateIntervalType(string name, int id)
+            : base(name, id)
         {
-            return date.AddYears(iteration);
+        }
+
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
+        {
+            return effectiveDate.AddYears(iteration);
         }
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
@@ -167,11 +179,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class OneTimeDateIntervalType : DateIntervalType
     {
-        public OneTimeDateIntervalType(string name, int id) : base(name, id) { }
-
-        protected override DateTime AddIteration(DateTime date, int iteration)
+        public OneTimeDateIntervalType(string name, int id)
+            : base(name, id)
         {
-            return date;
+        }
+
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
+        {
+            return effectiveDate;
         }
 
         public override DateTime NextDate(DateTime effectiveDate, DateTime fromDate, int frequency)
@@ -184,10 +199,12 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             return effectiveDate;
         }
 
-        public override IEnumerable<DateTime> DatesInRange(DateTime effective, DateTime from, DateTime to,
+        public override IEnumerable<DateTime> DatesInRange(DateTime effectiveDate, DateTime fromDate, DateTime toDate,
             int frequency)
         {
-            return effective >= from && effective <= to ? new[] {effective} : Array.Empty<DateTime>();
+            return effectiveDate >= fromDate && effectiveDate <= toDate
+                ? new[] {effectiveDate}
+                : Array.Empty<DateTime>();
         }
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,

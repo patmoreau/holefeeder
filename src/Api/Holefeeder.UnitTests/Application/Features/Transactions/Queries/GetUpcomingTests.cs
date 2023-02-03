@@ -1,40 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-using AutoBogus;
-
-using Bogus;
-
-using FluentAssertions;
-
-using FluentValidation.TestHelper;
-
-using Holefeeder.Application.Features.Transactions;
-using Holefeeder.Application.Models;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Extensions;
-using Holefeeder.Tests.Common.Factories;
 
 using Microsoft.AspNetCore.Http;
 
-using NSubstitute;
-
-using Xunit;
-
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
-namespace Holefeeder.UnitTests.Application.Features.Cashflows.Queries;
+namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
 public class GetUpcomingTests
 {
     private readonly Faker<Request> _faker;
-
-    private readonly UpcomingViewModelFactory _viewModelFactory = new();
-
-    private readonly IUserContext _userContextMock = MockHelper.CreateUserContext();
-    private readonly IUpcomingQueriesRepository _repositoryMock = Substitute.For<IUpcomingQueriesRepository>();
 
     public GetUpcomingTests()
     {
@@ -50,7 +26,11 @@ public class GetUpcomingTests
         var request = _faker.Generate();
         var httpContext = new DefaultHttpContext
         {
-            Request = {QueryString = new QueryString($"?from={request.From.ToPersistent()}&to={request.To.ToPersistent()}")}
+            Request =
+            {
+                QueryString =
+                    new QueryString($"?from={request.From.ToPersistent()}&to={request.To.ToPersistent()}")
+            }
         };
 
         // act
@@ -73,25 +53,5 @@ public class GetUpcomingTests
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.From);
-    }
-
-    [Fact]
-    public async Task GivenHandler_WhenIdFound_ThenReturnResult()
-    {
-        // arrange
-        var request = _faker.Generate();
-        var count = new Faker().Random.Number(100);
-        var models = _viewModelFactory.Generate(count);
-
-        _repositoryMock.GetUpcomingAsync(Arg.Is(_userContextMock.UserId), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(models);
-
-        var handler = new Handler(_userContextMock, _repositoryMock);
-
-        // act
-        var result = await handler.Handle(request, default);
-
-        // assert
-        result.Should().BeEquivalentTo(new QueryResult<UpcomingViewModel>(count, models));
     }
 }

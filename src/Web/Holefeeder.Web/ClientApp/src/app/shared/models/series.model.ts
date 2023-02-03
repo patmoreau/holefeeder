@@ -6,4 +6,3 @@ export class Series {
     public amount: number
   ) {}
 }
-

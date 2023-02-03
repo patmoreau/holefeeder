@@ -1,17 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Transactions;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,9 +27,9 @@ public class DeleteTransaction : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<Unit>;
+    internal record Request(Guid Id) : ICommandRequest<Unit>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -43,33 +37,28 @@ public class DeleteTransaction : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _transactionRepository = transactionRepository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             var transaction =
-                await _transactionRepository.FindByIdAsync(request.Id, _userContext.UserId, cancellationToken);
+                await _context.Transactions.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(request.Id);
             }
 
-            _logger.LogInformation("----- Deleting - Transaction: {@Transaction}", transaction);
-
-            await _transactionRepository.DeleteAsync(request.Id, _userContext.UserId, cancellationToken);
-
-            await _transactionRepository.UnitOfWork.CommitAsync(cancellationToken);
+            _context.Remove(transaction);
 
             return Unit.Value;
         }

@@ -9,8 +9,8 @@ public class QueryParams
 
     public const int DEFAULT_OFFSET = 0;
     public const int DEFAULT_LIMIT = int.MaxValue;
-    public static readonly IReadOnlyList<string> DefaultSort = ImmutableArray.Create<string>();
-    public static readonly IReadOnlyList<string> DefaultFilter = ImmutableArray.Create<string>();
+    public static readonly IReadOnlyCollection<string> DefaultSort = ImmutableArray.Create<string>();
+    public static readonly IReadOnlyCollection<string> DefaultFilter = ImmutableArray.Create<string>();
 
     public QueryParams(int offset, int limit, IEnumerable<string> sort, IEnumerable<string> filter)
     {
@@ -42,13 +42,18 @@ public class QueryParams
 
     public int Offset { get; }
     public int Limit { get; }
-    public IReadOnlyList<string> Sort { get; }
-    public IReadOnlyList<string> Filter { get; }
+    public IReadOnlyCollection<string> Sort { get; }
+    public IReadOnlyCollection<string> Filter { get; }
 
     public static QueryParams Empty => new(DEFAULT_OFFSET, DEFAULT_LIMIT, DefaultSort, DefaultFilter);
 
     public static QueryParams Create(IRequestQuery requestQuery)
     {
+        if (requestQuery == null)
+        {
+            throw new ArgumentNullException(nameof(requestQuery));
+        }
+
         return new QueryParams(requestQuery.Offset, requestQuery.Limit, requestQuery.Sort, requestQuery.Filter);
     }
 }

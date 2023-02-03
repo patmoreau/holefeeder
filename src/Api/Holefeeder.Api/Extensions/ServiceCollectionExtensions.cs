@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using Holefeeder.Api.Authorization;
 using Holefeeder.Api.Swagger;
+using Holefeeder.Infrastructure.SeedWork;
 
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 
@@ -15,7 +16,7 @@ using Microsoft.OpenApi.Models;
 namespace Holefeeder.Api.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
@@ -23,7 +24,7 @@ public static class ServiceCollectionExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(
                 options => options.TokenValidationParameters =
-                    new TokenValidationParameters {ValidateIssuer = false},
+                    new TokenValidationParameters {ValidateIssuer = true},
                 options => configuration.Bind("AzureAdB2C", options));
 
         services.AddAuthorization(o =>
@@ -95,12 +96,8 @@ public static class ServiceCollectionExtensions
         services
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), tags: new[] {"holefeeder", "api", "service"})
-            .AddMySql(configuration["ObjectStoreDatabaseSettings:ConnectionString"]!,
-                "object-store-db-check",
-                tags: new[] {"holefeeder", "api", "mysql"})
-            .AddMySql(configuration["HolefeederDatabaseSettings:ConnectionString"]!,
-                "budgeting-db-check",
-                tags: new[] {"holefeeder", "api", "mysql"});
+            .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
+                "budgeting-db-check", tags: new[] {"holefeeder", "api", "mysql"});
 
         return services;
     }

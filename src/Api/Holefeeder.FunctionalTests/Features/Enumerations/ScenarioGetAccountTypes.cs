@@ -1,13 +1,8 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 

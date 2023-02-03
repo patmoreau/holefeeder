@@ -2,27 +2,31 @@ using System.Diagnostics.CodeAnalysis;
 
 using Carter;
 
+using Hangfire;
+
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
-using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Infrastructure.Extensions;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
 
 builder.Services
     .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
     .AddSwagger(builder.Environment)
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
-    .AddApplication()
-    .AddInfrastructure(builder.Configuration)
-    .AddHostedService<LongRunningService>();
-
-builder.Host.AddSerilog();
+    .AddApplication(builder.Configuration)
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
 app.UseCustomErrors(app.Environment);
 
 if (!app.Environment.IsDevelopment())
@@ -30,25 +34,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseSerilog()
-    .MapSwagger(builder.Environment)
+app.MapSwagger(builder.Environment)
     .MapHealthChecks()
     .MapCarter();
+app.UseHealthChecks("/ready");
+app.UseHealthChecks("/health/startup");
+app.UseHangfireDashboard();
+app.MapHangfireDashboard();
 
 app.UseAuthentication()
-    .UseAuthorization()
-    .UseHttpsRedirection();
+    .UseAuthorization();
 
 app.MigrateDb();
 
 await app.RunAsync();
-
-#pragma warning disable CA1050
-namespace Holefeeder.Api
-{
-    [ExcludeFromCodeCoverage]
-    public partial class Program
-    {
-    }
-}
-#pragma warning restore CA1050

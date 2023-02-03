@@ -8,4 +8,3 @@ export class CashflowRequest {
     public recurrence: number = 0
   ) {}
 }
-

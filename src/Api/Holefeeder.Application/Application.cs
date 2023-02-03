@@ -1,5 +1,5 @@
 ﻿namespace Holefeeder.Application;
 
-public class Application
+public sealed class Application
 {
 }

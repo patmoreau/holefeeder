@@ -1,15 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Categories.Queries;
 
@@ -32,29 +28,30 @@ public class GetCategories : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<QueryResult<CategoryViewModel>>;
-
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
+    internal record Request : IRequest<QueryResult<CategoryViewModel>>;
+
+    internal class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {
         private readonly IUserContext _userContext;
-        private readonly ICategoryQueriesRepository _categoryQueriesRepository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICategoryQueriesRepository categoryQueriesRepository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _categoryQueriesRepository = categoryQueriesRepository;
+            _context = context;
         }
 
         public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result = (await _categoryQueriesRepository.GetCategoriesAsync(_userContext.UserId, cancellationToken))
-                .ToList();
+            var result = await _context.Categories
+                .Where(x => x.UserId == _userContext.UserId)
+                .ToListAsync(cancellationToken);
 
-            return new QueryResult<CategoryViewModel>(result.Count, result);
+            return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
         }
     }
 }

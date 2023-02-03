@@ -1,0 +1,14 @@
+<Project>
+  <ItemGroup>
+    <Compile Update="**\*.Handler.cs">
+      <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Handler', '.cs'))</DependentUpon>
+    </Compile>
+    <Compile Update="**\*.Validator.cs">
+      <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Validator', '.cs'))</DependentUpon>
+    </Compile>
+    <Compile Update="**\*.Request.cs">
+      <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Request', '.cs'))</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

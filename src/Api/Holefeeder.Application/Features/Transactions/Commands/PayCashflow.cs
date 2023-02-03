@@ -1,17 +1,12 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -33,7 +28,7 @@ public class PayCashflow : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request : IRequest<Guid>
+    internal record Request : ICommandRequest<Guid>
     {
         public DateTime Date { get; init; }
 
@@ -44,30 +39,32 @@ public class PayCashflow : ICarterModule
         public DateTime CashflowDate { get; init; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
+        public Validator()
+        {
+            RuleFor(command => command.Date).NotEmpty();
+            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.CashflowId).NotEmpty();
+            RuleFor(command => command.CashflowDate).NotEmpty();
+        }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly ICashflowRepository _cashflowRepository;
-        private readonly ILogger _logger;
         private readonly IUserContext _userContext;
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionRepository transactionRepository,
-            ICashflowRepository cashflowRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _transactionRepository = transactionRepository;
-            _cashflowRepository = cashflowRepository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            var cashflow =
-                await _cashflowRepository.FindByIdAsync(request.CashflowId, _userContext.UserId, cancellationToken);
+            var cashflow = await _context.Cashflows.SingleOrDefaultAsync(
+                x => x.Id == request.CashflowId && x.UserId == _userContext.UserId, cancellationToken);
             if (cashflow is null)
             {
                 throw new ValidationException($"Cashflow '{request.CashflowId}' does not exists");
@@ -79,11 +76,7 @@ public class PayCashflow : ICarterModule
 
             transaction = transaction.SetTags(cashflow.Tags.ToArray());
 
-            _logger.LogInformation("----- Pay Cashflow - Transaction: {@Transaction}", transaction);
-
-            await _transactionRepository.SaveAsync(transaction, cancellationToken);
-
-            await _transactionRepository.UnitOfWork.CommitAsync(cancellationToken);
+            await _context.Transactions.AddAsync(transaction, cancellationToken);
 
             return transaction.Id;
         }

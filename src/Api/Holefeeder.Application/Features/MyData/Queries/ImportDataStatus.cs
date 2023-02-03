@@ -1,12 +1,5 @@
-﻿using Carter;
-
-using FluentValidation;
-
-using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.MyData.Exceptions;
+﻿using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -32,9 +25,10 @@ public class ImportDataStatus : ICarterModule
             .WithName(nameof(ImportDataStatus))
             .RequireAuthorization();
     }
-    public record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
 
-    public class Validator : AbstractValidator<Request>
+    internal record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
+
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -42,7 +36,7 @@ public class ImportDataStatus : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, ImportDataStatusDto>
+    internal class Handler : IRequestHandler<Request, ImportDataStatusDto>
     {
         private readonly IMemoryCache _memoryCache;
 

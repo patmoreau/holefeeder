@@ -1,17 +1,12 @@
-﻿using Carter;
-
-using FluentValidation;
-
-using Holefeeder.Application.Features.StoreItems.Queries;
+﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Accounts.Commands;
 
@@ -23,7 +18,7 @@ public class OpenAccount : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetStoreItem), new {Id = result}, new {Id = result});
+                    return Results.CreatedAtRoute(nameof(GetAccount), new {Id = result}, new {Id = result});
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -33,59 +28,44 @@ public class OpenAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
-        : IRequest<Guid>;
+    internal record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
+        : ICommandRequest<Guid>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
-        public Validator(IUserContext userContext, IAccountRepository repository)
+        public Validator()
         {
             RuleFor(command => command.Type).NotNull();
-            RuleFor(command => command.Name)
-                .NotNull()
-                .NotEmpty()
-                .Length(1, 255)
-                .MustAsync(async (name, cancellation) =>
-                    (await repository.FindByNameAsync(name, userContext.UserId, cancellation)) is null)
-                .WithMessage(x => $"Name '{x.Name}' already exists.")
-                .WithErrorCode("AlreadyExistsValidator");
+            RuleFor(command => command.Name).NotNull().NotEmpty().Length(1, 255);
             RuleFor(command => command.OpenDate).NotEmpty();
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly ILogger<Handler> _logger;
         private readonly IUserContext _userContext;
-        private readonly IAccountRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountRepository repository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            if (await _context.Accounts.AnyAsync(x => x.Name == request.Name && x.UserId == _userContext.UserId,
+                    cancellationToken))
             {
-                var account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
-                    request.Description, _userContext.UserId);
-
-                _logger.LogInformation("----- Opening Account - Account: {@Account}", account);
-
-                await _repository.SaveAsync(account, cancellationToken);
-
-                await _repository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return account.Id;
+                throw new AccountDomainException($"Name '{request.Name}' already exists.");
             }
-            catch (AccountDomainException)
-            {
-                _repository.UnitOfWork.Dispose();
-                throw;
-            }
+
+            var account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
+                request.Description, _userContext.UserId);
+
+            await _context.Accounts.AddAsync(account, cancellationToken);
+
+            return account.Id;
         }
     }
 }

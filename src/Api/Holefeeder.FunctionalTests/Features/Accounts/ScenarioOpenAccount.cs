@@ -1,53 +1,65 @@
 using System.Net;
 using System.Text.Json;
 
-using FluentAssertions;
-
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioOpenAccount : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
-
     public ScenarioOpenAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _databaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenAnActiveAccount()
-            .WithName(string.Empty)
+        var request = GivenAnInvalidOpenAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserOpensAnAccount(entity);
+        await WhenUserOpensAnAccount(request);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
+    public async Task WhenAccountNameAlreadyExistsRequest()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = await GivenAnActiveAccount()
+            .ForUser(AuthorizedUserId)
+            .SavedInDb(DatabaseDriver);
+
+        var request = GivenAnOpenAccountRequest()
+            .WithName(entity.Name)
+            .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserOpensAnAccount(entity);
+        await WhenUserOpensAnAccount(request);
+
+        ThenShouldExpectStatusCode(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task WhenAuthorizedUser()
+    {
+        var request = GivenAnOpenAccountRequest().Build();
+
+        GivenUserIsAuthorized();
+
+        await WhenUserOpensAnAccount(request);
 
         ThenUserShouldBeAuthorizedToAccessEndpoint();
     }
@@ -55,11 +67,11 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var request = GivenAnOpenAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
-        await WhenUserOpensAnAccount(entity);
+        await WhenUserOpensAnAccount(request);
 
         ShouldBeForbiddenToAccessEndpoint();
     }
@@ -67,11 +79,11 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var request = GivenAnOpenAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
-        await WhenUserOpensAnAccount(entity);
+        await WhenUserOpensAnAccount(request);
 
         ShouldNotBeAuthorizedToAccessEndpoint();
     }
@@ -79,34 +91,24 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenOpenAccount()
     {
-        var entity = GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+        var request = GivenAnOpenAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserOpensAnAccount(entity);
+        await WhenUserOpensAnAccount(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.Created);
 
         var id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
 
-        var result = await _databaseDriver.FindByIdAsync<AccountEntity>(id, entity.UserId);
-        result.Should().NotBeNull();
-        result!.Should().BeEquivalentTo(entity,
-            options => options.Excluding(info => info.Id).Excluding(info => info.Favorite));
+        var result = await DatabaseDriver.FindByIdAsync<Account>(id);
+        result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
-    private async Task WhenUserOpensAnAccount(AccountEntity entity)
+    private async Task WhenUserOpensAnAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(new
-        {
-            entity.Type,
-            entity.Name,
-            entity.OpenBalance,
-            entity.OpenDate,
-            entity.Description
-        });
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.OpenAccount, json);
     }
 }

@@ -10,4 +10,3 @@ export class Category {
     public favorite: boolean
   ) {}
 }
-

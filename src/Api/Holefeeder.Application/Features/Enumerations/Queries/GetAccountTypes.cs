@@ -1,10 +1,4 @@
-using Carter;
-
-using FluentValidation;
-
 using Holefeeder.Domain.Features.Accounts;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,13 +21,13 @@ public class GetAccountTypes : ICarterModule
             .WithName(nameof(GetAccountTypes));
     }
 
-    public record Request : IRequest<IReadOnlyCollection<AccountType>>;
+    internal record Request : IRequest<IReadOnlyCollection<AccountType>>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, IReadOnlyCollection<AccountType>>
+    internal class Handler : IRequestHandler<Request, IReadOnlyCollection<AccountType>>
     {
         public Task<IReadOnlyCollection<AccountType>> Handle(Request query, CancellationToken cancellationToken)
         {

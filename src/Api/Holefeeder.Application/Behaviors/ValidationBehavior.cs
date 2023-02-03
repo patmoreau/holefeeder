@@ -1,10 +1,6 @@
-﻿using FluentValidation;
+﻿namespace Holefeeder.Application.Behaviors;
 
-using MediatR;
-
-namespace Holefeeder.Application.Behaviors;
-
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;

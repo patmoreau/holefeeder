@@ -11,8 +11,8 @@
             <div [formGroup]="form" class="container mt-2">
               <div class="form-group">
                 <label for="amount">Amount</label>
-                <input class="form-control" appAutofocus formControlName="amount" id="amount"
-                  placeholder="cashflow amount..." required type="number" />
+                <input appAutofocus class="form-control" formControlName="amount" id="amount"
+                       placeholder="cashflow amount..." required type="number" />
               </div>
               <div class="form-group">
                 <label for="category">Category</label>
@@ -43,12 +43,12 @@
                 <label for="frequency">Frequency</label>
                 <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number" />
               </div>
-              <app-date-picker label="Effective date" formControlName="effectiveDate" [required]="true">
+              <app-date-picker [required]="true" formControlName="effectiveDate" label="Effective date">
               </app-date-picker>
               <div class="form-group">
                 <label for="description">Note</label>
                 <input [placeholder]="'transaction note...'" class="form-control" formControlName="description"
-                  id="description" type="text" />
+                       id="description" type="text" />
               </div>
             </div>
           </ng-container>

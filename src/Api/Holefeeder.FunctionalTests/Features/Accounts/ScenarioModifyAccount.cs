@@ -1,39 +1,33 @@
 using System.Net;
 using System.Text.Json;
 
-using AutoBogus;
-
-using FluentAssertions;
-
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.AccountEntityBuilder;
+using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioModifyAccount : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioModifyAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
+        _databaseDriver = DatabaseDriver;
         _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenAnActiveAccount()
-            .WithId(Guid.Empty)
+        var entity = GivenAnInvalidModifyAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -46,11 +40,11 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenAccountNotFound()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var request = GivenAModifyAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserModifiesAccount(entity);
+        await WhenUserModifiesAccount(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
@@ -58,7 +52,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = GivenAModifyAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -70,7 +64,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = GivenAModifyAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -82,7 +76,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenAnActiveAccount().Build();
+        var entity = GivenAModifyAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -98,26 +92,26 @@ public class ScenarioModifyAccount : BaseScenario
             .ForUser(AuthorizedUserId)
             .SavedInDb(_databaseDriver);
 
-        entity = GivenAnExistingAccount(entity)
-            .WithName("modified name")
-            .WithDescription("modified description")
-            .WithOpenBalance(123.45m)
+        var request = GivenAModifyAccountRequest()
+            .WithId(entity.Id)
             .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserModifiesAccount(entity);
+        await WhenUserModifiesAccount(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<AccountEntity>(entity.Id, entity.UserId);
-        result.Should().NotBeNull();
-        result!.Should().BeEquivalentTo(entity);
+        var result = await _databaseDriver.FindByIdAsync<Account>(entity.Id);
+        result.Should()
+            .NotBeNull()
+            .And
+            .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
-    private async Task WhenUserModifiesAccount(AccountEntity entity)
+    private async Task WhenUserModifiesAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(new {entity.Id, entity.Name, entity.OpenBalance, entity.Description});
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyAccount, json);
     }
 }

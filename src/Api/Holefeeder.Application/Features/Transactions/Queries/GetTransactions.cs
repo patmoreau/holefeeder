@@ -1,19 +1,14 @@
 using System.Reflection;
 
-using Carter;
-
-using FluentValidation.Results;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
-using Holefeeder.Application.Features.Categories.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -38,7 +33,7 @@ public class GetTransactions : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<TransactionInfoViewModel>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
@@ -47,29 +42,37 @@ public class GetTransactions : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
     {
         private readonly IUserContext _userContext;
-        private readonly ITransactionQueriesRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ITransactionQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<QueryResult<TransactionInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            var (totalCount, transactions) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request),
-                    cancellationToken);
+            var total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            var items = await _context.Transactions
+                .Include(e => e.Account)
+                .Include(e => e.Category)
+                .Where(e => e.UserId == _userContext.UserId)
+                .Filter(request.Filter)
+                .Sort(request.Sort)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(e => TransactionMapper.MapToDto(e))
+                .ToListAsync(cancellationToken);
 
-            return new QueryResult<TransactionInfoViewModel>(totalCount, transactions);
+            return new QueryResult<TransactionInfoViewModel>(total, items);
         }
     }
 }

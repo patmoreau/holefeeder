@@ -1,8 +1,8 @@
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using FluentAssertions;
 using FluentAssertions.Execution;
 
 using Holefeeder.FunctionalTests.Drivers;
@@ -10,27 +10,43 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
 
 using Microsoft.AspNetCore.Mvc;
-
-using Xunit;
-using Xunit.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Holefeeder.FunctionalTests.Features;
 
 [Collection("Api collection")]
-public abstract class BaseScenario
+public abstract class BaseScenario : IDisposable
 {
-    protected HttpClientDriver HttpClientDriver { get; }
-
-    protected readonly UserStepDefinition User;
-    protected readonly TransactionStepDefinition Transaction;
-
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
+        if (apiApplicationDriver == null)
+        {
+            throw new ArgumentNullException(nameof(apiApplicationDriver));
+        }
+
+        Scope = apiApplicationDriver.Services.CreateScope();
+
         HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver(testOutputHelper);
 
-        User = new UserStepDefinition(HttpClientDriver);
+        StoreItem = new StoreItemStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);
+        User = new UserStepDefinition(HttpClientDriver);
     }
+
+    private IServiceScope Scope { get; }
+
+    private BudgetingDatabaseDriver? _databaseDriver;
+
+    protected BudgetingDatabaseDriver DatabaseDriver
+    {
+        get => _databaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
+    }
+
+    protected HttpClientDriver HttpClientDriver { get; }
+
+    protected StoreItemStepDefinition StoreItem { get; }
+    protected TransactionStepDefinition Transaction { get; }
+    protected UserStepDefinition User { get; }
 
     protected void GivenUserIsUnauthorized()
     {
@@ -53,19 +69,19 @@ public abstract class BaseScenario
         var sb = new StringBuilder();
         if (offset is not null)
         {
-            sb.Append($"offset={offset}&");
+            sb.Append(CultureInfo.InvariantCulture, $"offset={offset}&");
         }
 
         if (limit is not null)
         {
-            sb.Append($"limit={limit}&");
+            sb.Append(CultureInfo.InvariantCulture, $"limit={limit}&");
         }
 
         if (!string.IsNullOrWhiteSpace(sorts))
         {
             foreach (var sort in sorts.Split(';'))
             {
-                sb.Append($"sort={sort}&");
+                sb.Append(CultureInfo.InvariantCulture, $"sort={sort}&");
             }
         }
 
@@ -73,7 +89,7 @@ public abstract class BaseScenario
         {
             foreach (var filter in filters.Split(';'))
             {
-                sb.Append($"filter={filter}&");
+                sb.Append(CultureInfo.InvariantCulture, $"filter={filter}&");
             }
         }
 
@@ -101,9 +117,26 @@ public abstract class BaseScenario
         CheckAuthorizationStatus(false);
     }
 
+    protected T ThenShouldReceive<T>()
+    {
+        var result = HttpClientDriver.DeserializeContent<T>();
+        result.Should().NotBeNull();
+        return result!;
+    }
+
     protected void ThenShouldExpectStatusCode(HttpStatusCode expectedStatusCode)
     {
         HttpClientDriver.ShouldHaveResponseWithStatus(expectedStatusCode);
+    }
+
+    protected void ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode expectedStatusCode,
+        string errorMessage)
+    {
+        ThenShouldExpectStatusCode(expectedStatusCode);
+
+        var problemDetails = HttpClientDriver.DeserializeContent<ProblemDetails>();
+        problemDetails.Should().NotBeNull();
+        problemDetails?.Detail.Should().Be(errorMessage);
     }
 
     protected void ShouldReceiveValidationProblemDetailsWithErrorMessage(string errorMessage)
@@ -127,116 +160,64 @@ public abstract class BaseScenario
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
 
-    protected void ThenAssertAll(Action assertions)
+#pragma warning disable CA1822
+    protected void ThenAssertAll(Func<Task> assertions)
+#pragma warning restore CA1822
     {
+        if (assertions == null)
+        {
+            throw new ArgumentNullException(nameof(assertions));
+        }
+
+        using var scope = new AssertionScope();
+        assertions();
+    }
+
+#pragma warning disable CA1822
+    protected void ThenAssertAll(Action assertions)
+#pragma warning restore CA1822
+    {
+        if (assertions == null)
+        {
+            throw new ArgumentNullException(nameof(assertions));
+        }
+
         using var scope = new AssertionScope();
         assertions();
     }
 
     private void CheckAuthorizationStatus(bool isAuthorized)
     {
-        bool IsExpectedStatus(HttpStatusCode? statusCode) => isAuthorized
-            ? statusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
-            : statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized;
+        bool IsExpectedStatus(HttpStatusCode? statusCode)
+        {
+            return isAuthorized
+                ? statusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
+                : statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized;
+        }
 
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
     }
-}
 
-public abstract class BaseScenario<T> : BaseScenario where T : BaseScenario<T>
-{
-    private readonly ITestOutputHelper _testOutputHelper;
-    private readonly List<Func<Task>> _tasks = new();
-    private int _taskCount = 0;
-
-    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public void Dispose()
     {
-        _testOutputHelper = testOutputHelper;
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
-    protected T Given(Action action) => Given(string.Empty, action);
+    private bool _disposed;
 
-    protected T Given(string message, Action action)
+    protected virtual void Dispose(bool disposing)
     {
-        AddTask(nameof(Given), message, action);
-        return (T)this;
-    }
-
-    protected T Given(Func<Task> action) => Given(string.Empty, action);
-
-    protected T Given(string message, Func<Task> action)
-    {
-        AddTask(nameof(Given), message, action);
-
-        return (T)this;
-    }
-
-    protected T When(Action action) => When(string.Empty, action);
-
-    protected T When(string message, Action action)
-    {
-        AddTask(nameof(When), message, action);
-
-        return (T)this;
-    }
-
-    protected T When(Func<Task> action) => When(string.Empty, action);
-
-    protected T When(string message, Func<Task> action)
-    {
-        AddTask(nameof(When), message, action);
-
-        return (T)this;
-    }
-
-    protected T Then(Action action) => Then(string.Empty, action);
-
-    protected T Then(string message, Action action)
-    {
-        AddTask(nameof(Then), message, () =>
+        if (_disposed)
         {
-            using var scope = new AssertionScope();
-            return Task.Run(action);
-
-        });
-
-        return (T)this;
-    }
-
-    protected T Then(Func<Task> action) => Then(string.Empty, action);
-
-    protected T Then(string message, Func<Task> action)
-    {
-        AddTask(nameof(Then), message, () =>
-        {
-            using var scope = new AssertionScope();
-            return action();
-
-        });
-
-        return (T)this;
-    }
-
-    protected async Task RunScenarioAsync()
-    {
-        var tasks = _tasks.ToArray();
-        _tasks.Clear();
-
-        foreach (var task in tasks)
-        {
-            await task();
+            return;
         }
-    }
 
-    private void AddTask(string command, string message, Action action) =>
-        AddTask(command, message, () => Task.Run(action));
+        if (disposing)
+        {
+            Scope.Dispose();
+        }
 
-    private void AddTask(string command, string message, Func<Task> action)
-    {
-        _taskCount++;
-        var text = string.IsNullOrWhiteSpace(message) ? $"task #{_taskCount}" : message;
-        _tasks.Add(() => Task.Run(() => _testOutputHelper.WriteLine($"{command} {text}")));
-        _tasks.Add(() => Task.Run(action));
+        _disposed = true;
     }
 }

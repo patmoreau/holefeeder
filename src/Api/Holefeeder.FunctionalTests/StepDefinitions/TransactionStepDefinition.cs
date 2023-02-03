@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
@@ -8,25 +8,38 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class TransactionStepDefinition
 {
-    private HttpClientDriver HttpClientDriver { get; }
-
     public TransactionStepDefinition(HttpClientDriver httpClientDriver)
     {
         HttpClientDriver = httpClientDriver;
     }
 
+    private HttpClientDriver HttpClientDriver { get; }
 
-    public async Task MakesPurchase(Transaction entity)
+    internal async Task MakesPurchase(MakePurchase.Request request)
     {
-        var json = JsonSerializer.Serialize(new
+        if (request == null)
         {
-            entity.Date,
-            entity.Amount,
-            entity.Description,
-            entity.AccountId,
-            entity.CategoryId,
-            entity.Tags
-        });
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
+    }
+
+    internal async Task PayACashflow(PayCashflow.Request request)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var json = JsonSerializer.Serialize(request);
+        await HttpClientDriver.SendPostRequest(ApiResources.PayCashflow, json);
+    }
+
+    internal async Task Transfer(Transfer.Request request)
+    {
+        var json = JsonSerializer.Serialize(request);
+        await HttpClientDriver.SendPostRequest(ApiResources.Transfer, json);
     }
 }

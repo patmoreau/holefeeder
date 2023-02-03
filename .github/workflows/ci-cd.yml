@@ -91,10 +91,10 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-          cache-to: |
-            type=gha,scope=api-build,mode=max
+          # cache-from: |
+          #   type=gha,scope=api-build
+          # cache-to: |
+          #   type=gha,scope=api-build,mode=max
 
       - name: Build Holefeeder.Web container
         uses: docker/build-push-action@v3
@@ -106,10 +106,10 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-          cache-to: |
-            type=gha,scope=ui-build,mode=max
+          # cache-from: |
+          #   type=gha,scope=ui-build
+          # cache-to: |
+          #   type=gha,scope=ui-build,mode=max
 
   tests:
     name: Tests
@@ -192,11 +192,11 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=api-build
-            type=gha,scope=api-final
-          cache-to: |
-            type=gha,scope=api-final,mode=max
+          # cache-from: |
+          #   type=gha,scope=api-build
+          #   type=gha,scope=api-final
+          # cache-to: |
+          #   type=gha,scope=api-final,mode=max
 
       - name: Build Holefeeder.Web container
         uses: docker/build-push-action@v3
@@ -207,11 +207,11 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
-          cache-from: |
-            type=gha,scope=ui-build
-            type=gha,scope=ui-final
-          cache-to: |
-            type=gha,scope=ui-final,mode=max
+          # cache-from: |
+          #   type=gha,scope=ui-build
+          #   type=gha,scope=ui-final
+          # cache-to: |
+          #   type=gha,scope=ui-final,mode=max
 
       - name: Tag version
         uses: actions/github-script@v3
@@ -253,9 +253,8 @@ jobs:
 
       - uses: yokawasa/action-setup-kube-tools@v0.8.0
         with:
-          kubectl: "1.22.2"
-          kustomize: "4.4.0"
-          skaffold: "1.32.0"
+          kubectl: "1.25.2"
+          kustomize: "4.5.7"
 
       - name: Create kube config
         run: |
@@ -265,11 +264,22 @@ jobs:
       - name: Create .env.secrets file
         run: |
           printf "BUDGETING_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
-          OBJECT_STORE_CONNECTION_STRING=Server=mysql-prd;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=object_store_prd;
           MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_USER=${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+
+      - name: Create docker-github-config.yaml file
+        run: |
+          cat <<'EOF' >$GITHUB_WORKSPACE/kubernetes/prd/docker-github-config.yaml
+          apiVersion: kustomize.config.k8s.io/v1beta1
+          kind: SecretGenerator
+          metadata:
+            name: dockerconfigjson-github-com
+          data:
+            literals:
+              - .dockerconfigjson=$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)
+          EOF
 
       - name: Set image tags
         run: |

@@ -1,47 +1,50 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>default</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>default</LangVersion>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <NoWarn>1701;1702;S3925</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <NoWarn>1701;1702;S3925</NoWarn>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj" />
-      <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj" />
+    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Ardalis.SmartEnum.Dapper" Version="1.0.0" />
-      <PackageReference Include="Dapper" Version="2.0.123" />
-      <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
-      <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
-      <PackageReference Include="Dapper.Transaction" Version="2.0.35.2" />
-      <PackageReference Include="dbup-core" Version="4.6.3" />
-      <PackageReference Include="dbup-mysql" Version="4.6.0" />
-      <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />
-      <PackageReference Include="MySqlConnector" Version="2.2.0" />
-      <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum.Dapper" Version="1.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="2.1.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
+    <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
+    <PackageReference Include="Dapper.Transaction" Version="2.0.35.2" />
+    <PackageReference Include="dbup-core" Version="5.0.10" />
+    <PackageReference Include="dbup-mysql" Version="5.0.10" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />
+    <PackageReference Include="MySqlConnector" Version="2.2.5" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-silver.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Include="Scripts\Holefeeder\001-CreateAccountsTable.sql" />
-      <EmbeddedResource Include="Scripts\Holefeeder\002-CreateCategoriesTable.sql" />
-      <EmbeddedResource Include="Scripts\Holefeeder\003-CreateCashflowsTable.sql" />
-      <EmbeddedResource Include="Scripts\Holefeeder\004-CreateTransactionsTable.sql" />
-      <EmbeddedResource Include="Scripts\ObjectStore\001-CreateTable.sql" />
-    </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql" />
+    <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql" />
+    <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql" />
+    <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
+    <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
+  </ItemGroup>
 
 </Project>

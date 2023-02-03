@@ -1,16 +1,12 @@
-using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Domain.SeedWork;
-
-using Microsoft.AspNetCore.Http;
+using Holefeeder.Application.Exceptions;
 
 namespace Holefeeder.Application.Features.MyData.Exceptions;
 
-public class ImportIdNotFoundException : DomainException
+#pragma warning disable CA1032
+public class ImportIdNotFoundException : NotFoundException
+#pragma warning restore CA1032
 {
-    public ImportIdNotFoundException(Guid id) : base(StatusCodes.Status404NotFound,
-        $"{nameof(ImportDataStatusDto)} '{id}' not found")
+    public ImportIdNotFoundException(Guid id) : base(id, nameof(MyData))
     {
     }
-
-    public override string Context => nameof(ImportIdNotFoundException);
 }

@@ -1,34 +1,31 @@
 using System.Net;
 using System.Text.Json;
 
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
+using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioModifyStoreItem : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
 
     public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var storeItem = GivenAStoreItem()
+        var storeItem = GivenAModifyStoreItemRequest()
             .WithId(Guid.Empty)
             .Build();
 
@@ -42,7 +39,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var storeItem = GivenAStoreItem().Build();
+        var storeItem = GivenAModifyStoreItemRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -54,7 +51,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var storeItem = GivenAStoreItem().Build();
+        var storeItem = GivenAModifyStoreItemRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -66,7 +63,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var storeItem = GivenAStoreItem().Build();
+        var storeItem = GivenAModifyStoreItemRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -80,18 +77,27 @@ public class ScenarioModifyStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(DatabaseDriver);
+
+        var request = GivenAModifyStoreItemRequest()
+            .WithId(storeItem.Id)
+            .Build();
 
         GivenUserIsAuthorized();
 
-        await WhenUserModifyStoreItem(storeItem);
+        await WhenUserModifyStoreItem(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+
+        var result = await DatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
+        result.Should().NotBeNull();
+        result!.Data.Should().BeEquivalentTo(request.Data);
+
     }
 
-    private async Task WhenUserModifyStoreItem(StoreItemEntity entity)
+    private async Task WhenUserModifyStoreItem(Request request)
     {
-        var json = JsonSerializer.Serialize(new {entity.Id, entity.Data});
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
     }
 }

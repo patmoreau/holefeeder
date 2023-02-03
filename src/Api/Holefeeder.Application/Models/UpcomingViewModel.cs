@@ -19,7 +19,7 @@ public record UpcomingViewModel
     public ImmutableArray<string> Tags
     {
         get => _tags;
-        init => _tags = value == null ? ImmutableArray<string>.Empty : ImmutableArray.Create(value.ToArray());
+        init => _tags =  ImmutableArray.Create(value.ToArray());
     }
 
     public CategoryInfoViewModel Category { get; init; } = null!;

@@ -1,8 +1,6 @@
-using Holefeeder.Domain.SeedWork;
-
 namespace Holefeeder.Domain.Features.Categories;
 
-public record Category : IAggregateRoot
+public sealed record Category : Entity, IAggregateRoot
 {
     private readonly Guid _id;
     private readonly string _name = string.Empty;
@@ -16,10 +14,10 @@ public record Category : IAggregateRoot
         UserId = userId;
     }
 
-    public Guid Id
+    public override Guid Id
     {
         get => _id;
-        private init
+        init
         {
             if (value.Equals(default))
             {
@@ -57,9 +55,9 @@ public record Category : IAggregateRoot
     public Guid UserId
     {
         get => _userId;
-        private init
+        init
         {
-            if (value.Equals(default(Guid)))
+            if (value.Equals(default))
             {
                 throw new CategoryDomainException($"{nameof(UserId)} is required");
             }
@@ -71,6 +69,6 @@ public record Category : IAggregateRoot
     public static Category Create(CategoryType type, string name, decimal budgetAmount,
         string description, Guid userId)
     {
-        return new(Guid.NewGuid(), type, name, userId) {BudgetAmount = budgetAmount};
+        return new Category(Guid.NewGuid(), type, name, userId) {BudgetAmount = budgetAmount};
     }
 }

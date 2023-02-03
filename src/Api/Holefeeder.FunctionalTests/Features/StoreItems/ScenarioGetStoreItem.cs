@@ -1,29 +1,24 @@
 using System.Net;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.StoreItemEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItem : BaseScenario
 {
-    private readonly ObjectStoreDatabaseDriver _objectStoreDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _objectStoreDatabaseDriver = apiApplicationDriver.CreateObjectStoreDatabaseDriver();
-        _objectStoreDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = DatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -81,7 +76,7 @@ public class ScenarioGetStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_objectStoreDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -94,7 +89,7 @@ public class ScenarioGetStoreItem : BaseScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId));
+                .BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId).Excluding(x => x.DomainEvents));
         });
     }
 

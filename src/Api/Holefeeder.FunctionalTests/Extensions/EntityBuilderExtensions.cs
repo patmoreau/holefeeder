@@ -5,7 +5,7 @@ namespace Holefeeder.FunctionalTests.Extensions;
 
 internal static class EntityBuilderExtensions
 {
-    public static async Task<T> SavedInDb<T>(this IBuilder<T> builder, DatabaseDriver databaseDriver)
+    public static async Task<T> SavedInDb<T>(this IBuilder<T> builder, DbContextDriver databaseDriver)
         where T : class
     {
         var entity = builder.Build();
@@ -14,7 +14,7 @@ internal static class EntityBuilderExtensions
     }
 
     public static async Task<T[]> CollectionSavedInDb<T>(this ICollectionBuilder<T> builder,
-        DatabaseDriver databaseDriver, int count) where T : class
+        DbContextDriver databaseDriver, int count) where T : class
     {
         var entities = builder.Build(count);
         foreach (var entity in entities)

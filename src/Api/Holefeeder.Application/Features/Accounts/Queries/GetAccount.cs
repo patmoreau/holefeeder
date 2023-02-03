@@ -1,16 +1,11 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Accounts.Queries;
 
@@ -18,11 +13,12 @@ public class GetAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v2/accounts/{id:guid}", async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
-            {
-                var requestResult = await mediator.Send(new Request(id), cancellationToken);
-                return Results.Ok(requestResult);
-            })
+        app.MapGet("api/v2/accounts/{id:guid}",
+                async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
+                {
+                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
+                    return Results.Ok(requestResult);
+                })
             .Produces<AccountViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -31,9 +27,9 @@ public class GetAccount : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<AccountViewModel>;
+    internal record Request(Guid Id) : IRequest<AccountViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -41,26 +37,41 @@ public class GetAccount : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, AccountViewModel>
+    internal class Handler : IRequestHandler<Request, AccountViewModel>
     {
         private readonly IUserContext _userContext;
-        private readonly IAccountQueriesRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IAccountQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<AccountViewModel> Handle(Request query, CancellationToken cancellationToken)
         {
-            var result = await _repository.FindByIdAsync(_userContext.UserId, query.Id, cancellationToken);
-            if (result is null)
+            var account = await _context.Accounts
+                .Include(e => e.Transactions).ThenInclude(e => e.Category)
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId,
+                    cancellationToken: cancellationToken);
+            if (account is null)
             {
                 throw new AccountNotFoundException(query.Id);
             }
 
-            return result;
+            return new AccountViewModel(
+                account.Id,
+                account.Type,
+                account.Name,
+                account.OpenBalance,
+                account.OpenDate,
+                account.Transactions.Count,
+                account.CalculateBalance(),
+                account.CalculateLastTransactionDate(),
+                account.Description,
+                account.Favorite,
+                account.Inactive
+            );
         }
     }
 }

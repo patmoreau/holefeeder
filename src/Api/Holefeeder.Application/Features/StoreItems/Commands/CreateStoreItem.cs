@@ -1,17 +1,12 @@
-﻿using Carter;
-
-using FluentValidation;
-
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.StoreItem;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Commands;
 
@@ -33,54 +28,41 @@ public class CreateStoreItem : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(string Code, string Data) : IRequest<Guid>;
-
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
-        public Validator(IUserContext userContext, IStoreItemsRepository itemsRepository)
+        public Validator()
         {
-            RuleFor(x => x.Code)
-                .NotEmpty()
-                .MustAsync(async (code, cancellation) =>
-                    (await itemsRepository.FindByCodeAsync(userContext.UserId, code, cancellation)) is null)
-                .WithMessage(x => $"Code '{x.Code}' already exists.")
-                .WithErrorCode("AlreadyExistsValidator");
+            RuleFor(x => x.Code).NotEmpty();
             RuleFor(x => x.Data).NotEmpty();
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal record Request(string Code, string Data) : ICommandRequest<Guid>;
+
+    internal class Handler : IRequestHandler<Request, Guid>
     {
         private readonly IUserContext _userContext;
-        private readonly IStoreItemsRepository _itemsRepository;
-        private readonly ILogger _logger;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IStoreItemsRepository itemsRepository, ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _itemsRepository = itemsRepository;
-            _logger = logger;
+            _context = context;
         }
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            try
+            if (await _context.StoreItems
+                    .AnyAsync(e => e.Code == request.Code, cancellationToken: cancellationToken))
             {
-                var storeItem = StoreItem.Create(request.Code, request.Data, _userContext.UserId);
-
-                _logger.LogInformation("----- Create Store Item - StoreItem: {@StoreItem}", storeItem);
-
-                await _itemsRepository.SaveAsync(storeItem, cancellationToken);
-
-                await _itemsRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-                return storeItem.Id;
+                throw new ObjectStoreDomainException($"Code '{request.Code}' already exists.");
             }
-            catch (ObjectStoreDomainException)
-            {
-                _itemsRepository.UnitOfWork.Dispose();
-                throw;
-            }
+
+            var storeItem = StoreItem.Create(request.Code, request.Data, _userContext.UserId);
+
+            _context.StoreItems.Add(storeItem);
+
+            return storeItem.Id;
         }
     }
 }

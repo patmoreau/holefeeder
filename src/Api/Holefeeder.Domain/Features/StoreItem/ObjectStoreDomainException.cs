@@ -1,14 +1,14 @@
-﻿using Holefeeder.Domain.SeedWork;
+﻿namespace Holefeeder.Domain.Features.StoreItem;
 
-using Microsoft.AspNetCore.Http;
-
-namespace Holefeeder.Domain.Features.StoreItem;
-
-public class ObjectStoreDomainException : DomainException
+#pragma warning disable CA1032
+public class ObjectStoreDomainException : DomainException<StoreItem>
+#pragma warning restore CA1032
 {
-    public ObjectStoreDomainException(string message) : base(StatusCodes.Status400BadRequest, message)
+    public ObjectStoreDomainException(string message) : base(message)
     {
     }
 
-    public override string Context => nameof(StoreItem);
+    public ObjectStoreDomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

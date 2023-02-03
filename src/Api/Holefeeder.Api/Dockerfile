@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS restore
 WORKDIR /source
 
 COPY *.sln .
+COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .
 COPY nuget.config .

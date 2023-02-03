@@ -1,14 +1,19 @@
-﻿using Holefeeder.Domain.SeedWork;
+﻿namespace Holefeeder.Domain.Features.StoreItem;
 
-namespace Holefeeder.Domain.Features.StoreItem;
-
-public record StoreItem : IAggregateRoot
+public sealed record StoreItem : Entity, IAggregateRoot
 {
     private readonly string _code = null!;
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    public Guid Id
+    public StoreItem(Guid id, string code, Guid userId)
+    {
+        Id = id;
+        Code = code;
+        UserId = userId;
+    }
+
+    public override Guid Id
     {
         get => _id;
         init
@@ -36,7 +41,7 @@ public record StoreItem : IAggregateRoot
         }
     }
 
-    public string Data { get; init; } = string.Empty;
+    public string Data { get; set; } = string.Empty;
 
     public Guid UserId
     {
@@ -50,13 +55,6 @@ public record StoreItem : IAggregateRoot
 
             _userId = value;
         }
-    }
-
-    public StoreItem(Guid id, string code, Guid userId)
-    {
-        Id = id;
-        Code = code;
-        UserId = userId;
     }
 
     public static StoreItem Create(string code, string data, Guid userId)

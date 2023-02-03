@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-using FluentAssertions;
+﻿using System.Collections.Generic;
 
 using Holefeeder.Domain.Extensions;
-
-using Xunit;
 
 namespace Holefeeder.UnitTests.Domain.Extensions;
 

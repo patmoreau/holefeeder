@@ -1,15 +1,19 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Holefeeder.Domain.SeedWork;
 
-public abstract class DomainException : Exception
+public class DomainException : Exception
 {
-    protected DomainException(int? statusCode, string message) : base(message)
+    protected DomainException()
     {
-        StatusCode = statusCode ?? StatusCodes.Status500InternalServerError;
     }
 
-    public int StatusCode { get; }
+    protected DomainException(string message) : base(message)
+    {
+    }
 
-    public abstract string Context { get; }
+
+    protected DomainException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
+
+    public virtual string Context => nameof(DomainException);
 }

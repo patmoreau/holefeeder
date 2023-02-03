@@ -1,16 +1,14 @@
 using System.Reflection;
 
-using Carter;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -35,7 +33,7 @@ public class GetCashflows : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<CashflowInfoViewModel>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
@@ -44,26 +42,35 @@ public class GetCashflows : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
     {
         private readonly IUserContext _userContext;
-        private readonly ICashflowQueriesRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<QueryResult<CashflowInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            var (total, items) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request), cancellationToken);
+            var total = await _context.Cashflows.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            var items = await _context.Cashflows
+                .Include(e => e.Account)
+                .Include(e => e.Category)
+                .Where(e => e.UserId == _userContext.UserId)
+                .Filter(request.Filter)
+                .Sort(request.Sort)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(e => CashflowMapper.MapToDto(e))
+                .ToListAsync(cancellationToken);
 
             return new QueryResult<CashflowInfoViewModel>(total, items);
         }

@@ -29,7 +29,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
         }
 
         if (!AuthenticationHeaderValue.TryParse(Context.Request.Headers["Authorization"],
-                out AuthenticationHeaderValue? headerValue))
+                out var headerValue))
         {
             return Task.FromResult(AuthenticateResult.NoResult());
         }

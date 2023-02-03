@@ -1,35 +1,29 @@
 using System.Net;
 using System.Text.Json;
 
-using FluentAssertions;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Infrastructure.Entities;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
-using static Holefeeder.Tests.Common.Features.MyData.ImportDataRequestBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataAccountDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataCashflowDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataCategoryDtoBuilder;
-using static Holefeeder.Tests.Common.Features.MyData.MyDataTransactionDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataAccountDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataCashflowDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataCategoryDtoBuilder;
+using static Holefeeder.Tests.Common.Builders.MyData.MyDataTransactionDtoBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioImportData : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _databaseDriver;
-
     public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _databaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _databaseDriver.ResetStateAsync().Wait();
+        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -109,7 +103,6 @@ public class ScenarioImportData : BaseScenario
         await WhenUserImportsData(request);
 
         ThenShouldExpectStatusCode(HttpStatusCode.Accepted);
-        ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
 
         var id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
 
@@ -132,36 +125,28 @@ public class ScenarioImportData : BaseScenario
 
         async Task AssertAccount(MyDataAccountDto account)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<AccountEntity>(account.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await DatabaseDriver.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
 
         async Task AssertCategory(MyDataCategoryDto category)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<CategoryEntity>(category.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await DatabaseDriver.FindByIdAsync<Category>(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
 
         async Task AssertCashflow(MyDataCashflowDto cashflow)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<CashflowEntity>(cashflow.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
 
         async Task AssertTransaction(MyDataTransactionDto transaction)
         {
-            var result =
-                await _databaseDriver.FindByIdAsync<TransactionEntity>(transaction.Id,
-                    MockAuthenticationHandler.AuthorizedUserId);
+            var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }
@@ -182,6 +167,8 @@ public class ScenarioImportData : BaseScenario
 
         while (tries < numberOfRetry && inProgress)
         {
+            await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
+
             await HttpClientDriver.SendGetRequest(ApiResources.ImportDataStatus, importId);
 
             ThenShouldExpectStatusCode(HttpStatusCode.OK);
@@ -198,7 +185,6 @@ public class ScenarioImportData : BaseScenario
             }
 
             tries++;
-            await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
         }
 
         return null;

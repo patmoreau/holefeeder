@@ -1,5 +1,5 @@
 <ngb-toast (hidden)="remove(toast)" *ngFor="let toast of toasts$ | async" [autohide]="true" [class]="toast.className"
-  [delay]="toast.delay">
+           [delay]="toast.delay">
   <ng-container *ngTemplateOutlet="{'info': info, 'warning': warning, 'danger': danger}[toast.type]"></ng-container>
   {{ toast.message }}
 </ngb-toast>

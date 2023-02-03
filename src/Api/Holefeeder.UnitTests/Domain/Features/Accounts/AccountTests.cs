@@ -1,15 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using Holefeeder.Domain.Features.Accounts;
 
-using Bogus;
-using Bogus.Extensions;
-
-using FluentAssertions;
-
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.SeedWork;
-
-using Xunit;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
@@ -21,13 +12,10 @@ public class AccountTests
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
+        var builder = GivenAnActiveAccount().WithId(default);
 
         // act
-        Action action = () => _ = new Account(Guid.Empty,
-            _faker.PickRandom(AccountType.List.ToArray()),
-            _faker.Random.Word(),
-            _faker.Date.Recent(),
-            _faker.Random.Guid());
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<AccountDomainException>()
@@ -42,13 +30,10 @@ public class AccountTests
     public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string name)
     {
         // arrange
+        var builder = GivenAnActiveAccount().WithName(name);
 
         // act
-        Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(AccountType.List.ToArray()),
-            name,
-            _faker.Date.Recent(),
-            _faker.Random.Guid());
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<AccountDomainException>()
@@ -61,13 +46,10 @@ public class AccountTests
     public void GivenConstructor_WhenNameIsTooLong_ThenThrowException()
     {
         // arrange
+        var builder = GivenAnActiveAccount().WithName(_faker.Random.Words().ClampLength(256));
 
         // act
-        Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(AccountType.List.ToArray()),
-            _faker.Random.Words().ClampLength(256),
-            _faker.Date.Recent(),
-            _faker.Random.Guid());
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<AccountDomainException>()
@@ -80,13 +62,10 @@ public class AccountTests
     public void GivenConstructor_WhenOpenDateIsMissing_ThenThrowException()
     {
         // arrange
+        var builder = GivenAnActiveAccount().WithOpenDate(default);
 
         // act
-        Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(AccountType.List.ToArray()),
-            _faker.Random.Word(),
-            default,
-            _faker.Random.Guid());
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<AccountDomainException>()
@@ -99,13 +78,10 @@ public class AccountTests
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
+        var builder = GivenAnActiveAccount().ForUser(Guid.Empty);
 
         // act
-        Action action = () => _ = new Account(_faker.Random.Guid(),
-            _faker.PickRandom(AccountType.List.ToArray()),
-            _faker.Random.Word(),
-            _faker.Date.Recent(),
-            Guid.Empty);
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<AccountDomainException>()
@@ -118,15 +94,7 @@ public class AccountTests
     public void GivenCloseAccount_WhenClosing_ThenThrowException()
     {
         // arrange
-        var account =
-            new Account(Guid.NewGuid(), AccountType.Checking, "Account name", DateTime.Today, Guid.NewGuid())
-            {
-                Favorite = false,
-                OpenBalance = Decimal.One,
-                Description = "Description",
-                Inactive = true,
-                Cashflows = Array.Empty<Guid>()
-            };
+        var account = GivenAnInactiveAccount().Build();
 
         // act
         Action action = () => account.Close();
@@ -142,15 +110,7 @@ public class AccountTests
     public void GivenOpenAccountWithCashflows_WhenClosing_ThenThrowException()
     {
         // arrange
-        var account =
-            new Account(Guid.NewGuid(), AccountType.Checking, "Account name", DateTime.Today, Guid.NewGuid())
-            {
-                Favorite = false,
-                OpenBalance = Decimal.One,
-                Description = "Description",
-                Inactive = false,
-                Cashflows = new[] {Guid.NewGuid()}
-            };
+        var account = GivenAnActiveAccount().WithActiveCashflows().Build();
 
         // act
         Action action = () => account.Close();
@@ -168,15 +128,7 @@ public class AccountTests
     public void GivenAccount_WhenSetAsFavorite_ThenAccountIsModified(bool favorite)
     {
         // arrange
-        var account =
-            new Account(Guid.NewGuid(), AccountType.Checking, "Account name", DateTime.Today, Guid.NewGuid())
-            {
-                Favorite = false,
-                OpenBalance = Decimal.One,
-                Description = "Description",
-                Inactive = false,
-                Cashflows = new[] {Guid.NewGuid()}
-            };
+        var account = GivenAnActiveAccount().IsFavorite(!favorite).Build();
 
         // act
         account = account with {Favorite = favorite};

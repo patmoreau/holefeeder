@@ -1,28 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Ardalis.SmartEnum.Dapper;
+using Holefeeder.Application.Context;
+using Holefeeder.Infrastructure.Scripts;
+using Holefeeder.Infrastructure.SeedWork;
 
-using Dapper;
-
-using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.Features.Categories;
-using Holefeeder.Application.Features.MyData;
-using Holefeeder.Application.Features.StoreItems.Queries;
-using Holefeeder.Application.Features.Transactions;
-using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.Features.StoreItem;
-using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Infrastructure.Context;
-using Holefeeder.Infrastructure.Mapping;
-using Holefeeder.Infrastructure.Repositories;
-using Holefeeder.Infrastructure.Scripts.ObjectStore;
-using Holefeeder.Infrastructure.Serializers;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+
+using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.Extensions;
 
@@ -37,49 +23,20 @@ public static class ServiceCollectionExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        services
-            .AddOptions<ObjectStoreDatabaseSettings>()
-            .Bind(configuration.GetSection(nameof(ObjectStoreDatabaseSettings)));
-        services.AddOptions<HolefeederDatabaseSettings>()
-            .Bind(configuration.GetSection(nameof(HolefeederDatabaseSettings)))
-            .ValidateDataAnnotations();
+        var mySqlDatabaseSettings = new BudgetingConnectionStringBuilder
+        {
+            ConnectionString = configuration.GetConnectionString("BudgetingConnectionString")!
+        };
 
-        services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<ObjectStoreDatabaseSettings>>().Value);
-        services.AddSingleton(sp =>
-            sp.GetRequiredService<IOptions<HolefeederDatabaseSettings>>().Value);
+        services.AddSingleton(mySqlDatabaseSettings);
 
-        services.AddSingleton<AccountMapper>();
-        services.AddSingleton<CashflowMapper>();
-        services.AddSingleton<CategoryMapper>();
-        services.AddSingleton<StoreItemMapper>();
-        services.AddSingleton<TransactionMapper>();
-        services.AddSingleton<TagsMapper>();
+        services.AddDbContext<BudgetingContext>(options =>
+        {
+            var connectionString = mySqlDatabaseSettings.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        });
 
-        services.AddScoped<IHolefeederContext, HolefeederContext>();
-        services.AddScoped<IObjectStoreContext, ObjectStoreContext>();
         services.AddScoped<Script000InitDatabase>();
-
-        services.AddTransient<IAccountQueriesRepository, AccountQueriesRepository>();
-        services.AddTransient<IAccountRepository, AccountRepository>();
-        services.AddTransient<ICashflowQueriesRepository, CashflowQueriesRepository>();
-        services.AddTransient<ICashflowRepository, CashflowRepository>();
-        services.AddTransient<ICategoryRepository, CategoryRepository>();
-        services.AddTransient<ICategoryQueriesRepository, CategoriesQueriesRepository>();
-        services.AddTransient<ICategoriesRepository, CategoriesQueriesRepository>();
-        services.AddTransient<IMyDataQueriesRepository, MyDataQueriesRepository>();
-        services.AddTransient<IStoreItemsQueriesRepository, StoreItemsQueriesRepository>();
-        services.AddTransient<IStoreItemsRepository, StoreItemsRepository>();
-        services.AddTransient<ITransactionQueriesRepository, TransactionQueriesRepository>();
-        services.AddTransient<ITransactionRepository, TransactionRepository>();
-        services.AddTransient<IUpcomingQueriesRepository, UpcomingQueriesRepository>();
-
-        DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-        SqlMapper.AddTypeHandler(typeof(AccountType), new SmartEnumByNameTypeHandler<AccountType>());
-        SqlMapper.AddTypeHandler(typeof(CategoryType), new SmartEnumByNameTypeHandler<CategoryType>());
-        SqlMapper.AddTypeHandler(typeof(DateIntervalType), new SmartEnumByNameTypeHandler<DateIntervalType>());
-        SqlMapper.AddTypeHandler(new TagsHandler());
 
         return services;
     }

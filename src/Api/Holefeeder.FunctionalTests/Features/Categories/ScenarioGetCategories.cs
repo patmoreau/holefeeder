@@ -1,30 +1,24 @@
 using System.Net;
 
-using FluentAssertions;
-
-using Holefeeder.Application.Features.Categories.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using Xunit;
-using Xunit.Abstractions;
-
-using static Holefeeder.Tests.Common.Builders.CategoryEntityBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
 public class ScenarioGetCategories : BaseScenario
 {
-    private readonly HolefeederDatabaseDriver _holefeederDatabaseDriver;
+    private readonly BudgetingDatabaseDriver _databaseDriver;
 
     public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
-        _holefeederDatabaseDriver = apiApplicationDriver.CreateHolefeederDatabaseDriver();
-        _holefeederDatabaseDriver.ResetStateAsync().Wait();
+        _databaseDriver = DatabaseDriver;
+        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -66,12 +60,12 @@ public class ScenarioGetCategories : BaseScenario
         var firstCategory = await GivenACategory()
             .WithName(firstName)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         var secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_holefeederDatabaseDriver);
+            .SavedInDb(_databaseDriver);
 
         GivenUserIsAuthorized();
 

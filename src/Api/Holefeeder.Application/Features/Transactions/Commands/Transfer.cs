@@ -1,18 +1,12 @@
-﻿using Carter;
-
-using FluentValidation;
-
-using Holefeeder.Application.Features.Accounts.Queries;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Commands;
 
@@ -24,7 +18,7 @@ public class Transfer : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result}, new {Id = result});
+                    return Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result.FromTransactionId}, result);
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -34,80 +28,69 @@ public class Transfer : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request
-        (DateTime Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<Guid>;
+    internal record Request
+    (DateTime Date, decimal Amount, string Description, Guid FromAccountId,
+        Guid ToAccountId) : ICommandRequest<(Guid FromTransactionId, Guid ToTransactionId)>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
             RuleFor(command => command.FromAccountId).NotNull().NotEmpty();
             RuleFor(command => command.ToAccountId).NotNull().NotEmpty();
-            RuleFor(command => command.Date).NotNull();
+            RuleFor(command => command.Date).NotEmpty();
             RuleFor(command => command.Amount).GreaterThan(0);
         }
     }
 
-    public class Handler : IRequestHandler<Request, Guid>
+    internal class Handler : IRequestHandler<Request, (Guid FromTransactionId, Guid ToTransactionId)>
     {
-        private readonly IAccountQueriesRepository _accountQueriesRepository;
-        private readonly ICategoriesRepository _categoriesRepository;
-        private readonly ILogger _logger;
+        private readonly BudgetingContext _context;
         private readonly IUserContext _userContext;
-        private readonly ITransactionRepository _transactionRepository;
 
-        public Handler(
-            IUserContext userContext,
-            ITransactionRepository transactionRepository,
-            IAccountQueriesRepository accountQueriesRepository,
-            ICategoriesRepository categoriesRepository,
-            ILogger<Handler> logger)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _transactionRepository = transactionRepository;
-            _accountQueriesRepository = accountQueriesRepository;
-            _categoriesRepository = categoriesRepository;
-            _logger = logger;
+            _context = context;
         }
 
-        public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<(Guid FromTransactionId, Guid ToTransactionId)> Handle(Request request,
+            CancellationToken cancellationToken)
         {
             var errors = new List<string>();
 
-            if (!await _accountQueriesRepository.IsAccountActive(request.FromAccountId, _userContext.UserId,
+            if (await _context.Accounts.AnyAsync(
+                    x => x.Id == request.FromAccountId && x.UserId == _userContext.UserId && !x.Inactive,
                     cancellationToken))
             {
                 errors.Add($"From account {request.FromAccountId} does not exists");
             }
 
-            if (!await _accountQueriesRepository.IsAccountActive(request.ToAccountId, _userContext.UserId,
+            if (await _context.Accounts.AnyAsync(
+                    x => x.Id == request.ToAccountId && x.UserId == _userContext.UserId && !x.Inactive,
                     cancellationToken))
             {
                 errors.Add($"To account {request.ToAccountId} does not exists");
             }
 
             var transferTo =
-                await _categoriesRepository.FindByNameAsync(_userContext.UserId, "Transfer In", cancellationToken);
+                await _context.Categories
+                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer In", cancellationToken);
             var transferFrom =
-                await _categoriesRepository.FindByNameAsync(_userContext.UserId, "Transfer Out", cancellationToken);
+                await _context.Categories
+                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer Out", cancellationToken);
 
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, transferFrom!.Id, _userContext.UserId);
+                request.FromAccountId, transferFrom.Id, _userContext.UserId);
 
-            _logger.LogInformation("----- Transfer Money from Account - Transaction: {@Transaction}", transactionFrom);
-
-            await _transactionRepository.SaveAsync(transactionFrom, cancellationToken);
+            await _context.Transactions.AddAsync(transactionFrom, cancellationToken);
 
             var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.ToAccountId, transferTo!.Id, _userContext.UserId);
+                request.ToAccountId, transferTo.Id, _userContext.UserId);
 
-            _logger.LogInformation("----- Transfer Money to Account - Transaction: {@Transaction}", transactionTo);
+            await _context.Transactions.AddAsync(transactionTo, cancellationToken);
 
-            await _transactionRepository.SaveAsync(transactionTo, cancellationToken);
-
-            await _transactionRepository.UnitOfWork.CommitAsync(cancellationToken);
-
-            return errors.Any() ? Guid.Empty : transactionFrom.Id;
+            return errors.Any() ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
         }
     }
 }

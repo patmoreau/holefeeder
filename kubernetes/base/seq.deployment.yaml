@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seq-pv-claim
+  namespace: holefeeder
+  labels:
+    app: holefeeder
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seq
+  namespace: holefeeder
+  labels:
+    app: seq
+spec:
+  ports:
+    - name: seq
+      port: 80
+      targetPort: 80
+    # - name: seq-ingestion
+    #   port: 5341
+    #   targetPort: 5341
+  selector:
+    app: seq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seq
+  namespace: holefeeder
+  labels:
+    app: seq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: seq
+    spec:
+      containers:
+        - name: seq
+          image: datalust/seq:latest
+          ports:
+            - containerPort: 80
+              name: seq
+            - containerPort: 5341
+              name: seq-ingestion
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+          volumeMounts:
+            - name: seq-persistent-storage
+              mountPath: "/data"
+      volumes:
+        - name: seq-persistent-storage
+          persistentVolumeClaim:
+            claimName: seq-pv-claim

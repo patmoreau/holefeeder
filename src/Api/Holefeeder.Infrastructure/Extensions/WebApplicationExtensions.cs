@@ -1,12 +1,12 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Sockets;
 using System.Reflection;
 
 using DbUp;
 using DbUp.MySql;
 
-using Holefeeder.Infrastructure.Context;
+using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.AspNetCore.Builder;
@@ -24,66 +24,68 @@ public static class WebApplicationExtensions
 
     public static IApplicationBuilder MigrateDb(this IApplicationBuilder app)
     {
+        if (app is null)
+        {
+            throw new ArgumentNullException(nameof(app));
+        }
+
         using var scope = app.ApplicationServices.CreateScope();
 
-        var objectStoreDatabaseSettings = scope.ServiceProvider.GetRequiredService<ObjectStoreDatabaseSettings>();
-        var objectStoreLogger = scope.ServiceProvider.GetRequiredService<ILogger<ObjectStoreContext>>();
+        var connectionStringBuilder = scope.ServiceProvider.GetRequiredService<BudgetingConnectionStringBuilder>();
+        var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
 
-        MigrateDb(objectStoreDatabaseSettings, objectStoreLogger, "ObjectStore");
-
-        var holefeederDatabaseSettings = scope.ServiceProvider.GetRequiredService<HolefeederDatabaseSettings>();
-        var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<HolefeederContext>>();
-
-        MigrateDb(holefeederDatabaseSettings, holefeederLogger, "Holefeeder");
+        MigrateDb(connectionStringBuilder, holefeederLogger);
 
         return app;
     }
 
-    private static void MigrateDb(MySqlDatabaseSettings databaseSettings, ILogger logger, string name)
+    private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
         var completed = false;
         var tryCount = 0;
 
         while (tryCount++ < 3 && !completed)
         {
-            logger.LogInformation("{DatabaseName} - Migration attempt #{TryCount}", name, tryCount);
+            logger.LogMigrationAttempt(tryCount);
             try
             {
-                PerformMigration(databaseSettings, name);
+                PerformMigration(connectionStringBuilder);
                 completed = true;
             }
+#pragma warning disable CA1031
             catch (Exception e)
+#pragma warning restore CA1031
             {
-                logger.LogInformation("{DatabaseName} - Migration attempt #{TryCount} - error {Error}", name, tryCount,
-                    e);
+                logger.LogMigrationError(tryCount, e);
                 Thread.Sleep(10000);
             }
         }
 
         if (!completed)
         {
-            throw new DataException($"{name} - Unable to perform database migration, no connection to server was found.");
+            throw new DataException(
+                $"Unable to perform database migration, no connection to server was found.");
         }
 
-        logger.LogInformation("{DatabaseName} - Migration completed successfully", name);
+        logger.LogMigrationSuccess();
     }
 
-    private static void PerformMigration(MySqlDatabaseSettings databaseSettings, string name)
+    private static void PerformMigration(BudgetingConnectionStringBuilder connectionStringBuilder)
     {
         lock (Locker)
         {
-            var connectionManager = new MySqlConnectionManager(databaseSettings.ConnectionString);
+            var builder = connectionStringBuilder.CreateBuilder();
 
-            EnsureDatabase.For.MySqlDatabase(databaseSettings.GetBuilder(true).ConnectionString);
+            var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
+
+            EnsureDatabase.For.MySqlDatabase(builder.ConnectionString);
 
             var upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
-                    s => s.Contains($"{nameof(Scripts)}.{name}"))
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .JournalTo(new MySqlTableJournal(
                     () => connectionManager,
-                    () => MySqlConnectionManager.Log, databaseSettings.GetBuilder().Database,
-                    "schema_versions"))
+                    () => MySqlConnectionManager.Log, builder.Database, "schema_versions"))
                 .LogToConsole()
                 .Build();
 

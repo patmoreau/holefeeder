@@ -1,15 +1,13 @@
 ﻿using System.Reflection;
 
-using Carter;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.SeedWork;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.StoreItems.Queries;
 
@@ -24,7 +22,7 @@ public class GetStoreItems : ICarterModule
                     ctx.Response.Headers.Add("X-Total-Count", $"{results.Total}");
                     return Results.Ok(results.Items);
                 })
-            .Produces<IEnumerable<StoreItemViewModel>>()
+            .Produces<QueryResult<Response>>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
@@ -34,8 +32,8 @@ public class GetStoreItems : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(int Offset, int Limit, string[] Sort, string[] Filter)
-        : IRequest<QueryResult<StoreItemViewModel>>, IRequestQuery
+    internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
+        : IRequest<QueryResult<Response>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
@@ -43,27 +41,36 @@ public class GetStoreItems : ICarterModule
         }
     }
 
-    public class Validator : QueryValidatorRoot<Request>
+    internal record Response(Guid Id, string Code, string Data);
+
+    internal class Validator : QueryValidatorRoot<Request>
     {
     }
 
-    public class Handler : IRequestHandler<Request, QueryResult<StoreItemViewModel>>
+    internal class Handler : IRequestHandler<Request, QueryResult<Response>>
     {
-        private readonly IStoreItemsQueriesRepository _repository;
         private readonly IUserContext _userContext;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, IStoreItemsQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
-        public async Task<QueryResult<StoreItemViewModel>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResult<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var (total, items) =
-                await _repository.FindAsync(_userContext.UserId, QueryParams.Create(request), cancellationToken);
+            var total = await _context.StoreItems.Where(e => e.UserId == _userContext.UserId).CountAsync(cancellationToken);
+            var items = await _context.StoreItems
+                .Where(e => e.UserId == _userContext.UserId)
+                .Filter(request.Filter)
+                .Sort(request.Sort)
+                .Skip(request.Offset)
+                .Take(request.Limit)
+                .Select(e => new Response(e.Id, e.Code, e.Data))
+                .ToListAsync(cancellationToken);
 
-            return new QueryResult<StoreItemViewModel>(total, items);
+            return new QueryResult<Response>(total, items);
         }
     }
 }

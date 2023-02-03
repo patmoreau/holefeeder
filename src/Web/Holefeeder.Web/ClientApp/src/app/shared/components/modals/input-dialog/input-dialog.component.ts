@@ -35,13 +35,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class InputDialogComponent {
   title!: string;
-
-  set initialValue(value: string) {
-    this.input.setValue(value);
-  }
-
   message!: string;
   input = new FormControl('', Validators.required);
 
   constructor(public activeModal: NgbActiveModal) {}
+
+  set initialValue(value: string) {
+    this.input.setValue(value);
+  }
 }

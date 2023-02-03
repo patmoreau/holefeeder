@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta24
+apiVersion: skaffold/v3
 kind: Config
 metadata:
   name: holefeeder
@@ -15,26 +15,24 @@ build:
         dockerfile: src/Web/Holefeeder.Web/Dockerfile
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
+        noCache: false
     - image: holefeeder/holefeeder-api
       context: .
       docker:
         dockerfile: src/Api/Holefeeder.Api/Dockerfile
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
+        noCache: false
 profiles:
-  - name: dev-docker
+  - name: dev
     activation:
-      - kubeContext: docker-desktop
-    deploy:
+      - kubeContext: k3d-dev
+    manifests:
       kustomize:
-        paths: ["kubernetes/dev"]
-  - name: dev-k3d
-    activation:
-      - kubeContext: k3d-*
-    deploy:
-      kustomize:
-        paths: ["kubernetes/dev"]
+        paths:
+          - "kubernetes/dev"
   - name: prd
-    deploy:
+    manifests:
       kustomize:
-        paths: ["kubernetes/prd"]
+        paths:
+          - "kubernetes/prd"

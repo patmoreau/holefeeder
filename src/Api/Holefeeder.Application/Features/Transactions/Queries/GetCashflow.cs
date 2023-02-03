@@ -1,16 +1,12 @@
-using Carter;
-
-using FluentValidation;
-
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Transactions.Queries;
 
@@ -32,9 +28,9 @@ public class GetCashflow : ICarterModule
             .RequireAuthorization();
     }
 
-    public record Request(Guid Id) : IRequest<CashflowInfoViewModel>;
+    internal record Request(Guid Id) : IRequest<CashflowInfoViewModel>;
 
-    public class Validator : AbstractValidator<Request>
+    internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -42,26 +38,28 @@ public class GetCashflow : ICarterModule
         }
     }
 
-    public class Handler : IRequestHandler<Request, CashflowInfoViewModel>
+    internal class Handler : IRequestHandler<Request, CashflowInfoViewModel>
     {
         private readonly IUserContext _userContext;
-        private readonly ICashflowQueriesRepository _repository;
+        private readonly BudgetingContext _context;
 
-        public Handler(IUserContext userContext, ICashflowQueriesRepository repository)
+        public Handler(IUserContext userContext, BudgetingContext context)
         {
             _userContext = userContext;
-            _repository = repository;
+            _context = context;
         }
 
-        public async Task<CashflowInfoViewModel> Handle(Request query, CancellationToken cancellationToken)
+        public async Task<CashflowInfoViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result = await _repository.FindByIdAsync(_userContext.UserId, query.Id, cancellationToken);
+            var result = await _context.Cashflows
+                .Include(x => x.Account).Include(x => x.Category)
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (result is null)
             {
-                throw new CashflowNotFoundException(query.Id);
+                throw new CashflowNotFoundException(request.Id);
             }
 
-            return result;
+            return CashflowMapper.MapToDto(result);
         }
     }
 }

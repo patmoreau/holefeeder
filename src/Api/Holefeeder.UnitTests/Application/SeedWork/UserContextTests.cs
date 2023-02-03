@@ -1,9 +1,4 @@
-using System;
 using System.Security.Claims;
-
-using AutoBogus;
-
-using FluentAssertions;
 
 using Holefeeder.Application.SeedWork;
 
@@ -11,8 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Web;
 
 using NSubstitute;
-
-using Xunit;
 
 namespace Holefeeder.UnitTests.Application.SeedWork;
 

@@ -53,4 +53,3 @@ export enum ToastType {
   warning = 'warning',
   danger = 'danger',
 }
-

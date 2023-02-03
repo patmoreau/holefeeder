@@ -1,14 +1,6 @@
-using System;
 using System.Threading.Tasks;
 
-using AutoBogus;
-
-using FluentAssertions;
-using FluentAssertions.Execution;
-
 using Holefeeder.Domain.Features.StoreItem;
-
-using Xunit;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
@@ -84,7 +76,7 @@ public class StoreItemTests
 
         // act
         StoreItem item = null!;
-        Func<Task> action = () =>
+        var action = () =>
         {
             item = new StoreItem(id, code, userId) {Data = data};
             return Task.CompletedTask;
