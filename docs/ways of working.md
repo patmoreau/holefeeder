@@ -1,1 +1,0 @@
-Document outlining development team conventions
