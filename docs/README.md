@@ -1,1 +1,0 @@
-The `<root>\docs` folder contains documentation used by the development team.
