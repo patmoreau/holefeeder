@@ -18,7 +18,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioGetUpcoming : BaseScenario<ScenarioGetUpcoming>
+public class ScenarioGetUpcoming : BaseScenario
 {
     public ScenarioGetUpcoming(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
@@ -75,100 +75,87 @@ public class ScenarioGetUpcoming : BaseScenario<ScenarioGetUpcoming>
     }
 
     [Fact]
-    public async Task WhenUnpaidUpcomingOneTimeCashflow()
+    public void WhenUnpaidUpcomingOneTimeCashflow()
     {
-        Cashflow cashflow = null!;
-        Request request = null!;
-        DateTime from = default;
-        DateTime to = default;
-        UpcomingViewModel[]? result = null!;
+        ScenarioFor("unpaid upcoming one time cashflow", player =>
+        {
+            Cashflow cashflow = null!;
+            Request request = null!;
+            UpcomingViewModel[]? result = null!;
 
-        await Given(() => User.IsAuthorized())
-            .Given(async () => cashflow = await BuildCashflow(DateIntervalType.OneTime))
-            .Given(() => from = cashflow.EffectiveDate.AddDays(-1))
-            .Given(() => to = cashflow.EffectiveDate.AddDays(7))
-            .Given(() => request = BuildUpcomingRequest(from, to))
-            .When(() => WhenUserGetsUpcoming(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.OK))
-            .When(() => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
-            .Then(() =>
-            {
-                result.Should().NotBeNull().And.HaveCount(1).And.BeInAscendingOrder(x => x.Date);
-                result![0].Should().BeEquivalentTo(cashflow, options => options.ExcludingMissingMembers());
-            })
-            .RunScenarioAsync();
+            player
+                .Given("an authorized user", () => User.IsAuthorized())
+                .And("with an active one time cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.OneTime))
+                .And("who wants to get all upcoming cashflows from yesterday to the next week", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(7)))
+                .When("the request is sent", () => WhenUserGetsUpcoming(request))
+                .Then("the return should be successful", () => ThenShouldExpectStatusCode(HttpStatusCode.OK))
+                .And("the upcoming cashflow list should be received", () => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
+                .And("have a count of 1 sorted by date", () =>
+                {
+                    result.Should().NotBeNull().And.HaveCount(1).And.BeInAscendingOrder(x => x.Date);
+                    result![0].Should().BeEquivalentTo(cashflow, options => options.ExcludingMissingMembers());
+                });
+        });
     }
 
     [Fact]
-    public async Task WhenUnpaidUpcomingWeeklyCashflow()
+    public void WhenUnpaidUpcomingWeeklyCashflow()
     {
-        Cashflow cashflow = null!;
-        Request request = null!;
-        DateTime from = default;
-        DateTime to = default;
-        UpcomingViewModel[]? result = null!;
+        ScenarioFor("unpaid upcoming weekly cashflows", player =>
+        {
+            Cashflow cashflow = null!;
+            Request request = null!;
+            UpcomingViewModel[]? result = null!;
 
-        await Given(() => User.IsAuthorized())
-            .Given(async () => cashflow = await BuildCashflow(DateIntervalType.Weekly, 2))
-            .Given(() => from = cashflow.EffectiveDate.AddDays(-1))
-            .Given(() => to = cashflow.EffectiveDate.AddDays(7*3))
-            .Given(() => request = BuildUpcomingRequest(from, to))
-            .When(() => WhenUserGetsUpcoming(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.OK))
-            .When(() => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
-            .Then(() =>
-            {
-                result.Should().NotBeNull().And.HaveCount(3).And.BeInAscendingOrder(x => x.Date);
-            })
-            .RunScenarioAsync();
+            player
+                .Given("an authorized user", () => User.IsAuthorized())
+                .And("with an active weekly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Weekly, 2))
+                .And("who wants to get all upcoming cashflows from yesterday to the next 3 weeks", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(7 * 3)))
+                .When("the request is sent", () => WhenUserGetsUpcoming(request))
+                .Then("the return should be successful", () => ThenShouldExpectStatusCode(HttpStatusCode.OK))
+                .And("the upcoming cashflow list should be received", () => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
+                .And("have a count of 3 sorted by date", () => result.Should().NotBeNull().And.HaveCount(3).And.BeInAscendingOrder(x => x.Date));
+        });
     }
 
     [Fact]
-    public async Task WhenUnpaidUpcomingMonthlyCashflow()
+    public void WhenUnpaidUpcomingMonthlyCashflow()
     {
-        Cashflow cashflow = null!;
-        Request request = null!;
-        DateTime from = default;
-        DateTime to = default;
-        UpcomingViewModel[]? result = null!;
+        ScenarioFor("unpaid upcoming monthly cashflows", player =>
+        {
+            Cashflow cashflow = default!;
+            Request request = default!;
+            UpcomingViewModel[]? result = default!;
 
-        await Given(() => User.IsAuthorized())
-            .Given(async () => cashflow = await BuildCashflow(DateIntervalType.Monthly))
-            .Given(() => from = cashflow.EffectiveDate.AddDays(-1))
-            .Given(() => to = cashflow.EffectiveDate.AddMonths(12))
-            .Given(() => request = BuildUpcomingRequest(from, to))
-            .When(() => WhenUserGetsUpcoming(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.OK))
-            .When(() => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
-            .Then(() =>
-            {
-                result.Should().NotBeNull().And.HaveCount(12).And.BeInAscendingOrder(x => x.Date);
-            })
-            .RunScenarioAsync();
+            player
+                .Given("an authorized user", () => User.IsAuthorized())
+                .And("with an active monthly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Monthly))
+                .And("who wants to get all upcoming cashflows from yesterday to the next 12 months", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddMonths(12)))
+                .When("the request is sent", () => WhenUserGetsUpcoming(request))
+                .Then("the return should be successful", () => ThenShouldExpectStatusCode(HttpStatusCode.OK))
+                .And("the upcoming cashflow list should be received", () => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
+                .And("have a count of 12 sorted by date", () => result.Should().NotBeNull().And.HaveCount(12).And.BeInAscendingOrder(x => x.Date));
+        });
     }
 
     [Fact]
-    public async Task WhenUnpaidUpcomingYearlyCashflow()
+    public void WhenUnpaidUpcomingYearlyCashflow()
     {
-        Cashflow cashflow = null!;
-        Request request = null!;
-        DateTime from = default;
-        DateTime to = default;
-        UpcomingViewModel[]? result = null!;
+        ScenarioFor("unpaid upcoming monthly cashflows", player =>
+        {
+            Cashflow cashflow = null!;
+            Request request = null!;
+            UpcomingViewModel[]? result = null!;
 
-        await Given(() => User.IsAuthorized())
-            .Given(async () => cashflow = await BuildCashflow(DateIntervalType.Yearly))
-            .Given(() => from = cashflow.EffectiveDate.AddDays(-1))
-            .Given(() => to = cashflow.EffectiveDate.AddYears(2))
-            .Given(() => request = BuildUpcomingRequest(from, to))
-            .When(() => WhenUserGetsUpcoming(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.OK))
-            .When(() => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
-            .Then(() =>
-            {
-                result.Should().NotBeNull().And.HaveCount(2).And.BeInAscendingOrder(x => x.Date);
-            })
-            .RunScenarioAsync();
+            player
+                .Given("an authorized user", () => User.IsAuthorized())
+                .Given("with an active yearly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Yearly))
+                .Given("who wants to get all upcoming cashflows from yesterday to the next 2 years", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddYears(2)))
+                .When("the request is sent", () => WhenUserGetsUpcoming(request))
+                .Then("the return should be successful", () => ThenShouldExpectStatusCode(HttpStatusCode.OK))
+                .And("the upcoming cashflow list should be received", () => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
+                .And("have a count of 2 sorted by date", () => result.Should().NotBeNull().And.HaveCount(2).And.BeInAscendingOrder(x => x.Date));
+        });
     }
 
     private async Task WhenUserGetsUpcoming(Request request)

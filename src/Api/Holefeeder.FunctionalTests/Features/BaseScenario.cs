@@ -3,8 +3,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using FluentAssertions.Execution;
-
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
@@ -17,12 +15,16 @@ namespace Holefeeder.FunctionalTests.Features;
 [Collection("Api collection")]
 public abstract class BaseScenario : IDisposable
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
     protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
+
+        _testOutputHelper = testOutputHelper;
 
         Scope = apiApplicationDriver.Services.CreateScope();
 
@@ -117,9 +119,9 @@ public abstract class BaseScenario : IDisposable
         CheckAuthorizationStatus(false);
     }
 
-    protected T ThenShouldReceive<T>()
+    protected TContent ThenShouldReceive<TContent>()
     {
-        var result = HttpClientDriver.DeserializeContent<T>();
+        var result = HttpClientDriver.DeserializeContent<TContent>();
         result.Should().NotBeNull();
         return result!;
     }
@@ -196,6 +198,15 @@ public abstract class BaseScenario : IDisposable
         }
 
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
+    }
+
+    protected void ScenarioFor(string description, Action<ScenarioPlayer> scenario)
+    {
+        var player = ScenarioPlayer.Create(description, _testOutputHelper);
+
+        scenario(player);
+
+        player.Play();
     }
 
     public void Dispose()

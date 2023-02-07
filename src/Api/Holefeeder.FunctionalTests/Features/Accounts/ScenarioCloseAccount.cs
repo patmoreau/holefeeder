@@ -25,28 +25,31 @@ public class ScenarioCloseAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenInvalidRequest()
+    public void WhenInvalidRequest()
     {
-        var request = GivenAnInvalidCloseAccountRequest()
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserClosesAccount(request);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ScenarioFor("closing an account with an invalid request", player =>
+        {
+            Request request = default!;
+            player
+                .Given("an invalid account request", () => request = GivenAnInvalidCloseAccountRequest().Build())
+                .Given("the user is authorized", () => GivenUserIsAuthorized())
+                .When("the user closes an account", () => WhenUserClosesAccount(request))
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+        });
     }
 
     [Fact]
-    public async Task WhenAccountNotFound()
+    public void WhenAccountNotFound()
     {
-        var request = GivenACloseAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserClosesAccount(request);
-
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ScenarioFor("closing an account that does not exists", player =>
+        {
+            Request request = default!;
+            player
+                .Given("a close account request", () => request = GivenACloseAccountRequest().Build())
+                .Given("the user is authorized", () => GivenUserIsAuthorized())
+                .When("the user closes an account", () => WhenUserClosesAccount(request))
+                .Then("should receive a NotFound error code", () => ThenShouldExpectStatusCode(HttpStatusCode.NotFound));
+        });
     }
 
     [Fact]

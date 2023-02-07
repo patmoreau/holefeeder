@@ -14,9 +14,8 @@ using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
+public sealed class ScenarioTransfer : BaseScenario
 {
-
     public ScenarioTransfer(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
         apiApplicationDriver, testOutputHelper)
     {
@@ -29,103 +28,101 @@ public sealed class ScenarioTransfer : BaseScenario<ScenarioTransfer>
     }
 
     [Fact]
-    public async Task InvalidRequest()
+    public void InvalidRequest()
     {
-        Request request = default!;
-        await Given(() =>
-            {
-                request = GivenAnInvalidTransfer().Build();
-            })
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.Transfer(request))
-            .Then(
-                () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."))
-            .RunScenarioAsync();
+        ScenarioFor("an invalid transfer request", player =>
+        {
+            Request request = default!;
+            player
+                .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
+                .And("the user is authorized", () => User.IsAuthorized())
+                .When("a transfer is made", () => Transaction.Transfer(request))
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+        });
     }
 
     [Fact]
-    public async Task AuthorizedUser()
+    public void AuthorizedUser()
     {
-        Request request = null!;
+        ScenarioFor("an authorized user making a transfer", player =>
+        {
+            Request request = default!;
 
-        await Given(() => request = GivenATransfer().Build())
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.Transfer(request))
-            .Then(ThenUserShouldBeAuthorizedToAccessEndpoint)
-            .RunScenarioAsync();
+            player
+                .Given("a transfer request", () => request = GivenATransfer().Build())
+                .And("the user is authorized", () => User.IsAuthorized())
+                .When("the transfer is made", () => Transaction.Transfer(request))
+                .Then("the user should be authorized to access the endpoint", ThenUserShouldBeAuthorizedToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task ForbiddenUser()
+    public void ForbiddenUser()
     {
-        Request request = null!;
-        await Given(() => request = GivenATransfer().Build())
-            .Given(() => User.IsForbidden())
-            .When(() => Transaction.Transfer(request))
-            .Then(ShouldBeForbiddenToAccessEndpoint)
-            .RunScenarioAsync();
+        ScenarioFor("a forbidden user making a request", player =>
+        {
+            Request request = null!;
+            player
+                .Given("a transfer request", () => request = GivenATransfer().Build())
+                .And("the user is forbidden", () => User.IsForbidden())
+                .When("the request is sent", () => Transaction.Transfer(request))
+                .Then("should be forbidden from accessing the endpoint", ShouldBeForbiddenToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task UnauthorizedUser()
+    public void UnauthorizedUser()
     {
-        Request entity = null!;
-        await Given(() => entity = GivenATransfer().Build())
-            .Given(() => User.IsUnauthorized())
-            .When(() => Transaction.Transfer(entity))
-            .Then(ShouldNotBeAuthorizedToAccessEndpoint)
-            .RunScenarioAsync();
+        ScenarioFor("an unauthorized user making a transfer request", player =>
+        {
+            Request entity = null!;
+            player
+                .Given("a transfer request", () => entity = GivenATransfer().Build())
+                .And("the user is unauthorized", () => User.IsUnauthorized())
+                .When("the transfer request is made", () => Transaction.Transfer(entity))
+                .Then("the user should not be authorized to access endpoint", ShouldNotBeAuthorizedToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task ValidRequest()
+    public void ValidRequest()
     {
-        Account fromAccount = null!;
-        Account toAccount = null!;
-        Request request = null!;
-        (Guid FromTransactionId, Guid ToTransactionId) ids = default;
+        ScenarioFor("a valid transfer request", player =>
+        {
+            Account fromAccount = null!;
+            Account toAccount = null!;
+            Request request = null!;
+            (Guid FromTransactionId, Guid ToTransactionId) ids = default;
 
-        await Given(async () => fromAccount = await GivenAnActiveAccount()
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(async () => toAccount = await GivenAnActiveAccount()
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(async () => await GivenACategory()
-                .WithName("Transfer In")
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(async () => await GivenACategory()
-                .WithName("Transfer Out")
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(() => request = GivenATransfer()
-                .FromAccount(fromAccount)
-                .ToAccount(toAccount)
-                .Build())
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.Transfer(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-            .Then(() => ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
-            .Then(() => ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>())
-            .Then(async () =>
-            {
-                var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
+            player
+                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("their request is valid", () => request = GivenATransfer().FromAccount(fromAccount).ToAccount(toAccount).Build())
+                .And("they are authorized to use the application", () => User.IsAuthorized())
+                .When("the transfer request is sent", () => Transaction.Transfer(request))
+                .Then("the return code should be Created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+                .And("the route of the new resource should be in the header", () => ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .And("both transaction ids should be received", () => ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>())
+                .And("the data of the outgoing transaction be valid", async () =>
+                {
+                    var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
-                TransactionMapper.MapToModelOrNull(result).Should()
-                    .NotBeNull()
-                    .And
-                    .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-            })
-            .Then(async () =>
-            {
-                var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
+                    TransactionMapper.MapToModelOrNull(result).Should()
+                        .NotBeNull()
+                        .And
+                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                })
+                .And("the data of the incoming transaction be valid", async () =>
+                {
+                    var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
 
-                TransactionMapper.MapToModelOrNull(result).Should()
-                    .NotBeNull()
-                    .And
-                    .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-            })
-            .RunScenarioAsync();
+                    TransactionMapper.MapToModelOrNull(result).Should()
+                        .NotBeNull()
+                        .And
+                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                });
+        });
     }
 }

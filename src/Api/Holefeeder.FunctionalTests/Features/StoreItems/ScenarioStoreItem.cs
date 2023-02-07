@@ -4,11 +4,12 @@ using Holefeeder.FunctionalTests.Drivers;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
-using Request = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
+using CreateRequest = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
+using ModifyRequest = Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
+public class ScenarioStoreItem : BaseScenario
 {
     public ScenarioStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
@@ -22,43 +23,42 @@ public class ScenarioStoreItem : BaseScenario<ScenarioStoreItem>
     }
 
     [Fact]
-    public async Task UserCreatesStoreItem()
+    public void UserCreatesStoreItem()
     {
-        Guid id = Guid.Empty;
-        Request createRequest = null!;
-        StoreItemViewModel storeItem = null!;
+        ScenarioFor("user creating a store item", player =>
+        {
+            Guid id = Guid.Empty;
+            CreateRequest createRequest = null!;
+            StoreItemViewModel storeItem = null!;
 
-        await Given(() => User.IsAuthorized())
-            .Given(() => createRequest = GivenACreateStoreItemRequest().Build())
-            .When(() => id = StoreItem.GetsCreated(createRequest).WithCreatedId())
-            .When(() => storeItem = StoreItem.RetrievedById(id).WithResultAs<StoreItemViewModel>())
-            .Then(() =>
-            {
-                storeItem.Id.Should().Be(id);
-                storeItem.Code.Should().Be(createRequest.Code);
-                storeItem.Data.Should().Be(createRequest.Data);
-            })
-            .RunScenarioAsync();
+            player
+                .Given("the user is authorized", () => User.IsAuthorized())
+                .And("they created a valid request", () => createRequest = GivenACreateStoreItemRequest().Build())
+                .When("the request is sent", () => id = StoreItem.GetsCreated(createRequest).WithCreatedId())
+                .And("the store item is retrieved using the id", () => storeItem = StoreItem.RetrievedById(id).WithResultAs<StoreItemViewModel>())
+                .Then("the stored item should match the request", () =>
+                {
+                    storeItem.Id.Should().Be(id);
+                    storeItem.Should().BeEquivalentTo(createRequest);
+                });
+        });
     }
 
     [Fact]
-    public async Task UserModifiesStoreItem()
+    public void UserModifiesStoreItem()
     {
-        Guid id = Guid.Empty;
-        Application.Features.StoreItems.Commands.ModifyStoreItem.Request request = null!;
-        StoreItemViewModel storeItem = null!;
+        ScenarioFor("modifying a store item", player =>
+        {
+            Guid id = Guid.Empty;
+            ModifyRequest request = null!;
+            StoreItemViewModel storeItem = null!;
 
-        await Given(() => User.IsAuthorized())
-            .When(() => id = StoreItem.GetsCreated().WithCreatedId())
-            .Given(() => request = GivenAModifyStoreItemRequest().WithId(id).Build())
-            .When(() => storeItem = StoreItem.GetsModified()
-                .RetrievedById(id)
-                .WithResultAs<StoreItemViewModel>())
-            .Then(() =>
-            {
-                storeItem.Id.Should().NotBeEmpty();
-                storeItem.Data.Should().Be(request.Data);
-            })
-            .RunScenarioAsync();
+            player
+                .Given("the user is authorized", () => User.IsAuthorized())
+                .And("a store item is already created", () => id = StoreItem.GetsCreated().WithCreatedId())
+                .And("a valid request is built", () => request = GivenAModifyStoreItemRequest().WithId(id).Build())
+                .When("the request is sent", () => storeItem = StoreItem.GetsModified().RetrievedById(id).WithResultAs<StoreItemViewModel>())
+                .Then("the data should be modified", () => storeItem.Should().BeEquivalentTo(request));
+        });
     }
 }

@@ -16,9 +16,8 @@ using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public sealed class ScenarioPayCashflow : BaseScenario<ScenarioPayCashflow>
+public sealed class ScenarioPayCashflow : BaseScenario
 {
-
     public ScenarioPayCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
         apiApplicationDriver, testOutputHelper)
     {
@@ -31,90 +30,100 @@ public sealed class ScenarioPayCashflow : BaseScenario<ScenarioPayCashflow>
     }
 
     [Fact]
-    public async Task InvalidRequest()
+    public void InvalidRequest()
     {
-        Request request = default!;
-        await Given(() =>
-            {
-                request = GivenAnInvalidCashflowPayment().Build();
-            })
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.PayACashflow(request))
-            .Then(
-                () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."))
-            .RunScenarioAsync();
+        ScenarioFor("trying to pay a cashflow with an invalid request", player =>
+        {
+            Request request = default!;
+            player
+                .Given("", () => request = GivenAnInvalidCashflowPayment().Build())
+                .Given("", () => User.IsAuthorized())
+                .When("", () => Transaction.PayACashflow(request))
+                .Then("", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+        });
     }
 
     [Fact]
-    public async Task AuthorizedUser()
+    public void AuthorizedUser()
     {
-        Request request = null!;
-
-        await Given(() => request = GivenACashflowPayment().Build())
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.PayACashflow(request))
-            .Then(ThenUserShouldBeAuthorizedToAccessEndpoint)
-            .RunScenarioAsync();
+        ScenarioFor("", player =>
+        {
+            Request request = null!;
+            player
+                .Given("", () => request = GivenACashflowPayment().Build())
+                .Given("", () => User.IsAuthorized())
+                .When("", () => Transaction.PayACashflow(request))
+                .Then("", ThenUserShouldBeAuthorizedToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task ForbiddenUser()
+    public void ForbiddenUser()
     {
-        Request request = null!;
-        await Given(() => request = GivenACashflowPayment().Build())
-            .Given(() => User.IsForbidden())
-            .When(() => Transaction.PayACashflow(request))
-            .Then(ShouldBeForbiddenToAccessEndpoint)
-            .RunScenarioAsync();
+        ScenarioFor("", player =>
+        {
+            Request request = null!;
+            player
+                .Given("", () => request = GivenACashflowPayment().Build())
+                .Given("", () => User.IsForbidden())
+                .When("", () => Transaction.PayACashflow(request))
+                .Then("", ShouldBeForbiddenToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task UnauthorizedUser()
+    public void UnauthorizedUser()
     {
-        Request entity = null!;
-        await Given(() => entity = GivenACashflowPayment().Build())
-            .Given(() => User.IsUnauthorized())
-            .When(() => Transaction.PayACashflow(entity))
-            .Then(ShouldNotBeAuthorizedToAccessEndpoint)
-            .RunScenarioAsync();
+        ScenarioFor("", player =>
+        {
+            Request entity = null!;
+            player
+                .Given("", () => entity = GivenACashflowPayment().Build())
+                .Given("", () => User.IsUnauthorized())
+                .When("", () => Transaction.PayACashflow(entity))
+                .Then("", ShouldNotBeAuthorizedToAccessEndpoint);
+        });
     }
 
     [Fact]
-    public async Task ValidRequest()
+    public void ValidRequest()
     {
-        Account account = null!;
-        Category category = null!;
-        Cashflow cashflow = null!;
-        Request request = null!;
-        var id = Guid.Empty;
+        ScenarioFor("", player =>
+        {
+            Account account = null!;
+            Category category = null!;
+            Cashflow cashflow = null!;
+            Request request = null!;
+            var id = Guid.Empty;
 
-        await Given(async () => account = await GivenAnActiveAccount()
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(async () => category = await GivenACategory()
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(async () => cashflow = await GivenAnActiveCashflow()
-                .ForAccount(account)
-                .ForCategory(category)
-                .ForUser(AuthorizedUserId)
-                .SavedInDb(DatabaseDriver))
-            .Given(() => request = GivenACashflowPayment()
-                .ForCashflow(cashflow)
-                .Build())
-            .Given(() => User.IsAuthorized())
-            .When(() => Transaction.PayACashflow(request))
-            .Then(() => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-            .Then(() => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
-            .Then(async () =>
-            {
-                var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+            player
+                .Given("", async () => account = await GivenAnActiveAccount()
+                    .ForUser(AuthorizedUserId)
+                    .SavedInDb(DatabaseDriver))
+                .Given("", async () => category = await GivenACategory()
+                    .ForUser(AuthorizedUserId)
+                    .SavedInDb(DatabaseDriver))
+                .Given("", async () => cashflow = await GivenAnActiveCashflow()
+                    .ForAccount(account)
+                    .ForCategory(category)
+                    .ForUser(AuthorizedUserId)
+                    .SavedInDb(DatabaseDriver))
+                .Given("", () => request = GivenACashflowPayment()
+                    .ForCashflow(cashflow)
+                    .Build())
+                .Given("", () => User.IsAuthorized())
+                .When("", () => Transaction.PayACashflow(request))
+                .Then("", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+                .Then("", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .Then("", async () =>
+                {
+                    var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
-                TransactionMapper.MapToModelOrNull(result).Should()
-                    .NotBeNull()
-                    .And
-                    .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-            })
-            .RunScenarioAsync();
+                    TransactionMapper.MapToModelOrNull(result).Should()
+                        .NotBeNull()
+                        .And
+                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                });
+        });
     }
 }
