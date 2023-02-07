@@ -202,6 +202,11 @@ public abstract class BaseScenario : IDisposable
 
     protected void ScenarioFor(string description, Action<ScenarioPlayer> scenario)
     {
+        if (scenario == null)
+        {
+            throw new ArgumentNullException(nameof(scenario));
+        }
+
         var player = ScenarioPlayer.Create(description, _testOutputHelper);
 
         scenario(player);

@@ -145,7 +145,7 @@ jobs:
         with:
           name: test-results
           path: |
-            ./tests-results/*.junit.xml
+            ./tests-results/*
 
   publish-docker-images:
     name: Publish Docker Images

@@ -118,7 +118,7 @@ public class ScenarioPlayer
         }
 
         var previousCommand = _tasks.LastOrDefault();
-        var textCommand = command.Equals(previousCommand.Command) ? "and" : command.ToUpperInvariant();
+        var textCommand = command.Equals(previousCommand.Command, StringComparison.OrdinalIgnoreCase) ? "and" : command.ToUpperInvariant();
         var text = $"{textCommand} {message}";
         _tasks.Add((command, () => Task.Run(() => _testOutputHelper.WriteLine($"{text}"))));
         _tasks.Add((command, () => Task.Run(action)));
