@@ -143,7 +143,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Unit Test Results
+          name: test-results
           path: |
             ./tests-results/*.junit.xml
 
