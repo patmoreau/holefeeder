@@ -51,5 +51,5 @@ jobs:
         with:
           artifact: Test Results # artifact name
           name: Tests Results 2 # Name of the check run which will be created
-          path: "artifacts/*.trx" # Path to test results (inside artifact .zip)
+          path: "*.trx" # Path to test results (inside artifact .zip)
           reporter: dotnet-trx # Format of test results
