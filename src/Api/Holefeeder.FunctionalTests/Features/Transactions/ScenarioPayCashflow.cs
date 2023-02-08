@@ -36,59 +36,59 @@ public sealed class ScenarioPayCashflow : BaseScenario
         {
             Request request = default!;
             player
-                .Given("", () => request = GivenAnInvalidCashflowPayment().Build())
-                .Given("", () => User.IsAuthorized())
-                .When("", () => Transaction.PayACashflow(request))
-                .Then("", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+                .Given("an unauthorized user", () => User.IsAuthorized())
+                .And("creates an invalid payment", () => request = GivenAnInvalidCashflowPayment().Build())
+                .When("sending the request", () => Transaction.PayACashflow(request))
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
         });
     }
 
     [Fact]
     public void AuthorizedUser()
     {
-        ScenarioFor("", player =>
+        ScenarioFor("an authorized user pays a cashflow", player =>
         {
             Request request = null!;
             player
-                .Given("", () => request = GivenACashflowPayment().Build())
-                .Given("", () => User.IsAuthorized())
-                .When("", () => Transaction.PayACashflow(request))
-                .Then("", ThenUserShouldBeAuthorizedToAccessEndpoint);
+                .Given("an authorized user", () => User.IsAuthorized())
+                .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
+                .When("the payment is sent", () => Transaction.PayACashflow(request))
+                .Then("the user should be authorized", ThenUserShouldBeAuthorizedToAccessEndpoint);
         });
     }
 
     [Fact]
     public void ForbiddenUser()
     {
-        ScenarioFor("", player =>
+        ScenarioFor("a forbidden user pays a cashflow", player =>
         {
             Request request = null!;
             player
-                .Given("", () => request = GivenACashflowPayment().Build())
-                .Given("", () => User.IsForbidden())
-                .When("", () => Transaction.PayACashflow(request))
-                .Then("", ShouldBeForbiddenToAccessEndpoint);
+                .Given("a forbidden user", () => User.IsForbidden())
+                .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
+                .When("the payment is sent", () => Transaction.PayACashflow(request))
+                .Then("the user should be forbidden", ShouldBeForbiddenToAccessEndpoint);
         });
     }
 
     [Fact]
     public void UnauthorizedUser()
     {
-        ScenarioFor("", player =>
+        ScenarioFor("an unauthorized user pays a cashflow", player =>
         {
             Request entity = null!;
             player
-                .Given("", () => entity = GivenACashflowPayment().Build())
-                .Given("", () => User.IsUnauthorized())
-                .When("", () => Transaction.PayACashflow(entity))
-                .Then("", ShouldNotBeAuthorizedToAccessEndpoint);
+                .Given("an unauthorized user", () => User.IsUnauthorized())
+                .And("a cashflow payment request", () => entity = GivenACashflowPayment().Build())
+                .When("the payment is sent", () => Transaction.PayACashflow(entity))
+                .Then("the user should not be authorized", ShouldNotBeAuthorizedToAccessEndpoint);
         });
     }
 
     [Fact]
     public void ValidRequest()
     {
-        ScenarioFor("", player =>
+        ScenarioFor("paying a cashflow", player =>
         {
             Account account = null!;
             Category category = null!;
@@ -97,25 +97,15 @@ public sealed class ScenarioPayCashflow : BaseScenario
             var id = Guid.Empty;
 
             player
-                .Given("", async () => account = await GivenAnActiveAccount()
-                    .ForUser(AuthorizedUserId)
-                    .SavedInDb(DatabaseDriver))
-                .Given("", async () => category = await GivenACategory()
-                    .ForUser(AuthorizedUserId)
-                    .SavedInDb(DatabaseDriver))
-                .Given("", async () => cashflow = await GivenAnActiveCashflow()
-                    .ForAccount(account)
-                    .ForCategory(category)
-                    .ForUser(AuthorizedUserId)
-                    .SavedInDb(DatabaseDriver))
-                .Given("", () => request = GivenACashflowPayment()
-                    .ForCashflow(cashflow)
-                    .Build())
-                .Given("", () => User.IsAuthorized())
-                .When("", () => Transaction.PayACashflow(request))
-                .Then("", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .Then("", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
-                .Then("", async () =>
+                .Given("the user is authorized", () => User.IsAuthorized())
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("a category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("a cashflow setu", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).Build())
+                .When("the payment is made", () => Transaction.PayACashflow(request))
+                .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+                .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .And("the cashflow paid saved in the database should match the request", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 

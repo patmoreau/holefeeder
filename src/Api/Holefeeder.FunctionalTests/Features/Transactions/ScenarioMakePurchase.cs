@@ -96,21 +96,14 @@ public sealed class ScenarioMakePurchase : BaseScenario
             var id = Guid.Empty;
 
             player
-                .Given("", async () => account = await GivenAnActiveAccount()
-                    .ForUser(AuthorizedUserId)
-                    .SavedInDb(DatabaseDriver))
-                .Given("", async () => category = await GivenACategory()
-                    .ForUser(AuthorizedUserId)
-                    .SavedInDb(DatabaseDriver))
-                .Given("", () => request = GivenAPurchase()
-                    .ForAccount(account)
-                    .ForCategory(category)
-                    .Build())
-                .Given("", () => User.IsAuthorized())
-                .When("", () => Transaction.MakesPurchase(request))
-                .Then("", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .Then("", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
-                .Then("", async () =>
+                .Given("the user is authorized", () => User.IsAuthorized())
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("wanting to make a purchase", () => request = GivenAPurchase().ForAccount(account).ForCategory(category).Build())
+                .When("the purchase is made", () => Transaction.MakesPurchase(request))
+                .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
+                .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .And("the purchase saved in the database should match the request", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
