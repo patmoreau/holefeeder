@@ -2,7 +2,8 @@ name: CI/CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
   pull_request:
 
@@ -143,9 +144,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Unit Test Results
+          name: Test Results
           path: |
-            ./tests-results/*.junit.xml
+            ./tests-results/**/*.trx
 
   publish-docker-images:
     name: Publish Docker Images
@@ -153,7 +154,8 @@ jobs:
     if: >
       always() &&
       github.event.sender.login != 'dependabot[bot]' &&
-      github.event_name != 'pull_request'
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
@@ -219,9 +221,10 @@ jobs:
   deploy:
     name: Deploy to DigitalOcean
     needs: [set-version, tests, publish-docker-images]
-    if: github.repository_owner == 'DrifterApps'
+    if: >
+      github.repository_owner == 'DrifterApps' &&
+      github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production

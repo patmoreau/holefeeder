@@ -1,51 +1,47 @@
-version: '3.4'
+version: "3.7"
 
 services:
-
   mysql-data-test:
+    expose:
+      - 3306
     environment:
       - MYSQL_ROOT_PASSWORD=mypass
 
   api-functional-tests:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - ObjectStoreDatabaseSettings__ConnectionString=Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=object_store_functional_tests;
-      - HolefeederDatabaseSettings__ConnectionString=Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_functional_tests;
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      ConnectionStrings__BudgetingConnectionString: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_functional_tests;
     entrypoint:
-        - dotnet
-        - test
-        - --no-restore
-        - --configuration
-        - Release
-        - --logger
-        - trx;LogFileName=/testsresults/api-functional-tests-results.xml
-        - --logger
-        - html;LogFileName=/testsresults/api-functional-tests-results.html
-        - --logger
-        - junit;LogFileName=/testsresults/api-functional-tests-results.junit.xml
-        - --results-directory
-        - /testsresults
-        - --collect
-        - "XPlat Code Coverage"
+      - dotnet
+      - test
+      # - --no-restore
+      # - --configuration
+      # - Release
+      - --logger
+      - trx;verbosity=normal
+      - --results-directory
+      - /TestResults
+      - --collect
+      - "XPlat Code Coverage"
 
   api-unit-tests:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
     entrypoint:
-        - dotnet
-        - test
-        - --no-restore
-        - --configuration
-        - Release
-        - --logger
-        - trx;LogFileName=/testsresults/api-unit-tests-results.xml
-        - --logger
-        - html;LogFileName=/testsresults/api-unit-tests-results.html
-        - --logger
-        - junit;LogFileName=/testsresults/api-unit-tests-results.junit.xml
-        - --results-directory
-        - /testsresults
-        - --collect
-        - "XPlat Code Coverage"
+      - dotnet
+      - test
+      # - --no-restore
+      # - --configuration
+      # - Release
+      - --logger
+      - trx;verbosity=normal
+      - --logger
+      - html;LogFileName=/testsresults/api-unit-tests-results.html
+      - --logger
+      - junit;LogFileName=/testsresults/api-unit-tests-results.junit.xml
+      - --results-directory
+      - /TestResults
+      - --collect
+      - "XPlat Code Coverage"

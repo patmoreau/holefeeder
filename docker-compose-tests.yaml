@@ -1,12 +1,13 @@
-version: '3.4'
+version: "3.7"
 
 services:
-
   mysql-data-test:
     image: mariadb:10.5.13
+    container_name: mysql-data-test
 
   api-functional-tests:
     image: api-functional-tests
+    container_name: api-functional-tests
     build:
       context: .
       dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
@@ -14,13 +15,14 @@ services:
     depends_on:
       - mysql-data-test
     volumes:
-      - ./tests-results/:/testsresults
+      - ./tests-results:/TestResults
 
   api-unit-tests:
     image: api-unit-tests
+    container_name: api-unit-tests
     build:
       context: .
       dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
       target: unittests
     volumes:
-      - ./tests-results/:/testsresults
+      - ./tests-results/:/TestResults

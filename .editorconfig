@@ -132,6 +132,9 @@ csharp_space_between_method_call_empty_parameter_list_parentheses = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
+[Scenario*.cs]
+max_line_length = 0
+
 [*.cs]
 dotnet_diagnostic.CA1040.severity = none
 dotnet_diagnostic.CA1308.severity = none
