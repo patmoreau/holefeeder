@@ -45,7 +45,7 @@ jobs:
           event_file: artifacts/Event File/event.json
           event_name: ${{ github.event.workflow_run.event }}
           trx_files: "artifacts/**/*.trx"
-          report_suite_logs: all
+          report_suite_logs: any
 
       - name: Set badge color
         shell: bash
