@@ -15,9 +15,9 @@ services:
     entrypoint:
       - dotnet
       - test
-      # - --no-restore
-      # - --configuration
-      # - Release
+      - --no-restore
+      - --configuration
+      - Release
       - --logger
       - trx;verbosity=normal
       - --results-directory
@@ -32,15 +32,11 @@ services:
     entrypoint:
       - dotnet
       - test
-      # - --no-restore
-      # - --configuration
-      # - Release
+      - --no-restore
+      - --configuration
+      - Release
       - --logger
       - trx;verbosity=normal
-      - --logger
-      - html;LogFileName=/testsresults/api-unit-tests-results.html
-      - --logger
-      - junit;LogFileName=/testsresults/api-unit-tests-results.junit.xml
       - --results-directory
       - /TestResults
       - --collect
