@@ -124,6 +124,18 @@ jobs:
           # cache-from: type=local,src=/tmp/.buildx-web-cache
           # cache-to: type=local,mode=max,dest=/tmp/.buildx-web-cache-new
 
+      - name: Save Docker cache for api
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker/api
+          key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+
+      - name: Save Docker cache for web
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker/web
+          key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
@@ -188,7 +200,7 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Test Results
           path: |
@@ -318,7 +330,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Event File
           path: ${{ github.event_path }}
