@@ -1,0 +1,310 @@
+name: Continuous integration
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+
+  workflow_dispatch:
+
+env:
+  DOCKER_REGISTRY: ghcr.io/drifterapps/holefeeder
+
+jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug Action
+        uses: hmarr/debug-action@v2.0.1
+
+  set-version:
+    name: Set version
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.gitversion.outputs.majorMinorPatch }}
+      assembly-version: ${{ steps.gitversion.outputs.semVer }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Disable workflow commands
+        run: |
+          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+
+      - name: Ensure .NET Installed
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.10
+        with:
+          versionSpec: "5.x"
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.10
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+
+      - name: Enable workflow commands
+        run: |
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
+
+  build:
+    name: Build
+    needs: set-version
+    runs-on: ubuntu-latest
+
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - name: Cache Api Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-api-cache
+          key: ${{ runner.os }}-api-buildx-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-api-buildx
+
+      - name: Build Holefeeder.Api container
+        uses: docker/build-push-action@v3
+        with:
+          load: true
+          context: .
+          file: ./src/Api/Holefeeder.Api/Dockerfile
+          # target: build
+          build-args: BUILD_VERSION=${{ env.VERSION }}
+          push: false
+          tags: holefeeder/holefeeder-api:${{ env.VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-api-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-api-cache-new
+
+      - name: Cache Web Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-web-cache
+          key: ${{ runner.os }}-api-buildx-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-web-buildx
+
+      - name: Build Holefeeder.Web container
+        uses: docker/build-push-action@v3
+        with:
+          load: true
+          context: .
+          file: ./src/Web/Holefeeder.Web/Dockerfile
+          # target: build
+          build-args: BUILD_VERSION=${{ env.VERSION }}
+          push: false
+          tags: holefeeder/holefeeder-web:${{ env.VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-web-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-web-cache-new
+
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-api-cache
+          mv /tmp/.buildx-api-cache-new /tmp/.buildx-api-cache
+          rm -rf /tmp/.buildx-web-cache
+          mv /tmp/.buildx-web-cache-new /tmp/.buildx-web-cache
+
+  tests:
+    name: Tests
+    needs: [set-version, build]
+    runs-on: ubuntu-latest
+
+    env:
+      VERSION: ${{ needs.set-version.outputs.version }}
+      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Setup docker compose .env
+        run: |
+          printf "COMPOSE_DOCKER_CLI_BUILD=1
+          DOCKER_BUILDKIT=1" > .env
+
+      - name: Api unit tests
+        run: |
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
+
+      - name: Api functional tests
+        run: |
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+
+      - name: Tests cleanup
+        run: |
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Results
+          path: |
+            ./tests-results/**/*.trx
+
+  # publish-docker-images:
+  #   name: Publish Docker Images
+  #   needs: [set-version, tests]
+  #   if: >
+  #     always() &&
+  #     github.event.sender.login != 'dependabot[bot]' &&
+  #     github.event_name != 'pull_request' &&
+  #     github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     VERSION: ${{ needs.set-version.outputs.version }}
+  #     ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+
+  #     - name: Login to GHCR
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ${{ env.DOCKER_REGISTRY }}
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Build Holefeeder.Api container
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./src/Api/Holefeeder.Api/Dockerfile
+  #         target: final
+  #         build-args: BUILD_VERSION=${{ env.VERSION }}
+  #         push: true
+  #         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
+
+  #     - name: Build Holefeeder.Web container
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./src/Web/Holefeeder.Web/Dockerfile
+  #         target: final
+  #         build-args: BUILD_VERSION=${{ env.VERSION }}
+  #         push: true
+  #         tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+
+  #     - name: Tag version
+  #       uses: actions/github-script@v3
+  #       with:
+  #         github-token: ${{secrets.GITHUB_TOKEN}}
+  #         script: |
+  #           try {
+  #             await github.git.deleteRef({
+  #               owner: context.repo.owner,
+  #               repo: context.repo.repo,
+  #               ref: "tags/${{ env.VERSION }}"
+  #             })
+  #           } catch (e) {
+  #             console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
+  #           }
+  #           await github.git.createRef({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             ref: "refs/tags/${{ env.VERSION }}",
+  #             sha: context.sha
+  #           })
+
+  # deploy:
+  #   name: Deploy to DigitalOcean
+  #   needs: [set-version, tests, publish-docker-images]
+  #   if: >
+  #     github.repository_owner == 'DrifterApps' &&
+  #     github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     VERSION: ${{ needs.set-version.outputs.version }}
+  #     ENVIRONMENT: Production
+  #     POD_KUBECONFIG: "${{ github.workspace }}/.kube/pod-kubeconfig"
+
+  #   environment:
+  #     name: production
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - uses: yokawasa/action-setup-kube-tools@v0.8.0
+  #       with:
+  #         kubectl: "1.25.2"
+  #         kustomize: "4.5.7"
+
+  #     - name: Create kube config
+  #       run: |
+  #         mkdir -p '${{ github.workspace }}/.kube' \
+  #           && echo '${{ secrets.KUBE_CONFIG}}' > $POD_KUBECONFIG
+
+  #     - name: Create .env.secrets file
+  #       run: |
+  #         printf "BUDGETING_CONNECTION_STRING=Server=mysql;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
+  #         MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+  #         MYSQL_USER=${{ secrets.MYSQL_USER }}
+  #         MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+  #         AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+
+  #     - name: Create .env.token file
+  #       run: |
+  #         printf ".dockerconfigjson=$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > $GITHUB_WORKSPACE/kubernetes/prd/.env.token
+
+  #     - name: Set image tags
+  #       run: |
+  #         cd $GITHUB_WORKSPACE/kubernetes/prd
+  #         kustomize edit set image holefeeder/holefeeder-api=${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
+  #         kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+
+  #     - name: Deploy to DigitalOcean Kubernetes
+  #       run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
+
+  event_file:
+    name: "Event File"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Event File
+          path: ${{ github.event_path }}
