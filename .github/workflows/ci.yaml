@@ -109,8 +109,8 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          # cache-from: type=local,src=/tmp/.buildx-api-cache
-          # cache-to: type=local,mode=max,dest=/tmp/.buildx-api-cache-new
+          cache-from: type=local,src=~/.docker/api
+          cache-to: type=local,mode=max,dest=~/.docker/api
 
       - name: Build Holefeeder.Web container
         uses: docker/build-push-action@v3
@@ -121,8 +121,8 @@ jobs:
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          # cache-from: type=local,src=/tmp/.buildx-web-cache
-          # cache-to: type=local,mode=max,dest=/tmp/.buildx-web-cache-new
+          cache-from: type=local,src=~/.docker/web
+          cache-to: type=local,mode=max,dest=~/.docker/web
 
       - name: Save Docker cache for api
         uses: actions/cache@v2
