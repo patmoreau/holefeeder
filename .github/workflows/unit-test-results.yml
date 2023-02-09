@@ -38,10 +38,10 @@ jobs:
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
+        id: test-results
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           check_name: Test Results
-          json_file: results.json
           event_file: artifacts/Event File/event.json
           event_name: ${{ github.event.workflow_run.event }}
           trx_files: "artifacts/**/*.trx"
@@ -66,7 +66,7 @@ jobs:
         uses: emibcn/badge-action@d6f51ff11b5c3382b3b88689ae2d6db22d9737d1
         with:
           label: Tests
-          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
+          status: "${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}"
           color: ${{ env.BADGE_COLOR }}
           path: badge.svg
 
