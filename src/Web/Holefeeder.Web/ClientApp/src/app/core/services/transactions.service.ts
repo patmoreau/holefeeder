@@ -35,7 +35,7 @@ export class TransactionsService {
   ): Observable<PagingInfo<TransactionDetail>> {
     let params = new HttpParams();
     if (accountId) {
-      params = params.set('filter', `account_id:eq:${accountId}`);
+      params = params.set('filter', `AccountId:eq:${accountId}`);
     }
     if (offset) {
       params = params.set('offset', `${offset}`);
