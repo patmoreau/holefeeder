@@ -23,8 +23,7 @@ COPY src/Api/Holefeeder.UnitTests/*.csproj src/Api/Holefeeder.UnitTests/
 COPY src/Api/Holefeeder.Tests.Common/*.csproj src/Api/Holefeeder.Tests.Common/
 COPY src/Api/Holefeeder.FunctionalTests/*.csproj src/Api/Holefeeder.FunctionalTests/
 
-RUN --mount=type=cache,target=/root/.nuget/packages \
-    dotnet restore
+RUN dotnet restore
 
 FROM restore as build
 ARG BUILD_VERSION=99.99.99
@@ -34,8 +33,7 @@ WORKDIR /source
 COPY src/. src/.
 WORKDIR /source/src/Web/Holefeeder.Web
 
-RUN --mount=type=cache,target=/root/.nuget/packages \
-    dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
+RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
 LABEL author="Drifter Apps Inc."
