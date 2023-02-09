@@ -78,8 +78,8 @@ jobs:
         uses: andymckay/append-gist-action@1fbfbbce708a39bd45846f0955ed5521f2099c6d
         with:
           token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.githubusercontent.com/{user}/{id}
-          file: badge.svg
+          gistURL: https://gist.githubusercontent.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6
+          file: holefeeder-tests-badge.svg
 
       - name: Publish Test Report
         uses: dorny/test-reporter@v1
