@@ -105,12 +105,15 @@ public sealed class ScenarioMakePurchase : BaseScenario
                 .And("wanting to make a purchase", () => request = GivenAPurchase().ForAccount(account).ForCategory(category).Build())
                 .When("the purchase is made", () => Transaction.MakesPurchase(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .And("have the resource link in the header", () =>
+                {
+                    id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
+
+                    id.Should().NotBeEmpty();
+                })
                 .And("the purchase saved in the database should match the request", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
-
-                    result.Should().NotBeNull();
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()

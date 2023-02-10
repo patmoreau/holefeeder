@@ -105,7 +105,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).Build())
+                .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).ForDate(cashflow.EffectiveDate).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
                 .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
