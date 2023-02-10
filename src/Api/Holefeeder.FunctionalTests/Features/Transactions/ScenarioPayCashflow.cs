@@ -32,9 +32,10 @@ public sealed class ScenarioPayCashflow : BaseScenario
     [Fact]
     public void InvalidRequest()
     {
+        Request request = default!;
+
         ScenarioFor("trying to pay a cashflow with an invalid request", player =>
         {
-            Request request = default!;
             player
                 .Given("an unauthorized user", () => User.IsAuthorized())
                 .And("creates an invalid payment", () => request = GivenAnInvalidCashflowPayment().Build())
@@ -46,9 +47,10 @@ public sealed class ScenarioPayCashflow : BaseScenario
     [Fact]
     public void AuthorizedUser()
     {
+        Request request = null!;
+
         ScenarioFor("an authorized user pays a cashflow", player =>
         {
-            Request request = null!;
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
@@ -60,9 +62,10 @@ public sealed class ScenarioPayCashflow : BaseScenario
     [Fact]
     public void ForbiddenUser()
     {
+        Request request = null!;
+
         ScenarioFor("a forbidden user pays a cashflow", player =>
         {
-            Request request = null!;
             player
                 .Given("a forbidden user", () => User.IsForbidden())
                 .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
@@ -74,9 +77,10 @@ public sealed class ScenarioPayCashflow : BaseScenario
     [Fact]
     public void UnauthorizedUser()
     {
+        Request entity = null!;
+
         ScenarioFor("an unauthorized user pays a cashflow", player =>
         {
-            Request entity = null!;
             player
                 .Given("an unauthorized user", () => User.IsUnauthorized())
                 .And("a cashflow payment request", () => entity = GivenACashflowPayment().Build())
@@ -88,14 +92,14 @@ public sealed class ScenarioPayCashflow : BaseScenario
     [Fact]
     public void ValidRequest()
     {
+        Account account = null!;
+        Category category = null!;
+        Cashflow cashflow = null!;
+        Request request = null!;
+        var id = Guid.Empty;
+
         ScenarioFor("paying a cashflow", player =>
         {
-            Account account = null!;
-            Category category = null!;
-            Cashflow cashflow = null!;
-            Request request = null!;
-            var id = Guid.Empty;
-
             player
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))

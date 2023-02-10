@@ -77,12 +77,12 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public void WhenUnpaidUpcomingOneTimeCashflow()
     {
+        Cashflow cashflow = null!;
+        Request request = null!;
+        UpcomingViewModel[]? result = null!;
+
         ScenarioFor("unpaid upcoming one time cashflow", player =>
         {
-            Cashflow cashflow = null!;
-            Request request = null!;
-            UpcomingViewModel[]? result = null!;
-
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("with an active one time cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.OneTime))
@@ -101,12 +101,12 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public void WhenUnpaidUpcomingWeeklyCashflow()
     {
+        Cashflow cashflow = null!;
+        Request request = null!;
+        UpcomingViewModel[]? result = null!;
+
         ScenarioFor("unpaid upcoming weekly cashflows", player =>
         {
-            Cashflow cashflow = null!;
-            Request request = null!;
-            UpcomingViewModel[]? result = null!;
-
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("with an active weekly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Weekly, 2))
@@ -121,12 +121,12 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public void WhenUnpaidUpcomingMonthlyCashflow()
     {
+        Cashflow cashflow = default!;
+        Request request = default!;
+        UpcomingViewModel[]? result = default!;
+
         ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
-            Cashflow cashflow = default!;
-            Request request = default!;
-            UpcomingViewModel[]? result = default!;
-
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("with an active monthly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Monthly))
@@ -141,12 +141,12 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public void WhenUnpaidUpcomingYearlyCashflow()
     {
+        Cashflow cashflow = null!;
+        Request request = null!;
+        UpcomingViewModel[]? result = null!;
+
         ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
-            Cashflow cashflow = null!;
-            Request request = null!;
-            UpcomingViewModel[]? result = null!;
-
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .Given("with an active yearly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Yearly))

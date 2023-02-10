@@ -27,9 +27,10 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public void WhenInvalidRequest()
     {
+        Request request = default!;
+
         ScenarioFor("closing an account with an invalid request", player =>
         {
-            Request request = default!;
             player
                 .Given("an invalid account request", () => request = GivenAnInvalidCloseAccountRequest().Build())
                 .Given("the user is authorized", () => GivenUserIsAuthorized())
@@ -41,9 +42,10 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public void WhenAccountNotFound()
     {
+        Request request = default!;
+
         ScenarioFor("closing an account that does not exists", player =>
         {
-            Request request = default!;
             player
                 .Given("a close account request", () => request = GivenACloseAccountRequest().Build())
                 .Given("the user is authorized", () => GivenUserIsAuthorized())

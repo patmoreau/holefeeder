@@ -31,9 +31,10 @@ public sealed class ScenarioMakePurchase : BaseScenario
     [Fact]
     public void InvalidRequest()
     {
+        Request request = default!;
+
         ScenarioFor("making an invalid request purchase", player =>
         {
-            Request request = default!;
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("making a purchase of 0$", () => request = GivenAPurchase().OfAmount(0).Build())
@@ -45,10 +46,10 @@ public sealed class ScenarioMakePurchase : BaseScenario
     [Fact]
     public void AuthorizedUser()
     {
+        Request request = null!;
+
         ScenarioFor("making an authorized purchase", player =>
         {
-            Request request = null!;
-
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("making a purchase", () => request = GivenAPurchase().Build())
@@ -60,9 +61,10 @@ public sealed class ScenarioMakePurchase : BaseScenario
     [Fact]
     public void ForbiddenUser()
     {
+        Request request = null!;
+
         ScenarioFor("making an forbidden purchase", player =>
         {
-            Request request = null!;
             player
                 .Given("a forbidden user", () => User.IsForbidden())
                 .And("making a purchase", () => request = GivenAPurchase().Build())
@@ -74,9 +76,10 @@ public sealed class ScenarioMakePurchase : BaseScenario
     [Fact]
     public void UnauthorizedUser()
     {
+        Request entity = null!;
+
         ScenarioFor("making an unauthorized purchase", player =>
         {
-            Request entity = null!;
             player
                 .Given("an unauthorized user", () => User.IsUnauthorized())
                 .And("making a purchase", () => entity = GivenAPurchase().Build())
@@ -88,13 +91,13 @@ public sealed class ScenarioMakePurchase : BaseScenario
     [Fact]
     public void ValidRequest()
     {
+        Account account = null!;
+        Category category = null!;
+        Request request = null!;
+        var id = Guid.Empty;
+
         ScenarioFor("making a valid purchase", player =>
         {
-            Account account = null!;
-            Category category = null!;
-            Request request = null!;
-            var id = Guid.Empty;
-
             player
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))

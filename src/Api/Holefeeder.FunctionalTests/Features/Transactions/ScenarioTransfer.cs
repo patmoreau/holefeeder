@@ -30,9 +30,10 @@ public sealed class ScenarioTransfer : BaseScenario
     [Fact]
     public void InvalidRequest()
     {
+        Request request = default!;
+
         ScenarioFor("an invalid transfer request", player =>
         {
-            Request request = default!;
             player
                 .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
                 .And("the user is authorized", () => User.IsAuthorized())
@@ -44,10 +45,10 @@ public sealed class ScenarioTransfer : BaseScenario
     [Fact]
     public void AuthorizedUser()
     {
+        Request request = default!;
+
         ScenarioFor("an authorized user making a transfer", player =>
         {
-            Request request = default!;
-
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
                 .And("the user is authorized", () => User.IsAuthorized())
@@ -59,9 +60,10 @@ public sealed class ScenarioTransfer : BaseScenario
     [Fact]
     public void ForbiddenUser()
     {
+        Request request = null!;
+
         ScenarioFor("a forbidden user making a request", player =>
         {
-            Request request = null!;
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
                 .And("the user is forbidden", () => User.IsForbidden())
@@ -73,9 +75,10 @@ public sealed class ScenarioTransfer : BaseScenario
     [Fact]
     public void UnauthorizedUser()
     {
+        Request entity = null!;
+
         ScenarioFor("an unauthorized user making a transfer request", player =>
         {
-            Request entity = null!;
             player
                 .Given("a transfer request", () => entity = GivenATransfer().Build())
                 .And("the user is unauthorized", () => User.IsUnauthorized())
@@ -87,13 +90,13 @@ public sealed class ScenarioTransfer : BaseScenario
     [Fact]
     public void ValidRequest()
     {
+        Account fromAccount = null!;
+        Account toAccount = null!;
+        Request request = null!;
+        (Guid FromTransactionId, Guid ToTransactionId) ids = default;
+
         ScenarioFor("a valid transfer request", player =>
         {
-            Account fromAccount = null!;
-            Account toAccount = null!;
-            Request request = null!;
-            (Guid FromTransactionId, Guid ToTransactionId) ids = default;
-
             player
                 .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
@@ -104,12 +107,17 @@ public sealed class ScenarioTransfer : BaseScenario
                 .When("the transfer request is sent", () => Transaction.Transfer(request))
                 .Then("the return code should be Created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
                 .And("the route of the new resource should be in the header", () => ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
-                .And("both transaction ids should be received", () => ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>())
+                .And("both transaction ids should be received", () =>
+                {
+                    ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>();
+                    ids.FromTransactionId.Should().NotBeEmpty();
+                    ids.ToTransactionId.Should().NotBeEmpty();
+                })
                 .And("the data of the outgoing transaction be valid", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
-                    result.Should().NotBeNull();
+                    result.Should().NotBeNull($"because the FromTransactionId ({ids.FromTransactionId}) was not found");
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
@@ -120,7 +128,7 @@ public sealed class ScenarioTransfer : BaseScenario
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
 
-                    result.Should().NotBeNull();
+                    result.Should().NotBeNull($"because the ToTransactionId ({ids.ToTransactionId}) was not found");
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
