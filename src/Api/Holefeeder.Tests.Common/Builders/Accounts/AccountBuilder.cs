@@ -7,8 +7,6 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
 {
-    private const decimal OPEN_BALANCE_MAX = 10000m;
-
     private readonly Faker<Account> _faker = new AutoFaker<Account>()
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)

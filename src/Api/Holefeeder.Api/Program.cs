@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 using Carter;
 
 using Hangfire;
