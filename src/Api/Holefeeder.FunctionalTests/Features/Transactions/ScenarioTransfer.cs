@@ -109,6 +109,8 @@ public sealed class ScenarioTransfer : BaseScenario
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
+                    result.Should().NotBeNull();
+
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
                         .And
@@ -117,6 +119,8 @@ public sealed class ScenarioTransfer : BaseScenario
                 .And("the data of the incoming transaction be valid", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
+
+                    result.Should().NotBeNull();
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()

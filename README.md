@@ -2,6 +2,8 @@
 
 [![Continuous Integration](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml)
 
+[![Test Results](https://github.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml)
+
 ## Introduction
 
 The main purpose of this repository is to showcase what I can do. This is also a constant work in progress to learn new designs, architecture, technologies where my main goal is to be the most efficient in my craft and offering the best/simple solutions for the job.

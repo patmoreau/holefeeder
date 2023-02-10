@@ -100,7 +100,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("a cashflow setu", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
@@ -108,6 +108,8 @@ public sealed class ScenarioPayCashflow : BaseScenario
                 .And("the cashflow paid saved in the database should match the request", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+
+                    result.Should().NotBeNull();
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
