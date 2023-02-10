@@ -1,10 +1,9 @@
-﻿using System.Transactions;
-
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Domain.Features.Categories;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -64,26 +63,18 @@ public class Transfer : ICarterModule
         {
             var errors = new List<(string, string)>();
 
-            if (await _context.Accounts.AnyAsync(
-                    x => x.Id == request.FromAccountId && x.UserId == _userContext.UserId && !x.Inactive,
-                    cancellationToken))
+            if (!await ActiveAccountExistsAsync(request.FromAccountId, cancellationToken))
             {
                 errors.Add((nameof(request.FromAccountId), $"From account {request.FromAccountId} does not exists"));
             }
 
-            if (await _context.Accounts.AnyAsync(
-                    x => x.Id == request.ToAccountId && x.UserId == _userContext.UserId && !x.Inactive,
-                    cancellationToken))
+            if (!await ActiveAccountExistsAsync(request.ToAccountId, cancellationToken))
             {
                 errors.Add((nameof(request.ToAccountId), $"To account {request.ToAccountId} does not exists"));
             }
 
-            var transferTo =
-                await _context.Categories
-                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer In", cancellationToken);
-            var transferFrom =
-                await _context.Categories
-                    .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == "Transfer Out", cancellationToken);
+            var transferTo = await FirstCategoryAsync("Transfer In", cancellationToken);
+            var transferFrom = await FirstCategoryAsync("Transfer Out", cancellationToken);
 
             var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
                 request.FromAccountId, transferFrom.Id, _userContext.UserId);
@@ -103,5 +94,14 @@ public class Transfer : ICarterModule
 
             return errors.Any() ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
         }
+
+        private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>
+            await _context.Categories
+                .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == categoryName, cancellationToken);
+
+        private async Task<bool> ActiveAccountExistsAsync(Guid accountId, CancellationToken cancellationToken) =>
+            await _context.Accounts.AnyAsync(
+                x => x.Id == accountId && x.UserId == _userContext.UserId && !x.Inactive,
+                cancellationToken);
     }
 }

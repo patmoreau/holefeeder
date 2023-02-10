@@ -5,8 +5,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 internal class OpenAccountRequestBuilder : IBuilder<Request>
 {
     private readonly Faker<Request> _faker = new AutoFaker<Request>()
-        .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount());
+        .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date);
 
     public Request Build()
     {

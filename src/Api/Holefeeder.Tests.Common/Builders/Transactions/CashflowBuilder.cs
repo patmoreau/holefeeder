@@ -9,11 +9,8 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class CashflowBuilder : IBuilder<Cashflow>, ICollectionBuilder<Cashflow>
 {
-    private const decimal AMOUNT_MAX = 100m;
-
     private readonly Faker<Cashflow> _faker = new AutoFaker<Cashflow>()
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: decimal.Zero, max: AMOUNT_MAX))
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())

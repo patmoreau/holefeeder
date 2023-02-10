@@ -8,8 +8,6 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 internal class ModifyTransactionRequestBuilder : IBuilder<Request>
 {
     private readonly Faker<Request> _faker = new AutoFaker<Request>()
-        .RuleFor(x => x.Date, faker => faker.Date.Soon().Date)
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(1, Constants.MAX_AMOUNT))
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public Request Build()

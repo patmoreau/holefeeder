@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Holefeeder.FunctionalTests.Features;
 
 [Collection("Api collection")]
-public abstract class BaseScenario : IDisposable
+public abstract partial class BaseScenario : IDisposable
 {
     private readonly ITestOutputHelper _testOutputHelper;
 
@@ -157,7 +157,7 @@ public abstract class BaseScenario : IDisposable
         headers.Should().ContainKey("Location");
 
         var responseString = headers.GetValues("Location").Single();
-        var match = Regex.Match(responseString, @"[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?");
+        var match = MyRegex().Match(responseString);
 
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
@@ -236,4 +236,7 @@ public abstract class BaseScenario : IDisposable
 
         _disposed = true;
     }
+
+    [GeneratedRegex("[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?")]
+    private static partial Regex MyRegex();
 }

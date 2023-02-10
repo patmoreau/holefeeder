@@ -11,7 +11,6 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
 
     private readonly Faker<Account> _faker = new AutoFaker<Account>()
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount(max: OPEN_BALANCE_MAX))
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Transactions, new List<Transaction>())

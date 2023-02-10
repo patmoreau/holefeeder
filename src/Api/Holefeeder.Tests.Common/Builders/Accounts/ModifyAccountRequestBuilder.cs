@@ -4,8 +4,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class ModifyAccountRequestBuilder : IBuilder<Request>
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>()
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount());
+    private readonly Faker<Request> _faker = new AutoFaker<Request>();
 
     public Request Build()
     {
