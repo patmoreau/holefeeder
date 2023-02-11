@@ -69,6 +69,7 @@ public class HttpClientDriver
 
     public void ShouldHaveResponseWithStatus(HttpStatusCode httpStatus)
     {
+        LogUnexpectedContent(httpStatus);
         ResponseMessage.Should().NotBeNull();
         ResponseMessage?.StatusCode.Should().Be(httpStatus);
     }
@@ -123,5 +124,18 @@ public class HttpClientDriver
         var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
 
         _testOutputHelper.WriteLine($"HTTP 500 Response: {resultAsString ?? "<unknown>"}");
+    }
+
+    private void LogUnexpectedContent(HttpStatusCode expectedStatusCode)
+    {
+        if (ResponseMessage?.StatusCode == expectedStatusCode)
+        {
+            return;
+        }
+
+        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+
+        _testOutputHelper.WriteLine(
+            $"Unexpected HTTP {ResponseMessage?.StatusCode} Code with Response: {resultAsString ?? "<unknown>"}");
     }
 }
