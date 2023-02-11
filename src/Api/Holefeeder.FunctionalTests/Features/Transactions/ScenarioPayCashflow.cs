@@ -30,11 +30,11 @@ public sealed class ScenarioPayCashflow : BaseScenario
     }
 
     [Fact]
-    public void InvalidRequest()
+    public async Task InvalidRequest()
     {
         Request request = default!;
 
-        ScenarioFor("trying to pay a cashflow with an invalid request", player =>
+        await ScenarioFor("trying to pay a cashflow with an invalid request", player =>
         {
             player
                 .Given("an unauthorized user", () => User.IsAuthorized())
@@ -45,11 +45,11 @@ public sealed class ScenarioPayCashflow : BaseScenario
     }
 
     [Fact]
-    public void AuthorizedUser()
+    public async Task AuthorizedUser()
     {
         Request request = null!;
 
-        ScenarioFor("an authorized user pays a cashflow", player =>
+        await ScenarioFor("an authorized user pays a cashflow", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -60,11 +60,11 @@ public sealed class ScenarioPayCashflow : BaseScenario
     }
 
     [Fact]
-    public void ForbiddenUser()
+    public async Task ForbiddenUser()
     {
         Request request = null!;
 
-        ScenarioFor("a forbidden user pays a cashflow", player =>
+        await ScenarioFor("a forbidden user pays a cashflow", player =>
         {
             player
                 .Given("a forbidden user", () => User.IsForbidden())
@@ -75,11 +75,11 @@ public sealed class ScenarioPayCashflow : BaseScenario
     }
 
     [Fact]
-    public void UnauthorizedUser()
+    public async Task UnauthorizedUser()
     {
         Request entity = null!;
 
-        ScenarioFor("an unauthorized user pays a cashflow", player =>
+        await ScenarioFor("an unauthorized user pays a cashflow", player =>
         {
             player
                 .Given("an unauthorized user", () => User.IsUnauthorized())
@@ -90,7 +90,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
     }
 
     [Fact]
-    public void ValidRequest()
+    public async Task ValidRequest()
     {
         Account account = null!;
         Category category = null!;
@@ -98,7 +98,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         Request request = null!;
         var id = Guid.Empty;
 
-        ScenarioFor("paying a cashflow", player =>
+        await ScenarioFor("paying a cashflow", player =>
         {
             player
                 .Given("the user is authorized", () => User.IsAuthorized())

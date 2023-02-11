@@ -29,11 +29,11 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void InvalidRequest()
+    public async Task InvalidRequest()
     {
         Request request = default!;
 
-        ScenarioFor("making an invalid request purchase", player =>
+        await ScenarioFor("making an invalid request purchase", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -44,11 +44,11 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void AuthorizedUser()
+    public async Task AuthorizedUser()
     {
         Request request = null!;
 
-        ScenarioFor("making an authorized purchase", player =>
+        await ScenarioFor("making an authorized purchase", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -59,11 +59,11 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void ForbiddenUser()
+    public async Task ForbiddenUser()
     {
         Request request = null!;
 
-        ScenarioFor("making an forbidden purchase", player =>
+        await ScenarioFor("making an forbidden purchase", player =>
         {
             player
                 .Given("a forbidden user", () => User.IsForbidden())
@@ -74,11 +74,11 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void UnauthorizedUser()
+    public async Task UnauthorizedUser()
     {
         Request entity = null!;
 
-        ScenarioFor("making an unauthorized purchase", player =>
+        await ScenarioFor("making an unauthorized purchase", player =>
         {
             player
                 .Given("an unauthorized user", () => User.IsUnauthorized())
@@ -89,14 +89,14 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void ValidRequest()
+    public async Task ValidRequest()
     {
         Account account = null!;
         Category category = null!;
         Request request = null!;
         var id = Guid.Empty;
 
-        ScenarioFor("making a valid purchase", player =>
+        await ScenarioFor("making a valid purchase", player =>
         {
             player
                 .Given("the user is authorized", () => User.IsAuthorized())

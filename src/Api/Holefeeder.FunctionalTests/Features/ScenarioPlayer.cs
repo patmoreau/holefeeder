@@ -97,11 +97,11 @@ public class ScenarioPlayer
         };
     }
 
-    public void Play()
+    public async Task PlayAsync()
     {
         foreach (var task in _tasks)
         {
-            task.Task().Wait();
+            await task.Task();
         }
     }
 

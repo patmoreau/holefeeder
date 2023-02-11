@@ -28,11 +28,11 @@ public sealed class ScenarioTransfer : BaseScenario
     }
 
     [Fact]
-    public void InvalidRequest()
+    public async Task InvalidRequest()
     {
         Request request = default!;
 
-        ScenarioFor("an invalid transfer request", player =>
+        await ScenarioFor("an invalid transfer request", player =>
         {
             player
                 .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
@@ -43,11 +43,11 @@ public sealed class ScenarioTransfer : BaseScenario
     }
 
     [Fact]
-    public void AuthorizedUser()
+    public async Task AuthorizedUser()
     {
         Request request = default!;
 
-        ScenarioFor("an authorized user making a transfer", player =>
+        await ScenarioFor("an authorized user making a transfer", player =>
         {
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
@@ -58,11 +58,11 @@ public sealed class ScenarioTransfer : BaseScenario
     }
 
     [Fact]
-    public void ForbiddenUser()
+    public async Task ForbiddenUser()
     {
         Request request = null!;
 
-        ScenarioFor("a forbidden user making a request", player =>
+        await ScenarioFor("a forbidden user making a request", player =>
         {
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
@@ -73,11 +73,11 @@ public sealed class ScenarioTransfer : BaseScenario
     }
 
     [Fact]
-    public void UnauthorizedUser()
+    public async Task UnauthorizedUser()
     {
         Request entity = null!;
 
-        ScenarioFor("an unauthorized user making a transfer request", player =>
+        await ScenarioFor("an unauthorized user making a transfer request", player =>
         {
             player
                 .Given("a transfer request", () => entity = GivenATransfer().Build())
@@ -88,14 +88,14 @@ public sealed class ScenarioTransfer : BaseScenario
     }
 
     [Fact]
-    public void ValidRequest()
+    public async Task ValidRequest()
     {
         Account fromAccount = null!;
         Account toAccount = null!;
         Request request = null!;
         (Guid FromTransactionId, Guid ToTransactionId) ids = default;
 
-        ScenarioFor("a valid transfer request", player =>
+        await ScenarioFor("a valid transfer request", player =>
         {
             player
                 .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))

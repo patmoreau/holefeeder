@@ -200,7 +200,7 @@ public abstract partial class BaseScenario : IDisposable
         HttpClientDriver.ShouldHaveResponseWithStatus(IsExpectedStatus);
     }
 
-    protected void ScenarioFor(string description, Action<ScenarioPlayer> scenario)
+    protected async Task ScenarioFor(string description, Action<ScenarioPlayer> scenario)
     {
         if (scenario == null)
         {
@@ -211,7 +211,7 @@ public abstract partial class BaseScenario : IDisposable
 
         scenario(player);
 
-        player.Play();
+        await player.PlayAsync();
     }
 
     public void Dispose()

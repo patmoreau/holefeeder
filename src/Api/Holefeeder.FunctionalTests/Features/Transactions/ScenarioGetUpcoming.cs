@@ -75,13 +75,13 @@ public class ScenarioGetUpcoming : BaseScenario
     }
 
     [Fact]
-    public void WhenUnpaidUpcomingOneTimeCashflow()
+    public async Task WhenUnpaidUpcomingOneTimeCashflow()
     {
         Cashflow cashflow = null!;
         Request request = null!;
         UpcomingViewModel[]? result = null!;
 
-        ScenarioFor("unpaid upcoming one time cashflow", player =>
+        await ScenarioFor("unpaid upcoming one time cashflow", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -99,13 +99,13 @@ public class ScenarioGetUpcoming : BaseScenario
     }
 
     [Fact]
-    public void WhenUnpaidUpcomingWeeklyCashflow()
+    public async Task WhenUnpaidUpcomingWeeklyCashflow()
     {
         Cashflow cashflow = null!;
         Request request = null!;
         UpcomingViewModel[]? result = null!;
 
-        ScenarioFor("unpaid upcoming weekly cashflows", player =>
+        await ScenarioFor("unpaid upcoming weekly cashflows", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -119,13 +119,13 @@ public class ScenarioGetUpcoming : BaseScenario
     }
 
     [Fact]
-    public void WhenUnpaidUpcomingMonthlyCashflow()
+    public async Task WhenUnpaidUpcomingMonthlyCashflow()
     {
         Cashflow cashflow = default!;
         Request request = default!;
         UpcomingViewModel[]? result = default!;
 
-        ScenarioFor("unpaid upcoming monthly cashflows", player =>
+        await ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
@@ -139,13 +139,13 @@ public class ScenarioGetUpcoming : BaseScenario
     }
 
     [Fact]
-    public void WhenUnpaidUpcomingYearlyCashflow()
+    public async Task WhenUnpaidUpcomingYearlyCashflow()
     {
         Cashflow cashflow = null!;
         Request request = null!;
         UpcomingViewModel[]? result = null!;
 
-        ScenarioFor("unpaid upcoming monthly cashflows", player =>
+        await ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
             player
                 .Given("an authorized user", () => User.IsAuthorized())

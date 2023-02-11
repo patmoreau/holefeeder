@@ -25,11 +25,11 @@ public class ScenarioCloseAccount : BaseScenario
     }
 
     [Fact]
-    public void WhenInvalidRequest()
+    public async Task WhenInvalidRequest()
     {
         Request request = default!;
 
-        ScenarioFor("closing an account with an invalid request", player =>
+        await ScenarioFor("closing an account with an invalid request", player =>
         {
             player
                 .Given("an invalid account request", () => request = GivenAnInvalidCloseAccountRequest().Build())
@@ -40,11 +40,11 @@ public class ScenarioCloseAccount : BaseScenario
     }
 
     [Fact]
-    public void WhenAccountNotFound()
+    public async Task WhenAccountNotFound()
     {
         Request request = default!;
 
-        ScenarioFor("closing an account that does not exists", player =>
+        await ScenarioFor("closing an account that does not exists", player =>
         {
             player
                 .Given("a close account request", () => request = GivenACloseAccountRequest().Build())
