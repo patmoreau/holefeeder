@@ -6,11 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransactionBuilder : IBuilder<Transaction>, ICollectionBuilder<Transaction>
 {
-    private const decimal AMOUNT_MAX = 100m;
-
     private readonly Faker<Transaction> _faker = new AutoFaker<Transaction>()
-        .RuleFor(x => x.Date, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: Decimal.Zero, max: AMOUNT_MAX))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.CashflowId, _ => null)
         .RuleFor(x => x.CashflowDate, _ => null)

@@ -34,6 +34,8 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
                 context.Faker.PickRandom<CategoryType>(CategoryType.List));
             configBuilder.WithOverride<DateIntervalType>(context =>
                 context.Faker.PickRandom<DateIntervalType>(DateIntervalType.List));
+            configBuilder.WithOverride(context => context.Faker.Date.Soon().Date);
+            configBuilder.WithOverride(context => context.Faker.Finance.Amount());
         });
 
         var configuration = new ConfigurationBuilder()

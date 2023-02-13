@@ -8,11 +8,6 @@ public class ModifyCashflowTests
 {
     private readonly AutoFaker<Request> _faker = new();
 
-    public ModifyCashflowTests()
-    {
-        _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(decimal.One, decimal.MaxValue));
-    }
-
     [Fact]
     public async Task GivenValidator_WhenIdIsEmpty_ThenError()
     {

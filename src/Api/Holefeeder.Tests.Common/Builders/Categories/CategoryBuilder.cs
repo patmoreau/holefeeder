@@ -4,12 +4,9 @@ namespace Holefeeder.Tests.Common.Builders.Categories;
 
 internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category>
 {
-    private const decimal BUDGET_AMOUNT_MAX = 100m;
-
     private readonly Faker<Category> _faker = new AutoFaker<Category>()
-        .RuleFor(x => x.Name, faker => faker.Lorem.Word())
-        .RuleFor(x => x.Color, faker => faker.Internet.Color())
-        .RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount(max: BUDGET_AMOUNT_MAX));
+        .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
+        .RuleFor(x => x.Color, faker => faker.Internet.Color());
 
 
     public Category Build()

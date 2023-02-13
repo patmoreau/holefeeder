@@ -6,8 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransferRequestBuilder : IBuilder<Request>
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>()
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount(1));
+    private readonly Faker<Request> _faker = new AutoFaker<Request>();
 
     public Request Build()
     {

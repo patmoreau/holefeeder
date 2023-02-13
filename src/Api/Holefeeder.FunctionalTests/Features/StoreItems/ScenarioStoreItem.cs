@@ -23,14 +23,14 @@ public class ScenarioStoreItem : BaseScenario
     }
 
     [Fact]
-    public void UserCreatesStoreItem()
+    public async Task UserCreatesStoreItem()
     {
-        ScenarioFor("user creating a store item", player =>
-        {
-            Guid id = Guid.Empty;
-            CreateRequest createRequest = null!;
-            StoreItemViewModel storeItem = null!;
+        Guid id = Guid.Empty;
+        CreateRequest createRequest = null!;
+        StoreItemViewModel storeItem = null!;
 
+        await ScenarioFor("user creating a store item", player =>
+        {
             player
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("they created a valid request", () => createRequest = GivenACreateStoreItemRequest().Build())
@@ -45,14 +45,14 @@ public class ScenarioStoreItem : BaseScenario
     }
 
     [Fact]
-    public void UserModifiesStoreItem()
+    public async Task UserModifiesStoreItem()
     {
-        ScenarioFor("modifying a store item", player =>
-        {
-            Guid id = Guid.Empty;
-            ModifyRequest request = null!;
-            StoreItemViewModel storeItem = null!;
+        Guid id = Guid.Empty;
+        ModifyRequest request = null!;
+        StoreItemViewModel storeItem = null!;
 
+        await ScenarioFor("modifying a store item", player =>
+        {
             player
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("a store item is already created", () => id = StoreItem.GetsCreated().WithCreatedId())

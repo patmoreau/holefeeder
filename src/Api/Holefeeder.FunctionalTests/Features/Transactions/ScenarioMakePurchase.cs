@@ -29,11 +29,12 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void InvalidRequest()
+    public async Task InvalidRequest()
     {
-        ScenarioFor("making an invalid request purchase", player =>
+        Request request = default!;
+
+        await ScenarioFor("making an invalid request purchase", player =>
         {
-            Request request = default!;
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("making a purchase of 0$", () => request = GivenAPurchase().OfAmount(0).Build())
@@ -43,12 +44,12 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void AuthorizedUser()
+    public async Task AuthorizedUser()
     {
-        ScenarioFor("making an authorized purchase", player =>
-        {
-            Request request = null!;
+        Request request = null!;
 
+        await ScenarioFor("making an authorized purchase", player =>
+        {
             player
                 .Given("an authorized user", () => User.IsAuthorized())
                 .And("making a purchase", () => request = GivenAPurchase().Build())
@@ -58,11 +59,12 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void ForbiddenUser()
+    public async Task ForbiddenUser()
     {
-        ScenarioFor("making an forbidden purchase", player =>
+        Request request = null!;
+
+        await ScenarioFor("making an forbidden purchase", player =>
         {
-            Request request = null!;
             player
                 .Given("a forbidden user", () => User.IsForbidden())
                 .And("making a purchase", () => request = GivenAPurchase().Build())
@@ -72,11 +74,12 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void UnauthorizedUser()
+    public async Task UnauthorizedUser()
     {
-        ScenarioFor("making an unauthorized purchase", player =>
+        Request entity = null!;
+
+        await ScenarioFor("making an unauthorized purchase", player =>
         {
-            Request entity = null!;
             player
                 .Given("an unauthorized user", () => User.IsUnauthorized())
                 .And("making a purchase", () => entity = GivenAPurchase().Build())
@@ -86,15 +89,15 @@ public sealed class ScenarioMakePurchase : BaseScenario
     }
 
     [Fact]
-    public void ValidRequest()
+    public async Task ValidRequest()
     {
-        ScenarioFor("making a valid purchase", player =>
-        {
-            Account account = null!;
-            Category category = null!;
-            Request request = null!;
-            var id = Guid.Empty;
+        Account account = null!;
+        Category category = null!;
+        Request request = null!;
+        var id = Guid.Empty;
 
+        await ScenarioFor("making a valid purchase", player =>
+        {
             player
                 .Given("the user is authorized", () => User.IsAuthorized())
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
@@ -102,10 +105,17 @@ public sealed class ScenarioMakePurchase : BaseScenario
                 .And("wanting to make a purchase", () => request = GivenAPurchase().ForAccount(account).ForCategory(category).Build())
                 .When("the purchase is made", () => Transaction.MakesPurchase(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .And("have the resource link in the header", () =>
+                {
+                    id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
+
+                    id.Should().NotBeEmpty();
+                })
                 .And("the purchase saved in the database should match the request", async () =>
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+
+                    result.Should().NotBeNull($"because the TransactionId ({id}) was not found");
 
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
