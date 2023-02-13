@@ -115,6 +115,8 @@ public sealed class ScenarioMakePurchase : BaseScenario
                 {
                     var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
+                    result.Should().NotBeNull($"because the TransactionId ({id}) was not found");
+
                     TransactionMapper.MapToModelOrNull(result).Should()
                         .NotBeNull()
                         .And
