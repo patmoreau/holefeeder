@@ -11,7 +11,7 @@ using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public class BudgetingDatabaseInitializer : IAsyncLifetime
+public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
 {
     private readonly string _connectionString;
     private Respawner _respawner = default!;
@@ -51,7 +51,12 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime
         await _respawner.ResetAsync(_connection);
     }
 
-    public async Task DisposeAsync()
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
         await _connection.DisposeAsync();
     }
