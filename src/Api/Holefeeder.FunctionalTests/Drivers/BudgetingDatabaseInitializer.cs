@@ -59,5 +59,6 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         await _connection.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }
