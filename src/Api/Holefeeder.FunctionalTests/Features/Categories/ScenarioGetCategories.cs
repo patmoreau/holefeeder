@@ -12,13 +12,9 @@ namespace Holefeeder.FunctionalTests.Features.Categories;
 
 public class ScenarioGetCategories : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetCategories(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -60,12 +56,12 @@ public class ScenarioGetCategories : BaseScenario
         var firstCategory = await GivenACategory()
             .WithName(firstName)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 

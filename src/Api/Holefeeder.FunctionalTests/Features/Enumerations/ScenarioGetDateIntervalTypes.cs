@@ -8,8 +8,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetDateIntervalTypes : BaseScenario
 {
-    public ScenarioGetDateIntervalTypes(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetDateIntervalTypes(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 

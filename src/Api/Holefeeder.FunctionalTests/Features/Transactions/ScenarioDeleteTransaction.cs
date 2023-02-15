@@ -16,16 +16,13 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioDeleteTransaction : BaseScenario
 {
-
-    public ScenarioDeleteTransaction(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioDeleteTransaction(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
-
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

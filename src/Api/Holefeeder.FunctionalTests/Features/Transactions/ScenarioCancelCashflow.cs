@@ -17,16 +17,13 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioCancelCashflow : BaseScenario
 {
-
-    public ScenarioCancelCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioCancelCashflow(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
-
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

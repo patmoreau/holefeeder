@@ -20,10 +20,9 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioGetUpcoming : BaseScenario
 {
-    public ScenarioGetUpcoming(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetUpcoming(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

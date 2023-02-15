@@ -20,10 +20,9 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioImportData : BaseScenario
 {
-    public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

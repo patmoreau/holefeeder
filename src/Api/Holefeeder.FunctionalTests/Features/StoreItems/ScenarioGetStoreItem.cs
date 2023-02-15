@@ -12,13 +12,9 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItem : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -76,7 +72,7 @@ public class ScenarioGetStoreItem : BaseScenario
     {
         var storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 

@@ -18,15 +18,13 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioPayCashflow : BaseScenario
 {
-    public ScenarioPayCashflow(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : base(
-        apiApplicationDriver, testOutputHelper)
+    public ScenarioPayCashflow(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
-
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

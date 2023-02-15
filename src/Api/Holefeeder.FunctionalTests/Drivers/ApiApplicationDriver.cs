@@ -40,7 +40,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
-            .AddUserSecrets<FunctionalTestMarker>()
+            .AddUserSecrets<ApiApplicationDriver>()
             .AddEnvironmentVariables()
             .Build();
 

@@ -10,20 +10,31 @@ using Holefeeder.FunctionalTests.StepDefinitions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
+using Nito.AsyncEx;
+
 namespace Holefeeder.FunctionalTests.Features;
 
+/// <summary>
+///     <P>Base class for scenario tests in this namespace</P>
+///     <P>This class will clear the database using the Respawn package at beginning of every test.</P>
+///     Implements Xunit.IAsyncLifetime to manage cleaning up after async tasks.
+/// </summary>
 [Collection("Api collection")]
-public abstract partial class BaseScenario : IDisposable
+public abstract partial class BaseScenario : IAsyncLifetime
 {
+    private static readonly AsyncLock _mutex = new();
+
+    private readonly BudgetingDatabaseInitializer _budgetingDatabaseInitializer;
     private readonly ITestOutputHelper _testOutputHelper;
 
-    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
 
+        _budgetingDatabaseInitializer = budgetingDatabaseInitializer;
         _testOutputHelper = testOutputHelper;
 
         Scope = apiApplicationDriver.Services.CreateScope();
@@ -214,29 +225,21 @@ public abstract partial class BaseScenario : IDisposable
         await player.PlayAsync();
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    private bool _disposed;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (disposing)
-        {
-            Scope.Dispose();
-        }
-
-        _disposed = true;
-    }
-
     [GeneratedRegex("[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?")]
     private static partial Regex MyRegex();
+
+    public async Task InitializeAsync()
+    {
+        // Version for reset every test
+        using (await _mutex.LockAsync())
+        {
+            await _budgetingDatabaseInitializer.ResetCheckpoint();
+        }
+    }
+
+    public Task DisposeAsync()
+    {
+        Scope.Dispose();
+        return Task.CompletedTask;
+    }
 }

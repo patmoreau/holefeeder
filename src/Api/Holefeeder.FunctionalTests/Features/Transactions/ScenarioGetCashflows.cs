@@ -17,10 +17,9 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioGetCashflows : BaseScenario
 {
-    public ScenarioGetCashflows(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetCashflows(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

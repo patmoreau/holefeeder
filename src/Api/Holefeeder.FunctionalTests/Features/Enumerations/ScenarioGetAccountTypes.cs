@@ -8,8 +8,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetAccountTypes : BaseScenario
 {
-    public ScenarioGetAccountTypes(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetAccountTypes(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 

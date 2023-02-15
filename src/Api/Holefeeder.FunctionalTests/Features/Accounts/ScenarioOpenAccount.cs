@@ -15,10 +15,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioOpenAccount : BaseScenario
 {
-    public ScenarioOpenAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioOpenAccount(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
