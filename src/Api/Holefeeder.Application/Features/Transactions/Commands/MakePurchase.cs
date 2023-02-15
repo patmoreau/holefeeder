@@ -97,6 +97,8 @@ public class MakePurchase : ICarterModule
 
             transaction = transaction.SetTags(request.Tags);
 
+            await _context.Transactions.AddAsync(transaction, cancellationToken);
+
             return transaction.Id;
         }
 

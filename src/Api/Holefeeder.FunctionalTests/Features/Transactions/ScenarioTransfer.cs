@@ -85,7 +85,7 @@ public sealed class ScenarioTransfer : BaseScenario
         });
     }
 
-    [Fact(Skip = "Works locally but not on the workflow; need this deployed to fix urgent bug")]
+    [Fact]
     public async Task ValidRequest()
     {
         Account fromAccount = null!;
