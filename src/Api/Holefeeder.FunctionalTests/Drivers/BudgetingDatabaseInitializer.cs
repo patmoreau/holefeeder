@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 
 using Holefeeder.Infrastructure.SeedWork;
@@ -32,22 +33,43 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
     {
         _connection = new MySqlConnection(_connectionString);
 
-        await _connection.OpenAsync();
+        try
+        {
+            await _connection.OpenAsync();
 
-        _respawner = await Respawner.CreateAsync(_connection,
-            new RespawnerOptions
+            _respawner = await Respawner.CreateAsync(_connection,
+                new RespawnerOptions
+                {
+                    DbAdapter = DbAdapter.MySql,
+                    SchemasToInclude = new[] {"budgeting_functional_tests"},
+                    TablesToInclude =
+                        new Table[] {"accounts", "cashflows", "categories", "store_items", "transactions"},
+                    TablesToIgnore = new Table[] {"schema_versions"},
+                    WithReseed = true
+                });
+        }
+        catch (MySqlException e)
+        {
+            if (e.ErrorCode is not (MySqlErrorCode.UnableToConnectToHost or MySqlErrorCode.UnknownDatabase))
             {
-                DbAdapter = DbAdapter.MySql,
-                SchemasToInclude = new[] {"budgeting_functional_tests"},
-                TablesToInclude =
-                    new Table[] {"accounts", "cashflows", "categories", "store_items", "transactions"},
-                TablesToIgnore = new Table[] {"schema_versions"},
-                WithReseed = true
-            });
+                Console.WriteLine(e);
+                throw;
+            }
+
+            if (e.InnerException is not null && e.InnerException is not MySqlException {ErrorCode: MySqlErrorCode.UnknownDatabase})
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 
     public async Task ResetCheckpoint()
     {
+        if (_connection.State is ConnectionState.Closed or ConnectionState.Broken)
+        {
+            await this.InitializeAsync();
+        }
         await _respawner.ResetAsync(_connection);
     }
 

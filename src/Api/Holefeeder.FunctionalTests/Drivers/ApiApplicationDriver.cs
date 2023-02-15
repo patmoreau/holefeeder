@@ -22,7 +22,7 @@ namespace Holefeeder.FunctionalTests.Drivers;
 public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 {
     public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
-        new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
+        new(CreateClient(), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

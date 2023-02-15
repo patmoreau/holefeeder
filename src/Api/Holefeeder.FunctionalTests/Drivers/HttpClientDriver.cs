@@ -9,10 +9,10 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public class HttpClientDriver
 {
-    private readonly Lazy<HttpClient> _httpClient;
+    private readonly HttpClient _httpClient;
     private readonly ITestOutputHelper _testOutputHelper;
 
-    public HttpClientDriver(Lazy<HttpClient> httpClient, ITestOutputHelper testOutputHelper)
+    public HttpClientDriver(HttpClient httpClient, ITestOutputHelper testOutputHelper)
     {
         _httpClient = httpClient;
         _testOutputHelper = testOutputHelper;
@@ -22,7 +22,7 @@ public class HttpClientDriver
 
     private async Task SendRequest(HttpRequestMessage requestMessage)
     {
-        ResponseMessage = await _httpClient.Value.SendAsync(requestMessage);
+        ResponseMessage = await _httpClient.SendAsync(requestMessage);
 
         LogUnexpectedErrors();
     }
@@ -105,13 +105,13 @@ public class HttpClientDriver
 
     public void AuthenticateUser(Guid userId)
     {
-        _httpClient.Value.DefaultRequestHeaders.Authorization =
+        _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId.ToString());
     }
 
     public void UnAuthenticate()
     {
-        _httpClient.Value.DefaultRequestHeaders.Authorization = null;
+        _httpClient.DefaultRequestHeaders.Authorization = null;
     }
 
     private void LogUnexpectedErrors()
