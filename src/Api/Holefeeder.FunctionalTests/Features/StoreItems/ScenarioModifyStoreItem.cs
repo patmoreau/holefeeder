@@ -15,11 +15,9 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioModifyStoreItem : BaseScenario
 {
-
-    public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioModifyStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

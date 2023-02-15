@@ -22,7 +22,7 @@ namespace Holefeeder.FunctionalTests.Drivers;
 public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 {
     public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
-        new(new Lazy<HttpClient>(CreateClient), testOutputHelper);
+        new(CreateClient(), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -40,7 +40,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
 
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
-            .AddUserSecrets<FunctionalTestMarker>()
+            .AddUserSecrets<ApiApplicationDriver>()
             .AddEnvironmentVariables()
             .Build();
 

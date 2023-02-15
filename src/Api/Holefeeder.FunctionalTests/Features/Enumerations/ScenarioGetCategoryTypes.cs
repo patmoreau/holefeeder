@@ -8,8 +8,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetCategoryTypes : BaseScenario
 {
-    public ScenarioGetCategoryTypes(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetCategoryTypes(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 

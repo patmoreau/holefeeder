@@ -13,13 +13,9 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioCreateStoreItem : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioCreateStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioCreateStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -90,7 +86,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     public async Task WhenCodeAlreadyExist()
     {
         var existingItem = await GivenAStoreItem()
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var storeItem = GivenACreateStoreItemRequest()
             .WithCode(existingItem.Code)

@@ -16,13 +16,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioGetAccount : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioGetAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioGetAccount(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -81,17 +77,17 @@ public class ScenarioGetAccount : BaseScenario
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -116,17 +112,17 @@ public class ScenarioGetAccount : BaseScenario
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Gain)
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 

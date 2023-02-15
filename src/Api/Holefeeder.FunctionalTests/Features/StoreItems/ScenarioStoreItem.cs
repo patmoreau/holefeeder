@@ -11,15 +11,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioStoreItem : BaseScenario
 {
-    public ScenarioStoreItem(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
             throw new ArgumentNullException(nameof(apiApplicationDriver));
         }
-
-        DatabaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]

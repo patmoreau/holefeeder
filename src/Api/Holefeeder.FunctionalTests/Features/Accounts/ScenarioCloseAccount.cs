@@ -15,13 +15,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioCloseAccount : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioCloseAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioCloseAccount(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -95,7 +91,7 @@ public class ScenarioCloseAccount : BaseScenario
     {
         var entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenACloseAccountRequest()
             .WithId(entity.Id)
@@ -107,7 +103,7 @@ public class ScenarioCloseAccount : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<Account>(entity.Id);
+        var result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
         result!.Inactive.Should().BeTrue();
     }

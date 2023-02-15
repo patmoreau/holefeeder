@@ -15,13 +15,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioFavoriteAccount : BaseScenario
 {
-    private readonly BudgetingDatabaseDriver _databaseDriver;
-
-    public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+    public ScenarioFavoriteAccount(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _databaseDriver = DatabaseDriver;
-        _databaseDriver.ResetStateAsync().Wait();
     }
 
     [Fact]
@@ -90,7 +86,7 @@ public class ScenarioFavoriteAccount : BaseScenario
         var entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .IsFavorite(false)
-            .SavedInDb(_databaseDriver);
+            .SavedInDb(DatabaseDriver);
 
         var request = GivenAFavoriteAccountRequest()
             .WithId(entity.Id)
@@ -103,7 +99,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await _databaseDriver.FindByIdAsync<Account>(entity.Id);
+        var result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
         result!.Favorite.Should().BeTrue();
     }
