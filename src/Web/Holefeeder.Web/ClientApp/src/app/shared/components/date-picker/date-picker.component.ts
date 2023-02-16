@@ -48,10 +48,21 @@ export class DatePickerComponent extends BaseFormControlWithValidatorComponent<D
   @Input()
   public disabled = false;
 
-  constructor(@Inject(Injector) protected injector: Injector) {
+  constructor(
+    @Inject(Injector) protected injector: Injector // private adapter: NgbDateNativeAdapter
+  ) {
     super(injector);
 
-    this.data = startOfToday();
+    this.value = startOfToday();
+  }
+
+  public writeValue(value: Date): void {
+    this.value = value;
+  }
+
+  public onDateSelect(value: Date) {
+    this.value = value;
+    this.onChange();
   }
 
   public override validate(

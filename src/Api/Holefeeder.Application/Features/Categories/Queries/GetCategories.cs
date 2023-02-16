@@ -1,4 +1,5 @@
 ﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
 
@@ -49,6 +50,8 @@ public class GetCategories : ICarterModule
         {
             var result = await _context.Categories
                 .Where(x => x.UserId == _userContext.UserId)
+                .OrderByDescending(x => x.Favorite)
+                .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
             return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
