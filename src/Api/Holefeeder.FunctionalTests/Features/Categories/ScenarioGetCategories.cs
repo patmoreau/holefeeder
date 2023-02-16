@@ -56,11 +56,13 @@ public class ScenarioGetCategories : BaseScenario
         var firstCategory = await GivenACategory()
             .WithName(firstName)
             .ForUser(AuthorizedUserId)
+            .IsNotFavorite()
             .SavedInDb(DatabaseDriver);
 
         var secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(AuthorizedUserId)
+            .IsFavorite()
             .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
@@ -71,10 +73,10 @@ public class ScenarioGetCategories : BaseScenario
         var result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
         ThenAssertAll(() =>
         {
-            result.Should().NotBeNull().And.HaveCount(2);
-            result![0].Should().BeEquivalentTo(firstCategory,
+            result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
+            result![0].Should().BeEquivalentTo(secondCategory,
                 options => options.ExcludingMissingMembers());
-            result[1].Should().BeEquivalentTo(secondCategory,
+            result[1].Should().BeEquivalentTo(firstCategory,
                 options => options.ExcludingMissingMembers());
         });
     }

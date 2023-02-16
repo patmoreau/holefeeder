@@ -48,4 +48,16 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
         _faker.RuleFor(f => f.UserId, userId);
         return this;
     }
+
+    public CategoryBuilder IsFavorite()
+    {
+        _faker.RuleFor(f => f.Favorite, true);
+        return this;
+    }
+
+    public CategoryBuilder IsNotFavorite()
+    {
+        _faker.RuleFor(f => f.Favorite, false);
+        return this;
+    }
 }
