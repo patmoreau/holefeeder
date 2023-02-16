@@ -17,7 +17,7 @@ export abstract class BaseFormControlComponent<T>
 {
   public control!: FormControl;
 
-  public data!: T;
+  public value!: T | null;
 
   protected readonly destroy = new Subject<void>();
 
@@ -28,24 +28,24 @@ export abstract class BaseFormControlComponent<T>
   }
 
   public writeValue(value: T): void {
-    this.data = value;
+    this.value = value;
   }
 
   public onChange(): void {
-    this.onChangeFn(this.data);
+    this.onChanged(this.value);
   }
 
   public registerOnChange(fn: (value: T | null) => T): void {
-    this.onChangeFn = fn;
+    this.onChanged = fn;
   }
 
   public registerOnTouched(fn: () => void): void {
-    this.onTouchFn = fn;
+    this.onTouched = fn;
   }
 
-  public onChangeFn = (value: T | null): T | null => value;
+  public onChanged = (value: T | null): T | null => value;
 
-  public onTouchFn = (): void => {};
+  public onTouched = (): void => {};
 
   public ngOnDestroy(): void {
     this.destroy.next();
