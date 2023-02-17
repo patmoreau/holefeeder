@@ -7,6 +7,9 @@ on:
       - completed
 
   workflow_dispatch:
+    workflows: ["CI/CD"]
+    types:
+      - completed
 
 jobs:
   debug:
