@@ -401,7 +401,7 @@ public class ImportData : ICarterModule
         }
     }
 
-    internal record Request : IRequest
+    internal record Request : IRequest<Unit>
     {
         [Required] public bool UpdateExisting { get; init; }
 

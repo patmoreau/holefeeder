@@ -32,10 +32,11 @@ public static class ServiceCollectionExtensions
         services.AddMemoryCache();
 
         services
-            .AddMediatR(typeof(Application).Assembly)
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+            .AddMediatR(serviceConfiguration =>
+                serviceConfiguration.RegisterServicesFromAssembly(typeof(Application).Assembly)
+                    .AddOpenBehavior(typeof(LoggingBehavior<,>))
+                    .AddOpenBehavior(typeof(ValidationBehavior<,>))
+                    .AddOpenBehavior(typeof(TransactionBehavior<,>)));
 
         return services;
     }

@@ -17,7 +17,7 @@ internal class CommandsScheduler
         _serviceProvider = serviceProvider;
     }
 
-    public string SendNow(IRequest request, string description)
+    public string SendNow(IRequest<Unit> request, string description)
     {
         var mediatorSerializedObject = SerializeObject(request, description);
 

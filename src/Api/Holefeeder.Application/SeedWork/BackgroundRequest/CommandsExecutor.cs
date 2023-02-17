@@ -22,7 +22,7 @@ internal class CommandsExecutor
         {
             var req = JsonSerializer.Deserialize(mediatorSerializedObject.Data, type);
 
-            await _mediator.Send((req as IRequest)!);
+            await _mediator.Send((req as IRequest<Unit>)!);
         }
     }
 }
