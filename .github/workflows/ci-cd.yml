@@ -3,8 +3,22 @@ name: CI/CD
 on:
   push:
     branches: [main]
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/codeql-analysis.yml",
+        "**/unit-test-results.yml",
+      ]
 
   pull_request:
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/codeql-analysis.yml",
+        "**/unit-test-results.yml",
+      ]
 
   workflow_dispatch:
 
