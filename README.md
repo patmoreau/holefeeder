@@ -1,8 +1,6 @@
 # Holefeeder
 
-[![Continuous Integration](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml)
-
-[![Test Results](https://github.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml)
+[![Continuous Integration](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml) [![CodeQL](https://github.com/patmoreau/Holefeeder/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/patmoreau/Holefeeder/actions/workflows/codeql-analysis.yml) [![Test Results](https://gist.github.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6/raw/holefeeder-tests-badge.svg)](https://github.com/patmoreau/Holefeeder/actions/workflows/unit-test-results.yml)
 
 ## Introduction
 
