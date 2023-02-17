@@ -6,11 +6,6 @@ on:
     types:
       - completed
 
-  workflow_dispatch:
-    workflows: ["CI/CD"]
-    types:
-      - completed
-
 jobs:
   debug:
     name: Debug
