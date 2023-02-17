@@ -20,6 +20,8 @@ on:
         "**/unit-test-results.yml",
       ]
 
+  workflow_dispatch:
+
 env:
   DOCKER_REGISTRY: ghcr.io/patmoreau/holefeeder
 
