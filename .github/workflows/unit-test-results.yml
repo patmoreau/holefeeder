@@ -82,8 +82,9 @@ jobs:
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
           github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@0.1
+        uses: exuanbo/actions-deploy-gist@v1
         with:
           token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.githubusercontent.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6
-          file: holefeeder-tests-badge.svg
+          gist_id: 230a77d0ee69381bbe869c0fc62f9cc6
+          file_path: holefeeder-tests-badge.svg
+          file_type: text
