@@ -17,7 +17,7 @@ jobs:
         uses: hmarr/debug-action@v2.0.1
 
   test_results:
-    needs: [CI-CD]
+    needs: ["CI-CD.tests"]
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion != 'skipped'
 
