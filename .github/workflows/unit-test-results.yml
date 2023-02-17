@@ -2,9 +2,11 @@ name: Test Results
 
 on:
   workflow_run:
-    workflows: ["CI/CD"]
+    workflows: ["CI-CD"]
     types:
       - completed
+
+  workflow_dispatch:
 
 jobs:
   debug:
@@ -15,7 +17,7 @@ jobs:
         uses: hmarr/debug-action@v2.0.1
 
   test_results:
-    needs: ${{ github.event.workflow_run.id }}
+    needs: ["CI-CD"]
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion != 'skipped'
 

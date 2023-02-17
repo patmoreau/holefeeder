@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI-CD
 
 on:
   push:
@@ -19,8 +19,6 @@ on:
         "**/codeql-analysis.yml",
         "**/unit-test-results.yml",
       ]
-
-  workflow_dispatch:
 
 env:
   DOCKER_REGISTRY: ghcr.io/patmoreau/holefeeder
