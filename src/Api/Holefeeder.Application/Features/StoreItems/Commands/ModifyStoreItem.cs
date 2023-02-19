@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
 
@@ -59,7 +59,7 @@ public class ModifyStoreItem : ICarterModule
                 throw new StoreItemNotFoundException(request.Id);
             }
 
-            _context.Update(storeItem with {Data = request.Data});
+            _context.Update(storeItem with { Data = request.Data });
 
             return Unit.Value;
         }

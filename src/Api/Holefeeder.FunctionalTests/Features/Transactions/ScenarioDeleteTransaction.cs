@@ -9,8 +9,8 @@ using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransac
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 

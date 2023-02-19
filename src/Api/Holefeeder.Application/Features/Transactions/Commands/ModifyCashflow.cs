@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
 
@@ -69,7 +69,7 @@ public class ModifyCashflow : ICarterModule
                 throw new CashflowNotFoundException(request.Id);
             }
 
-            var cashflow = exists with {Amount = request.Amount, Description = request.Description};
+            var cashflow = exists with { Amount = request.Amount, Description = request.Description };
 
             cashflow = cashflow.SetTags(request.Tags);
 

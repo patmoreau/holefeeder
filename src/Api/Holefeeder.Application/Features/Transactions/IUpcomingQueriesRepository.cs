@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Models;
+using Holefeeder.Application.Models;
 
 namespace Holefeeder.Application.Features.Transactions;
 

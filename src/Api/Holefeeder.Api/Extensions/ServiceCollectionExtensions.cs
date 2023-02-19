@@ -24,7 +24,7 @@ internal static class ServiceCollectionExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(
                 options => options.TokenValidationParameters =
-                    new TokenValidationParameters {ValidateIssuer = true},
+                    new TokenValidationParameters { ValidateIssuer = true },
                 options => configuration.Bind("AzureAdB2C", options));
 
         services.AddAuthorization(o =>
@@ -46,7 +46,7 @@ internal static class ServiceCollectionExtensions
             {
                 options.EnableAnnotations();
                 options.SwaggerDoc("v2",
-                    new OpenApiInfo {Title = environment.ApplicationName, Version = "v2"});
+                    new OpenApiInfo { Title = environment.ApplicationName, Version = "v2" });
                 options.CustomSchemaIds(type => type.ToString());
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -95,9 +95,9 @@ internal static class ServiceCollectionExtensions
     {
         services
             .AddHealthChecks()
-            .AddCheck("api", () => HealthCheckResult.Healthy(), tags: new[] {"holefeeder", "api", "service"})
+            .AddCheck("api", () => HealthCheckResult.Healthy(), tags: new[] { "holefeeder", "api", "service" })
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
-                "budgeting-db-check", tags: new[] {"holefeeder", "api", "mysql"});
+                "budgeting-db-check", tags: new[] { "holefeeder", "api", "mysql" });
 
         return services;
     }

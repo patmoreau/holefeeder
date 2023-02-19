@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Accounts;
 
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
@@ -131,7 +131,7 @@ public class AccountTests
         var account = GivenAnActiveAccount().IsFavorite(!favorite).Build();
 
         // act
-        account = account with {Favorite = favorite};
+        account = account with { Favorite = favorite };
 
         // assert
         account.Favorite.Should().Be(favorite);

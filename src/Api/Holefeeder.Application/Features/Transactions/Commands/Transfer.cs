@@ -1,4 +1,4 @@
-﻿using FluentValidation.Results;
+using FluentValidation.Results;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
@@ -22,7 +22,7 @@ public class Transfer : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result.FromTransactionId}, result);
+                    return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result.FromTransactionId }, result);
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -92,7 +92,8 @@ public sealed record Account : Entity, IAggregateRoot
     {
         return new Account(Guid.NewGuid(), type, name, openDate, userId)
         {
-            OpenBalance = openBalance, Description = description
+            OpenBalance = openBalance,
+            Description = description
         };
     }
 
@@ -108,7 +109,7 @@ public sealed record Account : Entity, IAggregateRoot
             throw new AccountDomainException("Account has active cashflows");
         }
 
-        return this with {Inactive = true};
+        return this with { Inactive = true };
     }
 
     public decimal CalculateBalance() =>

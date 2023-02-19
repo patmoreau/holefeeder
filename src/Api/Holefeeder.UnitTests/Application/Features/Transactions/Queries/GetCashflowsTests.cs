@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 
@@ -23,14 +23,14 @@ public class GetCashflowsTests
         // arrange
         var httpContext = new DefaultHttpContext
         {
-            Request = {QueryString = new QueryString("?offset=10&limit=100&sort=data&filter=code:eq:settings")}
+            Request = { QueryString = new QueryString("?offset=10&limit=100&sort=data&filter=code:eq:settings") }
         };
 
         // act
         var result = await Request.BindAsync(httpContext, null!);
 
         // assert
-        result.Should().BeEquivalentTo(new Request(10, 100, new[] {"data"}, new[] {"code:eq:settings"}));
+        result.Should().BeEquivalentTo(new Request(10, 100, new[] { "data" }, new[] { "code:eq:settings" }));
     }
 
     [Fact]

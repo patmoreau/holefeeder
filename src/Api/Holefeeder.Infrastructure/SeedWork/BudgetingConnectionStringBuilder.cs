@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.SeedWork;
 
@@ -10,5 +10,5 @@ public class BudgetingConnectionStringBuilder
     public MySqlConnectionStringBuilder CreateBuilder() => new(ConnectionString);
 
     public MySqlConnectionStringBuilder CreateBuilder(MySqlGuidFormat guidFormat) =>
-        new(ConnectionString) {GuidFormat = guidFormat};
+        new(ConnectionString) { GuidFormat = guidFormat };
 }

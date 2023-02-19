@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.SeedWork;
 

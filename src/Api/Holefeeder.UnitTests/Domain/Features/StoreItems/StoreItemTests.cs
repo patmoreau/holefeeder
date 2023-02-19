@@ -78,7 +78,7 @@ public class StoreItemTests
         StoreItem item = null!;
         var action = () =>
         {
-            item = new StoreItem(id, code, userId) {Data = data};
+            item = new StoreItem(id, code, userId) { Data = data };
             return Task.CompletedTask;
         };
 

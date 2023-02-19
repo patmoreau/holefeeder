@@ -41,7 +41,7 @@ public class UserContextTests
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] {new Claim(ClaimConstants.Sub, _idSub.ToString())}))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimConstants.Sub, _idSub.ToString()) }))
         };
 
         // act
@@ -91,7 +91,7 @@ public class UserContextTests
     {
         // arrange
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-        httpContextAccessor.HttpContext = new DefaultHttpContext {User = new ClaimsPrincipal(new ClaimsIdentity())};
+        httpContextAccessor.HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity()) };
 
         // act
         var userContext = new UserContext(httpContextAccessor);

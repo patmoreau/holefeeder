@@ -32,7 +32,8 @@ public static class WebApplicationExtensions
         app.MapHealthChecks("/healthz",
             new HealthCheckOptions
             {
-                Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
 
         return app;

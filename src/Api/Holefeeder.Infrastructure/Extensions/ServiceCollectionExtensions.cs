@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.Scripts;

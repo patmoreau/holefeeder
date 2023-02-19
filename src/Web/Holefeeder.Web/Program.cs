@@ -26,7 +26,7 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
         options => options.TokenValidationParameters =
-            new TokenValidationParameters {ValidateIssuer = true},
+            new TokenValidationParameters { ValidateIssuer = true },
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
 builder.Services
@@ -38,7 +38,7 @@ builder.Services
     .AddInMemoryStorage();
 
 builder.Services.AddHealthChecks()
-    .AddCheck("web", () => HealthCheckResult.Healthy(), new[] {"holefeeder", "web", "service"});
+    .AddCheck("web", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "web", "service" });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -73,7 +73,7 @@ app.MapFallbackToFile("index.html");
 app.AddConfigRoutes();
 
 app.MapHealthChecks("/healthz",
-    new HealthCheckOptions {Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse}
+    new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
 );
 app.UseHttpLogging();
 app.MapHealthChecksUI(config =>

@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 

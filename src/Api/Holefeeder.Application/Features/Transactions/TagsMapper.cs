@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application.Features.Transactions;
+namespace Holefeeder.Application.Features.Transactions;
 
 internal static class TagsMapper
 {

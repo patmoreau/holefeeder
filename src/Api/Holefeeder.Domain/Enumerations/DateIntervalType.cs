@@ -203,7 +203,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             int frequency)
         {
             return effectiveDate >= fromDate && effectiveDate <= toDate
-                ? new[] {effectiveDate}
+                ? new[] { effectiveDate }
                 : Array.Empty<DateTime>();
         }
 

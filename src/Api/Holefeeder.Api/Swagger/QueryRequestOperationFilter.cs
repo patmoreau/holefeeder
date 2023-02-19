@@ -39,7 +39,7 @@ public class QueryRequestOperationFilter : IOperationFilter
                 Name = properties.Name.ToLowerInvariant(),
                 In = ParameterLocation.Query,
                 Required = false,
-                Schema = new OpenApiSchema {Type = properties.PropertyType.Name}
+                Schema = new OpenApiSchema { Type = properties.PropertyType.Name }
             });
         }
     }

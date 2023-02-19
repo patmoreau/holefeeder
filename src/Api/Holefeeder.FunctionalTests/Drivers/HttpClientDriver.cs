@@ -94,7 +94,7 @@ public class HttpClientDriver
         }
 
         var content = JsonSerializer.Deserialize<T>(resultAsString,
-            new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         return content;
     }
 

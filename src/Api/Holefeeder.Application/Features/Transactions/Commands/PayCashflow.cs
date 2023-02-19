@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
@@ -18,7 +18,7 @@ public class PayCashflow : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetTransaction), new {Id = result}, new {Id = result});
+                    return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result });
                 })
             .Produces<Guid>(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
@@ -171,7 +171,7 @@ public record Cashflow : Entity, IAggregateRoot
             throw new TransactionDomainException($"Cashflow {Id} already inactive", nameof(Cashflow));
         }
 
-        return this with {Inactive = true};
+        return this with { Inactive = true };
     }
 
     public Cashflow SetTags(params string[] tags)

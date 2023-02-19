@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Application.Features.MyData.Models;
 

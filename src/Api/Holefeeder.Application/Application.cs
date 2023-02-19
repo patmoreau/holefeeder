@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application;
+namespace Holefeeder.Application;
 
 public sealed class Application
 {

@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
@@ -18,7 +18,7 @@ public class OpenAccount : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetAccount), new {Id = result}, new {Id = result});
+                    return Results.CreatedAtRoute(nameof(GetAccount), new { Id = result }, new { Id = result });
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)

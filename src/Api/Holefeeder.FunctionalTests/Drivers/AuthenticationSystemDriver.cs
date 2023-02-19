@@ -14,7 +14,7 @@ public class AuthenticationSystemDriver
 
     public void Start()
     {
-        if (_azureB2C is not {IsStarted: true})
+        if (_azureB2C is not { IsStarted: true })
         {
             _azureB2C = StartWithRetry(9999);
         }
@@ -22,7 +22,7 @@ public class AuthenticationSystemDriver
 
     public void Stop()
     {
-        if (_azureB2C is not {IsStarted: true})
+        if (_azureB2C is not { IsStarted: true })
         {
             return;
         }

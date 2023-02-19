@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 
@@ -47,7 +47,7 @@ public class FavoriteAccount : ICarterModule
                 throw new AccountNotFoundException(request.Id);
             }
 
-            _context.Update(account with {Favorite = request.IsFavorite});
+            _context.Update(account with { Favorite = request.IsFavorite });
 
             return Unit.Value;
         }
