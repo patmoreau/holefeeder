@@ -26,14 +26,15 @@ jobs:
 
       - name: Lint C# files with dotnet format
         id: lint
-        run: dotnet format --severity error --verbosity diagnostic || true
+        run: dotnet format --severity error --verbosity diagnostic --report ./linter-report || true
 
       - name: Save report
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: dotnet-format-report
-          path: dotnet-format-report.txt
+          path: ./linter-report/*
+
       - name: Check for errors
         if: ${{ steps.lint.outcome != 'success' }}
         run: echo "::error::dotnet format found issues in the code. Please fix them."
