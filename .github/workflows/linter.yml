@@ -12,8 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: github/super-linter@v4.10.1
-        env:
-          FILTER_REGEX_EXCLUDE: \bLICENSE$|\.g\.cs$|\.snk$
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_SHELL_SHFMT: false
+
+      # - uses: github/super-linter@v4.10.1
+      #   env:
+      #     FILTER_REGEX_EXCLUDE: \bLICENSE$|\.g\.cs$|\.snk$
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     VALIDATE_SHELL_SHFMT: false
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: Lint C# files with dotnet format
+        run: dotnet format --check --verbosity diagnostic
