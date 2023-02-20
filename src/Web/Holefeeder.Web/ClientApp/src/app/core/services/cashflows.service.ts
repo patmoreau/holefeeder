@@ -14,7 +14,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { CashflowDetailAdapter } from '../adapters';
 import { StateService } from './state.service';
 
-const apiRoute: string = 'api/v2/cashflows';
+const apiRoute = 'api/v2/cashflows';
 
 interface CashflowState {
   cashflows: CashflowDetail[];
@@ -122,7 +122,7 @@ export class CashflowsService extends StateService<CashflowState> {
   }
 
   private getAll(): Observable<PagingInfo<CashflowDetail>> {
-    let params = new HttpParams().append('sort', 'description');
+    const params = new HttpParams().append('sort', 'description');
 
     return this.http
       .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {

@@ -93,10 +93,10 @@ export class MakePurchaseComponent implements OnInit {
     ]).pipe(
       filter(([_, accounts]) => accounts.length > 0),
       tap(([params, accounts]) => {
-        let fromAccount =
+        const fromAccount =
           params[accountIdParamName] ??
           this.accountService.findOneByIndex(0)?.id;
-        let toAccount = this.accountService.findOneByIndex(1)?.id;
+        const toAccount = this.accountService.findOneByIndex(1)?.id;
         this.formPurchase.patchValue({
           date: startOfToday(),
           account: fromAccount,

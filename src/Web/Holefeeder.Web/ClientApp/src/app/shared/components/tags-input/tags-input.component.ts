@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TagsInputComponent implements OnInit {
   @Input() tagsArray: FormArray<any> = new FormArray<any>([]);
-  @Input() isReadonly: boolean = false;
+  @Input() isReadonly = false;
 
   constructor(private fb: FormBuilder) {}
 

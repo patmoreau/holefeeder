@@ -11,7 +11,7 @@ import {
 } from 'rxjs';
 
 export function tapTrace<T>(
-  message: string = 'observe'
+  message = 'observe'
 ): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
   return pipe(
     tap(x => logger.verbose(message, x)) as OperatorFunction<

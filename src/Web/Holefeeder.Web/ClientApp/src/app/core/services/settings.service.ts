@@ -24,7 +24,7 @@ import { StateService } from './state.service';
 
 import { MessageService } from './message.service';
 
-const apiRoute: string = 'api/v2/store-items';
+const apiRoute = 'api/v2/store-items';
 
 interface SettingsState {
   period: DateInterval;

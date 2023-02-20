@@ -8,7 +8,7 @@ import { AccountAdapter } from '../adapters/account-adapter.service';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
 import { StateService } from './state.service';
 
-const apiRoute: string = 'api/v2/accounts';
+const apiRoute = 'api/v2/accounts';
 
 interface AccountState {
   accounts: Account[];
@@ -87,7 +87,7 @@ export class AccountsService extends StateService<AccountState> {
   }
 
   private getAll(): Observable<PagingInfo<Account>> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .append('sort', '-favorite')
       .append('sort', 'name');
 
