@@ -13,11 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - uses: github/super-linter@v4.10.1
-      #   env:
-      #     FILTER_REGEX_EXCLUDE: \bLICENSE$|\.g\.cs$|\.snk$
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     VALIDATE_SHELL_SHFMT: false
+      - name: Lint typescript files
+        uses: github/super-linter:slim-v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_TYPESCRIPT: true
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: ${{ github.actor }}
+          LOG_LEVEL: debug
+          RUN_LOCAL: true
+          LINTER_RULES: '{"typescript": {"files": ["src/web/clientapp/**/*.ts"]}}'
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3.0.3
