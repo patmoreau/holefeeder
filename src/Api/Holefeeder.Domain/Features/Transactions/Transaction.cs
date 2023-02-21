@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
@@ -122,13 +122,13 @@ public record Transaction : Entity, IAggregateRoot
     public static Transaction Create(Guid id, DateTime date, decimal amount, string description, Guid accountId,
         Guid categoryId, Guid userId)
     {
-        return new Transaction(id, date, amount, accountId, categoryId, userId) {Description = description};
+        return new Transaction(id, date, amount, accountId, categoryId, userId) { Description = description };
     }
 
     public static Transaction Create(DateTime date, decimal amount, string description, Guid accountId, Guid categoryId,
         Guid userId)
     {
-        return new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) {Description = description};
+        return new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) { Description = description };
     }
 
     public Transaction SetTags(params string[] tags)

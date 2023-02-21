@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Context;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
 
@@ -49,7 +49,9 @@ public class ModifyAccount : ICarterModule
 
             _context.Update(exists with
             {
-                Name = request.Name, Description = request.Description, OpenBalance = request.OpenBalance
+                Name = request.Name,
+                Description = request.Description,
+                OpenBalance = request.OpenBalance
             });
 
             return Unit.Value;

@@ -45,6 +45,7 @@ export abstract class BaseFormControlComponent<T>
 
   public onChanged = (value: T | null): T | null => value;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
   public ngOnDestroy(): void {

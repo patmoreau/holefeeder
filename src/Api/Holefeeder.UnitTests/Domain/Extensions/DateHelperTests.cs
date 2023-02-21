@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Holefeeder.Domain.Extensions;
 
@@ -10,8 +10,8 @@ public class DateHelperTests
     {
         get
         {
-            yield return new object[] {"2014-01-09", new DateTime(2014, 1, 9)};
-            yield return new object[] {"2016-12-28", new DateTime(2016, 12, 28)};
+            yield return new object[] { "2014-01-09", new DateTime(2014, 1, 9) };
+            yield return new object[] { "2016-12-28", new DateTime(2016, 12, 28) };
         }
     }
 
@@ -24,8 +24,8 @@ public class DateHelperTests
 
     public static IEnumerable<object[]> ToPersistentTestCases()
     {
-        yield return new object[] {new DateTime(2014, 1, 9), "2014-01-09"};
-        yield return new object[] {new DateTime(2016, 12, 28), "2016-12-28"};
+        yield return new object[] { new DateTime(2014, 1, 9), "2014-01-09" };
+        yield return new object[] { new DateTime(2016, 12, 28), "2016-12-28" };
     }
 
     [Theory]

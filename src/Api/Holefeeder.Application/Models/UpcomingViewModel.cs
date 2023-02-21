@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 using Holefeeder.Application.Features.Accounts.Queries;
 
@@ -19,7 +19,7 @@ public record UpcomingViewModel
     public ImmutableArray<string> Tags
     {
         get => _tags;
-        init => _tags =  ImmutableArray.Create(value.ToArray());
+        init => _tags = ImmutableArray.Create(value.ToArray());
     }
 
     public CategoryInfoViewModel Category { get; init; } = null!;

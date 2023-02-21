@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application.Models;
+namespace Holefeeder.Application.Models;
 
 public record CategoryViewModel
 {

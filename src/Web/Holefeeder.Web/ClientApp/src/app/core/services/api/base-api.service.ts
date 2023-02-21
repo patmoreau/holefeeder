@@ -4,7 +4,7 @@ import { throwError } from 'rxjs';
 
 export abstract class BaseApiService {
   mapToPagingInfo<T>(
-    resp: HttpResponse<Object[]>,
+    resp: HttpResponse<object[]>,
     adapter: Adapter<T>
   ): PagingInfo<T> {
     const totalCount = +(

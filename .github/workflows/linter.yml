@@ -1,0 +1,71 @@
+name: Linter
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+
+  workflow_dispatch:
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: Install dependencies
+        working-directory: src/Web/Holefeeder.Web/ClientApp
+        run: yarn install
+
+      - name: Lint code with ESLint
+        id: lint
+        working-directory: src/Web/Holefeeder.Web/ClientApp
+        run: yarn lint --format node_modules/eslint-formatter-pretty > ./eslint-report.md
+
+      - name: Print ESLint report
+        if: always()
+        working-directory: src/Web/Holefeeder.Web/ClientApp
+        run: cat ./eslint-report.md
+
+      - name: Upload ESLint report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ESLint report
+          path: src/Web/Holefeeder.Web/ClientApp/eslint-report.md
+
+      - name: Check for errors
+        if: ${{ steps.lint.outcome != 'success' }}
+        run: echo "::error::eslint found issues in the code. Please fix them."
+
+  csharp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: Lint C# files with dotnet format
+        id: lint
+        run: dotnet format --severity error --verbosity diagnostic --report ./linter-report || true
+
+      - name: Save report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-format-report
+          path: ./linter-report/*
+
+      - name: Check for errors
+        if: ${{ steps.lint.outcome != 'success' }}
+        run: echo "::error::dotnet format found issues in the code. Please fix them."

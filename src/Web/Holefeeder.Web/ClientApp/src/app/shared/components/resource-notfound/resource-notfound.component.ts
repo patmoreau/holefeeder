@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-resource-notfound',
@@ -6,8 +6,4 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './resource-notfound.component.html',
   styleUrls: ['./resource-notfound.component.scss'],
 })
-export class ResourceNotfoundComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit() {}
-}
+export class ResourceNotfoundComponent {}

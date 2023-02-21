@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
@@ -67,11 +67,11 @@ public static class CustomErrorHandler
 
     private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details)
     {
-        return new ProblemDetails {Status = statusCode, Title = title, Detail = details};
+        return new ProblemDetails { Status = statusCode, Title = title, Detail = details };
     }
 
     private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors)
     {
-        return new ValidationProblemDetails(errors) {Status = StatusCodes.Status422UnprocessableEntity};
+        return new ValidationProblemDetails(errors) { Status = StatusCodes.Status422UnprocessableEntity };
     }
 }

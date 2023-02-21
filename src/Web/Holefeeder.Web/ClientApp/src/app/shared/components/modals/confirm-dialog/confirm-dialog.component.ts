@@ -29,8 +29,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
 })
 export class ConfirmDialogComponent {
-  title: string = 'Title placeholder';
-  prompt: string = 'Prompt placeholder';
+  title = 'Title placeholder';
+  prompt = 'Prompt placeholder';
 
   constructor(public activeModal: NgbActiveModal) {}
 }

@@ -7,7 +7,7 @@ export abstract class ToastItem {
 }
 
 export class InfoToastItem extends ToastItem {
-  constructor(message: string, delay: number = 5000) {
+  constructor(message: string, delay = 5000) {
     super(message, delay);
   }
 
@@ -21,7 +21,7 @@ export class InfoToastItem extends ToastItem {
 }
 
 export class WarningToastItem extends ToastItem {
-  constructor(message: string, delay: number = 5000) {
+  constructor(message: string, delay = 5000) {
     super(message, delay);
   }
 
@@ -35,7 +35,7 @@ export class WarningToastItem extends ToastItem {
 }
 
 export class DangerToastItem extends ToastItem {
-  constructor(message: string, delay: number = 5000) {
+  constructor(message: string, delay = 5000) {
     super(message, delay);
   }
 

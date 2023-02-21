@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.SeedWork;
+using Holefeeder.Application.SeedWork;
 
 using Microsoft.AspNetCore.Http;
 

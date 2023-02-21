@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -9,11 +9,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [CommonModule, NgbDatepickerModule],
 })
-export class DateViewComponent implements OnInit {
+export class DateViewComponent {
   @Input() date: Date | undefined;
   @Input() color: string | undefined;
-
-  constructor() {}
-
-  ngOnInit() {}
 }

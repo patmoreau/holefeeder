@@ -41,10 +41,10 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
                 new RespawnerOptions
                 {
                     DbAdapter = DbAdapter.MySql,
-                    SchemasToInclude = new[] {"budgeting_functional_tests"},
+                    SchemasToInclude = new[] { "budgeting_functional_tests" },
                     TablesToInclude =
-                        new Table[] {"accounts", "cashflows", "categories", "store_items", "transactions"},
-                    TablesToIgnore = new Table[] {"schema_versions"},
+                        new Table[] { "accounts", "cashflows", "categories", "store_items", "transactions" },
+                    TablesToIgnore = new Table[] { "schema_versions" },
                     WithReseed = true
                 });
         }
@@ -56,7 +56,7 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
                 throw;
             }
 
-            if (e.InnerException is not null && e.InnerException is not MySqlException {ErrorCode: MySqlErrorCode.UnknownDatabase})
+            if (e.InnerException is not null && e.InnerException is not MySqlException { ErrorCode: MySqlErrorCode.UnknownDatabase })
             {
                 Console.WriteLine(e);
                 throw;

@@ -4,8 +4,6 @@ import { Adapter, CashflowRequest } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class CashflowRequestAdapter implements Adapter<CashflowRequest> {
-  constructor() {}
-
   adapt(item: any): CashflowRequest {
     return new CashflowRequest(
       dateToUtc(item.effectiveDate),

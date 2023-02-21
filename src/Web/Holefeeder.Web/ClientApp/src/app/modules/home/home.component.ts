@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { trace } from '@app/core/logger';
+import { Component } from '@angular/core';
 import { FooterComponent } from '@app/modules/home/footer/footer.component';
 import { HeaderComponent } from '@app/modules/home/header/header.component';
 import { ToastViewComponent } from '@app/shared/components';
@@ -19,9 +18,4 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
     FooterComponent,
   ],
 })
-export class HomeComponent implements OnInit {
-  constructor() {}
-
-  @trace()
-  ngOnInit(): void {}
-}
+export class HomeComponent {}

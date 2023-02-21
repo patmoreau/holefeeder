@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;

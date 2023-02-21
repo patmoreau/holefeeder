@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
@@ -45,8 +45,8 @@ public class ImportData : ICarterModule
                     };
                     commandsScheduler.SendNow(internalRequest, nameof(ImportData));
 
-                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = internalRequest.RequestId},
-                        new {Id = internalRequest.RequestId});
+                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new { Id = internalRequest.RequestId },
+                        new { Id = internalRequest.RequestId });
                 })
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -78,7 +78,7 @@ public class ImportData : ICarterModule
             {
                 await _context.BeginTransactionAsync(cancellationToken);
 
-                UpdateProgress(request.RequestId, _importDataStatus with {Status = CommandStatus.InProgress});
+                UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.InProgress });
                 await ImportAccountsAsync(request, cancellationToken);
                 await ImportCategoriesAsync(request, cancellationToken);
                 await ImportCashflowsAsync(request, cancellationToken);
@@ -86,13 +86,13 @@ public class ImportData : ICarterModule
 
                 await _context.CommitTransactionAsync(cancellationToken);
 
-                UpdateProgress(request.RequestId, _importDataStatus with {Status = CommandStatus.Completed});
+                UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.Completed });
             }
 #pragma warning disable CA1031
             catch (Exception e)
             {
                 UpdateProgress(request.RequestId,
-                    _importDataStatus with {Status = CommandStatus.Error, Message = e.ToString()});
+                    _importDataStatus with { Status = CommandStatus.Error, Message = e.ToString() });
                 await _context.RollbackTransactionAsync(cancellationToken);
             }
 #pragma warning restore CA1031
@@ -116,7 +116,8 @@ public class ImportData : ICarterModule
 
             _importDataStatus = _importDataStatus with
             {
-                Status = CommandStatus.InProgress, AccountsTotal = accounts.Length
+                Status = CommandStatus.InProgress,
+                AccountsTotal = accounts.Length
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
@@ -181,7 +182,8 @@ public class ImportData : ICarterModule
 
             _importDataStatus = _importDataStatus with
             {
-                Status = CommandStatus.InProgress, CategoriesTotal = categories.Length
+                Status = CommandStatus.InProgress,
+                CategoriesTotal = categories.Length
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
@@ -245,7 +247,8 @@ public class ImportData : ICarterModule
 
             _importDataStatus = _importDataStatus with
             {
-                Status = CommandStatus.InProgress, CashflowsTotal = cashflows.Length
+                Status = CommandStatus.InProgress,
+                CashflowsTotal = cashflows.Length
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
@@ -322,7 +325,8 @@ public class ImportData : ICarterModule
 
             _importDataStatus = _importDataStatus with
             {
-                Status = CommandStatus.InProgress, TransactionsTotal = transactions.Length
+                Status = CommandStatus.InProgress,
+                TransactionsTotal = transactions.Length
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 

@@ -7,10 +7,10 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
+using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -106,6 +106,6 @@ public class ScenarioGetTransaction : BaseScenario
 
     private async Task WhenUserGetTransaction(Guid id)
     {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object?[] {id.ToString()});
+        await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object?[] { id.ToString() });
     }
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BaseApiService } from './base-api.service';
 
-const apiRoute: string = 'api/v2/categories';
+const apiRoute = 'api/v2/categories';
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsApiService extends BaseApiService {
@@ -25,13 +25,13 @@ export class StatisticsApiService extends BaseApiService {
   }
 
   find(settings: Settings): Observable<Statistics<ICategoryInfo>[]> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('effectiveDate', `${settings.effectiveDate.toISOString()}`)
       .set('intervalType', `${settings.intervalType}`)
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}/statistics`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}/statistics`, {
         params: params,
       })
       .pipe(
@@ -44,13 +44,13 @@ export class StatisticsApiService extends BaseApiService {
     id: string,
     settings: Settings
   ): Observable<Statistics<ICategoryInfo>[]> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('effectiveDate', `${settings.effectiveDate.toISOString()}`)
       .set('intervalType', `${settings.intervalType}`)
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}/${id}/statistics`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}/${id}/statistics`, {
         params: params,
       })
       .pipe(

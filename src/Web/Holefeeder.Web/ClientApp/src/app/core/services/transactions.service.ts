@@ -16,7 +16,7 @@ import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TransactionDetailAdapter } from '../adapters';
 
-const apiRoute: string = 'api/v2/transactions';
+const apiRoute = 'api/v2/transactions';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
@@ -49,7 +49,7 @@ export class TransactionsService {
       });
     }
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

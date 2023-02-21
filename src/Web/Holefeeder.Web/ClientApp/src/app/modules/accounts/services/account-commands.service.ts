@@ -10,7 +10,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { OpenAccountCommand } from '../models/open-account-command.model';
 
-const apiRoute: string = 'api/v2/accounts';
+const apiRoute = 'api/v2/accounts';
 
 @Injectable({ providedIn: 'root' })
 export class AccountCommandsService {

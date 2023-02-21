@@ -23,19 +23,19 @@ internal class StoreItemBuilder : IBuilder<StoreItem>
 
     public StoreItemBuilder WithId(Guid id)
     {
-        _entity = _entity with {Id = id};
+        _entity = _entity with { Id = id };
         return this;
     }
 
     public StoreItemBuilder WithCode(string code)
     {
-        _entity = _entity with {Code = code};
+        _entity = _entity with { Code = code };
         return this;
     }
 
     public StoreItemBuilder ForUser(Guid userId)
     {
-        _entity = _entity with {UserId = userId};
+        _entity = _entity with { UserId = userId };
         return this;
     }
 }

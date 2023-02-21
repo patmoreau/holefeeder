@@ -4,7 +4,7 @@ import { CategoryAdapter } from '@app/core/adapters';
 import { Category } from '@app/shared/models';
 import { map, Observable } from 'rxjs';
 
-const apiRoute: string = 'api/v2/categories';
+const apiRoute = 'api/v2/categories';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesApiService {

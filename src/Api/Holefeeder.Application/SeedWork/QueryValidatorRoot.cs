@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application.SeedWork;
+namespace Holefeeder.Application.SeedWork;
 
 public abstract class QueryValidatorRoot<TRequest> : AbstractValidator<TRequest>
     where TRequest : IRequestQuery

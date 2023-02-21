@@ -34,7 +34,7 @@ export class ToastsService extends StateService<ToastsState> {
   ) {
     super(initialState);
 
-    let subscription = this.messages.listen
+    const subscription = this.messages.listen
       .pipe(
         tapTrace(),
         filter(

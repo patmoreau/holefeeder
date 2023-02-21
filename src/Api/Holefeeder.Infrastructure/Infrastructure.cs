@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Infrastructure;
+namespace Holefeeder.Infrastructure;
 
 public sealed class Infrastructure
 {

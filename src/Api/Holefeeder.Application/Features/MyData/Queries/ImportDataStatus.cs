@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Features.MyData.Exceptions;
+using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 
 using Microsoft.AspNetCore.Builder;

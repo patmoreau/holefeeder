@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Domain.Features.StoreItem;
+namespace Holefeeder.Domain.Features.StoreItem;
 
 #pragma warning disable CA1032
 public class ObjectStoreDomainException : DomainException<StoreItem>

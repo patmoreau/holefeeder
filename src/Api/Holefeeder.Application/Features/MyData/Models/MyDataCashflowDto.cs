@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.Application.Features.MyData.Models;
 

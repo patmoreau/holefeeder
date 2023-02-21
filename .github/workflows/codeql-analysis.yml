@@ -19,6 +19,7 @@ on:
         "docs/**",
         ".vscode/**",
         "**/ci-cd.yml",
+        "**/linter.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
       ]
@@ -30,6 +31,7 @@ on:
         "docs/**",
         ".vscode/**",
         "**/ci-cd.yml",
+        "**/linter.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
       ]

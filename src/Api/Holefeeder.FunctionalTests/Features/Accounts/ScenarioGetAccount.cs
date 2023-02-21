@@ -7,10 +7,10 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
+using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -143,6 +143,6 @@ public class ScenarioGetAccount : BaseScenario
 
     private async Task WhenUserGetAccount(Guid id)
     {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object?[] {id.ToString()});
+        await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object?[] { id.ToString() });
     }
 }

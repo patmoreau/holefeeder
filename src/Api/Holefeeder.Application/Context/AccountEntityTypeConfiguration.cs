@@ -13,7 +13,7 @@ internal class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
             .ToTable("accounts")
             .HasKey(e => e.Id);
         builder
-            .HasIndex(e => new {e.Id, e.UserId})
+            .HasIndex(e => new { e.Id, e.UserId })
             .IsUnique();
         builder
             .Property(e => e.Id)

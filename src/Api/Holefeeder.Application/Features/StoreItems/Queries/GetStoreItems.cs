@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;

@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Extensions;
 
 using Microsoft.Extensions.Logging;
 

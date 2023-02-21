@@ -29,6 +29,7 @@ export abstract class BaseFormControlWithValidatorComponent<T>
     this.onValidationChangeFn = fn;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onValidationChangeFn: any = () => {};
 
   public onChange() {
