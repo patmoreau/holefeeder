@@ -25,7 +25,7 @@ jobs:
 
       - name: Lint code with ESLint
         id: lint
-        run: yarn lint --format node_modules/eslint-formatter-github --cwd src/Web/Holefeeder.Web/ClientApp > eslint-report.md
+        run: yarn run lint --cwd src/Web/Holefeeder.Web/ClientApp --format node_modules/eslint-formatter-github > eslint-report.md
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v2
