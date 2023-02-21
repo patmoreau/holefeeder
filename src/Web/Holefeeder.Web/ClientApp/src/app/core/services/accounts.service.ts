@@ -92,7 +92,7 @@ export class AccountsService extends StateService<AccountState> {
       .append('sort', 'name');
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

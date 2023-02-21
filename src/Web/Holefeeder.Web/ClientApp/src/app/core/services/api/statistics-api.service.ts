@@ -31,7 +31,7 @@ export class StatisticsApiService extends BaseApiService {
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}/statistics`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}/statistics`, {
         params: params,
       })
       .pipe(
@@ -50,7 +50,7 @@ export class StatisticsApiService extends BaseApiService {
       .set('frequency', `${settings.intervalType}`);
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}/${id}/statistics`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}/${id}/statistics`, {
         params: params,
       })
       .pipe(

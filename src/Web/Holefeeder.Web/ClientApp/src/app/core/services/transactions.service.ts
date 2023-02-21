@@ -49,7 +49,7 @@ export class TransactionsService {
       });
     }
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

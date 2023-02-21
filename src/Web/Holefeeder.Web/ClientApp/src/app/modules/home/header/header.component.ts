@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { logger } from '@app/core/logger';
 import {
@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   settings$: Observable<Settings> | undefined;
   period$: Observable<DateInterval> | undefined;
 
@@ -53,23 +53,18 @@ export class HeaderComponent implements OnInit {
     this.period$ = this.settingsService.period$;
   }
 
-  ngOnInit() {}
-
   open(content: any, period: DateInterval) {
     this.setCalendar(period);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(
-        _ => {
-          this.settingsService.setPeriod(
-            new DateInterval(
-              this.getDate(this.fromDate!),
-              this.getDate(this.toDate!)
-            )
-          );
-        },
-        _ => {}
-      );
+      .result.then(_ => {
+        this.settingsService.setPeriod(
+          new DateInterval(
+            this.getDate(this.fromDate!),
+            this.getDate(this.toDate!)
+          )
+        );
+      });
   }
 
   nextPeriod() {

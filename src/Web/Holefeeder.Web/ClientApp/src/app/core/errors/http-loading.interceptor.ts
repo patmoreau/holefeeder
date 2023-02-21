@@ -13,8 +13,6 @@ const retryWaitMilliSeconds = 5000;
 
 @Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
-  constructor() {}
-
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler

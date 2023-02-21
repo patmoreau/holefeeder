@@ -40,6 +40,7 @@ export class AccountComponent implements OnInit {
   }
 
   @trace()
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   saveProfile(formValues: any): void {}
 
   cancel() {

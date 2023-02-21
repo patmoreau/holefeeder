@@ -71,7 +71,7 @@ export class CashflowsService extends StateService<CashflowState> {
       });
     }
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })
@@ -125,7 +125,7 @@ export class CashflowsService extends StateService<CashflowState> {
     const params = new HttpParams().append('sort', 'description');
 
     return this.http
-      .get<Object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

@@ -16,7 +16,12 @@ export class Statistics<T> {
 export class StatisticsAdapter<T> implements Adapter<Statistics<T>> {
   constructor(private adapter: SeriesAdapter) {}
 
-  adapt(item: any): Statistics<T> {
+  adapt(item: {
+    item: T;
+    yearly: unknown[];
+    monthly: unknown[];
+    period: unknown[];
+  }): Statistics<T> {
     return new Statistics<T>(
       item.item,
       item.yearly.map(this.adapter.adapt),

@@ -3,7 +3,7 @@ import { Adapter, PagingInfo } from '@app/shared/models';
 import { throwError } from 'rxjs';
 
 export function mapToPagingInfo<T>(
-  resp: HttpResponse<Object[]>,
+  resp: HttpResponse<object[]>,
   adapter: Adapter<T>
 ): PagingInfo<T> {
   const totalCount = +(
