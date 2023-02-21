@@ -13,7 +13,7 @@
     "analyze": "source-map-explorer dist/**/*.js",
     "watch": "ng build --watch --configuration development",
     "mock:server": "json-server mocks/data.json --routes mocks/routes.json --watch -m ./node_modules/json-server-auth",
-    "lint": "eslint --fix \"src/**/*.ts\"",
+    "lint": "eslint --fix \"src/**/*.ts\" --ext \"src/**/*.html\" --ext \"src/**/*.scss\"",
     "test": "ng test"
   },
   "private": true,
@@ -65,6 +65,7 @@
     "codelyzer": "^6.0.2",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-formatter-github": "^1.0.11",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^40.0.0",
     "eslint-plugin-prefer-arrow-functions": "^3.1.4",

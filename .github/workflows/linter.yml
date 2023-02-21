@@ -21,17 +21,17 @@ jobs:
           node-version: "14.x"
 
       - name: Install dependencies
-        run: yarn install
+        run: cd src/Web/Holefeeder.Web/ClientApp & yarn install
 
       - name: Lint code with ESLint
         id: lint
-        run: yarn eslint --ext .ts,.html,.scss --format node_modules/eslint-formatter-gitlab src/Web/Holefeeder.Web/ClientApp > eslint-report.json
+        run: cd src/Web/Holefeeder.Web/ClientApp & yarn lint --format node_modules/eslint-formatter-gitlab > eslint-report.md
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v2
         with:
           name: ESLint report
-          path: eslint-report.json
+          path: eslint-report.md
 
       - name: Check for errors
         if: ${{ steps.lint.outcome != 'success' }}
