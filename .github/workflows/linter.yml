@@ -8,25 +8,39 @@ on:
 
   workflow_dispatch:
 jobs:
-  lint:
+  typescript:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint code with ESLint
+        id: lint
+        run: yarn eslint --ext .ts,.html,.scss --format node_modules/eslint-formatter-gitlab src/Web/Holefeeder.Web/ClientApp > eslint-report.json
+
+      - name: Upload ESLint report
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESLint report
+          path: eslint-report.json
+
+      - name: Check for errors
+        if: ${{ steps.lint.outcome != 'success' }}
+        run: echo "::error::eslint found issues in the code. Please fix them."
+
+  csharp:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-
-      - name: Lint typescript files
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          VALIDATE_TYPESCRIPT_ES: true
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USER: ${{ github.actor }}
-          LOG_LEVEL: debug
-          RUN_LOCAL: true
-          LINTER_RULES: '{"typescript": {"files": ["src/web/clientapp/**/*.ts"]}}'
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3.0.3
