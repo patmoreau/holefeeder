@@ -21,11 +21,11 @@ jobs:
           node-version: "14.x"
 
       - name: Install dependencies
-        run: cd src/Web/Holefeeder.Web/ClientApp & yarn install
+        run: cd src/Web/Holefeeder.Web/ClientApp && yarn install
 
       - name: Lint code with ESLint
         id: lint
-        run: cd src/Web/Holefeeder.Web/ClientApp & yarn lint --format node_modules/eslint-formatter-gitlab > eslint-report.md
+        run: cd src/Web/Holefeeder.Web/ClientApp && yarn lint --format node_modules/eslint-formatter-gitlab > eslint-report.md
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v2
