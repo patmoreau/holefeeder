@@ -27,9 +27,7 @@ jobs:
       - name: Lint code with ESLint
         id: lint
         working-directory: src/Web/Holefeeder.Web/ClientApp
-        run: yarn lint --format node_modules/eslint-formatter-github > ./eslint-report.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn lint --format node_modules/eslint-formatter-pretty > ./eslint-report.md
 
       - name: Print ESLint report
         if: always()
