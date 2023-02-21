@@ -12,12 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
 
       - name: Lint typescript files
-        uses: github/super-linter/slim@v4
+        uses: github/super-linter@v4
         env:
           VALIDATE_ALL_CODEBASE: false
-          VALIDATE_TYPESCRIPT: true
+          VALIDATE_TYPESCRIPT_ES: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_USER: ${{ github.actor }}
