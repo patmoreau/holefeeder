@@ -57,7 +57,7 @@ export class TransactionsListComponent implements OnInit {
   pageChanged(page: number) {
     this.router
       .navigate(['./'], {
-        queryParams: { page: this.currentPage },
+        queryParams: { page: page },
         relativeTo: this.route,
       })
       .then();
