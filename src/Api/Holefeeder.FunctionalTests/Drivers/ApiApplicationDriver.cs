@@ -1,14 +1,11 @@
 using AutoBogus;
-
 using Dapper;
-
 using Holefeeder.Application.Context;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.SeedWork;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -38,7 +35,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
             configBuilder.WithOverride(context => context.Faker.Finance.Amount());
         });
 
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
             .AddUserSecrets<ApiApplicationDriver>()
             .AddEnvironmentVariables()
@@ -49,7 +46,7 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
         builder
             .ConfigureTestServices(services =>
             {
-                var holefeederConnection =
+                string? holefeederConnection =
                     configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING);
                 services.AddDbContext<BudgetingContext>(options =>
                     options.UseMySql(ServerVersion.AutoDetect(holefeederConnection)));

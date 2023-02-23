@@ -1,4 +1,4 @@
-using Holefeeder.Domain.Features.Transactions;
+﻿using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Tests.Common.Factories;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
@@ -44,7 +44,7 @@ public class TransactionTests
     {
         // arrange
         _factory.RuleFor(transaction => transaction.Amount,
-            faker => faker.Finance.Amount(Decimal.MinValue, Decimal.MinusOne));
+            faker => faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
 
         // act
         Action action = () => _ = _factory.Generate();
@@ -108,10 +108,10 @@ public class TransactionTests
     public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
     {
         // arrange
-        var transaction = _factory.Generate();
+        Transaction? transaction = _factory.Generate();
 
         // act
-        var result = transaction.SetTags(Array.Empty<string>());
+        Transaction result = transaction.SetTags(Array.Empty<string>());
 
         // assert
         result.Tags.Should().BeEmpty();
@@ -121,11 +121,11 @@ public class TransactionTests
     public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
     {
         // arrange
-        var transaction = _factory.Generate();
-        var newTags = AutoFaker.Generate<string[]>();
+        Transaction? transaction = _factory.Generate();
+        string[]? newTags = AutoFaker.Generate<string[]>();
 
         // act
-        var result = transaction.SetTags(newTags);
+        Transaction result = transaction.SetTags(newTags);
 
         // assert
         result.Tags.Should().Contain(newTags);
@@ -135,7 +135,7 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenCashflowIdEmpty_ThenThrowException()
     {
         // arrange
-        var transaction = _factory.Generate();
+        Transaction? transaction = _factory.Generate();
 
         // act
         Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, AutoFaker.Generate<DateTime>());
@@ -151,7 +151,7 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenDateIsMissing_ThenThrowException()
     {
         // arrange
-        var transaction = _factory.Generate();
+        Transaction? transaction = _factory.Generate();
 
         // act
         Action action = () => _ = transaction.ApplyCashflow(AutoFaker.Generate<Guid>(), default);
@@ -167,12 +167,12 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenValid_ThenSetTransaction()
     {
         // arrange
-        var transaction = _factory.Generate();
-        var cashflowId = AutoFaker.Generate<Guid>();
-        var cashflowDate = AutoFaker.Generate<DateTime>();
+        Transaction? transaction = _factory.Generate();
+        Guid cashflowId = AutoFaker.Generate<Guid>();
+        DateTime cashflowDate = AutoFaker.Generate<DateTime>();
 
         // act
-        var result = transaction.ApplyCashflow(cashflowId, cashflowDate);
+        Transaction result = transaction.ApplyCashflow(cashflowId, cashflowDate);
 
         // assert
         using (new AssertionScope())

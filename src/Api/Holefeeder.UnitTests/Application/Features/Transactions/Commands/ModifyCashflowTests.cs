@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
@@ -12,12 +11,12 @@ public class ModifyCashflowTests
     public async Task GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
+        Request? request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
@@ -27,13 +26,13 @@ public class ModifyCashflowTests
     public async Task GivenValidator_WhenAmountIsNotGreaterThanZero_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(decimal.MinValue, decimal.Zero))
+        Request? request = _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(decimal.MinValue, decimal.Zero))
             .Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Amount);
@@ -43,12 +42,12 @@ public class ModifyCashflowTests
     public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = _faker.Generate();
+        Request? request = _faker.Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

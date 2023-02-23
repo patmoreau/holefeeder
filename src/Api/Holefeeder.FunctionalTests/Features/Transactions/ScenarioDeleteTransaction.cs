@@ -1,10 +1,10 @@
 using System.Net;
-
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -28,7 +28,7 @@ public class ScenarioDeleteTransaction : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidDeleteTransactionRequest().Build();
+        Request request = GivenAnInvalidDeleteTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -40,7 +40,7 @@ public class ScenarioDeleteTransaction : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenADeleteTransactionRequest().Build();
+        Request request = GivenADeleteTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -52,7 +52,7 @@ public class ScenarioDeleteTransaction : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenADeleteTransactionRequest().Build();
+        Request request = GivenADeleteTransactionRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -64,7 +64,7 @@ public class ScenarioDeleteTransaction : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenADeleteTransactionRequest().Build();
+        Request request = GivenADeleteTransactionRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -76,20 +76,20 @@ public class ScenarioDeleteTransaction : BaseScenario
     [Fact]
     public async Task WhenDeletingATransaction()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var transaction = await GivenATransaction()
+        Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
+        Request request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
 
         GivenUserIsAuthorized();
 
@@ -97,13 +97,10 @@ public class ScenarioDeleteTransaction : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+        Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request)
-    {
-        await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
-    }
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
 }

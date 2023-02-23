@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 using Holefeeder.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Extensions;
@@ -17,10 +16,8 @@ public class DateHelperTests
 
     [Theory]
     [MemberData(nameof(ToPersistentTestCases))]
-    public void ToPersistent_DateTimeValue_ReturnsString(DateTime dateTime, string expected)
-    {
+    public void ToPersistent_DateTimeValue_ReturnsString(DateTime dateTime, string expected) =>
         dateTime.ToPersistent().Should().Be(expected);
-    }
 
     public static IEnumerable<object[]> ToPersistentTestCases()
     {
@@ -30,8 +27,6 @@ public class DateHelperTests
 
     [Theory]
     [MemberData(nameof(ParsePersistentTestCases))]
-    public void ParsePersistent_StringValue_ReturnsDateTime(string dateTime, DateTime expected)
-    {
+    public void ParsePersistent_StringValue_ReturnsDateTime(string dateTime, DateTime expected) =>
         dateTime.ParsePersistent().Should().Be(expected);
-    }
 }

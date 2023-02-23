@@ -1,5 +1,4 @@
 using System.Net;
-
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -21,15 +20,9 @@ public class ScenarioGetDateIntervalTypes : BaseScenario
         await WhenUserGetEnumeration();
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
-        ThenAssertAll(() =>
-        {
-            result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count);
-        });
+        DateIntervalType[]? result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
+        ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration()
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetDateIntervalTypes);
-    }
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetDateIntervalTypes);
 }

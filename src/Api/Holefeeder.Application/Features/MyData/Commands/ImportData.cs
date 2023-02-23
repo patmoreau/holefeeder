@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.MyData.Models;
@@ -9,7 +8,6 @@ using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,26 +15,25 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-
 using ValidationException = FluentValidation.ValidationException;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Holefeeder.Application.Features.MyData.Commands;
 
 public class ImportData : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/my-data/import-data",
                 [DisableRequestSizeLimit] (Request request, IUserContext userContext, IValidator<Request> validator,
                     CommandsScheduler commandsScheduler) =>
                 {
-                    var validation = validator.Validate(request);
+                    ValidationResult? validation = validator.Validate(request);
                     if (!validation.IsValid)
                     {
                         throw new ValidationException(validation.Errors);
                     }
 
-                    var internalRequest = new InternalRequest
+                    InternalRequest internalRequest = new InternalRequest
                     {
                         RequestId = Guid.NewGuid(),
                         UpdateExisting = request.UpdateExisting,
@@ -55,13 +52,12 @@ public class ImportData : ICarterModule
             .WithTags(nameof(MyData))
             .WithName(nameof(ImportData))
             .RequireAuthorization();
-    }
 
     internal class Handler : IRequestHandler<InternalRequest, Unit>
     {
         private readonly BudgetingContext _context;
-        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<Handler> _logger;
+        private readonly IMemoryCache _memoryCache;
 
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
@@ -100,10 +96,8 @@ public class ImportData : ICarterModule
             return Unit.Value;
         }
 
-        private void UpdateProgress(Guid requestId, ImportDataStatusDto response)
-        {
+        private void UpdateProgress(Guid requestId, ImportDataStatusDto response) =>
             _memoryCache.Set(requestId, response, TimeSpan.FromHours(1));
-        }
 
         private async Task ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
@@ -112,7 +106,7 @@ public class ImportData : ICarterModule
                 return;
             }
 
-            var accounts = request.Data.Accounts;
+            MyDataAccountDto[] accounts = request.Data.Accounts;
 
             _importDataStatus = _importDataStatus with
             {
@@ -121,9 +115,9 @@ public class ImportData : ICarterModule
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
-            foreach (var element in accounts)
+            foreach (MyDataAccountDto element in accounts)
             {
-                var exists = await _context.Accounts
+                Account? exists = await _context.Accounts
                     .SingleOrDefaultAsync(account => account.Id == element.Id && account.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
@@ -150,13 +144,14 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    var account = new Account(element.Id, element.Type, element.Name, element.OpenDate, request.UserId)
-                    {
-                        Favorite = element.Favorite,
-                        OpenBalance = element.OpenBalance,
-                        Description = element.Description,
-                        Inactive = element.Inactive
-                    };
+                    Account account =
+                        new Account(element.Id, element.Type, element.Name, element.OpenDate, request.UserId)
+                        {
+                            Favorite = element.Favorite,
+                            OpenBalance = element.OpenBalance,
+                            Description = element.Description,
+                            Inactive = element.Inactive
+                        };
                     _logger.LogAccount("Create", account);
                     await _context.Accounts.AddAsync(account, cancellationToken);
                 }
@@ -178,7 +173,7 @@ public class ImportData : ICarterModule
                 return;
             }
 
-            var categories = request.Data.Categories;
+            MyDataCategoryDto[] categories = request.Data.Categories;
 
             _importDataStatus = _importDataStatus with
             {
@@ -187,9 +182,9 @@ public class ImportData : ICarterModule
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
-            foreach (var element in categories)
+            foreach (MyDataCategoryDto element in categories)
             {
-                var exists = await _context.Categories
+                Category? exists = await _context.Categories
                     .SingleOrDefaultAsync(category => category.Id == element.Id && category.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
@@ -215,7 +210,7 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    var category = new Category(element.Id, element.Type, element.Name, request.UserId)
+                    Category category = new Category(element.Id, element.Type, element.Name, request.UserId)
                     {
                         Favorite = element.Favorite,
                         System = element.System,
@@ -243,7 +238,7 @@ public class ImportData : ICarterModule
                 return;
             }
 
-            var cashflows = request.Data.Cashflows;
+            MyDataCashflowDto[] cashflows = request.Data.Cashflows;
 
             _importDataStatus = _importDataStatus with
             {
@@ -252,9 +247,9 @@ public class ImportData : ICarterModule
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
-            foreach (var element in cashflows)
+            foreach (MyDataCashflowDto element in cashflows)
             {
-                var exists = await _context.Cashflows
+                Cashflow? exists = await _context.Cashflows
                     .SingleOrDefaultAsync(cashflow => cashflow.Id == element.Id && cashflow.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
@@ -284,7 +279,7 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    var cashflow = new Cashflow
+                    Cashflow cashflow = new Cashflow
                     {
                         Id = element.Id,
                         EffectiveDate = element.EffectiveDate,
@@ -321,7 +316,7 @@ public class ImportData : ICarterModule
                 return;
             }
 
-            var transactions = request.Data.Transactions;
+            MyDataTransactionDto[] transactions = request.Data.Transactions;
 
             _importDataStatus = _importDataStatus with
             {
@@ -330,9 +325,9 @@ public class ImportData : ICarterModule
             };
             UpdateProgress(request.RequestId, _importDataStatus);
 
-            foreach (var element in transactions)
+            foreach (MyDataTransactionDto element in transactions)
             {
-                var exists = await _context.Transactions
+                Transaction? exists = await _context.Transactions
                     .SingleOrDefaultAsync(
                         transaction => transaction.Id == element.Id && transaction.UserId == request.UserId,
                         cancellationToken);
@@ -360,7 +355,7 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    var transaction = Transaction.Create(element.Id,
+                    Transaction transaction = Transaction.Create(element.Id,
                         element.Date,
                         element.Amount,
                         element.Description,
@@ -392,8 +387,7 @@ public class ImportData : ICarterModule
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator()
-        {
+        public Validator() =>
             RuleFor(command => command.Data)
                 .NotNull()
                 .Must(data =>
@@ -402,7 +396,6 @@ public class ImportData : ICarterModule
                     data.Cashflows.Any() ||
                     data.Transactions.Any())
                 .WithMessage("must contain at least 1 array of accounts|categories|cashflows|transactions");
-        }
     }
 
     internal record Request : IRequest<Unit>

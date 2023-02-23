@@ -1,4 +1,4 @@
-using Holefeeder.Application.SeedWork;
+﻿using Holefeeder.Application.SeedWork;
 
 namespace Holefeeder.Application.Features.MyData.Models;
 
@@ -10,8 +10,5 @@ public record ImportDataStatusDto(
     int TransactionsProcessed = 0, int TransactionsTotal = 0,
     string Message = "")
 {
-    public static ImportDataStatusDto Init()
-    {
-        return new ImportDataStatusDto(CommandStatus.Initializing);
-    }
+    public static ImportDataStatusDto Init() => new ImportDataStatusDto(CommandStatus.Initializing);
 }

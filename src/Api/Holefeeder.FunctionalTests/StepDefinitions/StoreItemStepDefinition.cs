@@ -1,5 +1,4 @@
 using System.Text.Json;
-
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -9,10 +8,8 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class StoreItemStepDefinition : BaseStepDefinition
 {
-    public StoreItemStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
-    {
+    public StoreItemStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver) =>
         HttpClientDriver = httpClientDriver;
-    }
 
     private HttpClientDriver HttpClientDriver { get; }
 
@@ -20,7 +17,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
     {
         AddStep(() =>
         {
-            var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
+            string json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
             return HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
         });
 
@@ -31,7 +28,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
     {
         AddStep(() =>
         {
-            var json = JsonSerializer.Serialize(request ?? new ModifyStoreItemRequestBuilder().Build());
+            string json = JsonSerializer.Serialize(request ?? new ModifyStoreItemRequestBuilder().Build());
             return HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
         });
 

@@ -21,7 +21,7 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
         return _faker.Generate(count).ToArray();
     }
 
-    public Category[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
+    public Category[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
 
     public static CategoryBuilder GivenACategory() => new();
 

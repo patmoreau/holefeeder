@@ -1,15 +1,13 @@
 using System.Globalization;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-
 using Nito.AsyncEx;
 
 namespace Holefeeder.FunctionalTests.Features;
@@ -27,7 +25,10 @@ public abstract partial class BaseScenario : IAsyncLifetime
     private readonly BudgetingDatabaseInitializer _budgetingDatabaseInitializer;
     private readonly ITestOutputHelper _testOutputHelper;
 
-    protected BaseScenario(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+    private BudgetingDatabaseDriver? _databaseDriver;
+
+    protected BaseScenario(ApiApplicationDriver apiApplicationDriver,
+        BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
     {
         if (apiApplicationDriver == null)
         {
@@ -48,12 +49,8 @@ public abstract partial class BaseScenario : IAsyncLifetime
 
     private IServiceScope Scope { get; }
 
-    private BudgetingDatabaseDriver? _databaseDriver;
-
-    protected BudgetingDatabaseDriver DatabaseDriver
-    {
-        get => _databaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
-    }
+    protected BudgetingDatabaseDriver DatabaseDriver =>
+        _databaseDriver ??= Scope.ServiceProvider.GetRequiredService<BudgetingDatabaseDriver>();
 
     protected HttpClientDriver HttpClientDriver { get; }
 
@@ -61,25 +58,31 @@ public abstract partial class BaseScenario : IAsyncLifetime
     protected TransactionStepDefinition Transaction { get; }
     protected UserStepDefinition User { get; }
 
-    protected void GivenUserIsUnauthorized()
+    public async Task InitializeAsync()
     {
-        HttpClientDriver.UnAuthenticate();
+        // Version for reset every test
+        using (await _mutex.LockAsync())
+        {
+            await _budgetingDatabaseInitializer.ResetCheckpoint();
+        }
     }
 
-    protected void GivenUserIsAuthorized()
+    public Task DisposeAsync()
     {
-        HttpClientDriver.Authenticate();
+        Scope.Dispose();
+        return Task.CompletedTask;
     }
 
-    protected void GivenForbiddenUserIsAuthorized()
-    {
-        HttpClientDriver.AuthenticateUser(Guid.NewGuid());
-    }
+    protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
+
+    protected void GivenUserIsAuthorized() => HttpClientDriver.Authenticate();
+
+    protected void GivenForbiddenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(Guid.NewGuid());
 
     protected Task WhenUserTriesToQuery(ApiResources apiResource, int? offset = null, int? limit = null,
         string? sorts = null, string? filters = null)
     {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         if (offset is not null)
         {
             sb.Append(CultureInfo.InvariantCulture, $"offset={offset}&");
@@ -92,7 +95,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
 
         if (!string.IsNullOrWhiteSpace(sorts))
         {
-            foreach (var sort in sorts.Split(';'))
+            foreach (string sort in sorts.Split(';'))
             {
                 sb.Append(CultureInfo.InvariantCulture, $"sort={sort}&");
             }
@@ -100,7 +103,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
 
         if (!string.IsNullOrWhiteSpace(filters))
         {
-            foreach (var filter in filters.Split(';'))
+            foreach (string filter in filters.Split(';'))
             {
                 sb.Append(CultureInfo.InvariantCulture, $"filter={filter}&");
             }
@@ -110,44 +113,31 @@ public abstract partial class BaseScenario : IAsyncLifetime
             sb.Length == 0 ? null : sb.Remove(sb.Length - 1, 1).ToString());
     }
 
-    protected void ThenShouldNotHaveInternalServerError()
-    {
+    protected void ThenShouldNotHaveInternalServerError() =>
         HttpClientDriver.ShouldHaveResponseWithStatus(statusCode => statusCode != HttpStatusCode.InternalServerError);
-    }
 
-    protected void ThenUserShouldBeAuthorizedToAccessEndpoint()
-    {
-        CheckAuthorizationStatus(true);
-    }
+    protected void ThenUserShouldBeAuthorizedToAccessEndpoint() => CheckAuthorizationStatus(true);
 
-    protected void ShouldBeForbiddenToAccessEndpoint()
-    {
-        CheckAuthorizationStatus(false);
-    }
+    protected void ShouldBeForbiddenToAccessEndpoint() => CheckAuthorizationStatus(false);
 
-    protected void ShouldNotBeAuthorizedToAccessEndpoint()
-    {
-        CheckAuthorizationStatus(false);
-    }
+    protected void ShouldNotBeAuthorizedToAccessEndpoint() => CheckAuthorizationStatus(false);
 
     protected TContent ThenShouldReceive<TContent>()
     {
-        var result = HttpClientDriver.DeserializeContent<TContent>();
+        TContent? result = HttpClientDriver.DeserializeContent<TContent>();
         result.Should().NotBeNull();
         return result!;
     }
 
-    protected void ThenShouldExpectStatusCode(HttpStatusCode expectedStatusCode)
-    {
+    protected void ThenShouldExpectStatusCode(HttpStatusCode expectedStatusCode) =>
         HttpClientDriver.ShouldHaveResponseWithStatus(expectedStatusCode);
-    }
 
     protected void ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode expectedStatusCode,
         string errorMessage)
     {
         ThenShouldExpectStatusCode(expectedStatusCode);
 
-        var problemDetails = HttpClientDriver.DeserializeContent<ProblemDetails>();
+        ProblemDetails? problemDetails = HttpClientDriver.DeserializeContent<ProblemDetails>();
         problemDetails.Should().NotBeNull();
         problemDetails?.Detail.Should().Be(errorMessage);
     }
@@ -156,19 +146,19 @@ public abstract partial class BaseScenario : IAsyncLifetime
     {
         ThenShouldExpectStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        var problemDetails = HttpClientDriver.DeserializeContent<ValidationProblemDetails>();
+        ValidationProblemDetails? problemDetails = HttpClientDriver.DeserializeContent<ValidationProblemDetails>();
         problemDetails.Should().NotBeNull();
         problemDetails?.Title.Should().Be(errorMessage);
     }
 
     protected Guid ThenShouldGetTheRouteOfTheNewResourceInTheHeader()
     {
-        var headers = HttpClientDriver.ResponseMessage!.Headers;
+        HttpResponseHeaders headers = HttpClientDriver.ResponseMessage!.Headers;
 
         headers.Should().ContainKey("Location");
 
-        var responseString = headers.GetValues("Location").Single();
-        var match = MyRegex().Match(responseString);
+        string responseString = headers.GetValues("Location").Single();
+        Match match = MyRegex().Match(responseString);
 
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
@@ -182,7 +172,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
             throw new ArgumentNullException(nameof(assertions));
         }
 
-        using var scope = new AssertionScope();
+        using AssertionScope scope = new AssertionScope();
         assertions();
     }
 
@@ -195,7 +185,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
             throw new ArgumentNullException(nameof(assertions));
         }
 
-        using var scope = new AssertionScope();
+        using AssertionScope scope = new AssertionScope();
         assertions();
     }
 
@@ -218,7 +208,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
             throw new ArgumentNullException(nameof(scenario));
         }
 
-        var player = ScenarioPlayer.Create(description, _testOutputHelper);
+        ScenarioPlayer player = ScenarioPlayer.Create(description, _testOutputHelper);
 
         scenario(player);
 
@@ -227,19 +217,4 @@ public abstract partial class BaseScenario : IAsyncLifetime
 
     [GeneratedRegex("[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?")]
     private static partial Regex MyRegex();
-
-    public async Task InitializeAsync()
-    {
-        // Version for reset every test
-        using (await _mutex.LockAsync())
-        {
-            await _budgetingDatabaseInitializer.ResetCheckpoint();
-        }
-    }
-
-    public Task DisposeAsync()
-    {
-        Scope.Dispose();
-        return Task.CompletedTask;
-    }
 }

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -31,24 +30,18 @@ public class AuthenticationSystemDriver
         _azureB2C.Dispose();
     }
 
-    public void SetupValidToken()
-    {
-        SetToken(VALID_TOKEN);
-    }
+    public void SetupValidToken() => SetToken(VALID_TOKEN);
 
-    public void SetupInvalidToken()
-    {
-        SetToken(string.Empty);
-    }
+    public void SetupInvalidToken() => SetToken(string.Empty);
 
     private void SetToken(string accessToken)
     {
         Debug.Assert(_azureB2C != null, nameof(_azureB2C) + " != null");
-        var token = "{\"access_token\": " +
-                    $"\"{accessToken}\"," +
-                    "\"expires_in\": 900," +
-                    "\"token_type\": \"Bearer\"," +
-                    "\"scope\": \"holefeeder.user\"}";
+        string token = "{\"access_token\": " +
+                       $"\"{accessToken}\"," +
+                       "\"expires_in\": 900," +
+                       "\"token_type\": \"Bearer\"," +
+                       "\"scope\": \"holefeeder.user\"}";
         _azureB2C.Given(Request.Create()).RespondWith(Response.Create().WithBody(token));
     }
 

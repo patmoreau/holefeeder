@@ -1,9 +1,7 @@
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
-
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
-
 using CreateRequest = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 using ModifyRequest = Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.Request;
 

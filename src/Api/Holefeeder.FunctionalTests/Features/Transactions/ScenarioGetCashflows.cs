@@ -1,13 +1,11 @@
 using System.Net;
-
 using Bogus;
-
 using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -65,14 +63,14 @@ public class ScenarioGetCashflows : BaseScenario
     [Fact]
     public async Task WhenCashflowsExistsSortedByDescriptionDesc()
     {
-        var faker = new Faker();
-        var count = faker.Random.Int(2, 10);
+        Faker faker = new Faker();
+        int count = faker.Random.Int(2, 10);
 
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
@@ -88,7 +86,7 @@ public class ScenarioGetCashflows : BaseScenario
         await WhenUserTriesToQuery(ApiResources.GetCashflows, sorts: "-description");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel[]>();
+        CashflowInfoViewModel[]? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Description);
     }
 }

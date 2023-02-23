@@ -7,36 +7,28 @@ public abstract class BaseStepDefinition
     private readonly HttpClientDriver _httpClientDriver;
     private readonly List<Action> _steps = new();
 
-    protected BaseStepDefinition(HttpClientDriver httpClientDriver)
-    {
-        _httpClientDriver = httpClientDriver;
-    }
+    protected BaseStepDefinition(HttpClientDriver httpClientDriver) => _httpClientDriver = httpClientDriver;
 
-    protected void AddStep(Action action)
-    {
-        _steps.Add(action);
-    }
+    protected void AddStep(Action action) => _steps.Add(action);
 
-    protected void AddStep(Func<Task> action)
-    {
-        AddStep(() => action().Wait());
-    }
+    protected void AddStep(Func<Task> action) => AddStep(() => action().Wait());
 
     protected void ExecuteSteps()
     {
-        var steps = _steps.ToList();
+        List<Action> steps = _steps.ToList();
         _steps.Clear();
 
-        foreach (var step in steps)
+        foreach (Action step in steps)
         {
             step();
         }
     }
+
     public Guid WithCreatedId()
     {
         ExecuteSteps();
 
-        var result = _httpClientDriver.DeserializeContent<Created>();
+        Created? result = _httpClientDriver.DeserializeContent<Created>();
 
         result.Should().NotBeNull();
 
@@ -47,7 +39,7 @@ public abstract class BaseStepDefinition
     {
         ExecuteSteps();
 
-        var result = _httpClientDriver.DeserializeContent<TResult>();
+        TResult? result = _httpClientDriver.DeserializeContent<TResult>();
         result.Should().NotBeNull();
 
         return result!;

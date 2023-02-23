@@ -1,6 +1,6 @@
-using Holefeeder.Application.SeedWork;
-
+﻿using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace Holefeeder.Application.Extensions;
 
@@ -14,12 +14,12 @@ internal static class HttpContextExtensions
         const string sortKey = "sort";
         const string filterKey = "filter";
 
-        var hasOffset = int.TryParse(context.Request.Query[offsetKey], out var offset);
-        var hasLimit = int.TryParse(context.Request.Query[limitKey], out var limit);
-        var sort = context.Request.Query[sortKey];
-        var filter = context.Request.Query[filterKey];
+        bool hasOffset = int.TryParse(context.Request.Query[offsetKey], out int offset);
+        bool hasLimit = int.TryParse(context.Request.Query[limitKey], out int limit);
+        StringValues sort = context.Request.Query[sortKey];
+        StringValues filter = context.Request.Query[filterKey];
 
-        var result = createInstance(hasOffset ? offset : QueryParams.DEFAULT_OFFSET,
+        TRequest? result = createInstance(hasOffset ? offset : QueryParams.DEFAULT_OFFSET,
             hasLimit ? limit : QueryParams.DEFAULT_LIMIT, sort!, filter!);
 
         return ValueTask.FromResult(result);

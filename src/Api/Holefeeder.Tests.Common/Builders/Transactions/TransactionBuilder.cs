@@ -13,6 +13,20 @@ internal class TransactionBuilder : IBuilder<Transaction>, ICollectionBuilder<Tr
         .RuleFor(x => x.Cashflow, _ => null)
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
+    public Transaction Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public Transaction[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
+
+    public Transaction[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
     public static TransactionBuilder GivenATransaction() => new();
 
     public TransactionBuilder OfAmount(decimal amount)
@@ -49,18 +63,4 @@ internal class TransactionBuilder : IBuilder<Transaction>, ICollectionBuilder<Tr
             .RuleFor(f => f.Category, entity);
         return this;
     }
-
-    public Transaction Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public Transaction[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-
-    public Transaction[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

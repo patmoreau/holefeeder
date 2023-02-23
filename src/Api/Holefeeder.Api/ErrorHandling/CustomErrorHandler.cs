@@ -1,13 +1,10 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-
 using FluentValidation;
-
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Exceptions;
 using Holefeeder.Domain.SeedWork;
-
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,26 +23,20 @@ public static class CustomErrorHandler
         return app;
     }
 
-    private static Task WriteDevelopmentResponse(HttpContext httpContext)
-    {
-        return WriteResponse(httpContext, true);
-    }
+    private static Task WriteDevelopmentResponse(HttpContext httpContext) => WriteResponse(httpContext, true);
 
-    private static Task WriteProductionResponse(HttpContext httpContext)
-    {
-        return WriteResponse(httpContext, false);
-    }
+    private static Task WriteProductionResponse(HttpContext httpContext) => WriteResponse(httpContext, false);
 
     private static async Task WriteResponse(HttpContext httpContext, bool includeDetails)
     {
-        var exceptionDetails = httpContext.Features.Get<IExceptionHandlerFeature>();
-        var ex = exceptionDetails?.Error;
+        IExceptionHandlerFeature? exceptionDetails = httpContext.Features.Get<IExceptionHandlerFeature>();
+        Exception? ex = exceptionDetails?.Error;
 
         if (ex != null)
         {
             httpContext.Response.ContentType = "application/problem+json";
 
-            var problem = ex switch
+            ProblemDetails problem = ex switch
             {
                 ValidationException validationException => CreateValidationProblemDetails(validationException
                     .ToDictionary()),
@@ -65,13 +56,9 @@ public static class CustomErrorHandler
         }
     }
 
-    private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details)
-    {
-        return new ProblemDetails { Status = statusCode, Title = title, Detail = details };
-    }
+    private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details) =>
+        new ProblemDetails { Status = statusCode, Title = title, Detail = details };
 
-    private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors)
-    {
-        return new ValidationProblemDetails(errors) { Status = StatusCodes.Status422UnprocessableEntity };
-    }
+    private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors) =>
+        new ValidationProblemDetails(errors) { Status = StatusCodes.Status422UnprocessableEntity };
 }

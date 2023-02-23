@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.Accounts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.Accounts.Commands;
 
 public class FavoriteAccount : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/accounts/favorite-account",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,12 +24,11 @@ public class FavoriteAccount : ICarterModule
             .WithTags(nameof(Accounts))
             .WithName(nameof(FavoriteAccount))
             .RequireAuthorization();
-    }
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -40,7 +38,7 @@ public class FavoriteAccount : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts
+            Account? account = await _context.Accounts
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (account is null)
             {
@@ -57,9 +55,6 @@ public class FavoriteAccount : ICarterModule
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEmpty();
-        }
+        public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
     }
 }

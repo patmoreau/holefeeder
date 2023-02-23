@@ -1,5 +1,4 @@
-using System.Collections.Immutable;
-
+﻿using System.Collections.Immutable;
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData.Models;
@@ -17,7 +16,7 @@ internal static class CashflowMapper
             return null;
         }
 
-        var model = new Cashflow
+        Cashflow model = new Cashflow
         {
             Id = entity.Id,
             AccountId = entity.AccountId,
@@ -35,14 +34,11 @@ internal static class CashflowMapper
         return model.SetTags(TagsMapper.Map(entity.Tags));
     }
 
-    public static CashflowInfoViewModel? MapToDtoOrNull(Cashflow? entity)
-    {
-        return entity is null ? null : MapToDto(entity);
-    }
+    public static CashflowInfoViewModel? MapToDtoOrNull(Cashflow? entity) => entity is null ? null : MapToDto(entity);
 
     public static CashflowInfoViewModel MapToDto(Cashflow entity)
     {
-        var dto = new CashflowInfoViewModel
+        CashflowInfoViewModel dto = new CashflowInfoViewModel
         {
             Id = entity.Id,
             Amount = entity.Amount,
@@ -60,14 +56,12 @@ internal static class CashflowMapper
         return dto;
     }
 
-    public static IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<Cashflow> entities)
-    {
-        return entities.Select(MapToDto);
-    }
+    public static IEnumerable<CashflowInfoViewModel> MapToDto(IEnumerable<Cashflow> entities) =>
+        entities.Select(MapToDto);
 
     public static MyDataCashflowDto MapToMyDataCashflowDto(Cashflow entity)
     {
-        var dto = new MyDataCashflowDto
+        MyDataCashflowDto dto = new MyDataCashflowDto
         {
             Id = entity.Id,
             Amount = entity.Amount,

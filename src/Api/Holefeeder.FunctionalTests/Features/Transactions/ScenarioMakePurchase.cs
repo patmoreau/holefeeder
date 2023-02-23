@@ -1,12 +1,10 @@
 using System.Net;
-
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
-
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -92,7 +90,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         Account account = null!;
         Category category = null!;
         Request request = null!;
-        var id = Guid.Empty;
+        Guid id = Guid.Empty;
 
         await ScenarioFor("making a valid purchase", player =>
         {
@@ -111,7 +109,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
                 })
                 .And("the purchase saved in the database should match the request", async () =>
                 {
-                    var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+                    Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
                     result.Should().NotBeNull($"because the TransactionId ({id}) was not found");
 

@@ -1,5 +1,4 @@
-using System.Collections.Immutable;
-
+﻿using System.Collections.Immutable;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
@@ -9,9 +8,8 @@ namespace Holefeeder.Application.Features.Accounts;
 
 internal static class AccountMapper
 {
-    public static MyDataAccountDto MapToMyDataAccountDto(Account entity)
-    {
-        return new MyDataAccountDto
+    public static MyDataAccountDto MapToMyDataAccountDto(Account entity) =>
+        new MyDataAccountDto
         {
             Id = entity.Id,
             Description = entity.Description,
@@ -22,16 +20,12 @@ internal static class AccountMapper
             Type = entity.Type,
             Inactive = entity.Inactive
         };
-    }
 
-    public static AccountInfoViewModel MapToAccountInfoViewModel(Account entity)
-    {
-        return new AccountInfoViewModel(entity.Id, entity.Name);
-    }
+    public static AccountInfoViewModel MapToAccountInfoViewModel(Account entity) =>
+        new AccountInfoViewModel(entity.Id, entity.Name);
 
-    public static AccountViewModel MapToAccountViewModel(Account entity)
-    {
-        return new AccountViewModel(
+    public static AccountViewModel MapToAccountViewModel(Account entity) =>
+        new AccountViewModel(
             entity.Id,
             entity.Type,
             entity.Name,
@@ -44,7 +38,6 @@ internal static class AccountMapper
             entity.Description,
             entity.Favorite,
             entity.Inactive);
-    }
 
     public static Account? MapToModelOrNull(Account? entity, IEnumerable<Cashflow>? cashflows = null)
     {
@@ -53,7 +46,7 @@ internal static class AccountMapper
             return null;
         }
 
-        var model = new Account(entity.Id, entity.Type, entity.Name, entity.OpenDate, entity.UserId)
+        Account model = new Account(entity.Id, entity.Type, entity.Name, entity.OpenDate, entity.UserId)
         {
             Favorite = entity.Favorite,
             Cashflows = cashflows?.ToImmutableArray() ?? ImmutableArray<Cashflow>.Empty,

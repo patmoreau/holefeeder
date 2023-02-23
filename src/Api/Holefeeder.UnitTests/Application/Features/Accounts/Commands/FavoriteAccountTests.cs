@@ -6,21 +6,18 @@ public class FavoriteAccountTests
 {
     private readonly Faker<Request> _faker;
 
-    public FavoriteAccountTests()
-    {
-        _faker = new AutoFaker<Request>();
-    }
+    public FavoriteAccountTests() => _faker = new AutoFaker<Request>();
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenValidationError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, _ => Guid.Empty).Generate();
+        Request? request = _faker.RuleFor(x => x.Id, _ => Guid.Empty).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = validator.TestValidate(request);
+        TestValidationResult<Request>? result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);

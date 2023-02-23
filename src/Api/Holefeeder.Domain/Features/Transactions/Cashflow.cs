@@ -1,4 +1,4 @@
-using Holefeeder.Domain.Enumerations;
+﻿using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
@@ -147,9 +147,8 @@ public record Cashflow : Entity, IAggregateRoot
     }
 
     public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
-        decimal amount, string description, Guid categoryId, Guid accountId, Guid userId)
-    {
-        return new Cashflow
+        decimal amount, string description, Guid categoryId, Guid accountId, Guid userId) =>
+        new Cashflow
         {
             Id = Guid.NewGuid(),
             EffectiveDate = effectiveDate,
@@ -162,7 +161,6 @@ public record Cashflow : Entity, IAggregateRoot
             CategoryId = categoryId,
             AccountId = accountId
         };
-    }
 
     public Cashflow Cancel()
     {
@@ -176,14 +174,14 @@ public record Cashflow : Entity, IAggregateRoot
 
     public Cashflow SetTags(params string[] tags)
     {
-        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+        List<string> newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
         Tags = newTags.ToImmutableArray();
         return this;
     }
 
     public IReadOnlyCollection<DateTime> GetUpcoming(DateTime to)
     {
-        var dates = new List<DateTime>();
+        List<DateTime> dates = new List<DateTime>();
 
         if (Inactive)
         {
@@ -197,10 +195,8 @@ public record Cashflow : Entity, IAggregateRoot
         return dates;
     }
 
-    private bool IsUnpaid(DateTime effectiveDate, DateTime nextDate)
-    {
-        return LastPaidDate is null
+    private bool IsUnpaid(DateTime effectiveDate, DateTime nextDate) =>
+        LastPaidDate is null
             ? nextDate >= effectiveDate
             : nextDate > LastPaidDate && nextDate > LastCashflowDate;
-    }
 }

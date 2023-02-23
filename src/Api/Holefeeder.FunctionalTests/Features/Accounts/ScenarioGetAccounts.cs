@@ -1,12 +1,9 @@
 using System.Net;
-
 using Bogus;
-
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
@@ -62,8 +59,8 @@ public class ScenarioGetAccounts : BaseScenario
     [Fact]
     public async Task WhenAccountsExistsSortedByNameDesc()
     {
-        var faker = new Faker();
-        var count = faker.Random.Int(2, 10);
+        Faker faker = new Faker();
+        int count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
@@ -77,7 +74,7 @@ public class ScenarioGetAccounts : BaseScenario
         await WhenUserTriesToQuery(ApiResources.GetAccounts, sorts: "-name");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
+        AccountViewModel[]? result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Name);
     }
 }

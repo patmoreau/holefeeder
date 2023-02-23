@@ -18,7 +18,7 @@ public class MockSchemeProvider : AuthenticationSchemeProvider
     {
         if (name == MockAuthenticationHandler.AUTHENTICATION_SCHEME)
         {
-            var scheme = new AuthenticationScheme(
+            AuthenticationScheme scheme = new AuthenticationScheme(
                 MockAuthenticationHandler.AUTHENTICATION_SCHEME,
                 MockAuthenticationHandler.AUTHENTICATION_SCHEME,
                 typeof(MockAuthenticationHandler));

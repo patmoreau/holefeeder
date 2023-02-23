@@ -1,10 +1,8 @@
 using System.Reflection;
-
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.SeedWork;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,12 +12,12 @@ namespace Holefeeder.Application.Features.Transactions.Queries;
 
 public class GetTransactions : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/transactions",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var (total, viewModels) = await mediator.Send(request, cancellationToken);
+                    (int total, IEnumerable<TransactionInfoViewModel> viewModels) =
+                        await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Add("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
@@ -31,15 +29,12 @@ public class GetTransactions : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(GetTransactions))
             .RequireAuthorization();
-    }
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<TransactionInfoViewModel>>, IRequestQuery
     {
-        public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
-        {
-            return context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
-        }
+        public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter) =>
+            context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
     }
 
     internal class Validator : QueryValidatorRoot<Request>
@@ -48,8 +43,8 @@ public class GetTransactions : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -60,8 +55,8 @@ public class GetTransactions : ICarterModule
         public async Task<QueryResult<TransactionInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            var total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
-            var items = await _context.Transactions
+            int total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            List<TransactionInfoViewModel> items = await _context.Transactions
                 .Include(e => e.Account)
                 .Include(e => e.Category)
                 .Where(e => e.UserId == _userContext.UserId)

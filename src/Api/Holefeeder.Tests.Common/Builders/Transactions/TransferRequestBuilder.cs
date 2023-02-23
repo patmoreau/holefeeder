@@ -1,5 +1,4 @@
 using Holefeeder.Domain.Features.Accounts;
-
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -30,7 +29,7 @@ internal class TransferRequestBuilder : IBuilder<Request>
 
     public static TransferRequestBuilder GivenAnInvalidTransfer()
     {
-        var builder = new TransferRequestBuilder();
+        TransferRequestBuilder builder = new TransferRequestBuilder();
         builder._faker.RuleFor(x => x.FromAccountId, Guid.Empty);
         return builder;
     }

@@ -1,8 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -12,12 +11,11 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class PayCashflow : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/transactions/pay-cashflow",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    Guid result = await mediator.Send(request, cancellationToken);
                     return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result });
                 })
             .Produces<Guid>(StatusCodes.Status204NoContent)
@@ -26,7 +24,6 @@ public class PayCashflow : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(PayCashflow))
             .RequireAuthorization();
-    }
 
     internal record Request : ICommandRequest<Guid>
     {
@@ -52,8 +49,8 @@ public class PayCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -63,14 +60,14 @@ public class PayCashflow : ICarterModule
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            var cashflow = await _context.Cashflows.SingleOrDefaultAsync(
+            Cashflow? cashflow = await _context.Cashflows.SingleOrDefaultAsync(
                 x => x.Id == request.CashflowId && x.UserId == _userContext.UserId, cancellationToken);
             if (cashflow is null)
             {
                 throw new ValidationException($"Cashflow '{request.CashflowId}' does not exists");
             }
 
-            var transaction = Transaction.Create(request.Date, request.Amount, cashflow.Description,
+            Transaction transaction = Transaction.Create(request.Date, request.Amount, cashflow.Description,
                     cashflow.AccountId, cashflow.CategoryId, _userContext.UserId)
                 .ApplyCashflow(request.CashflowId, request.CashflowDate);
 

@@ -1,11 +1,9 @@
 using System.Net;
 using System.Text.Json;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -23,7 +21,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var entity = GivenAnInvalidModifyAccountRequest()
+        Request entity = GivenAnInvalidModifyAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -36,7 +34,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenAccountNotFound()
     {
-        var request = GivenAModifyAccountRequest().Build();
+        Request request = GivenAModifyAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -48,7 +46,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var entity = GivenAModifyAccountRequest().Build();
+        Request entity = GivenAModifyAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -60,7 +58,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var entity = GivenAModifyAccountRequest().Build();
+        Request entity = GivenAModifyAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -72,7 +70,7 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var entity = GivenAModifyAccountRequest().Build();
+        Request entity = GivenAModifyAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -84,11 +82,11 @@ public class ScenarioModifyAccount : BaseScenario
     [Fact]
     public async Task WhenModifyAccount()
     {
-        var entity = await GivenAnActiveAccount()
+        Account entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenAModifyAccountRequest()
+        Request request = GivenAModifyAccountRequest()
             .WithId(entity.Id)
             .Build();
 
@@ -98,7 +96,7 @@ public class ScenarioModifyAccount : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
+        Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should()
             .NotBeNull()
             .And
@@ -107,7 +105,7 @@ public class ScenarioModifyAccount : BaseScenario
 
     private async Task WhenUserModifiesAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyAccount, json);
     }
 }

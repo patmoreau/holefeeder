@@ -1,5 +1,4 @@
 using Holefeeder.Domain.Features.Transactions;
-
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -30,7 +29,7 @@ internal class PayCashflowRequestBuilder : IBuilder<Request>
 
     public static PayCashflowRequestBuilder GivenAnInvalidCashflowPayment()
     {
-        var builder = new PayCashflowRequestBuilder();
+        PayCashflowRequestBuilder builder = new PayCashflowRequestBuilder();
         builder._faker.RuleFor(x => x.CashflowId, Guid.Empty);
         return builder;
     }

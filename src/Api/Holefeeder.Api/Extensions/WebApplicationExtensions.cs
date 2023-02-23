@@ -1,9 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-
 using HealthChecks.UI.Client;
-
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-
 using Serilog;
 
 namespace Holefeeder.Api.Extensions;

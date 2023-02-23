@@ -1,4 +1,4 @@
-using Holefeeder.Domain.Features.Accounts;
+﻿using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
@@ -120,20 +120,16 @@ public record Transaction : Entity, IAggregateRoot
     }
 
     public static Transaction Create(Guid id, DateTime date, decimal amount, string description, Guid accountId,
-        Guid categoryId, Guid userId)
-    {
-        return new Transaction(id, date, amount, accountId, categoryId, userId) { Description = description };
-    }
+        Guid categoryId, Guid userId) =>
+        new Transaction(id, date, amount, accountId, categoryId, userId) { Description = description };
 
     public static Transaction Create(DateTime date, decimal amount, string description, Guid accountId, Guid categoryId,
-        Guid userId)
-    {
-        return new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) { Description = description };
-    }
+        Guid userId) =>
+        new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) { Description = description };
 
     public Transaction SetTags(params string[] tags)
     {
-        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+        List<string> newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
         Tags = newTags.ToImmutableArray();
         return this;
@@ -150,6 +146,7 @@ public record Transaction : Entity, IAggregateRoot
         {
             throw new TransactionDomainException($"{nameof(CashflowDate)} is required", nameof(Transaction));
         }
+
         CashflowId = cashflowId;
         CashflowDate = cashflowDate;
         return this;

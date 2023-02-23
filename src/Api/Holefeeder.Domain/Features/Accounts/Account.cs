@@ -88,14 +88,12 @@ public sealed record Account : Entity, IAggregateRoot
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
     public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
-        string description, Guid userId)
-    {
-        return new Account(Guid.NewGuid(), type, name, openDate, userId)
+        string description, Guid userId) =>
+        new Account(Guid.NewGuid(), type, name, openDate, userId)
         {
             OpenBalance = openBalance,
             Description = description
         };
-    }
 
     public Account Close()
     {

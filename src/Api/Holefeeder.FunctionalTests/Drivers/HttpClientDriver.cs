@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-
 using Holefeeder.FunctionalTests.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Drivers;
@@ -29,8 +28,8 @@ public class HttpClientDriver
 
     public async Task SendGetRequest(ApiResources apiResource, string? query = null)
     {
-        var baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
-        var fullUri = baseUri;
+        Uri baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+        Uri fullUri = baseUri;
         if (query is not null)
         {
             fullUri = new Uri($"{fullUri}?{query}", fullUri.IsAbsoluteUri ? UriKind.Absolute : UriKind.Relative);
@@ -42,14 +41,14 @@ public class HttpClientDriver
 
     public async Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
     {
-        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
         using HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
         await SendRequest(request);
     }
 
     public async Task SendPostRequest(ApiResources apiResource, string? body = null)
     {
-        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
 
         using HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
         if (body is not null)
@@ -62,7 +61,7 @@ public class HttpClientDriver
 
     public async Task SendDeleteRequest(ApiResources apiResource, params object?[] parameters)
     {
-        var endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
         using HttpRequestMessage request = new(HttpMethod.Delete, endpointUri);
         await SendRequest(request);
     }
@@ -87,32 +86,24 @@ public class HttpClientDriver
 
     public T? DeserializeContent<T>()
     {
-        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+        string? resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
         if (resultAsString is null)
         {
             return default;
         }
 
-        var content = JsonSerializer.Deserialize<T>(resultAsString,
+        T? content = JsonSerializer.Deserialize<T>(resultAsString,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         return content;
     }
 
-    public void Authenticate()
-    {
-        AuthenticateUser(MockAuthenticationHandler.AuthorizedUserId);
-    }
+    public void Authenticate() => AuthenticateUser(MockAuthenticationHandler.AuthorizedUserId);
 
-    public void AuthenticateUser(Guid userId)
-    {
+    public void AuthenticateUser(Guid userId) =>
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId.ToString());
-    }
 
-    public void UnAuthenticate()
-    {
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-    }
+    public void UnAuthenticate() => _httpClient.DefaultRequestHeaders.Authorization = null;
 
     private void LogUnexpectedErrors()
     {
@@ -121,7 +112,7 @@ public class HttpClientDriver
             return;
         }
 
-        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+        string? resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
 
         _testOutputHelper.WriteLine($"HTTP 500 Response: {resultAsString ?? "<unknown>"}");
     }
@@ -133,7 +124,7 @@ public class HttpClientDriver
             return;
         }
 
-        var resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
+        string? resultAsString = ResponseMessage?.Content.ReadAsStringAsync().Result;
 
         _testOutputHelper.WriteLine(
             $"Unexpected HTTP {ResponseMessage?.StatusCode} Code with Response: {resultAsString ?? "<unknown>"}");

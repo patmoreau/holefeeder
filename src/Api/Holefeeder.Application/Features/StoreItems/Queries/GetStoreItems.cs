@@ -1,9 +1,7 @@
-using System.Reflection;
-
+﻿using System.Reflection;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.SeedWork;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -13,12 +11,11 @@ namespace Holefeeder.Application.Features.StoreItems.Queries;
 
 public class GetStoreItems : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/store-items",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var results = await mediator.Send(request, cancellationToken);
+                    QueryResult<Response> results = await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Add("X-Total-Count", $"{results.Total}");
                     return Results.Ok(results.Items);
                 })
@@ -30,15 +27,12 @@ public class GetStoreItems : ICarterModule
             .WithTags(nameof(StoreItems))
             .WithName(nameof(GetStoreItems))
             .RequireAuthorization();
-    }
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<Response>>, IRequestQuery
     {
-        public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
-        {
-            return context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
-        }
+        public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter) =>
+            context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
     }
 
     internal record Response(Guid Id, string Code, string Data);
@@ -49,8 +43,8 @@ public class GetStoreItems : ICarterModule
 
     internal class Handler : IRequestHandler<Request, QueryResult<Response>>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -60,8 +54,9 @@ public class GetStoreItems : ICarterModule
 
         public async Task<QueryResult<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var total = await _context.StoreItems.Where(e => e.UserId == _userContext.UserId).CountAsync(cancellationToken);
-            var items = await _context.StoreItems
+            int total = await _context.StoreItems.Where(e => e.UserId == _userContext.UserId)
+                .CountAsync(cancellationToken);
+            List<Response> items = await _context.StoreItems
                 .Where(e => e.UserId == _userContext.UserId)
                 .Filter(request.Filter)
                 .Sort(request.Sort)

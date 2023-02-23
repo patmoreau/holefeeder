@@ -1,12 +1,11 @@
 using System.Net;
-
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -74,17 +73,17 @@ public class ScenarioGetAccount : BaseScenario
     [Fact]
     public async Task WhenAccountExistsWithExpenses()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var transaction = await GivenATransaction()
+        Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
             .SavedInDb(DatabaseDriver);
@@ -94,7 +93,7 @@ public class ScenarioGetAccount : BaseScenario
         await WhenUserGetAccount(account.Id);
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel>();
+        AccountViewModel? result = HttpClientDriver.DeserializeContent<AccountViewModel>();
         ThenAssertAll(() =>
         {
             result.Should()
@@ -109,17 +108,17 @@ public class ScenarioGetAccount : BaseScenario
     [Fact]
     public async Task WhenAccountExistsWithGains()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Gain)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var transaction = await GivenATransaction()
+        Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
             .SavedInDb(DatabaseDriver);
@@ -129,7 +128,7 @@ public class ScenarioGetAccount : BaseScenario
         await WhenUserGetAccount(account.Id);
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel>();
+        AccountViewModel? result = HttpClientDriver.DeserializeContent<AccountViewModel>();
         ThenAssertAll(() =>
         {
             result.Should()
@@ -141,8 +140,5 @@ public class ScenarioGetAccount : BaseScenario
         });
     }
 
-    private async Task WhenUserGetAccount(Guid id)
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object?[] { id.ToString() });
-    }
+    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object?[] { id.ToString() });
 }

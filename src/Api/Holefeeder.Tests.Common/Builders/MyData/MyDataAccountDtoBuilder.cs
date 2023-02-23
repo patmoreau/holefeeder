@@ -8,8 +8,6 @@ internal sealed class MyDataAccountDtoBuilder : IBuilder<MyDataAccountDto>, ICol
     private readonly Faker<MyDataAccountDto> _faker = new AutoFaker<MyDataAccountDto>()
         .RuleFor(f => f.Type, faker => faker.PickRandom(AccountType.List.ToArray()));
 
-    public static MyDataAccountDtoBuilder GivenMyAccountData() => new();
-
     public MyDataAccountDto Build()
     {
         _faker.AssertConfigurationIsValid();
@@ -22,5 +20,7 @@ internal sealed class MyDataAccountDtoBuilder : IBuilder<MyDataAccountDto>, ICol
         return _faker.Generate(count).ToArray();
     }
 
-    public MyDataAccountDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
+    public MyDataAccountDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
+    public static MyDataAccountDtoBuilder GivenMyAccountData() => new();
 }

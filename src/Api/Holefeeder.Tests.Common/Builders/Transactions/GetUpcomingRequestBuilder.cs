@@ -30,7 +30,7 @@ internal class GetUpcomingRequestBuilder : IBuilder<Request>
 
     public static GetUpcomingRequestBuilder GivenAnInvalidUpcomingRequest()
     {
-        var builder = new GetUpcomingRequestBuilder();
+        GetUpcomingRequestBuilder builder = new GetUpcomingRequestBuilder();
         builder._faker
             .RuleFor(fake => fake.To, fake => fake.Date.Past().Date)
             .RuleFor(fake => fake.From, fake => fake.Date.Future().Date);

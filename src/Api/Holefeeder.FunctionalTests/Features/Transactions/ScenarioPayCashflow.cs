@@ -1,12 +1,10 @@
 using System.Net;
-
 using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
-
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -94,7 +92,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         Category category = null!;
         Cashflow cashflow = null!;
         Request request = null!;
-        var id = Guid.Empty;
+        Guid id = Guid.Empty;
 
         await ScenarioFor("paying a cashflow", player =>
         {
@@ -109,7 +107,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
                 .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
                 .And("the cashflow paid saved in the database should match the request", async () =>
                 {
-                    var result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+                    Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
 
                     result.Should().NotBeNull();
 

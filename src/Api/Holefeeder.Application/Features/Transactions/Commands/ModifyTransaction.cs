@@ -1,8 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -12,8 +11,7 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class ModifyTransaction : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/transactions/modify",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -26,7 +24,6 @@ public class ModifyTransaction : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(ModifyTransaction))
             .RequireAuthorization();
-    }
 
     internal record Request : ICommandRequest<Unit>
     {
@@ -59,8 +56,8 @@ public class ModifyTransaction : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -70,19 +67,19 @@ public class ModifyTransaction : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (!(await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
-                    cancellationToken)))
+            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
+                    cancellationToken))
             {
                 throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
 
-            if (!(await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
-                    cancellationToken)))
+            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
+                    cancellationToken))
             {
                 throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
             }
 
-            var exists =
+            Transaction? exists =
                 await _context.Transactions.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (exists is null)
@@ -90,7 +87,7 @@ public class ModifyTransaction : ICarterModule
                 throw new TransactionNotFoundException(request.Id);
             }
 
-            var transaction = exists with
+            Transaction transaction = exists with
             {
                 Date = request.Date,
                 Amount = request.Amount,

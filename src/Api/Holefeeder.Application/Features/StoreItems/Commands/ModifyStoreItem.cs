@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.StoreItem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.StoreItems.Commands;
 
 public class ModifyStoreItem : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/store-items/modify-store-item",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,7 +24,6 @@ public class ModifyStoreItem : ICarterModule
             .WithTags(nameof(StoreItems))
             .WithName(nameof(ModifyStoreItem))
             .RequireAuthorization();
-    }
 
     internal class Validator : AbstractValidator<Request>
     {
@@ -40,8 +38,8 @@ public class ModifyStoreItem : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -51,7 +49,7 @@ public class ModifyStoreItem : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var storeItem = await _context.StoreItems
+            StoreItem? storeItem = await _context.StoreItems
                 // .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (storeItem is null)

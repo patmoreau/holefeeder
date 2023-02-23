@@ -1,12 +1,11 @@
 using System.Net;
-
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -74,17 +73,17 @@ public class ScenarioGetCashflow : BaseScenario
     [Fact]
     public async Task WhenCashflowExists()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var cashflow = await GivenAnActiveCashflow()
+        Cashflow cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
@@ -95,7 +94,7 @@ public class ScenarioGetCashflow : BaseScenario
         await WhenUserGetCashflow(cashflow.Id);
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
+        CashflowInfoViewModel? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
         ThenAssertAll(() =>
         {
             result.Should()
@@ -105,8 +104,5 @@ public class ScenarioGetCashflow : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCashflow(Guid id)
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetCashflow, new object?[] { id.ToString() });
-    }
+    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetCashflow, new object?[] { id.ToString() });
 }

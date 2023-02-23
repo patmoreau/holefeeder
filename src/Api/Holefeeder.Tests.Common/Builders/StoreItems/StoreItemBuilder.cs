@@ -6,20 +6,11 @@ internal class StoreItemBuilder : IBuilder<StoreItem>
 {
     private StoreItem _entity;
 
-    private StoreItemBuilder()
-    {
-        _entity = new StoreItemFactory().Generate();
-    }
+    private StoreItemBuilder() => _entity = new StoreItemFactory().Generate();
 
-    public StoreItem Build()
-    {
-        return _entity;
-    }
+    public StoreItem Build() => _entity;
 
-    public static StoreItemBuilder GivenAStoreItem()
-    {
-        return new();
-    }
+    public static StoreItemBuilder GivenAStoreItem() => new StoreItemBuilder();
 
     public StoreItemBuilder WithId(Guid id)
     {

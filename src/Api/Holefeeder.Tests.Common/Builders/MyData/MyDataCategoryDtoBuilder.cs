@@ -8,8 +8,6 @@ internal sealed class MyDataCategoryDtoBuilder : IBuilder<MyDataCategoryDto>, IC
     private readonly Faker<MyDataCategoryDto> _faker = new AutoFaker<MyDataCategoryDto>()
         .RuleFor(f => f.Type, faker => faker.PickRandom(CategoryType.List.ToArray()));
 
-    public static MyDataCategoryDtoBuilder GivenMyCategoryData() => new();
-
     public MyDataCategoryDto Build()
     {
         _faker.AssertConfigurationIsValid();
@@ -22,5 +20,7 @@ internal sealed class MyDataCategoryDtoBuilder : IBuilder<MyDataCategoryDto>, IC
         return _faker.Generate(count).ToArray();
     }
 
-    public MyDataCategoryDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
+    public MyDataCategoryDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
+    public static MyDataCategoryDtoBuilder GivenMyCategoryData() => new();
 }

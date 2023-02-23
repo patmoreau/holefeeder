@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,7 +28,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
         }
 
         if (!AuthenticationHeaderValue.TryParse(Context.Request.Headers["Authorization"],
-                out var headerValue))
+                out AuthenticationHeaderValue? headerValue))
         {
             return Task.FromResult(AuthenticateResult.NoResult());
         }
@@ -44,7 +43,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
-        var claims = new List<Claim>
+        List<Claim> claims = new List<Claim>
         {
             new(ClaimTypes.Name, "Test user"), new(ClaimTypes.NameIdentifier, headerValue.Parameter)
         };
@@ -54,9 +53,9 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
             claims.Add(new Claim(ClaimConstants.Scope, "holefeeder.user"));
         }
 
-        var identity = new ClaimsIdentity(claims, AUTHENTICATION_SCHEME);
-        var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, AUTHENTICATION_SCHEME);
+        ClaimsIdentity identity = new ClaimsIdentity(claims, AUTHENTICATION_SCHEME);
+        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+        AuthenticationTicket ticket = new AuthenticationTicket(principal, AUTHENTICATION_SCHEME);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }

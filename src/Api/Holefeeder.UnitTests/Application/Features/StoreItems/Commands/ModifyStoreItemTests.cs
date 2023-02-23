@@ -1,4 +1,3 @@
-
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
@@ -10,12 +9,12 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = GivenAModifyStoreItemRequest().WithNoId().Build();
+        Request request = GivenAModifyStoreItemRequest().WithNoId().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = validator.TestValidate(request);
+        TestValidationResult<Request>? result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
@@ -25,12 +24,12 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
-        var request = GivenAModifyStoreItemRequest().WithNoData().Build();
+        Request request = GivenAModifyStoreItemRequest().WithNoData().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = validator.TestValidate(request);
+        TestValidationResult<Request>? result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Data);
@@ -40,12 +39,12 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = GivenAModifyStoreItemRequest().Build();
+        Request request = GivenAModifyStoreItemRequest().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = validator.TestValidate(request);
+        TestValidationResult<Request>? result = validator.TestValidate(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
@@ -10,9 +9,9 @@ public class StoreItemTests
     public void GivenStoreItem_WhenIdIsNull_ThenThrowException()
     {
         // arrange
-        var id = Guid.Empty;
-        var code = AutoFaker.Generate<string>();
-        var userId = AutoFaker.Generate<Guid>();
+        Guid id = Guid.Empty;
+        string? code = AutoFaker.Generate<string>();
+        Guid userId = AutoFaker.Generate<Guid>();
 
         // act
         Action action = () => _ = new StoreItem(id, code, userId);
@@ -32,8 +31,8 @@ public class StoreItemTests
     public void GivenStoreItem_WhenCodeIsNull_ThenThrowException(string code)
     {
         // arrange
-        var id = AutoFaker.Generate<Guid>();
-        var userId = AutoFaker.Generate<Guid>();
+        Guid id = AutoFaker.Generate<Guid>();
+        Guid userId = AutoFaker.Generate<Guid>();
 
         // act
         Action action = () => _ = new StoreItem(id, code, userId);
@@ -50,9 +49,9 @@ public class StoreItemTests
     public void GivenStoreItem_WhenUserIdIsNull_ThenThrowException()
     {
         // arrange
-        var id = AutoFaker.Generate<Guid>();
-        var code = AutoFaker.Generate<string>();
-        var userId = Guid.Empty;
+        Guid id = AutoFaker.Generate<Guid>();
+        string? code = AutoFaker.Generate<string>();
+        Guid userId = Guid.Empty;
 
         // act
         Action action = () => _ = new StoreItem(id, code, userId);
@@ -69,14 +68,14 @@ public class StoreItemTests
     public async Task GivenStoreItem_WhenValid_ThenValidEntity()
     {
         // arrange
-        var id = AutoFaker.Generate<Guid>();
-        var code = AutoFaker.Generate<string>();
-        var data = AutoFaker.Generate<string>();
-        var userId = AutoFaker.Generate<Guid>();
+        Guid id = AutoFaker.Generate<Guid>();
+        string? code = AutoFaker.Generate<string>();
+        string? data = AutoFaker.Generate<string>();
+        Guid userId = AutoFaker.Generate<Guid>();
 
         // act
         StoreItem item = null!;
-        var action = () =>
+        Func<Task> action = () =>
         {
             item = new StoreItem(id, code, userId) { Data = data };
             return Task.CompletedTask;

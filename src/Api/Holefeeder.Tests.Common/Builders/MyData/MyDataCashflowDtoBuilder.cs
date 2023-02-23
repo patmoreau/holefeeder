@@ -10,6 +10,20 @@ internal sealed class MyDataCashflowDtoBuilder : IBuilder<MyDataCashflowDto>, IC
         .RuleFor(f => f.Frequency, faker => faker.Random.Int(1))
         .RuleFor(f => f.Recurrence, faker => faker.Random.Int(0));
 
+    public MyDataCashflowDto Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public MyDataCashflowDto[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
+
+    public MyDataCashflowDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
     public static MyDataCashflowDtoBuilder GivenMyCashflowData() => new();
 
     public MyDataCashflowDtoBuilder WithAccount(MyDataAccountDto account)
@@ -23,18 +37,4 @@ internal sealed class MyDataCashflowDtoBuilder : IBuilder<MyDataCashflowDto>, IC
         _faker.RuleFor(f => f.CategoryId, category.Id);
         return this;
     }
-
-    public MyDataCashflowDto Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public MyDataCashflowDto[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-
-    public MyDataCashflowDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

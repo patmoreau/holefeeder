@@ -1,7 +1,6 @@
-using DbUp.Engine.Output;
+﻿using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.MySql;
-
 using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.SeedWork;
@@ -21,8 +20,8 @@ internal class MySqlConnectionManager : DatabaseConnectionManager
 
     public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
     {
-        var commandSplitter = new MySqlCommandSplitter();
-        var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
+        MySqlCommandSplitter commandSplitter = new MySqlCommandSplitter();
+        IEnumerable<string>? scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
         return scriptStatements;
     }
 }

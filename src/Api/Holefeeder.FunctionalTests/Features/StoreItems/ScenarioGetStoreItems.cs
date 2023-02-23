@@ -1,10 +1,8 @@
 using System.Net;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
@@ -81,7 +79,7 @@ public class ScenarioGetStoreItems : BaseScenario
         await WhenUserTriesToQuery(ApiResources.GetStoreItems, sorts: "-code");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
+        StoreItemViewModel[]? result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
         ThenAssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2);

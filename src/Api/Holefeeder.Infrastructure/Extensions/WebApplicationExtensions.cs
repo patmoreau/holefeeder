@@ -1,18 +1,16 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-
 using DbUp;
+using DbUp.Engine;
 using DbUp.MySql;
-
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using MySqlConnector;
 using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 
 namespace Holefeeder.Infrastructure.Extensions;
@@ -29,10 +27,12 @@ public static class WebApplicationExtensions
             throw new ArgumentNullException(nameof(app));
         }
 
-        using var scope = app.ApplicationServices.CreateScope();
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
 
-        var connectionStringBuilder = scope.ServiceProvider.GetRequiredService<BudgetingConnectionStringBuilder>();
-        var holefeederLogger = scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
+        BudgetingConnectionStringBuilder connectionStringBuilder =
+            scope.ServiceProvider.GetRequiredService<BudgetingConnectionStringBuilder>();
+        ILogger<BudgetingContext> holefeederLogger =
+            scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
 
         MigrateDb(connectionStringBuilder, holefeederLogger);
 
@@ -41,8 +41,8 @@ public static class WebApplicationExtensions
 
     private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
-        var completed = false;
-        var tryCount = 0;
+        bool completed = false;
+        int tryCount = 0;
 
         while (tryCount++ < 3 && !completed)
         {
@@ -64,7 +64,7 @@ public static class WebApplicationExtensions
         if (!completed)
         {
             throw new DataException(
-                $"Unable to perform database migration, no connection to server was found.");
+                "Unable to perform database migration, no connection to server was found.");
         }
 
         logger.LogMigrationSuccess();
@@ -74,13 +74,13 @@ public static class WebApplicationExtensions
     {
         lock (Locker)
         {
-            var builder = connectionStringBuilder.CreateBuilder();
+            MySqlConnectionStringBuilder builder = connectionStringBuilder.CreateBuilder();
 
-            var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
+            MySqlConnectionManager connectionManager = new MySqlConnectionManager(connectionStringBuilder);
 
             EnsureDatabase.For.MySqlDatabase(builder.ConnectionString);
 
-            var upgradeEngine = DeployChanges.To
+            UpgradeEngine? upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .JournalTo(new MySqlTableJournal(
@@ -89,7 +89,7 @@ public static class WebApplicationExtensions
                 .LogToConsole()
                 .Build();
 
-            var result = upgradeEngine.PerformUpgrade();
+            DatabaseUpgradeResult? result = upgradeEngine.PerformUpgrade();
             if (!result.Successful)
             {
                 throw result.Error;

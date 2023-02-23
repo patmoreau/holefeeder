@@ -1,5 +1,4 @@
 using System.Net;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -21,15 +20,9 @@ public class ScenarioGetAccountTypes : BaseScenario
         await WhenUserGetEnumeration();
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountType[]>();
-        ThenAssertAll(() =>
-        {
-            result.Should().NotBeNull().And.HaveCount(AccountType.List.Count);
-        });
+        AccountType[]? result = HttpClientDriver.DeserializeContent<AccountType[]>();
+        ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(AccountType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration()
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetAccountTypes);
-    }
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetAccountTypes);
 }

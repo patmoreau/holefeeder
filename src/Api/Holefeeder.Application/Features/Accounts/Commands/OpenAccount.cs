@@ -1,8 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -12,12 +11,11 @@ namespace Holefeeder.Application.Features.Accounts.Commands;
 
 public class OpenAccount : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/accounts/open-account",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    Guid result = await mediator.Send(request, cancellationToken);
                     return Results.CreatedAtRoute(nameof(GetAccount), new { Id = result }, new { Id = result });
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
@@ -26,7 +24,6 @@ public class OpenAccount : ICarterModule
             .WithTags(nameof(Accounts))
             .WithName(nameof(OpenAccount))
             .RequireAuthorization();
-    }
 
     internal record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
         : ICommandRequest<Guid>;
@@ -43,8 +40,8 @@ public class OpenAccount : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -60,7 +57,7 @@ public class OpenAccount : ICarterModule
                 throw new AccountDomainException($"Name '{request.Name}' already exists.");
             }
 
-            var account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
+            Account account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
                 request.Description, _userContext.UserId);
 
             await _context.Accounts.AddAsync(account, cancellationToken);

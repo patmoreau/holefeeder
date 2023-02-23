@@ -1,12 +1,11 @@
 using System.Net;
-
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -74,17 +73,17 @@ public class ScenarioGetTransaction : BaseScenario
     [Fact]
     public async Task WhenTransactionExists()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var transaction = await GivenATransaction()
+        Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
             .SavedInDb(DatabaseDriver);
@@ -94,7 +93,7 @@ public class ScenarioGetTransaction : BaseScenario
         await WhenUserGetTransaction(transaction.Id);
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel>();
+        TransactionInfoViewModel? result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel>();
         ThenAssertAll(() =>
         {
             result.Should()
@@ -104,8 +103,5 @@ public class ScenarioGetTransaction : BaseScenario
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id)
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object?[] { id.ToString() });
-    }
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object?[] { id.ToString() });
 }

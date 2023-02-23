@@ -1,5 +1,4 @@
-using System.Collections.Immutable;
-
+﻿using System.Collections.Immutable;
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData.Models;
@@ -17,7 +16,8 @@ internal static class TransactionMapper
             return null;
         }
 
-        var model = Transaction.Create(entity.Id, entity.Date, entity.Amount, entity.Description, entity.AccountId,
+        Transaction model = Transaction.Create(entity.Id, entity.Date, entity.Amount, entity.Description,
+            entity.AccountId,
             entity.CategoryId, entity.UserId);
 
         if (entity.CashflowId is not null)
@@ -30,7 +30,7 @@ internal static class TransactionMapper
 
     public static TransactionInfoViewModel MapToDto(Transaction entity)
     {
-        var dto = new TransactionInfoViewModel
+        TransactionInfoViewModel dto = new TransactionInfoViewModel
         {
             Id = entity.Id,
             Amount = entity.Amount,
@@ -44,14 +44,12 @@ internal static class TransactionMapper
         return dto;
     }
 
-    public static IEnumerable<TransactionInfoViewModel> MapToDto(IEnumerable<Transaction> entities)
-    {
-        return entities.Select(MapToDto);
-    }
+    public static IEnumerable<TransactionInfoViewModel> MapToDto(IEnumerable<Transaction> entities) =>
+        entities.Select(MapToDto);
 
     public static MyDataTransactionDto MapToMyDataTransactionDto(Transaction entity)
     {
-        var dto = new MyDataTransactionDto
+        MyDataTransactionDto dto = new MyDataTransactionDto
         {
             Id = entity.Id,
             Amount = entity.Amount,

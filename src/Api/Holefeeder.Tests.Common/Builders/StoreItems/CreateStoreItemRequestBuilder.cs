@@ -12,10 +12,7 @@ internal class CreateStoreItemRequestBuilder : IBuilder<Request>
         return _faker.Generate();
     }
 
-    public static CreateStoreItemRequestBuilder GivenACreateStoreItemRequest()
-    {
-        return new();
-    }
+    public static CreateStoreItemRequestBuilder GivenACreateStoreItemRequest() => new CreateStoreItemRequestBuilder();
 
     public CreateStoreItemRequestBuilder WithCode(string code)
     {

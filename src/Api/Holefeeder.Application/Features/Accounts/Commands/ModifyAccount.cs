@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.Accounts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.Accounts.Commands;
 
 public class ModifyAccount : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/accounts/modify-account",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,12 +24,11 @@ public class ModifyAccount : ICarterModule
             .WithTags(nameof(Accounts))
             .WithName(nameof(ModifyAccount))
             .RequireAuthorization();
-    }
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -40,7 +38,7 @@ public class ModifyAccount : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var exists = await _context.Accounts
+            Account? exists = await _context.Accounts
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (exists is null)
             {

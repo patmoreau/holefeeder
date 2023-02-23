@@ -1,10 +1,7 @@
 using System.Security.Claims;
-
 using Holefeeder.Application.SeedWork;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Web;
-
 using NSubstitute;
 
 namespace Holefeeder.UnitTests.Application.SeedWork;
@@ -18,7 +15,7 @@ public class UserContextTests
     public void GivenGetUserId_WhenUserHasNameIdentifierClaim_ThenReturnNameIdentifierClaim()
     {
         // arrange
-        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
@@ -28,7 +25,7 @@ public class UserContextTests
         };
 
         // act
-        var userContext = new UserContext(httpContextAccessor);
+        UserContext userContext = new UserContext(httpContextAccessor);
 
         // assert
         userContext.UserId.Should().Be(_idNameIdentifier);
@@ -38,14 +35,14 @@ public class UserContextTests
     public void GivenGetUserId_WhenUserHasSubClaim_ThenReturnSubClaim()
     {
         // arrange
-        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimConstants.Sub, _idSub.ToString()) }))
         };
 
         // act
-        var userContext = new UserContext(httpContextAccessor);
+        UserContext userContext = new UserContext(httpContextAccessor);
 
         // assert
         userContext.UserId.Should().Be(_idSub);
@@ -55,7 +52,7 @@ public class UserContextTests
     public void GivenGetUserId_WhenUserHasNameIdentifierAndSubClaim_ThenReturnNameIdentifierClaim()
     {
         // arrange
-        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
@@ -66,7 +63,7 @@ public class UserContextTests
         };
 
         // act
-        var userContext = new UserContext(httpContextAccessor);
+        UserContext userContext = new UserContext(httpContextAccessor);
 
         // assert
         userContext.UserId.Should().Be(_idNameIdentifier);
@@ -76,11 +73,11 @@ public class UserContextTests
     public void GivenGetUserId_WhenHttpContextIsNull_ThenReturnEmptyGuid()
     {
         // arrange
-        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = null;
 
         // act
-        var userContext = new UserContext(httpContextAccessor);
+        UserContext userContext = new UserContext(httpContextAccessor);
 
         // assert
         userContext.UserId.Should().Be(Guid.Empty);
@@ -90,11 +87,11 @@ public class UserContextTests
     public void GivenGetUserId_WhenUserHasNoClaims_ThenReturnEmptyGuid()
     {
         // arrange
-        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity()) };
 
         // act
-        var userContext = new UserContext(httpContextAccessor);
+        UserContext userContext = new UserContext(httpContextAccessor);
 
         // assert
         userContext.UserId.Should().Be(Guid.Empty);

@@ -1,5 +1,4 @@
-using Holefeeder.Application.Extensions;
-
+﻿using Holefeeder.Application.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.Application.Behaviors;
@@ -9,10 +8,7 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
-    {
-        _logger = logger;
-    }
+    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger) => _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
@@ -22,12 +18,12 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
             throw new ArgumentNullException(nameof(next));
         }
 
-        var requestName = typeof(TRequest).FullName ?? nameof(TRequest);
+        string requestName = typeof(TRequest).FullName ?? nameof(TRequest);
 
-        using var scope = _logger.BeginScope(request);
+        using IDisposable? scope = _logger.BeginScope(request);
 
         _logger.LogMediatrRequest(requestName, request);
-        var response = await next();
+        TResponse response = await next();
         _logger.LogMediatrResponse(requestName, response);
 
         return response;

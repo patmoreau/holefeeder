@@ -1,4 +1,4 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.SeedWork;
 
@@ -9,10 +9,7 @@ internal class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 {
     private readonly BudgetingContext _context;
 
-    public TransactionBehavior(BudgetingContext context)
-    {
-        _context = context;
-    }
+    public TransactionBehavior(BudgetingContext context) => _context = context;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
@@ -21,7 +18,7 @@ internal class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
         try
         {
-            var response = await next();
+            TResponse response = await next();
 
             await _context.CommitTransactionAsync(cancellationToken);
 

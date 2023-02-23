@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
@@ -20,8 +21,8 @@ public abstract class DbContextDriver
 
     private void RefreshAll()
     {
-        var entitiesList = DbContext.ChangeTracker.Entries().ToList();
-        foreach (var entity in entitiesList)
+        List<EntityEntry> entitiesList = DbContext.ChangeTracker.Entries().ToList();
+        foreach (EntityEntry entity in entitiesList)
         {
             entity.Reload();
         }

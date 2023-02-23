@@ -1,10 +1,9 @@
 using System.Net;
 using System.Text.Json;
-
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
@@ -21,7 +20,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var storeItem = GivenACreateStoreItemRequest()
+        Request storeItem = GivenACreateStoreItemRequest()
             .WithCode(string.Empty)
             .Build();
 
@@ -35,7 +34,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var storeItem = GivenACreateStoreItemRequest().Build();
+        Request storeItem = GivenACreateStoreItemRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -47,7 +46,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var storeItem = GivenACreateStoreItemRequest().Build();
+        Request storeItem = GivenACreateStoreItemRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -59,7 +58,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var storeItem = GivenACreateStoreItemRequest().Build();
+        Request storeItem = GivenACreateStoreItemRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -71,7 +70,7 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenCreateStoreItem()
     {
-        var storeItem = GivenACreateStoreItemRequest().Build();
+        Request storeItem = GivenACreateStoreItemRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -85,10 +84,10 @@ public class ScenarioCreateStoreItem : BaseScenario
     [Fact]
     public async Task WhenCodeAlreadyExist()
     {
-        var existingItem = await GivenAStoreItem()
+        StoreItem existingItem = await GivenAStoreItem()
             .SavedInDb(DatabaseDriver);
 
-        var storeItem = GivenACreateStoreItemRequest()
+        Request storeItem = GivenACreateStoreItemRequest()
             .WithCode(existingItem.Code)
             .Build();
 
@@ -101,7 +100,7 @@ public class ScenarioCreateStoreItem : BaseScenario
 
     private async Task WhenUserCreateStoreItem(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
     }
 }

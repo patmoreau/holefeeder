@@ -1,6 +1,5 @@
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -41,8 +40,8 @@ internal class MakePurchaseRequestBuilder : IBuilder<Request>
 internal class CashflowRequestBuilder : IBuilder<Request.CashflowRequest>
 {
     private readonly Faker<Request.CashflowRequest> _faker = new AutoFaker<Request.CashflowRequest>()
-        .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
-        .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0));
+        .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
+        .RuleFor(x => x.Recurrence, faker => faker.Random.Int(0));
 
     public Request.CashflowRequest Build()
     {

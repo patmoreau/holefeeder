@@ -1,11 +1,11 @@
 using System.Net;
 using System.Text.Json;
-
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -29,7 +29,7 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidModifyTransactionRequest().Build();
+        Request request = GivenAnInvalidModifyTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -41,7 +41,7 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenAModifyTransactionRequest().Build();
+        Request request = GivenAModifyTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -53,7 +53,7 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenAModifyTransactionRequest().Build();
+        Request request = GivenAModifyTransactionRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -65,7 +65,7 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenAModifyTransactionRequest().Build();
+        Request request = GivenAModifyTransactionRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -77,7 +77,7 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenAccountDoesNotExists()
     {
-        var request = GivenAModifyTransactionRequest().Build();
+        Request request = GivenAModifyTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -90,11 +90,11 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenCategoryDoesNotExists()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenAModifyTransactionRequest()
+        Request request = GivenAModifyTransactionRequest()
             .WithAccount(account).Build();
 
         GivenUserIsAuthorized();
@@ -108,15 +108,15 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenTransactionDoesNotExists()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenAModifyTransactionRequest()
+        Request request = GivenAModifyTransactionRequest()
             .WithAccount(account)
             .WithCategory(category)
             .Build();
@@ -132,22 +132,22 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenModifyATransaction()
     {
-        var accounts = await GivenAnActiveAccount()
+        Account[] accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        var categories = await GivenACategory()
+        Category[] categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        var transaction = await GivenATransaction()
+        Transaction transaction = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
             .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
-        var request = GivenAModifyTransactionRequest()
+        Request request = GivenAModifyTransactionRequest()
             .WithId(transaction.Id)
             .WithAccount(accounts[1])
             .WithCategory(categories[1])
@@ -157,14 +157,14 @@ public class ScenarioModifyTransaction : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+        Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
     private async Task WhenUserModifiedATransaction(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyTransaction, json);
     }
 }

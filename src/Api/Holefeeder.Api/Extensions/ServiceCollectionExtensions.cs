@@ -1,11 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-
 using Holefeeder.Api.Authorization;
 using Holefeeder.Api.Swagger;
 using Holefeeder.Infrastructure.SeedWork;
-
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -95,7 +92,7 @@ internal static class ServiceCollectionExtensions
     {
         services
             .AddHealthChecks()
-            .AddCheck("api", () => HealthCheckResult.Healthy(), tags: new[] { "holefeeder", "api", "service" })
+            .AddCheck("api", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "api", "service" })
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
                 "budgeting-db-check", tags: new[] { "holefeeder", "api", "mysql" });
 

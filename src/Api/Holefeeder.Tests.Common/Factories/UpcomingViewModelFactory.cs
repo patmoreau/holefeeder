@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-
 using Holefeeder.Application.Models;
 
 namespace Holefeeder.Tests.Common.Factories;

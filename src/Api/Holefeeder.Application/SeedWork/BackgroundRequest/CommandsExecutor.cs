@@ -1,26 +1,23 @@
 using System.ComponentModel;
 using System.Reflection;
-
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using System.Text.Json;
 
 namespace Holefeeder.Application.SeedWork.BackgroundRequest;
 
 internal class CommandsExecutor
 {
     private readonly IMediator _mediator;
-    public CommandsExecutor(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+
+    public CommandsExecutor(IMediator mediator) => _mediator = mediator;
 
     [DisplayName("Processing command {0}")]
     public async Task ExecuteCommand(MediatorSerializedObject mediatorSerializedObject)
     {
-        var type = Assembly.GetAssembly(typeof(Application))!.GetType(mediatorSerializedObject.FullTypeName);
+        Type? type = Assembly.GetAssembly(typeof(Application))!.GetType(mediatorSerializedObject.FullTypeName);
 
         if (type != null)
         {
-            var req = JsonSerializer.Deserialize(mediatorSerializedObject.Data, type);
+            object? req = JsonSerializer.Deserialize(mediatorSerializedObject.Data, type);
 
             await _mediator.Send((req as IRequest<Unit>)!);
         }

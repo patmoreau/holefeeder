@@ -67,8 +67,6 @@ public sealed record Category : Entity, IAggregateRoot
     }
 
     public static Category Create(CategoryType type, string name, decimal budgetAmount,
-        string description, Guid userId)
-    {
-        return new Category(Guid.NewGuid(), type, name, userId) { BudgetAmount = budgetAmount };
-    }
+        string description, Guid userId) =>
+        new Category(Guid.NewGuid(), type, name, userId) { BudgetAmount = budgetAmount };
 }

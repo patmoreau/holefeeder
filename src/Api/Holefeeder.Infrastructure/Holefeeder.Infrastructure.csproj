@@ -12,40 +12,40 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj" />
-    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
+    <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj"/>
+    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum.Dapper" Version="7.0.0" />
-    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="7.0.0" />
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
-    <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
-    <PackageReference Include="Dapper.Transaction" Version="2.0.123" />
-    <PackageReference Include="dbup-core" Version="5.0.10" />
-    <PackageReference Include="dbup-mysql" Version="5.0.10" />
-    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0" />
-    <PackageReference Include="MySqlConnector" Version="2.2.5" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="Ardalis.SmartEnum.Dapper" Version="7.0.0"/>
+    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="7.0.0"/>
+    <PackageReference Include="Dapper" Version="2.0.123"/>
+    <PackageReference Include="Dapper.FluentMap" Version="2.0.0"/>
+    <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78"/>
+    <PackageReference Include="Dapper.Transaction" Version="2.0.123"/>
+    <PackageReference Include="dbup-core" Version="5.0.10"/>
+    <PackageReference Include="dbup-mysql" Version="5.0.10"/>
+    <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="7.0.0"/>
+    <PackageReference Include="MySqlConnector" Version="2.2.5"/>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0"/>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5"/>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql" />
-    <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql" />
-    <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql" />
-    <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
-    <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
-    <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql" />
+    <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql"/>
+    <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql"/>
+    <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql"/>
+    <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql"/>
+    <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql"/>
+    <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql"/>
   </ItemGroup>
 
 </Project>

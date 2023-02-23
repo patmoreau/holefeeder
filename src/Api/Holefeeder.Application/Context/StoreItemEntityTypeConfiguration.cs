@@ -1,5 +1,4 @@
 using Holefeeder.Domain.Features.StoreItem;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

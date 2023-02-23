@@ -1,11 +1,9 @@
 using System.Net;
 using System.Text.Json;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -53,7 +51,7 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenACloseAccountRequest().Build();
+        Request request = GivenACloseAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -65,7 +63,7 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenACloseAccountRequest().Build();
+        Request request = GivenACloseAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -77,7 +75,7 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenACloseAccountRequest().Build();
+        Request request = GivenACloseAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -89,11 +87,11 @@ public class ScenarioCloseAccount : BaseScenario
     [Fact]
     public async Task WhenCloseAccount()
     {
-        var entity = await GivenAnActiveAccount()
+        Account entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenACloseAccountRequest()
+        Request request = GivenACloseAccountRequest()
             .WithId(entity.Id)
             .Build();
 
@@ -103,14 +101,14 @@ public class ScenarioCloseAccount : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
+        Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
         result!.Inactive.Should().BeTrue();
     }
 
     private async Task WhenUserClosesAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.CloseAccount, json);
     }
 }

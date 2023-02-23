@@ -1,5 +1,4 @@
 using System.Net;
-
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -21,15 +20,9 @@ public class ScenarioGetCategoryTypes : BaseScenario
         await WhenUserGetEnumeration();
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CategoryType[]>();
-        ThenAssertAll(() =>
-        {
-            result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count);
-        });
+        CategoryType[]? result = HttpClientDriver.DeserializeContent<CategoryType[]>();
+        ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration()
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetCategoryTypes);
-    }
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetCategoryTypes);
 }

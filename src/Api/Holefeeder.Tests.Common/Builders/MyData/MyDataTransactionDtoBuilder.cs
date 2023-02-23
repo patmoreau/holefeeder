@@ -9,6 +9,20 @@ internal sealed class MyDataTransactionDtoBuilder : IBuilder<MyDataTransactionDt
         .RuleFor(f => f.CashflowId, (Guid?)null)
         .RuleFor(f => f.CashflowDate, (DateTime?)null);
 
+    public MyDataTransactionDto Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public MyDataTransactionDto[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
+
+    public MyDataTransactionDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
     public static MyDataTransactionDtoBuilder GivenMyTransactionData() => new();
 
     public MyDataTransactionDtoBuilder WithAccount(MyDataAccountDto account)
@@ -22,17 +36,4 @@ internal sealed class MyDataTransactionDtoBuilder : IBuilder<MyDataTransactionDt
         _faker.RuleFor(f => f.CategoryId, category.Id);
         return this;
     }
-
-    public MyDataTransactionDto Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public MyDataTransactionDto[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-    public MyDataTransactionDto[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

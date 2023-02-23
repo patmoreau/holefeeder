@@ -1,12 +1,8 @@
 using System.Data;
 using System.Data.Common;
-
 using Holefeeder.Infrastructure.SeedWork;
-
 using Microsoft.Extensions.Configuration;
-
 using MySqlConnector;
-
 using Respawn;
 using Respawn.Graph;
 
@@ -15,18 +11,24 @@ namespace Holefeeder.FunctionalTests.Drivers;
 public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
 {
     private readonly string _connectionString;
-    private Respawner _respawner = default!;
     private DbConnection _connection = default!;
+    private Respawner _respawner = default!;
 
     public BudgetingDatabaseInitializer()
     {
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
             .AddUserSecrets<BudgetingDatabaseInitializer>()
             .AddEnvironmentVariables()
             .Build();
         _connectionString =
             configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!;
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        await _connection.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 
     public async Task InitializeAsync()
@@ -56,7 +58,10 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
                 throw;
             }
 
-            if (e.InnerException is not null && e.InnerException is not MySqlException { ErrorCode: MySqlErrorCode.UnknownDatabase })
+            if (e.InnerException is not null && e.InnerException is not MySqlException
+                {
+                    ErrorCode: MySqlErrorCode.UnknownDatabase
+                })
             {
                 Console.WriteLine(e);
                 throw;
@@ -64,23 +69,15 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
         }
     }
 
+    public Task DisposeAsync() => Task.CompletedTask;
+
     public async Task ResetCheckpoint()
     {
         if (_connection.State is ConnectionState.Closed or ConnectionState.Broken)
         {
-            await this.InitializeAsync();
+            await InitializeAsync();
         }
+
         await _respawner.ResetAsync(_connection);
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    async ValueTask IAsyncDisposable.DisposeAsync()
-    {
-        await _connection.DisposeAsync();
-        GC.SuppressFinalize(this);
     }
 }

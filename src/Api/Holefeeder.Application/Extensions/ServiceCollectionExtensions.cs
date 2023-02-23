@@ -1,12 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-
 using Hangfire;
 using Hangfire.MemoryStorage;
-
 using Holefeeder.Application.Behaviors;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Application.SeedWork.BackgroundRequest;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

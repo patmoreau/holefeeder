@@ -10,12 +10,12 @@ public class GetTransactionTests
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
+        Request? request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = validator.TestValidate(request);
+        TestValidationResult<Request>? result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);

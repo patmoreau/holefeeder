@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
@@ -8,21 +7,18 @@ public class MakePurchaseTests
 {
     private readonly AutoFaker<Request> _faker = new();
 
-    public MakePurchaseTests()
-    {
-        _faker.RuleFor(x => x.Cashflow, _ => null);
-    }
+    public MakePurchaseTests() => _faker.RuleFor(x => x.Cashflow, _ => null);
 
     [Fact]
     public async Task GivenValidator_WhenAccountIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.AccountId, Guid.Empty).Generate();
+        Request? request = _faker.RuleFor(x => x.AccountId, Guid.Empty).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.AccountId);
@@ -32,12 +28,12 @@ public class MakePurchaseTests
     public async Task GivenValidator_WhenCategoryIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.CategoryId, Guid.Empty).Generate();
+        Request? request = _faker.RuleFor(x => x.CategoryId, Guid.Empty).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.CategoryId);
@@ -47,12 +43,12 @@ public class MakePurchaseTests
     public async Task GivenValidator_WhenDateIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Date, _ => default).Generate();
+        Request? request = _faker.RuleFor(x => x.Date, _ => default).Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Date);
@@ -62,13 +58,13 @@ public class MakePurchaseTests
     public async Task GivenValidator_WhenAmountNotGreaterThanZero_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Amount, faker => faker.Random.Decimal(Decimal.MinValue, Decimal.Zero))
+        Request? request = _faker.RuleFor(x => x.Amount, faker => faker.Random.Decimal(decimal.MinValue, decimal.Zero))
             .Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Amount);
@@ -78,12 +74,12 @@ public class MakePurchaseTests
     public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = _faker.Generate();
+        Request? request = _faker.Generate();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

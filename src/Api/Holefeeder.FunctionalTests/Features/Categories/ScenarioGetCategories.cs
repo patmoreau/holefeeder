@@ -1,10 +1,9 @@
 using System.Net;
-
 using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
@@ -53,13 +52,13 @@ public class ScenarioGetCategories : BaseScenario
         const string firstName = nameof(firstName);
         const string secondName = nameof(secondName);
 
-        var firstCategory = await GivenACategory()
+        Category firstCategory = await GivenACategory()
             .WithName(firstName)
             .ForUser(AuthorizedUserId)
             .IsNotFavorite()
             .SavedInDb(DatabaseDriver);
 
-        var secondCategory = await GivenACategory()
+        Category secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(AuthorizedUserId)
             .IsFavorite()
@@ -70,7 +69,7 @@ public class ScenarioGetCategories : BaseScenario
         await WhenUserGetCategories();
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
+        CategoryViewModel[]? result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
         ThenAssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
@@ -81,8 +80,5 @@ public class ScenarioGetCategories : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCategories()
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetCategories);
-    }
+    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequest(ApiResources.GetCategories);
 }

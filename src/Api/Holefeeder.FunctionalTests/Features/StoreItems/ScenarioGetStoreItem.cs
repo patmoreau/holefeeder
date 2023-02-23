@@ -1,10 +1,9 @@
 using System.Net;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
@@ -70,7 +69,7 @@ public class ScenarioGetStoreItem : BaseScenario
     [Fact]
     public async Task WhenStoreItemExists()
     {
-        var storeItem = await GivenAStoreItem()
+        StoreItem storeItem = await GivenAStoreItem()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
@@ -79,7 +78,7 @@ public class ScenarioGetStoreItem : BaseScenario
         await WhenUserGetStoreItem(storeItem.Id);
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<StoreItemViewModel>();
+        StoreItemViewModel? result = HttpClientDriver.DeserializeContent<StoreItemViewModel>();
         ThenAssertAll(() =>
         {
             result.Should()
@@ -89,8 +88,5 @@ public class ScenarioGetStoreItem : BaseScenario
         });
     }
 
-    private async Task WhenUserGetStoreItem(Guid id)
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, new object?[] { id.ToString() });
-    }
+    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, new object?[] { id.ToString() });
 }

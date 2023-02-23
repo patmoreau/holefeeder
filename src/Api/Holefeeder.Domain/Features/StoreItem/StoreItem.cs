@@ -1,4 +1,4 @@
-namespace Holefeeder.Domain.Features.StoreItem;
+﻿namespace Holefeeder.Domain.Features.StoreItem;
 
 public sealed record StoreItem : Entity, IAggregateRoot
 {
@@ -57,8 +57,6 @@ public sealed record StoreItem : Entity, IAggregateRoot
         }
     }
 
-    public static StoreItem Create(string code, string data, Guid userId)
-    {
-        return new StoreItem(Guid.NewGuid(), code, userId) { Data = data };
-    }
+    public static StoreItem Create(string code, string data, Guid userId) =>
+        new StoreItem(Guid.NewGuid(), code, userId) { Data = data };
 }

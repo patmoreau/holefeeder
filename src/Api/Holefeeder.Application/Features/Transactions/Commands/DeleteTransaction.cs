@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class DeleteTransaction : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapDelete("api/v2/transactions/{id:guid}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,22 +24,18 @@ public class DeleteTransaction : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(DeleteTransaction))
             .RequireAuthorization();
-    }
 
     internal record Request(Guid Id) : ICommandRequest<Unit>;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEmpty();
-        }
+        public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
     }
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -50,7 +45,7 @@ public class DeleteTransaction : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var transaction =
+            Transaction? transaction =
                 await _context.Transactions.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
             if (transaction is null)

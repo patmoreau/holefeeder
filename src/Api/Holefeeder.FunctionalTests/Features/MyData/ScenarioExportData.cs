@@ -1,5 +1,4 @@
 using System.Net;
-
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -7,7 +6,6 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -56,21 +54,21 @@ public class ScenarioExportData : BaseScenario
     [Fact]
     public async Task WhenDataIsExported()
     {
-        var accounts = await GivenAnActiveAccount()
+        Account[] accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        var categories = await GivenACategory()
+        Category[] categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        var cashflows = await GivenAnActiveCashflow()
+        Cashflow[] cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        var transactions = await GivenATransaction()
+        Transaction[] transactions = await GivenATransaction()
             .ForAccount(accounts[0])
             .ForCategory(categories[0])
             .CollectionSavedInDb(DatabaseDriver, 2);
@@ -80,7 +78,7 @@ public class ScenarioExportData : BaseScenario
         await WhenUserExportsHisData();
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<ExportDataDto>();
+        ExportDataDto? result = HttpClientDriver.DeserializeContent<ExportDataDto>();
         ThenAssertAll(() =>
         {
             result.Should().NotBeNull();
@@ -114,8 +112,5 @@ public class ScenarioExportData : BaseScenario
         }
     }
 
-    private async Task WhenUserExportsHisData()
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.ExportData);
-    }
+    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequest(ApiResources.ExportData);
 }

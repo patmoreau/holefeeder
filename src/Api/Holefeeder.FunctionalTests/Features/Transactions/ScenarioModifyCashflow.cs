@@ -1,11 +1,11 @@
 using System.Net;
 using System.Text.Json;
-
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -29,8 +29,8 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidModifyCashflowRequest()
-            .OfAmount(Decimal.MinusOne)
+        Request request = GivenAnInvalidModifyCashflowRequest()
+            .OfAmount(decimal.MinusOne)
             .Build();
 
         GivenUserIsAuthorized();
@@ -43,7 +43,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenAModifyCashflowRequest().Build();
+        Request request = GivenAModifyCashflowRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -55,7 +55,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenAModifyCashflowRequest().Build();
+        Request request = GivenAModifyCashflowRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -67,7 +67,7 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenAModifyCashflowRequest().Build();
+        Request request = GivenAModifyCashflowRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -79,15 +79,15 @@ public class ScenarioModifyCashflow : BaseScenario
     [Fact]
     public async Task WhenModifyACashflow()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var cashflow = await GivenAnActiveCashflow()
+        Cashflow cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
@@ -95,7 +95,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         GivenUserIsAuthorized();
 
-        var request = GivenAModifyCashflowRequest()
+        Request request = GivenAModifyCashflowRequest()
             .WithId(cashflow.Id)
             .Build();
 
@@ -103,14 +103,14 @@ public class ScenarioModifyCashflow : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+        Cashflow? result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
     private async Task WhenUserModifiedACashflow(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
     }
 }

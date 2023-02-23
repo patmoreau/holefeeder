@@ -1,11 +1,9 @@
 using System.Net;
 using System.Text.Json;
-
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -23,7 +21,7 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidOpenAccountRequest()
+        Request request = GivenAnInvalidOpenAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -36,11 +34,11 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenAccountNameAlreadyExistsRequest()
     {
-        var entity = await GivenAnActiveAccount()
+        Account entity = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenAnOpenAccountRequest()
+        Request request = GivenAnOpenAccountRequest()
             .WithName(entity.Name)
             .Build();
 
@@ -54,7 +52,7 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenAnOpenAccountRequest().Build();
+        Request request = GivenAnOpenAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -66,7 +64,7 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenAnOpenAccountRequest().Build();
+        Request request = GivenAnOpenAccountRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -78,7 +76,7 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenAnOpenAccountRequest().Build();
+        Request request = GivenAnOpenAccountRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -90,7 +88,7 @@ public class ScenarioOpenAccount : BaseScenario
     [Fact]
     public async Task WhenOpenAccount()
     {
-        var request = GivenAnOpenAccountRequest()
+        Request request = GivenAnOpenAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -99,15 +97,15 @@ public class ScenarioOpenAccount : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.Created);
 
-        var id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
+        Guid id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
 
-        var result = await DatabaseDriver.FindByIdAsync<Account>(id);
+        Account? result = await DatabaseDriver.FindByIdAsync<Account>(id);
         result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
     }
 
     private async Task WhenUserOpensAnAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.OpenAccount, json);
     }
 }

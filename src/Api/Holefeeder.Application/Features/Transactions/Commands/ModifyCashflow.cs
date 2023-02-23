@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class ModifyCashflow : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/cashflows/modify",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,7 +24,6 @@ public class ModifyCashflow : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(ModifyCashflow))
             .RequireAuthorization();
-    }
 
     internal record Request : ICommandRequest<Unit>
     {
@@ -49,8 +47,8 @@ public class ModifyCashflow : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -60,7 +58,7 @@ public class ModifyCashflow : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var exists =
+            Cashflow? exists =
                 await _context.Cashflows.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == _userContext.UserId,
                     cancellationToken);
@@ -69,7 +67,7 @@ public class ModifyCashflow : ICarterModule
                 throw new CashflowNotFoundException(request.Id);
             }
 
-            var cashflow = exists with { Amount = request.Amount, Description = request.Description };
+            Cashflow cashflow = exists with { Amount = request.Amount, Description = request.Description };
 
             cashflow = cashflow.SetTags(request.Tags);
 

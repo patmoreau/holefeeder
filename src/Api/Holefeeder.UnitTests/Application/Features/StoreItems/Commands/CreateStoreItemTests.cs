@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 
@@ -11,12 +10,12 @@ public class CreateStoreItemTests
     public async Task GivenValidator_WhenCodeIsEmpty_ThenError()
     {
         // arrange
-        var request = GivenACreateStoreItemRequest().WithNoCode().Build();
+        Request request = GivenACreateStoreItemRequest().WithNoCode().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Code);
@@ -26,12 +25,12 @@ public class CreateStoreItemTests
     public async Task GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
-        var request = GivenACreateStoreItemRequest().WithNoData().Build();
+        Request request = GivenACreateStoreItemRequest().WithNoData().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Data);
@@ -41,12 +40,12 @@ public class CreateStoreItemTests
     public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = GivenACreateStoreItemRequest().Build();
+        Request request = GivenACreateStoreItemRequest().Build();
 
-        var validator = new Validator();
+        Validator validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

@@ -2,7 +2,6 @@ using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
-
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -11,8 +10,8 @@ internal class CashflowBuilder : IBuilder<Cashflow>, ICollectionBuilder<Cashflow
 {
     private readonly Faker<Cashflow> _faker = new AutoFaker<Cashflow>()
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.Frequency, faker => faker.Random.Int(min: 1))
-        .RuleFor(x => x.Recurrence, faker => faker.Random.Int(min: 0))
+        .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
+        .RuleFor(x => x.Recurrence, faker => faker.Random.Int(0))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray())
         .RuleFor(x => x.Account, _ => null)
@@ -31,18 +30,18 @@ internal class CashflowBuilder : IBuilder<Cashflow>, ICollectionBuilder<Cashflow
         return _faker.Generate(count).ToArray();
     }
 
-    public Cashflow[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
+    public Cashflow[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
 
     public static CashflowBuilder GivenAnActiveCashflow()
     {
-        var builder = new CashflowBuilder();
+        CashflowBuilder builder = new CashflowBuilder();
         builder._faker.RuleFor(x => x.Inactive, false);
         return builder;
     }
 
     public static CashflowBuilder GivenAnInactiveCashflow()
     {
-        var builder = new CashflowBuilder();
+        CashflowBuilder builder = new CashflowBuilder();
         builder._faker.RuleFor(x => x.Inactive, true);
         return builder;
     }

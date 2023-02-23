@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
 
@@ -24,14 +23,18 @@ public abstract class AccountType : SmartEnum<AccountType>
 
     private sealed class CreditAccountType : AccountType
     {
-        public CreditAccountType(int id, string name) : base(id, name) { }
+        public CreditAccountType(int id, string name) : base(id, name)
+        {
+        }
 
         public override int Multiplier => -1;
     }
 
     private sealed class DebitAccountType : AccountType
     {
-        public DebitAccountType(int id, string name) : base(id, name) { }
+        public DebitAccountType(int id, string name) : base(id, name)
+        {
+        }
 
         public override int Multiplier => 1;
     }

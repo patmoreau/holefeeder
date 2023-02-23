@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,8 +11,7 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class CancelCashflow : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/cashflows/cancel",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
@@ -25,22 +24,18 @@ public class CancelCashflow : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(CancelCashflow))
             .RequireAuthorization();
-    }
 
     internal record Request(Guid Id) : ICommandRequest<Unit>;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEmpty();
-        }
+        public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
     }
 
     internal class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -50,8 +45,9 @@ public class CancelCashflow : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var exists =
-                await _context.Cashflows.SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
+            Cashflow? exists =
+                await _context.Cashflows.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == _userContext.UserId,
                     cancellationToken);
             if (exists is null)
             {

@@ -1,5 +1,4 @@
 using System.Linq;
-
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;

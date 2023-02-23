@@ -1,13 +1,12 @@
 using System.Net;
-
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -27,7 +26,7 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidUpcomingRequest().Build();
+        Request request = GivenAnInvalidUpcomingRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -39,7 +38,7 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenAnUpcomingRequest().Build();
+        Request request = GivenAnUpcomingRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -51,7 +50,7 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenAnUpcomingRequest().Build();
+        Request request = GivenAnUpcomingRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -63,7 +62,7 @@ public class ScenarioGetUpcoming : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenAnUpcomingRequest().Build();
+        Request request = GivenAnUpcomingRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -156,21 +155,18 @@ public class ScenarioGetUpcoming : BaseScenario
         });
     }
 
-    private async Task WhenUserGetsUpcoming(Request request)
-    {
-        await HttpClientDriver.SendGetRequest(ApiResources.GetUpcoming, request.From, request.To);
-    }
+    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequest(ApiResources.GetUpcoming, request.From, request.To);
 
     private static Request BuildUpcomingRequest(DateTime from, DateTime to) => GivenAnUpcomingRequest()
         .From(from).To(to).Build();
 
     private async Task<Cashflow> BuildCashflow(DateIntervalType intervalType, int frequency = 1, int recurrence = 1)
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);

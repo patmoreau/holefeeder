@@ -1,7 +1,7 @@
-using Holefeeder.Application.Context;
+﻿using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.SeedWork;
-
+using Holefeeder.Domain.Features.StoreItem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,12 +11,11 @@ namespace Holefeeder.Application.Features.StoreItems.Queries;
 
 public class GetStoreItem : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/store-items/{id}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(id), cancellationToken);
+                    StoreItemViewModel result = await mediator.Send(new Request(id), cancellationToken);
                     return Results.Ok(result);
                 })
             .Produces<StoreItemViewModel>()
@@ -26,22 +25,18 @@ public class GetStoreItem : ICarterModule
             .WithTags(nameof(StoreItems))
             .WithName(nameof(GetStoreItem))
             .RequireAuthorization();
-    }
 
     internal record Request(Guid Id) : IRequest<StoreItemViewModel>;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        public Validator() => RuleFor(x => x.Id).NotEmpty();
     }
 
     internal class Handler : IRequestHandler<Request, StoreItemViewModel>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -51,9 +46,9 @@ public class GetStoreItem : ICarterModule
 
         public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result = await _context.StoreItems
+            StoreItem? result = await _context.StoreItems
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
-                    cancellationToken: cancellationToken);
+                    cancellationToken);
 
             if (result is null)
             {

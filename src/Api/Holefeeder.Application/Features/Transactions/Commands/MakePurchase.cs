@@ -3,7 +3,6 @@ using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -13,12 +12,11 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class MakePurchase : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/transactions/make-purchase",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    Guid result = await mediator.Send(request, cancellationToken);
                     return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result }, new { Id = result });
                 })
             .Produces<Unit>(StatusCodes.Status201Created)
@@ -27,7 +25,6 @@ public class MakePurchase : ICarterModule
             .WithTags(nameof(Transactions))
             .WithName(nameof(MakePurchase))
             .RequireAuthorization();
-    }
 
     internal record Request : ICommandRequest<Guid>
     {
@@ -62,8 +59,8 @@ public class MakePurchase : ICarterModule
 
     internal class Handler : IRequestHandler<Request, Guid>
     {
-        private readonly IUserContext _userContext;
         private readonly BudgetingContext _context;
+        private readonly IUserContext _userContext;
 
         public Handler(IUserContext userContext, BudgetingContext context)
         {
@@ -73,21 +70,21 @@ public class MakePurchase : ICarterModule
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (!(await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
-                    cancellationToken)))
+            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
+                    cancellationToken))
             {
                 throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
 
-            if (!(await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
-                    cancellationToken)))
+            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
+                    cancellationToken))
             {
                 throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
             }
 
-            var cashflowId = await HandleCashflow(request, cancellationToken);
+            Guid? cashflowId = await HandleCashflow(request, cancellationToken);
 
-            var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
+            Transaction transaction = Transaction.Create(request.Date, request.Amount, request.Description,
                 request.AccountId, request.CategoryId, _userContext.UserId);
 
             if (cashflowId is not null)
@@ -109,8 +106,8 @@ public class MakePurchase : ICarterModule
                 return null;
             }
 
-            var cashflowRequest = request.Cashflow;
-            var cashflow = Cashflow.Create(cashflowRequest.EffectiveDate, cashflowRequest.IntervalType,
+            Request.CashflowRequest? cashflowRequest = request.Cashflow;
+            Cashflow cashflow = Cashflow.Create(cashflowRequest.EffectiveDate, cashflowRequest.IntervalType,
                 cashflowRequest.Frequency, cashflowRequest.Recurrence, request.Amount, request.Description,
                 request.CategoryId, request.AccountId, _userContext.UserId);
 

@@ -1,15 +1,12 @@
 using Carter;
-
 using Hangfire;
-
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
-
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
@@ -22,7 +19,7 @@ builder.Services
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseSerilogRequestLogging();
 app.UseCustomErrors(app.Environment);

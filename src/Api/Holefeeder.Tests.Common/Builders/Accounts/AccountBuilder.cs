@@ -1,6 +1,5 @@
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
-
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
@@ -14,23 +13,37 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         .RuleFor(x => x.Transactions, new List<Transaction>())
         .RuleFor(x => x.Cashflows, new List<Cashflow>());
 
+    public Account Build()
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate();
+    }
+
+    public Account[] Build(int count)
+    {
+        _faker.AssertConfigurationIsValid();
+        return _faker.Generate(count).ToArray();
+    }
+
+    public Account[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
+
     public static AccountBuilder GivenAnActiveAccount()
     {
-        var builder = new AccountBuilder();
+        AccountBuilder builder = new AccountBuilder();
         builder._faker.RuleFor(f => f.Inactive, false);
         return builder;
     }
 
     public static AccountBuilder GivenAnInactiveAccount()
     {
-        var builder = new AccountBuilder();
+        AccountBuilder builder = new AccountBuilder();
         builder._faker.RuleFor(f => f.Inactive, true);
         return builder;
     }
 
     public static AccountBuilder GivenAnExistingAccount(Account entity)
     {
-        var builder = new AccountBuilder();
+        AccountBuilder builder = new AccountBuilder();
         builder._faker
             .RuleFor(f => f.Id, entity.Id)
             .RuleFor(f => f.Type, entity.Type)
@@ -97,18 +110,4 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         _faker.RuleFor(f => f.UserId, userId);
         return this;
     }
-
-    public Account Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public Account[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-
-    public Account[] Build(Faker faker) => this.Build(faker.Random.Int(1, 10));
 }

@@ -1,4 +1,4 @@
-using MySqlConnector;
+﻿using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.SeedWork;
 

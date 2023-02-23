@@ -1,11 +1,11 @@
 using System.Net;
 using System.Text.Json;
-
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-
 using static Holefeeder.Application.Features.Transactions.Commands.CancelCashflow;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -29,7 +29,7 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        var request = GivenAnInvalidCancelCashflowRequest().Build();
+        Request request = GivenAnInvalidCancelCashflowRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -41,7 +41,7 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenAuthorizedUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        Request request = GivenACancelCashflowRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -53,7 +53,7 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenForbiddenUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        Request request = GivenACancelCashflowRequest().Build();
 
         GivenForbiddenUserIsAuthorized();
 
@@ -65,7 +65,7 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenUnauthorizedUser()
     {
-        var request = GivenACancelCashflowRequest().Build();
+        Request request = GivenACancelCashflowRequest().Build();
 
         GivenUserIsUnauthorized();
 
@@ -77,21 +77,21 @@ public class ScenarioCancelCashflow : BaseScenario
     [Fact]
     public async Task WhenCancellingACashflow()
     {
-        var account = await GivenAnActiveAccount()
+        Account account = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var category = await GivenACategory()
+        Category category = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var cashflow = await GivenAnActiveCashflow()
+        Cashflow cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(AuthorizedUserId)
             .SavedInDb(DatabaseDriver);
 
-        var request = GivenACancelCashflowRequest().WithId(cashflow.Id).Build();
+        Request request = GivenACancelCashflowRequest().WithId(cashflow.Id).Build();
 
         GivenUserIsAuthorized();
 
@@ -99,7 +99,7 @@ public class ScenarioCancelCashflow : BaseScenario
 
         ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+        Cashflow? result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
 
         result.Should()
             .NotBeNull()
@@ -109,7 +109,7 @@ public class ScenarioCancelCashflow : BaseScenario
 
     private async Task WhenUserCancelsACashflow(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequest(ApiResources.CancelCashflow, json);
     }
 }

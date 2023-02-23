@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
 
@@ -24,10 +23,10 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     public virtual DateTime NextDate(DateTime effectiveDate, DateTime fromDate, int frequency)
     {
-        var start = effectiveDate;
-        var next = fromDate;
+        DateTime start = effectiveDate;
+        DateTime next = fromDate;
 
-        var count = 0;
+        int count = 0;
         while (start < next)
         {
             start = AddIteration(effectiveDate, frequency * count);
@@ -44,9 +43,9 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             return effectiveDate;
         }
 
-        var start = effectiveDate;
+        DateTime start = effectiveDate;
 
-        var count = 0;
+        int count = 0;
         while (start < fromDate)
         {
             count++;
@@ -59,10 +58,10 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
     public virtual IEnumerable<DateTime> DatesInRange(DateTime effectiveDate, DateTime fromDate, DateTime toDate,
         int frequency)
     {
-        var dates = new List<DateTime>();
-        var start = effectiveDate;
+        List<DateTime> dates = new List<DateTime>();
+        DateTime start = effectiveDate;
 
-        var iteration = 1;
+        int iteration = 1;
         while (start < fromDate)
         {
             start = AddIteration(effectiveDate, frequency * iteration);
@@ -86,16 +85,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         {
         }
 
-        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
-        {
-            return AddWeeks(effectiveDate, iteration);
-        }
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration) =>
+            AddWeeks(effectiveDate, iteration);
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
             int frequency)
         {
-            var start = effectiveDate;
-            var end = NextDate(effectiveDate, fromDate, frequency);
+            DateTime start = effectiveDate;
+            DateTime end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -109,10 +106,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             return (start, end.AddDays(-1));
         }
 
-        private static DateTime AddWeeks(DateTime effectiveDate, int weeks)
-        {
-            return effectiveDate.AddDays(7 * weeks);
-        }
+        private static DateTime AddWeeks(DateTime effectiveDate, int weeks) => effectiveDate.AddDays(7 * weeks);
     }
 
     private sealed class MonthlyDateIntervalType : DateIntervalType
@@ -122,16 +116,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         {
         }
 
-        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
-        {
-            return effectiveDate.AddMonths(iteration);
-        }
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration) =>
+            effectiveDate.AddMonths(iteration);
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
             int frequency)
         {
-            var start = effectiveDate;
-            var end = NextDate(effectiveDate, fromDate, frequency);
+            DateTime start = effectiveDate;
+            DateTime end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -153,16 +145,14 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         {
         }
 
-        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
-        {
-            return effectiveDate.AddYears(iteration);
-        }
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration) =>
+            effectiveDate.AddYears(iteration);
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
             int frequency)
         {
-            var start = effectiveDate;
-            var end = NextDate(effectiveDate, fromDate, frequency);
+            DateTime start = effectiveDate;
+            DateTime end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -184,33 +174,21 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         {
         }
 
-        protected override DateTime AddIteration(DateTime effectiveDate, int iteration)
-        {
-            return effectiveDate;
-        }
+        protected override DateTime AddIteration(DateTime effectiveDate, int iteration) => effectiveDate;
 
-        public override DateTime NextDate(DateTime effectiveDate, DateTime fromDate, int frequency)
-        {
-            return effectiveDate;
-        }
+        public override DateTime NextDate(DateTime effectiveDate, DateTime fromDate, int frequency) => effectiveDate;
 
-        public override DateTime PreviousDate(DateTime effectiveDate, DateTime fromDate, int frequency)
-        {
-            return effectiveDate;
-        }
+        public override DateTime PreviousDate(DateTime effectiveDate, DateTime fromDate, int frequency) =>
+            effectiveDate;
 
         public override IEnumerable<DateTime> DatesInRange(DateTime effectiveDate, DateTime fromDate, DateTime toDate,
-            int frequency)
-        {
-            return effectiveDate >= fromDate && effectiveDate <= toDate
+            int frequency) =>
+            effectiveDate >= fromDate && effectiveDate <= toDate
                 ? new[] { effectiveDate }
                 : Array.Empty<DateTime>();
-        }
 
         public override (DateTime from, DateTime to) Interval(DateTime effectiveDate, DateTime fromDate,
-            int frequency)
-        {
-            return (effectiveDate, effectiveDate);
-        }
+            int frequency) =>
+            (effectiveDate, effectiveDate);
     }
 }
