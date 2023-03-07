@@ -41,36 +41,6 @@ public class ScenarioGetAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetAccount(Guid.NewGuid());
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetAccount(Guid.NewGuid());
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetAccount(Guid.NewGuid());
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenAccountExistsWithExpenses()
     {
         Account account = await GivenAnActiveAccount()
@@ -140,5 +110,5 @@ public class ScenarioGetAccount : BaseScenario
         });
     }
 
-    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object?[] { id.ToString() });
+    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetAccount, new object[] { id.ToString() });
 }

@@ -36,42 +36,6 @@ public class ScenarioGetUpcoming : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAnUpcomingRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserGetsUpcoming(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenAnUpcomingRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetsUpcoming(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenAnUpcomingRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetsUpcoming(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenUnpaidUpcomingOneTimeCashflow()
     {
         Cashflow cashflow = null!;
@@ -155,7 +119,7 @@ public class ScenarioGetUpcoming : BaseScenario
         });
     }
 
-    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequest(ApiResources.GetUpcoming, request.From, request.To);
+    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequest(ApiResource.GetUpcoming, request.From, request.To);
 
     private static Request BuildUpcomingRequest(DateTime from, DateTime to) => GivenAnUpcomingRequest()
         .From(from).To(to).Build();

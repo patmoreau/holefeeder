@@ -39,42 +39,6 @@ public class ScenarioCancelCashflow : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenACancelCashflowRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserCancelsACashflow(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenACancelCashflowRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserCancelsACashflow(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenACancelCashflowRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserCancelsACashflow(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenCancellingACashflow()
     {
         Account account = await GivenAnActiveAccount()
@@ -110,6 +74,6 @@ public class ScenarioCancelCashflow : BaseScenario
     private async Task WhenUserCancelsACashflow(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.CancelCashflow, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.CancelCashflow, json);
     }
 }

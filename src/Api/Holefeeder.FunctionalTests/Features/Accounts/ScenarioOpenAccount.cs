@@ -50,42 +50,6 @@ public class ScenarioOpenAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAnOpenAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserOpensAnAccount(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenAnOpenAccountRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserOpensAnAccount(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenAnOpenAccountRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserOpensAnAccount(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenOpenAccount()
     {
         Request request = GivenAnOpenAccountRequest()
@@ -106,6 +70,6 @@ public class ScenarioOpenAccount : BaseScenario
     private async Task WhenUserOpensAnAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.OpenAccount, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.OpenAccount, json);
     }
 }

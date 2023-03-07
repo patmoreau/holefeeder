@@ -19,7 +19,7 @@ public class TransactionStepDefinition
         }
 
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.MakePurchase, json);
     }
 
     internal async Task PayACashflow(PayCashflow.Request request)
@@ -30,12 +30,12 @@ public class TransactionStepDefinition
         }
 
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.PayCashflow, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.PayCashflow, json);
     }
 
     internal async Task Transfer(Transfer.Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.Transfer, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.Transfer, json);
     }
 }

@@ -3,6 +3,9 @@
     <Compile Update="**\*.Handler.cs">
       <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Handler', '.cs'))</DependentUpon>
     </Compile>
+    <Compile Update="**\*.Steps.cs">
+      <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Steps', '.cs'))</DependentUpon>
+    </Compile>
     <Compile Update="**\*.Validator.cs">
       <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Validator', '.cs'))</DependentUpon>
     </Compile>

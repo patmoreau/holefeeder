@@ -6,7 +6,8 @@ namespace Holefeeder.Tests.Common.Builders.MyData;
 internal sealed class MyDataCategoryDtoBuilder : IBuilder<MyDataCategoryDto>, ICollectionBuilder<MyDataCategoryDto>
 {
     private readonly Faker<MyDataCategoryDto> _faker = new AutoFaker<MyDataCategoryDto>()
-        .RuleFor(f => f.Type, faker => faker.PickRandom(CategoryType.List.ToArray()));
+        .RuleFor(f => f.Type, faker => faker.PickRandom(CategoryType.List.ToArray()))
+        .RuleFor(f => f.Color, faker => faker.Internet.Color());
 
     public MyDataCategoryDto Build()
     {

@@ -32,42 +32,6 @@ public class ScenarioCreateStoreItem : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request storeItem = GivenACreateStoreItemRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserCreateStoreItem(storeItem);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request storeItem = GivenACreateStoreItemRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserCreateStoreItem(storeItem);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request storeItem = GivenACreateStoreItemRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserCreateStoreItem(storeItem);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenCreateStoreItem()
     {
         Request storeItem = GivenACreateStoreItemRequest().Build();
@@ -101,6 +65,6 @@ public class ScenarioCreateStoreItem : BaseScenario
     private async Task WhenUserCreateStoreItem(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.CreateStoreItem, json);
     }
 }

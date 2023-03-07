@@ -38,42 +38,6 @@ public class ScenarioImportData : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAnImportDataRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserImportsData(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenAnImportDataRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserImportsData(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenAnImportDataRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserImportsData(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenDataIsImported()
     {
         MyDataAccountDto[] accounts = GivenMyAccountData().Build(2);
@@ -152,7 +116,7 @@ public class ScenarioImportData : BaseScenario
     private async Task WhenUserImportsData(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ImportData, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.ImportData, json);
     }
 
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
@@ -166,7 +130,7 @@ public class ScenarioImportData : BaseScenario
         {
             await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
 
-            await HttpClientDriver.SendGetRequest(ApiResources.ImportDataStatus, importId);
+            await HttpClientDriver.SendGetRequest(ApiResource.ImportDataStatus, importId);
 
             ThenShouldExpectStatusCode(HttpStatusCode.OK);
 

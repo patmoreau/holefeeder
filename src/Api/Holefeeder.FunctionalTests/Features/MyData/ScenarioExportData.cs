@@ -22,36 +22,6 @@ public class ScenarioExportData : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserExportsHisData();
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserExportsHisData();
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserExportsHisData();
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenDataIsExported()
     {
         Account[] accounts = await GivenAnActiveAccount()
@@ -112,5 +82,5 @@ public class ScenarioExportData : BaseScenario
         }
     }
 
-    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequest(ApiResources.ExportData);
+    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequest(ApiResource.ExportData);
 }

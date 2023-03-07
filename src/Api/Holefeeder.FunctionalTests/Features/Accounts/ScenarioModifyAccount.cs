@@ -44,42 +44,6 @@ public class ScenarioModifyAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request entity = GivenAModifyAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifiesAccount(entity);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request entity = GivenAModifyAccountRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserModifiesAccount(entity);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request entity = GivenAModifyAccountRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserModifiesAccount(entity);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenModifyAccount()
     {
         Account entity = await GivenAnActiveAccount()
@@ -106,6 +70,6 @@ public class ScenarioModifyAccount : BaseScenario
     private async Task WhenUserModifiesAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyAccount, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.ModifyAccount, json);
     }
 }

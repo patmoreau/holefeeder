@@ -24,5 +24,5 @@ public class ScenarioGetDateIntervalTypes : BaseScenario
         ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetDateIntervalTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResource.GetDateIntervalTypes);
 }

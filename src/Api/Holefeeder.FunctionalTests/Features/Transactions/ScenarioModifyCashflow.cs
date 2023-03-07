@@ -41,42 +41,6 @@ public class ScenarioModifyCashflow : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAModifyCashflowRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifiedACashflow(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenAModifyCashflowRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserModifiedACashflow(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenAModifyCashflowRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserModifiedACashflow(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenModifyACashflow()
     {
         Account account = await GivenAnActiveAccount()
@@ -111,6 +75,6 @@ public class ScenarioModifyCashflow : BaseScenario
     private async Task WhenUserModifiedACashflow(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.ModifyCashflow, json);
     }
 }

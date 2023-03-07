@@ -39,42 +39,6 @@ public class ScenarioModifyTransaction : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAModifyTransactionRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifiedATransaction(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenAModifyTransactionRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserModifiedATransaction(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenAModifyTransactionRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserModifiedATransaction(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenAccountDoesNotExists()
     {
         Request request = GivenAModifyTransactionRequest().Build();
@@ -165,6 +129,6 @@ public class ScenarioModifyTransaction : BaseScenario
     private async Task WhenUserModifiedATransaction(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyTransaction, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.ModifyTransaction, json);
     }
 }

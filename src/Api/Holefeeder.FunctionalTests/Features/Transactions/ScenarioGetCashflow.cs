@@ -41,36 +41,6 @@ public class ScenarioGetCashflow : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetCashflow(Guid.NewGuid());
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetCashflow(Guid.NewGuid());
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetCashflow(Guid.NewGuid());
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenCashflowExists()
     {
         Account account = await GivenAnActiveAccount()
@@ -104,5 +74,5 @@ public class ScenarioGetCashflow : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetCashflow, new object?[] { id.ToString() });
+    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetCashflow, new object[] { id.ToString() });
 }

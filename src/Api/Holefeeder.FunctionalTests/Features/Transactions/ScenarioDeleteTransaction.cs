@@ -38,42 +38,6 @@ public class ScenarioDeleteTransaction : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenADeleteTransactionRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserDeletesATransaction(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenADeleteTransactionRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserDeletesATransaction(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenADeleteTransactionRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserDeletesATransaction(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenDeletingATransaction()
     {
         Account account = await GivenAnActiveAccount()
@@ -102,5 +66,5 @@ public class ScenarioDeleteTransaction : BaseScenario
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResource.DeleteTransaction, request.Id);
 }

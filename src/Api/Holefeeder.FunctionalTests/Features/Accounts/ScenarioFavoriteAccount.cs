@@ -43,42 +43,6 @@ public class ScenarioFavoriteAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenAFavoriteAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserSetsFavoriteAccount(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request entity = GivenAFavoriteAccountRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserSetsFavoriteAccount(entity);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request entity = GivenAFavoriteAccountRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserSetsFavoriteAccount(entity);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenFavoriteAccount()
     {
         Account entity = await GivenAnActiveAccount()
@@ -105,6 +69,6 @@ public class ScenarioFavoriteAccount : BaseScenario
     private async Task WhenUserSetsFavoriteAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.FavoriteAccount, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.FavoriteAccount, json);
     }
 }

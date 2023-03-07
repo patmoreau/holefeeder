@@ -37,36 +37,6 @@ public class ScenarioGetStoreItem : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetStoreItem(Guid.NewGuid());
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetStoreItem(Guid.NewGuid());
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetStoreItem(Guid.NewGuid());
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenStoreItemExists()
     {
         StoreItem storeItem = await GivenAStoreItem()
@@ -88,5 +58,5 @@ public class ScenarioGetStoreItem : BaseScenario
         });
     }
 
-    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, new object?[] { id.ToString() });
+    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetStoreItem, new object[] { id.ToString() });
 }

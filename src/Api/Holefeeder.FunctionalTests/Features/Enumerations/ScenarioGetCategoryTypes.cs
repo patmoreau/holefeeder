@@ -24,5 +24,5 @@ public class ScenarioGetCategoryTypes : BaseScenario
         ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetCategoryTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResource.GetCategoryTypes);
 }

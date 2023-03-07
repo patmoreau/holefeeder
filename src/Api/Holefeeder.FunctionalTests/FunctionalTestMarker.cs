@@ -1,4 +1,7 @@
 using Holefeeder.FunctionalTests.Drivers;
+using LightBDD.XUnit2;
+
+[assembly: LightBddScope]
 
 namespace Holefeeder.FunctionalTests;
 

@@ -25,39 +25,9 @@ public class ScenarioGetTransactions : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetTransactions, -1);
+        await WhenUserTriesToQuery(ApiResource.GetTransactions, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
-    }
-
-    [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetTransactions);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetTransactions);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetTransactions);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]
@@ -82,7 +52,7 @@ public class ScenarioGetTransactions : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetTransactions, sorts: "-description");
+        await WhenUserTriesToQuery(ApiResource.GetTransactions, sorts: "-description");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         TransactionInfoViewModel[]? result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel[]>();

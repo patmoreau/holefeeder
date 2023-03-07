@@ -26,9 +26,9 @@ public class HttpClientDriver
         LogUnexpectedErrors();
     }
 
-    public async Task SendGetRequest(ApiResources apiResource, string? query = null)
+    internal async Task SendGetRequest(ApiResource apiResource, string? query = null)
     {
-        Uri baseUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+        Uri baseUri = apiResource.EndpointFromResource();
         Uri fullUri = baseUri;
         if (query is not null)
         {
@@ -39,16 +39,16 @@ public class HttpClientDriver
         await SendRequest(request);
     }
 
-    public async Task SendGetRequest(ApiResources apiResource, params object?[] parameters)
+    internal async Task SendGetRequest(ApiResource apiResource, params object[] parameters)
     {
-        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        Uri endpointUri = apiResource.EndpointFromResource(parameters);
         using HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
         await SendRequest(request);
     }
 
-    public async Task SendPostRequest(ApiResources apiResource, string? body = null)
+    internal async Task SendPostRequest(ApiResource apiResource, string? body = null)
     {
-        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource);
+        Uri endpointUri = apiResource.EndpointFromResource();
 
         using HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
         if (body is not null)
@@ -59,11 +59,17 @@ public class HttpClientDriver
         await SendRequest(request);
     }
 
-    public async Task SendDeleteRequest(ApiResources apiResource, params object?[] parameters)
+    internal async Task SendDeleteRequest(ApiResource apiResource, params object[] parameters)
     {
-        Uri endpointUri = ResourceRouteAttribute.EndpointFromResource(apiResource, parameters);
+        Uri endpointUri = apiResource.EndpointFromResource(parameters);
         using HttpRequestMessage request = new(HttpMethod.Delete, endpointUri);
         await SendRequest(request);
+    }
+
+    public void ShouldBeUnauthorized()
+    {
+        ResponseMessage.Should().NotBeNull()
+            .And.HaveStatusCode(HttpStatusCode.Unauthorized);
     }
 
     public void ShouldHaveResponseWithStatus(HttpStatusCode httpStatus)
@@ -71,6 +77,12 @@ public class HttpClientDriver
         LogUnexpectedContent(httpStatus);
         ResponseMessage.Should().NotBeNull();
         ResponseMessage?.StatusCode.Should().Be(httpStatus);
+    }
+
+    public void ShouldNotHaveResponseWithOneOfStatuses(params HttpStatusCode[] httpStatuses)
+    {
+        ResponseMessage.Should().NotBeNull();
+        ResponseMessage?.StatusCode.Should().BeOneOf(httpStatuses);
     }
 
     public void ShouldHaveResponseWithStatus(Func<HttpStatusCode?, bool> httpStatusPredicate)

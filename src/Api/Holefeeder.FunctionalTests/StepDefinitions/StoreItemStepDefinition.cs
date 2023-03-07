@@ -18,7 +18,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
         AddStep(() =>
         {
             string json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
-            return HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
+            return HttpClientDriver.SendPostRequest(ApiResource.CreateStoreItem, json);
         });
 
         return this;
@@ -29,7 +29,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
         AddStep(() =>
         {
             string json = JsonSerializer.Serialize(request ?? new ModifyStoreItemRequestBuilder().Build());
-            return HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
+            return HttpClientDriver.SendPostRequest(ApiResource.ModifyStoreItem, json);
         });
 
         return this;
@@ -37,7 +37,7 @@ public class StoreItemStepDefinition : BaseStepDefinition
 
     public StoreItemStepDefinition RetrievedById(Guid id)
     {
-        AddStep(() => HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, id));
+        AddStep(() => HttpClientDriver.SendGetRequest(ApiResource.GetStoreItem, id));
 
         return this;
     }

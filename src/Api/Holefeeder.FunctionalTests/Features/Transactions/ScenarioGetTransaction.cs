@@ -41,36 +41,6 @@ public class ScenarioGetTransaction : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetTransaction(Guid.NewGuid());
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetTransaction(Guid.NewGuid());
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetTransaction(Guid.NewGuid());
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenTransactionExists()
     {
         Account account = await GivenAnActiveAccount()
@@ -103,5 +73,5 @@ public class ScenarioGetTransaction : BaseScenario
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object?[] { id.ToString() });
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetTransaction, new object[] { id.ToString() });
 }

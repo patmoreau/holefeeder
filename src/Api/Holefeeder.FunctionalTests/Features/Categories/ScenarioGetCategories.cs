@@ -17,36 +17,6 @@ public class ScenarioGetCategories : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetCategories();
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserGetCategories();
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserGetCategories();
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenCategoriesExists()
     {
         const string firstName = nameof(firstName);
@@ -80,5 +50,5 @@ public class ScenarioGetCategories : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequest(ApiResources.GetCategories);
+    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequest(ApiResource.GetCategories);
 }

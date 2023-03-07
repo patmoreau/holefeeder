@@ -79,7 +79,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
 
     protected void GivenForbiddenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(Guid.NewGuid());
 
-    protected Task WhenUserTriesToQuery(ApiResources apiResource, int? offset = null, int? limit = null,
+    internal Task WhenUserTriesToQuery(ApiResource apiResource, int? offset = null, int? limit = null,
         string? sorts = null, string? filters = null)
     {
         StringBuilder sb = new StringBuilder();

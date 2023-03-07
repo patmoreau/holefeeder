@@ -12,20 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carter" Version="7.0.0"/>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.33"/>
-    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0"/>
-    <PackageReference Include="MediatR" Version="12.0.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.26.0"/>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0"/>
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.25"/>
+    <PackageReference Include="Carter" Version="7.0.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.33" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.5.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj"/>
+    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
   </ItemGroup>
 
 </Project>

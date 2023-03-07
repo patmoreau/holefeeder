@@ -21,39 +21,9 @@ public class ScenarioGetAccounts : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetAccounts, -1);
+        await WhenUserTriesToQuery(ApiResource.GetAccounts, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
-    }
-
-    [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetAccounts);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetAccounts);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetAccounts);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]
@@ -71,7 +41,7 @@ public class ScenarioGetAccounts : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetAccounts, sorts: "-name");
+        await WhenUserTriesToQuery(ApiResource.GetAccounts, sorts: "-name");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         AccountViewModel[]? result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();

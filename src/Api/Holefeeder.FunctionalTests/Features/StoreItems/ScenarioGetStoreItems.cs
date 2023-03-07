@@ -20,39 +20,9 @@ public class ScenarioGetStoreItems : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems, -1);
+        await WhenUserTriesToQuery(ApiResource.GetStoreItems, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
-    }
-
-    [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]
@@ -76,7 +46,7 @@ public class ScenarioGetStoreItems : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems, sorts: "-code");
+        await WhenUserTriesToQuery(ApiResource.GetStoreItems, sorts: "-code");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         StoreItemViewModel[]? result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();

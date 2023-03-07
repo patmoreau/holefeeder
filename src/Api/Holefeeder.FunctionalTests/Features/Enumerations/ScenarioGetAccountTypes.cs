@@ -24,5 +24,5 @@ public class ScenarioGetAccountTypes : BaseScenario
         ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(AccountType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetAccountTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResource.GetAccountTypes);
 }

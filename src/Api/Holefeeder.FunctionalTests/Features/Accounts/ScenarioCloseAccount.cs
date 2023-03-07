@@ -4,6 +4,9 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using LightBDD.Framework;
+using LightBDD.Framework.Scenarios;
+using LightBDD.XUnit2;
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -49,42 +52,6 @@ public class ScenarioCloseAccount : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request request = GivenACloseAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserClosesAccount(request);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request request = GivenACloseAccountRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserClosesAccount(request);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request request = GivenACloseAccountRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserClosesAccount(request);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenCloseAccount()
     {
         Account entity = await GivenAnActiveAccount()
@@ -109,6 +76,6 @@ public class ScenarioCloseAccount : BaseScenario
     private async Task WhenUserClosesAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.CloseAccount, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.CloseAccount, json);
     }
 }

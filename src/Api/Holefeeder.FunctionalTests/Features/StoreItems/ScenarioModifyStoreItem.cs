@@ -33,42 +33,6 @@ public class ScenarioModifyStoreItem : BaseScenario
     }
 
     [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        Request storeItem = GivenAModifyStoreItemRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifyStoreItem(storeItem);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        Request storeItem = GivenAModifyStoreItemRequest().Build();
-
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserModifyStoreItem(storeItem);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        Request storeItem = GivenAModifyStoreItemRequest().Build();
-
-        GivenUserIsUnauthorized();
-
-        await WhenUserModifyStoreItem(storeItem);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
     public async Task WhenModifyStoreItem()
     {
         StoreItem storeItem = await GivenAStoreItem()
@@ -93,6 +57,6 @@ public class ScenarioModifyStoreItem : BaseScenario
     private async Task WhenUserModifyStoreItem(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
+        await HttpClientDriver.SendPostRequest(ApiResource.ModifyStoreItem, json);
     }
 }

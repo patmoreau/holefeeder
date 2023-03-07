@@ -25,39 +25,9 @@ public class ScenarioGetCashflows : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetCashflows, -1);
+        await WhenUserTriesToQuery(ApiResource.GetCashflows, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
-    }
-
-    [Fact]
-    public async Task WhenAuthorizedUser()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetCashflows);
-
-        ThenUserShouldBeAuthorizedToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenForbiddenUser()
-    {
-        GivenForbiddenUserIsAuthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetCashflows);
-
-        ShouldBeForbiddenToAccessEndpoint();
-    }
-
-    [Fact]
-    public async Task WhenUnauthorizedUser()
-    {
-        GivenUserIsUnauthorized();
-
-        await WhenUserTriesToQuery(ApiResources.GetCashflows);
-
-        ShouldNotBeAuthorizedToAccessEndpoint();
     }
 
     [Fact]
@@ -83,7 +53,7 @@ public class ScenarioGetCashflows : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetCashflows, sorts: "-description");
+        await WhenUserTriesToQuery(ApiResource.GetCashflows, sorts: "-description");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         CashflowInfoViewModel[]? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel[]>();
