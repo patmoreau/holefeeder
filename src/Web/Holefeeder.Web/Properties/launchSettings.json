@@ -7,7 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
-        "Serilog__WriteTo__1__Args__serverUrl": "https://seq-ingestion.127.0.0.1.nip.io",
+        "Serilog__WriteTo__1__Args__serverUrl": "https://seq-ingestion.lvh.me",
         "Serilog__WriteTo__1__Args__apiKey": "fPMB1qU9khTQtXE0AsxR"
       }
     }
