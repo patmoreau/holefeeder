@@ -4,12 +4,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AccountsService, UpcomingService } from '@app/core/services';
 import { LoaderComponent } from '@app/shared/components';
 import { filterNullish } from '@app/shared/helpers';
-import {
-  Account,
-  accountTypeMultiplier,
-  categoryTypeMultiplier,
-} from '@app/shared/models';
-import { from, Observable, scan, switchMap, tap } from 'rxjs';
+import { Account, accountTypeMultiplier, Upcoming } from '@app/shared/models';
+import { Observable, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-account-details',
@@ -46,34 +42,30 @@ export class AccountDetailsComponent implements OnInit {
       ),
       filterNullish(),
       tap(account => this.accountsService.selectAccount(account)),
-      switchMap(_ => this.accountsService.selectedAccount$),
+      switchMap(() => this.accountsService.selectedAccount$),
       filterNullish()
     );
 
     this.upcomingBalance$ = this.account$.pipe(
       filterNullish(),
       switchMap(account =>
-        this.upcomingService.getUpcoming(account.id).pipe(
-          switchMap(cashflows => from(cashflows)),
-          scan(
-            (sum, cashflow) =>
-              sum +
-              cashflow.amount *
-                categoryTypeMultiplier(cashflow.category.type) *
-                accountTypeMultiplier(account.type),
-            account.balance
+        this.upcomingService
+          .getUpcoming(account.id)
+          .pipe(
+            switchMap(cashflows =>
+              of(this.accountsService.getUpcomingBalance(account, cashflows))
+            )
           )
-        )
       )
     );
   }
 
   edit() {
-    this.router.navigate(['edit'], { relativeTo: this.route });
+    this.router.navigate(['edit'], { relativeTo: this.route }).then();
   }
 
   addTransaction(account: Account) {
-    this.router.navigate(['transactions', 'make-purchase', account.id]);
+    this.router.navigate(['transactions', 'make-purchase', account.id]).then();
   }
 
   balanceClass(account: Account): string {

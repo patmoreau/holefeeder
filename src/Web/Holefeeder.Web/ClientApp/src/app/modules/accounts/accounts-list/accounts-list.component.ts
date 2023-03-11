@@ -53,21 +53,7 @@ export class AccountsListComponent implements OnInit {
   }
 
   getUpcomingBalance(account: Account, cashflows: Upcoming[]): number {
-    return (
-      account.balance +
-      (cashflows
-        ? cashflows
-            .filter(cashflow => cashflow.account.id === account.id)
-            .map(cashflow => {
-              return (
-                cashflow.amount *
-                categoryTypeMultiplier(cashflow.category.type) *
-                accountTypeMultiplier(account.type)
-              );
-            })
-            .reduce((sum, current) => sum + current, 0)
-        : 0)
-    );
+    return this.accountsService.getUpcomingBalance(account, cashflows);
   }
 
   amountClass(account: Account): string {

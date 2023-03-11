@@ -2,7 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { filterNullish } from '@app/shared/helpers';
-import { Account, MessageType, PagingInfo } from '@app/shared/models';
+import {
+  Account,
+  accountTypeMultiplier,
+  categoryTypeMultiplier,
+  MessageType,
+  PagingInfo,
+  Upcoming,
+} from '@app/shared/models';
 import { catchError, filter, map, Observable, take } from 'rxjs';
 import { AccountAdapter } from '../adapters/account-adapter.service';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
@@ -100,5 +107,22 @@ export class AccountsService extends StateService<AccountState> {
         map(resp => mapToPagingInfo(resp, this.adapter)),
         catchError(formatErrors)
       );
+  }
+  public getUpcomingBalance(account: Account, cashflows: Upcoming[]): number {
+    return (
+      account.balance +
+      (cashflows
+        ? cashflows
+            .filter(cashflow => cashflow.account.id === account.id)
+            .map(cashflow => {
+              return (
+                cashflow.amount *
+                categoryTypeMultiplier(cashflow.category.type) *
+                accountTypeMultiplier(account.type)
+              );
+            })
+            .reduce((sum, current) => sum + current, 0)
+        : 0)
+    );
   }
 }
