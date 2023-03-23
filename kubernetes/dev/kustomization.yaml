@@ -7,9 +7,9 @@ resources:
   - ingress.deployment.yaml
 
 patchesStrategicMerge:
-  - api.env.yaml
-  - seq.deployment.yaml
-  - ui.env.yaml
+  - api.patch.yaml
+  - seq.patch.yaml
+  - ui.patch.yaml
 
 patchesJson6902:
   - target:

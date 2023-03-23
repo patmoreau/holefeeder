@@ -9,8 +9,8 @@ resources:
   - certificates.yaml
 
 patchesStrategicMerge:
-  - api.env.yaml
-  - ui.env.yaml
+  - api.patch.yaml
+  - ui.patch.yaml
 
 patchesJson6902:
   - target:
