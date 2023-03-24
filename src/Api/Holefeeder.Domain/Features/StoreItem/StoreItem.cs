@@ -6,14 +6,7 @@ public sealed record StoreItem : Entity, IAggregateRoot
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    public StoreItem(Guid id, string code, Guid userId)
-    {
-        Id = id;
-        Code = code;
-        UserId = userId;
-    }
-
-    public override Guid Id
+    public override required Guid Id
     {
         get => _id;
         init
@@ -27,7 +20,7 @@ public sealed record StoreItem : Entity, IAggregateRoot
         }
     }
 
-    public string Code
+    public required string Code
     {
         get => _code;
         init
@@ -43,7 +36,7 @@ public sealed record StoreItem : Entity, IAggregateRoot
 
     public string Data { get; set; } = string.Empty;
 
-    public Guid UserId
+    public required Guid UserId
     {
         get => _userId;
         init
@@ -58,5 +51,5 @@ public sealed record StoreItem : Entity, IAggregateRoot
     }
 
     public static StoreItem Create(string code, string data, Guid userId) =>
-        new StoreItem(Guid.NewGuid(), code, userId) { Data = data };
+        new() { Id = Guid.NewGuid(), Code = code, UserId = userId, Data = data };
 }

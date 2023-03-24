@@ -9,16 +9,7 @@ public sealed record Account : Entity, IAggregateRoot
     private readonly DateTime _openDate;
     private readonly Guid _userId;
 
-    public Account(Guid id, AccountType type, string name, DateTime openDate, Guid userId)
-    {
-        Id = id;
-        Type = type;
-        Name = name;
-        OpenDate = openDate;
-        UserId = userId;
-    }
-
-    public override Guid Id
+    public override required Guid Id
     {
         get => _id;
         init
@@ -32,9 +23,9 @@ public sealed record Account : Entity, IAggregateRoot
         }
     }
 
-    public AccountType Type { get; init; }
+    public required AccountType Type { get; init; }
 
-    public string Name
+    public required string Name
     {
         get => _name;
         init
@@ -52,7 +43,7 @@ public sealed record Account : Entity, IAggregateRoot
 
     public decimal OpenBalance { get; init; }
 
-    public DateTime OpenDate
+    public required DateTime OpenDate
     {
         get => _openDate;
         init
@@ -70,7 +61,7 @@ public sealed record Account : Entity, IAggregateRoot
 
     public bool Inactive { get; init; }
 
-    public Guid UserId
+    public required Guid UserId
     {
         get => _userId;
         init
@@ -89,8 +80,13 @@ public sealed record Account : Entity, IAggregateRoot
 
     public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
         string description, Guid userId) =>
-        new Account(Guid.NewGuid(), type, name, openDate, userId)
+        new()
         {
+            Id = Guid.NewGuid(),
+            Type = type,
+            Name = name,
+            OpenDate = openDate,
+            UserId = userId,
             OpenBalance = openBalance,
             Description = description
         };

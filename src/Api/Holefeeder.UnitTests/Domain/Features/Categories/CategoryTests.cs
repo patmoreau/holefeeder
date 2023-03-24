@@ -1,5 +1,5 @@
-using System.Linq;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Tests.Common.Builders.Categories;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
@@ -13,10 +13,7 @@ public class CategoryTests
         // arrange
 
         // act
-        Action action = () => _ = new Category(Guid.Empty,
-            _faker.PickRandom(CategoryType.List.ToArray()),
-            _faker.Random.Word(),
-            _faker.Random.Guid());
+        Action action = () => _ = CategoryBuilder.GivenACategory().WithNoId().Build();
 
         // assert
         action.Should().Throw<CategoryDomainException>()
@@ -33,10 +30,7 @@ public class CategoryTests
         // arrange
 
         // act
-        Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(CategoryType.List.ToArray()),
-            name,
-            _faker.Random.Guid());
+        Action action = () => _ = CategoryBuilder.GivenACategory().WithName(name).Build();
 
         // assert
         action.Should().Throw<CategoryDomainException>()
@@ -51,10 +45,8 @@ public class CategoryTests
         // arrange
 
         // act
-        Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(CategoryType.List.ToArray()),
-            _faker.Random.Words().ClampLength(256),
-            _faker.Random.Guid());
+        Action action = () =>
+            _ = CategoryBuilder.GivenACategory().WithName(_faker.Random.Words().ClampLength(256)).Build();
 
         // assert
         action.Should().Throw<CategoryDomainException>()
@@ -69,10 +61,7 @@ public class CategoryTests
         // arrange
 
         // act
-        Action action = () => _ = new Category(_faker.Random.Guid(),
-            _faker.PickRandom(CategoryType.List.ToArray()),
-            _faker.Random.Word(),
-            Guid.Empty);
+        Action action = () => _ = CategoryBuilder.GivenACategory().ForNoUser().Build();
 
         // assert
         action.Should().Throw<CategoryDomainException>()

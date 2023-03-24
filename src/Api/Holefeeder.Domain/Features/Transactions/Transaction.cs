@@ -12,17 +12,7 @@ public record Transaction : Entity, IAggregateRoot
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    public Transaction(Guid id, DateTime date, decimal amount, Guid accountId, Guid categoryId, Guid userId)
-    {
-        Id = id;
-        Date = date;
-        Amount = amount;
-        AccountId = accountId;
-        CategoryId = categoryId;
-        UserId = userId;
-    }
-
-    public sealed override Guid Id
+    public sealed override required Guid Id
     {
         get => _id;
         init
@@ -36,7 +26,7 @@ public record Transaction : Entity, IAggregateRoot
         }
     }
 
-    public DateTime Date
+    public required DateTime Date
     {
         get => _date;
         init
@@ -50,7 +40,7 @@ public record Transaction : Entity, IAggregateRoot
         }
     }
 
-    public decimal Amount
+    public required decimal Amount
     {
         get => _amount;
         init
@@ -66,7 +56,7 @@ public record Transaction : Entity, IAggregateRoot
 
     public string Description { get; init; } = string.Empty;
 
-    public Guid AccountId
+    public required Guid AccountId
     {
         get => _accountId;
         init
@@ -82,7 +72,7 @@ public record Transaction : Entity, IAggregateRoot
 
     public Account? Account { get; init; }
 
-    public Guid CategoryId
+    public required Guid CategoryId
     {
         get => _categoryId;
         init
@@ -105,7 +95,7 @@ public record Transaction : Entity, IAggregateRoot
 
     public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
 
-    public Guid UserId
+    public required Guid UserId
     {
         get => _userId;
         init
@@ -121,11 +111,29 @@ public record Transaction : Entity, IAggregateRoot
 
     public static Transaction Create(Guid id, DateTime date, decimal amount, string description, Guid accountId,
         Guid categoryId, Guid userId) =>
-        new Transaction(id, date, amount, accountId, categoryId, userId) { Description = description };
+        new()
+        {
+            Id = id,
+            Date = date,
+            Amount = amount,
+            AccountId = accountId,
+            CategoryId = categoryId,
+            UserId = userId,
+            Description = description
+        };
 
     public static Transaction Create(DateTime date, decimal amount, string description, Guid accountId, Guid categoryId,
         Guid userId) =>
-        new Transaction(Guid.NewGuid(), date, amount, accountId, categoryId, userId) { Description = description };
+        new()
+        {
+            Id = Guid.NewGuid(),
+            Date = date,
+            Amount = amount,
+            AccountId = accountId,
+            CategoryId = categoryId,
+            UserId = userId,
+            Description = description
+        };
 
     public Transaction SetTags(params string[] tags)
     {

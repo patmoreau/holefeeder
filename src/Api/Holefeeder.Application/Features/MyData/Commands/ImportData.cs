@@ -145,8 +145,13 @@ public class ImportData : ICarterModule
                 else
                 {
                     Account account =
-                        new Account(element.Id, element.Type, element.Name, element.OpenDate, request.UserId)
+                        new()
                         {
+                            Id = element.Id,
+                            Type = element.Type,
+                            Name = element.Name,
+                            OpenDate = element.OpenDate,
+                            UserId = request.UserId,
                             Favorite = element.Favorite,
                             OpenBalance = element.OpenBalance,
                             Description = element.Description,
@@ -210,8 +215,12 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    Category category = new Category(element.Id, element.Type, element.Name, request.UserId)
+                    Category category = new()
                     {
+                        Id = element.Id,
+                        Type = element.Type,
+                        Name = element.Name,
+                        UserId = request.UserId,
                         Favorite = element.Favorite,
                         System = element.System,
                         BudgetAmount = element.BudgetAmount,

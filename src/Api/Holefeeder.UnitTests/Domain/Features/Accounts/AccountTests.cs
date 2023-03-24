@@ -78,7 +78,7 @@ public class AccountTests
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().ForUser(Guid.Empty);
+        AccountBuilder builder = GivenAnActiveAccount().ForNoUser();
 
         // act
         Action action = () => _ = builder.Build();

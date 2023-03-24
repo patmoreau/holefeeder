@@ -31,6 +31,12 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
         return this;
     }
 
+    public CategoryBuilder WithNoId()
+    {
+        _faker.RuleFor(f => f.Id, Guid.Empty);
+        return this;
+    }
+
     public CategoryBuilder OfType(CategoryType type)
     {
         _faker.RuleFor(f => f.Type, type);
@@ -46,6 +52,12 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
     public CategoryBuilder ForUser(Guid userId)
     {
         _faker.RuleFor(f => f.UserId, userId);
+        return this;
+    }
+
+    public CategoryBuilder ForNoUser()
+    {
+        _faker.RuleFor(f => f.UserId, Guid.Empty);
         return this;
     }
 

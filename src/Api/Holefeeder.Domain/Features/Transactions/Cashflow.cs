@@ -15,7 +15,7 @@ public record Cashflow : Entity, IAggregateRoot
     private readonly int _recurrence;
     private readonly Guid _userId;
 
-    public sealed override Guid Id
+    public sealed override required Guid Id
     {
         get => _id;
         init
@@ -29,7 +29,7 @@ public record Cashflow : Entity, IAggregateRoot
         }
     }
 
-    public DateTime EffectiveDate
+    public required DateTime EffectiveDate
     {
         get => _effectiveDate;
         init
@@ -90,7 +90,7 @@ public record Cashflow : Entity, IAggregateRoot
 
     public string Description { get; init; } = string.Empty;
 
-    public Guid AccountId
+    public required Guid AccountId
     {
         get => _accountId;
         init
@@ -106,7 +106,7 @@ public record Cashflow : Entity, IAggregateRoot
 
     public Account? Account { get; init; }
 
-    public Guid CategoryId
+    public required Guid CategoryId
     {
         get => _categoryId;
         init
@@ -132,7 +132,7 @@ public record Cashflow : Entity, IAggregateRoot
 
     public bool Inactive { get; init; }
 
-    public Guid UserId
+    public required Guid UserId
     {
         get => _userId;
         init
@@ -148,7 +148,7 @@ public record Cashflow : Entity, IAggregateRoot
 
     public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
         decimal amount, string description, Guid categoryId, Guid accountId, Guid userId) =>
-        new Cashflow
+        new()
         {
             Id = Guid.NewGuid(),
             EffectiveDate = effectiveDate,
@@ -181,7 +181,7 @@ public record Cashflow : Entity, IAggregateRoot
 
     public IReadOnlyCollection<DateTime> GetUpcoming(DateTime to)
     {
-        List<DateTime> dates = new List<DateTime>();
+        List<DateTime> dates = new();
 
         if (Inactive)
         {

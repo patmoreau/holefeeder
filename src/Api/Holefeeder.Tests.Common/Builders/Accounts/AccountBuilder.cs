@@ -110,4 +110,10 @@ internal class AccountBuilder : IBuilder<Account>, ICollectionBuilder<Account>
         _faker.RuleFor(f => f.UserId, userId);
         return this;
     }
+
+    public AccountBuilder ForNoUser()
+    {
+        _faker.RuleFor(f => f.UserId, Guid.Empty);
+        return this;
+    }
 }

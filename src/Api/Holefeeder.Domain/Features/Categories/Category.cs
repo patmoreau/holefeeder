@@ -6,15 +6,7 @@ public sealed record Category : Entity, IAggregateRoot
     private readonly string _name = string.Empty;
     private readonly Guid _userId;
 
-    public Category(Guid id, CategoryType type, string name, Guid userId)
-    {
-        Id = id;
-        Type = type;
-        Name = name;
-        UserId = userId;
-    }
-
-    public override Guid Id
+    public override required Guid Id
     {
         get => _id;
         init
@@ -28,9 +20,9 @@ public sealed record Category : Entity, IAggregateRoot
         }
     }
 
-    public CategoryType Type { get; init; }
+    public required CategoryType Type { get; init; }
 
-    public string Name
+    public required string Name
     {
         get => _name;
         init
@@ -52,7 +44,7 @@ public sealed record Category : Entity, IAggregateRoot
 
     public decimal BudgetAmount { get; init; }
 
-    public Guid UserId
+    public required Guid UserId
     {
         get => _userId;
         init
@@ -68,5 +60,12 @@ public sealed record Category : Entity, IAggregateRoot
 
     public static Category Create(CategoryType type, string name, decimal budgetAmount,
         string description, Guid userId) =>
-        new Category(Guid.NewGuid(), type, name, userId) { BudgetAmount = budgetAmount };
+        new()
+        {
+            Id = Guid.NewGuid(),
+            Type = type,
+            Name = name,
+            UserId = userId,
+            BudgetAmount = budgetAmount
+        };
 }

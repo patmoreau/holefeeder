@@ -18,6 +18,12 @@ internal class StoreItemBuilder : IBuilder<StoreItem>
         return this;
     }
 
+    public StoreItemBuilder WithNoId()
+    {
+        _entity = _entity with { Id = Guid.Empty };
+        return this;
+    }
+
     public StoreItemBuilder WithCode(string code)
     {
         _entity = _entity with { Code = code };
@@ -27,6 +33,12 @@ internal class StoreItemBuilder : IBuilder<StoreItem>
     public StoreItemBuilder ForUser(Guid userId)
     {
         _entity = _entity with { UserId = userId };
+        return this;
+    }
+
+    public StoreItemBuilder ForNoUser()
+    {
+        _entity = _entity with { UserId = Guid.Empty };
         return this;
     }
 }

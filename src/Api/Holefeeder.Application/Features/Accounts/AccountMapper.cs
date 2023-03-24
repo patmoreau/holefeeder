@@ -46,8 +46,13 @@ internal static class AccountMapper
             return null;
         }
 
-        Account model = new Account(entity.Id, entity.Type, entity.Name, entity.OpenDate, entity.UserId)
+        Account model = new()
         {
+            Id = entity.Id,
+            Type = entity.Type,
+            Name = entity.Name,
+            OpenDate = entity.OpenDate,
+            UserId = entity.UserId,
             Favorite = entity.Favorite,
             Cashflows = cashflows?.ToImmutableArray() ?? ImmutableArray<Cashflow>.Empty,
             Description = entity.Description,
