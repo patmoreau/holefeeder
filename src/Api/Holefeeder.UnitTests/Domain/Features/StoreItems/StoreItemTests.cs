@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Tests.Common.Builders.StoreItems;
 

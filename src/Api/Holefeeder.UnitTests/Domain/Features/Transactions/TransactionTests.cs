@@ -1,20 +1,18 @@
 ﻿using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Tests.Common.Factories;
+using Holefeeder.Tests.Common.Builders.Transactions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 public class TransactionTests
 {
-    private readonly TransactionFactory _factory = new();
-
     [Fact]
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.Id, Guid.Empty);
+        var builder = TransactionBuilder.GivenATransaction().WithNoId();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -27,10 +25,10 @@ public class TransactionTests
     public void GivenConstructor_WhenDateIsMissing_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.Date, default(DateTime));
+        var builder = TransactionBuilder.GivenATransaction().WithNoDate();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -43,11 +41,10 @@ public class TransactionTests
     public void GivenConstructor_WhenAmountIsNegative_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.Amount,
-            faker => faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
+        var builder = TransactionBuilder.GivenATransaction().WithNegativeAmount();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -60,10 +57,10 @@ public class TransactionTests
     public void GivenConstructor_WhenAccountIdEmpty_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.AccountId, Guid.Empty);
+        var builder = TransactionBuilder.GivenATransaction().WithNoAccount();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -76,10 +73,10 @@ public class TransactionTests
     public void GivenConstructor_WhenCategoryIdEmpty_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.CategoryId, Guid.Empty);
+        var builder = TransactionBuilder.GivenATransaction().WithNoCategory();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -92,10 +89,10 @@ public class TransactionTests
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        _factory.RuleFor(transaction => transaction.UserId, Guid.Empty);
+        var builder = TransactionBuilder.GivenATransaction().WithNoUser();
 
         // act
-        Action action = () => _ = _factory.Generate();
+        Action action = () => _ = builder.Build();
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -108,10 +105,10 @@ public class TransactionTests
     public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
     {
         // arrange
-        Transaction? transaction = _factory.Generate();
+        var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
-        Transaction result = transaction.SetTags(Array.Empty<string>());
+        var result = transaction.SetTags(Array.Empty<string>());
 
         // assert
         result.Tags.Should().BeEmpty();
@@ -121,11 +118,11 @@ public class TransactionTests
     public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
     {
         // arrange
-        Transaction? transaction = _factory.Generate();
+        var transaction = TransactionBuilder.GivenATransaction().Build();
         string[]? newTags = AutoFaker.Generate<string[]>();
 
         // act
-        Transaction result = transaction.SetTags(newTags);
+        var result = transaction.SetTags(newTags);
 
         // assert
         result.Tags.Should().Contain(newTags);
@@ -135,7 +132,7 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenCashflowIdEmpty_ThenThrowException()
     {
         // arrange
-        Transaction? transaction = _factory.Generate();
+        var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
         Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, AutoFaker.Generate<DateTime>());
@@ -151,7 +148,7 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenDateIsMissing_ThenThrowException()
     {
         // arrange
-        Transaction? transaction = _factory.Generate();
+        var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
         Action action = () => _ = transaction.ApplyCashflow(AutoFaker.Generate<Guid>(), default);
@@ -167,12 +164,12 @@ public class TransactionTests
     public void GivenApplyCashflow_WhenValid_ThenSetTransaction()
     {
         // arrange
-        Transaction? transaction = _factory.Generate();
-        Guid cashflowId = AutoFaker.Generate<Guid>();
-        DateTime cashflowDate = AutoFaker.Generate<DateTime>();
+        var transaction = TransactionBuilder.GivenATransaction().Build();
+        var cashflowId = AutoFaker.Generate<Guid>();
+        var cashflowDate = AutoFaker.Generate<DateTime>();
 
         // act
-        Transaction result = transaction.ApplyCashflow(cashflowId, cashflowDate);
+        var result = transaction.ApplyCashflow(cashflowId, cashflowDate);
 
         // assert
         using (new AssertionScope())
