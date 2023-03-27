@@ -58,7 +58,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
     protected TransactionStepDefinition Transaction { get; }
     protected UserStepDefinition User { get; }
 
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         // Version for reset every test
         using (await _mutex.LockAsync())
@@ -67,7 +67,7 @@ public abstract partial class BaseScenario : IAsyncLifetime
         }
     }
 
-    public Task DisposeAsync()
+    public virtual Task DisposeAsync()
     {
         Scope.Dispose();
         return Task.CompletedTask;

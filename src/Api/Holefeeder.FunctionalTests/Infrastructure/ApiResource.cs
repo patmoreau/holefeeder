@@ -42,6 +42,7 @@ public partial class ApiResource : SmartEnum<ApiResource>
     public static readonly ApiResource GetTransaction = new(nameof(GetTransaction), 706, "api/v2/transactions/{0}", HttpMethod.Get);
     public static readonly ApiResource GetTransactions = new(nameof(GetTransactions), 707, "api/v2/transactions", HttpMethod.Get);
 
+    public static readonly ApiResource GetForAllCategories = new(nameof(GetForAllCategories), 800, "api/v2/categories/statistics", HttpMethod.Get);
     public string Endpoint { get; }
 
     public virtual bool IsOpen => false;
