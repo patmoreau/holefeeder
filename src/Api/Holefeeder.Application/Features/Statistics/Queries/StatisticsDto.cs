@@ -3,4 +3,4 @@
 
 namespace Holefeeder.Application.Features.Statistics.Queries;
 
-public record StatisticsDto(Guid CategoryId, string Category, IEnumerable<YearStatisticsDto> Years);
+public record StatisticsDto(Guid CategoryId, string Category, string Color, decimal MonthlyAverage, IEnumerable<YearStatisticsDto> Years);

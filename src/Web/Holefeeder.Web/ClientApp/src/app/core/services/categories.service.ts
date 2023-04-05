@@ -1,8 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Category } from '@app/shared/models';
-import { filter, mergeMap, Observable } from 'rxjs';
-import { CategoriesApiService } from './api/categories-api.service';
+import { catchError, filter, map, mergeMap, Observable } from 'rxjs';
 import { StateService } from './state.service';
+import { HttpClient } from '@angular/common/http';
+import { CategoryAdapter } from '@app/core/adapters';
+import { formatErrors } from '@app/core/utils/api.utils';
+
+const apiRoute = 'api/v2/categories';
 
 interface CategoriesState {
   categories: Category[];
@@ -16,12 +20,14 @@ const initialState: CategoriesState = {
 export class CategoriesService extends StateService<CategoriesState> {
   categories$: Observable<Category[]> = this.select(state => state.categories);
 
-  constructor(private apiService: CategoriesApiService) {
+  constructor(
+    private http: HttpClient,
+    @Inject('BASE_API_URL') private apiUrl: string,
+    private adapter: CategoryAdapter
+  ) {
     super(initialState);
 
-    this.apiService.find().subscribe(items => {
-      this.setState({ categories: items });
-    });
+    this.load();
   }
 
   findOneById(id: string): Observable<Category> {
@@ -33,5 +39,16 @@ export class CategoriesService extends StateService<CategoriesState> {
 
   findOneByIndex(index: number): Category {
     return this.state.categories[index];
+  }
+
+  private load() {
+    this.getAll().subscribe(items => this.setState({ categories: items }));
+  }
+
+  private getAll(): Observable<Category[]> {
+    return this.http.get(`${this.apiUrl}/${apiRoute}`).pipe(
+      map((data: any) => data.map(this.adapter.adapt)),
+      catchError(formatErrors)
+    );
   }
 }

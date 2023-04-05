@@ -1,20 +1,26 @@
-import { Injectable } from '@angular/core';
-import { ICategoryInfo, Settings, Statistics } from '@app/shared/models';
+import { Inject, Injectable } from '@angular/core';
+import { Statistics } from '@app/shared/models';
 import { Observable } from 'rxjs';
-import { StatisticsApiService } from './api/statistics-api.service';
+import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { formatErrors } from '@app/core/utils/api.utils';
+
+const apiRoute = 'api/v2/categories/statistics';
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsService {
-  constructor(private apiService: StatisticsApiService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject('BASE_API_URL') private apiUrl: string
+  ) {}
 
-  find(settings: Settings): Observable<Statistics<ICategoryInfo>[]> {
-    return this.apiService.find(settings);
+  find(): Observable<Statistics[]> {
+    return this.getStatistics();
   }
 
-  findByCategoryId(
-    id: string,
-    settings: Settings
-  ): Observable<Statistics<ICategoryInfo>[]> {
-    return this.apiService.findByCategoryId(id, settings);
+  private getStatistics(): Observable<Statistics[]> {
+    return this.http
+      .get<Statistics[]>(`${this.apiUrl}/${apiRoute}`)
+      .pipe(catchError(formatErrors));
   }
 }

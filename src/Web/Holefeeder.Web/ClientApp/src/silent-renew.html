@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <base href="./" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>silent-renew</title>
+    <meta content="text/html" http-equiv="content-type" />
+  </head>
 
-<head>
-  <base href="./" />
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>silent-renew</title>
-  <meta content="text/html" http-equiv="content-type" />
-</head>
-
-<body>
-<script>
-  window.onload = function() {
-    /* The parent window hosts the Angular application */
-    var parent = window.parent;
-    /* Send the id_token information to the oidc message handler */
-    var event = new CustomEvent("oidc-silent-renew-message", { detail: window.location });
-    parent.dispatchEvent(event);
-  };
-</script>
-</body>
-
+  <body>
+    <script>
+      window.onload = function () {
+        /* The parent window hosts the Angular application */
+        var parent = window.parent;
+        /* Send the id_token information to the oidc message handler */
+        var event = new CustomEvent('oidc-silent-renew-message', {
+          detail: window.location,
+        });
+        parent.dispatchEvent(event);
+      };
+    </script>
+  </body>
 </html>

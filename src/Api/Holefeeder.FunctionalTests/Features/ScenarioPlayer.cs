@@ -64,7 +64,7 @@ public class ScenarioPlayer
     {
         AddTask(nameof(Then), message, () =>
         {
-            using AssertionScope scope = new AssertionScope();
+            using AssertionScope scope = new();
             return action();
         });
 

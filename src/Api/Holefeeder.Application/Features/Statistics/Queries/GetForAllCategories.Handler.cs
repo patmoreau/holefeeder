@@ -3,6 +3,7 @@
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.SeedWork;
+using Holefeeder.Domain.Features.Categories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Statistics.Queries;
@@ -24,7 +25,7 @@ public partial class GetForAllCategories
         {
             var query = from category in _context.Categories
                         join transaction in _context.Transactions on category.Id equals transaction.CategoryId
-                        where category.UserId == _userContext.UserId
+                        where category.UserId == _userContext.UserId && !category.System
                         group transaction by new
                         {
                             category.Id,
@@ -39,6 +40,8 @@ public partial class GetForAllCategories
                         {
                             groupedTransactions.Key.Id,
                             groupedTransactions.Key.Name,
+                            groupedTransactions.Key.Type,
+                            groupedTransactions.Key.Color,
                             groupedTransactions.Key.Year,
                             groupedTransactions.Key.Month,
                             TotalAmount = groupedTransactions.Sum(t => t.Amount)
@@ -48,6 +51,8 @@ public partial class GetForAllCategories
                         {
                             summarizedTransactions.Id,
                             summarizedTransactions.Name,
+                            summarizedTransactions.Type,
+                            summarizedTransactions.Color,
                             summarizedTransactions.Year
                         }
                 into groupedSummaries
@@ -55,6 +60,8 @@ public partial class GetForAllCategories
                         {
                             groupedSummaries.Key.Id,
                             groupedSummaries.Key.Name,
+                            groupedSummaries.Key.Type,
+                            groupedSummaries.Key.Color,
                             groupedSummaries.Key.Year,
                             TotalAmountByYear = groupedSummaries.Sum(s => s.TotalAmount),
                             MonthlyTotals = groupedSummaries.Select(s => new { s.Month, TotalAmountByMonth = s.TotalAmount })
@@ -63,11 +70,14 @@ public partial class GetForAllCategories
             var results = await query.ToListAsync(cancellationToken: cancellationToken);
 
             var dto = results
-                .GroupBy(x => new { x.Id, x.Name },
+                .Where(x => x.Type.IsExpense)
+                .GroupBy(x => new { x.Id, x.Name, x.Color },
                     arg => new YearStatisticsDto(arg.Year, arg.TotalAmountByYear,
-                        arg.MonthlyTotals.Select(x => new MonthStatisticsDto(x.Month, x.TotalAmountByMonth)).ToList()));
+                        arg.MonthlyTotals.Select(x => new MonthStatisticsDto(x.Month, x.TotalAmountByMonth)).ToList()))
+                .OrderBy(x => x.Key.Name);
 
-            return dto.Select(x => new StatisticsDto(x.Key.Id, x.Key.Name, x.ToList()));
+            return dto.Select(x => new StatisticsDto(x.Key.Id, x.Key.Name, x.Key.Color,
+                Math.Round(x.Sum(x => x.Total) / x.Sum(x => x.Months.Count()), 2), x));
         }
     }
 }

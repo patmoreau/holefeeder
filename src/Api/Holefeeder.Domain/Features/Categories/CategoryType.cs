@@ -16,6 +16,8 @@ public abstract class CategoryType : SmartEnum<CategoryType>
 
     public virtual int Multiplier => 1;
 
+    public virtual bool IsExpense => false;
+
     private sealed class ExpenseCategoryType : CategoryType
     {
         public ExpenseCategoryType(int id, string name) : base(id, name)
@@ -23,6 +25,7 @@ public abstract class CategoryType : SmartEnum<CategoryType>
         }
 
         public override int Multiplier => -1;
+        public override bool IsExpense => true;
     }
 
     private sealed class GainCategoryType : CategoryType
@@ -30,5 +33,6 @@ public abstract class CategoryType : SmartEnum<CategoryType>
         public GainCategoryType(int id, string name) : base(id, name)
         {
         }
+        public override bool IsExpense => false;
     }
 }

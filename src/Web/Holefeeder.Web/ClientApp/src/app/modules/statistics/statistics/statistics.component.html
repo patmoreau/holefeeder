@@ -1,0 +1,14 @@
+<ng-container *ngIf="statistics$ | async as statistics; else loader">
+  <div class="pt-3">
+    <canvas baseChart class="chart"
+            [data]="chartData$ | async | filterNonNullish"
+            [type]="pieChartType"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            (chartClick)="chartClicked($event)">
+    </canvas>
+  </div>
+</ng-container>
+<ng-template #loader>
+  <app-loader></app-loader>
+</ng-template>

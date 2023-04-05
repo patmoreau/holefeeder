@@ -6,7 +6,8 @@ internal class CategoryBuilder : IBuilder<Category>, ICollectionBuilder<Category
 {
     private readonly Faker<Category> _faker = new AutoFaker<Category>()
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
-        .RuleFor(x => x.Color, faker => faker.Internet.Color());
+        .RuleFor(x => x.Color, faker => faker.Internet.Color())
+        .RuleFor(x => x.System, false);
 
 
     public Category Build()

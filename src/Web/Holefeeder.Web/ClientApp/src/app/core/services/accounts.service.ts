@@ -11,7 +11,7 @@ import {
   Upcoming,
 } from '@app/shared/models';
 import { catchError, filter, map, Observable, take } from 'rxjs';
-import { AccountAdapter } from '../adapters/account-adapter.service';
+import { AccountAdapter } from '@app/core/adapters';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
 import { StateService } from './state.service';
 

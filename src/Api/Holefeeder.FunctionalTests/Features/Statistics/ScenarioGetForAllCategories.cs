@@ -40,31 +40,42 @@ public class ScenarioGetForAllCategories : BaseScenario
             .PlayAsync();
     }
 
-    private void ValidateResponse()
+    private Task ValidateResponse()
     {
+        var expectedFoodAndDrink = new StatisticsDto(_categories["food and drink"].Id,
+            _categories["food and drink"].Name, _categories["food and drink"].Color, 333.67m,
+            new[]
+            {
+                new YearStatisticsDto(2022, 100.1m, new[] {new MonthStatisticsDto(12, 100.1m)}), new YearStatisticsDto(2023, 900.9m,
+                    new[] {new MonthStatisticsDto(1, 200.2m), new MonthStatisticsDto(2, 700.7m)})
+            });
+        var expectedPurchase = new StatisticsDto(_categories["purchase"].Id,
+            _categories["purchase"].Name, _categories["purchase"].Color, 500.5m,
+            new[] { new YearStatisticsDto(2023, 500.5m, new[] { new MonthStatisticsDto(2, 500.5m) }) });
+
         var results = HttpClientDriver.DeserializeContent<StatisticsDto[]>();
+        if (results is null)
+        {
+            results.Should()
+                .NotBeNull();
+        }
+
         results.Should()
             .NotBeNull()
+            .And.HaveCount(2)
             .And.SatisfyRespectively(
-                first => first.Should().BeEquivalentTo(new StatisticsDto(_categories["food and drink"].Id,
-                    _categories["food and drink"].Name,
-                    new[]
-                    {
-                        new YearStatisticsDto(2022, 100.1m, new[] {new MonthStatisticsDto(12, 100.1m)}),
-                        new YearStatisticsDto(2023, 900.9m,
-                            new[] {new MonthStatisticsDto(1, 200.2m), new MonthStatisticsDto(2, 700.7m)})
-                    })),
-                second => second.Should().BeEquivalentTo(new StatisticsDto(_categories["purchase"].Id,
-                    _categories["purchase"].Name,
-                    new[] { new YearStatisticsDto(2023, 500.5m, new[] { new MonthStatisticsDto(2, 500.5m) }) }))
+                first => first.Should().BeEquivalentTo(expectedFoodAndDrink),
+                second => second.Should().BeEquivalentTo(expectedPurchase)
             );
+
+        return Task.CompletedTask;
     }
 
     private async Task CreateTransaction(string categoryName, string accountName, DateTime date, decimal amount)
     {
         if (!_categories.TryGetValue(categoryName, out var category))
         {
-            category = await CategoryBuilder.GivenACategory().WithName(categoryName).ForUser(_userId).SavedInDb(DatabaseDriver);
+            category = await CategoryBuilder.GivenACategory().OfType(CategoryType.Expense).WithName(categoryName).ForUser(_userId).SavedInDb(DatabaseDriver);
             _categories.Add(categoryName, category);
         }
 

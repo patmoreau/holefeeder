@@ -520,5 +520,51 @@
         "name": "Checking account"
       }
     }
+  ],
+  "statistics": [
+    {
+      "categoryId": "id#1",
+      "category": "food and drinks",
+      "color": "#1B5088",
+      "monthlyAverage": 111.55,
+      "years": [
+        {
+          "year": 2022,
+          "total": 223.10,
+          "months": [
+            {
+              "month": 11,
+              "total": 100.05
+            },
+            {
+              "month": 12,
+              "total": 123.05
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "categoryId": "id#2",
+      "category": "mortgage",
+      "color": "#00FFFF",
+      "monthlyAverage": 653,
+      "years": [
+        {
+          "year": 2022,
+          "total": 1306,
+          "months": [
+            {
+              "month": 11,
+              "total": 653
+            },
+            {
+              "month": 12,
+              "total": 653
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
