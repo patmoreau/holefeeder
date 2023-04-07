@@ -50,7 +50,7 @@ public class ModifyTransaction : ICarterModule
             RuleFor(command => command.AccountId).NotNull().NotEmpty();
             RuleFor(command => command.CategoryId).NotNull().NotEmpty();
             RuleFor(command => command.Date).NotNull().NotEmpty();
-            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
         }
     }
 

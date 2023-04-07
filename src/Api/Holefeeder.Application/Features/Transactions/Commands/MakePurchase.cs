@@ -53,7 +53,7 @@ public class MakePurchase : ICarterModule
             RuleFor(command => command.AccountId).NotNull().NotEmpty();
             RuleFor(command => command.CategoryId).NotNull().NotEmpty();
             RuleFor(command => command.Date).NotEmpty();
-            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
         }
     }
 

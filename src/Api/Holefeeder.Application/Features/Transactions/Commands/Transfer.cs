@@ -39,7 +39,7 @@ public class Transfer : ICarterModule
             RuleFor(command => command.FromAccountId).NotNull().NotEmpty();
             RuleFor(command => command.ToAccountId).NotNull().NotEmpty();
             RuleFor(command => command.Date).NotEmpty();
-            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
         }
     }
 

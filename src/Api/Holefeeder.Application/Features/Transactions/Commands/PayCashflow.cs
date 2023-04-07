@@ -41,7 +41,7 @@ public class PayCashflow : ICarterModule
         public Validator()
         {
             RuleFor(command => command.Date).NotEmpty();
-            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
             RuleFor(command => command.CashflowId).NotEmpty();
             RuleFor(command => command.CashflowDate).NotEmpty();
         }

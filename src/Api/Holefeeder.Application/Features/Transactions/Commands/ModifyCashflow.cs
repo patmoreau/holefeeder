@@ -41,7 +41,7 @@ public class ModifyCashflow : ICarterModule
         public Validator()
         {
             RuleFor(command => command.Id).NotNull().NotEmpty();
-            RuleFor(command => command.Amount).GreaterThan(0);
+            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
         }
     }
 
