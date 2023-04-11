@@ -1,26 +1,13 @@
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
 
-internal sealed class MyDataAccountDtoBuilder : IBuilder<MyDataAccountDto>, ICollectionBuilder<MyDataAccountDto>
+internal sealed class MyDataAccountDtoBuilder : RootBuilder<MyDataAccountDto>
 {
-    private readonly Faker<MyDataAccountDto> _faker = new AutoFaker<MyDataAccountDto>()
+    protected override Faker<MyDataAccountDto> Faker { get; } = new AutoFaker<MyDataAccountDto>()
         .RuleFor(f => f.Type, faker => faker.PickRandom(AccountType.List.ToArray()));
-
-    public MyDataAccountDto Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public MyDataAccountDto[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-
-    public MyDataAccountDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
 
     public static MyDataAccountDtoBuilder GivenMyAccountData() => new();
 }

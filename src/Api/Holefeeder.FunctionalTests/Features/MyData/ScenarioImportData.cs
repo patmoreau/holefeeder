@@ -40,23 +40,23 @@ public class ScenarioImportData : BaseScenario
     [Fact]
     public async Task WhenDataIsImported()
     {
-        MyDataAccountDto[] accounts = GivenMyAccountData().Build(2);
-        MyDataCategoryDto[] categories = GivenMyCategoryData().Build(2);
-        MyDataCashflowDto[] cashflows = GivenMyCashflowData()
-            .WithAccount(accounts[0])
-            .WithCategory(categories[0])
-            .Build(2);
-        MyDataTransactionDto[] transactions = GivenMyTransactionData()
-            .WithAccount(accounts[0])
-            .WithCategory(categories[0])
-            .Build(2);
+        var accounts = GivenMyAccountData().BuildCollection(2);
+        var categories = GivenMyCategoryData().BuildCollection(2);
+        var cashflows = GivenMyCashflowData()
+            .WithAccount(accounts.ElementAt(0))
+            .WithCategory(categories.ElementAt(0))
+            .BuildCollection(2);
+        var transactions = GivenMyTransactionData()
+            .WithAccount(accounts.ElementAt(0))
+            .WithCategory(categories.ElementAt(0))
+            .BuildCollection(2);
 
         Request request = GivenAnImportDataRequest()
             .WithUpdateExisting()
-            .WithAccounts(accounts)
-            .WithCategories(categories)
-            .WithCashflows(cashflows)
-            .WithTransactions(transactions)
+            .WithAccounts(accounts.ToArray())
+            .WithCategories(categories.ToArray())
+            .WithCashflows(cashflows.ToArray())
+            .WithTransactions(transactions.ToArray())
             .Build();
 
         GivenUserIsAuthorized();
@@ -74,14 +74,14 @@ public class ScenarioImportData : BaseScenario
             dto.Should().NotBeNull("The import task never completed");
             dto!.Status.Should().NotBe(CommandStatus.Error, dto.Message);
 
-            await AssertAccount(accounts[0]);
-            await AssertAccount(accounts[1]);
-            await AssertCategory(categories[0]);
-            await AssertCategory(categories[1]);
-            await AssertCashflow(cashflows[0]);
-            await AssertCashflow(cashflows[1]);
-            await AssertTransaction(transactions[0]);
-            await AssertTransaction(transactions[1]);
+            await AssertAccount(accounts.ElementAt(0));
+            await AssertAccount(accounts.ElementAt(1));
+            await AssertCategory(categories.ElementAt(0));
+            await AssertCategory(categories.ElementAt(1));
+            await AssertCashflow(cashflows.ElementAt(0));
+            await AssertCashflow(cashflows.ElementAt(1));
+            await AssertTransaction(transactions.ElementAt(0));
+            await AssertTransaction(transactions.ElementAt(1));
         });
 
         async Task AssertAccount(MyDataAccountDto account)

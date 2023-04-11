@@ -1,6 +1,5 @@
 using Holefeeder.Application.SeedWork;
 using Microsoft.Extensions.Logging;
-using NSubstitute;
 
 namespace Holefeeder.UnitTests;
 

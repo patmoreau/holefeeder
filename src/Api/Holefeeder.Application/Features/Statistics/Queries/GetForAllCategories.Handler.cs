@@ -3,7 +3,6 @@
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.SeedWork;
-using Holefeeder.Domain.Features.Categories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Statistics.Queries;
@@ -76,8 +75,8 @@ public partial class GetForAllCategories
                         arg.MonthlyTotals.Select(x => new MonthStatisticsDto(x.Month, x.TotalAmountByMonth)).ToList()))
                 .OrderBy(x => x.Key.Name);
 
-            return dto.Select(x => new StatisticsDto(x.Key.Id, x.Key.Name, x.Key.Color,
-                Math.Round(x.Sum(x => x.Total) / x.Sum(x => x.Months.Count()), 2), x));
+            return dto.Select(grouping => new StatisticsDto(grouping.Key.Id, grouping.Key.Name, grouping.Key.Color,
+                Math.Round(grouping.Sum(x => x.Total) / grouping.Sum(x => x.Months.Count()), 2), grouping));
         }
     }
 }

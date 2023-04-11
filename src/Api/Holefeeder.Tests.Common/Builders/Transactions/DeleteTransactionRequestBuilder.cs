@@ -1,26 +1,19 @@
+using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class DeleteTransactionRequestBuilder : IBuilder<Request>
+internal class DeleteTransactionRequestBuilder : RootBuilder<Request>
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>();
-
-    public Request Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
     public DeleteTransactionRequestBuilder WithId(Guid id)
     {
-        _faker.RuleFor(x => x.Id, id);
+        Faker.RuleFor(x => x.Id, id);
         return this;
     }
 
     public DeleteTransactionRequestBuilder WithNoId()
     {
-        _faker.RuleFor(x => x.Id, Guid.Empty);
+        Faker.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 

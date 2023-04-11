@@ -1,25 +1,20 @@
 using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
 
-internal class ImportDataRequestBuilder : IBuilder<Request>
+internal class ImportDataRequestBuilder : RootBuilder<Request>
 {
     private readonly Faker<Request.Dto> _dtoFaker = new AutoFaker<Request.Dto>();
-    private readonly Faker<Request> _faker = new AutoFaker<Request>();
 
-    private ImportDataRequestBuilder()
-    {
-    }
-
-    public Request Build()
+    public override Request Build()
     {
         Request.Dto? data = _dtoFaker.Generate();
 
-        _faker.RuleFor(f => f.Data, data);
+        Faker.RuleFor(f => f.Data, data);
 
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
+        return base.Build();
     }
 
     public static ImportDataRequestBuilder GivenAnImportDataRequest() => new();
@@ -35,7 +30,7 @@ internal class ImportDataRequestBuilder : IBuilder<Request>
 
     public ImportDataRequestBuilder WithUpdateExisting()
     {
-        _faker.RuleFor(f => f.UpdateExisting, true);
+        Faker.RuleFor(f => f.UpdateExisting, true);
         return this;
     }
 

@@ -96,25 +96,25 @@ public class ScenarioModifyTransaction : BaseScenario
     [Fact]
     public async Task WhenModifyATransaction()
     {
-        Account[] accounts = await GivenAnActiveAccount()
+        var accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        Category[] categories = await GivenACategory()
+        var categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        Transaction transaction = await GivenATransaction()
-            .ForAccount(accounts[0])
-            .ForCategory(categories[0])
+        var transaction = await GivenATransaction()
+            .ForAccount(accounts.ElementAt(0))
+            .ForCategory(categories.ElementAt(0))
             .SavedInDb(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         Request request = GivenAModifyTransactionRequest()
             .WithId(transaction.Id)
-            .WithAccount(accounts[1])
-            .WithCategory(categories[1])
+            .WithAccount(accounts.ElementAt(1))
+            .WithCategory(categories.ElementAt(1))
             .Build();
 
         await WhenUserModifiedATransaction(request);

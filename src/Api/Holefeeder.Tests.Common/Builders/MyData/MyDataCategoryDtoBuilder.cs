@@ -1,27 +1,14 @@
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
 
-internal sealed class MyDataCategoryDtoBuilder : IBuilder<MyDataCategoryDto>, ICollectionBuilder<MyDataCategoryDto>
+internal sealed class MyDataCategoryDtoBuilder : RootBuilder<MyDataCategoryDto>
 {
-    private readonly Faker<MyDataCategoryDto> _faker = new AutoFaker<MyDataCategoryDto>()
+    protected override Faker<MyDataCategoryDto> Faker { get; } = new AutoFaker<MyDataCategoryDto>()
         .RuleFor(f => f.Type, faker => faker.PickRandom(CategoryType.List.ToArray()))
         .RuleFor(f => f.Color, faker => faker.Internet.Color());
-
-    public MyDataCategoryDto Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
-    public MyDataCategoryDto[] Build(int count)
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate(count).ToArray();
-    }
-
-    public MyDataCategoryDto[] Build(Faker faker) => Build(faker.Random.Int(1, 10));
 
     public static MyDataCategoryDtoBuilder GivenMyCategoryData() => new();
 }

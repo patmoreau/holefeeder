@@ -24,23 +24,23 @@ public class ScenarioExportData : BaseScenario
     [Fact]
     public async Task WhenDataIsExported()
     {
-        Account[] accounts = await GivenAnActiveAccount()
+        var accounts = await GivenAnActiveAccount()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        Category[] categories = await GivenACategory()
+        var categories = await GivenACategory()
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        Cashflow[] cashflows = await GivenAnActiveCashflow()
-            .ForAccount(accounts[0])
-            .ForCategory(categories[0])
+        var cashflows = await GivenAnActiveCashflow()
+            .ForAccount(accounts.ElementAt(0))
+            .ForCategory(categories.ElementAt(0))
             .ForUser(AuthorizedUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
-        Transaction[] transactions = await GivenATransaction()
-            .ForAccount(accounts[0])
-            .ForCategory(categories[0])
+        var transactions = await GivenATransaction()
+            .ForAccount(accounts.ElementAt(0))
+            .ForCategory(categories.ElementAt(0))
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         GivenUserIsAuthorized();

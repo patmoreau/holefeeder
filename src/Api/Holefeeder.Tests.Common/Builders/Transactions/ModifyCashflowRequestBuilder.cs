@@ -1,33 +1,28 @@
+using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class ModifyCashflowRequestBuilder : IBuilder<Request>
+internal class ModifyCashflowRequestBuilder : RootBuilder<Request>
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
-
-    public Request Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
 
     public ModifyCashflowRequestBuilder OfAmount(decimal amount)
     {
-        _faker.RuleFor(x => x.Amount, amount);
+        Faker.RuleFor(x => x.Amount, amount);
         return this;
     }
 
     public ModifyCashflowRequestBuilder WithId(Guid id)
     {
-        _faker.RuleFor(x => x.Id, id);
+        Faker.RuleFor(x => x.Id, id);
         return this;
     }
 
     public ModifyCashflowRequestBuilder WithNoId()
     {
-        _faker.RuleFor(x => x.Id, Guid.Empty);
+        Faker.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 

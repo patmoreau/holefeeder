@@ -1,53 +1,42 @@
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class MakePurchaseRequestBuilder : IBuilder<Request>
+internal class MakePurchaseRequestBuilder : RootBuilder<Request>
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
         .RuleForType(typeof(Request.CashflowRequest), _ => CashflowRequestBuilder.GivenACashflowPurchase().Build())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
-    public Request Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
-
     public MakePurchaseRequestBuilder ForAccount(Account account)
     {
-        _faker.RuleFor(x => x.AccountId, account.Id);
+        Faker.RuleFor(x => x.AccountId, account.Id);
         return this;
     }
 
     public MakePurchaseRequestBuilder ForCategory(Category category)
     {
-        _faker.RuleFor(x => x.CategoryId, category.Id);
+        Faker.RuleFor(x => x.CategoryId, category.Id);
         return this;
     }
 
     public MakePurchaseRequestBuilder OfAmount(decimal amount)
     {
-        _faker.RuleFor(x => x.Amount, amount);
+        Faker.RuleFor(x => x.Amount, amount);
         return this;
     }
 
     public static MakePurchaseRequestBuilder GivenAPurchase() => new();
 }
 
-internal class CashflowRequestBuilder : IBuilder<Request.CashflowRequest>
+internal class CashflowRequestBuilder : RootBuilder<Request.CashflowRequest>
 {
-    private readonly Faker<Request.CashflowRequest> _faker = new AutoFaker<Request.CashflowRequest>()
+    protected override Faker<Request.CashflowRequest> Faker { get; } = new AutoFaker<Request.CashflowRequest>()
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(0));
-
-    public Request.CashflowRequest Build()
-    {
-        _faker.AssertConfigurationIsValid();
-        return _faker.Generate();
-    }
 
     public static CashflowRequestBuilder GivenACashflowPurchase() => new();
 }

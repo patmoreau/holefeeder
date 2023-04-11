@@ -1,11 +1,11 @@
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.Tests.Common.Builders;
+using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.FunctionalTests.Extensions;
 
 internal static class EntityBuilderExtensions
 {
-    public static async Task<T> SavedInDb<T>(this IBuilder<T> builder, DbContextDriver databaseDriver)
+    public static async Task<T> SavedInDb<T>(this RootBuilder<T> builder, DbContextDriver databaseDriver)
         where T : class
     {
         T entity = builder.Build();
@@ -13,10 +13,10 @@ internal static class EntityBuilderExtensions
         return entity;
     }
 
-    public static async Task<T[]> CollectionSavedInDb<T>(this ICollectionBuilder<T> builder,
-        DbContextDriver databaseDriver, int count) where T : class
+    public static async Task<IReadOnlyCollection<T>> CollectionSavedInDb<T>(this RootBuilder<T> builder,
+        DbContextDriver databaseDriver, int? count = null) where T : class
     {
-        T[] entities = builder.Build(count);
+        var entities = builder.BuildCollection(count);
         foreach (T entity in entities)
         {
             await databaseDriver.SaveAsync(entity);

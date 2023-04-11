@@ -1,44 +1,50 @@
 using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
-internal class StoreItemBuilder : IBuilder<StoreItem>
+internal class StoreItemBuilder : RootBuilder<StoreItem>
 {
-    private StoreItem _entity;
+    protected override Faker<StoreItem> Faker { get; } = new AutoFaker<StoreItem>()
+        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.Code, faker => faker.Random.String2(1, 100))
+        .RuleFor(x => x.Data, faker => faker.Random.Words())
+        .RuleFor(x => x.UserId, faker => faker.Random.Guid());
 
-    private StoreItemBuilder() => _entity = new StoreItemFactory().Generate();
-
-    public StoreItem Build() => _entity;
-
-    public static StoreItemBuilder GivenAStoreItem() => new StoreItemBuilder();
+    public static StoreItemBuilder GivenAStoreItem() => new();
 
     public StoreItemBuilder WithId(Guid id)
     {
-        _entity = _entity with { Id = id };
+        Faker.RuleFor(x => x.Id, id);
+
         return this;
     }
 
     public StoreItemBuilder WithNoId()
     {
-        _entity = _entity with { Id = Guid.Empty };
+        Faker.RuleFor(x => x.Id, Guid.Empty);
+
         return this;
     }
 
     public StoreItemBuilder WithCode(string code)
     {
-        _entity = _entity with { Code = code };
+        Faker.RuleFor(x => x.Code, code);
+
         return this;
     }
 
     public StoreItemBuilder ForUser(Guid userId)
     {
-        _entity = _entity with { UserId = userId };
+        Faker.RuleFor(x => x.UserId, userId);
+
         return this;
     }
 
     public StoreItemBuilder ForNoUser()
     {
-        _entity = _entity with { UserId = Guid.Empty };
+        Faker.RuleFor(x => x.UserId, Guid.Empty);
+
         return this;
     }
 }
