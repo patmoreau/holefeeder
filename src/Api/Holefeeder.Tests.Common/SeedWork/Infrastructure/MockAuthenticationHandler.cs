@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
-namespace Holefeeder.FunctionalTests.Infrastructure;
+namespace Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
 public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string AUTHENTICATION_SCHEME = "Test";
+    public const string AuthenticationScheme = "Test";
 
     public static readonly Guid AuthorizedUserId = Guid.NewGuid();
     public static readonly Guid ForbiddenUserId = Guid.NewGuid();
@@ -33,7 +33,7 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
-        if (!AUTHENTICATION_SCHEME.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
+        if (!AuthenticationScheme.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
         {
             return Task.FromResult(AuthenticateResult.NoResult());
         }
@@ -53,9 +53,9 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
             claims.Add(new Claim(ClaimConstants.Scope, "holefeeder.user"));
         }
 
-        ClaimsIdentity identity = new ClaimsIdentity(claims, AUTHENTICATION_SCHEME);
-        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-        AuthenticationTicket ticket = new AuthenticationTicket(principal, AUTHENTICATION_SCHEME);
+        ClaimsIdentity identity = new(claims, AuthenticationScheme);
+        ClaimsPrincipal principal = new(identity);
+        AuthenticationTicket ticket = new(principal, AuthenticationScheme);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }

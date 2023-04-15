@@ -1,26 +1,26 @@
 using System.Net;
 using AutoBogus;
-using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Features;
 
 public partial class FeatureSecurity
 {
-    private Task When_I_invoke_the_resource(ApiResource apiResource)
+    private Task When_I_invoke_the_resource(ApiResource apiResources)
     {
-        if (apiResource.HttpMethod == HttpMethod.Post)
+        if (apiResources.HttpMethod == HttpMethod.Post)
         {
-            return HttpClientDriver.SendPostRequest(apiResource);
+            return HttpClientDriver.SendPostRequest(apiResources);
         }
 
-        var parameters = AutoFaker.Generate<Guid>(apiResource.ParameterCount)
+        var parameters = AutoFaker.Generate<Guid>(apiResources.ParameterCount)
             .Select(x => x.ToString())
             .Cast<object>()
             .ToArray();
 
-        return apiResource.HttpMethod == HttpMethod.Delete ?
-            HttpClientDriver.SendDeleteRequest(apiResource, parameters) :
-            HttpClientDriver.SendGetRequest(apiResource, parameters);
+        return apiResources.HttpMethod == HttpMethod.Delete ?
+            HttpClientDriver.SendDeleteRequest(apiResources, parameters) :
+            HttpClientDriver.SendGetRequest(apiResources, parameters);
     }
 
     private Task Then_user_should_be_authorized_to_access_endpoint()

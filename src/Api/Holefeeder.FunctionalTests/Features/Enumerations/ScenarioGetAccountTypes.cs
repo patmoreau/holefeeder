@@ -7,8 +7,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 public class ScenarioGetAccountTypes : BaseScenario
 {
-    public ScenarioGetAccountTypes(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -24,5 +24,5 @@ public class ScenarioGetAccountTypes : BaseScenario
         ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(AccountType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResource.GetAccountTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetAccountTypes);
 }

@@ -4,15 +4,15 @@ using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItem : BaseScenario
 {
-    public ScenarioGetStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -58,5 +58,5 @@ public class ScenarioGetStoreItem : BaseScenario
         });
     }
 
-    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetStoreItem, new object[] { id.ToString() });
+    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, new object[] { id.ToString() });
 }

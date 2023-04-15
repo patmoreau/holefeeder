@@ -8,18 +8,18 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.GetUpcomingRequestBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioGetUpcoming : BaseScenario
 {
-    public ScenarioGetUpcoming(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -45,7 +45,7 @@ public class ScenarioGetUpcoming : BaseScenario
         await ScenarioFor("unpaid upcoming one time cashflow", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("with an active one time cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.OneTime))
                 .And("who wants to get all upcoming cashflows from yesterday to the next week", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(7)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
@@ -69,7 +69,7 @@ public class ScenarioGetUpcoming : BaseScenario
         await ScenarioFor("unpaid upcoming weekly cashflows", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("with an active weekly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Weekly, 2))
                 .And("who wants to get all upcoming cashflows from yesterday to the next 3 weeks", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(7 * 3)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
@@ -89,7 +89,7 @@ public class ScenarioGetUpcoming : BaseScenario
         await ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("with an active monthly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Monthly))
                 .And("who wants to get all upcoming cashflows from yesterday to the next 12 months", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddMonths(12)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
@@ -109,7 +109,7 @@ public class ScenarioGetUpcoming : BaseScenario
         await ScenarioFor("unpaid upcoming monthly cashflows", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .Given("with an active yearly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Yearly))
                 .Given("who wants to get all upcoming cashflows from yesterday to the next 2 years", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddYears(2)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
@@ -119,7 +119,7 @@ public class ScenarioGetUpcoming : BaseScenario
         });
     }
 
-    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequest(ApiResource.GetUpcoming, request.From, request.To);
+    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequest(ApiResources.GetUpcoming, request.From, request.To);
 
     private static Request BuildUpcomingRequest(DateTime from, DateTime to) => GivenAnUpcomingRequest()
         .From(from).To(to).Build();

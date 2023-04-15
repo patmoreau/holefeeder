@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace Holefeeder.FunctionalTests.Infrastructure;
+namespace Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
 public class MockSchemeProvider : AuthenticationSchemeProvider
 {
@@ -16,11 +16,11 @@ public class MockSchemeProvider : AuthenticationSchemeProvider
 
     public override Task<AuthenticationScheme?> GetSchemeAsync(string name)
     {
-        if (name == MockAuthenticationHandler.AUTHENTICATION_SCHEME)
+        if (name == MockAuthenticationHandler.AuthenticationScheme)
         {
             AuthenticationScheme scheme = new AuthenticationScheme(
-                MockAuthenticationHandler.AUTHENTICATION_SCHEME,
-                MockAuthenticationHandler.AUTHENTICATION_SCHEME,
+                MockAuthenticationHandler.AuthenticationScheme,
+                MockAuthenticationHandler.AuthenticationScheme,
                 typeof(MockAuthenticationHandler));
             return Task.FromResult<AuthenticationScheme?>(scheme);
         }

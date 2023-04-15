@@ -3,6 +3,7 @@
 
 using Bogus;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.Tests.Common.SeedWork.Drivers;
 using LightBDD.XUnit2;
 
 namespace Holefeeder.FunctionalTests.Features;

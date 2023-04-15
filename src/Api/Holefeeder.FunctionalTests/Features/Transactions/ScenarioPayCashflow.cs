@@ -6,22 +6,22 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioPayCashflow : BaseScenario
 {
-    public ScenarioPayCashflow(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioPayCashflow(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -33,7 +33,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         await ScenarioFor("trying to pay a cashflow with an invalid request", player =>
         {
             player
-                .Given("an unauthorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("creates an invalid payment", () => request = GivenAnInvalidCashflowPayment().Build())
                 .When("sending the request", () => Transaction.PayACashflow(request))
                 .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
@@ -48,7 +48,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         await ScenarioFor("an authorized user pays a cashflow", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
                 .When("the payment is sent", () => Transaction.PayACashflow(request))
                 .Then("the user should be authorized", ThenUserShouldBeAuthorizedToAccessEndpoint);
@@ -63,7 +63,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         await ScenarioFor("a forbidden user pays a cashflow", player =>
         {
             player
-                .Given("a forbidden user", () => User.IsForbidden())
+                .Given(User.IsForbidden)
                 .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
                 .When("the payment is sent", () => Transaction.PayACashflow(request))
                 .Then("the user should be forbidden", ShouldBeForbiddenToAccessEndpoint);
@@ -78,7 +78,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         await ScenarioFor("an unauthorized user pays a cashflow", player =>
         {
             player
-                .Given("an unauthorized user", () => User.IsUnauthorized())
+                .Given(User.IsUnauthorized)
                 .And("a cashflow payment request", () => entity = GivenACashflowPayment().Build())
                 .When("the payment is sent", () => Transaction.PayACashflow(entity))
                 .Then("the user should not be authorized", ShouldNotBeAuthorizedToAccessEndpoint);
@@ -97,7 +97,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
         await ScenarioFor("paying a cashflow", player =>
         {
             player
-                .Given("the user is authorized", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))

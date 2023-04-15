@@ -6,17 +6,17 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioGetTransaction : BaseScenario
 {
-    public ScenarioGetTransaction(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -73,5 +73,5 @@ public class ScenarioGetTransaction : BaseScenario
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResource.GetTransaction, new object[] { id.ToString() });
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object[] { id.ToString() });
 }

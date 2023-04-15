@@ -7,22 +7,22 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioModifyTransaction : BaseScenario
 {
-    public ScenarioModifyTransaction(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -129,6 +129,6 @@ public class ScenarioModifyTransaction : BaseScenario
     private async Task WhenUserModifiedATransaction(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.ModifyTransaction, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.ModifyTransaction, json);
     }
 }

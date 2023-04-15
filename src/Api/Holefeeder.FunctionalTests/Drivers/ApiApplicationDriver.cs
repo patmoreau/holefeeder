@@ -4,8 +4,9 @@ using Holefeeder.Application.Context;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.SeedWork;
+using Holefeeder.Tests.Common.SeedWork.Drivers;
+using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
+public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver
 {
     public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
         new(CreateClient(), testOutputHelper);
@@ -54,9 +55,9 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>
                 services.AddScoped<BudgetingDatabaseDriver>();
 
                 services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
-                services.AddAuthentication(MockAuthenticationHandler.AUTHENTICATION_SCHEME)
+                services.AddAuthentication(MockAuthenticationHandler.AuthenticationScheme)
                     .AddScheme<AuthenticationSchemeOptions, MockAuthenticationHandler>(
-                        MockAuthenticationHandler.AUTHENTICATION_SCHEME, _ => { });
+                        MockAuthenticationHandler.AuthenticationScheme, _ => { });
 
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
             });

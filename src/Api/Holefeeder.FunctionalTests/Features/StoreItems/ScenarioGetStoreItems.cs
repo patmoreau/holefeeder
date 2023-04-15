@@ -3,15 +3,15 @@ using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioGetStoreItems : BaseScenario
 {
-    public ScenarioGetStoreItems(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -20,7 +20,7 @@ public class ScenarioGetStoreItems : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResource.GetStoreItems, -1);
+        await WhenUserTriesToQuery(ApiResources.GetStoreItems, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -46,7 +46,7 @@ public class ScenarioGetStoreItems : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResource.GetStoreItems, sorts: "-code");
+        await WhenUserTriesToQuery(ApiResources.GetStoreItems, sorts: "-code");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         StoreItemViewModel[]? result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();

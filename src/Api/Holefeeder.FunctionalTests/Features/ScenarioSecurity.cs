@@ -1,5 +1,7 @@
+using System.Reflection;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
@@ -52,6 +54,17 @@ public partial class FeatureSecurity : BaseFeature
 
     public static IEnumerable<object[]> SecuredEndpointTestCases
     {
-        get { return ApiResource.List.Where(x => !x.IsOpen).Select(endpoint => new[] { endpoint }); }
+        get
+        {
+            var apiResources = typeof(ApiResources).GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.FieldType == typeof(ApiResource) && !((ApiResource)f.GetValue(null)!).IsOpen)
+                .Select(f => (ApiResource)f.GetValue(null)!)
+                .ToList();
+
+            foreach (var apiResource in apiResources)
+            {
+                yield return new object[] { apiResource };
+            }
+        }
     }
 }

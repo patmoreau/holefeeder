@@ -2,9 +2,11 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Holefeeder.FunctionalTests.Infrastructure;
+using FluentAssertions;
+using Holefeeder.Tests.Common.SeedWork.Infrastructure;
+using Xunit.Abstractions;
 
-namespace Holefeeder.FunctionalTests.Drivers;
+namespace Holefeeder.Tests.Common.SeedWork.Drivers;
 
 public class HttpClientDriver
 {
@@ -26,9 +28,9 @@ public class HttpClientDriver
         LogUnexpectedErrors();
     }
 
-    internal async Task SendGetRequest(ApiResource apiResource, string? query = null)
+    internal async Task SendGetRequest(ApiResource apiResources, string? query = null)
     {
-        Uri baseUri = apiResource.EndpointFromResource();
+        Uri baseUri = apiResources.EndpointFromResource();
         Uri fullUri = baseUri;
         if (query is not null)
         {
@@ -39,16 +41,16 @@ public class HttpClientDriver
         await SendRequest(request);
     }
 
-    internal async Task SendGetRequest(ApiResource apiResource, params object[] parameters)
+    internal async Task SendGetRequest(ApiResource apiResources, params object[] parameters)
     {
-        Uri endpointUri = apiResource.EndpointFromResource(parameters);
+        Uri endpointUri = apiResources.EndpointFromResource(parameters);
         using HttpRequestMessage request = new(HttpMethod.Get, endpointUri);
         await SendRequest(request);
     }
 
-    internal async Task SendPostRequest(ApiResource apiResource, string? body = null)
+    internal async Task SendPostRequest(ApiResource apiResources, string? body = null)
     {
-        Uri endpointUri = apiResource.EndpointFromResource();
+        Uri endpointUri = apiResources.EndpointFromResource();
 
         using HttpRequestMessage request = new(HttpMethod.Post, endpointUri);
         if (body is not null)
@@ -59,9 +61,9 @@ public class HttpClientDriver
         await SendRequest(request);
     }
 
-    internal async Task SendDeleteRequest(ApiResource apiResource, params object[] parameters)
+    internal async Task SendDeleteRequest(ApiResource apiResources, params object[] parameters)
     {
-        Uri endpointUri = apiResource.EndpointFromResource(parameters);
+        Uri endpointUri = apiResources.EndpointFromResource(parameters);
         using HttpRequestMessage request = new(HttpMethod.Delete, endpointUri);
         await SendRequest(request);
     }
@@ -113,7 +115,7 @@ public class HttpClientDriver
 
     public void AuthenticateUser(Guid userId) =>
         _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue(MockAuthenticationHandler.AUTHENTICATION_SCHEME, userId.ToString());
+            new AuthenticationHeaderValue(MockAuthenticationHandler.AuthenticationScheme, userId.ToString());
 
     public void UnAuthenticate() => _httpClient.DefaultRequestHeaders.Authorization = null;
 

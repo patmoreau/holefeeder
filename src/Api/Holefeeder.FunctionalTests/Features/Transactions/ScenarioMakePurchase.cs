@@ -6,21 +6,21 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.MakePurchaseRequestBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioMakePurchase : BaseScenario
 {
-    public ScenarioMakePurchase(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioMakePurchase(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -32,7 +32,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         await ScenarioFor("making an invalid request purchase", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("making a purchase of 0$", () => request = GivenAPurchase().OfAmount(0).Build())
                 .When("sending the request", () => Transaction.MakesPurchase(request))
                 .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
@@ -47,7 +47,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         await ScenarioFor("making an authorized purchase", player =>
         {
             player
-                .Given("an authorized user", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("making a purchase", () => request = GivenAPurchase().Build())
                 .When("sending the request", () => Transaction.MakesPurchase(request))
                 .Then("should be allowed", ThenUserShouldBeAuthorizedToAccessEndpoint);
@@ -62,7 +62,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         await ScenarioFor("making an forbidden purchase", player =>
         {
             player
-                .Given("a forbidden user", () => User.IsForbidden())
+                .Given(User.IsForbidden)
                 .And("making a purchase", () => request = GivenAPurchase().Build())
                 .When("sending the request", () => Transaction.MakesPurchase(request))
                 .Then("should be forbidden", ShouldBeForbiddenToAccessEndpoint);
@@ -77,7 +77,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         await ScenarioFor("making an unauthorized purchase", player =>
         {
             player
-                .Given("an unauthorized user", () => User.IsUnauthorized())
+                .Given(User.IsUnauthorized)
                 .And("making a purchase", () => entity = GivenAPurchase().Build())
                 .When("sending the request", () => Transaction.MakesPurchase(entity))
                 .Then("should be unauthorized", ShouldNotBeAuthorizedToAccessEndpoint);
@@ -95,7 +95,7 @@ public sealed class ScenarioMakePurchase : BaseScenario
         await ScenarioFor("making a valid purchase", player =>
         {
             player
-                .Given("the user is authorized", () => User.IsAuthorized())
+                .Given(User.IsAuthorized)
                 .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("wanting to make a purchase", () => request = GivenAPurchase().ForAccount(account).ForCategory(category).Build())

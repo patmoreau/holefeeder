@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Holefeeder.FunctionalTests.Drivers;
+namespace Holefeeder.Tests.Common.SeedWork.Drivers;
 
 public abstract class DbContextDriver
 {

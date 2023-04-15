@@ -18,8 +18,8 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 public class ScenarioImportData : BaseScenario
 {
-    public ScenarioImportData(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioImportData(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -116,7 +116,7 @@ public class ScenarioImportData : BaseScenario
     private async Task WhenUserImportsData(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.ImportData, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.ImportData, json);
     }
 
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
@@ -130,7 +130,7 @@ public class ScenarioImportData : BaseScenario
         {
             await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
 
-            await HttpClientDriver.SendGetRequest(ApiResource.ImportDataStatus, importId);
+            await HttpClientDriver.SendGetRequest(ApiResources.ImportDataStatus, importId);
 
             ThenShouldExpectStatusCode(HttpStatusCode.OK);
 

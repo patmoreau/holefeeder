@@ -1,6 +1,6 @@
-using System.Data;
 using System.Data.Common;
 using Holefeeder.Infrastructure.SeedWork;
+using Holefeeder.Tests.Common.SeedWork.Drivers;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Respawn;
@@ -8,11 +8,10 @@ using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
+public class BudgetingDatabaseInitializer : DatabaseInitializer
 {
     private readonly string _connectionString;
-    private DbConnection _connection = default!;
-    private Respawner _respawner = default!;
+    private DbConnection? _connection;
 
     public BudgetingDatabaseInitializer()
     {
@@ -25,30 +24,26 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
             configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!;
     }
 
-    async ValueTask IAsyncDisposable.DisposeAsync()
+    protected override DbConnection Connection
     {
-        await _connection.DisposeAsync();
-        GC.SuppressFinalize(this);
+        get { return _connection ??= new MySqlConnection(_connectionString); }
     }
 
-    public async Task InitializeAsync()
+    protected override RespawnerOptions Options { get; } = new()
     {
-        _connection = new MySqlConnection(_connectionString);
+        DbAdapter = DbAdapter.MySql,
+        SchemasToInclude = new[] { "budgeting_functional_tests" },
+        TablesToInclude =
+            new Table[] { "accounts", "cashflows", "categories", "store_items", "transactions" },
+        TablesToIgnore = new Table[] { "schema_versions" },
+        WithReseed = true
+    };
 
+    public override async Task InitializeAsync()
+    {
         try
         {
-            await _connection.OpenAsync();
-
-            _respawner = await Respawner.CreateAsync(_connection,
-                new RespawnerOptions
-                {
-                    DbAdapter = DbAdapter.MySql,
-                    SchemasToInclude = new[] { "budgeting_functional_tests" },
-                    TablesToInclude =
-                        new Table[] { "accounts", "cashflows", "categories", "store_items", "transactions" },
-                    TablesToIgnore = new Table[] { "schema_versions" },
-                    WithReseed = true
-                });
+            await base.InitializeAsync();
         }
         catch (MySqlException e)
         {
@@ -67,17 +62,5 @@ public class BudgetingDatabaseInitializer : IAsyncLifetime, IAsyncDisposable
                 throw;
             }
         }
-    }
-
-    public Task DisposeAsync() => Task.CompletedTask;
-
-    public async Task ResetCheckpoint()
-    {
-        if (_connection.State is ConnectionState.Closed or ConnectionState.Broken)
-        {
-            await InitializeAsync();
-        }
-
-        await _respawner.ResetAsync(_connection);
     }
 }

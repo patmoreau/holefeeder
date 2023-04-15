@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Holefeeder.Application.Features.Transactions.Commands;
-using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common.SeedWork.Drivers;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -19,7 +19,7 @@ public class TransactionStepDefinition
         }
 
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.MakePurchase, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.MakePurchase, json);
     }
 
     internal async Task PayACashflow(PayCashflow.Request request)
@@ -30,12 +30,12 @@ public class TransactionStepDefinition
         }
 
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.PayCashflow, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.PayCashflow, json);
     }
 
     internal async Task Transfer(Transfer.Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.Transfer, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.Transfer, json);
     }
 }

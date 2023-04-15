@@ -7,22 +7,22 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyCashflowRequestBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioModifyCashflow : BaseScenario
 {
-    public ScenarioModifyCashflow(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -75,6 +75,6 @@ public class ScenarioModifyCashflow : BaseScenario
     private async Task WhenUserModifiedACashflow(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.ModifyCashflow, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
     }
 }

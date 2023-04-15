@@ -6,22 +6,22 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public class ScenarioDeleteTransaction : BaseScenario
 {
-    public ScenarioDeleteTransaction(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -66,5 +66,5 @@ public class ScenarioDeleteTransaction : BaseScenario
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResource.DeleteTransaction, request.Id);
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
 }

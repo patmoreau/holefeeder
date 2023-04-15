@@ -5,21 +5,21 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 public sealed class ScenarioTransfer : BaseScenario
 {
-    public ScenarioTransfer(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioTransfer(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        if (apiApplicationDriver == null)
+        if (applicationDriver == null)
         {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
+            throw new ArgumentNullException(nameof(applicationDriver));
         }
     }
 
@@ -32,7 +32,7 @@ public sealed class ScenarioTransfer : BaseScenario
         {
             player
                 .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
-                .And("the user is authorized", () => User.IsAuthorized())
+                .And(User.IsAuthorized)
                 .When("a transfer is made", () => Transaction.Transfer(request))
                 .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
         });
@@ -47,7 +47,7 @@ public sealed class ScenarioTransfer : BaseScenario
         {
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
-                .And("the user is authorized", () => User.IsAuthorized())
+                .And(User.IsAuthorized)
                 .When("the transfer is made", () => Transaction.Transfer(request))
                 .Then("the user should be authorized to access the endpoint", ThenUserShouldBeAuthorizedToAccessEndpoint);
         });
@@ -62,7 +62,7 @@ public sealed class ScenarioTransfer : BaseScenario
         {
             player
                 .Given("a transfer request", () => request = GivenATransfer().Build())
-                .And("the user is forbidden", () => User.IsForbidden())
+                .And(User.IsForbidden)
                 .When("the request is sent", () => Transaction.Transfer(request))
                 .Then("should be forbidden from accessing the endpoint", ShouldBeForbiddenToAccessEndpoint);
         });
@@ -77,7 +77,7 @@ public sealed class ScenarioTransfer : BaseScenario
         {
             player
                 .Given("a transfer request", () => entity = GivenATransfer().Build())
-                .And("the user is unauthorized", () => User.IsUnauthorized())
+                .And(User.IsUnauthorized)
                 .When("the transfer request is made", () => Transaction.Transfer(entity))
                 .Then("the user should not be authorized to access endpoint", ShouldNotBeAuthorizedToAccessEndpoint);
         });
@@ -99,7 +99,7 @@ public sealed class ScenarioTransfer : BaseScenario
                 .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
                 .And("their request is valid", () => request = GivenATransfer().FromAccount(fromAccount).ToAccount(toAccount).Build())
-                .And("they are authorized to use the application", () => User.IsAuthorized())
+                .And(User.IsAuthorized)
                 .When("the transfer request is sent", () => Transaction.Transfer(request))
                 .Then("the return code should be Created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
                 .And("the route of the new resource should be in the header", () => ThenShouldGetTheRouteOfTheNewResourceInTheHeader())

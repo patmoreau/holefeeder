@@ -4,15 +4,15 @@ using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
-using static Holefeeder.FunctionalTests.Infrastructure.MockAuthenticationHandler;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 public class ScenarioGetAccounts : BaseScenario
 {
-    public ScenarioGetAccounts(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetAccounts(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -21,7 +21,7 @@ public class ScenarioGetAccounts : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResource.GetAccounts, -1);
+        await WhenUserTriesToQuery(ApiResources.GetAccounts, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -41,7 +41,7 @@ public class ScenarioGetAccounts : BaseScenario
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResource.GetAccounts, sorts: "-name");
+        await WhenUserTriesToQuery(ApiResources.GetAccounts, sorts: "-name");
 
         ThenShouldExpectStatusCode(HttpStatusCode.OK);
         AccountViewModel[]? result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();

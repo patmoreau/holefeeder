@@ -7,6 +7,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.Accounts;
 using Holefeeder.Tests.Common.Builders.Categories;
 using Holefeeder.Tests.Common.Builders.Transactions;
+using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Features.Statistics;
 
@@ -17,28 +18,22 @@ public class ScenarioGetForAllCategories : BaseScenario
     private readonly Dictionary<string, Category> _categories = new();
     private readonly Dictionary<string, Account> _accounts = new();
 
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public ScenarioGetForAllCategories(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
-        _testOutputHelper = testOutputHelper;
     }
 
     [Fact]
-    public async Task WhenGettingStatistics()
-    {
-        await ScenarioPlayer.Create("A user sends was to know his statistics", _testOutputHelper)
-            .Given("the user is authorized", GivenUserIsAuthorized)
-            .And("a 'purchase' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("purchase", "credit card", new DateTime(2023, 2, 1), 500.5m))
-            .And("a 'food and drink' transaction was made on the 'credit card' account in December 2022", () => CreateTransaction("food and drink", "credit card", new DateTime(2022, 12, 1), 100.1m))
-            .And("a 'food and drink' transaction was made on the 'credit card' account in January 2023", () => CreateTransaction("food and drink", "credit card", new DateTime(2023, 1, 1), 200.2m))
-            .And("a 'food and drink' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("food and drink", "credit card", new DateTime(2023, 2, 1), 300.3m))
-            .And("a second 'food and drink' transaction was made on the 'checking' account in February 2023", () => CreateTransaction("food and drink", "checking", new DateTime(2023, 2, 10), 400.4m))
-            .When("user gets their statistics", () => WhenUserTriesToQuery(ApiResource.GetForAllCategories))
-            .Then("the total for the year should match the expected", ValidateResponse)
-            .PlayAsync();
-    }
+    public Task WhenGettingStatistics() =>
+        ScenarioFor("A user sends was to know his statistics", runner =>
+            runner.Given("the user is authorized", GivenUserIsAuthorized)
+                .And("a 'purchase' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("purchase", "credit card", new DateTime(2023, 2, 1), 500.5m))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in December 2022", () => CreateTransaction("food and drink", "credit card", new DateTime(2022, 12, 1), 100.1m))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in January 2023", () => CreateTransaction("food and drink", "credit card", new DateTime(2023, 1, 1), 200.2m))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("food and drink", "credit card", new DateTime(2023, 2, 1), 300.3m))
+                .And("a second 'food and drink' transaction was made on the 'checking' account in February 2023", () => CreateTransaction("food and drink", "checking", new DateTime(2023, 2, 10), 400.4m))
+                .When("user gets their statistics", () => WhenUserTriesToQuery(ApiResources.GetForAllCategories))
+                .Then("the total for the year should match the expected", ValidateResponse));
 
     private Task ValidateResponse()
     {

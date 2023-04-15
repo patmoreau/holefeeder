@@ -12,8 +12,8 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 public class ScenarioCreateStoreItem : BaseScenario
 {
-    public ScenarioCreateStoreItem(ApiApplicationDriver apiApplicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
     {
     }
 
@@ -65,6 +65,6 @@ public class ScenarioCreateStoreItem : BaseScenario
     private async Task WhenUserCreateStoreItem(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResource.CreateStoreItem, json);
+        await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
     }
 }
