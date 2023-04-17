@@ -3,8 +3,8 @@ using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
@@ -32,12 +32,12 @@ public class ScenarioGetStoreItems : BaseScenario
         const string secondCode = nameof(secondCode);
 
         await GivenAStoreItem()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .WithCode(firstCode)
             .SavedInDb(DatabaseDriver);
 
         await GivenAStoreItem()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .WithCode(secondCode)
             .SavedInDb(DatabaseDriver);
 

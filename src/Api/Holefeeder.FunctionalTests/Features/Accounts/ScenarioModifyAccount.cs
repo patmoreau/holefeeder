@@ -5,9 +5,9 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -47,7 +47,7 @@ public class ScenarioModifyAccount : BaseScenario
     public async Task WhenModifyAccount()
     {
         Account entity = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Request request = GivenAModifyAccountRequest()

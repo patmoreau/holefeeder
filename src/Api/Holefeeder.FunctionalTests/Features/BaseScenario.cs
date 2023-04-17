@@ -25,6 +25,7 @@ public abstract class BaseScenario : RootScenario
 
         StoreItem = new StoreItemStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);
+        User = new UserStepDefinition(HttpClientDriver);
     }
 
     private IServiceScope Scope { get; }
@@ -35,7 +36,10 @@ public abstract class BaseScenario : RootScenario
     protected StoreItemStepDefinition StoreItem { get; }
     protected TransactionStepDefinition Transaction { get; }
 
+    protected UserStepDefinition User { get; }
+
     protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
 
-    protected void GivenUserIsAuthorized() => HttpClientDriver.Authenticate();
+    protected void GivenUserIsAuthorized() =>
+        HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId);
 }

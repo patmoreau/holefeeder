@@ -6,11 +6,11 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -41,11 +41,11 @@ public class ScenarioDeleteTransaction : BaseScenario
     public async Task WhenDeletingATransaction()
     {
         Account account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Category category = await GivenACategory()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Transaction transaction = await GivenATransaction()

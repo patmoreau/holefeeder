@@ -5,10 +5,10 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -94,10 +94,10 @@ public sealed class ScenarioTransfer : BaseScenario
         await ScenarioFor("a valid transfer request", player =>
         {
             player
-                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
                 .And("their request is valid", () => request = GivenATransfer().FromAccount(fromAccount).ToAccount(toAccount).Build())
                 .And(User.IsAuthorized)
                 .When("the transfer request is sent", () => Transaction.Transfer(request))

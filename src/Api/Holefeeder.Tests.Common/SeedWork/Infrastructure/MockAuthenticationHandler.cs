@@ -4,18 +4,14 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
 
 namespace Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
-public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public sealed class MockAuthenticationHandler : AuthenticationHandler<MockAuthenticationSchemeOptions>
 {
     public const string AuthenticationScheme = "Test";
 
-    public static readonly Guid AuthorizedUserId = Guid.NewGuid();
-    public static readonly Guid ForbiddenUserId = Guid.NewGuid();
-
-    public MockAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
+    public MockAuthenticationHandler(IOptionsMonitor<MockAuthenticationSchemeOptions> options, ILoggerFactory logger,
         UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
     {
     }
@@ -43,15 +39,11 @@ public class MockAuthenticationHandler : AuthenticationHandler<AuthenticationSch
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
-        List<Claim> claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, "Test user"), new(ClaimTypes.NameIdentifier, headerValue.Parameter)
-        };
+        string userId = headerValue.Parameter;
 
-        if (headerValue.Parameter.Equals(AuthorizedUserId.ToString(), StringComparison.OrdinalIgnoreCase))
-        {
-            claims.Add(new Claim(ClaimConstants.Scope, "holefeeder.user"));
-        }
+        List<Claim> claims = new() { new(ClaimTypes.Name, userId), new(ClaimTypes.NameIdentifier, userId) };
+
+        claims.AddRange(Options.ConfigureUserClaims(userId));
 
         ClaimsIdentity identity = new(claims, AuthenticationScheme);
         ClaimsPrincipal principal = new(identity);

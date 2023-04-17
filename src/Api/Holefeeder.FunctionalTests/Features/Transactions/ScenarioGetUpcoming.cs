@@ -8,11 +8,11 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.GetUpcomingRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -127,18 +127,18 @@ public class ScenarioGetUpcoming : BaseScenario
     private async Task<Cashflow> BuildCashflow(DateIntervalType intervalType, int frequency = 1, int recurrence = 1)
     {
         Account account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         return await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .OfFrequency(intervalType, frequency)
             .Recurring(recurrence)
             .SavedInDb(DatabaseDriver);

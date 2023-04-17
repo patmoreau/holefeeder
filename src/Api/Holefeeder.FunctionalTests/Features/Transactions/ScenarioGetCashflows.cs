@@ -6,10 +6,10 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -37,18 +37,18 @@ public class ScenarioGetCashflows : BaseScenario
         int count = faker.Random.Int(2, 10);
 
         Account account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, count);
 
         GivenUserIsAuthorized();

@@ -111,8 +111,6 @@ public class HttpClientDriver
         return content;
     }
 
-    public void Authenticate() => AuthenticateUser(MockAuthenticationHandler.AuthorizedUserId);
-
     public void AuthenticateUser(Guid userId) =>
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(MockAuthenticationHandler.AuthenticationScheme, userId.ToString());

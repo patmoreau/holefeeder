@@ -7,7 +7,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Holefeeder.Tests.Common.SeedWork.Drivers;
 using Holefeeder.Tests.Common.SeedWork.Infrastructure;
-using Holefeeder.Tests.Common.SeedWork.StepDefinitions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Nito.AsyncEx;
@@ -39,11 +38,7 @@ public abstract partial class RootScenario : IAsyncLifetime
         Scope = applicationDriver.Services.CreateScope();
 
         HttpClientDriver = applicationDriver.CreateHttpClientDriver(testOutputHelper);
-
-        User = new UserStepDefinition(HttpClientDriver);
     }
-
-    protected UserStepDefinition User { get; }
 
     private IServiceScope Scope { get; }
 

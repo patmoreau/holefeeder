@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using AutoBogus;
 using Dapper;
 using Holefeeder.Application.Context;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Tests.Common.SeedWork.Drivers;
 using Holefeeder.Tests.Common.SeedWork.Infrastructure;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Web;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
@@ -56,8 +59,13 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
 
                 services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
                 services.AddAuthentication(MockAuthenticationHandler.AuthenticationScheme)
-                    .AddScheme<AuthenticationSchemeOptions, MockAuthenticationHandler>(
-                        MockAuthenticationHandler.AuthenticationScheme, _ => { });
+                    .AddScheme<MockAuthenticationSchemeOptions, MockAuthenticationHandler>(
+                        MockAuthenticationHandler.AuthenticationScheme, options =>
+                        {
+                            options.AdditionalUserClaims.Add(
+                                UserStepDefinition.HolefeederUserId.ToString(),
+                                new List<Claim> { new(ClaimConstants.Scope, "holefeeder.user") });
+                        });
 
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
             });

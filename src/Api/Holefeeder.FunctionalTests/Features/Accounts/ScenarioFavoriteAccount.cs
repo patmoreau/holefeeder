@@ -5,9 +5,9 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -46,7 +46,7 @@ public class ScenarioFavoriteAccount : BaseScenario
     public async Task WhenFavoriteAccount()
     {
         Account entity = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .IsFavorite(false)
             .SavedInDb(DatabaseDriver);
 

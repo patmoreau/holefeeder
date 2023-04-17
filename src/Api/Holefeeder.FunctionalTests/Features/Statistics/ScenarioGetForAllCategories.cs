@@ -4,16 +4,16 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Tests.Common.Builders.Accounts;
 using Holefeeder.Tests.Common.Builders.Categories;
 using Holefeeder.Tests.Common.Builders.Transactions;
-using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Features.Statistics;
 
 public class ScenarioGetForAllCategories : BaseScenario
 {
-    private readonly Guid _userId = MockAuthenticationHandler.AuthorizedUserId;
+    private readonly Guid _userId = UserStepDefinition.HolefeederUserId;
 
     private readonly Dictionary<string, Category> _categories = new();
     private readonly Dictionary<string, Account> _accounts = new();

@@ -7,11 +7,11 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -55,7 +55,7 @@ public class ScenarioModifyTransaction : BaseScenario
     public async Task WhenCategoryDoesNotExists()
     {
         Account account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Request request = GivenAModifyTransactionRequest()
@@ -73,11 +73,11 @@ public class ScenarioModifyTransaction : BaseScenario
     public async Task WhenTransactionDoesNotExists()
     {
         Account account = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Category category = await GivenACategory()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Request request = GivenAModifyTransactionRequest()
@@ -97,11 +97,11 @@ public class ScenarioModifyTransaction : BaseScenario
     public async Task WhenModifyATransaction()
     {
         var accounts = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         var transaction = await GivenATransaction()

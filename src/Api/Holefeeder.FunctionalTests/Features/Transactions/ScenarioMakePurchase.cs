@@ -6,10 +6,10 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.MakePurchaseRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -96,8 +96,8 @@ public sealed class ScenarioMakePurchase : BaseScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("category", async () => category = await GivenACategory().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
                 .And("wanting to make a purchase", () => request = GivenAPurchase().ForAccount(account).ForCategory(category).Build())
                 .When("the purchase is made", () => Transaction.MakesPurchase(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))

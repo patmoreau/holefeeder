@@ -6,11 +6,11 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
@@ -98,9 +98,9 @@ public sealed class ScenarioPayCashflow : BaseScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("a category", async () => category = await GivenACategory().ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
-                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(AuthorizedUserId).SavedInDb(DatabaseDriver))
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("a category", async () => category = await GivenACategory().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
                 .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).ForDate(cashflow.EffectiveDate).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
                 .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))

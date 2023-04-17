@@ -4,8 +4,8 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
@@ -24,13 +24,13 @@ public class ScenarioGetCategories : BaseScenario
 
         Category firstCategory = await GivenACategory()
             .WithName(firstName)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .IsNotFavorite()
             .SavedInDb(DatabaseDriver);
 
         Category secondCategory = await GivenACategory()
             .WithName(secondName)
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .IsFavorite()
             .SavedInDb(DatabaseDriver);
 

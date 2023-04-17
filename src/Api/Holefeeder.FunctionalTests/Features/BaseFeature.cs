@@ -3,6 +3,7 @@
 
 using Bogus;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Tests.Common.SeedWork.Drivers;
 using LightBDD.XUnit2;
 
@@ -29,7 +30,8 @@ public class BaseFeature : FeatureFixture
 
     protected Task Given_an_unauthorized_user() => Task.Run(() => HttpClientDriver.UnAuthenticate());
 
-    protected Task Given_an_authorized_user() => Task.Run(() => HttpClientDriver.Authenticate());
+    protected Task Given_an_authorized_user() => Task.Run(() =>
+        HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId));
 
     protected Task Given_a_forbidden_user() =>
         Task.Run(() => HttpClientDriver.AuthenticateUser(_faker.Random.Guid()));

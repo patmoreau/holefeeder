@@ -1,10 +1,13 @@
 using Holefeeder.Tests.Common.SeedWork.Drivers;
 using Holefeeder.Tests.Common.SeedWork.Scenarios;
+using Holefeeder.Tests.Common.SeedWork.StepDefinitions;
 
-namespace Holefeeder.Tests.Common.SeedWork.StepDefinitions;
+namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class UserStepDefinition : RootStepDefinition
 {
+    public static readonly Guid HolefeederUserId = Guid.NewGuid();
+
     public UserStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
     {
     }
@@ -18,7 +21,7 @@ public class UserStepDefinition : RootStepDefinition
     public void IsAuthorized(IStepRunner runner)
     {
         ArgumentNullException.ThrowIfNull(runner);
-        runner.Execute("the user is authorized", () => HttpClientDriver.Authenticate());
+        runner.Execute("the user is authorized", () => HttpClientDriver.AuthenticateUser(HolefeederUserId));
     }
 
     public void IsForbidden(IStepRunner runner)

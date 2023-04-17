@@ -5,9 +5,9 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
@@ -36,7 +36,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     public async Task WhenModifyStoreItem()
     {
         StoreItem storeItem = await GivenAStoreItem()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .SavedInDb(DatabaseDriver);
 
         Request request = GivenAModifyStoreItemRequest()

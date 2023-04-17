@@ -6,11 +6,11 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
@@ -25,17 +25,17 @@ public class ScenarioExportData : BaseScenario
     public async Task WhenDataIsExported()
     {
         var accounts = await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         var cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts.ElementAt(0))
             .ForCategory(categories.ElementAt(0))
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, 2);
 
         var transactions = await GivenATransaction()

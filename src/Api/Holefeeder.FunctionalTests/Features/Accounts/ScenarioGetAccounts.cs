@@ -4,8 +4,8 @@ using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
+using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-using static Holefeeder.Tests.Common.SeedWork.Infrastructure.MockAuthenticationHandler;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -33,7 +33,7 @@ public class ScenarioGetAccounts : BaseScenario
         int count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
-            .ForUser(AuthorizedUserId)
+            .ForUser(HolefeederUserId)
             .CollectionSavedInDb(DatabaseDriver, count);
 
         await GivenAnActiveAccount()

@@ -1,13 +1,12 @@
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
-using Holefeeder.Tests.Common.SeedWork.Scenarios;
 using CreateRequest = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
 using ModifyRequest = Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 [Collection("Api collection")]
-public class ScenarioStoreItem : RootScenario
+public class ScenarioStoreItem : BaseScenario
 {
     private readonly StoreItemStepDefinition _storeItem;
 
