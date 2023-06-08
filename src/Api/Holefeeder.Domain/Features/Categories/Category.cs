@@ -1,12 +1,12 @@
 namespace Holefeeder.Domain.Features.Categories;
 
-public sealed record Category : Entity, IAggregateRoot
+public sealed record Category : IAggregateRoot
 {
     private readonly Guid _id;
     private readonly string _name = string.Empty;
     private readonly Guid _userId;
 
-    public override required Guid Id
+    public required Guid Id
     {
         get => _id;
         init

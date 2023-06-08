@@ -1,12 +1,12 @@
 ﻿namespace Holefeeder.Domain.Features.StoreItem;
 
-public sealed record StoreItem : Entity, IAggregateRoot
+public sealed record StoreItem : IAggregateRoot
 {
     private readonly string _code = null!;
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    public override required Guid Id
+    public required Guid Id
     {
         get => _id;
         init

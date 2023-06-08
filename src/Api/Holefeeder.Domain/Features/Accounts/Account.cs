@@ -2,14 +2,14 @@ using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-public sealed record Account : Entity, IAggregateRoot
+public sealed record Account : IAggregateRoot
 {
     private readonly Guid _id;
     private readonly string _name = string.Empty;
     private readonly DateTime _openDate;
     private readonly Guid _userId;
 
-    public override required Guid Id
+    public required Guid Id
     {
         get => _id;
         init

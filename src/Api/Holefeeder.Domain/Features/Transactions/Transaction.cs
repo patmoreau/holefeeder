@@ -3,7 +3,7 @@ using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Transaction : Entity, IAggregateRoot
+public record Transaction : IAggregateRoot
 {
     private readonly Guid _accountId;
     private readonly decimal _amount;
@@ -12,7 +12,7 @@ public record Transaction : Entity, IAggregateRoot
     private readonly Guid _id;
     private readonly Guid _userId;
 
-    public sealed override required Guid Id
+    public required Guid Id
     {
         get => _id;
         init

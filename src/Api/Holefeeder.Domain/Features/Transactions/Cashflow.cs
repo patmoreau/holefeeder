@@ -4,7 +4,7 @@ using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Cashflow : Entity, IAggregateRoot
+public record Cashflow : IAggregateRoot
 {
     private readonly Guid _accountId;
     private readonly decimal _amount;
@@ -15,7 +15,7 @@ public record Cashflow : Entity, IAggregateRoot
     private readonly int _recurrence;
     private readonly Guid _userId;
 
-    public sealed override required Guid Id
+    public required Guid Id
     {
         get => _id;
         init
