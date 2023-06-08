@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Extensions;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Extensions;
-using Holefeeder.Application.SeedWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

@@ -1,5 +1,5 @@
 using System.Data;
-using Holefeeder.Application.SeedWork;
+using DrifterApps.Seeds.Domain;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
@@ -22,7 +22,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
     public DbSet<StoreItem> StoreItems { get; set; } = default!;
     public DbSet<Transaction> Transactions { get; set; } = default!;
 
-    public async Task BeginTransactionAsync(CancellationToken cancellationToken)
+    public async Task BeginWorkAsync(CancellationToken cancellationToken)
     {
         if (_currentTransaction != null)
         {
@@ -33,7 +33,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
             await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
     }
 
-    public async Task CommitTransactionAsync(CancellationToken cancellationToken)
+    public async Task CommitWorkAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -43,7 +43,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
         }
         catch
         {
-            await RollbackTransactionAsync(cancellationToken);
+            await RollbackWorkAsync(cancellationToken);
             throw;
         }
         finally
@@ -56,7 +56,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
         }
     }
 
-    public async Task RollbackTransactionAsync(CancellationToken cancellationToken)
+    public async Task RollbackWorkAsync(CancellationToken cancellationToken)
     {
         try
         {

@@ -1,7 +1,8 @@
-﻿using FluentValidation.Results;
+﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
+using FluentValidation.Results;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
@@ -30,7 +31,7 @@ public class Transfer : ICarterModule
 
     internal record Request
     (DateTime Date, decimal Amount, string Description, Guid FromAccountId,
-        Guid ToAccountId) : ICommandRequest<(Guid FromTransactionId, Guid ToTransactionId)>;
+        Guid ToAccountId) : IRequest<(Guid FromTransactionId, Guid ToTransactionId)>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

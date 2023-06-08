@@ -1,6 +1,7 @@
-﻿using Holefeeder.Application.Context;
+﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -51,7 +52,7 @@ public class FavoriteAccount : ICarterModule
         }
     }
 
-    internal record Request(Guid Id, bool IsFavorite) : ICommandRequest<Unit>;
+    internal record Request(Guid Id, bool IsFavorite) : IRequest<Unit>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

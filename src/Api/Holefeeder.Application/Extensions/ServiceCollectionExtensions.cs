@@ -1,9 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Holefeeder.Application.Behaviors;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,10 +15,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddHangfireServices();
 
-        services.AddHttpContextAccessor();
-        services.AddTransient<IUserContext, UserContext>()
-            .AddScoped<CommandsScheduler>()
-            .AddScoped<CommandsExecutor>();
+        services.AddUserContext();
 
         // For all the validators, register them with dependency injection as scoped
         AssemblyScanner
@@ -31,9 +27,7 @@ public static class ServiceCollectionExtensions
         services
             .AddMediatR(serviceConfiguration =>
                 serviceConfiguration.RegisterServicesFromAssembly(typeof(Application).Assembly)
-                    .AddOpenBehavior(typeof(LoggingBehavior<,>))
-                    .AddOpenBehavior(typeof(ValidationBehavior<,>))
-                    .AddOpenBehavior(typeof(TransactionBehavior<,>)));
+                    .RegisterServicesFromApplicationSeeds());
 
         return services;
     }

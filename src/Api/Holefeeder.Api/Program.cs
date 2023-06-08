@@ -1,4 +1,5 @@
 using Carter;
+using DrifterApps.Seeds.Infrastructure;
 using Hangfire;
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
@@ -17,7 +18,8 @@ builder.Services
     .AddHealthChecks(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddApplication(builder.Configuration)
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddHangfireRequestScheduler();
 
 WebApplication app = builder.Build();
 

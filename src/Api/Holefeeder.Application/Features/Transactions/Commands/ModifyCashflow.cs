@@ -1,6 +1,7 @@
-﻿using Holefeeder.Application.Context;
+﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ public class ModifyCashflow : ICarterModule
             .WithName(nameof(ModifyCashflow))
             .RequireAuthorization();
 
-    internal record Request : ICommandRequest<Unit>
+    internal record Request : IRequest<Unit>, IUnitOfWorkRequest
     {
         public Guid Id { get; init; }
 

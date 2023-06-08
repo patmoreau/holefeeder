@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using DrifterApps.Seeds.Application;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.MyData.Queries;
-using Holefeeder.Application.SeedWork;
-using Holefeeder.Application.SeedWork.BackgroundRequest;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -25,7 +24,7 @@ public class ImportData : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/my-data/import-data",
                 [DisableRequestSizeLimit] (Request request, IUserContext userContext, IValidator<Request> validator,
-                    CommandsScheduler commandsScheduler) =>
+                    IRequestScheduler requestScheduler) =>
                 {
                     ValidationResult? validation = validator.Validate(request);
                     if (!validation.IsValid)
@@ -40,7 +39,7 @@ public class ImportData : ICarterModule
                         Data = request.Data,
                         UserId = userContext.UserId
                     };
-                    commandsScheduler.SendNow(internalRequest, nameof(ImportData));
+                    requestScheduler.SendNow(internalRequest, nameof(ImportData));
 
                     return Results.AcceptedAtRoute(nameof(ImportDataStatus), new { Id = internalRequest.RequestId },
                         new { Id = internalRequest.RequestId });
@@ -72,7 +71,7 @@ public class ImportData : ICarterModule
         {
             try
             {
-                await _context.BeginTransactionAsync(cancellationToken);
+                await _context.BeginWorkAsync(cancellationToken);
 
                 UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.InProgress });
                 await ImportAccountsAsync(request, cancellationToken);
@@ -80,7 +79,7 @@ public class ImportData : ICarterModule
                 await ImportCashflowsAsync(request, cancellationToken);
                 await ImportTransactionsAsync(request, cancellationToken);
 
-                await _context.CommitTransactionAsync(cancellationToken);
+                await _context.CommitWorkAsync(cancellationToken);
 
                 UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.Completed });
             }
@@ -89,7 +88,7 @@ public class ImportData : ICarterModule
             {
                 UpdateProgress(request.RequestId,
                     _importDataStatus with { Status = CommandStatus.Error, Message = e.ToString() });
-                await _context.RollbackTransactionAsync(cancellationToken);
+                await _context.RollbackWorkAsync(cancellationToken);
             }
 #pragma warning restore CA1031
 

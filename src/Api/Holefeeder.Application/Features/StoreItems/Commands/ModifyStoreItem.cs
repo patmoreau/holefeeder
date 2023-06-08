@@ -1,6 +1,7 @@
-﻿using Holefeeder.Application.Context;
+﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.StoreItem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ public class ModifyStoreItem : ICarterModule
         }
     }
 
-    internal record Request(Guid Id, string Data) : ICommandRequest<Unit>;
+    internal record Request(Guid Id, string Data) : IRequest<Unit>, IUnitOfWorkRequest;
 
     internal class Handler : IRequestHandler<Request, Unit>
     {

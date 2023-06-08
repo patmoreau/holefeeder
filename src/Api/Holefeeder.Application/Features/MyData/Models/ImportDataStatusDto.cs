@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.SeedWork;
+﻿using DrifterApps.Seeds.Application;
 
 namespace Holefeeder.Application.Features.MyData.Models;
 

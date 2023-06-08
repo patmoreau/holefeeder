@@ -1,4 +1,4 @@
-using Holefeeder.Domain.SeedWork;
+using DrifterApps.Seeds.Domain;
 
 namespace Holefeeder.Application.Exceptions;
 

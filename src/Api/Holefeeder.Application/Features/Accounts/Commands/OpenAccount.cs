@@ -1,6 +1,7 @@
-﻿using Holefeeder.Application.Context;
+﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.Mediatr;
+using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +27,7 @@ public class OpenAccount : ICarterModule
             .RequireAuthorization();
 
     internal record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
-        : ICommandRequest<Guid>;
+        : IRequest<Guid>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
