@@ -1,12 +1,14 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
 
-internal class ImportDataRequestBuilder : RootBuilder<Request>
+internal class ImportDataRequestBuilder : FakerBuilder<Request>
 {
-    private readonly Faker<Request.Dto> _dtoFaker = new AutoFaker<Request.Dto>();
+    protected override Faker<Request> Faker { get; } = new Faker<Request>();
+
+    private readonly Faker<Request.Dto> _dtoFaker = new Faker<Request.Dto>();
 
     public override Request Build()
     {

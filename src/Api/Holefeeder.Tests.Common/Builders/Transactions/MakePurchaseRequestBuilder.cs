@@ -1,13 +1,13 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class MakePurchaseRequestBuilder : RootBuilder<Request>
+internal class MakePurchaseRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
         .RuleForType(typeof(Request.CashflowRequest), _ => CashflowRequestBuilder.GivenACashflowPurchase().Build())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
@@ -32,9 +32,9 @@ internal class MakePurchaseRequestBuilder : RootBuilder<Request>
     public static MakePurchaseRequestBuilder GivenAPurchase() => new();
 }
 
-internal class CashflowRequestBuilder : RootBuilder<Request.CashflowRequest>
+internal class CashflowRequestBuilder : FakerBuilder<Request.CashflowRequest>
 {
-    protected override Faker<Request.CashflowRequest> Faker { get; } = new AutoFaker<Request.CashflowRequest>()
+    protected override Faker<Request.CashflowRequest> Faker { get; } = new Faker<Request.CashflowRequest>()
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(0));
 

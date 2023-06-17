@@ -1,10 +1,14 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
-internal class FavoriteAccountRequestBuilder : RootBuilder<Request>
+internal class FavoriteAccountRequestBuilder : FakerBuilder<Request>
 {
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.IsFavorite, faker => faker.Random.Bool());
+
     public FavoriteAccountRequestBuilder WithId(Guid id)
     {
         Faker.RuleFor(x => x.Id, id);

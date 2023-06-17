@@ -1,11 +1,11 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
 
-internal sealed class MyDataTransactionDtoBuilder : RootBuilder<MyDataTransactionDto>
+internal sealed class MyDataTransactionDtoBuilder : FakerBuilder<MyDataTransactionDto>
 {
-    protected override Faker<MyDataTransactionDto> Faker { get; } = new AutoFaker<MyDataTransactionDto>()
+    protected override Faker<MyDataTransactionDto> Faker { get; } = new Faker<MyDataTransactionDto>()
         .RuleFor(f => f.CashflowId, (Guid?)null)
         .RuleFor(f => f.CashflowDate, (DateTime?)null);
 

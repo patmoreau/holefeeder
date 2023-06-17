@@ -1,16 +1,22 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
-internal class AccountBuilder : RootBuilder<Account>
+internal class AccountBuilder : FakerBuilder<Account>
 {
-    protected override Faker<Account> Faker { get; } = new AutoFaker<Account>()
+    protected override Faker<Account> Faker { get; } = new Faker<Account>()
+        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
+        .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
+        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
+        .RuleFor(x => x.Inactive, faker => faker.Random.Bool())
+        .RuleFor(x => x.UserId, faker => faker.Random.Guid())
         .RuleFor(x => x.Transactions, new List<Transaction>())
         .RuleFor(x => x.Cashflows, new List<Cashflow>());
 

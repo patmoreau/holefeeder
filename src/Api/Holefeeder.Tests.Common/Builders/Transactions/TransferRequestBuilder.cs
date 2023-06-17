@@ -1,11 +1,13 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class TransferRequestBuilder : RootBuilder<Request>
+internal class TransferRequestBuilder : FakerBuilder<Request>
 {
+    protected override Faker<Request> Faker { get; } = new Faker<Request>();
+
     public TransferRequestBuilder FromAccount(Account account)
     {
         Faker.RuleFor(x => x.FromAccountId, account.Id);

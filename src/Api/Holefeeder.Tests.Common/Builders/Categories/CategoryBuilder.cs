@@ -1,14 +1,19 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.Categories;
 
-internal class CategoryBuilder : RootBuilder<Category>
+internal class CategoryBuilder : FakerBuilder<Category>
 {
-    protected override Faker<Category> Faker { get; } = new AutoFaker<Category>()
+    protected override Faker<Category> Faker { get; } = new Faker<Category>()
+        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.Type, faker => faker.PickRandom<CategoryType>(CategoryType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
         .RuleFor(x => x.Color, faker => faker.Internet.Color())
-        .RuleFor(x => x.System, false);
+        .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
+        .RuleFor(x => x.System, false)
+        .RuleFor(x => x.BudgetAmount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.UserId, faker => faker.Random.Guid());
 
     public static CategoryBuilder GivenACategory() => new();
 

@@ -1,11 +1,11 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
-internal class OpenAccountRequestBuilder : RootBuilder<Request>
+internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
         .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date);
 
     public OpenAccountRequestBuilder WithName(string name)

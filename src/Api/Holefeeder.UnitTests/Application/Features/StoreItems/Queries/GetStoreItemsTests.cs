@@ -7,16 +7,17 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
 public class GetStoreItemsTests
 {
-    private readonly Faker<Request> _faker;
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
+            Array.Empty<string>()));
 
     public GetStoreItemsTests()
     {
-        _faker = new AutoFaker<Request>()
-            .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
-            .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1));
-
-        int countDummy = new Faker().Random.Number(100);
-        new AutoFaker<StoreItemViewModel>().Generate(countDummy);
+        int countDummy = Fakerizer.Random.Number(100);
+        new Faker<StoreItemViewModel>()
+            .CustomInstantiator(faker =>
+                new StoreItemViewModel(faker.Random.Guid(), faker.Random.Hash(), faker.Lorem.Paragraph()))
+            .Generate(countDummy);
     }
 
     [Fact]

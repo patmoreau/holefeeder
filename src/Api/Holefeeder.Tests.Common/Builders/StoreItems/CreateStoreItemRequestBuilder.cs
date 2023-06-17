@@ -1,11 +1,16 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
-internal class CreateStoreItemRequestBuilder : RootBuilder<Request>
+internal class CreateStoreItemRequestBuilder : FakerBuilder<Request>
 {
-    public static CreateStoreItemRequestBuilder GivenACreateStoreItemRequest() => new CreateStoreItemRequestBuilder();
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Hash(), faker.Lorem.Paragraphs()))
+        .RuleFor(x => x.Code, faker => faker.Random.Hash())
+        .RuleFor(x => x.Data, faker => faker.Lorem.Paragraphs());
+
+    public static CreateStoreItemRequestBuilder GivenACreateStoreItemRequest() => new();
 
     public CreateStoreItemRequestBuilder WithCode(string code)
     {

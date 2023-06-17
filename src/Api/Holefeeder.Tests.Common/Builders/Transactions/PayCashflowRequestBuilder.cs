@@ -1,11 +1,13 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class PayCashflowRequestBuilder : RootBuilder<Request>
+internal class PayCashflowRequestBuilder : FakerBuilder<Request>
 {
+    protected override Faker<Request> Faker { get; } = new Faker<Request>();
+
     public PayCashflowRequestBuilder ForCashflow(Cashflow cashflow)
     {
         Faker.RuleFor(x => x.CashflowId, cashflow.Id);

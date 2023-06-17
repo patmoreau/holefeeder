@@ -1,10 +1,13 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
-internal class CloseAccountRequestBuilder : RootBuilder<Request>
+internal class CloseAccountRequestBuilder : FakerBuilder<Request>
 {
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Guid()));
+
     public CloseAccountRequestBuilder WithId(Guid id)
     {
         Faker.RuleFor(x => x.Id, id);

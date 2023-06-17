@@ -1,11 +1,11 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class GetUpcomingRequestBuilder : RootBuilder<Request>
+internal class GetUpcomingRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
         .RuleFor(fake => fake.From, fake => fake.Date.Past().Date)
         .RuleFor(fake => fake.To, fake => fake.Date.Future().Date);
 

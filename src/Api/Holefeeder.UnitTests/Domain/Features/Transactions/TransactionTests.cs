@@ -119,7 +119,7 @@ public class TransactionTests
     {
         // arrange
         var transaction = TransactionBuilder.GivenATransaction().Build();
-        string[]? newTags = AutoFaker.Generate<string[]>();
+        string[]? newTags = Fakerizer.Random.WordsArray(RandomCollectionCount());
 
         // act
         var result = transaction.SetTags(newTags);
@@ -135,7 +135,7 @@ public class TransactionTests
         var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, AutoFaker.Generate<DateTime>());
+        Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, Fakerizer.Date.Recent());
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -151,7 +151,7 @@ public class TransactionTests
         var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(AutoFaker.Generate<Guid>(), default);
+        Action action = () => _ = transaction.ApplyCashflow(Fakerizer.Random.Guid(), default);
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -165,8 +165,8 @@ public class TransactionTests
     {
         // arrange
         var transaction = TransactionBuilder.GivenATransaction().Build();
-        var cashflowId = AutoFaker.Generate<Guid>();
-        var cashflowDate = AutoFaker.Generate<DateTime>();
+        var cashflowId = Fakerizer.Random.Guid();
+        var cashflowDate = Fakerizer.Date.Recent();
 
         // act
         var result = transaction.ApplyCashflow(cashflowId, cashflowDate);

@@ -4,7 +4,8 @@ namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
 public class GetStoreItemTests
 {
-    private readonly Faker<Request> _faker = new AutoFaker<Request>();
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Guid()));
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

@@ -1,11 +1,11 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class ModifyCashflowRequestBuilder : RootBuilder<Request>
+internal class ModifyCashflowRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public ModifyCashflowRequestBuilder OfAmount(decimal amount)

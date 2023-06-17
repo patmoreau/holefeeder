@@ -5,7 +5,9 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
 public class TransferTests
 {
-    private readonly AutoFaker<Request> _faker = new();
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Date.Soon(), faker.Finance.Amount(), faker.Lorem.Paragraphs(),
+            faker.Random.Guid(), faker.Random.Guid()));
 
     public TransferTests() => _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(1M));
 

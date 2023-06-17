@@ -4,9 +4,8 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
 public class FavoriteAccountTests
 {
-    private readonly Faker<Request> _faker;
-
-    public FavoriteAccountTests() => _faker = new AutoFaker<Request>();
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Guid(), faker.Random.Bool()));
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenValidationError()

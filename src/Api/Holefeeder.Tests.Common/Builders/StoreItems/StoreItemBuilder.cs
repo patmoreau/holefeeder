@@ -1,11 +1,11 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.StoreItem;
-using Holefeeder.Tests.Common.SeedWork;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
-internal class StoreItemBuilder : RootBuilder<StoreItem>
+internal class StoreItemBuilder : FakerBuilder<StoreItem>
 {
-    protected override Faker<StoreItem> Faker { get; } = new AutoFaker<StoreItem>()
+    protected override Faker<StoreItem> Faker { get; } = new Faker<StoreItem>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Code, faker => faker.Random.String2(1, 100))
         .RuleFor(x => x.Data, faker => faker.Random.Words())

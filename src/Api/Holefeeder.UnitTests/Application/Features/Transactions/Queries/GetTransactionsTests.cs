@@ -9,9 +9,9 @@ public class GetTransactionsTests
     private readonly Faker<Request> _faker;
 
     public GetTransactionsTests() =>
-        _faker = new AutoFaker<Request>()
-            .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
-            .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1));
+        _faker = new Faker<Request>()
+            .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
+                Array.Empty<string>()));
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
@@ -50,7 +50,7 @@ public class GetTransactionsTests
         // arrange
         Request? request = _faker.RuleFor(x => x.Limit, 0).Generate();
 
-        Validator validator = new Validator();
+        Validator validator = new();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

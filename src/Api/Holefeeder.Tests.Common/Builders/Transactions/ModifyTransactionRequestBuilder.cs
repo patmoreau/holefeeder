@@ -1,13 +1,13 @@
+using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Tests.Common.SeedWork;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
-internal class ModifyTransactionRequestBuilder : RootBuilder<Request>
+internal class ModifyTransactionRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new AutoFaker<Request>()
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public ModifyTransactionRequestBuilder OfAmount(decimal amount)

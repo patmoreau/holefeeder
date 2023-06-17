@@ -5,7 +5,14 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
 public class ModifyTransactionTests
 {
-    private readonly AutoFaker<Request> _faker = new();
+    private readonly Faker<Request> _faker = new Faker<Request>()
+            .RuleFor(x => x.Id, faker => faker.Random.Guid())
+            .RuleFor(x => x.Date, faker => faker.Date.Recent())
+            .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+            .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
+            .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
+            .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+            .RuleFor(x => x.Tags, faker => faker.Lorem.Words());
 
     public ModifyTransactionTests() =>
         _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(decimal.One, decimal.MaxValue));

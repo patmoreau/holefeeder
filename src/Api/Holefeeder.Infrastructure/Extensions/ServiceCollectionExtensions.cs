@@ -20,17 +20,16 @@ public static class ServiceCollectionExtensions
             throw new ArgumentNullException(nameof(configuration));
         }
 
-        BudgetingConnectionStringBuilder mySqlDatabaseSettings = new BudgetingConnectionStringBuilder
+        services.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
         {
             ConnectionString = configuration.GetConnectionString("BudgetingConnectionString")!
-        };
+        });
 
-        services.AddSingleton(mySqlDatabaseSettings);
-
-        services.AddDbContext<BudgetingContext>(options =>
+        services.AddDbContext<BudgetingContext>((provider, builder) =>
         {
-            string connectionString = mySqlDatabaseSettings.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
+            string connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
         services.AddScoped<Script000InitDatabase>();

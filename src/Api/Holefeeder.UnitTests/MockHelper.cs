@@ -1,4 +1,4 @@
-using Holefeeder.Application.SeedWork;
+using DrifterApps.Seeds.Application;
 using Microsoft.Extensions.Logging;
 
 namespace Holefeeder.UnitTests;
@@ -10,7 +10,7 @@ public static class MockHelper
     public static IUserContext CreateUserContext()
     {
         IUserContext? userContextMock = Substitute.For<IUserContext>();
-        userContextMock.UserId.Returns(AutoFaker.Generate<Guid>());
+        userContextMock.UserId.Returns(Fakerizer.Random.Guid());
         return userContextMock;
     }
 }

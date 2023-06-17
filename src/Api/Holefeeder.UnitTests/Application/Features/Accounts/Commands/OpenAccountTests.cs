@@ -7,11 +7,10 @@ namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
 public class OpenAccountTests
 {
-    private readonly Faker<Request> _faker;
-
-    public OpenAccountTests() =>
-        _faker = new AutoFaker<Request>()
-            .RuleForType(typeof(AccountType), faker => faker.PickRandom(AccountType.List.ToArray()));
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.PickRandom<AccountType>(AccountType.List), faker.Lorem.Word(),
+            faker.Date.Recent(), faker.Finance.Amount(), faker.Lorem.Sentence()))
+        .RuleForType(typeof(AccountType), faker => faker.PickRandom(AccountType.List.ToArray()));
 
     [Fact]
     public async Task GivenValidator_WhenTypeIsNull_ThenError()

@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+using DrifterApps.Seeds.Domain;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Holefeeder.Application.Context;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +30,8 @@ public static class ServiceCollectionExtensions
             .AddMediatR(serviceConfiguration =>
                 serviceConfiguration.RegisterServicesFromAssembly(typeof(Application).Assembly)
                     .RegisterServicesFromApplicationSeeds());
+
+        services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
 
         return services;
     }

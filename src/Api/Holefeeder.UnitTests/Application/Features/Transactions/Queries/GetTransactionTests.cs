@@ -4,7 +4,8 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
 public class GetTransactionTests
 {
-    private readonly AutoFaker<Request> _faker = new();
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Guid()));
 
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()

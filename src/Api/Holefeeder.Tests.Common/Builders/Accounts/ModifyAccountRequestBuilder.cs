@@ -1,10 +1,12 @@
-using Holefeeder.Tests.Common.SeedWork;
+using DrifterApps.Seeds.Testing;
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
 
-internal class ModifyAccountRequestBuilder : RootBuilder<Request>
+internal class ModifyAccountRequestBuilder : FakerBuilder<Request>
 {
+    protected override Faker<Request> Faker { get; } = new Faker<Request>();
+
     public ModifyAccountRequestBuilder WithId(Guid id)
     {
         Faker.RuleFor(x => x.Id, id);

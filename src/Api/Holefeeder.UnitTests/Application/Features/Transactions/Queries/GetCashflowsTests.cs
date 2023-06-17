@@ -6,12 +6,9 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
 public class GetCashflowsTests
 {
-    private readonly Faker<Request> _faker;
-
-    public GetCashflowsTests() =>
-        _faker = new AutoFaker<Request>()
-            .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
-            .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1));
+    private readonly Faker<Request> _faker = new Faker<Request>()
+        .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
+            Array.Empty<string>()));
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
