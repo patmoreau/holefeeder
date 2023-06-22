@@ -8,4 +8,5 @@ global using FluentAssertions.Execution;
 global using FluentValidation.TestHelper;
 global using NSubstitute;
 global using Xunit;
+global using Xunit.Categories;
 global using static DrifterApps.Seeds.Testing.Globals;

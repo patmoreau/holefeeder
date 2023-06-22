@@ -13,15 +13,15 @@
 
   <ItemGroup>
     <PackageReference Include="Carter" Version="7.1.0" />
-    <PackageReference Include="DrifterApps.Seeds.Application" Version="1.0.11-alpha" />
-    <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.11-alpha" />
+    <PackageReference Include="DrifterApps.Seeds.Application" Version="0.1.46" />
+    <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" Version="0.1.46" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.2" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="2.11.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.12.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.2" />
   </ItemGroup>

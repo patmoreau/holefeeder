@@ -3,6 +3,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransac
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
+[UnitTest]
 public class ModifyTransactionTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

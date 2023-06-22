@@ -52,14 +52,14 @@ public class OpenAccount : ICarterModule
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (await _context.Accounts.AnyAsync(x => x.Name == request.Name && x.UserId == _userContext.UserId,
+            if (await _context.Accounts.AnyAsync(x => x.Name == request.Name && x.UserId == _userContext.Id,
                     cancellationToken))
             {
                 throw new AccountDomainException($"Name '{request.Name}' already exists.");
             }
 
             Account account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
-                request.Description, _userContext.UserId);
+                request.Description, _userContext.Id);
 
             await _context.Accounts.AddAsync(account, cancellationToken);
 

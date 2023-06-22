@@ -47,7 +47,7 @@ public class GetAccount : ICarterModule
         {
             Account? account = await _context.Accounts
                 .Include(e => e.Transactions).ThenInclude(e => e.Category)
-                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId,
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.Id,
                     cancellationToken);
             if (account is null)
             {

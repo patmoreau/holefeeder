@@ -71,13 +71,13 @@ public class MakePurchase : ICarterModule
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
+            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
 
-            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
+            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
@@ -86,7 +86,7 @@ public class MakePurchase : ICarterModule
             Guid? cashflowId = await HandleCashflow(request, cancellationToken);
 
             Transaction transaction = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.AccountId, request.CategoryId, _userContext.UserId);
+                request.AccountId, request.CategoryId, _userContext.Id);
 
             if (cashflowId is not null)
             {
@@ -110,7 +110,7 @@ public class MakePurchase : ICarterModule
             Request.CashflowRequest? cashflowRequest = request.Cashflow;
             Cashflow cashflow = Cashflow.Create(cashflowRequest.EffectiveDate, cashflowRequest.IntervalType,
                 cashflowRequest.Frequency, cashflowRequest.Recurrence, request.Amount, request.Description,
-                request.CategoryId, request.AccountId, _userContext.UserId);
+                request.CategoryId, request.AccountId, _userContext.Id);
 
             cashflow = cashflow.SetTags(request.Tags);
 

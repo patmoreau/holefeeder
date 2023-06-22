@@ -3,6 +3,7 @@ using Holefeeder.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Extensions;
 
+[UnitTest]
 public class DateHelperTests
 {
     public static IEnumerable<object[]> ParsePersistentTestCases

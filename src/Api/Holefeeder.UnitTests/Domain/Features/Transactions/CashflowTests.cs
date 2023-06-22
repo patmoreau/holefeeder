@@ -9,6 +9,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
+[UnitTest]
 public class CashflowTests
 {
     private readonly Faker _faker = new();

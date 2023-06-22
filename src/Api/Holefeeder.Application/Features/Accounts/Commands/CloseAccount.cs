@@ -41,7 +41,7 @@ public class CloseAccount : ICarterModule
         {
             Account? account = await _context.Accounts
                 // .AsNoTracking()
-                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == _userContext.UserId, cancellationToken);
+                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == _userContext.Id, cancellationToken);
             if (account is null)
             {
                 throw new AccountNotFoundException(request.Id);

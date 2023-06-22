@@ -73,7 +73,7 @@ public class GetUpcoming : ICarterModule
         public async Task<QueryResult<UpcomingViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
             List<Cashflow> cashflows = await _context.Cashflows
-                .Where(c => c.UserId == _userContext.UserId)
+                .Where(c => c.UserId == _userContext.Id)
                 .Include(c => c.Account)
                 .Include(c => c.Category)
                 .Include(c => c.Transactions)

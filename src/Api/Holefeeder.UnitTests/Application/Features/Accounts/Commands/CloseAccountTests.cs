@@ -3,6 +3,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.CloseAccountRequestBuilde
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
+[UnitTest]
 public class CloseAccountTests
 {
     [Fact]

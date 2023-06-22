@@ -4,6 +4,7 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestB
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 
+[UnitTest]
 public class CreateStoreItemTests
 {
     [Fact]

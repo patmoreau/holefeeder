@@ -2,6 +2,7 @@ using static Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
+[UnitTest]
 public class GetAccountTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

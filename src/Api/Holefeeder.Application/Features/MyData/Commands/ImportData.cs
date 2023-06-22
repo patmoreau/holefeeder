@@ -37,7 +37,7 @@ public class ImportData : ICarterModule
                         RequestId = Guid.NewGuid(),
                         UpdateExisting = request.UpdateExisting,
                         Data = request.Data,
-                        UserId = userContext.UserId
+                        UserId = userContext.Id
                     };
                     requestScheduler.SendNow(internalRequest, nameof(ImportData));
 

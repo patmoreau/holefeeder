@@ -10,7 +10,7 @@ public static class MockHelper
     public static IUserContext CreateUserContext()
     {
         IUserContext? userContextMock = Substitute.For<IUserContext>();
-        userContextMock.UserId.Returns(Fakerizer.Random.Guid());
+        userContextMock.Id.Returns(Fakerizer.Random.Guid());
         return userContextMock;
     }
 }

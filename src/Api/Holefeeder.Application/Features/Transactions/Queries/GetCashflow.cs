@@ -48,7 +48,7 @@ public class GetCashflow : ICarterModule
         {
             Cashflow? result = await _context.Cashflows
                 .Include(x => x.Account).Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (result is null)
             {
                 throw new CashflowNotFoundException(request.Id);

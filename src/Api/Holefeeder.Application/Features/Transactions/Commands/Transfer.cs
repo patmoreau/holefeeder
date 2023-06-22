@@ -72,12 +72,12 @@ public class Transfer : ICarterModule
             Category transferFrom = await FirstCategoryAsync("Transfer Out", cancellationToken);
 
             Transaction transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, transferFrom.Id, _userContext.UserId);
+                request.FromAccountId, transferFrom.Id, _userContext.Id);
 
             await _context.Transactions.AddAsync(transactionFrom, cancellationToken);
 
             Transaction transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.ToAccountId, transferTo.Id, _userContext.UserId);
+                request.ToAccountId, transferTo.Id, _userContext.Id);
 
             await _context.Transactions.AddAsync(transactionTo, cancellationToken);
 
@@ -92,11 +92,11 @@ public class Transfer : ICarterModule
 
         private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>
             await _context.Categories
-                .FirstAsync(x => x.UserId == _userContext.UserId && x.Name == categoryName, cancellationToken);
+                .FirstAsync(x => x.UserId == _userContext.Id && x.Name == categoryName, cancellationToken);
 
         private async Task<bool> ActiveAccountExistsAsync(Guid accountId, CancellationToken cancellationToken) =>
             await _context.Accounts.AnyAsync(
-                x => x.Id == accountId && x.UserId == _userContext.UserId && !x.Inactive,
+                x => x.Id == accountId && x.UserId == _userContext.Id && !x.Inactive,
                 cancellationToken);
     }
 }

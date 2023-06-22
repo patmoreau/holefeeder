@@ -2,6 +2,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetTransaction
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
+[UnitTest]
 public class GetTransactionTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

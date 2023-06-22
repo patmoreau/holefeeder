@@ -54,10 +54,10 @@ public class GetStoreItems : ICarterModule
 
         public async Task<QueryResult<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-            int total = await _context.StoreItems.Where(e => e.UserId == _userContext.UserId)
+            int total = await _context.StoreItems.Where(e => e.UserId == _userContext.Id)
                 .CountAsync(cancellationToken);
             List<Response> items = await _context.StoreItems
-                .Where(e => e.UserId == _userContext.UserId)
+                .Where(e => e.UserId == _userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

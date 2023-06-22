@@ -40,7 +40,7 @@ public class ModifyAccount : ICarterModule
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             Account? exists = await _context.Accounts
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (exists is null)
             {
                 throw new AccountNotFoundException(request.Id);

@@ -55,11 +55,11 @@ public class GetTransactions : ICarterModule
         public async Task<QueryResult<TransactionInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            int total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
             List<TransactionInfoViewModel> items = await _context.Transactions
                 .Include(e => e.Account)
                 .Include(e => e.Category)
-                .Where(e => e.UserId == _userContext.UserId)
+                .Where(e => e.UserId == _userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

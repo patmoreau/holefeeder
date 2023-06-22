@@ -47,7 +47,7 @@ public class GetStoreItem : ICarterModule
         public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
             StoreItem? result = await _context.StoreItems
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId,
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id,
                     cancellationToken);
 
             if (result is null)

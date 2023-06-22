@@ -62,14 +62,14 @@ public class PayCashflow : ICarterModule
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
             Cashflow? cashflow = await _context.Cashflows.SingleOrDefaultAsync(
-                x => x.Id == request.CashflowId && x.UserId == _userContext.UserId, cancellationToken);
+                x => x.Id == request.CashflowId && x.UserId == _userContext.Id, cancellationToken);
             if (cashflow is null)
             {
                 throw new ValidationException($"Cashflow '{request.CashflowId}' does not exists");
             }
 
             Transaction transaction = Transaction.Create(request.Date, request.Amount, cashflow.Description,
-                    cashflow.AccountId, cashflow.CategoryId, _userContext.UserId)
+                    cashflow.AccountId, cashflow.CategoryId, _userContext.Id)
                 .ApplyCashflow(request.CashflowId, request.CashflowDate);
 
             transaction = transaction.SetTags(cashflow.Tags.ToArray());

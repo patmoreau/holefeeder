@@ -3,6 +3,7 @@ using Holefeeder.Tests.Common.Builders.Categories;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
+[UnitTest]
 public class CategoryTests
 {
     private readonly Faker _faker = new();

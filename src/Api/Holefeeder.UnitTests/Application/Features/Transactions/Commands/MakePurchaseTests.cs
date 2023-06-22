@@ -3,6 +3,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
+[UnitTest]
 public class MakePurchaseTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
@@ -10,7 +11,8 @@ public class MakePurchaseTests
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
-        .RuleFor(x => x.CategoryId, faker => faker.Random.Guid());
+        .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+        .RuleFor(x => x.Tags, Array.Empty<string>());
 
     public MakePurchaseTests() => _faker.RuleFor(x => x.Cashflow, _ => null);
 

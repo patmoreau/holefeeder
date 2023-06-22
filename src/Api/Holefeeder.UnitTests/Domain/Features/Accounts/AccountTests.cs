@@ -4,6 +4,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
+[UnitTest]
 public class AccountTests
 {
     private readonly Faker _faker = new();

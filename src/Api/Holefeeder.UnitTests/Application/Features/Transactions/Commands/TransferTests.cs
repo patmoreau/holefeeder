@@ -3,11 +3,18 @@ using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
+[UnitTest]
 public class TransferTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Date.Soon(), faker.Finance.Amount(), faker.Lorem.Paragraphs(),
-            faker.Random.Guid(), faker.Random.Guid()));
+            faker.Random.Guid(), faker.Random.Guid()))
+        .RuleFor(x => x.Date, faker => faker.Date.Soon())
+        .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.Description, faker => faker.Lorem.Paragraphs())
+        .RuleFor(x => x.FromAccountId, faker => faker.Random.Guid())
+        .RuleFor(x => x.ToAccountId, faker => faker.Random.Guid())
+        ;
 
     public TransferTests() => _faker.RuleFor(x => x.Amount, faker => faker.Finance.Amount(1M));
 

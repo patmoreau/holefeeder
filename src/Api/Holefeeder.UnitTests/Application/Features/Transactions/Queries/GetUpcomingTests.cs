@@ -5,10 +5,13 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
+[UnitTest]
 public class GetUpcomingTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Date.Past().Date, faker.Date.Future().Date));
+        .CustomInstantiator(faker => new Request(faker.Date.Past().Date, faker.Date.Future().Date))
+        .RuleFor(x => x.From, faker => faker.Date.Past().Date)
+        .RuleFor(x => x.To, faker => faker.Date.Future().Date);
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()

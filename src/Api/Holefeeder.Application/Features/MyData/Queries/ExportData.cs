@@ -44,21 +44,21 @@ public sealed class ExportData : ICarterModule
         public async Task<ExportDataDto> Handle(Request request, CancellationToken cancellationToken)
         {
             IEnumerable<MyDataAccountDto> accounts = (await _context.Accounts
-                    .Where(e => e.UserId == _userContext.UserId)
+                    .Where(e => e.UserId == _userContext.Id)
                     .ToListAsync(cancellationToken))
                 .Select(AccountMapper.MapToMyDataAccountDto);
             IEnumerable<MyDataCategoryDto> categories = (await _context.Categories
-                    .Where(e => e.UserId == _userContext.UserId)
+                    .Where(e => e.UserId == _userContext.Id)
                     .ToListAsync(cancellationToken))
                 .Select(CategoryMapper.MapToMyDataCategoryDto);
             IEnumerable<MyDataCashflowDto> cashflows = (await _context.Cashflows
-                    .Where(e => e.UserId == _userContext.UserId)
+                    .Where(e => e.UserId == _userContext.Id)
                     .Include(e => e.Account)
                     .Include(e => e.Category)
                     .ToListAsync(cancellationToken))
                 .Select(CashflowMapper.MapToMyDataCashflowDto);
             IEnumerable<MyDataTransactionDto> transactions = (await _context.Transactions
-                    .Where(e => e.UserId == _userContext.UserId)
+                    .Where(e => e.UserId == _userContext.Id)
                     .Include(e => e.Account)
                     .Include(e => e.Category)
                     .ToListAsync(cancellationToken))

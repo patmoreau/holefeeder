@@ -51,7 +51,7 @@ public class GetTransaction : ICarterModule
             Transaction? transaction = await _context.Transactions
                 .Include(x => x.Account)
                 .Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.UserId, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.Id, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(query.Id);

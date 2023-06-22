@@ -54,10 +54,10 @@ public class GetAccounts : ICarterModule
         public async Task<QueryResult<AccountViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Accounts.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            int total = await _context.Accounts.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
             List<AccountViewModel> items = await _context.Accounts
                 .Include(e => e.Transactions).ThenInclude(x => x.Category)
-                .Where(e => e.UserId == _userContext.UserId)
+                .Where(e => e.UserId == _userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

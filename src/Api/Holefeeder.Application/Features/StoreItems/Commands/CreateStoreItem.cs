@@ -56,7 +56,7 @@ public class CreateStoreItem : ICarterModule
                 throw new ObjectStoreDomainException($"Code '{request.Code}' already exists.");
             }
 
-            StoreItem storeItem = StoreItem.Create(request.Code, request.Data, _userContext.UserId);
+            StoreItem storeItem = StoreItem.Create(request.Code, request.Data, _userContext.Id);
 
             _context.StoreItems.Add(storeItem);
 

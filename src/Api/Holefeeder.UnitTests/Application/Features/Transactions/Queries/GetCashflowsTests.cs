@@ -4,11 +4,16 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetCashflows;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
+[UnitTest]
 public class GetCashflowsTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
-            Array.Empty<string>()));
+            Array.Empty<string>()))
+        .RuleFor(x => x.Offset, faker => faker.Random.Number())
+        .RuleFor(x => x.Limit, faker => faker.Random.Int(1))
+        .RuleFor(x => x.Sort, Array.Empty<string>())
+        .RuleFor(x => x.Filter, Array.Empty<string>());
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()

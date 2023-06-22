@@ -3,6 +3,7 @@ using Holefeeder.Tests.Common.Builders.StoreItems;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
+[UnitTest]
 public class StoreItemTests
 {
     [Fact]

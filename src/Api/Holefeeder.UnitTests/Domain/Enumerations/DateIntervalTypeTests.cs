@@ -3,6 +3,7 @@ using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.UnitTests.Domain.Enumerations;
 
+[UnitTest]
 public class DateIntervalTypeTests
 {
     public static IEnumerable<object[]> NextDateTestCases

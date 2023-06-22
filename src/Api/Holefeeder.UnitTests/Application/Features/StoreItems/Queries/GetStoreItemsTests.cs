@@ -5,11 +5,16 @@ using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItems;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
+[UnitTest]
 public class GetStoreItemsTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
-            Array.Empty<string>()));
+            Array.Empty<string>()))
+        .RuleFor(x => x.Offset, faker => faker.Random.Number())
+        .RuleFor(x => x.Limit, faker => faker.Random.Int(1))
+        .RuleFor(x => x.Sort, Array.Empty<string>())
+        .RuleFor(x => x.Filter, Array.Empty<string>());
 
     public GetStoreItemsTests()
     {
@@ -17,6 +22,9 @@ public class GetStoreItemsTests
         new Faker<StoreItemViewModel>()
             .CustomInstantiator(faker =>
                 new StoreItemViewModel(faker.Random.Guid(), faker.Random.Hash(), faker.Lorem.Paragraph()))
+            .RuleFor(x => x.Id, faker => faker.Random.Guid())
+            .RuleFor(x => x.Code, faker => faker.Random.Hash())
+            .RuleFor(x => x.Data, faker => faker.Lorem.Paragraph())
             .Generate(countDummy);
     }
 

@@ -3,6 +3,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
+[UnitTest]
 public class PayCashflowTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

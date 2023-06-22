@@ -68,13 +68,13 @@ public class ModifyTransaction : ICarterModule
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.UserId,
+            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
 
-            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.UserId,
+            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
@@ -82,7 +82,7 @@ public class ModifyTransaction : ICarterModule
 
             Transaction? exists =
                 await _context.Transactions.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+                    x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (exists is null)
             {
                 throw new TransactionNotFoundException(request.Id);

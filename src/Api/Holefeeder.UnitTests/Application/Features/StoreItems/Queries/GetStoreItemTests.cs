@@ -2,6 +2,7 @@ using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
+[UnitTest]
 public class GetStoreItemTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

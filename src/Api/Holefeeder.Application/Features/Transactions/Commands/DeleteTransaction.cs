@@ -48,7 +48,7 @@ public class DeleteTransaction : ICarterModule
         {
             Transaction? transaction =
                 await _context.Transactions.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+                    x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(request.Id);

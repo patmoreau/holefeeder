@@ -52,7 +52,7 @@ public class ModifyStoreItem : ICarterModule
         {
             StoreItem? storeItem = await _context.StoreItems
                 // .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.UserId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (storeItem is null)
             {
                 throw new StoreItemNotFoundException(request.Id);

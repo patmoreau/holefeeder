@@ -48,7 +48,7 @@ public class CancelCashflow : ICarterModule
         {
             Cashflow? exists =
                 await _context.Cashflows.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.UserId,
+                    x => x.Id == request.Id && x.UserId == _userContext.Id,
                     cancellationToken);
             if (exists is null)
             {

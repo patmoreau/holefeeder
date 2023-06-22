@@ -24,7 +24,7 @@ public partial class GetForAllCategories
         {
             var query = from category in _context.Categories
                         join transaction in _context.Transactions on category.Id equals transaction.CategoryId
-                        where category.UserId == _userContext.UserId && !category.System
+                        where category.UserId == _userContext.Id && !category.System
                         group transaction by new
                         {
                             category.Id,

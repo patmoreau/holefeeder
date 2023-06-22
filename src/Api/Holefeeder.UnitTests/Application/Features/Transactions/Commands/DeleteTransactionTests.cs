@@ -4,6 +4,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequ
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
+[UnitTest]
 public class DeleteTransactionTests
 {
     [Fact]

@@ -47,7 +47,7 @@ public class GetCategories : ICarterModule
         public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
             List<Category> result = await _context.Categories
-                .Where(x => x.UserId == _userContext.UserId)
+                .Where(x => x.UserId == _userContext.Id)
                 .OrderByDescending(x => x.Favorite)
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);

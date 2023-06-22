@@ -55,11 +55,11 @@ public class GetCashflows : ICarterModule
         public async Task<QueryResult<CashflowInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Cashflows.CountAsync(e => e.UserId == _userContext.UserId, cancellationToken);
+            int total = await _context.Cashflows.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
             List<CashflowInfoViewModel> items = await _context.Cashflows
                 .Include(e => e.Account)
                 .Include(e => e.Category)
-                .Where(e => e.UserId == _userContext.UserId)
+                .Where(e => e.UserId == _userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

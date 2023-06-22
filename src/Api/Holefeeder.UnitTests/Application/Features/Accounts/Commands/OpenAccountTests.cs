@@ -5,12 +5,17 @@ using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
+[UnitTest]
 public class OpenAccountTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.PickRandom<AccountType>(AccountType.List), faker.Lorem.Word(),
             faker.Date.Recent(), faker.Finance.Amount(), faker.Lorem.Sentence()))
-        .RuleForType(typeof(AccountType), faker => faker.PickRandom(AccountType.List.ToArray()));
+        .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
+        .RuleFor(x => x.Name, faker => faker.Lorem.Word())
+        .RuleFor(x => x.OpenDate, faker => faker.Date.Recent())
+        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
+        .RuleFor(x => x.Description, faker => faker.Lorem.Sentence());
 
     [Fact]
     public async Task GivenValidator_WhenTypeIsNull_ThenError()
