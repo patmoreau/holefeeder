@@ -5,10 +5,11 @@ using Holefeeder.FunctionalTests.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
-public class ScenarioGetDateIntervalTypes : BaseScenario
+[ComponentTest]
+public class ScenarioGetDateIntervalTypes : HolefeederScenario
 {
-    public ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -19,10 +20,10 @@ public class ScenarioGetDateIntervalTypes : BaseScenario
 
         await WhenUserGetEnumeration();
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         DateIntervalType[]? result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
-        ThenAssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
+        AssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequest(ApiResources.GetDateIntervalTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetDateIntervalTypes);
 }

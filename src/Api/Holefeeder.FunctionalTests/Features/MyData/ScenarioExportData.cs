@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -14,10 +13,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
-public class ScenarioExportData : BaseScenario
+[ComponentTest]
+public class ScenarioExportData : HolefeederScenario
 {
-    public ScenarioExportData(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -26,30 +26,30 @@ public class ScenarioExportData : BaseScenario
     {
         var accounts = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts.ElementAt(0))
             .ForCategory(categories.ElementAt(0))
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var transactions = await GivenATransaction()
             .ForAccount(accounts.ElementAt(0))
             .ForCategory(categories.ElementAt(0))
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         GivenUserIsAuthorized();
 
         await WhenUserExportsHisData();
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         ExportDataDto? result = HttpClientDriver.DeserializeContent<ExportDataDto>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should().NotBeNull();
             AssertAccounts(result!, accounts);
@@ -82,5 +82,5 @@ public class ScenarioExportData : BaseScenario
         }
     }
 
-    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequest(ApiResources.ExportData);
+    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequestAsync(ApiResources.ExportData);
 }

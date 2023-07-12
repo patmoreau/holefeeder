@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using Holefeeder.Application;
 using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Application.SeedWork;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -16,10 +16,11 @@ using static Holefeeder.Tests.Common.Builders.MyData.MyDataTransactionDtoBuilder
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
-public class ScenarioImportData : BaseScenario
+[ComponentTest]
+public class ScenarioImportData : HolefeederScenario
 {
-    public ScenarioImportData(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -63,13 +64,14 @@ public class ScenarioImportData : BaseScenario
 
         await WhenUserImportsData(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.Accepted);
+        ShouldExpectStatusCode(HttpStatusCode.Accepted);
 
-        Guid id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
+        Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+        var id = ResourceIdFromLocation(location);
 
         ImportDataStatusDto? dto = await ThenWaitForCompletion(id);
 
-        ThenAssertAll(async () =>
+        AssertAll(async () =>
         {
             dto.Should().NotBeNull("The import task never completed");
             dto!.Status.Should().NotBe(CommandStatus.Error, dto.Message);
@@ -116,7 +118,7 @@ public class ScenarioImportData : BaseScenario
     private async Task WhenUserImportsData(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ImportData, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.ImportData, json);
     }
 
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
@@ -130,9 +132,9 @@ public class ScenarioImportData : BaseScenario
         {
             await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
 
-            await HttpClientDriver.SendGetRequest(ApiResources.ImportDataStatus, importId);
+            await HttpClientDriver.SendGetRequestAsync(ApiResources.ImportDataStatus, importId);
 
-            ThenShouldExpectStatusCode(HttpStatusCode.OK);
+            ShouldExpectStatusCode(HttpStatusCode.OK);
 
             ImportDataStatusDto? dto = HttpClientDriver.DeserializeContent<ImportDataStatusDto>();
             dto.Should().NotBeNull();

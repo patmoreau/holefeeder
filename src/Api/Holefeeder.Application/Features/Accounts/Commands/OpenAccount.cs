@@ -26,7 +26,7 @@ public class OpenAccount : ICarterModule
             .WithName(nameof(OpenAccount))
             .RequireAuthorization();
 
-    internal record Request(AccountType Type, string Name, DateTime OpenDate, decimal OpenBalance, string Description)
+    internal record Request(AccountType Type, string Name, DateOnly OpenDate, decimal OpenBalance, string Description)
         : IRequest<Guid>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>

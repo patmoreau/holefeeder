@@ -9,7 +9,7 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
 {
     protected override Faker<Transaction> Faker { get; } = new Faker<Transaction>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
-        .RuleFor(x => x.Date, faker => faker.Date.Recent())
+        .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: 1))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
@@ -42,7 +42,7 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         return this;
     }
 
-    public TransactionBuilder OnDate(DateTime date)
+    public TransactionBuilder OnDate(DateOnly date)
     {
         Faker.RuleFor(f => f.Date, date);
         return this;
@@ -54,7 +54,7 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         return this;
     }
 
-    public TransactionBuilder ForCashflowDate(DateTime date)
+    public TransactionBuilder ForCashflowDate(DateOnly date)
     {
         Faker.RuleFor(f => f.CashflowDate, date);
         return this;

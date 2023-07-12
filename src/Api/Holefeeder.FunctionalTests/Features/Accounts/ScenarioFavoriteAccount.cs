@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -11,10 +10,11 @@ using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBui
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioFavoriteAccount : BaseScenario
+[ComponentTest]
+public class ScenarioFavoriteAccount : HolefeederScenario
 {
-    public ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -39,7 +39,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         await WhenUserSetsFavoriteAccount(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class ScenarioFavoriteAccount : BaseScenario
         Account entity = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .IsFavorite(false)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAFavoriteAccountRequest()
             .WithId(entity.Id)
@@ -59,7 +59,7 @@ public class ScenarioFavoriteAccount : BaseScenario
 
         await WhenUserSetsFavoriteAccount(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
@@ -69,6 +69,6 @@ public class ScenarioFavoriteAccount : BaseScenario
     private async Task WhenUserSetsFavoriteAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.FavoriteAccount, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.FavoriteAccount, json);
     }
 }

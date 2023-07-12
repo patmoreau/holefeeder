@@ -6,8 +6,8 @@ public static class DateExtensions
 {
     private const string DATE_FORMAT = "yyyy-MM-dd";
 
-    public static string ToPersistent(this DateTime date) => date.ToString(DATE_FORMAT, CultureInfo.InvariantCulture);
+    public static string ToPersistent(this DateOnly date) => date.ToString(DATE_FORMAT, CultureInfo.InvariantCulture);
 
-    public static DateTime ParsePersistent(this string persistentDate) =>
-        DateTime.ParseExact(persistentDate, DATE_FORMAT, null, DateTimeStyles.None);
+    public static DateOnly ParsePersistent(this string persistentDate) =>
+        DateOnly.ParseExact(persistentDate, DATE_FORMAT, null);
 }

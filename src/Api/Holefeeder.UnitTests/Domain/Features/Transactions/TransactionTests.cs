@@ -136,7 +136,7 @@ public class TransactionTests
         var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, Fakerizer.Date.Recent());
+        Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, Fakerizer.Date.RecentDateOnly());
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -167,7 +167,7 @@ public class TransactionTests
         // arrange
         var transaction = TransactionBuilder.GivenATransaction().Build();
         var cashflowId = Fakerizer.Random.Guid();
-        var cashflowDate = Fakerizer.Date.Recent();
+        var cashflowDate = Fakerizer.Date.RecentDateOnly();
 
         // act
         var result = transaction.ApplyCashflow(cashflowId, cashflowDate);

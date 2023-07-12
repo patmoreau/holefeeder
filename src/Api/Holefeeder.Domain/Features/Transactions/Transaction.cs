@@ -8,7 +8,7 @@ public record Transaction : IAggregateRoot
     private readonly Guid _accountId;
     private readonly decimal _amount;
     private readonly Guid _categoryId;
-    private readonly DateTime _date;
+    private readonly DateOnly _date;
     private readonly Guid _id;
     private readonly Guid _userId;
 
@@ -26,7 +26,7 @@ public record Transaction : IAggregateRoot
         }
     }
 
-    public required DateTime Date
+    public required DateOnly Date
     {
         get => _date;
         init
@@ -91,7 +91,7 @@ public record Transaction : IAggregateRoot
     public Guid? CashflowId { get; private set; }
     public Cashflow? Cashflow { get; init; }
 
-    public DateTime? CashflowDate { get; private set; }
+    public DateOnly? CashflowDate { get; private set; }
 
     public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
 
@@ -109,7 +109,7 @@ public record Transaction : IAggregateRoot
         }
     }
 
-    public static Transaction Create(Guid id, DateTime date, decimal amount, string description, Guid accountId,
+    public static Transaction Create(Guid id, DateOnly date, decimal amount, string description, Guid accountId,
         Guid categoryId, Guid userId) =>
         new()
         {
@@ -122,7 +122,7 @@ public record Transaction : IAggregateRoot
             Description = description
         };
 
-    public static Transaction Create(DateTime date, decimal amount, string description, Guid accountId, Guid categoryId,
+    public static Transaction Create(DateOnly date, decimal amount, string description, Guid accountId, Guid categoryId,
         Guid userId) =>
         new()
         {
@@ -143,7 +143,7 @@ public record Transaction : IAggregateRoot
         return this;
     }
 
-    public Transaction ApplyCashflow(Guid cashflowId, DateTime cashflowDate)
+    public Transaction ApplyCashflow(Guid cashflowId, DateOnly cashflowDate)
     {
         if (cashflowId.Equals(Guid.Empty))
         {

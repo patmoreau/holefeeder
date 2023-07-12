@@ -30,7 +30,7 @@ public class ModifyTransaction : ICarterModule
     {
         public Guid Id { get; init; }
 
-        public DateTime Date { get; init; }
+        public DateOnly Date { get; init; }
 
         public decimal Amount { get; init; }
 

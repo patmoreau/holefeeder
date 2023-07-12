@@ -13,7 +13,7 @@ internal class AccountBuilder : FakerBuilder<Account>
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
         .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
         .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
-        .RuleFor(x => x.OpenDate, faker => faker.Date.Past().Date)
+        .RuleFor(x => x.OpenDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Inactive, faker => faker.Random.Bool())
         .RuleFor(x => x.UserId, faker => faker.Random.Guid())
@@ -92,7 +92,7 @@ internal class AccountBuilder : FakerBuilder<Account>
         return this;
     }
 
-    public AccountBuilder WithOpenDate(DateTime openDate)
+    public AccountBuilder WithOpenDate(DateOnly openDate)
     {
         Faker.RuleFor(f => f.OpenDate, openDate);
         return this;

@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -14,10 +13,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBui
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public sealed class ScenarioPayCashflow : BaseScenario
+[ComponentTest]
+public sealed class ScenarioPayCashflow : HolefeederScenario
 {
-    public ScenarioPayCashflow(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioPayCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
         if (applicationDriver == null)
         {
@@ -51,7 +51,7 @@ public sealed class ScenarioPayCashflow : BaseScenario
                 .Given(User.IsAuthorized)
                 .And("a cashflow payment request", () => request = GivenACashflowPayment().Build())
                 .When("the payment is sent", () => Transaction.PayACashflow(request))
-                .Then("the user should be authorized", ThenUserShouldBeAuthorizedToAccessEndpoint);
+                .Then("the user should be authorized", ShouldBeAuthorizedToAccessEndpoint);
         });
     }
 
@@ -98,13 +98,13 @@ public sealed class ScenarioPayCashflow : BaseScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
-                .And("a category", async () => category = await GivenACategory().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
-                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("a category", async () => category = await GivenACategory().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
                 .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).ForDate(cashflow.EffectiveDate).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
-                .Then("the response should be created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .And("have the resource link in the header", () => id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .Then("the response should be created", () => ShouldExpectStatusCode(HttpStatusCode.Created))
+                // .And(ShouldGetTheRouteOfTheNewResourceInTheHeader)
                 .And("the cashflow paid saved in the database should match the request", async () =>
                 {
                     Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(id);

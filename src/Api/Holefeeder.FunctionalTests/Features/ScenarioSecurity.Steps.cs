@@ -1,6 +1,5 @@
 using System.Net;
-using AutoBogus;
-using Holefeeder.Tests.Common.SeedWork.Infrastructure;
+using DrifterApps.Seeds.Testing.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Features;
 
@@ -10,29 +9,25 @@ public partial class FeatureSecurity
     {
         if (apiResources.HttpMethod == HttpMethod.Post)
         {
-            return HttpClientDriver.SendPostRequest(apiResources);
+            return HttpClientDriver.SendPostRequestAsync(apiResources);
         }
 
-        var parameters = AutoFaker.Generate<Guid>(apiResources.ParameterCount)
-            .Select(x => x.ToString())
+        var parameters = Fakerizer.Make(apiResources.ParameterCount, () => Fakerizer.Random.Guid().ToString())
             .Cast<object>()
             .ToArray();
 
-        return apiResources.HttpMethod == HttpMethod.Delete ?
-            HttpClientDriver.SendDeleteRequest(apiResources, parameters) :
-            HttpClientDriver.SendGetRequest(apiResources, parameters);
+        return apiResources.HttpMethod == HttpMethod.Delete ? HttpClientDriver.SendDeleteRequestAsync(apiResources, parameters) : HttpClientDriver.SendGetRequestAsync(apiResources, parameters);
     }
 
     private Task Then_user_should_be_authorized_to_access_endpoint()
     {
-        HttpClientDriver.ResponseMessage.Should().NotBeNull()
-            .And.NotHaveStatusCode(HttpStatusCode.Unauthorized);
+        HttpClientDriver.ResponseMessage.Should().NotBeNull().And.NotHaveStatusCode(HttpStatusCode.Unauthorized).And.NotHaveStatusCode(HttpStatusCode.Forbidden);
         return Task.CompletedTask;
     }
 
     private Task Then_user_should_not_be_authorized_to_access_endpoint()
     {
-        HttpClientDriver.ShouldBeUnauthorized();
+        HttpClientDriver.ResponseMessage.Should().NotBeNull().And.HaveStatusCode(HttpStatusCode.Unauthorized);
         return Task.CompletedTask;
     }
 

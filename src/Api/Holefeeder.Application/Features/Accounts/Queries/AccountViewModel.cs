@@ -7,10 +7,10 @@ public record AccountViewModel(
     AccountType Type,
     string Name,
     decimal OpenBalance,
-    DateTime OpenDate,
+    DateOnly OpenDate,
     int TransactionCount,
     decimal Balance,
-    DateTime? Updated,
+    DateOnly? Updated,
     string Description,
     bool Favorite,
     bool Inactive

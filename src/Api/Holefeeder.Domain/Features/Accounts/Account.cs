@@ -6,7 +6,7 @@ public sealed record Account : IAggregateRoot
 {
     private readonly Guid _id;
     private readonly string _name = string.Empty;
-    private readonly DateTime _openDate;
+    private readonly DateOnly _openDate;
     private readonly Guid _userId;
 
     public required Guid Id
@@ -43,7 +43,7 @@ public sealed record Account : IAggregateRoot
 
     public decimal OpenBalance { get; init; }
 
-    public required DateTime OpenDate
+    public required DateOnly OpenDate
     {
         get => _openDate;
         init
@@ -78,7 +78,7 @@ public sealed record Account : IAggregateRoot
     public IReadOnlyCollection<Cashflow> Cashflows { get; init; } = new List<Cashflow>();
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
-    public static Account Create(AccountType type, string name, decimal openBalance, DateTime openDate,
+    public static Account Create(AccountType type, string name, decimal openBalance, DateOnly openDate,
         string description, Guid userId) =>
         new()
         {
@@ -109,5 +109,5 @@ public sealed record Account : IAggregateRoot
     public decimal CalculateBalance() =>
         OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
 
-    public DateTime CalculateLastTransactionDate() => Transactions.Any() ? Transactions.Max(t => t.Date) : OpenDate;
+    public DateOnly CalculateLastTransactionDate() => Transactions.Any() ? Transactions.Max(t => t.Date) : OpenDate;
 }

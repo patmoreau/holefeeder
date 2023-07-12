@@ -1,14 +1,15 @@
 using System.Reflection;
+using DrifterApps.Seeds.Testing.Infrastructure;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common.SeedWork.Infrastructure;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 
 namespace Holefeeder.FunctionalTests.Features;
 
-[FeatureDescription(@"In order to test the security")] //feature description
+[FeatureDescription(@"In order to test the security")]
+[ComponentTest]//feature description
 public partial class FeatureSecurity : BaseFeature
 {
     public FeatureSecurity(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)

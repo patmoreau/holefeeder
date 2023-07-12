@@ -12,7 +12,7 @@ public record MyDataAccountDto
 
     public decimal OpenBalance { get; init; }
 
-    public DateTime OpenDate { get; init; }
+    public DateOnly OpenDate { get; init; }
 
     public string Description { get; init; } = null!;
 

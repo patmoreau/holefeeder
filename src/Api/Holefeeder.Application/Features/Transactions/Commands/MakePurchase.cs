@@ -29,7 +29,7 @@ public class MakePurchase : ICarterModule
 
     internal record Request : IRequest<Guid>, IUnitOfWorkRequest
     {
-        public DateTime Date { get; init; }
+        public DateOnly Date { get; init; }
 
         public decimal Amount { get; init; }
 
@@ -43,7 +43,7 @@ public class MakePurchase : ICarterModule
 
         public CashflowRequest? Cashflow { get; init; }
 
-        internal record CashflowRequest(DateTime EffectiveDate, DateIntervalType IntervalType, int Frequency,
+        internal record CashflowRequest(DateOnly EffectiveDate, DateIntervalType IntervalType, int Frequency,
             int Recurrence);
     }
 

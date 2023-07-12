@@ -7,7 +7,7 @@ namespace Holefeeder.FunctionalTests.Drivers;
 
 public class AuthenticationSystemDriver
 {
-    public const string VALID_TOKEN = nameof(VALID_TOKEN);
+    public const string ValidToken = nameof(ValidToken);
 
     private WireMockServer? _azureB2C;
 
@@ -30,7 +30,7 @@ public class AuthenticationSystemDriver
         _azureB2C.Dispose();
     }
 
-    public void SetupValidToken() => SetToken(VALID_TOKEN);
+    public void SetupValidToken() => SetToken(ValidToken);
 
     public void SetupInvalidToken() => SetToken(string.Empty);
 

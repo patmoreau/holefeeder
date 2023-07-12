@@ -6,7 +6,7 @@ public record MyDataCashflowDto
 {
     public Guid Id { get; init; }
 
-    public DateTime EffectiveDate { get; init; }
+    public DateOnly EffectiveDate { get; init; }
 
     public decimal Amount { get; init; }
 

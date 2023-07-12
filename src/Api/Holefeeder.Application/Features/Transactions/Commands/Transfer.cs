@@ -29,7 +29,7 @@ public class Transfer : ICarterModule
             .WithName(nameof(Transfer))
             .RequireAuthorization();
 
-    internal record Request(DateTime Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<(Guid FromTransactionId, Guid ToTransactionId)>, IUnitOfWorkRequest;
+    internal record Request(DateOnly Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<(Guid FromTransactionId, Guid ToTransactionId)>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

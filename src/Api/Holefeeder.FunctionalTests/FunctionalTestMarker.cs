@@ -6,7 +6,6 @@ using LightBDD.XUnit2;
 namespace Holefeeder.FunctionalTests;
 
 [CollectionDefinition("Api collection")]
-public sealed class FunctionalTestMarker : ICollectionFixture<ApiApplicationDriver>,
-    ICollectionFixture<BudgetingDatabaseInitializer>
+public sealed class FunctionalTestMarker : ICollectionFixture<ApiApplicationDriver>
 {
 }

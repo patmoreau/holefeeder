@@ -12,123 +12,123 @@ public class DateIntervalTypeTests
         {
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.OneTime, 1,
-                new DateTime(2014, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.OneTime, 1,
+                new DateOnly(2014, 1, 9)
             };
             yield return new object[]
             {
-                new DateTime(2015, 9, 24), new DateTime(2015, 4, 6), DateIntervalType.OneTime, 1,
-                new DateTime(2015, 9, 24)
+                new DateOnly(2015, 9, 24), new DateOnly(2015, 4, 6), DateIntervalType.OneTime, 1,
+                new DateOnly(2015, 9, 24)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 1,
-                new DateTime(2015, 4, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 1,
+                new DateOnly(2015, 4, 9)
             };
             yield return new object[]
             {
-                new DateTime(2015, 9, 24), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 1,
-                new DateTime(2015, 9, 24)
+                new DateOnly(2015, 9, 24), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 1,
+                new DateOnly(2015, 9, 24)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 2,
-                new DateTime(2015, 4, 16)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 2,
+                new DateOnly(2015, 4, 16)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 5,
-                new DateTime(2015, 4, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 5,
+                new DateOnly(2015, 4, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 4, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 4, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 1, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 1, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 1, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 1, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 2, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 2, 28)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 2, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 2, 28)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2016, 2, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2016, 2, 29)
+                new DateOnly(2014, 1, 31), new DateOnly(2016, 2, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2016, 2, 29)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 3, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 3, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 3, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 3, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 4, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 4, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 4, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 4, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 5, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 5, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 5, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 5, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 6, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 6, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 6, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 6, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 7, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 7, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 7, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 7, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 8, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 8, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 8, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 8, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 9, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 9, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 9, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 9, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 10, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 10, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 10, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 10, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 11, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 11, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 11, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 11, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 12, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 12, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 12, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 12, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Monthly, 2,
-                new DateTime(2015, 5, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Monthly, 2,
+                new DateOnly(2015, 5, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Yearly, 1,
-                new DateTime(2016, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Yearly, 1,
+                new DateOnly(2016, 1, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 2, 28), new DateTime(2016, 2, 1), DateIntervalType.Yearly, 1,
-                new DateTime(2016, 2, 28)
+                new DateOnly(2014, 2, 28), new DateOnly(2016, 2, 1), DateIntervalType.Yearly, 1,
+                new DateOnly(2016, 2, 28)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Yearly, 7,
-                new DateTime(2021, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Yearly, 7,
+                new DateOnly(2021, 1, 9)
             };
         }
     }
@@ -139,123 +139,123 @@ public class DateIntervalTypeTests
         {
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.OneTime, 1,
-                new DateTime(2014, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.OneTime, 1,
+                new DateOnly(2014, 1, 9)
             };
             yield return new object[]
             {
-                new DateTime(2015, 9, 24), new DateTime(2015, 4, 6), DateIntervalType.OneTime, 1,
-                new DateTime(2015, 9, 24)
+                new DateOnly(2015, 9, 24), new DateOnly(2015, 4, 6), DateIntervalType.OneTime, 1,
+                new DateOnly(2015, 9, 24)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 1,
-                new DateTime(2015, 4, 2)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 1,
+                new DateOnly(2015, 4, 2)
             };
             yield return new object[]
             {
-                new DateTime(2015, 9, 24), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 1,
-                new DateTime(2015, 9, 24)
+                new DateOnly(2015, 9, 24), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 1,
+                new DateOnly(2015, 9, 24)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 2,
-                new DateTime(2015, 4, 2)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 2,
+                new DateOnly(2015, 4, 2)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Weekly, 5,
-                new DateTime(2015, 3, 5)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Weekly, 5,
+                new DateOnly(2015, 3, 5)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 3, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 3, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 1, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2014, 12, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 1, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2014, 12, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 2, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 1, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 2, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 1, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 3, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 2, 28)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 3, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 2, 28)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2016, 3, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2016, 2, 29)
+                new DateOnly(2014, 1, 31), new DateOnly(2016, 3, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2016, 2, 29)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 4, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 3, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 4, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 3, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 5, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 4, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 5, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 4, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 6, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 5, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 6, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 5, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 7, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 6, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 7, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 6, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 8, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 7, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 8, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 7, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 9, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 8, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 9, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 8, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 10, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 9, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 10, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 9, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 11, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 10, 31)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 11, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 10, 31)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 31), new DateTime(2015, 12, 15), DateIntervalType.Monthly, 1,
-                new DateTime(2015, 11, 30)
+                new DateOnly(2014, 1, 31), new DateOnly(2015, 12, 15), DateIntervalType.Monthly, 1,
+                new DateOnly(2015, 11, 30)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Monthly, 2,
-                new DateTime(2015, 3, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Monthly, 2,
+                new DateOnly(2015, 3, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 6), DateIntervalType.Yearly, 1,
-                new DateTime(2015, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 6), DateIntervalType.Yearly, 1,
+                new DateOnly(2015, 1, 9)
             };
             yield return new object[]
             {
-                new DateTime(2014, 2, 28), new DateTime(2017, 2, 1), DateIntervalType.Yearly, 1,
-                new DateTime(2016, 2, 28)
+                new DateOnly(2014, 2, 28), new DateOnly(2017, 2, 1), DateIntervalType.Yearly, 1,
+                new DateOnly(2016, 2, 28)
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2022, 4, 6), DateIntervalType.Yearly, 7,
-                new DateTime(2021, 1, 9)
+                new DateOnly(2014, 1, 9), new DateOnly(2022, 4, 6), DateIntervalType.Yearly, 7,
+                new DateOnly(2021, 1, 9)
             };
         }
     }
@@ -266,28 +266,28 @@ public class DateIntervalTypeTests
         {
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 7), DateIntervalType.Weekly, 2,
-                (From: new DateTime(2015, 4, 2), To: new DateTime(2015, 4, 15))
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Weekly, 2,
+                (From: new DateOnly(2015, 4, 2), To: new DateOnly(2015, 4, 15))
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 7), DateIntervalType.Weekly, 5,
-                (From: new DateTime(2015, 3, 5), To: new DateTime(2015, 4, 8))
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Weekly, 5,
+                (From: new DateOnly(2015, 3, 5), To: new DateOnly(2015, 4, 8))
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 7), DateIntervalType.Monthly, 1,
-                (From: new DateTime(2015, 3, 9), To: new DateTime(2015, 4, 8))
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Monthly, 1,
+                (From: new DateOnly(2015, 3, 9), To: new DateOnly(2015, 4, 8))
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 1), new DateTime(2016, 2, 15), DateIntervalType.Monthly, 2,
-                (From: new DateTime(2016, 1, 1), To: new DateTime(2016, 2, 29))
+                new DateOnly(2014, 1, 1), new DateOnly(2016, 2, 15), DateIntervalType.Monthly, 2,
+                (From: new DateOnly(2016, 1, 1), To: new DateOnly(2016, 2, 29))
             };
             yield return new object[]
             {
-                new DateTime(2014, 1, 9), new DateTime(2015, 4, 7), DateIntervalType.Yearly, 1,
-                (From: new DateTime(2015, 1, 9), To: new DateTime(2016, 1, 8))
+                new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Yearly, 1,
+                (From: new DateOnly(2015, 1, 9), To: new DateOnly(2016, 1, 8))
             };
         }
     }
@@ -298,128 +298,128 @@ public class DateIntervalTypeTests
         {
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 3, 1), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 3, 1), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 3, 1), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 3, 1), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 1, 1), Array.Empty<DateTime>()
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 1, 1), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
-                DateIntervalType.OneTime, 1, new DateTime(2014, 2, 2), new DateTime(2014, 3, 1),
-                new DateTime(2014, 4, 1), Array.Empty<DateTime>()
+                DateIntervalType.OneTime, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 3, 1),
+                new DateOnly(2014, 4, 1), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
-                DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 3, 1),
+                DateIntervalType.Weekly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 3, 1),
                 new[]
                 {
-                    new DateTime(2014, 2, 2), new DateTime(2014, 2, 9), new DateTime(2014, 2, 16),
-                    new DateTime(2014, 2, 23)
+                    new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 9), new DateOnly(2014, 2, 16),
+                    new DateOnly(2014, 2, 23)
                 }
             };
             yield return new object[]
             {
-                DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Weekly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 3, 1),
+                DateIntervalType.Weekly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 3, 1),
                 new[]
                 {
-                    new DateTime(2014, 2, 2), new DateTime(2014, 2, 9), new DateTime(2014, 2, 16),
-                    new DateTime(2014, 2, 23)
+                    new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 9), new DateOnly(2014, 2, 16),
+                    new DateOnly(2014, 2, 23)
                 }
             };
             yield return new object[]
             {
-                DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Weekly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Weekly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 2, 1), Array.Empty<DateTime>()
+                DateIntervalType.Weekly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 2, 1), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
-                DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 4, 1), new[] {new DateTime(2014, 2, 2), new DateTime(2014, 3, 2)}
+                DateIntervalType.Monthly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 4, 1), new[] {new DateOnly(2014, 2, 2), new DateOnly(2014, 3, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Monthly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 4, 1), new[] {new DateTime(2014, 2, 2), new DateTime(2014, 3, 2)}
+                DateIntervalType.Monthly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 4, 1), new[] {new DateOnly(2014, 2, 2), new DateOnly(2014, 3, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Monthly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Monthly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2014, 2, 1), Array.Empty<DateTime>()
+                DateIntervalType.Monthly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2014, 2, 1), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
-                DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 1, 1),
-                new DateTime(2016, 4, 1),
-                new[] {new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2)}
+                DateIntervalType.Yearly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 1, 1),
+                new DateOnly(2016, 4, 1),
+                new[] {new DateOnly(2014, 2, 2), new DateOnly(2015, 2, 2), new DateOnly(2016, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Yearly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2014, 2, 2),
-                new DateTime(2016, 4, 1),
-                new[] {new DateTime(2014, 2, 2), new DateTime(2015, 2, 2), new DateTime(2016, 2, 2)}
+                DateIntervalType.Yearly, 1, new DateOnly(2014, 2, 2), new DateOnly(2014, 2, 2),
+                new DateOnly(2016, 4, 1),
+                new[] {new DateOnly(2014, 2, 2), new DateOnly(2015, 2, 2), new DateOnly(2016, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2013, 1, 1),
-                new DateTime(2014, 2, 2), new[] {new DateTime(2014, 2, 2)}
+                DateIntervalType.Yearly, 1, new DateOnly(2014, 2, 2), new DateOnly(2013, 1, 1),
+                new DateOnly(2014, 2, 2), new[] {new DateOnly(2014, 2, 2)}
             };
             yield return new object[]
             {
-                DateIntervalType.Yearly, 1, new DateTime(2014, 2, 2), new DateTime(2013, 1, 1),
-                new DateTime(2014, 2, 1), Array.Empty<DateTime>()
+                DateIntervalType.Yearly, 1, new DateOnly(2014, 2, 2), new DateOnly(2013, 1, 1),
+                new DateOnly(2014, 2, 1), Array.Empty<DateOnly>()
             };
         }
     }
 
     [Theory]
     [MemberData(nameof(NextDateTestCases))]
-    public void NextDate_ValidDateTime_NewDateTime(DateTime originalDate, DateTime effectiveDate,
-        DateIntervalType intervalType, int frequency, DateTime expected)
+    public void NextDate_ValidDateOnly_NewDateOnly(DateOnly originalDate, DateOnly effectiveDate,
+        DateIntervalType intervalType, int frequency, DateOnly expected)
     {
         if (intervalType is null)
         {
@@ -431,8 +431,8 @@ public class DateIntervalTypeTests
 
     [Theory]
     [MemberData(nameof(PreviousDateTestCases))]
-    public void PreviousDate_ValidDateTime_NewDateTime(DateTime originalDate, DateTime effectiveDate,
-        DateIntervalType intervalType, int frequency, DateTime expected)
+    public void PreviousDate_ValidDateOnly_NewDateOnly(DateOnly originalDate, DateOnly effectiveDate,
+        DateIntervalType intervalType, int frequency, DateOnly expected)
     {
         if (intervalType is null)
         {
@@ -444,8 +444,8 @@ public class DateIntervalTypeTests
 
     [Theory]
     [MemberData(nameof(IntervalTestCases))]
-    public void TestInterval(DateTime originalDate, DateTime effectiveDate, DateIntervalType intervalType,
-        int frequency, (DateTime From, DateTime To) expected)
+    public void TestInterval(DateOnly originalDate, DateOnly effectiveDate, DateIntervalType intervalType,
+        int frequency, (DateOnly From, DateOnly To) expected)
     {
         if (intervalType is null)
         {
@@ -457,8 +457,8 @@ public class DateIntervalTypeTests
 
     [Theory]
     [MemberData(nameof(DatesInRangeTestCases))]
-    public void GivenDatesInRange_WhenValidDateTime_ThenListOfDatesInRange(DateIntervalType intervalType,
-        int frequency, DateTime effective, DateTime from, DateTime to, DateTime[] expected)
+    public void GivenDatesInRange_WhenValidDateOnly_ThenListOfDatesInRange(DateIntervalType intervalType,
+        int frequency, DateOnly effective, DateOnly from, DateOnly to, DateOnly[] expected)
     {
         if (intervalType is null)
         {

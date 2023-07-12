@@ -11,7 +11,7 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
 {
     protected override Faker<Cashflow> Faker { get; } = new Faker<Cashflow>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
-        .RuleFor(x => x.EffectiveDate, faker => faker.Date.Past().Date)
+        .RuleFor(x => x.EffectiveDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.IntervalType, faker => faker.PickRandom<DateIntervalType>(DateIntervalType.List))
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
         .RuleFor(x => x.Recurrence, faker => faker.Random.Int(0))
@@ -45,7 +45,7 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
         return this;
     }
 
-    public CashflowBuilder OnEffectiveDate(DateTime effectiveDate)
+    public CashflowBuilder OnEffectiveDate(DateOnly effectiveDate)
     {
         Faker.RuleFor(x => x.EffectiveDate, effectiveDate);
         return this;

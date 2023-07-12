@@ -9,7 +9,7 @@ public record Cashflow : IAggregateRoot
     private readonly Guid _accountId;
     private readonly decimal _amount;
     private readonly Guid _categoryId;
-    private readonly DateTime _effectiveDate;
+    private readonly DateOnly _effectiveDate;
     private readonly int _frequency;
     private readonly Guid _id;
     private readonly int _recurrence;
@@ -29,7 +29,7 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public required DateTime EffectiveDate
+    public required DateOnly EffectiveDate
     {
         get => _effectiveDate;
         init
@@ -126,9 +126,9 @@ public record Cashflow : IAggregateRoot
 
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
-    public DateTime? LastPaidDate => Transactions.Any() ? Transactions.Max(x => x.Date) : null;
+    public DateOnly? LastPaidDate => Transactions.Any() ? Transactions.Max(x => x.Date) : null;
 
-    public DateTime? LastCashflowDate => Transactions.Max(x => x.CashflowDate);
+    public DateOnly? LastCashflowDate => Transactions.Max(x => x.CashflowDate);
 
     public bool Inactive { get; init; }
 
@@ -146,7 +146,7 @@ public record Cashflow : IAggregateRoot
         }
     }
 
-    public static Cashflow Create(DateTime effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
+    public static Cashflow Create(DateOnly effectiveDate, DateIntervalType intervalType, int frequency, int recurrence,
         decimal amount, string description, Guid categoryId, Guid accountId, Guid userId) =>
         new()
         {
@@ -179,9 +179,9 @@ public record Cashflow : IAggregateRoot
         return this;
     }
 
-    public IReadOnlyCollection<DateTime> GetUpcoming(DateTime to)
+    public IReadOnlyCollection<DateOnly> GetUpcoming(DateOnly to)
     {
-        List<DateTime> dates = new();
+        List<DateOnly> dates = new();
 
         if (Inactive)
         {
@@ -195,7 +195,7 @@ public record Cashflow : IAggregateRoot
         return dates;
     }
 
-    private bool IsUnpaid(DateTime effectiveDate, DateTime nextDate) =>
+    private bool IsUnpaid(DateOnly effectiveDate, DateOnly nextDate) =>
         LastPaidDate is null
             ? nextDate >= effectiveDate
             : nextDate > LastPaidDate && nextDate > LastCashflowDate;

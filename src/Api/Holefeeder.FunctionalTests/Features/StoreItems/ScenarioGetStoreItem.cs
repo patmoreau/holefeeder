@@ -2,17 +2,17 @@ using System.Net;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-public class ScenarioGetStoreItem : BaseScenario
+[ComponentTest]
+public class ScenarioGetStoreItem : HolefeederScenario
 {
-    public ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -23,7 +23,7 @@ public class ScenarioGetStoreItem : BaseScenario
 
         await WhenUserGetStoreItem(Guid.NewGuid());
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -41,22 +41,16 @@ public class ScenarioGetStoreItem : BaseScenario
     {
         StoreItem storeItem = await GivenAStoreItem()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetStoreItem(storeItem.Id);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         StoreItemViewModel? result = HttpClientDriver.DeserializeContent<StoreItemViewModel>();
-        ThenAssertAll(() =>
-        {
-            result.Should()
-                .NotBeNull()
-                .And
-                .BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId).Excluding(x => x.DomainEvents));
-        });
+        result.Should().NotBeNull().And.BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId));
     }
 
-    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, new object[] { id.ToString() });
+    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetStoreItem, new object[] { id.ToString() });
 }

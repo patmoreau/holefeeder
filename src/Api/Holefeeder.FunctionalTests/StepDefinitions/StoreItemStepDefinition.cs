@@ -1,22 +1,22 @@
 using System.Text.Json;
+using DrifterApps.Seeds.Testing.Drivers;
+using DrifterApps.Seeds.Testing.Scenarios;
+using DrifterApps.Seeds.Testing.StepDefinitions;
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.StoreItems;
-using Holefeeder.Tests.Common.SeedWork.Drivers;
-using Holefeeder.Tests.Common.SeedWork.Scenarios;
-using Holefeeder.Tests.Common.SeedWork.StepDefinitions;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class StoreItemStepDefinition : RootStepDefinition
+public class StoreItemStepDefinition : StepDefinition
 {
     private const string ContextId = $"{nameof(StoreItemStepDefinition)}_Id";
     private const string ContextCreateStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_CreateStoreItemRequest";
     private const string ContextModifyStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_ModifyStoreItemRequest";
 
-    public StoreItemStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
+    public StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : base(httpClientDriver)
     {
     }
 
@@ -30,7 +30,7 @@ public class StoreItemStepDefinition : RootStepDefinition
             runner.SetContextData(ContextCreateStoreItemRequest, request);
 
             string json = JsonSerializer.Serialize(request);
-            await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
+            await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
 
@@ -47,7 +47,7 @@ public class StoreItemStepDefinition : RootStepDefinition
         runner.Execute("a store item is created", async () =>
         {
             string json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
-            await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
+            await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
 
@@ -65,7 +65,7 @@ public class StoreItemStepDefinition : RootStepDefinition
             runner.SetContextData(ContextModifyStoreItemRequest, request);
 
             string json = JsonSerializer.Serialize(request);
-            return HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
+            return HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
         });
     }
 
@@ -97,5 +97,5 @@ public class StoreItemStepDefinition : RootStepDefinition
         });
     }
 
-    private Task RetrievedById(Guid id) => HttpClientDriver.SendGetRequest(ApiResources.GetStoreItem, id);
+    private Task RetrievedById(Guid id) => HttpClientDriver.SendGetRequestAsync(ApiResources.GetStoreItem, id);
 }

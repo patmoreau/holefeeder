@@ -2,9 +2,9 @@
 // The.NET Foundation licenses this file to you under the MIT license.
 
 using Bogus;
+using DrifterApps.Seeds.Testing.Drivers;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
-using Holefeeder.Tests.Common.SeedWork.Drivers;
 using LightBDD.XUnit2;
 
 namespace Holefeeder.FunctionalTests.Features;
@@ -13,7 +13,7 @@ namespace Holefeeder.FunctionalTests.Features;
 public class BaseFeature : FeatureFixture
 {
     private readonly Faker _faker = new();
-    protected HttpClientDriver HttpClientDriver { get; }
+    protected IHttpClientDriver HttpClientDriver { get; }
 
     protected BaseFeature(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(testOutputHelper)
@@ -31,8 +31,8 @@ public class BaseFeature : FeatureFixture
     protected Task Given_an_unauthorized_user() => Task.Run(() => HttpClientDriver.UnAuthenticate());
 
     protected Task Given_an_authorized_user() => Task.Run(() =>
-        HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId));
+        HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId.ToString()));
 
     protected Task Given_a_forbidden_user() =>
-        Task.Run(() => HttpClientDriver.AuthenticateUser(_faker.Random.Guid()));
+        Task.Run(() => HttpClientDriver.AuthenticateUser(_faker.Random.Hash()));
 }

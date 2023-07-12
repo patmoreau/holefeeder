@@ -4,7 +4,6 @@ using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,10 +12,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioGetTransactions : BaseScenario
+[ComponentTest]
+public class ScenarioGetTransactions : HolefeederScenario
 {
-    public ScenarioGetTransactions(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -25,7 +25,7 @@ public class ScenarioGetTransactions : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetTransactions, -1);
+        await QueryEndpoint(ApiResources.GetTransactions, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -38,23 +38,23 @@ public class ScenarioGetTransactions : BaseScenario
 
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .CollectionSavedInDb(DatabaseDriver, count);
+            .CollectionSavedInDbAsync(DatabaseDriver, count);
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetTransactions, sorts: "-description");
+        await QueryEndpoint(ApiResources.GetTransactions, sorts: "-description");
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         TransactionInfoViewModel[]? result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Description);
     }

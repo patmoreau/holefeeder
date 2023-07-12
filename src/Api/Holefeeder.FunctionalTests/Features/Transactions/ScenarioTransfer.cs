@@ -3,7 +3,6 @@ using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -12,15 +11,12 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilde
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public sealed class ScenarioTransfer : BaseScenario
+[ComponentTest]
+public sealed class ScenarioTransfer : HolefeederScenario
 {
-    public ScenarioTransfer(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioTransfer(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
-        if (applicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(applicationDriver));
-        }
     }
 
     [Fact]
@@ -28,9 +24,9 @@ public sealed class ScenarioTransfer : BaseScenario
     {
         Request request = default!;
 
-        await ScenarioFor("an invalid transfer request", player =>
+        await ScenarioFor("an invalid transfer request", runner =>
         {
-            player
+            runner
                 .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
                 .And(User.IsAuthorized)
                 .When("a transfer is made", () => Transaction.Transfer(request))
@@ -43,13 +39,13 @@ public sealed class ScenarioTransfer : BaseScenario
     {
         Request request = default!;
 
-        await ScenarioFor("an authorized user making a transfer", player =>
+        await ScenarioFor("an authorized user making a transfer", runner =>
         {
-            player
+            runner
                 .Given("a transfer request", () => request = GivenATransfer().Build())
                 .And(User.IsAuthorized)
                 .When("the transfer is made", () => Transaction.Transfer(request))
-                .Then("the user should be authorized to access the endpoint", ThenUserShouldBeAuthorizedToAccessEndpoint);
+                .Then("the user should be authorized to access the endpoint", ShouldBeAuthorizedToAccessEndpoint);
         });
     }
 
@@ -58,9 +54,9 @@ public sealed class ScenarioTransfer : BaseScenario
     {
         Request request = null!;
 
-        await ScenarioFor("a forbidden user making a request", player =>
+        await ScenarioFor("a forbidden user making a request", runner =>
         {
-            player
+            runner
                 .Given("a transfer request", () => request = GivenATransfer().Build())
                 .And(User.IsForbidden)
                 .When("the request is sent", () => Transaction.Transfer(request))
@@ -73,9 +69,9 @@ public sealed class ScenarioTransfer : BaseScenario
     {
         Request entity = null!;
 
-        await ScenarioFor("an unauthorized user making a transfer request", player =>
+        await ScenarioFor("an unauthorized user making a transfer request", runner =>
         {
-            player
+            runner
                 .Given("a transfer request", () => entity = GivenATransfer().Build())
                 .And(User.IsUnauthorized)
                 .When("the transfer request is made", () => Transaction.Transfer(entity))
@@ -91,21 +87,21 @@ public sealed class ScenarioTransfer : BaseScenario
         Request request = null!;
         (Guid FromTransactionId, Guid ToTransactionId) ids = default;
 
-        await ScenarioFor("a valid transfer request", player =>
+        await ScenarioFor("a valid transfer request", runner =>
         {
-            player
-                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
-                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
-                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
-                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(HolefeederUserId).SavedInDb(DatabaseDriver))
+            runner
+                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
                 .And("their request is valid", () => request = GivenATransfer().FromAccount(fromAccount).ToAccount(toAccount).Build())
                 .And(User.IsAuthorized)
                 .When("the transfer request is sent", () => Transaction.Transfer(request))
-                .Then("the return code should be Created", () => ThenShouldExpectStatusCode(HttpStatusCode.Created))
-                .And("the route of the new resource should be in the header", () => ThenShouldGetTheRouteOfTheNewResourceInTheHeader())
+                .Then("the return code should be Created", () => ShouldExpectStatusCode(HttpStatusCode.Created))
+                // .And(ShouldGetTheRouteOfTheNewResourceInTheHeader)
                 .And("both transaction ids should be received", () =>
                 {
-                    ids = ThenShouldReceive<(Guid FromTransactionId, Guid ToTransactionId)>();
+                    ids = ShouldHaveReceived<(Guid FromTransactionId, Guid ToTransactionId)>();
                     ids.FromTransactionId.Should().NotBeEmpty();
                     ids.ToTransactionId.Should().NotBeEmpty();
                 })

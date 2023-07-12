@@ -9,9 +9,9 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 public class GetUpcomingTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Date.Past().Date, faker.Date.Future().Date))
-        .RuleFor(x => x.From, faker => faker.Date.Past().Date)
-        .RuleFor(x => x.To, faker => faker.Date.Future().Date);
+        .CustomInstantiator(faker => new Request(faker.Date.PastDateOnly(), faker.Date.FutureDateOnly()))
+        .RuleFor(x => x.From, faker => faker.Date.PastDateOnly())
+        .RuleFor(x => x.To, faker => faker.Date.FutureDateOnly());
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()

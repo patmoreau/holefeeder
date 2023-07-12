@@ -1,14 +1,14 @@
-using Holefeeder.Tests.Common.SeedWork.Drivers;
-using Holefeeder.Tests.Common.SeedWork.Scenarios;
-using Holefeeder.Tests.Common.SeedWork.StepDefinitions;
+using DrifterApps.Seeds.Testing.Drivers;
+using DrifterApps.Seeds.Testing.Scenarios;
+using DrifterApps.Seeds.Testing.StepDefinitions;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class UserStepDefinition : RootStepDefinition
+public class UserStepDefinition : StepDefinition
 {
-    public static readonly Guid HolefeederUserId = Guid.NewGuid();
+    public static readonly Guid HolefeederUserId = Fakerizer.Random.Guid();
 
-    public UserStepDefinition(HttpClientDriver httpClientDriver) : base(httpClientDriver)
+    public UserStepDefinition(IHttpClientDriver httpClientDriver) : base(httpClientDriver)
     {
     }
 
@@ -21,12 +21,13 @@ public class UserStepDefinition : RootStepDefinition
     public void IsAuthorized(IStepRunner runner)
     {
         ArgumentNullException.ThrowIfNull(runner);
-        runner.Execute("the user is authorized", () => HttpClientDriver.AuthenticateUser(HolefeederUserId));
+        runner.Execute("the user is authorized", () => HttpClientDriver.AuthenticateUser(HolefeederUserId.ToString()));
     }
 
     public void IsForbidden(IStepRunner runner)
     {
         ArgumentNullException.ThrowIfNull(runner);
-        runner.Execute("the user is unauthorized", () => HttpClientDriver.AuthenticateUser(Guid.NewGuid()));
+        runner.Execute("the user is unauthorized",
+            () => HttpClientDriver.AuthenticateUser(Fakerizer.Random.Hash()));
     }
 }

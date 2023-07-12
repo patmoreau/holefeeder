@@ -3,7 +3,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -14,10 +13,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioDeleteTransaction : BaseScenario
+[ComponentTest]
+public class ScenarioDeleteTransaction : HolefeederScenario
 {
-    public ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
         if (applicationDriver == null)
         {
@@ -42,16 +42,16 @@ public class ScenarioDeleteTransaction : BaseScenario
     {
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
 
@@ -59,12 +59,12 @@ public class ScenarioDeleteTransaction : BaseScenario
 
         await WhenUserDeletesATransaction(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequest(ApiResources.DeleteTransaction, request.Id);
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequestAsync(ApiResources.DeleteTransaction, request.Id);
 }

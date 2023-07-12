@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -15,10 +14,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.ModifyCashflowRequest
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioModifyCashflow : BaseScenario
+[ComponentTest]
+public class ScenarioModifyCashflow : HolefeederScenario
 {
-    public ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
         if (applicationDriver == null)
         {
@@ -45,17 +45,17 @@ public class ScenarioModifyCashflow : BaseScenario
     {
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Cashflow cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -65,7 +65,7 @@ public class ScenarioModifyCashflow : BaseScenario
 
         await WhenUserModifiedACashflow(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         Cashflow? result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
 
@@ -75,6 +75,6 @@ public class ScenarioModifyCashflow : BaseScenario
     private async Task WhenUserModifiedACashflow(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyCashflow, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyCashflow, json);
     }
 }

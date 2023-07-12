@@ -21,7 +21,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
     <PackageReference Include="Carter" Version="7.1.0" />
-    <PackageReference Include="DrifterApps.Seeds.Infrastructure" Version="0.1.46" />
+    <PackageReference Include="DrifterApps.Seeds.Infrastructure" Version="1.0.15-alpha" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="5.7.0" />

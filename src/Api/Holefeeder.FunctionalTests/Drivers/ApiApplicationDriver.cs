@@ -1,73 +1,79 @@
 using System.Security.Claims;
-using AutoBogus;
-using Dapper;
-using Holefeeder.Application.Context;
-using Holefeeder.Domain.Enumerations;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
+using Bogus;
+using DrifterApps.Seeds.Testing;
+using DrifterApps.Seeds.Testing.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Infrastructure.SeedWork;
-using Holefeeder.Tests.Common.SeedWork.Drivers;
-using Holefeeder.Tests.Common.SeedWork.Infrastructure;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
+using static Holefeeder.Infrastructure.SeedWork.BudgetingConnectionStringBuilder;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver
+public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
 {
-    public HttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
-        new(CreateClient(), testOutputHelper);
+    internal BudgetingDatabaseDriver DatabaseDriver { get; }
+
+    public ApiApplicationDriver()
+    {
+        Faker.DefaultStrictMode = true;
+
+        DatabaseDriver = new BudgetingDatabaseDriver();
+    }
+
+    public IHttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
+        HttpClientDriver.CreateDriver(CreateClient(), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        AutoFaker.Configure(configBuilder =>
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.ConfigureServices(services =>
         {
-            configBuilder.WithOverride<AccountType>(context =>
-                context.Faker.PickRandom<AccountType>(AccountType.List));
-            configBuilder.WithOverride<CategoryType>(context =>
-                context.Faker.PickRandom<CategoryType>(CategoryType.List));
-            configBuilder.WithOverride<DateIntervalType>(context =>
-                context.Faker.PickRandom<DateIntervalType>(DateIntervalType.List));
-            configBuilder.WithOverride(context => context.Faker.Date.Soon().Date);
-            configBuilder.WithOverride(context => context.Faker.Finance.Amount());
-        });
-
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json"))
-            .AddUserSecrets<ApiApplicationDriver>()
-            .AddEnvironmentVariables()
-            .Build();
-
-        builder.UseConfiguration(configuration);
-
-        builder
-            .ConfigureTestServices(services =>
+            services.RemoveAll<BudgetingConnectionStringBuilder>();
+            services.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
             {
-                string? holefeederConnection =
-                    configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING);
-                services.AddDbContext<BudgetingContext>(options =>
-                    options.UseMySql(ServerVersion.AutoDetect(holefeederConnection)));
-
-                services.AddScoped<BudgetingDatabaseDriver>();
-
-                services.AddTransient<IAuthenticationSchemeProvider, MockSchemeProvider>();
-                services.AddAuthentication(MockAuthenticationHandler.AuthenticationScheme)
-                    .AddScheme<MockAuthenticationSchemeOptions, MockAuthenticationHandler>(
-                        MockAuthenticationHandler.AuthenticationScheme, options =>
-                        {
-                            options.AdditionalUserClaims.Add(
-                                UserStepDefinition.HolefeederUserId.ToString(),
-                                new List<Claim> { new(ClaimConstants.Scope, "holefeeder.user") });
-                        });
-
-                DefaultTypeMap.MatchNamesWithUnderscores = true;
+                ConnectionString = DatabaseDriver.ConnectionString
             });
+        });
+        // builder.ConfigureAppConfiguration((hostingContext, configBuilder) =>
+        // {
+        //     IConfiguration configuration = configBuilder.Build();
+        //     IConfigurationSection connectionStringsSection = configuration.GetSection("ConnectionStrings");
+        //
+        //     // Replace the value of a specific connection string key
+        //     var myConnectionString = connectionStringsSection.GetSection(BUDGETING_CONNECTION_STRING);
+        //     if (myConnectionString.Exists())
+        //     {
+        //         configuration[BUDGETING_CONNECTION_STRING] = DatabaseDriver.ConnectionString;
+        //     }
+        //
+        //     // Replace the existing configuration with the modified one
+        //     builder.UseConfiguration(configuration);
+        // });
+        builder.ConfigureTestServices(services =>
+        {
+            services.AddMockAuthentication(options =>
+            {
+                options.AdditionalUserClaims.Add(UserStepDefinition.HolefeederUserId.ToString(),
+                    new List<Claim> { new(ClaimConstants.Scope, "holefeeder.user") });
+            });
+            services.AddDatabaseDriver(DatabaseDriver);
+        });
     }
+
+    public async Task ResetStateAsync()
+    {
+        await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+    }
+
+    Task IAsyncLifetime.InitializeAsync() => DatabaseDriver.InitializeAsync();
+
+    Task IAsyncLifetime.DisposeAsync() => DatabaseDriver.DisposeAsync();
 }

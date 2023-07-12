@@ -7,7 +7,7 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 public class MakePurchaseTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-        .RuleFor(x => x.Date, faker => faker.Date.Recent())
+        .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.AccountId, faker => faker.Random.Guid())

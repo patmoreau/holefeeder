@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -11,10 +10,11 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-public class ScenarioModifyStoreItem : BaseScenario
+[ComponentTest]
+public class ScenarioModifyStoreItem : HolefeederScenario
 {
-    public ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -37,7 +37,7 @@ public class ScenarioModifyStoreItem : BaseScenario
     {
         StoreItem storeItem = await GivenAStoreItem()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAModifyStoreItemRequest()
             .WithId(storeItem.Id)
@@ -47,7 +47,7 @@ public class ScenarioModifyStoreItem : BaseScenario
 
         await WhenUserModifyStoreItem(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         StoreItem? result = await DatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
@@ -57,6 +57,6 @@ public class ScenarioModifyStoreItem : BaseScenario
     private async Task WhenUserModifyStoreItem(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyStoreItem, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
     }
 }

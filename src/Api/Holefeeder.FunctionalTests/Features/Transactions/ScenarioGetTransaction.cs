@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,10 +12,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioGetTransaction : BaseScenario
+[ComponentTest]
+public class ScenarioGetTransaction : HolefeederScenario
 {
-    public ScenarioGetTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -27,7 +27,7 @@ public class ScenarioGetTransaction : BaseScenario
 
         await WhenUserGetTransaction(Guid.NewGuid());
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -46,25 +46,25 @@ public class ScenarioGetTransaction : BaseScenario
         Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetTransaction(transaction.Id);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         TransactionInfoViewModel? result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should()
                 .NotBeNull()
@@ -73,5 +73,5 @@ public class ScenarioGetTransaction : BaseScenario
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetTransaction, new object[] { id.ToString() });
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetTransaction, new object[] { id.ToString() });
 }

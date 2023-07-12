@@ -5,13 +5,13 @@ using ModifyRequest = Holefeeder.Application.Features.StoreItems.Commands.Modify
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[Collection("Api collection")]
-public class ScenarioStoreItem : BaseScenario
+[ComponentTest]
+public class ScenarioStoreItem : HolefeederScenario
 {
     private readonly StoreItemStepDefinition _storeItem;
 
-    public ScenarioStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
         _storeItem = new StoreItemStepDefinition(HttpClientDriver);
     }

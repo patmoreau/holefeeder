@@ -10,10 +10,10 @@ public class OpenAccountTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.PickRandom<AccountType>(AccountType.List), faker.Lorem.Word(),
-            faker.Date.Recent(), faker.Finance.Amount(), faker.Lorem.Sentence()))
+            faker.Date.RecentDateOnly(), faker.Finance.Amount(), faker.Lorem.Sentence()))
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word())
-        .RuleFor(x => x.OpenDate, faker => faker.Date.Recent())
+        .RuleFor(x => x.OpenDate, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence());
 
@@ -54,7 +54,7 @@ public class OpenAccountTests
     public async Task GivenValidator_WhenOpenDateIsInvalid_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.OpenDate, _ => DateTime.MinValue).Generate();
+        Request? request = _faker.RuleFor(x => x.OpenDate, _ => DateOnly.MinValue).Generate();
 
         Validator validator = new Validator();
 

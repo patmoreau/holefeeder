@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
+using DrifterApps.Seeds.Testing.Scenarios;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -11,10 +11,13 @@ using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioOpenAccount : BaseScenario
+[ComponentTest]
+public class ScenarioOpenAccount : HolefeederScenario
 {
-    public ScenarioOpenAccount(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    private const string OpenAccountRequestKey = $"{nameof(ScenarioOpenAccount)}_OpenAccountRequest";
+
+    public ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -36,7 +39,7 @@ public class ScenarioOpenAccount : BaseScenario
     {
         Account entity = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAnOpenAccountRequest()
             .WithName(entity.Name)
@@ -46,30 +49,47 @@ public class ScenarioOpenAccount : BaseScenario
 
         await WhenUserOpensAnAccount(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.BadRequest);
+        ShouldExpectStatusCode(HttpStatusCode.BadRequest);
     }
 
     [Fact]
-    public async Task WhenOpenAccount()
+    public async Task WhenOpenAccount() => await ScenarioFor("opening an account", runner =>
+        runner.Given(User.IsAuthorized)
+            .When(OpeningAccount)
+            .Then(AccountShouldBeOpened));
+
+    private void OpeningAccount(IStepRunner runner)
     {
-        Request request = GivenAnOpenAccountRequest()
-            .Build();
+        runner.Execute("opening an account", async () =>
+        {
+            var request = GivenAnOpenAccountRequest().Build();
 
-        GivenUserIsAuthorized();
+            runner.SetContextData(OpenAccountRequestKey, request);
 
-        await WhenUserOpensAnAccount(request);
-
-        ThenShouldExpectStatusCode(HttpStatusCode.Created);
-
-        Guid id = ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
-
-        Account? result = await DatabaseDriver.FindByIdAsync<Account>(id);
-        result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+            await WhenUserOpensAnAccount(request);
+        });
     }
 
     private async Task WhenUserOpensAnAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.OpenAccount, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.OpenAccount, json);
+    }
+
+    private void AccountShouldBeOpened(IStepRunner runner)
+    {
+        runner.Execute("the account was created successfully", async () =>
+        {
+            ShouldExpectStatusCode(HttpStatusCode.Created);
+
+            Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+            var id = ResourceIdFromLocation(location);
+
+            Account? result = await DatabaseDriver.FindByIdAsync<Account>(id);
+
+            var request = runner.GetContextData<Request>(OpenAccountRequestKey);
+
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
     }
 }

@@ -1,17 +1,17 @@
 using System.Net;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-public class ScenarioGetStoreItems : BaseScenario
+[ComponentTest]
+public class ScenarioGetStoreItems : HolefeederScenario
 {
-    public ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -20,7 +20,7 @@ public class ScenarioGetStoreItems : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems, -1);
+        await QueryEndpoint(ApiResources.GetStoreItems, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -34,23 +34,23 @@ public class ScenarioGetStoreItems : BaseScenario
         await GivenAStoreItem()
             .ForUser(HolefeederUserId)
             .WithCode(firstCode)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         await GivenAStoreItem()
             .ForUser(HolefeederUserId)
             .WithCode(secondCode)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         await GivenAStoreItem()
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetStoreItems, sorts: "-code");
+        await QueryEndpoint(ApiResources.GetStoreItems, sorts: "-code");
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         StoreItemViewModel[]? result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2);
             result![0].Code.Should().Be(secondCode);

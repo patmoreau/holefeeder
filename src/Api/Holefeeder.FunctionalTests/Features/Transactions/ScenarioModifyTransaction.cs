@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -15,10 +14,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioModifyTransaction : BaseScenario
+[ComponentTest]
+public class ScenarioModifyTransaction : HolefeederScenario
 {
-    public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
         if (applicationDriver == null)
         {
@@ -47,7 +47,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         await WhenUserModifiedATransaction(request);
 
-        ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
+        ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
             $"Account '{request.AccountId}' does not exists.");
     }
 
@@ -56,7 +56,7 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAModifyTransactionRequest()
             .WithAccount(account).Build();
@@ -65,7 +65,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         await WhenUserModifiedATransaction(request);
 
-        ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
+        ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
             $"Category '{request.CategoryId}' does not exists.");
     }
 
@@ -74,11 +74,11 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAModifyTransactionRequest()
             .WithAccount(account)
@@ -89,7 +89,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         await WhenUserModifiedATransaction(request);
 
-        ThenShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.NotFound,
+        ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.NotFound,
             $"'{request.Id}' not found");
     }
 
@@ -98,16 +98,16 @@ public class ScenarioModifyTransaction : BaseScenario
     {
         var accounts = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, 2);
+            .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var transaction = await GivenATransaction()
             .ForAccount(accounts.ElementAt(0))
             .ForCategory(categories.ElementAt(0))
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
@@ -119,7 +119,7 @@ public class ScenarioModifyTransaction : BaseScenario
 
         await WhenUserModifiedATransaction(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
 
@@ -129,6 +129,6 @@ public class ScenarioModifyTransaction : BaseScenario
     private async Task WhenUserModifiedATransaction(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyTransaction, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyTransaction, json);
     }
 }

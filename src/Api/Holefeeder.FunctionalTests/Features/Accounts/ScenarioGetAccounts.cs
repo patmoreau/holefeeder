@@ -2,17 +2,17 @@ using System.Net;
 using Bogus;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioGetAccounts : BaseScenario
+[ComponentTest]
+public class ScenarioGetAccounts : HolefeederScenario
 {
-    public ScenarioGetAccounts(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -21,7 +21,7 @@ public class ScenarioGetAccounts : BaseScenario
     {
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetAccounts, -1);
+        await QueryEndpoint(ApiResources.GetAccounts, -1);
 
         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
     }
@@ -34,16 +34,16 @@ public class ScenarioGetAccounts : BaseScenario
 
         await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .CollectionSavedInDb(DatabaseDriver, count);
+            .CollectionSavedInDbAsync(DatabaseDriver, count);
 
         await GivenAnActiveAccount()
-            .CollectionSavedInDb(DatabaseDriver, count);
+            .CollectionSavedInDbAsync(DatabaseDriver, count);
 
         GivenUserIsAuthorized();
 
-        await WhenUserTriesToQuery(ApiResources.GetAccounts, sorts: "-name");
+        await QueryEndpoint(ApiResources.GetAccounts, sorts: "-name");
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         AccountViewModel[]? result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Name);
     }

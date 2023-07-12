@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,10 +12,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioGetAccount : BaseScenario
+[ComponentTest]
+public class ScenarioGetAccount : HolefeederScenario
 {
-    public ScenarioGetAccount(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -27,7 +27,7 @@ public class ScenarioGetAccount : BaseScenario
 
         await WhenUserGetAccount(Guid.NewGuid());
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -46,25 +46,25 @@ public class ScenarioGetAccount : BaseScenario
         Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetAccount(account.Id);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         AccountViewModel? result = HttpClientDriver.DeserializeContent<AccountViewModel>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should()
                 .NotBeNull()
@@ -81,25 +81,25 @@ public class ScenarioGetAccount : BaseScenario
         Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Gain)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Transaction transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetAccount(account.Id);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         AccountViewModel? result = HttpClientDriver.DeserializeContent<AccountViewModel>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should()
                 .NotBeNull()
@@ -110,5 +110,5 @@ public class ScenarioGetAccount : BaseScenario
         });
     }
 
-    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetAccount, new object[] { id.ToString() });
+    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetAccount, new object[] { id.ToString() });
 }

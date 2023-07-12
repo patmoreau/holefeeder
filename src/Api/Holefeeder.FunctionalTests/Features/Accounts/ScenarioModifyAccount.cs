@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
@@ -11,10 +10,11 @@ using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuild
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioModifyAccount : BaseScenario
+[ComponentTest]
+public class ScenarioModifyAccount : HolefeederScenario
 {
-    public ScenarioModifyAccount(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -40,7 +40,7 @@ public class ScenarioModifyAccount : BaseScenario
 
         await WhenUserModifiesAccount(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class ScenarioModifyAccount : BaseScenario
     {
         Account entity = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request request = GivenAModifyAccountRequest()
             .WithId(entity.Id)
@@ -58,7 +58,7 @@ public class ScenarioModifyAccount : BaseScenario
 
         await WhenUserModifiesAccount(request);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NoContent);
+        ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
         Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
         result.Should()
@@ -70,6 +70,6 @@ public class ScenarioModifyAccount : BaseScenario
     private async Task WhenUserModifiesAccount(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.ModifyAccount, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyAccount, json);
     }
 }

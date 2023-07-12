@@ -2,17 +2,17 @@ using System.Net;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
-public class ScenarioGetCategories : BaseScenario
+[ComponentTest]
+public class ScenarioGetCategories : HolefeederScenario
 {
-    public ScenarioGetCategories(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -26,21 +26,21 @@ public class ScenarioGetCategories : BaseScenario
             .WithName(firstName)
             .ForUser(HolefeederUserId)
             .IsNotFavorite()
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(HolefeederUserId)
             .IsFavorite()
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetCategories();
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         CategoryViewModel[]? result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
             result![0].Should().BeEquivalentTo(secondCategory,
@@ -50,5 +50,5 @@ public class ScenarioGetCategories : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequest(ApiResources.GetCategories);
+    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCategories);
 }

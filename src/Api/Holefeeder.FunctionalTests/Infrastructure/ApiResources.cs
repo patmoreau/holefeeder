@@ -1,4 +1,4 @@
-using Holefeeder.Tests.Common.SeedWork.Infrastructure;
+using DrifterApps.Seeds.Testing.Infrastructure;
 
 namespace Holefeeder.FunctionalTests.Infrastructure;
 

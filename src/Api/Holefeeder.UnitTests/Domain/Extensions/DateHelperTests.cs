@@ -10,24 +10,24 @@ public class DateHelperTests
     {
         get
         {
-            yield return new object[] { "2014-01-09", new DateTime(2014, 1, 9) };
-            yield return new object[] { "2016-12-28", new DateTime(2016, 12, 28) };
+            yield return new object[] { "2014-01-09", new DateOnly(2014, 1, 9) };
+            yield return new object[] { "2016-12-28", new DateOnly(2016, 12, 28) };
         }
     }
 
     [Theory]
     [MemberData(nameof(ToPersistentTestCases))]
-    public void ToPersistent_DateTimeValue_ReturnsString(DateTime dateTime, string expected) =>
-        dateTime.ToPersistent().Should().Be(expected);
+    public void ToPersistent_DateOnlyValue_ReturnsString(DateOnly DateOnly, string expected) =>
+        DateOnly.ToPersistent().Should().Be(expected);
 
     public static IEnumerable<object[]> ToPersistentTestCases()
     {
-        yield return new object[] { new DateTime(2014, 1, 9), "2014-01-09" };
-        yield return new object[] { new DateTime(2016, 12, 28), "2016-12-28" };
+        yield return new object[] { new DateOnly(2014, 1, 9), "2014-01-09" };
+        yield return new object[] { new DateOnly(2016, 12, 28), "2016-12-28" };
     }
 
     [Theory]
     [MemberData(nameof(ParsePersistentTestCases))]
-    public void ParsePersistent_StringValue_ReturnsDateTime(string dateTime, DateTime expected) =>
-        dateTime.ParsePersistent().Should().Be(expected);
+    public void ParsePersistent_StringValue_ReturnsDateOnly(string DateOnly, DateOnly expected) =>
+        DateOnly.ParsePersistent().Should().Be(expected);
 }

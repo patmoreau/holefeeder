@@ -4,7 +4,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,10 +12,11 @@ using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-public class ScenarioGetCashflow : BaseScenario
+[ComponentTest]
+public class ScenarioGetCashflow : HolefeederScenario
 {
-    public ScenarioGetCashflow(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -27,7 +27,7 @@ public class ScenarioGetCashflow : BaseScenario
 
         await WhenUserGetCashflow(Guid.NewGuid());
 
-        ThenShouldExpectStatusCode(HttpStatusCode.NotFound);
+        ShouldExpectStatusCode(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -46,26 +46,26 @@ public class ScenarioGetCashflow : BaseScenario
         Account account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Category category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Cashflow cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(HolefeederUserId)
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();
 
         await WhenUserGetCashflow(cashflow.Id);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.OK);
+        ShouldExpectStatusCode(HttpStatusCode.OK);
         CashflowInfoViewModel? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
-        ThenAssertAll(() =>
+        AssertAll(() =>
         {
             result.Should()
                 .NotBeNull()
@@ -74,5 +74,5 @@ public class ScenarioGetCashflow : BaseScenario
         });
     }
 
-    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequest(ApiResources.GetCashflow, new object[] { id.ToString() });
+    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCashflow, new object[] { id.ToString() });
 }

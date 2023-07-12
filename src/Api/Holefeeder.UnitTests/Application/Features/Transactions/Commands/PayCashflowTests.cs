@@ -7,16 +7,16 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 public class PayCashflowTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-        .RuleFor(x => x.Date, faker => faker.Date.Soon())
+        .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.CashflowId, faker => faker.Random.Guid())
-        .RuleFor(x => x.CashflowDate, faker => faker.Date.Recent());
+        .RuleFor(x => x.CashflowDate, faker => faker.Date.RecentDateOnly());
 
     [Fact]
     public async Task GivenValidator_WhenDateIsEmpty_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Date, DateTime.MinValue).Generate();
+        Request? request = _faker.RuleFor(x => x.Date, DateOnly.MinValue).Generate();
 
         Validator validator = new Validator();
 

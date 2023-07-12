@@ -28,13 +28,13 @@ public class PayCashflow : ICarterModule
 
     internal record Request : IRequest<Guid>, IUnitOfWorkRequest
     {
-        public DateTime Date { get; init; }
+        public DateOnly Date { get; init; }
 
         public decimal Amount { get; init; }
 
         public Guid CashflowId { get; init; }
 
-        public DateTime CashflowDate { get; init; }
+        public DateOnly CashflowDate { get; init; }
     }
 
     internal class Validator : AbstractValidator<Request>

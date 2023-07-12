@@ -24,69 +24,69 @@ public class CashflowTests
             yield return new object[]
             {
                 "OneTime Cashflow effective after date returns nothing",
-                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2022, 12, 31), Array.Empty<DateTime>()
+                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2022, 12, 31), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
                 "OneTime Cashflow effective before date returns single date",
-                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31), new[] {new DateTime(2023, 1, 1)}
+                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31), new[] {new DateOnly(2023, 1, 1)}
             };
             yield return new object[]
             {
                 "Weekly Cashflow effective after date returns nothing",
-                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2022, 12, 31), Array.Empty<DateTime>()
+                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2022, 12, 31), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
                 "Weekly Cashflow effective before date returns 27 iterations",
-                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31),
+                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31),
                 new[]
                 {
-                    new DateTime(2023, 1, 1), new DateTime(2023, 1, 15), new DateTime(2023, 1, 29),
-                    new DateTime(2023, 2, 12), new DateTime(2023, 2, 26), new DateTime(2023, 3, 12),
-                    new DateTime(2023, 3, 26), new DateTime(2023, 4, 9), new DateTime(2023, 4, 23),
-                    new DateTime(2023, 5, 7), new DateTime(2023, 5, 21), new DateTime(2023, 6, 4),
-                    new DateTime(2023, 6, 18), new DateTime(2023, 7, 2), new DateTime(2023, 7, 16),
-                    new DateTime(2023, 7, 30), new DateTime(2023, 8, 13), new DateTime(2023, 8, 27),
-                    new DateTime(2023, 9, 10), new DateTime(2023, 9, 24), new DateTime(2023, 10, 8),
-                    new DateTime(2023, 10, 22), new DateTime(2023, 11, 5), new DateTime(2023, 11, 19),
-                    new DateTime(2023, 12, 3), new DateTime(2023, 12, 17), new DateTime(2023, 12, 31)
+                    new DateOnly(2023, 1, 1), new DateOnly(2023, 1, 15), new DateOnly(2023, 1, 29),
+                    new DateOnly(2023, 2, 12), new DateOnly(2023, 2, 26), new DateOnly(2023, 3, 12),
+                    new DateOnly(2023, 3, 26), new DateOnly(2023, 4, 9), new DateOnly(2023, 4, 23),
+                    new DateOnly(2023, 5, 7), new DateOnly(2023, 5, 21), new DateOnly(2023, 6, 4),
+                    new DateOnly(2023, 6, 18), new DateOnly(2023, 7, 2), new DateOnly(2023, 7, 16),
+                    new DateOnly(2023, 7, 30), new DateOnly(2023, 8, 13), new DateOnly(2023, 8, 27),
+                    new DateOnly(2023, 9, 10), new DateOnly(2023, 9, 24), new DateOnly(2023, 10, 8),
+                    new DateOnly(2023, 10, 22), new DateOnly(2023, 11, 5), new DateOnly(2023, 11, 19),
+                    new DateOnly(2023, 12, 3), new DateOnly(2023, 12, 17), new DateOnly(2023, 12, 31)
                 }
             };
             yield return new object[]
             {
                 "Monthly Cashflow effective after date returns nothing",
-                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2022, 12, 31), Array.Empty<DateTime>()
+                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2022, 12, 31), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
                 "Monthly Cashflow effective before date returns 12 iterations",
-                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31),
+                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31),
                 new[]
                 {
-                    new DateTime(2023, 1, 1), new DateTime(2023, 2, 1), new DateTime(2023, 3, 1),
-                    new DateTime(2023, 4, 1), new DateTime(2023, 5, 1), new DateTime(2023, 6, 1),
-                    new DateTime(2023, 7, 1), new DateTime(2023, 8, 1), new DateTime(2023, 9, 1),
-                    new DateTime(2023, 10, 1), new DateTime(2023, 11, 1), new DateTime(2023, 12, 1)
+                    new DateOnly(2023, 1, 1), new DateOnly(2023, 2, 1), new DateOnly(2023, 3, 1),
+                    new DateOnly(2023, 4, 1), new DateOnly(2023, 5, 1), new DateOnly(2023, 6, 1),
+                    new DateOnly(2023, 7, 1), new DateOnly(2023, 8, 1), new DateOnly(2023, 9, 1),
+                    new DateOnly(2023, 10, 1), new DateOnly(2023, 11, 1), new DateOnly(2023, 12, 1)
                 }
             };
             yield return new object[]
             {
                 "Yearly Cashflow effective after date returns nothing",
-                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2022, 12, 31), Array.Empty<DateTime>()
+                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2022, 12, 31), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
                 "Yearly Cashflow effective before date returns 2 iterations",
-                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2024, 12, 31), new[] {new DateTime(2023, 1, 1), new DateTime(2024, 1, 1)}
+                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2024, 12, 31), new[] {new DateOnly(2023, 1, 1), new DateOnly(2024, 1, 1)}
             };
         }
     }
@@ -98,32 +98,32 @@ public class CashflowTests
             yield return new object[]
             {
                 "OneTime Cashflow already paid returns nothing",
-                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31), new DateTime(2023, 1, 1), Array.Empty<DateTime>()
+                (IntervalType: DateIntervalType.OneTime, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31), new DateOnly(2023, 1, 1), Array.Empty<DateOnly>()
             };
             yield return new object[]
             {
                 "Weekly Cashflow effective before date returns 2 iterations",
-                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31), new DateTime(2023, 12, 3),
-                new[] {new DateTime(2023, 12, 17), new DateTime(2023, 12, 31)}
+                (IntervalType: DateIntervalType.Weekly, Frequency: 2, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31), new DateOnly(2023, 12, 3),
+                new[] {new DateOnly(2023, 12, 17), new DateOnly(2023, 12, 31)}
             };
             yield return new object[]
             {
                 "Monthly Cashflow effective before date returns 12 iterations",
-                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2023, 12, 31), new DateTime(2023, 7, 1),
+                (IntervalType: DateIntervalType.Monthly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2023, 12, 31), new DateOnly(2023, 7, 1),
                 new[]
                 {
-                    new DateTime(2023, 8, 1), new DateTime(2023, 9, 1), new DateTime(2023, 10, 1),
-                    new DateTime(2023, 11, 1), new DateTime(2023, 12, 1)
+                    new DateOnly(2023, 8, 1), new DateOnly(2023, 9, 1), new DateOnly(2023, 10, 1),
+                    new DateOnly(2023, 11, 1), new DateOnly(2023, 12, 1)
                 }
             };
             yield return new object[]
             {
                 "Yearly Cashflow effective before date returns 2 iterations",
-                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateTime(2023, 1, 1)),
-                new DateTime(2024, 12, 31), new DateTime(2023, 1, 1), new[] {new DateTime(2024, 1, 1)}
+                (IntervalType: DateIntervalType.Yearly, Frequency: 1, EffectiveDate: new DateOnly(2023, 1, 1)),
+                new DateOnly(2024, 12, 31), new DateOnly(2023, 1, 1), new[] {new DateOnly(2024, 1, 1)}
             };
         }
     }
@@ -322,7 +322,7 @@ public class CashflowTests
         Cashflow cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        DateTime? result = cashflow.LastPaidDate;
+        DateOnly? result = cashflow.LastPaidDate;
 
         // assert
         result.Should().BeNull();
@@ -337,7 +337,7 @@ public class CashflowTests
             .Build();
 
         // act
-        DateTime? result = cashflow.LastPaidDate;
+        DateOnly? result = cashflow.LastPaidDate;
 
         // assert
         result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().Date);
@@ -350,7 +350,7 @@ public class CashflowTests
         Cashflow cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        DateTime? result = cashflow.LastCashflowDate;
+        DateOnly? result = cashflow.LastCashflowDate;
 
         // assert
         result.Should().BeNull();
@@ -365,7 +365,7 @@ public class CashflowTests
             .Build();
 
         // act
-        DateTime? result = cashflow.LastCashflowDate;
+        DateOnly? result = cashflow.LastCashflowDate;
 
         // assert
         result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().CashflowDate);
@@ -378,7 +378,7 @@ public class CashflowTests
         Cashflow cashflow = GivenAnInactiveCashflow().Build();
 
         // act
-        IReadOnlyCollection<DateTime> result = cashflow.GetUpcoming(_faker.Date.Future());
+        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(_faker.Date.FutureDateOnly());
 
         // assert
         result.Should().BeEmpty();
@@ -388,9 +388,9 @@ public class CashflowTests
     [MemberData(nameof(GetUpcomingWithNonePaidTestCases))]
     public void GivenGetUpcoming_WhenNoCashflowsPaid_ThenReturnExpectedDates(
         string testName,
-        (DateIntervalType IntervalType, int Frequency, DateTime EffectiveDate) info,
-        DateTime to,
-        IReadOnlyCollection<DateTime> expected)
+        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
+        DateOnly to,
+        IReadOnlyCollection<DateOnly> expected)
     {
         _testOutputHelper.WriteLine(testName);
 
@@ -403,7 +403,7 @@ public class CashflowTests
             .Build();
 
         // act
-        IReadOnlyCollection<DateTime> result = cashflow.GetUpcoming(to);
+        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(to);
 
         // assert
         result.Should().HaveCount(expected.Count).And.Equal(expected);
@@ -413,10 +413,10 @@ public class CashflowTests
     [MemberData(nameof(GetUpcomingWithPaidTestCases))]
     public void GivenGetUpcoming_WhenSomeCashflowsPaid_ThenReturnExpectedDates(
         string testName,
-        (DateIntervalType IntervalType, int Frequency, DateTime EffectiveDate) info,
-        DateTime to,
-        DateTime lastPaidDate,
-        IReadOnlyCollection<DateTime> expected)
+        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
+        DateOnly to,
+        DateOnly lastPaidDate,
+        IReadOnlyCollection<DateOnly> expected)
     {
         _testOutputHelper.WriteLine(testName);
 
@@ -434,7 +434,7 @@ public class CashflowTests
             .Build();
 
         // act
-        IReadOnlyCollection<DateTime> result = cashflow.GetUpcoming(to);
+        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(to);
 
         // assert
         result.Should().HaveCount(expected.Count).And.Equal(expected);

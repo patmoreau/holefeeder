@@ -6,7 +6,11 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class PayCashflowRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>();
+    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+        .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
+        .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.CashflowId, faker => faker.Random.Guid())
+        .RuleFor(x => x.CashflowDate, faker => faker.Date.SoonDateOnly());
 
     public PayCashflowRequestBuilder ForCashflow(Cashflow cashflow)
     {
@@ -14,7 +18,7 @@ internal class PayCashflowRequestBuilder : FakerBuilder<Request>
         return this;
     }
 
-    public PayCashflowRequestBuilder ForDate(DateTime cashflowDate)
+    public PayCashflowRequestBuilder ForDate(DateOnly cashflowDate)
     {
         Faker.RuleFor(x => x.CashflowDate, cashflowDate);
         return this;

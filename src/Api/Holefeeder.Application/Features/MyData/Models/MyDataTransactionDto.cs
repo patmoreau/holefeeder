@@ -4,7 +4,7 @@ public record MyDataTransactionDto
 {
     public Guid Id { get; init; }
 
-    public DateTime Date { get; init; }
+    public DateOnly Date { get; init; }
 
     public decimal Amount { get; init; }
 
@@ -20,5 +20,5 @@ public record MyDataTransactionDto
 
     public Guid? CashflowId { get; init; }
 
-    public DateTime? CashflowDate { get; init; }
+    public DateOnly? CashflowDate { get; init; }
 }

@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Extensions;
 using Holefeeder.FunctionalTests.Infrastructure;
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
@@ -10,10 +9,11 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-public class ScenarioCreateStoreItem : BaseScenario
+[ComponentTest]
+public class ScenarioCreateStoreItem : HolefeederScenario
 {
-    public ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, BudgetingDatabaseInitializer budgetingDatabaseInitializer, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, budgetingDatabaseInitializer, testOutputHelper)
+    public ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+        : base(applicationDriver, testOutputHelper)
     {
     }
 
@@ -40,16 +40,16 @@ public class ScenarioCreateStoreItem : BaseScenario
 
         await WhenUserCreateStoreItem(storeItem);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.Created);
+        ShouldExpectStatusCode(HttpStatusCode.Created);
 
-        ThenShouldGetTheRouteOfTheNewResourceInTheHeader();
+        ShouldGetTheRouteOfTheNewResourceInTheHeader();
     }
 
     [Fact]
     public async Task WhenCodeAlreadyExist()
     {
         StoreItem existingItem = await GivenAStoreItem()
-            .SavedInDb(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver);
 
         Request storeItem = GivenACreateStoreItemRequest()
             .WithCode(existingItem.Code)
@@ -59,12 +59,12 @@ public class ScenarioCreateStoreItem : BaseScenario
 
         await WhenUserCreateStoreItem(storeItem);
 
-        ThenShouldExpectStatusCode(HttpStatusCode.BadRequest);
+        ShouldExpectStatusCode(HttpStatusCode.BadRequest);
     }
 
     private async Task WhenUserCreateStoreItem(Request request)
     {
         string json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequest(ApiResources.CreateStoreItem, json);
+        await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
     }
 }

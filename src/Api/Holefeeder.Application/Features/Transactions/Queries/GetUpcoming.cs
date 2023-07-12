@@ -31,17 +31,17 @@ public class GetUpcoming : ICarterModule
             .WithName(nameof(GetUpcoming))
             .RequireAuthorization();
 
-    internal record Request(DateTime From, DateTime To) : IRequest<QueryResult<UpcomingViewModel>>
+    internal record Request(DateOnly From, DateOnly To) : IRequest<QueryResult<UpcomingViewModel>>
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
             const string fromKey = "from";
             const string toKey = "to";
 
-            bool hasFrom = DateTime.TryParse(context.Request.Query[fromKey], out DateTime from);
-            bool hasTo = DateTime.TryParse(context.Request.Query[toKey], out DateTime to);
+            bool hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], out DateOnly from);
+            bool hasTo = DateOnly.TryParse(context.Request.Query[toKey], out DateOnly to);
 
-            Request result = new(hasFrom ? from : DateTime.MinValue, hasTo ? to : DateTime.MaxValue);
+            Request result = new(hasFrom ? from : DateOnly.MinValue, hasTo ? to : DateOnly.MaxValue);
 
             return ValueTask.FromResult<Request?>(result);
         }

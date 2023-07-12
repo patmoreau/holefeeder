@@ -7,9 +7,9 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 public class TransferTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Date.Soon(), faker.Finance.Amount(), faker.Lorem.Paragraphs(),
+        .CustomInstantiator(faker => new Request(faker.Date.SoonDateOnly(), faker.Finance.Amount(), faker.Lorem.Paragraphs(),
             faker.Random.Guid(), faker.Random.Guid()))
-        .RuleFor(x => x.Date, faker => faker.Date.Soon())
+        .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Paragraphs())
         .RuleFor(x => x.FromAccountId, faker => faker.Random.Guid())
@@ -22,7 +22,7 @@ public class TransferTests
     public async Task GivenValidator_WhenDateIsEmpty_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Date, DateTime.MinValue).Generate();
+        Request? request = _faker.RuleFor(x => x.Date, DateOnly.MinValue).Generate();
 
         Validator validator = new Validator();
 
