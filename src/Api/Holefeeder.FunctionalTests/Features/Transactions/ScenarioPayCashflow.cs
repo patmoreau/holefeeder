@@ -4,6 +4,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -92,7 +93,6 @@ public sealed class ScenarioPayCashflow : HolefeederScenario
         Category category = null!;
         Cashflow cashflow = null!;
         Request request = null!;
-        Guid id = Guid.Empty;
 
         await ScenarioFor("paying a cashflow", player =>
         {
@@ -104,17 +104,17 @@ public sealed class ScenarioPayCashflow : HolefeederScenario
                 .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).ForDate(cashflow.EffectiveDate).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
                 .Then("the response should be created", () => ShouldExpectStatusCode(HttpStatusCode.Created))
-                // .And(ShouldGetTheRouteOfTheNewResourceInTheHeader)
                 .And("the cashflow paid saved in the database should match the request", async () =>
                 {
-                    Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(id);
+                    Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+                    var id = ResourceIdFromLocation(location);
 
-                    result.Should().NotBeNull();
+                    using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    TransactionMapper.MapToModelOrNull(result).Should()
-                        .NotBeNull()
-                        .And
-                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(id);
+
+                    result.Should().NotBeNull($"because the TransactionId ({id}) was not found")
+                        .And.BeEquivalentTo(request);
                 });
         });
     }

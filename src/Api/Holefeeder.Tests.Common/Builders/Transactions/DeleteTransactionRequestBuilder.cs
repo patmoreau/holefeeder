@@ -5,18 +5,18 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class DeleteTransactionRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Random.Guid()));
 
     public DeleteTransactionRequestBuilder WithId(Guid id)
     {
-        Faker.RuleFor(x => x.Id, id);
+        FakerRules.RuleFor(x => x.Id, id);
         return this;
     }
 
     public DeleteTransactionRequestBuilder WithNoId()
     {
-        Faker.RuleFor(x => x.Id, Guid.Empty);
+        FakerRules.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 

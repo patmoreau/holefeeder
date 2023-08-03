@@ -8,5 +8,5 @@ namespace Holefeeder.Tests.Common.Builders.Statistics;
 
 internal class GetForAllCategoriesRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new();
+    protected override Faker<Request> FakerRules { get; } = new();
 }

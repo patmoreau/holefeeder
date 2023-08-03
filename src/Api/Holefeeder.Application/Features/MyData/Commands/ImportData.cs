@@ -32,7 +32,7 @@ public class ImportData : ICarterModule
                         throw new ValidationException(validation.Errors);
                     }
 
-                    InternalRequest internalRequest = new InternalRequest
+                    InternalRequest internalRequest = new()
                     {
                         RequestId = Guid.NewGuid(),
                         UpdateExisting = request.UpdateExisting,

@@ -7,12 +7,9 @@ using Holefeeder.Infrastructure.SeedWork;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
-using static Holefeeder.Infrastructure.SeedWork.BudgetingConnectionStringBuilder;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
@@ -42,23 +39,9 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
                 ConnectionString = DatabaseDriver.ConnectionString
             });
         });
-        // builder.ConfigureAppConfiguration((hostingContext, configBuilder) =>
-        // {
-        //     IConfiguration configuration = configBuilder.Build();
-        //     IConfigurationSection connectionStringsSection = configuration.GetSection("ConnectionStrings");
-        //
-        //     // Replace the value of a specific connection string key
-        //     var myConnectionString = connectionStringsSection.GetSection(BUDGETING_CONNECTION_STRING);
-        //     if (myConnectionString.Exists())
-        //     {
-        //         configuration[BUDGETING_CONNECTION_STRING] = DatabaseDriver.ConnectionString;
-        //     }
-        //
-        //     // Replace the existing configuration with the modified one
-        //     builder.UseConfiguration(configuration);
-        // });
         builder.ConfigureTestServices(services =>
         {
+            services.AddScoped<BudgetingDatabaseDriver>();
             services.AddMockAuthentication(options =>
             {
                 options.AdditionalUserClaims.Add(UserStepDefinition.HolefeederUserId.ToString(),
@@ -70,7 +53,14 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
 
     public async Task ResetStateAsync()
     {
-        await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+        try
+        {
+            await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     Task IAsyncLifetime.InitializeAsync() => DatabaseDriver.InitializeAsync();

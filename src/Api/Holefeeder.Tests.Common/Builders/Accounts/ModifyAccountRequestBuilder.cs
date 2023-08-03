@@ -5,7 +5,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class ModifyAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .CustomInstantiator(faker =>
             new Request(faker.Random.Guid(), faker.Lorem.Word(), faker.Finance.Amount(), faker.Lorem.Sentence()))
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
@@ -15,13 +15,13 @@ internal class ModifyAccountRequestBuilder : FakerBuilder<Request>
 
     public ModifyAccountRequestBuilder WithId(Guid id)
     {
-        Faker.RuleFor(x => x.Id, id);
+        FakerRules.RuleFor(x => x.Id, id);
         return this;
     }
 
     public ModifyAccountRequestBuilder WithNoId()
     {
-        Faker.RuleFor(x => x.Id, Guid.Empty);
+        FakerRules.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 

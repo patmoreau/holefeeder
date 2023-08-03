@@ -6,6 +6,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 using static Holefeeder.Tests.Common.Builders.Accounts.CloseAccountRequestBuilder;
 
@@ -36,7 +37,7 @@ public class CloseAccountScenario : HolefeederScenario
             .Then(TheAccountShouldNotBeFound));
 
     [Fact]
-    public async Task WhenCloseAccount() => await ScenarioFor("closing an account", runner =>
+    public Task WhenCloseAccount() => ScenarioFor("closing an account", runner =>
         runner
             .Given(User.IsAuthorized)
             .And(Account.Exists)
@@ -96,7 +97,9 @@ public class CloseAccountScenario : HolefeederScenario
             var account = runner.GetContextData<Account>(AccountStepDefinition.ContextExistingAccount);
             account.Should().NotBeNull();
 
-            Account? result = await DatabaseDriver.FindByIdAsync<Account>(account.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Account? result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Inactive.Should().BeTrue();
         });

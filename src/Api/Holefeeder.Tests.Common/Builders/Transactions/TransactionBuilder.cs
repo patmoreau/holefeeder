@@ -7,7 +7,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransactionBuilder : FakerBuilder<Transaction>
 {
-    protected override Faker<Transaction> Faker { get; } = new Faker<Transaction>()
+    protected override Faker<Transaction> FakerRules { get; } = new Faker<Transaction>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: 1))
@@ -26,52 +26,52 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
 
     public TransactionBuilder WithNoId()
     {
-        Faker.RuleFor(f => f.Id, _ => default);
+        FakerRules.RuleFor(f => f.Id, _ => default);
         return this;
     }
 
     public TransactionBuilder OfAmount(decimal amount)
     {
-        Faker.RuleFor(f => f.Amount, amount);
+        FakerRules.RuleFor(f => f.Amount, amount);
         return this;
     }
 
     public TransactionBuilder WithNegativeAmount()
     {
-        Faker.RuleFor(f => f.Amount, faker => faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
+        FakerRules.RuleFor(f => f.Amount, faker => faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
         return this;
     }
 
     public TransactionBuilder OnDate(DateOnly date)
     {
-        Faker.RuleFor(f => f.Date, date);
+        FakerRules.RuleFor(f => f.Date, date);
         return this;
     }
 
     public TransactionBuilder WithNoDate()
     {
-        Faker.RuleFor(f => f.Date, _ => default);
+        FakerRules.RuleFor(f => f.Date, _ => default);
         return this;
     }
 
     public TransactionBuilder ForCashflowDate(DateOnly date)
     {
-        Faker.RuleFor(f => f.CashflowDate, date);
+        FakerRules.RuleFor(f => f.CashflowDate, date);
         return this;
     }
 
     public TransactionBuilder ForAccount(Account entity)
     {
-        Faker
+        FakerRules
             .RuleFor(f => f.AccountId, entity.Id)
-            .RuleFor(f => f.Account, entity)
+            // .RuleFor(f => f.Account, entity)
             .RuleFor(f => f.UserId, entity.UserId);
         return this;
     }
 
     public TransactionBuilder WithNoAccount()
     {
-        Faker
+        FakerRules
             .RuleFor(f => f.AccountId, _ => default)
             .RuleFor(f => f.Account, _ => default);
         return this;
@@ -79,15 +79,16 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
 
     public TransactionBuilder ForCategory(Category entity)
     {
-        Faker
+        FakerRules
             .RuleFor(f => f.CategoryId, entity.Id)
-            .RuleFor(f => f.Category, entity);
+            // .RuleFor(f => f.Category, entity)
+            ;
         return this;
     }
 
     public TransactionBuilder WithNoCategory()
     {
-        Faker
+        FakerRules
             .RuleFor(f => f.CategoryId, _ => default)
             .RuleFor(f => f.Category, _ => default);
         return this;
@@ -95,7 +96,7 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
 
     public TransactionBuilder WithNoUser()
     {
-        Faker.RuleFor(f => f.UserId, _ => default);
+        FakerRules.RuleFor(f => f.UserId, _ => default);
         return this;
     }
 }

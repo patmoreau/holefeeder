@@ -9,28 +9,9 @@ namespace Holefeeder.Application.Features.Transactions;
 
 internal static class TransactionMapper
 {
-    public static Transaction? MapToModelOrNull(Transaction? entity)
-    {
-        if (entity is null)
-        {
-            return null;
-        }
-
-        Transaction model = Transaction.Create(entity.Id, entity.Date, entity.Amount, entity.Description,
-            entity.AccountId,
-            entity.CategoryId, entity.UserId);
-
-        if (entity.CashflowId is not null)
-        {
-            model = model.ApplyCashflow(entity.CashflowId.GetValueOrDefault(), entity.CashflowDate.GetValueOrDefault());
-        }
-
-        return model.SetTags(TagsMapper.Map(entity.Tags));
-    }
-
     public static TransactionInfoViewModel MapToDto(Transaction entity)
     {
-        TransactionInfoViewModel dto = new TransactionInfoViewModel
+        TransactionInfoViewModel dto = new()
         {
             Id = entity.Id,
             Amount = entity.Amount,
@@ -44,12 +25,9 @@ internal static class TransactionMapper
         return dto;
     }
 
-    public static IEnumerable<TransactionInfoViewModel> MapToDto(IEnumerable<Transaction> entities) =>
-        entities.Select(MapToDto);
-
     public static MyDataTransactionDto MapToMyDataTransactionDto(Transaction entity)
     {
-        MyDataTransactionDto dto = new MyDataTransactionDto
+        MyDataTransactionDto dto = new()
         {
             Id = entity.Id,
             Amount = entity.Amount,

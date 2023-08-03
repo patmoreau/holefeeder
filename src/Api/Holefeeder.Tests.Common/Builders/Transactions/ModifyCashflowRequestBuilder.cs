@@ -5,7 +5,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class ModifyCashflowRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
@@ -13,19 +13,19 @@ internal class ModifyCashflowRequestBuilder : FakerBuilder<Request>
 
     public ModifyCashflowRequestBuilder OfAmount(decimal amount)
     {
-        Faker.RuleFor(x => x.Amount, amount);
+        FakerRules.RuleFor(x => x.Amount, amount);
         return this;
     }
 
     public ModifyCashflowRequestBuilder WithId(Guid id)
     {
-        Faker.RuleFor(x => x.Id, id);
+        FakerRules.RuleFor(x => x.Id, id);
         return this;
     }
 
     public ModifyCashflowRequestBuilder WithNoId()
     {
-        Faker.RuleFor(x => x.Id, Guid.Empty);
+        FakerRules.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 

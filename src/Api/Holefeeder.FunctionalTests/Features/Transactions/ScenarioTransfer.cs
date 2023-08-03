@@ -3,6 +3,7 @@ using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -107,25 +108,26 @@ public sealed class ScenarioTransfer : HolefeederScenario
                 })
                 .And("the data of the outgoing transaction be valid", async () =>
                 {
-                    Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.FromTransactionId);
+                    using var dbContext = DatabaseDriver.CreateDbContext();
+
+                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
                     result.Should().NotBeNull($"because the FromTransactionId ({ids.FromTransactionId}) was not found");
 
-                    TransactionMapper.MapToModelOrNull(result).Should()
+                    result.Should()
                         .NotBeNull()
                         .And
-                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                        .BeEquivalentTo(request);
                 })
                 .And("the data of the incoming transaction be valid", async () =>
                 {
-                    Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(ids.ToTransactionId);
+                    using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    result.Should().NotBeNull($"because the ToTransactionId ({ids.ToTransactionId}) was not found");
+                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(ids.ToTransactionId);
 
-                    TransactionMapper.MapToModelOrNull(result).Should()
-                        .NotBeNull()
-                        .And
-                        .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+                    result.Should()
+                        .NotBeNull($"because the ToTransactionId ({ids.ToTransactionId}) was not found")
+                        .And.BeEquivalentTo(request);
                 });
         });
     }

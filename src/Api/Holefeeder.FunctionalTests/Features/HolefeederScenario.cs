@@ -13,14 +13,28 @@ namespace Holefeeder.FunctionalTests.Features;
 [Collection("Api collection")]
 public abstract partial class HolefeederScenario : Scenario
 {
-    protected BudgetingDatabaseDriver DatabaseDriver { get; }
+    private readonly ApiApplicationDriver _apiApplicationDriver;
+
+    protected override async Task ResetStateAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _apiApplicationDriver.ResetStateAsync().ConfigureAwait(false);
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e);
+        }
+    }
 
     protected HolefeederScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(apiApplicationDriver, testOutputHelper)
     {
         ArgumentNullException.ThrowIfNull(apiApplicationDriver);
 
-        DatabaseDriver = apiApplicationDriver.DatabaseDriver;
+        _apiApplicationDriver = apiApplicationDriver;
+
+        DatabaseDriver = _apiApplicationDriver.DatabaseDriver;
 
         Account = new AccountStepDefinition(HttpClientDriver, DatabaseDriver);
         Cashflow = new CashflowStepDefinition(HttpClientDriver, DatabaseDriver, this);
@@ -41,6 +55,9 @@ public abstract partial class HolefeederScenario : Scenario
     public TransactionStepDefinition Transaction { get; }
 
     public UserStepDefinition User { get; }
+
+
+    protected BudgetingDatabaseDriver DatabaseDriver { get; }
 
     // TODO: remove
     protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();

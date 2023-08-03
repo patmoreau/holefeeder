@@ -69,9 +69,20 @@ public class ScenarioGetAccount : HolefeederScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(account, options => options.ExcludingMissingMembers());
-            result!.TransactionCount.Should().Be(1);
-            result.Balance.Should().Be(account.OpenBalance - transaction.Amount);
+                .BeEquivalentTo(new
+                {
+                    account.Id,
+                    account.Type,
+                    account.Name,
+                    account.OpenBalance,
+                    account.OpenDate,
+                    TransactionCount = 1,
+                    Balance = decimal.Subtract(account.OpenBalance, transaction.Amount),
+                    Updated = transaction.Date,
+                    account.Description,
+                    account.Favorite,
+                    account.Inactive
+                });
         });
     }
 
@@ -104,9 +115,20 @@ public class ScenarioGetAccount : HolefeederScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(account, options => options.ExcludingMissingMembers());
-            result!.TransactionCount.Should().Be(1);
-            result.Balance.Should().Be(account.OpenBalance + transaction.Amount);
+                .BeEquivalentTo(new
+                {
+                    account.Id,
+                    account.Type,
+                    account.Name,
+                    account.OpenBalance,
+                    account.OpenDate,
+                    TransactionCount = 1,
+                    Balance = decimal.Add(account.OpenBalance, transaction.Amount),
+                    Updated = transaction.Date,
+                    account.Description,
+                    account.Favorite,
+                    account.Inactive
+                });
         });
     }
 

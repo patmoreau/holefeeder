@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal sealed class MyDataCashflowDtoBuilder : FakerBuilder<MyDataCashflowDto>
 {
-    protected override Faker<MyDataCashflowDto> Faker { get; } = new Faker<MyDataCashflowDto>()
+    protected override Faker<MyDataCashflowDto> FakerRules { get; } = new Faker<MyDataCashflowDto>()
         .RuleFor(f => f.Id, faker => faker.Random.Guid())
         .RuleFor(f => f.EffectiveDate, faker => faker.Date.RecentDateOnly())
         .RuleFor(f => f.Amount, faker => faker.Finance.Amount())
@@ -23,13 +23,13 @@ internal sealed class MyDataCashflowDtoBuilder : FakerBuilder<MyDataCashflowDto>
 
     public MyDataCashflowDtoBuilder WithAccount(MyDataAccountDto account)
     {
-        Faker.RuleFor(f => f.AccountId, account.Id);
+        FakerRules.RuleFor(f => f.AccountId, account.Id);
         return this;
     }
 
     public MyDataCashflowDtoBuilder WithCategory(MyDataCategoryDto category)
     {
-        Faker.RuleFor(f => f.CategoryId, category.Id);
+        FakerRules.RuleFor(f => f.CategoryId, category.Id);
         return this;
     }
 }

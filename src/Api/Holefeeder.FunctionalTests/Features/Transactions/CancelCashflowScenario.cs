@@ -6,6 +6,7 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
@@ -58,7 +59,9 @@ public class CancelCashflowScenario : HolefeederScenario
             var cashflow = runner.GetContextData<Cashflow>(CashflowStepDefinition.ContextExistingCashflow);
             cashflow.Should().NotBeNull();
 
-            var result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
 
             result.Should().NotBeNull();
             result!.Inactive.Should().BeTrue();

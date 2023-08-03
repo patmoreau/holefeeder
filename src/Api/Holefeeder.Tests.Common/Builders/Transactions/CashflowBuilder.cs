@@ -9,7 +9,13 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class CashflowBuilder : FakerBuilder<Cashflow>
 {
-    protected override Faker<Cashflow> Faker { get; } = new Faker<Cashflow>()
+    public override Cashflow Build()
+    {
+        var a = base.Build();
+        return a;
+    }
+
+    protected override Faker<Cashflow> FakerRules { get; } = new Faker<Cashflow>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.IntervalType, faker => faker.PickRandom<DateIntervalType>(DateIntervalType.List))
@@ -28,94 +34,93 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
     public static CashflowBuilder GivenAnActiveCashflow()
     {
         CashflowBuilder builder = new();
-        builder.Faker.RuleFor(x => x.Inactive, false);
+        builder.FakerRules.RuleFor(x => x.Inactive, false);
         return builder;
     }
 
     public static CashflowBuilder GivenAnInactiveCashflow()
     {
         CashflowBuilder builder = new();
-        builder.Faker.RuleFor(x => x.Inactive, true);
+        builder.FakerRules.RuleFor(x => x.Inactive, true);
         return builder;
     }
 
     public CashflowBuilder WithId(Guid id)
     {
-        Faker.RuleFor(x => x.Id, id);
+        FakerRules.RuleFor(x => x.Id, id);
         return this;
     }
 
     public CashflowBuilder OnEffectiveDate(DateOnly effectiveDate)
     {
-        Faker.RuleFor(x => x.EffectiveDate, effectiveDate);
+        FakerRules.RuleFor(x => x.EffectiveDate, effectiveDate);
         return this;
     }
 
     public CashflowBuilder OfAmount(decimal amount)
     {
-        Faker.RuleFor(x => x.Amount, amount);
+        FakerRules.RuleFor(x => x.Amount, amount);
         return this;
     }
 
     public CashflowBuilder ForAccount(Account entity)
     {
-        Faker.RuleFor(x => x.AccountId, entity.Id);
-        Faker.RuleFor(x => x.Account, entity);
+        FakerRules.RuleFor(x => x.AccountId, entity.Id);
+        // FakerRules.RuleFor(x => x.Account, entity);
         return this;
     }
 
     public CashflowBuilder ForAccount(Guid id)
     {
-        Faker.RuleFor(x => x.AccountId, id);
+        FakerRules.RuleFor(x => x.AccountId, id);
         return this;
     }
 
     public CashflowBuilder ForCategory(Category entity)
     {
-        Faker.RuleFor(x => x.CategoryId, entity.Id);
-        Faker.RuleFor(x => x.Category, entity);
+        FakerRules.RuleFor(x => x.CategoryId, entity.Id);
         return this;
     }
 
     public CashflowBuilder ForCategory(Guid id)
     {
-        Faker.RuleFor(x => x.CategoryId, id);
+        FakerRules.RuleFor(x => x.CategoryId, id);
         return this;
     }
 
     public CashflowBuilder ForUser(Guid userId)
     {
-        Faker.RuleFor(x => x.UserId, userId);
+        FakerRules.RuleFor(x => x.UserId, userId);
         return this;
     }
 
     public CashflowBuilder OfFrequency(int frequency = 1)
     {
-        Faker.RuleFor(x => x.Frequency, frequency);
+        FakerRules.RuleFor(x => x.Frequency, frequency);
         return this;
     }
 
     public CashflowBuilder OfFrequency(DateIntervalType intervalType, int frequency = 1)
     {
-        Faker.RuleFor(x => x.IntervalType, intervalType);
+        FakerRules.RuleFor(x => x.IntervalType, intervalType);
         return OfFrequency(frequency);
     }
 
     public CashflowBuilder Recurring(int recurrence)
     {
-        Faker.RuleFor(x => x.Recurrence, recurrence);
+        FakerRules.RuleFor(x => x.Recurrence, recurrence);
         return this;
     }
 
     public CashflowBuilder WithTransactions()
     {
-        Faker.RuleFor(x => x.Transactions, GivenATransaction().BuildCollection());
+        FakerRules.RuleFor(x => x.Transactions, GivenATransaction().BuildCollection());
         return this;
     }
 
     public CashflowBuilder WithTransactions(params Transaction[] transactions)
     {
-        Faker.RuleFor(x => x.Transactions, transactions);
+        FakerRules.RuleFor(x => x.Transactions, transactions);
         return this;
     }
 }

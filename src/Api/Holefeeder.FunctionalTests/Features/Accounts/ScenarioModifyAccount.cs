@@ -3,6 +3,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -59,12 +60,13 @@ public class ScenarioModifyAccount : HolefeederScenario
         await WhenUserModifiesAccount(request);
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
+        using var dbContext = DatabaseDriver.CreateDbContext();
 
-        Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
+        Account? result = await dbContext.FindByIdAsync<Account>(entity.Id);
         result.Should()
             .NotBeNull()
             .And
-            .BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+            .BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiesAccount(Request request)

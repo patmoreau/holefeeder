@@ -3,6 +3,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
@@ -49,7 +50,9 @@ public class ScenarioModifyStoreItem : HolefeederScenario
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        StoreItem? result = await DatabaseDriver.FindByIdAsync<StoreItem>(storeItem.Id);
+        using var dbContext = DatabaseDriver.CreateDbContext();
+
+        StoreItem? result = await dbContext.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
         result!.Data.Should().BeEquivalentTo(request.Data);
     }

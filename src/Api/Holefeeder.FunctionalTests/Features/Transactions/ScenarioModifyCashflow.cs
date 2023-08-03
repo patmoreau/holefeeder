@@ -5,6 +5,7 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -67,9 +68,11 @@ public class ScenarioModifyCashflow : HolefeederScenario
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        Cashflow? result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+        using var dbContext = DatabaseDriver.CreateDbContext();
 
-        result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        Cashflow? result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
+
+        result.Should().NotBeNull().And.BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiedACashflow(Request request)

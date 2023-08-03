@@ -7,7 +7,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class ModifyTransactionRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
@@ -18,31 +18,31 @@ internal class ModifyTransactionRequestBuilder : FakerBuilder<Request>
 
     public ModifyTransactionRequestBuilder OfAmount(decimal amount)
     {
-        Faker.RuleFor(x => x.Amount, amount);
+        FakerRules.RuleFor(x => x.Amount, amount);
         return this;
     }
 
     public ModifyTransactionRequestBuilder WithId(Guid id)
     {
-        Faker.RuleFor(x => x.Id, id);
+        FakerRules.RuleFor(x => x.Id, id);
         return this;
     }
 
     public ModifyTransactionRequestBuilder WithNoId()
     {
-        Faker.RuleFor(x => x.Id, Guid.Empty);
+        FakerRules.RuleFor(x => x.Id, Guid.Empty);
         return this;
     }
 
     public ModifyTransactionRequestBuilder WithAccount(Account account)
     {
-        Faker.RuleFor(x => x.AccountId, account.Id);
+        FakerRules.RuleFor(x => x.AccountId, account.Id);
         return this;
     }
 
     public ModifyTransactionRequestBuilder WithCategory(Category category)
     {
-        Faker.RuleFor(x => x.CategoryId, category.Id);
+        FakerRules.RuleFor(x => x.CategoryId, category.Id);
         return this;
     }
 

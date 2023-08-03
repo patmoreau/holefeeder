@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .CustomInstantiator(faker =>
             new Request(faker.PickRandom<AccountType>(AccountType.List),
                 faker.Lorem.Word(), faker.Date.PastDateOnly(), faker.Finance.Amount(), faker.Lorem.Sentence()))
@@ -18,13 +18,13 @@ internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 
     public OpenAccountRequestBuilder WithName(string name)
     {
-        Faker.RuleFor(x => x.Name, name);
+        FakerRules.RuleFor(x => x.Name, name);
         return this;
     }
 
     public OpenAccountRequestBuilder WithNoName()
     {
-        Faker.RuleFor(x => x.Name, string.Empty);
+        FakerRules.RuleFor(x => x.Name, string.Empty);
         return this;
     }
 

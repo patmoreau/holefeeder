@@ -4,6 +4,7 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -61,7 +62,9 @@ public class ScenarioDeleteTransaction : HolefeederScenario
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+        using var dbContext = DatabaseDriver.CreateDbContext();
+
+        Transaction? result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }

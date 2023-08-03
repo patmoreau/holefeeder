@@ -69,7 +69,26 @@ public class ScenarioGetTransaction : HolefeederScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(transaction, options => options.ExcludingMissingMembers());
+                .BeEquivalentTo(new
+                {
+                    transaction.Id,
+                    transaction.Date,
+                    transaction.Amount,
+                    transaction.Description,
+                    transaction.Tags,
+                    Category = new
+                    {
+                        category.Id,
+                        category.Name,
+                        category.Type,
+                        category.Color
+                    },
+                    Account = new
+                    {
+                        account.Id,
+                        account.Name
+                    }
+                });
         });
     }
 

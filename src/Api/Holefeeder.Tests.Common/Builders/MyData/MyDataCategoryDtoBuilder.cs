@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal sealed class MyDataCategoryDtoBuilder : FakerBuilder<MyDataCategoryDto>
 {
-    protected override Faker<MyDataCategoryDto> Faker { get; } = new Faker<MyDataCategoryDto>()
+    protected override Faker<MyDataCategoryDto> FakerRules { get; } = new Faker<MyDataCategoryDto>()
         .RuleFor(f => f.Id, faker => faker.Random.Guid())
         .RuleFor(f => f.Type, faker => faker.PickRandom(CategoryType.List.ToArray()))
         .RuleFor(f => f.Name, faker => faker.Lorem.Word())

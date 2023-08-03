@@ -3,6 +3,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -61,7 +62,9 @@ public class ScenarioFavoriteAccount : HolefeederScenario
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        Account? result = await DatabaseDriver.FindByIdAsync<Account>(entity.Id);
+        using var dbContext = DatabaseDriver.CreateDbContext();
+
+        Account? result = await dbContext.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
         result!.Favorite.Should().BeTrue();
     }

@@ -65,20 +65,17 @@ public class ScenarioExportData : HolefeederScenario
 
         void AssertCashflows(ExportDataDto exported, IEnumerable<Cashflow> expected)
         {
-            exported.Cashflows.Should().BeEquivalentTo(expected, options =>
-                options.ExcludingMissingMembers());
+            exported.Cashflows.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
         }
 
         void AssertCategories(ExportDataDto exported, IEnumerable<Category> expected)
         {
-            exported.Categories.Should().BeEquivalentTo(expected, options =>
-                options.ExcludingMissingMembers());
+            exported.Categories.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
         }
 
         void AssertTransactions(ExportDataDto exported, IEnumerable<Transaction> expected)
         {
-            exported.Transactions.Should().BeEquivalentTo(expected, options =>
-                options.ExcludingMissingMembers());
+            exported.Transactions.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
         }
     }
 

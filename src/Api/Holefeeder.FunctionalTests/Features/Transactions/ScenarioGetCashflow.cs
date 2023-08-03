@@ -70,7 +70,30 @@ public class ScenarioGetCashflow : HolefeederScenario
             result.Should()
                 .NotBeNull()
                 .And
-                .BeEquivalentTo(cashflow, options => options.ExcludingMissingMembers());
+                .BeEquivalentTo(new
+                {
+                    cashflow.Id,
+                    cashflow.EffectiveDate,
+                    cashflow.Amount,
+                    cashflow.IntervalType,
+                    cashflow.Frequency,
+                    cashflow.Recurrence,
+                    cashflow.Description,
+                    cashflow.Inactive,
+                    cashflow.Tags,
+                    Category = new
+                    {
+                        category.Id,
+                        category.Name,
+                        category.Type,
+                        category.Color
+                    },
+                    Account = new
+                    {
+                        account.Id,
+                        account.Name
+                    }
+                });
         });
     }
 

@@ -7,6 +7,7 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.MyData.MyDataAccountDtoBuilder;
@@ -88,28 +89,36 @@ public class ScenarioImportData : HolefeederScenario
 
         async Task AssertAccount(MyDataAccountDto account)
         {
-            Account? result = await DatabaseDriver.FindByIdAsync<Account>(account.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Account? result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
 
         async Task AssertCategory(MyDataCategoryDto category)
         {
-            Category? result = await DatabaseDriver.FindByIdAsync<Category>(category.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Category? result = await dbContext.FindByIdAsync<Category>(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
 
         async Task AssertCashflow(MyDataCashflowDto cashflow)
         {
-            Cashflow? result = await DatabaseDriver.FindByIdAsync<Cashflow>(cashflow.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Cashflow? result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
 
         async Task AssertTransaction(MyDataTransactionDto transaction)
         {
-            Transaction? result = await DatabaseDriver.FindByIdAsync<Transaction>(transaction.Id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Transaction? result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }

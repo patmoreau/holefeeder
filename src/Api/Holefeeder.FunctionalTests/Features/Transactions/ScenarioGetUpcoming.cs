@@ -39,6 +39,8 @@ public class ScenarioGetUpcoming : HolefeederScenario
     public async Task WhenUnpaidUpcomingOneTimeCashflow()
     {
         Cashflow cashflow = null!;
+        Account account = null!;
+        Category category = null!;
         Request request = null!;
         UpcomingViewModel[]? result = null!;
 
@@ -46,15 +48,39 @@ public class ScenarioGetUpcoming : HolefeederScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("with an active one time cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.OneTime))
+                .And("with an active one time cashflow", async () => (cashflow, account, category) = await BuildCashflow(DateIntervalType.OneTime))
                 .And("who wants to get all upcoming cashflows from yesterday to the next week", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(7)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
                 .Then("the return should be successful", () => ShouldExpectStatusCode(HttpStatusCode.OK))
                 .And("the upcoming cashflow list should be received", () => result = HttpClientDriver.DeserializeContent<UpcomingViewModel[]>())
                 .And("have a count of 1 sorted by date", () =>
                 {
-                    result.Should().NotBeNull().And.HaveCount(1).And.BeInAscendingOrder(x => x.Date);
-                    result![0].Should().BeEquivalentTo(cashflow, options => options.ExcludingMissingMembers());
+                    result.Should()
+                        .NotBeNull()
+                        .And.BeInAscendingOrder(x => x.Date)
+                        .And.BeEquivalentTo(new[]
+                        {
+                            new
+                            {
+                                cashflow.Id,
+                                Date = cashflow.EffectiveDate,
+                                cashflow.Amount,
+                                cashflow.Description,
+                                cashflow.Tags,
+                                Category = new
+                                {
+                                    category.Id,
+                                    category.Name,
+                                    category.Type,
+                                    category.Color
+                                },
+                                Account = new
+                                {
+                                    account.Id,
+                                    account.Name
+                                }
+                            }
+                        });
                 });
         });
     }
@@ -70,7 +96,7 @@ public class ScenarioGetUpcoming : HolefeederScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("with an active weekly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Weekly, 2))
+                .And("with an active weekly cashflow", async () => (cashflow, _, _) = await BuildCashflow(DateIntervalType.Weekly, 2))
                 .And("who wants to get all upcoming cashflows from yesterday to the next 6 weeks", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(-1).AddDays(7 * 6)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
                 .Then("the return should be successful", () => ShouldExpectStatusCode(HttpStatusCode.OK))
@@ -90,7 +116,7 @@ public class ScenarioGetUpcoming : HolefeederScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .And("with an active monthly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Monthly))
+                .And("with an active monthly cashflow", async () => (cashflow, _, _) = await BuildCashflow(DateIntervalType.Monthly))
                 .And("who wants to get all upcoming cashflows from yesterday to the next 12 months", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(-1).AddMonths(12)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
                 .Then("the return should be successful", () => ShouldExpectStatusCode(HttpStatusCode.OK))
@@ -110,7 +136,7 @@ public class ScenarioGetUpcoming : HolefeederScenario
         {
             player
                 .Given(User.IsAuthorized)
-                .Given("with an active yearly cashflow", async () => cashflow = await BuildCashflow(DateIntervalType.Yearly))
+                .Given("with an active yearly cashflow", async () => (cashflow, _, _) = await BuildCashflow(DateIntervalType.Yearly))
                 .Given("who wants to get all upcoming cashflows from yesterday to the next 2 years", () => request = BuildUpcomingRequest(cashflow.EffectiveDate.AddDays(-1), cashflow.EffectiveDate.AddDays(-1).AddYears(2)))
                 .When("the request is sent", () => WhenUserGetsUpcoming(request))
                 .Then("the return should be successful", () => ShouldExpectStatusCode(HttpStatusCode.OK))
@@ -124,7 +150,7 @@ public class ScenarioGetUpcoming : HolefeederScenario
     private static Request BuildUpcomingRequest(DateOnly from, DateOnly to) => GivenAnUpcomingRequest()
         .From(from).To(to).Build();
 
-    private async Task<Cashflow> BuildCashflow(DateIntervalType intervalType, int frequency = 1, int recurrence = 1)
+    private async Task<(Cashflow, Account, Category)> BuildCashflow(DateIntervalType intervalType, int frequency = 1, int recurrence = 1)
     {
         Account account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
@@ -135,12 +161,12 @@ public class ScenarioGetUpcoming : HolefeederScenario
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        return await GivenAnActiveCashflow()
+        return (await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(HolefeederUserId)
             .OfFrequency(intervalType, frequency)
             .Recurring(recurrence)
-            .SavedInDbAsync(DatabaseDriver);
+            .SavedInDbAsync(DatabaseDriver), account, category);
     }
 }

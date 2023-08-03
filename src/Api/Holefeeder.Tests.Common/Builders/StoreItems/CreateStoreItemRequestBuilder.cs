@@ -5,7 +5,7 @@ namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
 internal class CreateStoreItemRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Random.Hash(), faker.Lorem.Paragraphs()))
         .RuleFor(x => x.Code, faker => faker.Random.Hash())
         .RuleFor(x => x.Data, faker => faker.Lorem.Paragraphs());
@@ -14,19 +14,19 @@ internal class CreateStoreItemRequestBuilder : FakerBuilder<Request>
 
     public CreateStoreItemRequestBuilder WithCode(string code)
     {
-        Faker.RuleFor(x => x.Code, code);
+        FakerRules.RuleFor(x => x.Code, code);
         return this;
     }
 
     public CreateStoreItemRequestBuilder WithNoCode()
     {
-        Faker.RuleFor(x => x.Code, string.Empty);
+        FakerRules.RuleFor(x => x.Code, string.Empty);
         return this;
     }
 
     public CreateStoreItemRequestBuilder WithNoData()
     {
-        Faker.RuleFor(x => x.Data, string.Empty);
+        FakerRules.RuleFor(x => x.Data, string.Empty);
         return this;
     }
 }

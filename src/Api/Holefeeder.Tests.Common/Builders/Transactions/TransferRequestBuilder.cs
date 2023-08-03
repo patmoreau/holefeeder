@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransferRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .CustomInstantiator(faker => new Request(faker.Date.RecentDateOnly(), faker.Finance.Amount(),
             faker.Lorem.Sentence(),
             faker.Random.Guid(), faker.Random.Guid()))
@@ -18,13 +18,13 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
 
     public TransferRequestBuilder FromAccount(Account account)
     {
-        Faker.RuleFor(x => x.FromAccountId, account.Id);
+        FakerRules.RuleFor(x => x.FromAccountId, account.Id);
         return this;
     }
 
     public TransferRequestBuilder ToAccount(Account account)
     {
-        Faker.RuleFor(x => x.ToAccountId, account.Id);
+        FakerRules.RuleFor(x => x.ToAccountId, account.Id);
         return this;
     }
 
@@ -33,7 +33,7 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
     public static TransferRequestBuilder GivenAnInvalidTransfer()
     {
         TransferRequestBuilder builder = new TransferRequestBuilder();
-        builder.Faker.RuleFor(x => x.FromAccountId, Guid.Empty);
+        builder.FakerRules.RuleFor(x => x.FromAccountId, Guid.Empty);
         return builder;
     }
 }

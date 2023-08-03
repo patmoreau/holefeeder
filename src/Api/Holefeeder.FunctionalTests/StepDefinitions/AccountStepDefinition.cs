@@ -22,8 +22,8 @@ public class AccountStepDefinition : StepDefinition
 
         runner.Execute("a user has an active account", async () =>
         {
-            var account = await GivenAnActiveAccount().ForUser(UserStepDefinition.HolefeederUserId)
-                .SavedInDbAsync(_budgetingDatabaseDriver);
+            var builder = GivenAnActiveAccount().ForUser(UserStepDefinition.HolefeederUserId);
+            var account = await builder.SavedInDbAsync(_budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingAccount, account);
         });

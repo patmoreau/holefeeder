@@ -4,6 +4,7 @@ using DrifterApps.Seeds.Testing.Scenarios;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -85,11 +86,13 @@ public class ScenarioOpenAccount : HolefeederScenario
             Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
             var id = ResourceIdFromLocation(location);
 
-            Account? result = await DatabaseDriver.FindByIdAsync<Account>(id);
+            using var dbContext = DatabaseDriver.CreateDbContext();
+
+            Account? result = await dbContext.FindByIdAsync<Account>(id);
 
             var request = runner.GetContextData<Request>(OpenAccountRequestKey);
 
-            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+            result.Should().NotBeNull().And.BeEquivalentTo(request);
         });
     }
 }

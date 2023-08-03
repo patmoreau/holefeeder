@@ -8,8 +8,10 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using MySqlConnector;
 using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 
@@ -37,6 +39,16 @@ public static class WebApplicationExtensions
         MigrateDb(connectionStringBuilder, holefeederLogger);
 
         return app;
+    }
+
+    public static void MigrateDb(this DatabaseFacade databaseFacade, BudgetingConnectionStringBuilder connectionStringBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(databaseFacade);
+
+        using var loggerFactory = new NullLoggerFactory();
+        var holefeederLogger = new Logger<BudgetingContext>(loggerFactory);
+
+        MigrateDb(connectionStringBuilder, holefeederLogger);
     }
 
     private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)

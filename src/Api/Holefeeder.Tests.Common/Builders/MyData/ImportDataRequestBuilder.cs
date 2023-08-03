@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal class ImportDataRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = new Faker<Request>()
+    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .RuleFor(x => x.UpdateExisting, false);
 
     private readonly Faker<Request.Dto> _dtoFaker = new();
@@ -15,7 +15,7 @@ internal class ImportDataRequestBuilder : FakerBuilder<Request>
     {
         Request.Dto? data = _dtoFaker.Generate();
 
-        Faker.RuleFor(f => f.Data, data);
+        FakerRules.RuleFor(f => f.Data, data);
 
         return base.Build();
     }
@@ -33,7 +33,7 @@ internal class ImportDataRequestBuilder : FakerBuilder<Request>
 
     public ImportDataRequestBuilder WithUpdateExisting()
     {
-        Faker.RuleFor(f => f.UpdateExisting, true);
+        FakerRules.RuleFor(f => f.UpdateExisting, true);
         return this;
     }
 
