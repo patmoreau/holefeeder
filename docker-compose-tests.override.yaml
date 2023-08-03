@@ -11,7 +11,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      ConnectionStrings__BudgetingConnectionString: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_functional_tests;
+      ConnectionStrings__BudgetingConnectionString: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_tests;
+      LOCAL_CONNECTION_STRING: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_tests;
     entrypoint:
       - dotnet
       - test
