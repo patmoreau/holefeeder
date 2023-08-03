@@ -94,7 +94,7 @@ internal static class ServiceCollectionExtensions
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "api", "service" })
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
-                "budgeting-db-check", tags: new[] { "holefeeder", "api", "mysql" });
+                name: "budgeting-db-check", tags: new[] { "holefeeder", "api", "mysql" });
 
         return services;
     }
