@@ -34,7 +34,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         }
         else
         {
-            DatabaseServer = LocalDatabaseServer.CreateServer(connectionString!, ConnectionFactory);
+            DatabaseServer = LocalDatabaseServer.CreateServer(connectionString, ConnectionFactory);
         }
     }
 

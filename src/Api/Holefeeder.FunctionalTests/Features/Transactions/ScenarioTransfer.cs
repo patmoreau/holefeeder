@@ -1,5 +1,4 @@
 using System.Net;
-using Holefeeder.Application.Features.Transactions;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;

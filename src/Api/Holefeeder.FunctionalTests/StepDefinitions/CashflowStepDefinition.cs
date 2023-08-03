@@ -7,7 +7,6 @@ using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Features;
 using Holefeeder.FunctionalTests.Infrastructure;
 using MediatR;
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
@@ -18,16 +17,13 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 public class CashflowStepDefinition : StepDefinition
 {
     private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
-    private readonly HolefeederScenario _holefeederScenario;
     private const string ContextCashflowRequest = $"{nameof(CashflowStepDefinition)}_{nameof(ContextCashflowRequest)}";
     public const string ContextExistingCashflow = $"{nameof(CashflowStepDefinition)}_{nameof(ContextExistingCashflow)}";
 
-    public CashflowStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver,
-        HolefeederScenario holefeederScenario) : base(
+    public CashflowStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver) : base(
         httpClientDriver)
     {
         _budgetingDatabaseDriver = budgetingDatabaseDriver;
-        _holefeederScenario = holefeederScenario;
     }
 
 #pragma warning disable CA1822

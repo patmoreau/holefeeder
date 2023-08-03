@@ -37,7 +37,7 @@ public abstract partial class HolefeederScenario : Scenario
         DatabaseDriver = _apiApplicationDriver.DatabaseDriver;
 
         Account = new AccountStepDefinition(HttpClientDriver, DatabaseDriver);
-        Cashflow = new CashflowStepDefinition(HttpClientDriver, DatabaseDriver, this);
+        Cashflow = new CashflowStepDefinition(HttpClientDriver, DatabaseDriver);
         Category = new CategoryStepDefinition(HttpClientDriver, DatabaseDriver);
         StoreItem = new StoreItemStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);

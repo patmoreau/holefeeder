@@ -15,8 +15,6 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 [ComponentTest]
 public class CloseAccountScenario : HolefeederScenario
 {
-    private const string ContextRequest = $"{nameof(CloseAccountScenario)}_{nameof(ContextRequest)}";
-
     public CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
         : base(applicationDriver, testOutputHelper)
     {

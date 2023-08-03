@@ -2,7 +2,6 @@ using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
 using Holefeeder.FunctionalTests.Drivers;
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;

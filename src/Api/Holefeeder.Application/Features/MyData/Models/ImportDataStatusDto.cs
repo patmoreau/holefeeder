@@ -1,6 +1,4 @@
-﻿using DrifterApps.Seeds.Application;
-
-namespace Holefeeder.Application.Features.MyData.Models;
+﻿namespace Holefeeder.Application.Features.MyData.Models;
 
 public record ImportDataStatusDto(
     CommandStatus Status,
@@ -10,5 +8,5 @@ public record ImportDataStatusDto(
     int TransactionsProcessed = 0, int TransactionsTotal = 0,
     string Message = "")
 {
-    public static ImportDataStatusDto Init() => new ImportDataStatusDto(CommandStatus.Initializing);
+    public static ImportDataStatusDto Init() => new(CommandStatus.Initializing);
 }
