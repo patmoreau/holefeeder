@@ -13,13 +13,13 @@
     {
       "id": "093e9b28-3b51-40fb-9472-cf73d192b027",
       "code": "settings",
-      "data": "{\"effectiveDate\":\"2014-01-09T05:00:00.000Z\",\"intervalType\":\"Weekly\",\"frequency\":2}"
+      "data": "{\"effectiveDate\":\"2014-01-09\",\"intervalType\":\"Weekly\",\"frequency\":2}"
     }
   ],
   "get-upcoming": [
     {
       "id": "dfb0a88c-0129-4978-96e1-3be5b7c9a3e2",
-      "date": "2022-09-27T00:00:00",
+      "date": "2022-09-27",
       "amount": 34.02,
       "description": "Happy hour",
       "tags": [
@@ -38,7 +38,7 @@
     },
     {
       "id": "62b80af1-4337-4508-b1fb-fed84467d381",
-      "date": "2022-09-29T00:00:00",
+      "date": "2022-09-29",
       "amount": 100.0,
       "description": "Investment plan",
       "tags": [],
@@ -60,10 +60,10 @@
       "type": "Checking",
       "name": "Checking account",
       "openBalance": 0.0,
-      "openDate": "2014-10-01T00:00:00",
+      "openDate": "2014-10-01",
       "transactionCount": 1866,
       "balance": 774.08,
-      "updated": "2022-08-27T00:00:00",
+      "updated": "2022-08-27",
       "description": "",
       "favorite": true,
       "inactive": false
@@ -73,10 +73,10 @@
       "type": "CreditCard",
       "name": "Credit card account",
       "openBalance": 0.0,
-      "openDate": "2015-12-02T00:00:00",
+      "openDate": "2015-12-02",
       "transactionCount": 2560,
       "balance": 1256.53,
-      "updated": "2022-08-26T00:00:00",
+      "updated": "2022-08-26",
       "description": "",
       "favorite": true,
       "inactive": false
@@ -122,7 +122,7 @@
   "cashflows": [
     {
       "id": "3d40e740-882e-493f-a275-a05a19d4aa46",
-      "effectiveDate": "2015-03-27T00:00:00",
+      "effectiveDate": "2015-03-27",
       "amount": 25.0,
       "intervalType": "Monthly",
       "frequency": 1,
@@ -145,7 +145,7 @@
     },
     {
       "id": "db8ef0d5-bb96-4da1-a054-34c491a15378",
-      "effectiveDate": "2019-06-28T00:00:00",
+      "effectiveDate": "2019-06-28",
       "amount": 32.46,
       "intervalType": "Weekly",
       "frequency": 2,
@@ -170,7 +170,7 @@
   "transactions": [
     {
       "id": "5059586c-090d-4880-89e7-aba0d4ab1102",
-      "date": "2022-08-27T00:00:00",
+      "date": "2022-08-27",
       "amount": 100.0,
       "description": "Celi",
       "tags": [],
@@ -187,7 +187,7 @@
     },
     {
       "id": "f98ef56f-b29e-419e-bf25-8e69b78fa6e7",
-      "date": "2022-08-06T00:00:00",
+      "date": "2022-08-06",
       "amount": 192.0,
       "description": "FTQ REER",
       "tags": [],
@@ -204,7 +204,7 @@
     },
     {
       "id": "ffd3274e-e291-4148-b096-370dea9bd732",
-      "date": "2022-08-06T00:00:00",
+      "date": "2022-08-06",
       "amount": 33.58,
       "description": "Life Insurance",
       "tags": [
@@ -223,7 +223,7 @@
     },
     {
       "id": "f14e1e66-9021-4c6d-b6f7-0b6284bc10db",
-      "date": "2022-08-02T00:00:00",
+      "date": "2022-08-02",
       "amount": 10000.0,
       "description": "",
       "tags": [],
@@ -240,7 +240,7 @@
     },
     {
       "id": "8c15e823-3f9f-4bab-aa23-de88aa35690d",
-      "date": "2022-07-21T00:00:00",
+      "date": "2022-07-21",
       "amount": 123.45,
       "description": "test 123.45",
       "tags": [],
@@ -257,7 +257,7 @@
     },
     {
       "id": "3f1d3469-2099-4c87-a42e-e4859a2dd0ee",
-      "date": "2022-07-20T00:00:00",
+      "date": "2022-07-20",
       "amount": 123.0,
       "description": "123",
       "tags": [],
@@ -274,7 +274,7 @@
     },
     {
       "id": "8425ad55-9afe-45d4-bb91-0cbcf168ee8e",
-      "date": "2022-07-20T00:00:00",
+      "date": "2022-07-20",
       "amount": 12345.0,
       "description": "12345",
       "tags": [],
@@ -291,7 +291,7 @@
     },
     {
       "id": "9a36d689-1bda-4612-8da2-dea7e20f98b3",
-      "date": "2022-06-02T00:00:00",
+      "date": "2022-06-02",
       "amount": 2449.99,
       "description": "Paycheck",
       "tags": [],
@@ -308,7 +308,7 @@
     },
     {
       "id": "97c20cff-ca78-45b5-9db5-4cc260fc79dd",
-      "date": "2022-05-27T00:00:00",
+      "date": "2022-05-27",
       "amount": 34.02,
       "description": "Life Insurance Steph",
       "tags": [
@@ -327,7 +327,7 @@
     },
     {
       "id": "4ce56af4-b13e-4ff4-95e0-5acebc8513bc",
-      "date": "2022-05-24T00:00:00",
+      "date": "2022-05-24",
       "amount": 21.83,
       "description": "Netflix",
       "tags": [
@@ -346,7 +346,7 @@
     },
     {
       "id": "5059586c-090d-4880-89e7-aba0d4ab1102",
-      "date": "2022-08-27T00:00:00",
+      "date": "2022-08-27",
       "amount": 100.0,
       "description": "Celi",
       "tags": [],
@@ -363,7 +363,7 @@
     },
     {
       "id": "f98ef56f-b29e-419e-bf25-8e69b78fa6e7",
-      "date": "2022-08-06T00:00:00",
+      "date": "2022-08-06",
       "amount": 192.0,
       "description": "FTQ REER",
       "tags": [],
@@ -380,7 +380,7 @@
     },
     {
       "id": "ffd3274e-e291-4148-b096-370dea9bd732",
-      "date": "2022-08-06T00:00:00",
+      "date": "2022-08-06",
       "amount": 33.58,
       "description": "Life Insurance",
       "tags": [
@@ -399,7 +399,7 @@
     },
     {
       "id": "f14e1e66-9021-4c6d-b6f7-0b6284bc10db",
-      "date": "2022-08-02T00:00:00",
+      "date": "2022-08-02",
       "amount": 10000.0,
       "description": "",
       "tags": [],
@@ -416,7 +416,7 @@
     },
     {
       "id": "8c15e823-3f9f-4bab-aa23-de88aa35690d",
-      "date": "2022-07-21T00:00:00",
+      "date": "2022-07-21",
       "amount": 123.45,
       "description": "test 123.45",
       "tags": [],
@@ -433,7 +433,7 @@
     },
     {
       "id": "3f1d3469-2099-4c87-a42e-e4859a2dd0ee",
-      "date": "2022-07-20T00:00:00",
+      "date": "2022-07-20",
       "amount": 123.0,
       "description": "123",
       "tags": [],
@@ -450,7 +450,7 @@
     },
     {
       "id": "8425ad55-9afe-45d4-bb91-0cbcf168ee8e",
-      "date": "2022-07-20T00:00:00",
+      "date": "2022-07-20",
       "amount": 12345.0,
       "description": "12345",
       "tags": [],
@@ -467,7 +467,7 @@
     },
     {
       "id": "9a36d689-1bda-4612-8da2-dea7e20f98b3",
-      "date": "2022-06-02T00:00:00",
+      "date": "2022-06-02",
       "amount": 2449.99,
       "description": "Paycheck",
       "tags": [],
@@ -484,7 +484,7 @@
     },
     {
       "id": "97c20cff-ca78-45b5-9db5-4cc260fc79dd",
-      "date": "2022-05-27T00:00:00",
+      "date": "2022-05-27",
       "amount": 34.02,
       "description": "Life Insurance Steph",
       "tags": [
@@ -503,7 +503,7 @@
     },
     {
       "id": "4ce56af4-b13e-4ff4-95e0-5acebc8513bc",
-      "date": "2022-05-24T00:00:00",
+      "date": "2022-05-24",
       "amount": 21.83,
       "description": "Netflix",
       "tags": [

@@ -16,6 +16,8 @@ import {
   AuthModule,
   LogLevel,
 } from 'angular-auth-oidc-client';
+import { JsonDateOnlyInterceptor } from '@app/core/interceptors/json-dateonly-interceptor';
+import { DatePipe } from '@angular/common';
 
 if (environment.production) {
   enableProdMode();
@@ -29,6 +31,11 @@ bootstrapApplication(AppComponent, {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoadingInterceptor,
       multi: true,
+    },
+    {
+      multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: JsonDateOnlyInterceptor,
     },
     loadConfigProvider,
     importProvidersFrom(
