@@ -37,12 +37,13 @@
               "src/silent-renew.html"
             ],
             "styles": [
-              "src/sass/styles.scss",
+              "src/scss/styles.scss",
               "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
+                "src/scss",
                 "node_modules/bootstrap/scss"
               ]
             },

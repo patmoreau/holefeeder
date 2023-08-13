@@ -17,7 +17,7 @@ import {
   LogLevel,
 } from 'angular-auth-oidc-client';
 import { JsonDateOnlyInterceptor } from '@app/core/interceptors/json-dateonly-interceptor';
-import { DatePipe } from '@angular/common';
+import { NgChartsModule } from 'ng2-charts';
 
 if (environment.production) {
   enableProdMode();

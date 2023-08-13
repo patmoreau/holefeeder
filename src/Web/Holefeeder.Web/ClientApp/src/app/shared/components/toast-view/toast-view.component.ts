@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { ToastsService } from '@app/core/services';
 import { ToastItem, ToastType } from '@app/shared/models';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   selector: 'app-toast-view',
   standalone: true,
   imports: [CommonModule, NgbToastModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './toast-view.component.html',
   styleUrls: ['./toast-view.component.scss'],
   host: {

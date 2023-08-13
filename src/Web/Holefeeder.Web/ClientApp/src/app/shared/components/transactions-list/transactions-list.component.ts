@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { trace } from '@app/core/logger';
 import { TransactionsService } from '@app/core/services';
@@ -16,6 +21,7 @@ import { filter, switchMap } from 'rxjs/operators';
   styleUrls: ['./transactions-list.component.scss'],
   standalone: true,
   imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string | undefined;

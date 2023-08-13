@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Inject, Injector, Input } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  forwardRef,
+  Inject,
+  Injector,
+  Input,
+} from '@angular/core';
 import {
   AbstractControl,
   FormsModule,
@@ -33,7 +40,12 @@ import { BaseFormControlWithValidatorComponent } from '../base-form-control-with
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter },
   ],
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbDatepickerModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbDatepickerModule,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
   @Input()

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { logger } from '@app/core/logger';
 import {
@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule, NgbModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
