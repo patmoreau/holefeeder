@@ -2071,6 +2071,39 @@
   dependencies:
     tslib "^2.3.0"
 
+"@ngrx/effects@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-16.2.0.tgz#90a3572aa5c7bcc3ffc9d55795d0e48f62c51708"
+  integrity sha512-zZfq47LNoiRK+uS66Xm36mN07zm11AER1D9lTalX/G6jrV0bywgnAaukNNav9E33ZRrPEnCD8uu9BXZoboEYgA==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngrx/entity@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-16.2.0.tgz#2c6af77f8a3a887971993807623e4e1c4c6defcc"
+  integrity sha512-n8Vsz48/u14R8S7akLO7TWmqXGcvCYacCIS106hC3FVkOwAOflhcstGYu6oShbqOVuu0Vcw7s/amc2oAJV4YkQ==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngrx/schematics@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/schematics/-/schematics-16.2.0.tgz#cdda662c6e17f6e416e1d4e4eb563090c2755207"
+  integrity sha512-AfRgSCYhrg9+b3KjcLNS1BTuRKcf8XR2GkplBLZK5NFK8nQc9/JtmLk4PoUtKTL8BFAhDmXBPziAWKMwupjzlw==
+
+"@ngrx/store-devtools@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-16.2.0.tgz#908a649f7f95d76972d72ba2a441ef344a44f95d"
+  integrity sha512-m7mkNpIIp8fA8yNG5T0ZKm1RCP2fE0IVBEtcbj2Z/88fW4vyvobVBdBqha6zgYTuA5X4m28npMra9GPNPsuDLA==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngrx/store@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-16.2.0.tgz#2e3a336740e472b751f3f0765e09a429019c3523"
+  integrity sha512-C7oIUC87xXV+1dTGUwYG/L4p0IZdYv/Ou1nTL/LffyAHllmmygTA5gzLB87abLOhucAxlFIQMQ8t/GSxdk/+QA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngtools/webpack@16.2.0":
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-16.2.0.tgz#b3c2b2668faac35bbcc6c81a4bc016347d141349"
@@ -3281,10 +3314,10 @@ ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-angular-auth-oidc-client@^16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/angular-auth-oidc-client/-/angular-auth-oidc-client-16.0.0.tgz#f49b82b01a4524662269a7089d449b6988109abe"
-  integrity sha512-ej3PTA4yNwXH/NLHnZeSiDz/yMN/Fjua9nk9LoOi/v30PSSxN8cszSv0NZYJzgI/aN8XnUuzEep7cur7uaOj1g==
+angular-auth-oidc-client@^16.0.1:
+  version "16.0.1"
+  resolved "https://registry.yarnpkg.com/angular-auth-oidc-client/-/angular-auth-oidc-client-16.0.1.tgz#f7453913c352f756bc41c1c35f95751f6d1bf203"
+  integrity sha512-jWNNw4LgKcfskMX5ZDt33/qKp2NmlI6PL+s8ptlIixpzCdNLQv7FwMhYlyq22MMjk87WSsOCWmMlGBoMTeNOfw==
   dependencies:
     rfc4648 "^1.5.0"
     tslib "^2.3.0"
@@ -7584,6 +7617,13 @@ jasmine-core@~3.99.0:
   version "3.99.1"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.99.1.tgz#5bfa4b2d76618868bfac4c8ff08bb26fffa4120d"
   integrity sha512-Hu1dmuoGcZ7AfyynN3LsfruwMbxMALMka+YtZeGoLuDEySVmVAPaonkNoBRIw/ectu8b9tVQCJNgp4a4knp+tg==
+
+jasmine-marbles@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/jasmine-marbles/-/jasmine-marbles-0.9.2.tgz#5adfee5f72c7f24270687fa64a6e8a8613ffa841"
+  integrity sha512-T7RjG4fRsdiGGzbQZ6Kj39qYt6O1/KIcR4FkUNsD3DUGkd/AzpwzN+xtk0DXlLWEz5BaVdK1SzMgQDVw879c4Q==
+  dependencies:
+    lodash "^4.17.20"
 
 jasmine-spec-reporter@^7.0.0:
   version "7.0.0"

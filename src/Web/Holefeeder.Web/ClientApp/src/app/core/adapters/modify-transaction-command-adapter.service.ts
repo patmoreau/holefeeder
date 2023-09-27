@@ -6,7 +6,15 @@ import { Adapter, ModifyTransactionCommand } from '@app/shared/models';
 export class ModifyTransactionCommandAdapter
   implements Adapter<ModifyTransactionCommand>
 {
-  adapt(item: any): ModifyTransactionCommand {
+  adapt(item: {
+    id: string;
+    date: Date;
+    amount: number;
+    description: string;
+    account: string;
+    category: string;
+    tags: string[];
+  }): ModifyTransactionCommand {
     return new ModifyTransactionCommand(
       item.id,
       dateToUtc(item.date),

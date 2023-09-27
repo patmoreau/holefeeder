@@ -21,6 +21,7 @@ import { filterNullish } from '@app/shared/helpers';
 import DatalabelsPlugin, { Context } from 'chartjs-plugin-datalabels';
 import { FilterNonNullishPipe } from '@app/shared/pipes';
 
+// noinspection ES6ClassMemberInitializationOrder
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
@@ -39,11 +40,12 @@ import { FilterNonNullishPipe } from '@app/shared/pipes';
 export class StatisticsComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
-  public statistics$!: Observable<Statistics[] | undefined>;
+  public statistics$!: Observable<Statistics[]>;
 
+  // @ts-ignore
   public chartData$: Observable<
-    ChartData<keyof ChartTypeRegistry, number[], string | string[]> | undefined
-  > = of(undefined);
+    ChartData<keyof ChartTypeRegistry, number[], string | string[] | undefined>
+  > = undefined;
   constructor(
     private currencyPipe: CurrencyPipe,
     private statisticsService: StatisticsService
@@ -53,7 +55,7 @@ export class StatisticsComponent implements OnInit {
 
     this.chartData$ = this.statistics$.pipe(
       filterNullish(),
-      map(array => {
+      map((array: Statistics[]) => {
         return {
           labels: array.map(item => item.category),
           datasets: [

@@ -3,6 +3,7 @@ export * from './account-info.model';
 export * from './account-type.enum';
 export * from './account.model';
 export * from './adapter.interface';
+export * from './angular-settings.model';
 export * from './cashflow-detail.model';
 export * from './cashflow-info.interface';
 export * from './cashflow-request.model';

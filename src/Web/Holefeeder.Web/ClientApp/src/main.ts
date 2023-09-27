@@ -3,6 +3,7 @@ import {
   enableProdMode,
   ErrorHandler,
   importProvidersFrom,
+  isDevMode,
 } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -17,7 +18,11 @@ import {
   LogLevel,
 } from 'angular-auth-oidc-client';
 import { JsonDateOnlyInterceptor } from '@app/core/interceptors/json-dateonly-interceptor';
-import { NgChartsModule } from 'ng2-charts';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { appEffects, appStore } from '@app/core/store';
+import { provideEffects } from '@ngrx/effects';
+import { HttpRequestLoggerInterceptor } from '@app/core/interceptors/http-request-logger.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -26,18 +31,8 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}/gateway` },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpLoadingInterceptor,
-      multi: true,
-    },
-    {
-      multi: true,
-      provide: HTTP_INTERCEPTORS,
-      useClass: JsonDateOnlyInterceptor,
-    },
     loadConfigProvider,
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     importProvidersFrom(
       RouterModule.forRoot(ROUTES, {
         enableTracing: !environment.production && environment.enableTracing,
@@ -65,13 +60,42 @@ bootstrapApplication(AppComponent, {
             prompt: 'select_account', // login, consent
           },
           secureRoutes: [
-            'https://holefeeder.test',
+            'https://holefeeder.localtest.me',
             'http://localhost:3000',
             '/gateway/api',
           ],
         },
       })
     ),
+    provideStore(appStore),
+    provideEffects(appEffects),
+    provideStoreDevtools({
+      maxAge: 25, // Retains last 25 states
+      logOnly: !isDevMode(), // Restrict extension to log-only mode
+      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
+      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+    }),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingInterceptor,
+      multi: true,
+    },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JsonDateOnlyInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestLoggerInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingInterceptor,
+      multi: true,
+    },
   ],
 }).catch(err => console.error(err));

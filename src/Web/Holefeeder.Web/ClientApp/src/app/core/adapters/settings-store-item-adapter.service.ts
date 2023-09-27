@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { nameofFactory } from '@app/shared/helpers';
-import { Adapter, DateIntervalType, Settings } from '@app/shared/models';
+import {
+  Adapter,
+  DateIntervalType,
+  Settings,
+  StoreItem,
+} from '@app/shared/models';
 import { startOfToday } from 'date-fns';
 
 const nameof = nameofFactory<Settings>();
 
 @Injectable({ providedIn: 'root' })
 export class SettingsStoreItemAdapter implements Adapter<Settings> {
-  adapt(item: any): Settings {
+  adapt(item: StoreItem): Settings {
     if (item?.data === undefined) {
       return new Settings(startOfToday(), DateIntervalType.monthly, 1);
     }

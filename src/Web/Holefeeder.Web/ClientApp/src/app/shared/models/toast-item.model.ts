@@ -1,5 +1,8 @@
 export abstract class ToastItem {
-  constructor(public message: string, public delay: number) {}
+  constructor(
+    public message: string,
+    public delay: number
+  ) {}
 
   public abstract get className(): string;
 

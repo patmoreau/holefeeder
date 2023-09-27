@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class FilterNonNullishPipe implements PipeTransform {
-  transform(value: unknown): any {
+  transform(value: any): any {
     if (Array.isArray(value)) {
       return value.filter(item => item !== null && item !== undefined);
     } else {

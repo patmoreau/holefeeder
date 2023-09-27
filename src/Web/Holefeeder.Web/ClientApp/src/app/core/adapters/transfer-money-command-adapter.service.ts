@@ -6,7 +6,13 @@ import { Adapter, TransferMoneyCommand } from '@app/shared/models';
 export class TransferMoneyCommandAdapter
   implements Adapter<TransferMoneyCommand>
 {
-  adapt(item: any): TransferMoneyCommand {
+  adapt(item: {
+    date: Date;
+    amount: number;
+    description: string;
+    fromAccount: string;
+    toAccount: string;
+  }): TransferMoneyCommand {
     return new TransferMoneyCommand(
       dateToUtc(item.date),
       item.amount,

@@ -1,67 +1,66 @@
-import { environment } from '@env/environment';
-
-export enum LoggingLevel {
-  None = 'None',
-  Verbose = 'Verbose',
-  Debug = 'Debug',
-  Info = 'Info',
-  Warning = 'Warning',
-  Error = 'Error',
-}
+import { ConfigService } from '@app/core/services';
+import { Injectable } from '@angular/core';
+import { LoggingLevel } from './logging-level.enum';
 
 export interface Logger {
-  error(message: any, ...optionalParams: any[]): void;
+  error(message: unknown, ...optionalParams: unknown[]): void;
 
-  warning(message: any, ...optionalParams: any[]): void;
+  warning(message: unknown, ...optionalParams: unknown[]): void;
 
-  info(message: any, ...optionalParams: any[]): void;
+  info(message: unknown, ...optionalParams: unknown[]): void;
 
-  verbose(message: any, ...optionalParams: any[]): void;
+  verbose(message: unknown, ...optionalParams: unknown[]): void;
 
-  debug(message: any, ...optionalParams: any[]): void;
+  debug(message: unknown, ...optionalParams: unknown[]): void;
 
-  log(loggingLevel: LoggingLevel, message: any, ...optionalParams: any[]): void;
+  log(
+    loggingLevel: LoggingLevel,
+    message: unknown,
+    ...optionalParams: unknown[]
+  ): void;
 }
 
-export class ConsoleLogger implements Logger {
-  private static Logger: Logger | undefined = undefined;
+export class DecoratorLogger implements Logger {
+  private static logger: Logger | undefined = undefined;
+  protected loggingLevel: LoggingLevel = LoggingLevel.Info;
 
-  constructor() {
-    ConsoleLogger.Logger = this;
+  constructor(private level: LoggingLevel) {
+    this.loggingLevel = level;
+    DecoratorLogger.logger = this;
   }
 
   public static getInstance(): Logger {
-    if (!ConsoleLogger.Logger) {
-      ConsoleLogger.Logger = new ConsoleLogger();
+    if (!DecoratorLogger.logger) {
+      return new DecoratorLogger(LoggingLevel.Info);
     }
-    return ConsoleLogger.Logger;
+    return DecoratorLogger.logger;
   }
 
-  error(message: any, ...optionalParams: any[]): void {
+  error(message: unknown, ...optionalParams: unknown[]): void {
     if (this.shouldLog(LoggingLevel.Error)) {
       console.error(message, ...optionalParams);
     }
   }
 
-  warning(message: any, ...optionalParams: any[]): void {
+  warning(message: unknown, ...optionalParams: unknown[]): void {
     if (this.shouldLog(LoggingLevel.Warning)) {
       console.warn(message, ...optionalParams);
     }
   }
 
-  info(message: any, ...optionalParams: any[]): void {
+  info(message: unknown, ...optionalParams: unknown[]): void {
     if (this.shouldLog(LoggingLevel.Info)) {
       console.info(message, ...optionalParams);
     }
   }
 
-  debug(message: any, ...optionalParams: any[]): void {
+  debug(message: unknown, ...optionalParams: unknown[]): void {
     if (this.shouldLog(LoggingLevel.Debug)) {
       console.debug(message, ...optionalParams);
     }
   }
 
-  verbose(message: any, ...optionalParams: any[]): void {
+  verbose(message: unknown, ...optionalParams: unknown[]): void {
     if (this.shouldLog(LoggingLevel.Verbose)) {
       console.log(message, ...optionalParams);
     }
@@ -69,8 +68,8 @@ export class ConsoleLogger implements Logger {
 
   log(
     loggingLevel: LoggingLevel,
-    message: any,
-    ...optionalParams: any[]
+    message: unknown,
+    ...optionalParams: unknown[]
   ): void {
     if (this.shouldLog(loggingLevel)) {
       switch (loggingLevel) {
@@ -94,19 +93,19 @@ export class ConsoleLogger implements Logger {
   }
 
   private shouldLog(level: LoggingLevel): boolean {
-    if (environment.loggingLevel === LoggingLevel.None) {
+    if (this.loggingLevel === LoggingLevel.None) {
       return false;
-    } else if (environment.loggingLevel === LoggingLevel.Error) {
+    } else if (this.loggingLevel === LoggingLevel.Error) {
       return level === LoggingLevel.Error;
-    } else if (environment.loggingLevel === LoggingLevel.Warning) {
+    } else if (this.loggingLevel === LoggingLevel.Warning) {
       return level === LoggingLevel.Error || level === LoggingLevel.Warning;
-    } else if (environment.loggingLevel === LoggingLevel.Info) {
+    } else if (this.loggingLevel === LoggingLevel.Info) {
       return (
         level === LoggingLevel.Error ||
         level === LoggingLevel.Warning ||
         level === LoggingLevel.Info
       );
-    } else if (environment.loggingLevel === LoggingLevel.Debug) {
+    } else if (this.loggingLevel === LoggingLevel.Debug) {
       return (
         level === LoggingLevel.Error ||
         level === LoggingLevel.Warning ||
@@ -116,5 +115,17 @@ export class ConsoleLogger implements Logger {
     } else {
       return true;
     }
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class ConsoleLogger extends DecoratorLogger {
+  constructor(config: ConfigService) {
+    super(LoggingLevel.Info);
+
+    config.loggingLevel$.subscribe(level => {
+      console.info('ConsoleLogger logging level changed', level);
+      this.loggingLevel = level;
+    });
   }
 }

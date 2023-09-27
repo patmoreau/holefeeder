@@ -49,7 +49,8 @@ export class ToastsService extends StateService<ToastsState> {
             ...this.state.toasts,
             this.adapter.adapt({
               type: ToastType.danger,
-              message: message.content,
+              message: message.content as string,
+              delay: 5,
             }),
           ],
         });
@@ -61,7 +62,7 @@ export class ToastsService extends StateService<ToastsState> {
     this.setState({
       toasts: [
         ...this.state.toasts,
-        this.adapter.adapt({ type: type, message: message }),
+        this.adapter.adapt({ type: type, message: message, delay: 5 }),
       ],
     });
   }

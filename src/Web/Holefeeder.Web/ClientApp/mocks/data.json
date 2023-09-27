@@ -9,6 +9,10 @@
       "id": 1
     }
   ],
+  "articles": [
+    {"id": "j1", "title": "Core Java Tutorial", "category": "Java"},
+    {"id": "a1", "title": "Angular Tutorial", "category": "Angular"}
+  ],
   "store-items": [
     {
       "id": "093e9b28-3b51-40fb-9472-cf73d192b027",
@@ -95,12 +99,20 @@
       "name": "Food and Drinks",
       "color": "#1B5088",
       "budgetAmount": 350.0,
-      "favorite": false
+      "favorite": true
     },
     {
       "id": "914ecc7a-9e82-490f-a82e-ad914a7aa53d",
       "name": "Income",
       "color": "#1C621B",
+      "budgetAmount": 0.0,
+      "favorite": true
+    },
+    {
+      "id": "edcddaca-a31a-4c85-809a-96e2c4887455",
+      "name": "Investment",
+      "type": "Expense",
+      "color": "#878A28",
       "budgetAmount": 0.0,
       "favorite": false
     },

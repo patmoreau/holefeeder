@@ -1,3 +1,6 @@
 export class DateInterval {
-  constructor(public start: Date, public end: Date) {}
+  constructor(
+    public start: Date,
+    public end: Date
+  ) {}
 }

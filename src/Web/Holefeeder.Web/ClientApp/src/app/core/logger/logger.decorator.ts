@@ -1,6 +1,7 @@
-import { ConsoleLogger, Logger, LoggingLevel } from './logger.service';
+import { DecoratorLogger, Logger } from './logger.service';
+import { LoggingLevel } from './logging-level.enum';
 
-export const logger: Logger = ConsoleLogger.getInstance();
+export const logger: Logger = DecoratorLogger.getInstance();
 
 interface LoggerParams {
   type?:
@@ -27,13 +28,13 @@ export function trace(params?: LoggerParams) {
   };
 
   return function (
-    target: any,
+    target: unknown,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const targetMethod = descriptor.value;
 
-    descriptor.value = function (...args: any[]) {
+    descriptor.value = function (...args: unknown[]) {
       if (options.inputs && args.length) {
         logger.log(options.type, `Tracing ${propertyKey} <=`, args);
       } else {

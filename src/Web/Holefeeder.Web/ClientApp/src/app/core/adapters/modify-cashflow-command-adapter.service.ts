@@ -5,7 +5,12 @@ import { Adapter, ModifyCashflowCommand } from '@app/shared/models';
 export class ModifyCashflowCommandAdapter
   implements Adapter<ModifyCashflowCommand>
 {
-  adapt(item: any): ModifyCashflowCommand {
+  adapt(item: {
+    id: string;
+    amount: number;
+    description: string;
+    tags: string[];
+  }): ModifyCashflowCommand {
     return new ModifyCashflowCommand(
       item.id,
       item.amount,

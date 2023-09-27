@@ -1,5 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -12,7 +18,6 @@ import { ModifyCashflowCommandAdapter } from '@app/core/adapters';
 import {
   AccountsService,
   CashflowsService,
-  CategoriesService,
   ModalService,
 } from '@app/core/services';
 import {
@@ -29,7 +34,9 @@ import {
   DateIntervalTypeNames,
 } from '@app/shared/models';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, switchMap, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState, CategoriesFeature } from '@app/core/store';
 
 const cashflowIdParamName = 'cashflowId';
 
@@ -69,12 +76,13 @@ export class ModifyCashflowComponent implements OnInit {
 
   intervalTypesNames = DateIntervalTypeNames;
 
+  private readonly store = inject(Store<AppState>);
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private location: Location,
     private accountsService: AccountsService,
-    private categoriesService: CategoriesService,
     private cashflowsService: CashflowsService,
     private adapter: ModifyCashflowCommandAdapter,
     private modalService: ModalService
@@ -86,7 +94,7 @@ export class ModifyCashflowComponent implements OnInit {
 
   async ngOnInit() {
     this.accounts$ = this.accountsService.activeAccounts$;
-    this.categories$ = this.categoriesService.categories$;
+    this.categories$ = this.store.select(CategoriesFeature.selectAll);
 
     this.form = this.formBuilder.group({
       amount: ['', [Validators.required, Validators.min(0)]],

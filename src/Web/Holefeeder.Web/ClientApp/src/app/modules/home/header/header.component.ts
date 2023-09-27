@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { logger } from '@app/core/logger';
-import {
-  SettingsService,
-  SubscriberService,
-  UserService,
-} from '@app/core/services';
+import { SettingsService, SubscriberService } from '@app/core/services';
 import { DateInterval, Settings, User } from '@app/shared/models';
 import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { addDays, startOfToday } from 'date-fns';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppStore } from '@app/core/store';
+import { AuthActions } from '@app/core/store/auth/auth.actions';
+import { AuthFeature } from '@app/core/store/auth/auth.feature';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
   period$: Observable<DateInterval> | undefined;
 
@@ -43,16 +43,18 @@ export class HeaderComponent {
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private router: Router,
-    private userService: UserService,
-    private subService: SubscriberService
+    private subService: SubscriberService,
+    private store: Store<AppStore>
   ) {
     this.isNavbarCollapsed = true;
 
-    this.user$ = this.userService.user$;
-    this.logged$ = this.userService.loggedOn$;
+    this.user$ = this.store.select(AuthFeature.selectProfile);
+    this.logged$ = this.store.select(AuthFeature.selectIsAuthenticated);
     this.settings$ = this.settingsService.settings$;
     this.period$ = this.settingsService.period$;
   }
+
+  ngOnInit() {}
 
   open(content: any, period: DateInterval) {
     this.setCalendar(period);
@@ -136,7 +138,7 @@ export class HeaderComponent {
   }
 
   login() {
-    this.oidcSecurityService.authorize();
+    this.store.dispatch(AuthActions.login());
   }
 
   refreshSession() {
@@ -148,7 +150,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.oidcSecurityService.logoff();
+    this.store.dispatch(AuthActions.logout());
   }
 
   private setCalendar(period: DateInterval) {

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormArray,
   FormGroup,
   FormGroupDirective,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AccountsService, CategoriesService } from '@app/core/services';
+import { AccountsService } from '@app/core/services';
 import {
   DatePickerComponent,
   TagsInputComponent,
@@ -14,6 +14,8 @@ import {
 import { AutofocusDirective } from '@app/shared/directives';
 import { AccountInfo, Category } from '@app/shared/models';
 import { combineLatest, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState, CategoriesFeature } from '@app/core/store';
 
 @Component({
   selector: 'app-transaction-edit',
@@ -31,12 +33,15 @@ import { combineLatest, Observable } from 'rxjs';
 export class TransactionEditComponent implements OnInit {
   form!: FormGroup;
 
-  values$!: Observable<{ accounts: AccountInfo[]; categories: Category[] }>;
+  values$!: Observable<{
+    accounts: AccountInfo[];
+    categories: Category[];
+  }>;
 
+  private readonly store = inject(Store<AppState>);
   constructor(
     private rootFormGroup: FormGroupDirective,
-    private accountsService: AccountsService,
-    private categoriesService: CategoriesService
+    private accountsService: AccountsService
   ) {}
 
   get tags(): FormArray {
@@ -48,7 +53,7 @@ export class TransactionEditComponent implements OnInit {
 
     this.values$ = combineLatest({
       accounts: this.accountsService.activeAccounts$,
-      categories: this.categoriesService.categories$,
+      categories: this.store.select(CategoriesFeature.selectAll),
     });
   }
 }

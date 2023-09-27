@@ -14,7 +14,7 @@ import {
 } from '@app/shared/models';
 import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { TransactionDetailAdapter } from '../adapters';
+import { transactionDetail, TransactionDetailAdapter } from '../adapters';
 
 const apiRoute = 'api/v2/transactions';
 
@@ -61,7 +61,7 @@ export class TransactionsService {
 
   findById(id: string): Observable<TransactionDetail> {
     return this.http
-      .get(`${this.apiUrl}/${apiRoute}/${id}`)
+      .get<transactionDetail>(`${this.apiUrl}/${apiRoute}/${id}`)
       .pipe(map(this.adapter.adapt), catchError(formatErrors));
   }
 

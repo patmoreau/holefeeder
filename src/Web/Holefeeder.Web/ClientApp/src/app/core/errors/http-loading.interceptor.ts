@@ -14,9 +14,9 @@ const retryWaitMilliSeconds = 5000;
 @Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
   intercept(
-    request: HttpRequest<any>,
+    request: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       retry({ count: retryCount, delay: retryWaitMilliSeconds }),
       catchError((err: HttpErrorResponse) => {
@@ -30,6 +30,6 @@ export class HttpLoadingInterceptor implements HttpInterceptor {
         }
         return throwError(() => new Error(errorMessage));
       })
-    ) as Observable<HttpEvent<any>>;
+    ) as Observable<HttpEvent<unknown>>;
   }
 }

@@ -6,6 +6,6 @@ export class Message {
   constructor(
     public type: MessageType,
     public action: MessageAction,
-    public content?: any
+    public content?: unknown
   ) {}
 }

@@ -10,7 +10,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ToastItemAdapter implements Adapter<ToastItem> {
-  adapt(item: any): ToastItem {
+  adapt(item: { type: ToastType; message: string; delay: number }): ToastItem {
     if (item.type === ToastType.danger) {
       return new DangerToastItem(item.message, item.delay);
     } else if (item.type === ToastType.warning) {

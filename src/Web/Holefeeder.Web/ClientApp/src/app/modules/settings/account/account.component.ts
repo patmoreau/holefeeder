@@ -19,7 +19,10 @@ import { trace } from '@app/core/logger';
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {}
 
   get firstName() {
     return this.profileForm.get('firstName');

@@ -1,2 +1,3 @@
 export * from './logger.decorator';
-export { LoggingLevel } from './logger.service';
+export * from './logger.service';
+export * from './logging-level.enum';

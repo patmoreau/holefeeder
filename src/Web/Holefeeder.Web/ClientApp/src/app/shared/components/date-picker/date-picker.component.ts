@@ -40,11 +40,7 @@ import { BaseFormControlWithValidatorComponent } from '../base-form-control-with
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter },
   ],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgbDatepickerModule,
-  ],
+  imports: [CommonModule, FormsModule, NgbDatepickerModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
