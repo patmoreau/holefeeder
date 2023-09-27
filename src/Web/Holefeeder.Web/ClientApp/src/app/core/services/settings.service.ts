@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import {
   DateInterval,
   DateIntervalType,
-  MessageAction,
-  MessageType,
   Settings,
   StoreItem,
 } from '@app/shared/models';
@@ -23,6 +21,10 @@ import { SettingsStoreItemAdapter, StoreItemAdapter } from '../adapters';
 import { StateService } from './state.service';
 
 import { MessageService } from './message.service';
+import { AppState } from '@app/core/store';
+import { Store } from '@ngrx/store';
+import { AuthFeature } from '@app/core/store/auth/auth.feature';
+import { filterTrue } from '@app/shared/helpers';
 
 const apiRoute = 'api/v2/store-items';
 
@@ -45,22 +47,20 @@ export class SettingsService extends StateService<SettingsState> {
   settings$: Observable<Settings> = this.select(state => state.settings);
   period$: Observable<DateInterval> = this.select(state => state.period);
 
+  private readonly store = inject(Store<AppState>);
+
   constructor(
     private http: HttpClient,
     @Inject('BASE_API_URL') private apiUrl: string,
     private storeItemAdapter: StoreItemAdapter,
-    private adapter: SettingsStoreItemAdapter,
-    private messages: MessageService
+    private adapter: SettingsStoreItemAdapter
   ) {
     super(initialState);
 
-    this.messages.listen
+    this.store
+      .select(AuthFeature.selectIsAuthenticated)
       .pipe(
-        filter(
-          message =>
-            message.type === MessageType.general &&
-            message.action === MessageAction.userLogOn
-        ),
+        filterTrue(),
         switchMap(_ => this.getStoreItem(storeItemCode))
       )
       .subscribe(item => {
@@ -69,13 +69,10 @@ export class SettingsService extends StateService<SettingsState> {
         this.resetState(period, settings, item);
       });
 
-    this.messages.listen
+    this.store
+      .select(AuthFeature.selectIsAuthenticated)
       .pipe(
-        filter(
-          message =>
-            message.type === MessageType.general &&
-            message.action === MessageAction.userLogOff
-        ),
+        filter(isAuthenticated => !isAuthenticated),
         switchMap(_ => of(initialState))
       )
       .subscribe(state => {
