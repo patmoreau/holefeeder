@@ -24,7 +24,7 @@
     <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
     <PackageReference Include="Dapper.Transaction" Version="2.0.143" />
     <PackageReference Include="dbup-core" Version="5.0.10" />
-    <PackageReference Include="dbup-mysql" Version="5.0.10" />
+    <PackageReference Include="dbup-mysql" Version="5.0.37" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
