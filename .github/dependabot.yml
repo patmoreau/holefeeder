@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      - dependency-name: "Microsoft.AspNetCore.All"
+      - dependency-name: "Microsoft.AspNetCore.App"
+      - dependency-name: "Microsoft.NETCore.App"
+      - dependency-name: "Microsoft.VisualStudio.Azure.Containers.Tools.Targets"
