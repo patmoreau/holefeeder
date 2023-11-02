@@ -5,7 +5,7 @@ import { DateInterval, MessageType, Upcoming } from '@app/shared/models';
 import { format } from 'date-fns';
 import { filter, map, Observable, take } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { UpcomingAdapter } from '../adapters';
+import { UpcomingAdapter, upcomingType } from '../adapters';
 import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
@@ -41,7 +41,7 @@ export class UpcomingService extends StateService<UpcomingState> {
             message.type === MessageType.cashflow
         )
       )
-      .subscribe(_ => this.load());
+      .subscribe(() => this.load());
 
     this.load();
   }
@@ -68,11 +68,11 @@ export class UpcomingService extends StateService<UpcomingState> {
 
   private getAll(period: DateInterval): Observable<Upcoming[]> {
     return this.http
-      .get(`${this.apiUrl}/${apiRoute}`, {
+      .get<upcomingType[]>(`${this.apiUrl}/${apiRoute}`, {
         params: new HttpParams()
           .set('from', format(period.start, 'yyyy-MM-dd'))
           .set('to', format(period.end, 'yyyy-MM-dd')),
       })
-      .pipe(map((data: any) => data.map(this.adapter.adapt)));
+      .pipe(map(data => data.map(this.adapter.adapt)));
   }
 }

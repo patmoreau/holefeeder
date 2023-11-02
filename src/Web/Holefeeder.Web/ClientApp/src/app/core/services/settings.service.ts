@@ -15,12 +15,15 @@ import {
   startOfDay,
   startOfToday,
 } from 'date-fns';
-import { mergeMap, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { SettingsStoreItemAdapter, StoreItemAdapter } from '../adapters';
+import {
+  SettingsStoreItemAdapter,
+  StoreItemAdapter,
+  storeItemType,
+} from '../adapters';
 import { StateService } from './state.service';
 
-import { MessageService } from './message.service';
 import { AppState } from '@app/core/store';
 import { Store } from '@ngrx/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
@@ -61,7 +64,7 @@ export class SettingsService extends StateService<SettingsState> {
       .select(AuthFeature.selectIsAuthenticated)
       .pipe(
         filterTrue(),
-        switchMap(_ => this.getStoreItem(storeItemCode))
+        switchMap(() => this.getStoreItem(storeItemCode))
       )
       .subscribe(item => {
         const settings = this.adapter.adapt(item);
@@ -73,7 +76,7 @@ export class SettingsService extends StateService<SettingsState> {
       .select(AuthFeature.selectIsAuthenticated)
       .pipe(
         filter(isAuthenticated => !isAuthenticated),
-        switchMap(_ => of(initialState))
+        switchMap(() => of(initialState))
       )
       .subscribe(state => {
         this.resetState(state.period, state.settings, state.storeItem);
@@ -211,26 +214,21 @@ export class SettingsService extends StateService<SettingsState> {
 
   private getStoreItem(code: string): Observable<StoreItem> {
     return this.http
-      .get(`${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`)
-      .pipe(
-        mergeMap((data: any) => data),
-        map((item: any) => this.storeItemAdapter.adapt(item))
-      );
+      .get<storeItemType>(`${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`)
+      .pipe(map(item => this.storeItemAdapter.adapt(item)));
   }
 
   private saveStoreItem(item: StoreItem): Observable<StoreItem> {
     const command = item.id ? 'modify-store-item' : 'create-store-item';
-    return this.http.post(`${this.apiUrl}/${apiRoute}/${command}`, item).pipe(
-      map((data: any) => {
-        if (data?.id === undefined) {
-          return item;
-        }
-        return this.storeItemAdapter.adapt({
-          id: data.id,
-          code: item.code,
-          data: item.data,
-        });
-      })
-    );
+    return this.http
+      .post<storeItemType>(`${this.apiUrl}/${apiRoute}/${command}`, item)
+      .pipe(
+        map(data => {
+          if (data?.id === undefined) {
+            return item;
+          }
+          return this.storeItemAdapter.adapt(data);
+        })
+      );
   }
 }

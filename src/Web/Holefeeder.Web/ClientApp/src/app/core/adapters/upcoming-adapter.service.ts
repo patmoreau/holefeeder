@@ -7,17 +7,19 @@ import {
   Upcoming,
 } from '@app/shared/models';
 
+export type upcomingType = {
+  id: string;
+  date: Date;
+  amount: number;
+  description: string;
+  tags: string[];
+  category: ICategoryInfo;
+  account: IAccountInfo;
+};
+
 @Injectable({ providedIn: 'root' })
 export class UpcomingAdapter implements Adapter<Upcoming> {
-  adapt(item: {
-    id: string;
-    date: Date;
-    amount: number;
-    description: string;
-    tags: string[];
-    category: ICategoryInfo;
-    account: IAccountInfo;
-  }): Upcoming {
+  adapt(item: upcomingType): Upcoming {
     return new Upcoming(
       item.id,
       dateFromUtc(item.date),

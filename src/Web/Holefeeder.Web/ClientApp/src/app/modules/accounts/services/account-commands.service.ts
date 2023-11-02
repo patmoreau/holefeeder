@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { trace } from '@app/core/logger';
+import trace from '@app/shared/decorators/trace.decorator';
 import { MessageService } from '@app/core/services';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { CloseAccountCommand } from '@app/modules/accounts/models/close-account-command.model';
@@ -9,6 +9,7 @@ import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { OpenAccountCommand } from '../models/open-account-command.model';
+import { IdResultType } from '@app/shared/types/id-result.type';
 
 const apiRoute = 'api/v2/accounts';
 
@@ -22,9 +23,9 @@ export class AccountCommandsService {
 
   open(account: OpenAccountCommand): Observable<string> {
     return this.http
-      .post(`${this.apiUrl}/${apiRoute}/open-account`, account)
+      .post<IdResultType>(`${this.apiUrl}/${apiRoute}/open-account`, account)
       .pipe(
-        map((data: any) => data.id),
+        map(data => data.id),
         tap((id: string) =>
           this.messages.sendMessage({
             type: MessageType.account,
@@ -41,14 +42,14 @@ export class AccountCommandsService {
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify-account`, account)
       .pipe(
-        tap(_ =>
+        tap(() =>
           this.messages.sendMessage({
             type: MessageType.account,
             action: MessageAction.post,
             content: account.id,
           })
         ),
-        switchMap(_ => of(void 0)),
+        switchMap(() => of(void 0)),
         catchError(formatErrors)
       );
   }
@@ -57,14 +58,14 @@ export class AccountCommandsService {
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/close-account`, account)
       .pipe(
-        tap(_ =>
+        tap(() =>
           this.messages.sendMessage({
             type: MessageType.account,
             action: MessageAction.post,
             content: account.id,
           })
         ),
-        switchMap(_ => of(void 0)),
+        switchMap(() => of(void 0)),
         catchError(formatErrors)
       );
   }

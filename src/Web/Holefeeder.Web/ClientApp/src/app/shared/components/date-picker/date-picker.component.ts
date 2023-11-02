@@ -3,8 +3,6 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   forwardRef,
-  Inject,
-  Injector,
   Input,
 } from '@angular/core';
 import {
@@ -56,15 +54,12 @@ export class DatePickerComponent extends BaseFormControlWithValidatorComponent<D
   @Input()
   public disabled = false;
 
-  constructor(
-    @Inject(Injector) protected injector: Injector // private adapter: NgbDateNativeAdapter
-  ) {
-    super(injector);
-
+  constructor() {
+    super();
     this.value = startOfToday();
   }
 
-  public writeValue(value: Date): void {
+  public override writeValue(value: Date): void {
     this.value = value;
   }
 
@@ -74,7 +69,7 @@ export class DatePickerComponent extends BaseFormControlWithValidatorComponent<D
   }
 
   public override validate(
-    control: AbstractControl<any, any>
+    control: AbstractControl<unknown, unknown>
   ): ValidationErrors | null {
     if (control.value === null) {
       return null;

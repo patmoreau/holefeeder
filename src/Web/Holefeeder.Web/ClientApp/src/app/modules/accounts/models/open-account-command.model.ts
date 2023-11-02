@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { AccountType } from '@app/shared/models';
 import { dateToUtc } from '@app/shared/helpers';
-import { AccountType, Adapter } from '@app/shared/models';
 
 export class OpenAccountCommand {
   constructor(
@@ -10,17 +9,20 @@ export class OpenAccountCommand {
     public openBalance: number,
     public description: string
   ) {}
-}
 
-@Injectable({ providedIn: 'root' })
-export class OpenAccountAdapter implements Adapter<OpenAccountCommand> {
-  adapt(item: any): OpenAccountCommand {
+  static fromObject(obj: {
+    type: AccountType;
+    name: string;
+    openDate: Date;
+    openBalance: number;
+    description: string;
+  }): OpenAccountCommand {
     return new OpenAccountCommand(
-      item.type,
-      item.name,
-      dateToUtc(item.openDate),
-      item.openBalance,
-      item.description
+      obj.type,
+      obj.name,
+      dateToUtc(obj.openDate),
+      obj.openBalance,
+      obj.description
     );
   }
 }

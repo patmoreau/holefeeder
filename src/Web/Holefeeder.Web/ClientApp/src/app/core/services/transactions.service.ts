@@ -14,9 +14,11 @@ import {
 } from '@app/shared/models';
 import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { transactionDetail, TransactionDetailAdapter } from '../adapters';
+import { transactionDetailType, TransactionDetailAdapter } from '../adapters';
 
 const apiRoute = 'api/v2/transactions';
+
+type idType = { id: string };
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
@@ -49,7 +51,7 @@ export class TransactionsService {
       });
     }
     return this.http
-      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<transactionDetailType[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })
@@ -61,15 +63,15 @@ export class TransactionsService {
 
   findById(id: string): Observable<TransactionDetail> {
     return this.http
-      .get<transactionDetail>(`${this.apiUrl}/${apiRoute}/${id}`)
+      .get<transactionDetailType>(`${this.apiUrl}/${apiRoute}/${id}`)
       .pipe(map(this.adapter.adapt), catchError(formatErrors));
   }
 
   payCashflow(transaction: PayCashflowCommand): Observable<string> {
     return this.http
-      .post(`${this.apiUrl}/${apiRoute}/pay-cashflow`, transaction)
+      .post<idType>(`${this.apiUrl}/${apiRoute}/pay-cashflow`, transaction)
       .pipe(
-        map((data: any) => data.id),
+        map(data => data.id),
         catchError(formatErrors),
         tap(id =>
           this.messages.sendMessage({
@@ -83,9 +85,9 @@ export class TransactionsService {
 
   makePurchase(transaction: MakePurchaseCommand): Observable<string> {
     return this.http
-      .post(`${this.apiUrl}/${apiRoute}/make-purchase`, transaction)
+      .post<idType>(`${this.apiUrl}/${apiRoute}/make-purchase`, transaction)
       .pipe(
-        map((data: any) => data.id),
+        map(data => data.id),
         catchError(formatErrors),
         tap(id =>
           this.messages.sendMessage({
@@ -99,9 +101,9 @@ export class TransactionsService {
 
   transfer(transaction: TransferMoneyCommand): Observable<string> {
     return this.http
-      .post(`${this.apiUrl}/${apiRoute}/transfer`, transaction)
+      .post<idType>(`${this.apiUrl}/${apiRoute}/transfer`, transaction)
       .pipe(
-        map((data: any) => data.id),
+        map(data => data.id),
         catchError(formatErrors),
         tap(id =>
           this.messages.sendMessage({
@@ -117,9 +119,9 @@ export class TransactionsService {
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify`, transaction)
       .pipe(
-        switchMap(_ => of(void 0)),
+        switchMap(() => of(void 0)),
         catchError(formatErrors),
-        tap(_ =>
+        tap(() =>
           this.messages.sendMessage({
             type: MessageType.transaction,
             action: MessageAction.post,
@@ -131,9 +133,9 @@ export class TransactionsService {
 
   delete(id: string): Observable<void> {
     return this.http.delete(`${this.apiUrl}/${apiRoute}/${id}`).pipe(
-      switchMap(_ => of(void 0)),
+      switchMap(() => of(void 0)),
       catchError(formatErrors),
-      tap(_ =>
+      tap(() =>
         this.messages.sendMessage({
           type: MessageType.transaction,
           action: MessageAction.delete,

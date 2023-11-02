@@ -1,10 +1,11 @@
+using Carter;
 using Holefeeder.Web.Config;
 
-namespace Holefeeder.Web.Controllers;
+namespace Holefeeder.Web.Features;
 
-public static class ConfigRoutes
+public class ConfigRoutes : ICarterModule
 {
-    public static void AddConfigRoutes(this WebApplication app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         const string routePrefix = "config";
 

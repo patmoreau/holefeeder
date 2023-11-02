@@ -1,25 +1,38 @@
 <ng-container *ngIf="values$ | async; else loader">
   <div class="pt-3 pb-4 mb-3">
     <div class="container">
-      <h4 class="mb-0 line-height-1 text-truncate">
-        Modify transaction
-      </h4>
+      <h4 class="mb-0 line-height-1 text-truncate">Modify transaction</h4>
       <div class="container mb-5">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
           <app-transaction-edit></app-transaction-edit>
 
           <div class="d-flex justify-content-end mt-4">
-            <button (click)="onDelete()" class="btn btn-danger me-2" title="Delete" type="button">Delete
+            <button
+              (click)="onDelete()"
+              class="btn btn-danger me-2"
+              title="Delete"
+              type="button">
+              Delete
             </button>
-            <button (click)="goBack()" class="btn btn-secondary me-2" title="Cancel" type="button">
+            <button
+              (click)="goBack()"
+              class="btn btn-secondary me-2"
+              title="Cancel"
+              type="button">
               Cancel
             </button>
-            <button [disabled]="!form.valid" class="btn btn-primary" title="Save" type="submit">
+            <button
+              [disabled]="!form.valid"
+              class="btn btn-primary"
+              title="Save"
+              type="submit">
               Save
             </button>
           </div>
 
-          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
+          <em *ngIf="!form.valid" class="form-text text-danger">{{
+            form.errors
+          }}</em>
         </form>
       </div>
     </div>

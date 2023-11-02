@@ -1,13 +1,13 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { MessageService } from '../services';
-import { ConsoleLogger } from '@app/core/logger/logger.service';
+import { LoggerService } from '@app/core/logger/logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private messages: MessageService,
-    private logger: ConsoleLogger
+    private logger: LoggerService
   ) {}
 
   handleError(error: Error) {

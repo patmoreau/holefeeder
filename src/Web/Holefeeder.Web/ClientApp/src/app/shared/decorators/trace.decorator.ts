@@ -1,7 +1,7 @@
-import { DecoratorLogger, Logger } from './logger.service';
-import { LoggingLevel } from './logging-level.enum';
-
-export const logger: Logger = DecoratorLogger.getInstance();
+import { inject } from '@angular/core';
+import { LoggerService } from '@app/core/logger';
+import { LoggingLevel } from '@app/shared/models/logging-level.enum';
+import ignoreDuringUnitTest from './ignore-during-unit-test.decorator';
 
 interface LoggerParams {
   type?:
@@ -20,19 +20,20 @@ const defaultParams: Required<LoggerParams> = {
   outputs: false,
 };
 
-export function trace(params?: LoggerParams) {
-  const options: Required<LoggerParams> = {
-    type: params?.type || defaultParams.type,
-    inputs: params?.inputs ?? defaultParams.inputs,
-    outputs: params?.outputs ?? defaultParams.outputs,
-  };
+class TraceService {
+  constructor() {
+    this.decoratorFactory = this.decoratorFactory.bind(this);
+  }
 
-  return function (
+  @ignoreDuringUnitTest()
+  decorator(
     target: unknown,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
+    const logger = inject(LoggerService);
     const targetMethod = descriptor.value;
+    const options = defaultParams;
 
     descriptor.value = function (...args: unknown[]) {
       if (options.inputs && args.length) {
@@ -49,5 +50,12 @@ export function trace(params?: LoggerParams) {
       return result;
     };
     return descriptor;
-  };
+  }
+
+  decoratorFactory() {
+    return this.decorator;
+  }
 }
+
+const trace = new TraceService().decoratorFactory;
+export default trace;

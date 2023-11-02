@@ -1,8 +1,6 @@
+using Carter;
 using HealthChecks.UI.Client;
-
 using Holefeeder.Web.Config;
-using Holefeeder.Web.Controllers;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,13 +26,19 @@ builder.Services
             new TokenValidationParameters { ValidateIssuer = true },
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
+string apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
+                throw new InvalidOperationException("Missing `Api:Url` configuration");
+
 builder.Services
     .AddHealthChecksUI(setup =>
     {
         setup.AddHealthCheckEndpoint("web", "http://localhost/healthz");
-        setup.AddHealthCheckEndpoint("api", $"{builder.Configuration.GetValue<string>("Api:Url")!}/healthz");
+        setup.AddHealthCheckEndpoint("api", $"{apiUri}/healthz");
     })
     .AddInMemoryStorage();
+
+builder.Services
+    .AddCarter(configurator: configurator => configurator.WithEmptyValidators());
 
 builder.Services.AddHealthChecks()
     .AddCheck("web", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "web", "service" });
@@ -64,13 +67,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    "default",
-    "{controller}/{action=Index}/{id?}");
+app.MapCarter();
 
 app.MapFallbackToFile("index.html");
-
-app.AddConfigRoutes();
 
 app.MapHealthChecks("/healthz",
     new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }

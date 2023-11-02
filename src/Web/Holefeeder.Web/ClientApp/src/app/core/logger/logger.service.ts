@@ -1,39 +1,18 @@
-import { ConfigService } from '@app/core/services';
 import { Injectable } from '@angular/core';
-import { LoggingLevel } from './logging-level.enum';
+import { ConfigService } from '@app/core/services';
+import { LoggingLevel } from '@app/shared/models/logging-level.enum';
 
-export interface Logger {
-  error(message: unknown, ...optionalParams: unknown[]): void;
+@Injectable({ providedIn: 'root' })
+export class LoggerService {
+  private loggingLevel: LoggingLevel = LoggingLevel.Info;
 
-  warning(message: unknown, ...optionalParams: unknown[]): void;
+  constructor(config: ConfigService) {
+    this.loggingLevel = LoggingLevel.Info;
 
-  info(message: unknown, ...optionalParams: unknown[]): void;
-
-  verbose(message: unknown, ...optionalParams: unknown[]): void;
-
-  debug(message: unknown, ...optionalParams: unknown[]): void;
-
-  log(
-    loggingLevel: LoggingLevel,
-    message: unknown,
-    ...optionalParams: unknown[]
-  ): void;
-}
-
-export class DecoratorLogger implements Logger {
-  private static logger: Logger | undefined = undefined;
-  protected loggingLevel: LoggingLevel = LoggingLevel.Info;
-
-  constructor(private level: LoggingLevel) {
-    this.loggingLevel = level;
-    DecoratorLogger.logger = this;
-  }
-
-  public static getInstance(): Logger {
-    if (!DecoratorLogger.logger) {
-      return new DecoratorLogger(LoggingLevel.Info);
-    }
-    return DecoratorLogger.logger;
+    config.loggingLevel$.subscribe(level => {
+      console.info('ConsoleLogger logging level changed', level);
+      this.loggingLevel = level;
+    });
   }
 
   error(message: unknown, ...optionalParams: unknown[]): void {
@@ -115,17 +94,5 @@ export class DecoratorLogger implements Logger {
     } else {
       return true;
     }
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class ConsoleLogger extends DecoratorLogger {
-  constructor(config: ConfigService) {
-    super(LoggingLevel.Info);
-
-    config.loggingLevel$.subscribe(level => {
-      console.info('ConsoleLogger logging level changed', level);
-      this.loggingLevel = level;
-    });
   }
 }

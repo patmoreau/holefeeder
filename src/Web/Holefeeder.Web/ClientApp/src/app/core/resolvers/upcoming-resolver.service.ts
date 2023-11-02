@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Resolve,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { UpcomingService } from '@app/core/services';
 import { Upcoming } from '@app/shared/models';
 import { LoadingBarService } from '@ngx-loading-bar/core';
@@ -26,10 +21,7 @@ export class UpcomingResolverService
     super(router, toasts, barService);
   }
 
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<Upcoming> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Upcoming> {
     const id = route.params['cashflowId'];
     const date = new Date(route.queryParams['date']);
     return this.upcomingService.upcoming$.pipe(

@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { APP_INITIALIZER, FactoryProvider } from '@angular/core';
-import { LoggingLevel } from '@app/core/logger/logging-level.enum';
 import { ConfigService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { AngularSettings } from './shared/models';
+import { LoggingLevel } from '@app/shared/models/logging-level.enum';
 
 function loadConfigFactory(
   http: HttpClient,

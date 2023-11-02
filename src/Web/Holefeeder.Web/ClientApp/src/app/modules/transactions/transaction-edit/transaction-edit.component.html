@@ -1,31 +1,60 @@
 <ng-container *ngIf="values$ | async as values">
-
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
-      <input appAutofocus class="form-control" formControlName="amount" id="amount" placeholder="transaction amount..."
-             required type="number" />
+      <input
+        appAutofocus
+        class="form-control"
+        formControlName="amount"
+        id="amount"
+        placeholder="transaction amount..."
+        required
+        type="number" />
     </div>
-    <app-date-picker [required]="true" formControlName="date" label="Date"></app-date-picker>
+    <app-date-picker
+      [required]="true"
+      formControlName="date"
+      label="Date"></app-date-picker>
     <div class="form-group">
       <label for="category">Category</label>
-      <select class="form-control" formControlName="category" id="category" required>
-        <option *ngFor="let category of values.categories" [ngValue]="category.id">{{ category.name }}</option>
+      <select
+        class="form-control"
+        formControlName="category"
+        id="category"
+        required>
+        <option
+          *ngFor="let category of values.categories"
+          [ngValue]="category.id">
+          {{ category.name }}
+        </option>
       </select>
     </div>
     <div class="form-group">
       <label for="account">Account</label>
-      <select class="form-control" formControlName="account" id="account" required>
-        <option *ngFor="let account of values.accounts" [ngValue]="account.id">{{ account.name }}</option>
+      <select
+        class="form-control"
+        formControlName="account"
+        id="account"
+        required>
+        <option *ngFor="let account of values.accounts" [ngValue]="account.id">
+          {{ account.name }}
+        </option>
       </select>
     </div>
     <div class="form-group">
-      <app-tags-input [tagsArray]="tags" formArrayName="tags" id="tags"></app-tags-input>
+      <app-tags-input
+        [tagsArray]="tags"
+        formArrayName="tags"
+        id="tags"></app-tags-input>
     </div>
     <div class="form-group">
       <label for="description">Note</label>
-      <input [placeholder]="'transaction note...'" class="form-control" formControlName="description" id="description"
-             type="text" />
+      <input
+        [placeholder]="'transaction note...'"
+        class="form-control"
+        formControlName="description"
+        id="description"
+        type="text" />
     </div>
   </div>
 </ng-container>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-tags-input',
@@ -10,7 +10,7 @@ import { FormArray, FormBuilder } from '@angular/forms';
   imports: [CommonModule],
 })
 export class TagsInputComponent {
-  @Input() tagsArray: FormArray<any> = new FormArray<any>([]);
+  @Input() tagsArray = new FormArray<FormControl<string | null>>([]);
   @Input() isReadonly = false;
 
   constructor(private fb: FormBuilder) {}

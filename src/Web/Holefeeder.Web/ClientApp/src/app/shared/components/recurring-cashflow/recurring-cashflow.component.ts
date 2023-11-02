@@ -27,7 +27,10 @@ export class RecurringCashflowComponent implements OnInit {
     this.form = <FormGroup>this.controlContainer.control;
   }
 
-  compareFn(optionOne: any, optionTwo: any): boolean {
+  compareFn(
+    optionOne: string | { id: string },
+    optionTwo: string | { id: string }
+  ): boolean {
     if (optionOne && optionTwo) {
       const idOne = typeof optionOne === 'string' ? optionOne : optionOne.id;
       const idTwo = typeof optionTwo === 'string' ? optionTwo : optionTwo.id;

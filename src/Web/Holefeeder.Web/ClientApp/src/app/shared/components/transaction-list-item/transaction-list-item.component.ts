@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { trace } from '@app/core/logger';
+import trace from '@app/shared/decorators/trace.decorator';
 
 @Component({
   selector: 'app-transaction-list-item',

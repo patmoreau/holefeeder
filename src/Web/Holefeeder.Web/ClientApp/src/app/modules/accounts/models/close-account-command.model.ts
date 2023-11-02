@@ -7,7 +7,7 @@ export class CloseAccountCommand {
 
 @Injectable({ providedIn: 'root' })
 export class CloseAccountAdapter implements Adapter<CloseAccountCommand> {
-  adapt(item: any): CloseAccountCommand {
+  adapt(item: { id: string }): CloseAccountCommand {
     return new CloseAccountCommand(item.id);
   }
 }

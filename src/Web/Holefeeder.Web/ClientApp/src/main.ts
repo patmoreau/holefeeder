@@ -30,7 +30,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}/gateway` },
+    { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}` },
     loadConfigProvider,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     importProvidersFrom(
@@ -62,7 +62,7 @@ bootstrapApplication(AppComponent, {
           secureRoutes: [
             'https://holefeeder.localtest.me',
             'http://localhost:3000',
-            '/gateway/api',
+            '/api',
           ],
         },
       })

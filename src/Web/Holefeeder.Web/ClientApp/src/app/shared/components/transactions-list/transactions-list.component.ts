@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { trace } from '@app/core/logger';
+import trace from '@app/shared/decorators/trace.decorator';
 import { TransactionsService } from '@app/core/services';
 import { TransactionListItemComponent } from '@app/shared/components';
 import { tapTrace } from '@app/shared/helpers';

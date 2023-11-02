@@ -6,11 +6,11 @@ import {
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { ConsoleLogger } from '@app/core/logger/logger.service';
+import { LoggerService } from '@app/core/logger';
 
 @Injectable({ providedIn: 'root' })
 export class HttpRequestLoggerInterceptor implements HttpInterceptor {
-  constructor(private logger: ConsoleLogger) {}
+  constructor(private logger: LoggerService) {}
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler

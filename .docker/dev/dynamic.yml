@@ -1,0 +1,17 @@
+http:
+  routers:
+    traefik:
+      rule: "Host(`traefik.localtest.me`)"
+      service: "api@internal"
+      tls:
+        domains:
+          - main: "localtest.me"
+            sans:
+              - "*.localtest.me"
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/etc/certs/localtest.me+4.pem"
+        keyFile: "/etc/certs/localtest.me+4-key.pem"

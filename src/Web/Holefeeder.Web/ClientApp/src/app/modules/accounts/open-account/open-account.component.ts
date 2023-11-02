@@ -9,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AccountType } from '@app/shared/models';
 import { startOfToday } from 'date-fns';
-import { OpenAccountAdapter } from '../models/open-account-command.model';
+import { OpenAccountCommand } from '../models/open-account-command.model';
 import { AccountCommandsService } from '../services/account-commands.service';
 import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
 
@@ -27,8 +27,7 @@ export class OpenAccountComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private location: Location,
-    private commandsService: AccountCommandsService,
-    private adapter: OpenAccountAdapter
+    private commandsService: AccountCommandsService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +47,7 @@ export class OpenAccountComponent implements OnInit {
 
   onSubmit(): void {
     this.commandsService
-      .open(this.adapter.adapt(this.form.value))
+      .open(OpenAccountCommand.fromObject(this.form.value))
       .subscribe(id => this.router.navigate(['accounts', id]));
   }
 

@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { trace } from '@app/core/logger';
+import trace from '@app/shared/decorators/trace.decorator';
 import {
   ConfirmDialogComponent,
   DeleteDialogComponent,
@@ -87,7 +87,7 @@ export class ModalService {
 
     return from(modal.result).pipe(
       take(1), // take() manages unsubscription for us
-      catchError(error => {
+      catchError(() => {
         return of(undefined);
       })
     );

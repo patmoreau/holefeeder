@@ -1,4 +1,4 @@
-import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -21,7 +21,7 @@ export abstract class BaseFormControlComponent<T>
 
   protected readonly destroy = new Subject<void>();
 
-  protected constructor(@Inject(Injector) protected injector: Injector) {}
+  protected injector: Injector = inject(Injector);
 
   public ngOnInit(): void {
     this.setComponentControl();

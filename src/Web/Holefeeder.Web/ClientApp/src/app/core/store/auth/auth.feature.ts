@@ -7,7 +7,7 @@ export interface AuthState {
   isAuthenticated: boolean;
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
   isAuthenticated: false,
   profile: null,
 };
@@ -23,7 +23,7 @@ export const AuthFeature = createFeature({
         isAuthenticated,
       };
     }),
-    on(AuthActions.logout, (state, {}) => {
+    on(AuthActions.logout, state => {
       return {
         ...state,
         profile: null,

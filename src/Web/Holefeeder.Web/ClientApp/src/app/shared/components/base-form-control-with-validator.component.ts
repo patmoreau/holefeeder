@@ -1,17 +1,13 @@
-import { Component, Inject, Injector } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validator } from '@angular/forms';
 import { BaseFormControlComponent } from './base-form-control.component';
 
 @Component({ template: '' })
 export abstract class BaseFormControlWithValidatorComponent<T>
   extends BaseFormControlComponent<T>
-  implements Validator
+  implements Validator, OnInit
 {
-  protected constructor(@Inject(Injector) protected injector: Injector) {
-    super(injector);
-  }
-
-  public ngOnInit(): void {
+  public override ngOnInit(): void {
     super.ngOnInit();
 
     this.control.setValidators(
@@ -22,7 +18,7 @@ export abstract class BaseFormControlWithValidatorComponent<T>
   }
 
   public abstract validate(
-    control: AbstractControl<any, any>
+    control: AbstractControl<unknown, unknown>
   ): ValidationErrors | null;
 
   public registerOnValidatorChange?(fn: () => void): void {
@@ -30,9 +26,9 @@ export abstract class BaseFormControlWithValidatorComponent<T>
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public onValidationChangeFn: any = () => {};
+  public onValidationChangeFn = () => {};
 
-  public onChange() {
+  public override onChange() {
     super.onChange();
     this.onValidationChangeFn();
   }

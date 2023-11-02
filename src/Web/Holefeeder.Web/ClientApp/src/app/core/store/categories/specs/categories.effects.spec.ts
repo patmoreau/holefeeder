@@ -1,31 +1,27 @@
-import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
-import { cold, hot } from 'jasmine-marbles'; // You can use jasmine-marbles for testing observables
-import { fetchCategories } from '../categories.effects';
+import { Observable, of, take, throwError } from 'rxjs';
 import { CategoriesActions } from '../categories.actions';
-import { CategoriesService } from '@app/core/store/categories/services/categories.service';
+import { TestBed } from '@angular/core/testing';
+import { Action } from '@ngrx/store';
+import { fetchCategories } from '../categories.effects';
+import { CategoriesService } from '../categories.service';
 import { Category, CategoryType } from '@app/shared/models';
+import { provideMockActions } from '@ngrx/effects/testing';
 
-// Import your CategoriesService mock or use a real mock library
-const categoriesServiceMock = {
-  fetch: () => of([]), // Mock the fetch method to return an observable
-};
-
-describe('fetchCategories', () => {
-  let actions: Observable<any>;
+describe('Categories Effects', (): void => {
+  let categoriesServiceMock: CategoriesService;
+  let actions$: Observable<Action>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideMockActions(() => actions),
+        provideMockActions(() => actions$),
         { provide: CategoriesService, useValue: categoriesServiceMock }, // Provide the mock CategoriesService
       ],
     });
   });
 
-  it('should dispatch loadCategoriesSuccess action on successful fetch', () => {
-    const categories: ReadonlyArray<Category> = [
+  it('should dispatch loadCategoriesSuccess action on successful fetch', done => {
+    const mockCategories: ReadonlyArray<Category> = [
       {
         id: '1',
         name: 'Category 1',
@@ -35,49 +31,44 @@ describe('fetchCategories', () => {
         favorite: false,
       },
     ];
+    categoriesServiceMock = {
+      fetch: () => of(mockCategories),
+    } as unknown as CategoriesService;
 
-    // Create an action to trigger the effect
-    const action = CategoriesActions.loadCategories();
+    actions$ = of(CategoriesActions.loadCategories());
 
-    // Create a cold observable for the service response
-    const response = cold('-a|', { a: categories });
-
-    // Set up the service mock to return the response
-    categoriesServiceMock.fetch = () => response;
-
-    // Define the expected action to be dispatched
-    const expectedAction = CategoriesActions.loadCategoriesSuccess({
-      categories,
+    TestBed.runInInjectionContext((): void => {
+      fetchCategories(actions$, categoriesServiceMock)
+        .pipe(take(1))
+        .subscribe(action => {
+          expect(action).toEqual(
+            CategoriesActions.loadCategoriesSuccess({
+              categories: mockCategories,
+            })
+          );
+          done();
+        });
     });
-
-    // Use jasmine-marbles to test the effect
-    actions = hot('-a', { a: action });
-    const expected = cold('-b', { b: expectedAction });
-
-    expect(fetchCategories).toBeObservable(expected);
   });
 
-  it('should dispatch loadCategoriesFailure action on fetch error', () => {
-    const errorMessage = 'An error occurred';
+  it('should dispatch failure action when categories fetch failed', done => {
+    categoriesServiceMock = {
+      fetch: () => throwError(() => new Error('Error message')),
+    } as unknown as CategoriesService;
 
-    // Create an action to trigger the effect
-    const action = CategoriesActions.loadCategories();
+    actions$ = of(CategoriesActions.loadCategories());
 
-    // Create a cold observable for the service error
-    const errorResponse = cold('-#|', {}, errorMessage);
-
-    // Set up the service mock to return the error response
-    categoriesServiceMock.fetch = () => errorResponse;
-
-    // Define the expected action to be dispatched
-    const expectedAction = CategoriesActions.loadCategoriesFailure({
-      error: errorMessage,
+    TestBed.runInInjectionContext((): void => {
+      fetchCategories(actions$, categoriesServiceMock)
+        .pipe(take(1))
+        .subscribe(action => {
+          expect(action).toEqual(
+            CategoriesActions.loadCategoriesFailure({
+              error: 'Error message',
+            })
+          );
+          done();
+        });
     });
-
-    // Use jasmine-marbles to test the effect
-    actions = hot('-a', { a: action });
-    const expected = cold('-b', { b: expectedAction });
-
-    expect(fetchCategories).toBeObservable(expected);
   });
 });

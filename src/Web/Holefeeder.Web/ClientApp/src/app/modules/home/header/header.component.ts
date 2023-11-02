@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { logger } from '@app/core/logger';
 import { SettingsService, SubscriberService } from '@app/core/services';
 import { DateInterval, Settings, User } from '@app/shared/models';
 import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { addDays, startOfToday } from 'date-fns';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppStore } from '@app/core/store';
 import { AuthActions } from '@app/core/store/auth/auth.actions';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
+import { LoggerService } from '@app/core/logger';
 
 @Component({
   selector: 'app-header',
@@ -26,8 +25,8 @@ export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
   period$: Observable<DateInterval> | undefined;
 
-  logged$: Observable<boolean>;
-  user$: Observable<User | null>;
+  logged$: Observable<boolean> = of(false);
+  user$: Observable<User | null> = of(null);
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = null;
@@ -38,14 +37,16 @@ export class HeaderComponent implements OnInit {
   loggedIn = false;
 
   constructor(
-    private http: HttpClient,
     public oidcSecurityService: OidcSecurityService,
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private router: Router,
     private subService: SubscriberService,
-    private store: Store<AppStore>
-  ) {
+    private store: Store<AppStore>,
+    private logger: LoggerService
+  ) {}
+
+  ngOnInit() {
     this.isNavbarCollapsed = true;
 
     this.user$ = this.store.select(AuthFeature.selectProfile);
@@ -54,13 +55,11 @@ export class HeaderComponent implements OnInit {
     this.period$ = this.settingsService.period$;
   }
 
-  ngOnInit() {}
-
-  open(content: any, period: DateInterval) {
+  open(content: unknown, period: DateInterval) {
     this.setCalendar(period);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(_ => {
+      .result.then(() => {
         this.settingsService.setPeriod(
           new DateInterval(
             this.getDate(this.fromDate!),
@@ -72,7 +71,7 @@ export class HeaderComponent implements OnInit {
 
   nextPeriod() {
     if (this.toDate === undefined) {
-      logger.error('No date defined');
+      this.logger.error('No date defined');
       return;
     }
     const date = this.getDate(this.toDate!);
@@ -89,7 +88,7 @@ export class HeaderComponent implements OnInit {
 
   previousPeriod() {
     if (this.fromDate === undefined) {
-      logger.error('No date defined');
+      this.logger.error('No date defined');
       return;
     }
     const date = this.getDate(this.fromDate!);

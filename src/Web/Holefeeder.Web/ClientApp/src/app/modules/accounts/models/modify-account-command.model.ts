@@ -1,6 +1,3 @@
-import { Injectable } from '@angular/core';
-import { Adapter } from '@app/shared/models';
-
 export class ModifyAccountCommand {
   constructor(
     public id: string,
@@ -8,16 +5,18 @@ export class ModifyAccountCommand {
     public openBalance: number,
     public description: string
   ) {}
-}
 
-@Injectable({ providedIn: 'root' })
-export class ModifyAccountAdapter implements Adapter<ModifyAccountCommand> {
-  adapt(item: any): ModifyAccountCommand {
+  static fromObject(obj: {
+    id: string;
+    name: string;
+    openBalance: number;
+    description: string;
+  }): ModifyAccountCommand {
     return new ModifyAccountCommand(
-      item.id,
-      item.name,
-      item.openBalance,
-      item.description
+      obj.id || '',
+      obj.name || '',
+      obj.openBalance || 0,
+      obj.description || ''
     );
   }
 }

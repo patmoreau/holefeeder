@@ -9,13 +9,11 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { PayCashflowCommandAdapter } from '@app/core/adapters';
-import { TransactionsService, UpcomingService } from '@app/core/services';
+import { TransactionsService } from '@app/core/services';
 import { TransactionEditComponent } from '@app/modules/transactions/transaction-edit/transaction-edit.component';
 import { LoaderComponent } from '@app/shared/components';
 import { Upcoming } from '@app/shared/models';
 import { map, Observable, tap } from 'rxjs';
-
-const cashflowIdParamName = 'cashflowId';
 
 @Component({
   selector: 'app-pay-cashflow',
@@ -34,13 +32,12 @@ export class PayCashflowComponent implements OnInit {
 
   cashflow!: Upcoming;
 
-  values$!: Observable<any>;
+  values$!: Observable<Upcoming>;
 
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private location: Location,
-    private cashflowsService: UpcomingService,
     private transactionsService: TransactionsService,
     private adapter: PayCashflowCommandAdapter
   ) {}
@@ -86,7 +83,7 @@ export class PayCashflowComponent implements OnInit {
           })
         )
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   goBack(): void {
