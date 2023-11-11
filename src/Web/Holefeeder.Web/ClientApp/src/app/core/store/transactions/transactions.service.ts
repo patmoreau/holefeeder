@@ -1,12 +1,39 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
-import { PagingInfo, TransactionDetail } from '@app/shared/models';
+import {
+  CategoryType,
+  PagingInfo,
+  TransactionDetail,
+} from '@app/shared/models';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TransactionDetailAdapter } from '../../adapters';
 
 const apiRoute = 'api/v2/transactions';
+
+interface TransactionDetailResponse {
+  id: string;
+  date: Date;
+  amount: number;
+  description: string;
+  category: {
+    id: string;
+    name: string;
+    type: CategoryType;
+    color: string;
+  };
+  account: {
+    id: string;
+    name: string;
+    mongoId: string;
+  };
+  cashflow: {
+    id: string;
+    date: Date;
+  };
+  tags: string[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
@@ -38,7 +65,7 @@ export class TransactionsService {
       });
     }
     return this.http
-      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<TransactionDetailResponse[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

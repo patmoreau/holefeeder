@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  baseUrl: '',
+  baseUrl: 'http://localhost:3000',
   loggingLevel: 'Verbose',
   production: false,
   enableTracing: false,

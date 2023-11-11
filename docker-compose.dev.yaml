@@ -32,6 +32,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=root;Password=${MARIADB_ROOT_PASSWORD};Database=budgeting_dev;
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
     labels:
       traefik.http.routers.api-router.rule: 'Host(`holefeeder.localtest.me`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))'
 
@@ -44,6 +45,8 @@ services:
     expose:
       - 80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      ASPNETCORE_ENVIRONMENT: Production
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
+      AngularSettings__RedirectUrl: https://holefeeder.localtest.me
     labels:
-      traefik.http.routers.web-router.rule: 'Host(`holefeeder.localtest.me`) && !PathPrefix(`/api`) && !PathPrefix(`/swagger`)'
+      traefik.http.routers.web-router.rule: 'Host(`holefeeder.localtest.me`) && !(PathPrefix(`/api`) || PathPrefix(`/swagger`))'

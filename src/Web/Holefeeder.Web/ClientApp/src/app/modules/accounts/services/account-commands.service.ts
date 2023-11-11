@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import trace from '@app/shared/decorators/trace.decorator';
 import { MessageService } from '@app/core/services';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { CloseAccountCommand } from '@app/modules/accounts/models/close-account-command.model';
@@ -37,7 +36,6 @@ export class AccountCommandsService {
       );
   }
 
-  @trace()
   modify(account: ModifyAccountCommand): Observable<void> {
     return this.http
       .post(`${this.apiUrl}/${apiRoute}/modify-account`, account)

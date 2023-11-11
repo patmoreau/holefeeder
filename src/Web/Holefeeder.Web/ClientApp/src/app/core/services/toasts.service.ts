@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SubscriberService } from '@app/core/services';
 import { tapTrace } from '@app/shared/helpers';
 import {
@@ -12,6 +12,7 @@ import { filter, Observable } from 'rxjs';
 import { ToastItemAdapter } from '../adapters';
 import { MessageService } from './message.service';
 import { StateService } from './state.service';
+import { LoggerService } from '@app/core/logger';
 
 interface ToastsState {
   toasts: ToastItem[];
@@ -23,8 +24,10 @@ const initialState: ToastsState = {
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService extends StateService<ToastsState> {
+  private logger = inject(LoggerService);
+
   toasts$: Observable<ToastItem[]> = this.select(state => state.toasts).pipe(
-    tapTrace()
+    tapTrace(this.logger)
   );
 
   constructor(
@@ -36,7 +39,7 @@ export class ToastsService extends StateService<ToastsState> {
 
     const subscription = this.messages.listen
       .pipe(
-        tapTrace(),
+        tapTrace(this.logger),
         filter(
           message =>
             message.type === MessageType.error &&

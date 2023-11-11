@@ -9,12 +9,11 @@ import {
   UnaryFunction,
 } from 'rxjs';
 import { LoggerService } from '@app/core/logger';
-import { inject } from '@angular/core';
 
 export function tapTrace<T>(
+  logger: LoggerService,
   message = 'observe'
 ): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
-  const logger = inject(LoggerService);
   return pipe(
     tap(x => logger.verbose(message, x)) as OperatorFunction<
       T | null | undefined,

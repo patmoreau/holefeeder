@@ -82,8 +82,8 @@ services:
     expose:
       - 80
     environment:
-      - ASPNETCORE_URLS=http://+
-      - AzureAdB2C__ClientId=${AZUREADB2C_CLIENTID}
+      ASPNETCORE_URLS: http://+
+      AzureAdB2C__ClientId: ${AZUREADB2C_CLIENTID}
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
@@ -96,9 +96,8 @@ services:
     expose:
       - 80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HOSTINGSTARTUPASSEMBLIES=Microsoft.AspNetCore.SpaProxy
-      - ASPNETCORE_URLS=http://+
+      ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
+      ASPNETCORE_URLS: http://+
     labels:
       traefik.enable: true
       traefik.docker.network: proxy

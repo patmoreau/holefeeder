@@ -1,5 +1,4 @@
 import { Injectable, Type } from '@angular/core';
-import trace from '@app/shared/decorators/trace.decorator';
 import {
   ConfirmDialogComponent,
   DeleteDialogComponent,
@@ -14,7 +13,6 @@ import { catchError } from 'rxjs/operators';
 export class ModalService {
   constructor(private ngbModal: NgbModal) {}
 
-  @trace()
   confirm(
     prompt = 'Really?',
     title = 'Confirmation'
@@ -25,7 +23,6 @@ export class ModalService {
     );
   }
 
-  @trace()
   deactivate(
     prompt = 'Deactivate?',
     title = 'Confirmation'
@@ -37,7 +34,6 @@ export class ModalService {
     });
   }
 
-  @trace()
   delete(
     prompt = 'Delete?',
     title = 'Confirmation'
@@ -49,7 +45,6 @@ export class ModalService {
     });
   }
 
-  @trace()
   input(
     message: string,
     initialValue: string,
@@ -62,7 +57,6 @@ export class ModalService {
     });
   }
 
-  @trace()
   message(message: string, title = 'Message'): Observable<boolean | undefined> {
     return this.custom<MessageDialogComponent, boolean>(
       MessageDialogComponent,

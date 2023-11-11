@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { dateFromUtc } from '@app/shared/helpers';
 import { Account, AccountType, Adapter } from '@app/shared/models';
 
 export type accountType = {
@@ -24,10 +23,10 @@ export class AccountAdapter implements Adapter<Account> {
       item.name,
       item.type,
       item.openBalance,
-      dateFromUtc(item.openDate),
+      item.openDate,
       item.transactionCount,
       item.balance,
-      dateFromUtc(item.updated),
+      item.updated,
       item.description,
       item.favorite,
       item.inactive

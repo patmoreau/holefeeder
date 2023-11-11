@@ -73,32 +73,6 @@ RUN apt --fix-broken install
 RUN apt-get install google-chrome-stable -y
 
 ###################################
-# Debugger stage
-###################################
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS debugger
-EXPOSE 80
-EXPOSE 443
-EXPOSE 22
-
-WORKDIR /app
-COPY --from=build /app ./
-
-# Install openssh-server to enable SSH debugging
-RUN apt-get update && \
-    apt-get install -y  unzip procps curl bash openssh-server && \
-    rm -rf /var/lib/apt/lists/*
-
-# Configure SSH
-RUN mkdir /run/sshd
-RUN echo 'root:root' | chpasswd
-RUN echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
-RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-RUN update-rc.d ssh enable
-
-# Start the SSH daemon and the application
-ENTRYPOINT ["bash", "-c", "/etc/init.d/ssh start && dotnet Holefeeder.Web.dll"]
-
-###################################
 # Final stage
 ###################################
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
