@@ -16,12 +16,12 @@ Create and encode .dockerconfigjson
 {
   "auths": {
     "ghcr.io": {
-      "auth": "dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="
+      "auth": "<<secret>>"
     }
   }
 }
 ```
 
 ```bash
-echo -n '{"auths":{"ghcr.io":{"auth":"dXNlcm5hbWU6MTIzMTIzYWRzZmFzZGYxMjMxMjM="}}}' | base64
+echo -n '{"auths":{"ghcr.io":{"auth":"<<secret>>"}}}' | base64
 ```
