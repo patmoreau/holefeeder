@@ -1,0 +1,16 @@
+{
+    "stryker-config":
+    {
+        "baseline": {
+            "provider": "Dashboard"
+        },
+        "coverage-analysis": "all",
+        "ignore-methods": ["ToString", "ConfigureAwait", "*Exception.ctor", "Console.Write*"],
+        "reporters": ["html", "progress", "dashboard"],
+        "thresholds": {
+            "high": 80,
+            "low": 60,
+            "break": null
+        }
+    }
+}
