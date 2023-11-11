@@ -1,4 +1,4 @@
-name: Linter
+name: Mutation Tests
 
 on:
   push:
