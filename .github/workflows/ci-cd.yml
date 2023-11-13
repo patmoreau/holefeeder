@@ -8,8 +8,10 @@ on:
         "docs/**",
         ".vscode/**",
         "**/codeql-analysis.yml",
+        "**/dependabot.yml",
         "**/linter.yml",
-        "**/unit-test-results.yml",
+        "**/mutation-tests.yml",
+        "**/unit-test-results.yml"
       ]
 
   pull_request:
@@ -18,8 +20,10 @@ on:
         "docs/**",
         ".vscode/**",
         "**/codeql-analysis.yml",
+        "**/dependabot.yml",
         "**/linter.yml",
-        "**/unit-test-results.yml",
+        "**/mutation-tests.yml",
+        "**/unit-test-results.yml"
       ]
 
   workflow_dispatch:

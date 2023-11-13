@@ -12,13 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Ensure .NET Installed
-        uses: actions/setup-dotnet@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          global-json-file: ./global.json
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -32,9 +29,9 @@ jobs:
         run: dotnet restore
 
       - name: Run Mutation tests
-        if: github.event_name == 'pull_request'
-        run: dotnet stryker --with-baseline:${{ github.event.pull_request.base.ref }} --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --version ${{ github.event.pull_request.head.ref }}
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch')
+        run: dotnet stryker --reporter "dashboard" --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --version ${{ github.ref }}
 
       - name: Run Mutation tests
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: dotnet stryker --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --version ${{ github.ref }}
+        if: github.event_name == 'pull_request'
+        run: dotnet stryker --reporter "dashboard" --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --with-baseline:${{ github.event.pull_request.base.ref }} --version ${{ github.event.pull_request.head.ref }}
