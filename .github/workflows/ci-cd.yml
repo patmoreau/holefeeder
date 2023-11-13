@@ -8,8 +8,11 @@ on:
         "docs/**",
         ".vscode/**",
         "**/codeql-analysis.yml",
+        "**/dependabot.yml",
         "**/linter.yml",
+        "**/mutation-tests.yml",
         "**/unit-test-results.yml",
+        "kubernetes/README.md",
       ]
 
   pull_request:
@@ -18,8 +21,11 @@ on:
         "docs/**",
         ".vscode/**",
         "**/codeql-analysis.yml",
+        "**/dependabot.yml",
         "**/linter.yml",
+        "**/mutation-tests.yml",
         "**/unit-test-results.yml",
+        "kubernetes/README.md",
       ]
 
   workflow_dispatch:

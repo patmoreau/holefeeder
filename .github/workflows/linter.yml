@@ -3,10 +3,31 @@ name: Linter
 on:
   push:
     branches: [main]
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/ci-cd.yml",
+        "**/codeql-analysis.yml",
+        "**/mutation-tests.yml",
+        "**/unit-test-results.yml",
+        "kubernetes/**",
+      ]
 
   pull_request:
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/ci-cd.yml",
+        "**/codeql-analysis.yml",
+        "**/mutation-tests.yml",
+        "**/unit-test-results.yml",
+        "kubernetes/**",
+      ]
 
   workflow_dispatch:
+
 jobs:
   typescript:
     runs-on: ubuntu-latest
