@@ -51,8 +51,8 @@ jobs:
         run: dotnet restore
 
       - name: Run Mutation tests
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch')
-        run: dotnet stryker --reporter "dashboard" --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --version ${{ github.ref }}
+        if: (github.event_name == 'push' && github.ref_name == 'main') || (github.event_name == 'workflow_dispatch')
+        run: dotnet stryker --reporter "dashboard" --dashboard-api-key ${{ secrets.STRYKER_DASHBOARD_API_KEY }} --version ${{ github.ref_name }}
 
       - name: Run Mutation tests
         if: github.event_name == 'pull_request'
