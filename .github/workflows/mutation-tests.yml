@@ -3,8 +3,30 @@ name: Mutation Tests
 on:
   push:
     branches: [main]
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/ci-cd.yml",
+        "**/codeql-analysis.yml",
+        "**/dependabot.yml",
+        "**/linter.yml",
+        "**/unit-test-results.yml",
+        "kubernetes/**",
+      ]
 
   pull_request:
+    paths-ignore:
+      [
+        "docs/**",
+        ".vscode/**",
+        "**/ci-cd.yml",
+        "**/codeql-analysis.yml",
+        "**/dependabot.yml",
+        "**/linter.yml",
+        "**/unit-test-results.yml",
+        "kubernetes/**",
+      ]
 
   workflow_dispatch:
 jobs:

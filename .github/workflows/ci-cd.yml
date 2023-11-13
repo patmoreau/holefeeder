@@ -11,7 +11,8 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
-        "**/unit-test-results.yml"
+        "**/unit-test-results.yml",
+        "kubernetes/README.md",
       ]
 
   pull_request:
@@ -23,7 +24,8 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
-        "**/unit-test-results.yml"
+        "**/unit-test-results.yml",
+        "kubernetes/README.md",
       ]
 
   workflow_dispatch:

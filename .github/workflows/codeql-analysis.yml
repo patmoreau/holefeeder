@@ -20,9 +20,11 @@ on:
         ".vscode/**",
         "**/ci-cd.yml",
         "**/linter.yml",
+        "**/mutation-tests.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
       ]
+
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [main]
@@ -32,9 +34,11 @@ on:
         ".vscode/**",
         "**/ci-cd.yml",
         "**/linter.yml",
+        "**/mutation-tests.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
       ]
+
   schedule:
     - cron: "22 3 * * 3"
 
