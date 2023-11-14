@@ -62,7 +62,7 @@ jobs:
       - name: Ensure .NET Installed
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          global-json-file: ./global.json
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.10.2
