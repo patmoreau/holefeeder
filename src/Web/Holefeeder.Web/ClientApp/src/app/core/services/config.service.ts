@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LoggingLevel } from '@app/core/logger/logging-level.enum';
 import { StateService } from './state.service';
 import { Observable } from 'rxjs';
+import { LoggingLevel } from '@app/shared/models/logging-level.enum';
 
 interface ConfigState {
   loggingLevel: LoggingLevel;

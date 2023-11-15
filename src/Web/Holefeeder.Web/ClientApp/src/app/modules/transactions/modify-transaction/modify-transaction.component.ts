@@ -35,7 +35,7 @@ export class ModifyTransactionComponent implements OnInit {
 
   transactionId!: string;
 
-  values$!: Observable<any>;
+  values$!: Observable<TransactionDetail>;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,7 +87,7 @@ export class ModifyTransactionComponent implements OnInit {
           })
         )
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   onDelete() {
@@ -95,9 +95,9 @@ export class ModifyTransactionComponent implements OnInit {
       .delete('Are you sure you want to delete this transaction?')
       .pipe(
         filterTrue(),
-        switchMap(_ => this.transactionsService.delete(this.transactionId))
+        switchMap(() => this.transactionsService.delete(this.transactionId))
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   goBack(): void {

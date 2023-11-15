@@ -8,14 +8,10 @@ import {
 } from 'angular-auth-oidc-client';
 import { map } from 'rxjs/operators';
 import { User } from '@app/shared/models';
-import { ConsoleLogger } from '@app/core/logger';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(
-    private oidcSecurityService: OidcSecurityService,
-    private logger: ConsoleLogger
-  ) {}
+  constructor(private oidcSecurityService: OidcSecurityService) {}
 
   get isLoggedIn(): Observable<boolean> {
     return this.oidcSecurityService.isAuthenticated$.pipe(

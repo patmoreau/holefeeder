@@ -1,4 +1,3 @@
-import { logger } from '@app/core/logger';
 import {
   EMPTY,
   filter,
@@ -9,8 +8,10 @@ import {
   tap,
   UnaryFunction,
 } from 'rxjs';
+import { LoggerService } from '@app/core/logger';
 
 export function tapTrace<T>(
+  logger: LoggerService,
   message = 'observe'
 ): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
   return pipe(

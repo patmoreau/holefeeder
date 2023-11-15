@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { MessageService } from '@app/core/services';
-import { filterNullish } from '@app/shared/helpers';
 import {
   Account,
   accountTypeMultiplier,
@@ -10,8 +9,8 @@ import {
   PagingInfo,
   Upcoming,
 } from '@app/shared/models';
-import { catchError, filter, map, Observable, take } from 'rxjs';
-import { AccountAdapter } from '@app/core/adapters';
+import { catchError, filter, map, Observable } from 'rxjs';
+import { AccountAdapter, accountType } from '@app/core/adapters';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
 import { StateService } from './state.service';
 
@@ -35,7 +34,6 @@ export class AccountsService extends StateService<AccountState> {
   activeAccounts$: Observable<Account[]> = this.select(state =>
     state.accounts.filter(x => !x.inactive)
   );
-  count$: Observable<number> = this.select(state => state.accounts.length);
   selectedAccount$: Observable<Account | null> = this.select(
     state => state.selected
   );
@@ -56,7 +54,7 @@ export class AccountsService extends StateService<AccountState> {
             message.type === MessageType.transaction
         )
       )
-      .subscribe(_ => {
+      .subscribe(() => {
         this.load();
       });
 
@@ -71,13 +69,6 @@ export class AccountsService extends StateService<AccountState> {
 
   selectAccount(account: Account) {
     this.setState({ selected: account });
-  }
-
-  findOneById(id: string): Observable<Account> {
-    return this.select(state => state.accounts.find(x => x.id === id)).pipe(
-      take(1),
-      filterNullish()
-    );
   }
 
   findOneByIndex(index: number): Account | null {
@@ -99,7 +90,7 @@ export class AccountsService extends StateService<AccountState> {
       .append('sort', 'name');
 
     return this.http
-      .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
+      .get<accountType[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })

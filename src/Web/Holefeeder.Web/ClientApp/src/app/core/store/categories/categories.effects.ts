@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, map, of } from 'rxjs';
-import { CategoriesService } from './services/categories.service';
+import { CategoriesService } from './categories.service';
 import { CategoriesActions } from './categories.actions';
 
 export const fetchCategories = createEffect(
@@ -23,16 +23,6 @@ export const fetchCategories = createEffect(
           )
         )
       )
-    );
-  },
-  { functional: true, dispatch: true }
-);
-
-export const clearCategories = createEffect(
-  (actions$ = inject(Actions)) => {
-    return actions$.pipe(
-      ofType(CategoriesActions.clearCategories),
-      map(() => CategoriesActions.clearCategoriesSuccess())
     );
   },
   { functional: true, dispatch: true }

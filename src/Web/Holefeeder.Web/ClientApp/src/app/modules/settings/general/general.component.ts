@@ -53,10 +53,13 @@ export class GeneralComponent implements OnInit {
   onSubmit() {
     this.settingsService
       .saveSettings(this.settingsAdapter.adapt(this.settingsForm.value))
-      .subscribe(_ => this.router.navigate(['/']));
+      .subscribe(() => this.router.navigate(['/']));
   }
 
-  compareFn(optionOne: any, optionTwo: any): boolean {
+  compareFn(
+    optionOne: string | { id: string },
+    optionTwo: string | { id: string }
+  ): boolean {
     if (optionOne && optionTwo) {
       const idOne = typeof optionOne === 'string' ? optionOne : optionOne.id;
       const idTwo = typeof optionTwo === 'string' ? optionTwo : optionTwo.id;

@@ -25,7 +25,7 @@
   <div class="container">
     <div class="card-deck row">
       <div *ngFor="let account of accounts$ | async" class="col-12 col-md-6 col-lg-4 col-xl-4 pb-4">
-        <div (click)="click(account)" class="card rounded bg-card">
+        <div (click)="click(account)" (keydown)="click(account)" class="card rounded bg-card" tabindex="0">
           <div class="card-body">
             <h5 class="card-title test-white-25">{{ account.name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">

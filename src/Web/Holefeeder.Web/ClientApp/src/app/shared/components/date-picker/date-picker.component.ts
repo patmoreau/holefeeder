@@ -3,8 +3,6 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   forwardRef,
-  Inject,
-  Injector,
   Input,
 } from '@angular/core';
 import {
@@ -21,6 +19,8 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { isValid, startOfToday } from 'date-fns';
 import { BaseFormControlWithValidatorComponent } from '../base-form-control-with-validator.component';
+import { LoggerService } from '@app/core/logger';
+import { dateFromUtc, dateToUtc } from '@app/shared/helpers';
 
 @Component({
   selector: 'app-date-picker',
@@ -56,25 +56,26 @@ export class DatePickerComponent extends BaseFormControlWithValidatorComponent<D
   @Input()
   public disabled = false;
 
-  constructor(
-    @Inject(Injector) protected injector: Injector // private adapter: NgbDateNativeAdapter
-  ) {
-    super(injector);
-
+  constructor(private logger: LoggerService) {
+    super();
     this.value = startOfToday();
   }
 
-  public writeValue(value: Date): void {
+  public override writeValue(value: Date): void {
+    this.logger.info('writeValue', value);
+    this.logger.info('writeValue - utc', dateFromUtc(value));
     this.value = value;
   }
 
   public onDateSelect(value: Date) {
+    this.logger.info('onDateSelect', value);
+    this.logger.info('onDateSelect - utc', dateToUtc(value));
     this.value = value;
     this.onChange();
   }
 
   public override validate(
-    control: AbstractControl<any, any>
+    control: AbstractControl<unknown, unknown>
   ): ValidationErrors | null {
     if (control.value === null) {
       return null;

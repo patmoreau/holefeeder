@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Adapter, PagingInfo } from '@app/shared/models';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 export function mapToPagingInfo<T>(
   resp: HttpResponse<object[]>,
@@ -14,6 +14,6 @@ export function mapToPagingInfo<T>(
   return new PagingInfo<T>(totalCount, resp.body?.map(adapter.adapt) ?? []);
 }
 
-export function formatErrors(error: any) {
+export function formatErrors(error: { error: string }): Observable<never> {
   return throwError(() => new Error(error.error));
 }

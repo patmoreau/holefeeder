@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { dateFromUtc } from '@app/shared/helpers';
-import {
-  Adapter,
-  CategoryType,
-  IAccountInfo,
-  ICashflowInfo,
-  ICategoryInfo,
-  TransactionDetail,
-} from '@app/shared/models';
+import { Adapter, CategoryType, TransactionDetail } from '@app/shared/models';
 
-export type transactionDetail = {
+export type transactionDetailType = {
   id: string;
   date: Date;
   amount: number;
@@ -34,7 +27,7 @@ export type transactionDetail = {
 
 @Injectable({ providedIn: 'root' })
 export class TransactionDetailAdapter implements Adapter<TransactionDetail> {
-  adapt(item: transactionDetail): TransactionDetail {
+  adapt(item: transactionDetailType): TransactionDetail {
     return new TransactionDetail(
       item.id,
       dateFromUtc(item.date),

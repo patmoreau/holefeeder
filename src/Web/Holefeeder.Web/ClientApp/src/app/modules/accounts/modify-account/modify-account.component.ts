@@ -13,8 +13,9 @@ import { CloseAccountAdapter } from '@app/modules/accounts/models/close-account-
 import { LoaderComponent } from '@app/shared/components';
 import { filterNullish, filterTrue } from '@app/shared/helpers';
 import { Observable, switchMap, tap } from 'rxjs';
-import { ModifyAccountAdapter } from '../models/modify-account-command.model';
+import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { AccountCommandsService } from '../services/account-commands.service';
+import { Account } from '@app/shared/models';
 
 const accountIdParamName = 'accountId';
 
@@ -37,7 +38,7 @@ export class ModifyAccountComponent implements OnInit {
 
   accountId!: string;
 
-  values$!: Observable<any>;
+  values$!: Observable<Account>;
 
   constructor(
     private router: Router,
@@ -46,7 +47,6 @@ export class ModifyAccountComponent implements OnInit {
     private location: Location,
     private accountsService: AccountsService,
     private commandsService: AccountCommandsService,
-    private adapter: ModifyAccountAdapter,
     private closeAdapter: CloseAccountAdapter,
     private modalService: ModalService
   ) {}
@@ -81,13 +81,13 @@ export class ModifyAccountComponent implements OnInit {
   onSubmit() {
     this.commandsService
       .modify(
-        this.adapter.adapt(
+        ModifyAccountCommand.fromObject(
           Object.assign({}, this.form.value, {
             id: this.accountId,
           })
         )
       )
-      .subscribe(_ => this.router.navigate(['accounts', this.accountId]));
+      .subscribe(() => this.router.navigate(['accounts', this.accountId]));
   }
 
   onDeactivate() {
@@ -95,13 +95,13 @@ export class ModifyAccountComponent implements OnInit {
       .deactivate('Are you sure you want to deactivate this account?')
       .pipe(
         filterTrue(),
-        switchMap(_ =>
+        switchMap(() =>
           this.commandsService.close(
             this.closeAdapter.adapt({ id: this.accountId })
           )
         )
       )
-      .subscribe(_ => {
+      .subscribe(() => {
         this.router.navigate(['accounts']).then();
       });
   }

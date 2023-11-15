@@ -4,8 +4,7 @@
             [data]="chartData$ | async | filterNonNullish"
             [type]="pieChartType"
             [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            (chartClick)="chartClicked($event)">
+            [plugins]="pieChartPlugins">
     </canvas>
   </div>
 </ng-container>

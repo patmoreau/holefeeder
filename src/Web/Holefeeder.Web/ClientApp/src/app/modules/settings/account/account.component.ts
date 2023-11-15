@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { trace } from '@app/core/logger';
 
 @Component({
   selector: 'app-account',
@@ -42,9 +41,8 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  @trace()
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  saveProfile(formValues: any): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  saveProfile(formValues: unknown): void {}
 
   cancel() {
     this.router.navigate(['/accounts']);

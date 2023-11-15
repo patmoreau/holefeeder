@@ -21,7 +21,7 @@ import {
 import { DateIntervalType } from '@app/shared/models';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { startOfToday } from 'date-fns';
-import { combineLatest, filter, map, Observable, of, tap } from 'rxjs';
+import { combineLatest, filter, Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@app/core/store';
 import { filterNullish } from '@app/shared/helpers';
@@ -50,7 +50,7 @@ export class MakePurchaseComponent implements OnInit {
   formPurchase!: FormGroup;
   formTransfer!: FormGroup;
 
-  values$!: Observable<[any, any]>;
+  values$!: Observable<[unknown, unknown]>;
 
   private readonly store: Store<AppState> = inject(Store<AppState>);
 
@@ -92,8 +92,9 @@ export class MakePurchaseComponent implements OnInit {
       this.route.params,
       this.accountService.activeAccounts$,
     ]).pipe(
-      filter(([_, accounts]) => accounts.length > 0),
-      tap(([params, _]) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      filter(([params, accounts]) => accounts.length > 0),
+      tap(([params]) => {
         const fromAccount =
           params[accountIdParamName] ??
           this.accountService.findOneByIndex(0)?.id;
@@ -138,13 +139,13 @@ export class MakePurchaseComponent implements OnInit {
           })
         )
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   onTransfer(): void {
     this.transactionsService
       .transfer(this.adapterTransfer.adapt(this.formTransfer.value))
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   goBack(): void {

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+
+  reverse-proxy:
+    ports:
+      - 5011:5011
+      - 5012:5012
+    volumes:
+      # Map the static configuration into the container
+      - .docker/dev/traefik.yml:/etc/traefik/traefik.yml:ro
+      # Map the dynamic configuration into the container
+      - .docker/dev/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      # Map the certificats into the container
+      - .docker/certs:/etc/certs:ro
+
+  whoami:
+    labels:
+      traefik.http.routers.whoami-router.entrypoints: websecure,whoami
+      traefik.http.routers.whoami-router.rule: Host(`whoami.localtest.me`, `localhost`)
+
+  seq:
+    labels:
+      traefik.http.routers.seq-router.rule: Host(`seq.localtest.me`)
+
+  api:
+    build:
+      context: .
+      dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
+      tags:
+        - "${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=root;Password=${MARIADB_ROOT_PASSWORD};Database=budgeting_dev;
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
+    labels:
+      traefik.http.routers.api-router.rule: 'Host(`holefeeder.localtest.me`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))'
+
+  web:
+    build:
+      context: .
+      dockerfile: ./src/Web/Holefeeder.Web/Dockerfile
+      tags:
+        - "${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}"
+    expose:
+      - 80
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
+      AngularSettings__RedirectUrl: https://holefeeder.localtest.me
+    labels:
+      traefik.http.routers.web-router.rule: 'Host(`holefeeder.localtest.me`) && !(PathPrefix(`/api`) || PathPrefix(`/swagger`))'

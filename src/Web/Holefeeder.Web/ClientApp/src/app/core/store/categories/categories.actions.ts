@@ -19,7 +19,6 @@ export const CategoriesActions = createActionGroup({
     // updateCategories: props<{ categories: ReadonlyArray<Category> }>(),
     // upsertCategories: props<{ categories: ReadonlyArray<Category> }>(),
     clearCategories: emptyProps(),
-    clearCategoriesSuccess: emptyProps(),
   },
 });
 

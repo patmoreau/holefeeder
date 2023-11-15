@@ -366,4 +366,6 @@ data/
 tags.json
 **/.angular/
 **/.DS_Store
-linter-report/format-report.json
+linter-report/
+.certs/
+.env

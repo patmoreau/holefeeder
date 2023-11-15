@@ -17,7 +17,7 @@ export class MessageService {
   }: {
     type: MessageType;
     action: MessageAction;
-    content?: any;
+    content?: unknown;
   }): void {
     this.dispatcher.next(new Message(type, action, content));
   }

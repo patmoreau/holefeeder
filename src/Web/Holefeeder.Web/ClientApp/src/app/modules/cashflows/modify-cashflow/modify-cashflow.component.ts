@@ -34,7 +34,7 @@ import {
   DateIntervalTypeNames,
 } from '@app/shared/models';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { map, Observable, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState, CategoriesFeature } from '@app/core/store';
 
@@ -59,7 +59,7 @@ export class ModifyCashflowComponent implements OnInit {
 
   cashflowId!: string;
 
-  values$!: Observable<any>;
+  values$: Observable<CashflowDetail> = of({} as CashflowDetail);
 
   @ViewChild('confirm', { static: true })
   confirmModalElement!: ElementRef;
@@ -140,7 +140,7 @@ export class ModifyCashflowComponent implements OnInit {
           })
         )
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   onCancel() {
@@ -148,9 +148,9 @@ export class ModifyCashflowComponent implements OnInit {
       .delete('Are you sure you want to cancel this cashflow?')
       .pipe(
         filterTrue(),
-        switchMap(_ => this.cashflowsService.cancel(this.cashflowId))
+        switchMap(() => this.cashflowsService.cancel(this.cashflowId))
       )
-      .subscribe(_ => this.location.back());
+      .subscribe(() => this.location.back());
   }
 
   goBack(): void {

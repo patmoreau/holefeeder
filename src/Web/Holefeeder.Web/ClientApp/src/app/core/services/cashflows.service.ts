@@ -45,7 +45,7 @@ export class CashflowsService extends StateService<CashflowState> {
 
     this.messages.listen
       .pipe(filter(message => message.type === MessageType.cashflow))
-      .subscribe(_ => {
+      .subscribe(() => {
         this.load();
       });
 
@@ -55,8 +55,7 @@ export class CashflowsService extends StateService<CashflowState> {
   find(
     offset: number,
     limit: number,
-    sort: string[],
-    filter: string[]
+    sort: string[]
   ): Observable<PagingInfo<CashflowDetail>> {
     let params = new HttpParams();
     if (offset) {
@@ -89,9 +88,9 @@ export class CashflowsService extends StateService<CashflowState> {
 
   modify(cashflow: ModifyCashflowCommand): Observable<void> {
     return this.http.post(`${this.apiUrl}/${apiRoute}/modify`, cashflow).pipe(
-      switchMap(_ => of(void 0)),
+      switchMap(() => of(void 0)),
       catchError(formatErrors),
-      tap(_ =>
+      tap(() =>
         this.messages.sendMessage({
           type: MessageType.cashflow,
           action: MessageAction.post,
@@ -103,9 +102,9 @@ export class CashflowsService extends StateService<CashflowState> {
 
   cancel(id: string): Observable<void> {
     return this.http.post(`${this.apiUrl}/${apiRoute}/cancel`, { id: id }).pipe(
-      switchMap(_ => of(void 0)),
+      switchMap(() => of(void 0)),
       catchError(formatErrors),
-      tap(_ =>
+      tap(() =>
         this.messages.sendMessage({
           type: MessageType.cashflow,
           action: MessageAction.post,

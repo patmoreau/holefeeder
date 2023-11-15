@@ -13,8 +13,10 @@
     "analyze": "source-map-explorer dist/**/*.js",
     "watch": "ng build --watch --configuration development",
     "mock:server": "json-server mocks/data.json --routes mocks/routes.json --watch -m ./node_modules/json-server-auth",
-    "lint": "eslint --fix \"src/**/*.ts\" --ext \"src/**/*.html\" --ext \"src/**/*.scss\"",
-    "test": "ng test"
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "test": "ng test",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {
@@ -54,24 +56,25 @@
     "run-script-os": "^1.1.6",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.1",
-    "zone.js": "^0.13.1"
+    "zone.js": "^0.14.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.0",
-    "@angular-eslint/builder": "^16.1.0",
-    "@angular-eslint/eslint-plugin": "^16.1.0",
-    "@angular-eslint/eslint-plugin-template": "^16.1.0",
-    "@angular-eslint/schematics": "^16.1.0",
+    "@angular-eslint/builder": "16.2.0",
+    "@angular-eslint/eslint-plugin": "16.2.0",
+    "@angular-eslint/eslint-plugin-template": "16.2.0",
+    "@angular-eslint/schematics": "16.2.0",
+    "@angular-eslint/template-parser": "16.2.0",
     "@angular/cli": "^16.2.0",
     "@angular/compiler-cli": "^16.2.0",
     "@angular/language-service": "^16.2.0",
     "@types/jasminewd2": "^2.0.10",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.10",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
-    "@typescript-eslint/parser": "^6.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
     "codelyzer": "^6.0.2",
-    "eslint": "^8.47.0",
+    "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-formatter-github": "^1.1.4",
     "eslint-formatter-pretty": "^5.0.0",
@@ -91,18 +94,16 @@
     "json-server-auth": "^2.1.0",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng2-charts-schematics": "^0.1.7",
-    "prettier": "^3.0.1",
+    "prettier": "^3.0.3",
+    "prettier-eslint": "^16.1.2",
     "protractor": "^7.0.0",
     "source-map-explorer": "^2.5.3",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts"
+    "typescript": "~5.1.6"
   }
 }

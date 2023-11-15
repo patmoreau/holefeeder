@@ -6,10 +6,11 @@ import { CallState } from '@app/core/store/call-state.type';
 
 export interface CategoriesState extends EntityState<Category> {
   callState: CallState;
+  error: string;
 }
 
 // adapter
-export function selectId(a: Category) {
+export function selectId(a: Category): string {
   return a.id;
 }
 
@@ -22,8 +23,9 @@ export const categoryAdapter = createEntityAdapter<Category>({
   sortComparer: sortByFavoriteAndName,
 });
 
-const initialState: CategoriesState = categoryAdapter.getInitialState({
+export const initialState: CategoriesState = categoryAdapter.getInitialState({
   callState: 'init',
+  error: '',
 });
 
 export const CategoriesFeature = createFeature({
@@ -44,7 +46,7 @@ export const CategoriesFeature = createFeature({
       error,
       callState: 'loaded' as const,
     })),
-    on(CategoriesActions.clearCategoriesSuccess, state => ({
+    on(CategoriesActions.clearCategories, state => ({
       ...state,
       ...categoryAdapter.removeAll(state),
       callState: 'init' as const,

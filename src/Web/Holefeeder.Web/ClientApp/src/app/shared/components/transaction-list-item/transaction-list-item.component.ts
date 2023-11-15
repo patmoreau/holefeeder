@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { trace } from '@app/core/logger';
 
 @Component({
   selector: 'app-transaction-list-item',
@@ -17,7 +16,6 @@ export class TransactionListItemComponent {
   @Input() allowSave!: boolean;
   @Output() action: EventEmitter<string> = new EventEmitter<string>();
 
-  @trace()
   click(action: string) {
     this.action.emit(action);
   }

@@ -1,13 +1,15 @@
 <div class="d-flex flex-row bd-highlight mb-3 border-top">
   <div class="p-2 bd-highlight align-self-center justify-content-center">
-    <div (click)="click('EDIT')" *ngIf="!allowSave" class="flex-shrink-0 align-items-center m-1">
+    <div (click)="click('EDIT')" (keydown)="click('EDIT')" *ngIf="!allowSave"
+         class="flex-shrink-0 align-items-center m-1" tabindex="0">
       <em class="bi bi-cart"></em>
     </div>
-    <div (click)="click('SAVE')" *ngIf="allowSave" class="flex-shrink-0 align-items-center m-1">
+    <div (click)="click('SAVE')" (keydown)="click('SAVE')" *ngIf="allowSave"
+         class="flex-shrink-0 align-items-center m-1" tabindex="0">
       <em class="bi bi-cart-plus"></em>
     </div>
   </div>
-  <div (click)="click('EDIT')" class="p-2 bd-highlight flex-fill">
+  <div (click)="click('EDIT')" (keydown)="click('EDIT')" class="p-2 bd-highlight flex-fill" tabindex="0">
     <div class="text-start">
       {{ description }}
     </div>
@@ -17,7 +19,7 @@
       </span>
     </div>
   </div>
-  <div (click)="click('EDIT')" class="p-2 bd-highlight justify-content-end">
+  <div (click)="click('EDIT')" (keydown)="click('EDIT')" class="p-2 bd-highlight justify-content-end" tabindex="0">
     <div class="text-end">
       <small class="font-weight-bold">{{ amount | currency: 'CAD':'symbol-narrow' }}</small>
     </div>
@@ -26,3 +28,4 @@
     </div>
   </div>
 </div>
+

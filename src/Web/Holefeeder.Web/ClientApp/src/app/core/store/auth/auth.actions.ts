@@ -14,6 +14,7 @@ export const AuthActions = createActionGroup({
 });
 
 // generated action creators:
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const {
   checkAuth,
   checkAuthComplete,

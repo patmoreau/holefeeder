@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { trace } from '@app/core/logger';
 import { TransactionsService } from '@app/core/services';
 import { TransactionListItemComponent } from '@app/shared/components';
 import { tapTrace } from '@app/shared/helpers';
@@ -14,6 +14,7 @@ import { PagingInfo, TransactionDetail } from '@app/shared/models';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
+import { LoggerService } from '@app/core/logger';
 
 @Component({
   selector: 'app-transactions-list',
@@ -25,6 +26,8 @@ import { filter, switchMap } from 'rxjs/operators';
 })
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string | undefined;
+
+  private logger = inject(LoggerService);
 
   transactions$: Observable<PagingInfo<TransactionDetail>> | undefined;
 
@@ -40,7 +43,7 @@ export class TransactionsListComponent implements OnInit {
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
       filter(params => params !== null),
-      tapTrace(),
+      tapTrace(this.logger),
       switchMap(params => {
         this.currentPage = +(params.get('page') ?? 1);
         return this.accountId
@@ -59,7 +62,6 @@ export class TransactionsListComponent implements OnInit {
     this.router.navigate(['transactions', transaction.id]).then();
   }
 
-  @trace()
   pageChanged(page: number) {
     this.router
       .navigate(['./'], {

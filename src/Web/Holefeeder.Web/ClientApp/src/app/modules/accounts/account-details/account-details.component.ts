@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AccountsService, UpcomingService } from '@app/core/services';
 import { LoaderComponent } from '@app/shared/components';
 import { filterNullish } from '@app/shared/helpers';
-import { Account, accountTypeMultiplier, Upcoming } from '@app/shared/models';
+import { Account, accountTypeMultiplier } from '@app/shared/models';
 import { Observable, of, switchMap, tap } from 'rxjs';
 
 @Component({

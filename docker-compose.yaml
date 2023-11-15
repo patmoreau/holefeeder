@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+
+  reverse-proxy:
+    image: traefik
+    container_name: reverse-proxy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.whoami-router.entrypoints: websecure
+      traefik.http.routers.whoami-router.tls: true
+
+  seq:
+    image: datalust/seq
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_API_KEY=${SEQ_API_KEY}
+      - SEQ_BASE_URI=http://seq:5341
+    expose:
+      - 80
+      - 5341
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.seq-router.entrypoints: websecure
+      traefik.http.routers.seq-router.tls: true
+    volumes:
+      - seq-data:/data
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_DATABASE: holefeeder
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    expose:
+      - 3306
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - .docker/scripts/mysql-initdb.sh:/docker-entrypoint-initdb.d/mysql-initdb.sh
+    labels:
+      traefik.enable: false
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    expose:
+      - 8080
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.adminer-router.entrypoints: websecure
+      traefik.http.routers.adminer-router.tls: true
+
+  api:
+    container_name: api
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    expose:
+      - 80
+    environment:
+      ASPNETCORE_URLS: http://+
+      AzureAdB2C__ClientId: ${AZUREADB2C_CLIENTID}
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.api-router.entrypoints: websecure
+      traefik.http.routers.api-router.tls: true
+
+  web:
+    container_name: web
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
+      ASPNETCORE_URLS: http://+
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.web-router.entrypoints: websecure
+      traefik.http.routers.web-router.tls: true
+
+networks:
+  default:
+    name: proxy
+
+volumes:
+  mariadb-data:
+  seq-data:

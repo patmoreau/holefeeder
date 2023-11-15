@@ -15,10 +15,11 @@ import {
   ChartData,
   ChartType,
   ChartTypeRegistry,
+  TooltipItem,
 } from 'chart.js';
 import { LoaderComponent } from '@app/shared/components';
 import { filterNullish } from '@app/shared/helpers';
-import DatalabelsPlugin, { Context } from 'chartjs-plugin-datalabels';
+import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { FilterNonNullishPipe } from '@app/shared/pipes';
 
 // noinspection ES6ClassMemberInitializationOrder
@@ -42,10 +43,10 @@ export class StatisticsComponent implements OnInit {
 
   public statistics$!: Observable<Statistics[]>;
 
-  // @ts-ignore
   public chartData$: Observable<
-    ChartData<keyof ChartTypeRegistry, number[], string | string[] | undefined>
-  > = undefined;
+    | ChartData<keyof ChartTypeRegistry, number[], string | string[] | unknown>
+    | undefined
+  > = of(undefined);
   constructor(
     private currencyPipe: CurrencyPipe,
     private statisticsService: StatisticsService
@@ -70,7 +71,7 @@ export class StatisticsComponent implements OnInit {
     );
   }
 
-  footer = (tooltipItems: any) => {
+  footer = (tooltipItems: { parsed: { y: number } }[]) => {
     // const dataset = data.datasets[tooltipItem.datasetIndex];
     // const value = dataset.data[tooltipItem.index];
     // const total = dataset.data.reduce((acc: any, curr: any) => acc + curr, 0);
@@ -78,23 +79,27 @@ export class StatisticsComponent implements OnInit {
     // return `${dataset.label}: ${percentage}%`;
     let sum = 0;
 
-    tooltipItems.forEach(function (tooltipItem: any) {
+    tooltipItems.forEach(function (tooltipItem: { parsed: { y: number } }) {
       sum += tooltipItem.parsed.y;
     });
     return 'Sum: ' + sum;
   };
 
-  label = (context: any) => {
+  label = (tooltipItem: TooltipItem<keyof ChartTypeRegistry>) => {
+    const context = tooltipItem as {
+      dataset: { data: number[] };
+      dataIndex: number;
+    };
     const value = context.dataset.data[context.dataIndex] as number;
     const total: number = context.dataset.data.reduce(
-      (acc: any, curr: any) => acc + curr,
+      (acc: number, curr: number) => acc + curr,
       0
     ) as number;
     const percentage = ((value / total) * 100).toFixed(2);
     return `${this.currencyPipe.transform(value)} (${percentage}%)`;
   };
 
-  formatter = (value: any, ctx: Context) => {
+  formatter = (value: string | number) => {
     return this.currencyPipe.transform(value);
   };
 
@@ -120,9 +125,9 @@ export class StatisticsComponent implements OnInit {
 
   public getChartData(
     data: {
-      labels: string[];
-      data: number[];
-      colors: string[];
+      labels?: string[];
+      data?: number[];
+      colors?: string[];
     } | null
   ): ChartData<'pie', number[], string | string[]> {
     console.log(data);
@@ -151,14 +156,4 @@ export class StatisticsComponent implements OnInit {
   };
   public pieChartType: ChartType = 'pie';
   public pieChartPlugins = [DatalabelsPlugin];
-
-  // events
-  public chartClicked(e: any): void {
-    console.log(e);
-    console.log(this.chartData.datasets[e.active[0].datasetIndex]);
-  }
-
-  public chartHovered(e: any): void {
-    console.log(e);
-  }
 }

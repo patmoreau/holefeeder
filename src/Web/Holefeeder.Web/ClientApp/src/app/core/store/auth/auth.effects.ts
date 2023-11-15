@@ -4,7 +4,7 @@ import { from, map, of, tap } from 'rxjs';
 import { AuthActions } from './auth.actions';
 import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './auth.service';
 
 export const checkAuth = createEffect(
   (actions$ = inject(Actions), authService = inject(AuthService)) =>
@@ -33,8 +33,8 @@ export const checkAuthComplete = createEffect(
           return of(AuthActions.logoutComplete());
         }
         return authService.userData.pipe(
-          map(profile =>
-            AuthActions.loginComplete({ profile, isAuthenticated })
+          switchMap(profile =>
+            of(AuthActions.loginComplete({ profile, isAuthenticated }))
           )
         );
       })
