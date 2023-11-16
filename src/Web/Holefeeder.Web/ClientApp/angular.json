@@ -40,7 +40,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/silent-renew.html"
+              "src/silent-renew.html",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/scss/styles.scss",
@@ -50,7 +51,9 @@
             "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -115,7 +118,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/scss/styles.scss"
