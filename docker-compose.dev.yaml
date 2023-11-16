@@ -34,7 +34,7 @@ services:
       ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=root;Password=${MARIADB_ROOT_PASSWORD};Database=budgeting_dev;
       Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
     labels:
-      traefik.http.routers.api-router.rule: 'Host(`holefeeder.localtest.me`) && (PathPrefix(`/api`) || PathPrefix(`/swagger`))'
+      traefik.http.routers.api-router.rule: 'Host(`holefeeder.localtest.me`) && (PathPrefix(`/gateway`) || PathPrefix(`/swagger`))'
 
   web:
     build:

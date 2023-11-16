@@ -31,6 +31,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/platform-server": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@angular/service-worker": "^16.2.0",
     "@ng-bootstrap/ng-bootstrap": "^15.1.1",
     "@ngrx/effects": "^16.2.0",
     "@ngrx/entity": "^16.2.0",

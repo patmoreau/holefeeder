@@ -89,6 +89,8 @@ services:
       traefik.docker.network: proxy
       traefik.http.routers.api-router.entrypoints: websecure
       traefik.http.routers.api-router.tls: true
+      traefik.http.routers.api-router.middlewares: gateway-remover
+      traefik.http.middlewares.gateway-remover.stripprefix.prefixes: /gateway
 
   web:
     container_name: web
