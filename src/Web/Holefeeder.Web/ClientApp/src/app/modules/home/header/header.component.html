@@ -19,7 +19,6 @@
         id="offcanvasNavbar"
         tabindex="-1">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
           <button
             aria-label="Close"
             class="btn-close text-reset"
@@ -31,6 +30,7 @@
             <li class="nav-item">
               <a
                 [routerLink]="['/dashboard']"
+                data-bs-dismiss="offcanvas"
                 class="nav-link"
                 routerLinkActive="active">
                 <em class="bi bi-speedometer2"></em>&nbsp;Dashboard
@@ -39,6 +39,7 @@
             <li class="nav-item">
               <a
                 [routerLink]="['/accounts']"
+                data-bs-dismiss="offcanvas"
                 class="nav-link"
                 routerLinkActive="active">
                 <em class="bi bi-wallet2"></em>&nbsp;Accounts
@@ -47,6 +48,7 @@
             <li class="nav-item">
               <a
                 [routerLink]="['/cashflows']"
+                data-bs-dismiss="offcanvas"
                 class="nav-link"
                 routerLinkActive="active">
                 <em class="bi bi-cash-coin"></em>&nbsp;Cashflows
@@ -55,6 +57,7 @@
             <li class="nav-item">
               <a
                 [routerLink]="['/statistics']"
+                data-bs-dismiss="offcanvas"
                 class="nav-link"
                 routerLinkActive="active">
                 <em class="bi bi-graph-up"></em>&nbsp;Statistics
@@ -66,6 +69,7 @@
               <ng-container *ngIf="period$ | async as period">
                 <button
                   (click)="open(datePicker, period)"
+                  data-bs-dismiss="offcanvas"
                   class="btn btn-outline-secondary"
                   type="button">
                   <em class="bi bi-calendar-range"></em>&nbsp;{{
@@ -91,13 +95,16 @@
                 aria-labelledby="offcanvasNavbarDropdown"
                 class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a [routerLink]="['/settings']" class="dropdown-item"
+                  <a [routerLink]="['/settings']"
+                     data-bs-dismiss="offcanvas"
+                     class="dropdown-item"
                     ><em class="bi bi-gear"></em>&nbsp;Settings</a
                   >
                 </li>
                 <li>
                   <a
                     [routerLink]="['/hc-ui']"
+                    data-bs-dismiss="offcanvas"
                     class="dropdown-item"
                     target="_blank"
                     ><em class="bi bi-file-medical"></em>&nbsp;Health Checks</a
@@ -107,7 +114,10 @@
                   <hr class="dropdown-divider" />
                 </li>
                 <li>
-                  <a (click)="logout()" (keydown.enter)="logout()" role="button" tabindex="0" class="dropdown-item">
+                  <a (click)="logout()"
+                     data-bs-dismiss="offcanvas"
+                     (keydown.enter)="logout()"
+                     role="button" tabindex="0" class="dropdown-item">
                     <em class="bi bi-box-arrow-left"></em>&nbsp;Log out
                   </a>
                 </li>
