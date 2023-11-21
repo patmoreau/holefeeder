@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authenticationGuard } from '@app/core/auth/authorization.guard';
+import { UnauthorizedComponent } from '@app/modules/home/unauthorized/unauthorized.component';
 
 export const HOME_ROUTES: Routes = [
   {
@@ -35,6 +37,14 @@ export const HOME_ROUTES: Routes = [
         path: 'transactions',
         loadChildren: () =>
           import('../transactions/routes').then(m => m.TRANSACTIONS_ROUTES),
+      },
+      {
+        path: 'unauthorized',
+        loadComponent: () =>
+          import('./unauthorized/unauthorized.component').then(
+            m => m.UnauthorizedComponent
+          ),
+        pathMatch: 'full',
       },
     ],
   },

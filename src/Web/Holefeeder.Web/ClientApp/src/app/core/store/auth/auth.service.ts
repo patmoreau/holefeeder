@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
   AuthenticatedResult,
@@ -11,12 +11,19 @@ import { User } from '@app/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private oidcSecurityService: OidcSecurityService) {}
+  private isAuthenticatedFlag = false;
 
-  get isLoggedIn(): Observable<boolean> {
-    return this.oidcSecurityService.isAuthenticated$.pipe(
-      map((result: AuthenticatedResult) => result.isAuthenticated)
-    );
+  private oidcSecurityService = inject(OidcSecurityService);
+  constructor() {
+    this.oidcSecurityService.isAuthenticated$
+      .pipe(map((result: AuthenticatedResult) => result.isAuthenticated))
+      .subscribe(isAuthenticated => {
+        this.isAuthenticatedFlag = isAuthenticated;
+      });
+  }
+
+  get isAuthenticated(): boolean {
+    return this.isAuthenticatedFlag;
   }
 
   get token() {

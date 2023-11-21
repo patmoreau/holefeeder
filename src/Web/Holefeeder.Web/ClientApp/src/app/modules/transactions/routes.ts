@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { UpcomingResolverService } from '@app/core/resolvers';
-import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
+import { authenticationGuard } from "@app/core/auth/authorization.guard";
 
 export const TRANSACTIONS_ROUTES: Routes = [
   {
@@ -9,7 +9,7 @@ export const TRANSACTIONS_ROUTES: Routes = [
       import('./pay-cashflow/pay-cashflow.component').then(
         m => m.PayCashflowComponent
       ),
-    canActivate: [AutoLoginAllRoutesGuard],
+    canActivate: [authenticationGuard],
     resolve: {
       cashflow: UpcomingResolverService,
     },
@@ -20,7 +20,7 @@ export const TRANSACTIONS_ROUTES: Routes = [
       import('./make-purchase/make-purchase.component').then(
         m => m.MakePurchaseComponent
       ),
-    canActivate: [AutoLoginAllRoutesGuard],
+    canActivate: [authenticationGuard],
   },
   {
     path: 'make-purchase/:accountId',
@@ -28,7 +28,7 @@ export const TRANSACTIONS_ROUTES: Routes = [
       import('./make-purchase/make-purchase.component').then(
         m => m.MakePurchaseComponent
       ),
-    canActivate: [AutoLoginAllRoutesGuard],
+    canActivate: [authenticationGuard],
   },
   {
     path: ':transactionId',
@@ -36,6 +36,6 @@ export const TRANSACTIONS_ROUTES: Routes = [
       import('./modify-transaction/modify-transaction.component').then(
         m => m.ModifyTransactionComponent
       ),
-    canActivate: [AutoLoginAllRoutesGuard],
+    canActivate: [authenticationGuard],
   },
 ];
