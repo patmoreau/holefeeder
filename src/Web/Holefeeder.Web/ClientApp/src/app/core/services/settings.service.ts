@@ -27,7 +27,8 @@ import { StateService } from './state.service';
 import { AppState } from '@app/core/store';
 import { Store } from '@ngrx/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
-import { filterTrue } from '@app/shared/helpers';
+import { filterTrue, tapTrace } from '@app/shared/helpers';
+import { LoggerService } from '@app/core/logger';
 
 const apiRoute = 'api/v2/store-items';
 
@@ -51,6 +52,7 @@ export class SettingsService extends StateService<SettingsState> {
   period$: Observable<DateInterval> = this.select(state => state.period);
 
   private readonly store = inject(Store<AppState>);
+  private readonly logger = inject(LoggerService);
 
   constructor(
     private http: HttpClient,
@@ -64,7 +66,8 @@ export class SettingsService extends StateService<SettingsState> {
       .select(AuthFeature.selectIsAuthenticated)
       .pipe(
         filterTrue(),
-        switchMap(() => this.getStoreItem(storeItemCode))
+        switchMap(() => this.getStoreItem(storeItemCode)),
+        tapTrace(this.logger, 'SettingsService.getStoreItem')
       )
       .subscribe(item => {
         const settings = this.adapter.adapt(item);
@@ -214,8 +217,13 @@ export class SettingsService extends StateService<SettingsState> {
 
   private getStoreItem(code: string): Observable<StoreItem> {
     return this.http
-      .get<storeItemType>(`${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`)
-      .pipe(map(item => this.storeItemAdapter.adapt(item)));
+      .get<ReadonlyArray<storeItemType>>(
+        `${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`
+      )
+      .pipe(
+        filter(items => items.length > 0),
+        map(items => this.storeItemAdapter.adapt(items[0]))
+      );
   }
 
   private saveStoreItem(item: StoreItem): Observable<StoreItem> {

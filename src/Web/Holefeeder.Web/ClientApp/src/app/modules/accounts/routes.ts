@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
+import { authenticationGuard } from "@app/core/auth/authorization.guard";
 
 export const ACCOUNTS_ROUTES: Routes = [
   {
@@ -13,7 +13,7 @@ export const ACCOUNTS_ROUTES: Routes = [
           import('./accounts-list/accounts-list.component').then(
             m => m.AccountsListComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
         runGuardsAndResolvers: 'always',
         pathMatch: 'full',
       },
@@ -23,7 +23,7 @@ export const ACCOUNTS_ROUTES: Routes = [
           import('./open-account/open-account.component').then(
             m => m.OpenAccountComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
       },
       {
         path: ':accountId/edit',
@@ -31,7 +31,7 @@ export const ACCOUNTS_ROUTES: Routes = [
           import('./modify-account/modify-account.component').then(
             m => m.ModifyAccountComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
       },
       {
         path: ':accountId',
@@ -39,7 +39,7 @@ export const ACCOUNTS_ROUTES: Routes = [
           import('./account-details/account-details.component').then(
             m => m.AccountDetailsComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
         children: [
           { path: '', redirectTo: 'upcoming', pathMatch: 'full' },
           {
@@ -48,7 +48,7 @@ export const ACCOUNTS_ROUTES: Routes = [
               import('./account-upcoming/account-upcoming.component').then(
                 m => m.AccountUpcomingComponent
               ),
-            canActivate: [AutoLoginAllRoutesGuard],
+            canActivate: [authenticationGuard],
           },
           {
             path: 'transactions',
@@ -56,7 +56,7 @@ export const ACCOUNTS_ROUTES: Routes = [
               import(
                 './account-transactions/account-transactions.component'
               ).then(m => m.AccountTransactionsComponent),
-            canActivate: [AutoLoginAllRoutesGuard],
+            canActivate: [authenticationGuard],
           },
         ],
       },

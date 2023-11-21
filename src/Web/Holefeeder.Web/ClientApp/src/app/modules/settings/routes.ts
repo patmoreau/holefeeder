@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
+import { authenticationGuard } from "@app/core/auth/authorization.guard";
 
 export const SETTINGS_ROUTES: Routes = [
   { path: '', redirectTo: '/settings/account', pathMatch: 'full' },
@@ -7,19 +7,19 @@ export const SETTINGS_ROUTES: Routes = [
     path: '',
     loadComponent: () =>
       import('./settings.component').then(m => m.SettingsComponent),
-    canActivate: [AutoLoginAllRoutesGuard],
+    canActivate: [authenticationGuard],
     children: [
       {
         path: 'account',
         loadComponent: () =>
           import('./account/account.component').then(m => m.AccountComponent),
-        canActivateChild: [AutoLoginAllRoutesGuard],
+        canActivateChild: [authenticationGuard],
       },
       {
         path: 'general',
         loadComponent: () =>
           import('./general/general.component').then(m => m.GeneralComponent),
-        canActivateChild: [AutoLoginAllRoutesGuard],
+        canActivateChild: [authenticationGuard],
       },
     ],
   },

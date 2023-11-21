@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
+import { authenticationGuard } from "@app/core/auth/authorization.guard";
 
 export const CASHFLOWS_ROUTES: Routes = [
   {
@@ -13,7 +13,7 @@ export const CASHFLOWS_ROUTES: Routes = [
           import('./cashflows-list/cashflows-list.component').then(
             m => m.CashflowsListComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
         runGuardsAndResolvers: 'always',
         pathMatch: 'full',
       },
@@ -23,7 +23,7 @@ export const CASHFLOWS_ROUTES: Routes = [
           import('./modify-cashflow/modify-cashflow.component').then(
             m => m.ModifyCashflowComponent
           ),
-        canActivate: [AutoLoginAllRoutesGuard],
+        canActivate: [authenticationGuard],
       },
     ],
   },
