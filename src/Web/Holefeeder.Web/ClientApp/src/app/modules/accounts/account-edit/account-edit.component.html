@@ -12,8 +12,12 @@
   </div>
   <div class="form-group">
     <label for="openBalance">Opening balance</label>
-    <input class="form-control" formControlName="openBalance" id="openBalance" placeholder="amount..." required
-           type="number" />
+    <app-decimal-input
+      [control]="openBalance"
+      id="openBalance"
+      placeholder="amount..."
+      [required]="true"
+    ></app-decimal-input>
   </div>
   <app-date-picker [required]="true" formControlName="openDate" label="Opening date"></app-date-picker>
   <div class="form-group">

@@ -1,12 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
+  FormControl,
   FormGroup,
   FormGroupDirective,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { AccountsService } from '@app/core/services';
-import { DatePickerComponent } from '@app/shared/components';
+import {
+  DatePickerComponent,
+  DecimalInputComponent,
+} from '@app/shared/components';
 import { AutofocusDirective } from '@app/shared/directives';
 import { AccountInfo } from '@app/shared/models';
 import { Observable } from 'rxjs';
@@ -21,6 +25,7 @@ import { Observable } from 'rxjs';
     ReactiveFormsModule,
     DatePickerComponent,
     AutofocusDirective,
+    DecimalInputComponent,
   ],
 })
 export class TransferComponent implements OnInit {
@@ -37,5 +42,9 @@ export class TransferComponent implements OnInit {
     this.form = this.rootFormGroup.control;
 
     this.values$ = this.accountsService.activeAccounts$;
+  }
+
+  get amount(): FormControl {
+    return this.form.get('amount') as FormControl;
   }
 }

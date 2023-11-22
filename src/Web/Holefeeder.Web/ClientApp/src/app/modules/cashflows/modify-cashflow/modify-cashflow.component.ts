@@ -9,6 +9,7 @@ import {
 import {
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
@@ -22,6 +23,7 @@ import {
 } from '@app/core/services';
 import {
   DatePickerComponent,
+  DecimalInputComponent,
   LoaderComponent,
   TagsInputComponent,
 } from '@app/shared/components';
@@ -52,6 +54,7 @@ const cashflowIdParamName = 'cashflowId';
     AutofocusDirective,
     DatePickerComponent,
     LoaderComponent,
+    DecimalInputComponent,
   ],
 })
 export class ModifyCashflowComponent implements OnInit {
@@ -87,6 +90,10 @@ export class ModifyCashflowComponent implements OnInit {
     private adapter: ModifyCashflowCommandAdapter,
     private modalService: ModalService
   ) {}
+
+  get amount(): FormControl {
+    return this.form.get('amount') as FormControl;
+  }
 
   get tags(): FormArray {
     return this.form.get('tags') as FormArray;

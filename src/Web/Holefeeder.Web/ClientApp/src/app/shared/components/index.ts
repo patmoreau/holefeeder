@@ -1,5 +1,6 @@
 export * from './date-picker/date-picker.component';
 export * from './date-view/date-view.component';
+export * from './decimal-input/decimal-input.component';
 export * from './error-notfound/error-notfound.component';
 export * from './loader/loader.component';
 export * from './modals/confirm-dialog/confirm-dialog.component';

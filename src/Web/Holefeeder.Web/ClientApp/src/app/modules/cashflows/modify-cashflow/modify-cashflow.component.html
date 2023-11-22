@@ -11,8 +11,12 @@
             <div [formGroup]="form" class="container mt-2">
               <div class="form-group">
                 <label for="amount">Amount</label>
-                <input appAutofocus class="form-control" formControlName="amount" id="amount"
-                       placeholder="cashflow amount..." required type="number" />
+                <app-decimal-input
+                  [control]="amount"
+                  id="amount"
+                  placeholder="cashflow amount..."
+                  [required]="true"
+                ></app-decimal-input>
               </div>
               <div class="form-group">
                 <label for="category">Category</label>
@@ -41,7 +45,8 @@
               </div>
               <div class="form-group">
                 <label for="frequency">Frequency</label>
-                <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number" />
+                <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"
+                       inputmode="numeric" />
               </div>
               <app-date-picker [required]="true" formControlName="effectiveDate" label="Effective date">
               </app-date-picker>

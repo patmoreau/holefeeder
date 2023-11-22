@@ -2,14 +2,12 @@
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
-      <input
-        appAutofocus
-        class="form-control"
-        formControlName="amount"
+      <app-decimal-input
+        [control]="amount"
         id="amount"
         placeholder="transaction amount..."
-        required
-        type="number" />
+        [required]="true"
+      ></app-decimal-input>
     </div>
     <app-date-picker
       [required]="true"
