@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormArray,
+  FormControl,
   FormGroup,
   FormGroupDirective,
   ReactiveFormsModule,
@@ -9,6 +10,7 @@ import {
 import { AccountsService } from '@app/core/services';
 import {
   DatePickerComponent,
+  DecimalInputComponent,
   TagsInputComponent,
 } from '@app/shared/components';
 import { AutofocusDirective } from '@app/shared/directives';
@@ -28,6 +30,7 @@ import { AppState, CategoriesFeature } from '@app/core/store';
     DatePickerComponent,
     TagsInputComponent,
     AutofocusDirective,
+    DecimalInputComponent,
   ],
 })
 export class TransactionEditComponent implements OnInit {
@@ -43,6 +46,10 @@ export class TransactionEditComponent implements OnInit {
     private rootFormGroup: FormGroupDirective,
     private accountsService: AccountsService
   ) {}
+
+  get amount(): FormControl {
+    return this.form.get('amount') as FormControl;
+  }
 
   get tags(): FormArray {
     return this.form.get('tags') as FormArray;
