@@ -15,7 +15,7 @@
     "mock:server": "json-server mocks/data.json --routes mocks/routes.json --watch -m ./node_modules/json-server-auth",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "test": "ng test",
+    "test": "ng test --watch=true --code-coverage",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "private": true,

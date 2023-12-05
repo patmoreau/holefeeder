@@ -99,4 +99,16 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         FakerRules.RuleFor(f => f.UserId, _ => default);
         return this;
     }
+
+    public TransactionBuilder WithTags(IEnumerable<string> tags)
+    {
+        FakerRules.RuleFor(f => f.Tags, tags);
+        return this;
+    }
+
+    public TransactionBuilder WithNoTags()
+    {
+        FakerRules.RuleFor(f => f.Tags, _ => Array.Empty<string>());
+        return this;
+    }
 }

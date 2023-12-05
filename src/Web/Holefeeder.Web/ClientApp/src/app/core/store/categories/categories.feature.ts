@@ -23,7 +23,7 @@ export const categoryAdapter = createEntityAdapter<Category>({
   sortComparer: sortByFavoriteAndName,
 });
 
-export const initialState: CategoriesState = categoryAdapter.getInitialState({
+export const initialCategoriesState: CategoriesState = categoryAdapter.getInitialState({
   callState: 'init',
   error: '',
 });
@@ -31,7 +31,7 @@ export const initialState: CategoriesState = categoryAdapter.getInitialState({
 export const CategoriesFeature = createFeature({
   name: 'categories',
   reducer: createReducer(
-    initialState,
+    initialCategoriesState,
     on(CategoriesActions.loadCategories, state => ({
       ...state,
       callState: 'loading' as const,

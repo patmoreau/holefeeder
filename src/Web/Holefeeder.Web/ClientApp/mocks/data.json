@@ -2,6 +2,20 @@
   "config": {
     "loggingLevel": "Verbose"
   },
+  "tags": [
+    {
+      "tag": "restaurant",
+      "count": 2166
+    },
+    {
+      "tag": "alcohol",
+      "count": 1234
+    },
+    {
+      "tag": "fees",
+      "count": 156
+    }
+  ],
   "users": [
     {
       "email": "test@drifterapps.tst",

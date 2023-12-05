@@ -4,7 +4,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthActions } from '@app/core/store/auth/auth.actions';
 import { Store } from '@ngrx/store';
-import { AppStore, CategoriesActions } from '@app/core/store';
+import { AppStore, CategoriesActions, TagsActions } from '@app/core/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import {
   SwUpdate,
@@ -59,8 +59,10 @@ export class AppComponent implements OnInit {
       .subscribe(isAuthenticated => {
         if (isAuthenticated) {
           this.store.dispatch(CategoriesActions.loadCategories());
+          this.store.dispatch(TagsActions.loadTags());
         } else {
           this.store.dispatch(CategoriesActions.clearCategories());
+          this.store.dispatch(TagsActions.clearTags());
         }
       });
   }
