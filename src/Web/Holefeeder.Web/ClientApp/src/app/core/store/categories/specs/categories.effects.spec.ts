@@ -51,7 +51,7 @@ describe('Categories Effects', (): void => {
     });
   });
 
-  it('should dispatch failure action when categories fetch failed', done => {
+  it('should dispatch loadCategoriesFailure action when categories fetch failed', done => {
     categoriesServiceMock = {
       fetch: () => throwError(() => new Error('Error message')),
     } as unknown as CategoriesService;

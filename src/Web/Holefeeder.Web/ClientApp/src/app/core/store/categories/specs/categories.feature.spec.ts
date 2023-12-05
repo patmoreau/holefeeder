@@ -4,7 +4,7 @@ import {
   CategoriesFeature,
   CategoriesState,
   categoryAdapter,
-  initialState,
+  initialCategoriesState,
 } from '../categories.feature';
 
 describe('Categories feature', () => {
@@ -13,12 +13,12 @@ describe('Categories feature', () => {
     const action = CategoriesActions.loadCategories();
 
     const expectedState: CategoriesState = {
-      ...initialState,
+      ...initialCategoriesState,
       callState: 'loading',
     };
 
     // act
-    const result = CategoriesFeature.reducer(initialState, action);
+    const result = CategoriesFeature.reducer(initialCategoriesState, action);
 
     // assert
     expect(result).toEqual(expectedState);
@@ -38,13 +38,13 @@ describe('Categories feature', () => {
     const action = CategoriesActions.loadCategoriesSuccess({ categories });
 
     const expectedState: CategoriesState = {
-      ...initialState,
-      ...categoryAdapter.setAll(categories.concat(), initialState),
+      ...initialCategoriesState,
+      ...categoryAdapter.setAll(categories.concat(), initialCategoriesState),
       callState: 'loaded',
     };
 
     // act
-    const result = CategoriesFeature.reducer(initialState, action);
+    const result = CategoriesFeature.reducer(initialCategoriesState, action);
 
     // assert
     expect(result).toEqual(expectedState);
@@ -56,13 +56,13 @@ describe('Categories feature', () => {
     const action = CategoriesActions.loadCategoriesFailure({ error });
 
     const expectedState: CategoriesState = {
-      ...initialState,
+      ...initialCategoriesState,
       error,
       callState: 'loaded',
     };
 
     // act
-    const result = CategoriesFeature.reducer(initialState, action);
+    const result = CategoriesFeature.reducer(initialCategoriesState, action);
 
     // assert
     expect(result).toEqual(expectedState);
@@ -81,14 +81,14 @@ describe('Categories feature', () => {
     const categories = [category];
 
     const state: CategoriesState = {
-      ...initialState,
-      ...categoryAdapter.setAll(categories.concat(), initialState),
+      ...initialCategoriesState,
+      ...categoryAdapter.setAll(categories.concat(), initialCategoriesState),
       callState: 'loaded',
     };
     const action = CategoriesActions.clearCategories();
 
     const expectedState: CategoriesState = {
-      ...initialState,
+      ...initialCategoriesState,
       callState: 'init',
     };
 

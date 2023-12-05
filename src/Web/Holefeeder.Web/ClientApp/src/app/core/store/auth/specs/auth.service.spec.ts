@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import {
   AuthenticatedResult,
   LoginResponse,
@@ -8,19 +8,33 @@ import {
 } from 'angular-auth-oidc-client';
 import { AuthService } from '../auth.service';
 
+const isAuthenticatedResult: AuthenticatedResult = {
+  allConfigsAuthenticated: [],
+  isAuthenticated: true,
+};
+
+const isNotAuthenticatedResult: AuthenticatedResult = {
+  allConfigsAuthenticated: [],
+  isAuthenticated: false,
+};
+
 describe('AuthService', () => {
   let authService: AuthService;
   let oidcSecurityServiceSpy: jasmine.SpyObj<OidcSecurityService>;
+  const authenticatedResult = new Subject<AuthenticatedResult>();
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('OidcSecurityService', [
-      'checkAuth',
-      'authorize',
-      'logoffAndRevokeTokens',
-      'getIdToken',
-      'isAuthenticated$',
-      'userData$',
-    ]);
+    const spy = jasmine.createSpyObj(
+      'OidcSecurityService',
+      [
+        'checkAuth',
+        'authorize',
+        'logoffAndRevokeTokens',
+        'getIdToken',
+        'userData$',
+      ],
+      { isAuthenticated$: authenticatedResult }
+    );
 
     TestBed.configureTestingModule({
       providers: [AuthService, { provide: OidcSecurityService, useValue: spy }],
@@ -36,22 +50,27 @@ describe('AuthService', () => {
     expect(authService).toBeTruthy();
   });
 
-  it('should return true for isLoggedIn when isAuthenticated$', (done: DoneFn) => {
+  it('should return true for isAuthenticated when isAuthenticated$', () => {
     // Arrange
-    const isAuthenticatedResult: AuthenticatedResult = {
-      allConfigsAuthenticated: [],
-      isAuthenticated: true,
-    };
-
-    Object.defineProperty(oidcSecurityServiceSpy, 'isAuthenticated$', {
-      value: of(isAuthenticatedResult), // Change this to the desired initial state
-    });
+    authenticatedResult.next(isAuthenticatedResult);
 
     // Act & Assert
-    authService.isLoggedIn.subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBe(true);
-      done();
-    });
+    expect(authService.isAuthenticated).toBeTruthy();
+  });
+
+  it('should return false for isAuthenticated when not isAuthenticated$', () => {
+    // Arrange
+    authenticatedResult.next(isNotAuthenticatedResult);
+
+    // Act & Assert
+    expect(authService.isAuthenticated).toBeFalsy();
+  });
+
+  it('should return false for isAuthenticated when isAuthenticated$ emits nothing', () => {
+    // Arrange
+
+    // Act & Assert
+    expect(authService.isAuthenticated).toBeFalsy();
   });
 
   it('should return id token for token', () => {
@@ -91,7 +110,7 @@ describe('AuthService', () => {
     });
   });
 
-  it('should return true for checkAuth when isAuthenticated is true', () => {
+  it('should return true for checkAuth when isAuthenticated is true', (done: DoneFn) => {
     // Arrange
     const loginResponse: LoginResponse = {
       accessToken: '',
@@ -104,10 +123,11 @@ describe('AuthService', () => {
     // Act & Assert
     authService.checkAuth().subscribe(result => {
       expect(result).toBe(true);
+      done();
     });
   });
 
-  it('should do login', () => {
+  it('should do login', (done: DoneFn) => {
     // Arrange
     oidcSecurityServiceSpy.authorize.and.returnValue();
 
@@ -115,10 +135,11 @@ describe('AuthService', () => {
     authService.doLogin().subscribe(result => {
       expect(oidcSecurityServiceSpy.authorize).toHaveBeenCalled();
       expect(result).toBeUndefined();
+      done();
     });
   });
 
-  it('should sign out', () => {
+  it('should sign out', (done: DoneFn) => {
     // Arrange
     oidcSecurityServiceSpy.logoffAndRevokeTokens.and.returnValue(of(undefined));
 
@@ -126,6 +147,7 @@ describe('AuthService', () => {
     authService.signOut().subscribe(result => {
       expect(oidcSecurityServiceSpy.logoffAndRevokeTokens).toHaveBeenCalled();
       expect(result).toBeUndefined();
+      done();
     });
   });
 });
