@@ -81,13 +81,13 @@ public class Transfer : ICarterModule
 
             await _context.Transactions.AddAsync(transactionTo, cancellationToken);
 
-            if (errors.Any())
+            if (errors.Count > 0)
             {
                 throw new ValidationException("Transfer error",
                     errors.Select(x => new ValidationFailure(x.Item1, x.Item2)));
             }
 
-            return errors.Any() ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
+            return errors.Count > 0 ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
         }
 
         private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>

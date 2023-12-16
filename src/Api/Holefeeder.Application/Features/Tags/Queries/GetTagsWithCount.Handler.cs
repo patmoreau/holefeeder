@@ -27,7 +27,7 @@ public partial class GetTagsWithCount
                 .ToListAsync(cancellationToken: cancellationToken);
 
             var results = transactions.SelectMany(transaction => transaction.Tags,
-                    (transaction, tag) => new { Tag = tag })
+                    (_, tag) => new { Tag = tag })
                 .GroupBy(x => new { x.Tag })
                 .Select(group => new TagDto(group.Key.Tag, group.Count()))
                 .OrderByDescending(x => x.Count);

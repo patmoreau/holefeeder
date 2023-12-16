@@ -100,7 +100,7 @@ public class ImportData : ICarterModule
 
         private async Task ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
-            if (!request.Data.Accounts.Any())
+            if (request.Data.Accounts.Length == 0)
             {
                 return;
             }
@@ -172,7 +172,7 @@ public class ImportData : ICarterModule
 
         private async Task ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
         {
-            if (!request.Data.Categories.Any())
+            if (request.Data.Categories.Length == 0)
             {
                 return;
             }
@@ -241,7 +241,7 @@ public class ImportData : ICarterModule
 
         private async Task ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
-            if (!request.Data.Cashflows.Any())
+            if (request.Data.Cashflows.Length == 0)
             {
                 return;
             }
@@ -319,7 +319,7 @@ public class ImportData : ICarterModule
 
         private async Task ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
-            if (!request.Data.Transactions.Any())
+            if (request.Data.Transactions.Length == 0)
             {
                 return;
             }
@@ -399,10 +399,10 @@ public class ImportData : ICarterModule
             RuleFor(command => command.Data)
                 .NotNull()
                 .Must(data =>
-                    data.Accounts.Any() ||
-                    data.Categories.Any() ||
-                    data.Cashflows.Any() ||
-                    data.Transactions.Any())
+                    data.Accounts.Length > 0 ||
+                    data.Categories.Length > 0 ||
+                    data.Cashflows.Length > 0 ||
+                    data.Transactions.Length > 0)
                 .WithMessage("must contain at least 1 array of accounts|categories|cashflows|transactions");
     }
 

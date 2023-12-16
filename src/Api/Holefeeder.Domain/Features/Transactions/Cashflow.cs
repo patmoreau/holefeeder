@@ -126,7 +126,7 @@ public record Cashflow : IAggregateRoot
 
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 
-    public DateOnly? LastPaidDate => Transactions.Any() ? Transactions.Max(x => x.Date) : null;
+    public DateOnly? LastPaidDate => Transactions.Count > 0 ? Transactions.Max(x => x.Date) : null;
 
     public DateOnly? LastCashflowDate => Transactions.Max(x => x.CashflowDate);
 

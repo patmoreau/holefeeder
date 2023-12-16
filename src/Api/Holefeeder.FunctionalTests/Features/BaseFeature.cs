@@ -18,13 +18,7 @@ public class BaseFeature : FeatureFixture
     protected BaseFeature(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(testOutputHelper)
     {
-        if (apiApplicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(apiApplicationDriver));
-        }
-
-        // Scope = apiApplicationDriver.Services.CreateScope();
-
+        ArgumentNullException.ThrowIfNull(apiApplicationDriver);
         HttpClientDriver = apiApplicationDriver.CreateHttpClientDriver(testOutputHelper);
     }
 

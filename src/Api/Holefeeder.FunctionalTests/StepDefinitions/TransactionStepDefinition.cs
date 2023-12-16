@@ -14,10 +14,7 @@ public class TransactionStepDefinition : StepDefinition
 
     internal async Task MakesPurchase(MakePurchase.Request request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.MakePurchase, json);
@@ -25,10 +22,7 @@ public class TransactionStepDefinition : StepDefinition
 
     internal async Task PayACashflow(PayCashflow.Request request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         string json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.PayCashflow, json);

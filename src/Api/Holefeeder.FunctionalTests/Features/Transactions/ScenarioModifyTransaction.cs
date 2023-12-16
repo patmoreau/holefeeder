@@ -21,10 +21,6 @@ public class ScenarioModifyTransaction : HolefeederScenario
     public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
         : base(applicationDriver, testOutputHelper)
     {
-        if (applicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(applicationDriver));
-        }
     }
 
     [Fact]

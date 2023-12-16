@@ -19,10 +19,6 @@ public sealed class ScenarioPayCashflow : HolefeederScenario
     public ScenarioPayCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
         : base(applicationDriver, testOutputHelper)
     {
-        if (applicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(applicationDriver));
-        }
     }
 
     [Fact]

@@ -5,5 +5,5 @@ namespace Holefeeder.Application.Features.Tags.Queries;
 
 public partial class GetTagsWithCount
 {
-    internal partial record Request() : IRequest<IEnumerable<TagDto>>;
+    internal record Request : IRequest<IEnumerable<TagDto>>;
 }
