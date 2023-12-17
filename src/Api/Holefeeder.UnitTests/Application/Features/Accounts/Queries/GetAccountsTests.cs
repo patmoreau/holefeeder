@@ -11,7 +11,8 @@ public class GetAccountsTests
 
     public GetAccountsTests() =>
         _faker = new Faker<Request>()
-            .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(), Array.Empty<string>()))
+            .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
+                Array.Empty<string>()))
             .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
             .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1))
             .RuleFor(fake => fake.Sort, Array.Empty<string>())
@@ -30,7 +31,9 @@ public class GetAccountsTests
         Request? result = await Request.BindAsync(httpContext, null!);
 
         // assert
-        result.Should().BeEquivalentTo(new Request(10, 100, new[] { "data" }, new[] { "code:eq:settings" }));
+        string[] sort = new[] { "data" };
+        string[] filter = new[] { "code:eq:settings" };
+        result.Should().BeEquivalentTo(new Request(10, 100, sort, filter));
     }
 
     [Fact]

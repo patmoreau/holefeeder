@@ -1,7 +1,5 @@
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
-using CreateRequest = Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem.Request;
-using ModifyRequest = Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem.Request;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 

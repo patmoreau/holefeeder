@@ -57,8 +57,8 @@ public static class CustomErrorHandler
     }
 
     private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details) =>
-        new ProblemDetails { Status = statusCode, Title = title, Detail = details };
+        new() { Status = statusCode, Title = title, Detail = details };
 
-    private static ProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors) =>
-        new ValidationProblemDetails(errors) { Status = StatusCodes.Status422UnprocessableEntity };
+    private static ValidationProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors) =>
+        new(errors) { Status = StatusCodes.Status422UnprocessableEntity };
 }

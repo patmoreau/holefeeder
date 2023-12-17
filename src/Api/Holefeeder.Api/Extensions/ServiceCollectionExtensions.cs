@@ -76,7 +76,7 @@ internal static class ServiceCollectionExtensions
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
                         },
                         new List<string>()
                     }
@@ -88,13 +88,16 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
+    static readonly string[] serviceTags = new[] { "holefeeder", "api", "service" };
+    static readonly string[] databaseTags = new[] { "holefeeder", "api", "mysql" };
+
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddHealthChecks()
-            .AddCheck("api", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "api", "service" })
+            .AddCheck("api", () => HealthCheckResult.Healthy(), serviceTags)
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
-                name: "budgeting-db-check", tags: new[] { "holefeeder", "api", "mysql" });
+                name: "budgeting-db-check", tags: databaseTags);
 
         return services;
     }

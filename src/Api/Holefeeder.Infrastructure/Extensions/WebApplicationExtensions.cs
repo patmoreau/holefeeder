@@ -24,10 +24,7 @@ public static class WebApplicationExtensions
 
     public static IApplicationBuilder MigrateDb(this IApplicationBuilder app)
     {
-        if (app is null)
-        {
-            throw new ArgumentNullException(nameof(app));
-        }
+        ArgumentNullException.ThrowIfNull(app);
 
         using IServiceScope scope = app.ApplicationServices.CreateScope();
 

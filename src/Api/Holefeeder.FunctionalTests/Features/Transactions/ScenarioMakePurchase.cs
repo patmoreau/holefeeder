@@ -16,10 +16,6 @@ public sealed class ScenarioMakePurchase : HolefeederScenario
     public ScenarioMakePurchase(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
         : base(applicationDriver, testOutputHelper)
     {
-        if (applicationDriver == null)
-        {
-            throw new ArgumentNullException(nameof(applicationDriver));
-        }
     }
 
     [Fact]

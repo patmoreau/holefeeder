@@ -34,7 +34,7 @@ internal static class AccountMapper
             entity.Transactions.Count,
             entity.OpenBalance +
             entity.Transactions.Sum(x => x.Amount * x.Category?.Type.Multiplier * entity.Type.Multiplier ?? 0),
-            entity.Transactions.Any() ? entity.Transactions.Max(x => x.Date) : entity.OpenDate,
+            entity.Transactions.Count > 0 ? entity.Transactions.Max(x => x.Date) : entity.OpenDate,
             entity.Description,
             entity.Favorite,
             entity.Inactive);

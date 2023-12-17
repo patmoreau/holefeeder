@@ -40,8 +40,8 @@ builder.Services
 builder.Services
     .AddCarter(configurator: configurator => configurator.WithEmptyValidators());
 
-builder.Services.AddHealthChecks()
-    .AddCheck("web", () => HealthCheckResult.Healthy(), new[] { "holefeeder", "web", "service" });
+var tags = new[] { "holefeeder", "web", "service" };
+builder.Services.AddHealthChecks().AddCheck("web", () => HealthCheckResult.Healthy(), tags);
 
 builder.Services.AddAuthorization(options =>
 {

@@ -421,10 +421,7 @@ public class DateIntervalTypeTests
     public void NextDate_ValidDateOnly_NewDateOnly(DateOnly originalDate, DateOnly effectiveDate,
         DateIntervalType intervalType, int frequency, DateOnly expected)
     {
-        if (intervalType is null)
-        {
-            throw new ArgumentNullException(nameof(intervalType));
-        }
+        ArgumentNullException.ThrowIfNull(intervalType);
 
         intervalType.NextDate(originalDate, effectiveDate, frequency).Should().Be(expected);
     }
@@ -434,10 +431,7 @@ public class DateIntervalTypeTests
     public void PreviousDate_ValidDateOnly_NewDateOnly(DateOnly originalDate, DateOnly effectiveDate,
         DateIntervalType intervalType, int frequency, DateOnly expected)
     {
-        if (intervalType is null)
-        {
-            throw new ArgumentNullException(nameof(intervalType));
-        }
+        ArgumentNullException.ThrowIfNull(intervalType);
 
         intervalType.PreviousDate(originalDate, effectiveDate, frequency).Should().Be(expected);
     }
@@ -447,10 +441,7 @@ public class DateIntervalTypeTests
     public void TestInterval(DateOnly originalDate, DateOnly effectiveDate, DateIntervalType intervalType,
         int frequency, (DateOnly From, DateOnly To) expected)
     {
-        if (intervalType is null)
-        {
-            throw new ArgumentNullException(nameof(intervalType));
-        }
+        ArgumentNullException.ThrowIfNull(intervalType);
 
         intervalType.Interval(originalDate, effectiveDate, frequency).Should().BeEquivalentTo(expected);
     }
@@ -460,10 +451,7 @@ public class DateIntervalTypeTests
     public void GivenDatesInRange_WhenValidDateOnly_ThenListOfDatesInRange(DateIntervalType intervalType,
         int frequency, DateOnly effective, DateOnly from, DateOnly to, DateOnly[] expected)
     {
-        if (intervalType is null)
-        {
-            throw new ArgumentNullException(nameof(intervalType));
-        }
+        ArgumentNullException.ThrowIfNull(intervalType);
 
         intervalType.DatesInRange(effective, from, to, frequency).Should().Equal(expected);
     }

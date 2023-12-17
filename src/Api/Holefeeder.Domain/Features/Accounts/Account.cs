@@ -98,7 +98,7 @@ public sealed record Account : IAggregateRoot
             throw new AccountDomainException("Account already closed");
         }
 
-        if (Cashflows.Any())
+        if (Cashflows.Count > 0)
         {
             throw new AccountDomainException("Account has active cashflows");
         }
@@ -109,5 +109,5 @@ public sealed record Account : IAggregateRoot
     public decimal CalculateBalance() =>
         OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
 
-    public DateOnly CalculateLastTransactionDate() => Transactions.Any() ? Transactions.Max(t => t.Date) : OpenDate;
+    public DateOnly CalculateLastTransactionDate() => Transactions.Count > 0 ? Transactions.Max(t => t.Date) : OpenDate;
 }
