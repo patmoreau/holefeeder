@@ -41,7 +41,9 @@ public class GetStoreItemsTests
         Request? result = await Request.BindAsync(httpContext, null!);
 
         // assert
-        result.Should().BeEquivalentTo(new Request(10, 100, new[] { "data" }, new[] { "code:eq:settings" }));
+        string[] sort = new[] { "data" };
+        string[] filter = new[] { "code:eq:settings" };
+        result.Should().BeEquivalentTo(new Request(10, 100, sort, filter));
     }
 
     [Fact]
