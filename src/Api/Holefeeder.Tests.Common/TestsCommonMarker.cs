@@ -6,6 +6,4 @@ using System.Runtime.CompilerServices;
 
 namespace Holefeeder.Tests.Common;
 
-public sealed class TestsCommonMarker
-{
-}
+public sealed class TestsCommonMarker;

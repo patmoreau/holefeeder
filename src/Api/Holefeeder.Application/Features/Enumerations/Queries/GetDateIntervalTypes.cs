@@ -20,9 +20,7 @@ public class GetDateIntervalTypes : ICarterModule
 
     internal record Request : IRequest<IReadOnlyCollection<DateIntervalType>>;
 
-    internal class Validator : AbstractValidator<Request>
-    {
-    }
+    internal class Validator : AbstractValidator<Request>;
 
     internal class Handler : IRequestHandler<Request, IReadOnlyCollection<DateIntervalType>>
     {

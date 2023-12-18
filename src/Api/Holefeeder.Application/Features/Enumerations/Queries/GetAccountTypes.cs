@@ -20,9 +20,7 @@ public class GetAccountTypes : ICarterModule
 
     internal record Request : IRequest<IReadOnlyCollection<AccountType>>;
 
-    internal class Validator : AbstractValidator<Request>
-    {
-    }
+    internal class Validator : AbstractValidator<Request>;
 
     internal class Handler : IRequestHandler<Request, IReadOnlyCollection<AccountType>>
     {

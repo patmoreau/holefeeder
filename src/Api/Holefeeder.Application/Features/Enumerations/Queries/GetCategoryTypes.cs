@@ -20,9 +20,7 @@ public class GetCategoryTypes : ICarterModule
 
     internal record Request : IRequest<IReadOnlyCollection<CategoryType>>;
 
-    internal class Validator : AbstractValidator<Request>
-    {
-    }
+    internal class Validator : AbstractValidator<Request>;
 
     internal class Handler : IRequestHandler<Request, IReadOnlyCollection<CategoryType>>
     {

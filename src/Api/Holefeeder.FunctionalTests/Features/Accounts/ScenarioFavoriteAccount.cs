@@ -12,6 +12,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBui
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioFavoriteAccount : HolefeederScenario
 {
     public ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

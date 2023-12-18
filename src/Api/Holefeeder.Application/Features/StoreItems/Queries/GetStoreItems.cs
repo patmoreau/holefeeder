@@ -16,7 +16,7 @@ public class GetStoreItems : ICarterModule
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
                     QueryResult<Response> results = await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Add("X-Total-Count", $"{results.Total}");
+                    ctx.Response.Headers.Append("X-Total-Count", $"{results.Total}");
                     return Results.Ok(results.Items);
                 })
             .Produces<QueryResult<Response>>()
@@ -37,9 +37,7 @@ public class GetStoreItems : ICarterModule
 
     internal record Response(Guid Id, string Code, string Data);
 
-    internal class Validator : QueryValidatorRoot<Request>
-    {
-    }
+    internal class Validator : QueryValidatorRoot<Request>;
 
     internal class Handler : IRequestHandler<Request, QueryResult<Response>>
     {

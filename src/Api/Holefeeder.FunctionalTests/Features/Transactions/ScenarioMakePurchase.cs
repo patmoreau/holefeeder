@@ -11,6 +11,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.MakePurchaseRequestBu
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
+[Collection("Api collection")]
 public sealed class ScenarioMakePurchase : HolefeederScenario
 {
     public ScenarioMakePurchase(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

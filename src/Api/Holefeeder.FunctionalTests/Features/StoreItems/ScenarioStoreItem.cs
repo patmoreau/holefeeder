@@ -4,6 +4,7 @@ using Holefeeder.FunctionalTests.StepDefinitions;
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioStoreItem : HolefeederScenario
 {
     private readonly StoreItemStepDefinition _storeItem;

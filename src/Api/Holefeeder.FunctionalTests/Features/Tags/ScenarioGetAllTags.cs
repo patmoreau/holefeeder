@@ -11,6 +11,7 @@ using Holefeeder.Tests.Common.Builders.Transactions;
 namespace Holefeeder.FunctionalTests.Features.Tags;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetAllTags : HolefeederScenario
 {
     private readonly Guid _userId = UserStepDefinition.HolefeederUserId;

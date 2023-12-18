@@ -12,6 +12,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuild
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioModifyAccount : HolefeederScenario
 {
     public ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

@@ -35,7 +35,7 @@ public class OpenAccountTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public async Task GivenValidator_WhenNameIsInvalid_ThenError(string name)
+    public async Task GivenValidator_WhenNameIsInvalid_ThenError(string? name)
     {
         // arrange
         Request? request = _faker.RuleFor(x => x.Name, _ => name).Generate();

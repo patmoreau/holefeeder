@@ -6,6 +6,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetAccountTypes : HolefeederScenario
 {
     public ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

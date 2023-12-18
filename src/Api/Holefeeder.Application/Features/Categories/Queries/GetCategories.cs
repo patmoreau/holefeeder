@@ -17,7 +17,7 @@ public class GetCategories : ICarterModule
                 {
                     (int total, IEnumerable<CategoryViewModel> viewModels) =
                         await mediator.Send(new Request(), cancellationToken);
-                    ctx.Response.Headers.Add("X-Total-Count", $"{total}");
+                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
             .Produces<IEnumerable<CategoryViewModel>>()
@@ -27,9 +27,7 @@ public class GetCategories : ICarterModule
             .WithName(nameof(GetCategories))
             .RequireAuthorization();
 
-    internal class Validator : AbstractValidator<Request>
-    {
-    }
+    internal class Validator : AbstractValidator<Request>;
 
     internal record Request : IRequest<QueryResult<CategoryViewModel>>;
 

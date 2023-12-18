@@ -6,6 +6,7 @@ using Holefeeder.FunctionalTests.Infrastructure;
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetDateIntervalTypes : HolefeederScenario
 {
     public ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

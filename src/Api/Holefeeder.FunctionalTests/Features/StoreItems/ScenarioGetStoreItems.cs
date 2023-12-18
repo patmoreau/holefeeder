@@ -8,6 +8,7 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetStoreItems : HolefeederScenario
 {
     public ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
