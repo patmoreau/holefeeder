@@ -16,6 +16,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioModifyTransaction : HolefeederScenario
 {
     public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

@@ -26,12 +26,12 @@ public class StoreItemTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData(" ")]
-    public void GivenStoreItem_WhenCodeIsNull_ThenThrowException(string code)
+    public void GivenStoreItem_WhenCodeIsNull_ThenThrowException(string? code)
     {
         // arrange
 
         // act
-        Action action = () => _ = StoreItemBuilder.GivenAStoreItem().WithCode(code).Build();
+        Action action = () => _ = StoreItemBuilder.GivenAStoreItem().WithCode(code!).Build();
 
         // assert
         action.Should()

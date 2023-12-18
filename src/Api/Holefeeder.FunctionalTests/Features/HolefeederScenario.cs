@@ -10,7 +10,6 @@ namespace Holefeeder.FunctionalTests.Features;
 ///     <P>This class will clear the database using the Respawn package at beginning of every test.</P>
 ///     Implements Xunit.IAsyncLifetime to manage cleaning up after async tasks.
 /// </summary>
-[Collection("Api collection")]
 public abstract partial class HolefeederScenario : Scenario
 {
     private readonly ApiApplicationDriver _apiApplicationDriver;

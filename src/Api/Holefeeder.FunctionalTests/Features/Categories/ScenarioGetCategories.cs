@@ -9,6 +9,7 @@ using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetCategories : HolefeederScenario
 {
     public ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

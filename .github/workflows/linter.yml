@@ -1,4 +1,4 @@
-name: Linter
+name: linter
 
 on:
   push:
@@ -27,6 +27,10 @@ on:
       ]
 
   workflow_dispatch:
+
+concurrency:
+  group: linter-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   typescript:

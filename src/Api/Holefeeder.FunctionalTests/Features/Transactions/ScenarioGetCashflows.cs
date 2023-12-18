@@ -13,6 +13,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetCashflows : HolefeederScenario
 {
     public ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

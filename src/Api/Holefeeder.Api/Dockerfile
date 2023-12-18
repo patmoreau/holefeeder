@@ -1,7 +1,7 @@
 ###################################
 # Restore stage
 ###################################
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
 WORKDIR /source
 
 COPY *.sln .
@@ -49,7 +49,7 @@ WORKDIR /source/src/Api/Holefeeder.FunctionalTests
 ###################################
 # Final stage
 ###################################
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 as final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 as final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 EXPOSE 443

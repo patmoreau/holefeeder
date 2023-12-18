@@ -8,7 +8,5 @@ namespace Holefeeder.Application
         public static EventId ApplicationStopped { get; } = new(1001, nameof(ApplicationStopped));
     }
 
-    public sealed class Application
-    {
-    }
+    public sealed class Application;
 }

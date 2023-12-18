@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
+builder.Services.AddHttpLogging(_ => { });
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);

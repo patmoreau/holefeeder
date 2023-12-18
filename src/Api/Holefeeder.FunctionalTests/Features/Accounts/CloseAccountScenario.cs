@@ -13,6 +13,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.CloseAccountRequestBuilde
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class CloseAccountScenario : HolefeederScenario
 {
     public CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

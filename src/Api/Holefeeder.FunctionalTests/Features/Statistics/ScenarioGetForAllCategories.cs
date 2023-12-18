@@ -11,6 +11,7 @@ using Holefeeder.Tests.Common.Builders.Transactions;
 namespace Holefeeder.FunctionalTests.Features.Statistics;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetForAllCategories : HolefeederScenario
 {
     private readonly Guid _userId = UserStepDefinition.HolefeederUserId;

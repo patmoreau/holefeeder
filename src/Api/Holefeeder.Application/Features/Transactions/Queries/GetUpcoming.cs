@@ -20,7 +20,7 @@ public class GetUpcoming : ICarterModule
                 {
                     (int total, IEnumerable<UpcomingViewModel> viewModels) =
                         await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Add("X-Total-Count", $"{total}");
+                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
             .Produces<IEnumerable<UpcomingViewModel>>()

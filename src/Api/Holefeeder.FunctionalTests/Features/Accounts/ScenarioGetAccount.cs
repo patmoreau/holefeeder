@@ -13,6 +13,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioGetAccount : HolefeederScenario
 {
     public ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

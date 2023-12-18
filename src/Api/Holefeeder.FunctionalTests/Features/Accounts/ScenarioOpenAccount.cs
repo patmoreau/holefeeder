@@ -13,6 +13,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioOpenAccount : HolefeederScenario
 {
     private const string OpenAccountRequestKey = $"{nameof(ScenarioOpenAccount)}_OpenAccountRequest";

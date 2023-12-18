@@ -18,6 +18,7 @@ using static Holefeeder.Tests.Common.Builders.MyData.MyDataTransactionDtoBuilder
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
 [ComponentTest]
+[Collection("Api collection")]
 public class ScenarioImportData : HolefeederScenario
 {
     public ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)

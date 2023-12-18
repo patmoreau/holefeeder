@@ -18,7 +18,7 @@ public class GetCashflows : ICarterModule
                 {
                     (int total, IEnumerable<CashflowInfoViewModel> viewModels) =
                         await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Add("X-Total-Count", $"{total}");
+                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
             .Produces<IEnumerable<CashflowInfoViewModel>>()
@@ -37,9 +37,7 @@ public class GetCashflows : ICarterModule
             context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
     }
 
-    internal class Validator : QueryValidatorRoot<Request>
-    {
-    }
+    internal class Validator : QueryValidatorRoot<Request>;
 
     internal class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
     {
