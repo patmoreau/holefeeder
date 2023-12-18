@@ -1,4 +1,4 @@
-name: CI-CD
+name: ci-cd
 
 on:
   push:
@@ -29,6 +29,10 @@ on:
       ]
 
   workflow_dispatch:
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   DOCKER_REGISTRY: ghcr.io/patmoreau/holefeeder

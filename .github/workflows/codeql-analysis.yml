@@ -9,7 +9,7 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
-name: "CodeQL"
+name: codeql-analysis
 
 on:
   push:
@@ -41,6 +41,10 @@ on:
 
   schedule:
     - cron: "22 3 * * 3"
+
+concurrency:
+  group: codeql-analysis-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:

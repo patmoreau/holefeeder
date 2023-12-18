@@ -1,4 +1,4 @@
-name: Mutation Tests
+name: mutation-tests
 
 on:
   push:
@@ -29,6 +29,11 @@ on:
       ]
 
   workflow_dispatch:
+
+concurrency:
+  group: mutation-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   stryker:
     runs-on: ubuntu-latest
