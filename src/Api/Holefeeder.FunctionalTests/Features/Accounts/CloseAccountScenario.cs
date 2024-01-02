@@ -1,12 +1,16 @@
 using System.Net;
 using System.Text.Json;
+
 using DrifterApps.Seeds.Testing.Attributes;
 using DrifterApps.Seeds.Testing.Scenarios;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 using static Holefeeder.Tests.Common.Builders.Accounts.CloseAccountRequestBuilder;
 
@@ -14,13 +18,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class CloseAccountScenario : HolefeederScenario
+public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest() => await ScenarioFor("closing an account with an invalid request", runner =>
         runner
@@ -47,7 +47,7 @@ public class CloseAccountScenario : HolefeederScenario
     {
         runner.Execute("the account is closed with an invalid request", async () =>
         {
-            Request request = GivenAnInvalidCloseAccountRequest().Build();
+            var request = GivenAnInvalidCloseAccountRequest().Build();
             await SendRequest(request);
         });
     }
@@ -56,7 +56,7 @@ public class CloseAccountScenario : HolefeederScenario
     {
         runner.Execute("an account that does not exist is closed", async () =>
         {
-            Request request = GivenACloseAccountRequest().Build();
+            var request = GivenACloseAccountRequest().Build();
             await SendRequest(request);
         });
     }
@@ -68,7 +68,7 @@ public class CloseAccountScenario : HolefeederScenario
             var account = runner.GetContextData<Account>(AccountStepDefinition.ContextExistingAccount);
             account.Should().NotBeNull();
 
-            Request request = GivenACloseAccountRequest().WithId(account.Id).Build();
+            var request = GivenACloseAccountRequest().WithId(account.Id).Build();
             await SendRequest(request);
         });
     }
@@ -98,7 +98,7 @@ public class CloseAccountScenario : HolefeederScenario
 
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Account? result = await dbContext.FindByIdAsync<Account>(account.Id);
+            var result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Inactive.Should().BeTrue();
         });
@@ -106,7 +106,7 @@ public class CloseAccountScenario : HolefeederScenario
 
     private async Task SendRequest(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.CloseAccount, json);
     }
 }

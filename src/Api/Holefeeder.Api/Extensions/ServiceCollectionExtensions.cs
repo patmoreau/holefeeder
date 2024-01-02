@@ -1,8 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
+
 using Holefeeder.Api.Authorization;
 using Holefeeder.Api.Swagger;
 using Holefeeder.Infrastructure.SeedWork;
+
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -24,13 +27,11 @@ internal static class ServiceCollectionExtensions
                     new TokenValidationParameters { ValidateIssuer = true },
                 options => configuration.Bind("AzureAdB2C", options));
 
-        services.AddAuthorization(o =>
-        {
-            o.DefaultPolicy = new AuthorizationPolicyBuilder()
+        services.AddAuthorizationBuilder()
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireClaim(ClaimConstants.Scope, Policies.HOLEFEEDER_USER)
-                .Build();
-        });
+                .RequireClaim(ClaimConstants.Scope, Policies.HolefeederUser)
+                .Build());
 
         return services;
     }
@@ -88,16 +89,16 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    static readonly string[] serviceTags = new[] { "holefeeder", "api", "service" };
-    static readonly string[] databaseTags = new[] { "holefeeder", "api", "mysql" };
+    private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
+    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mysql"];
 
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddHealthChecks()
-            .AddCheck("api", () => HealthCheckResult.Healthy(), serviceTags)
-            .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BUDGETING_CONNECTION_STRING)!,
-                name: "budgeting-db-check", tags: databaseTags);
+            .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags)
+            .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
+                name: "budgeting-db-check", tags: DatabaseTags);
 
         return services;
     }

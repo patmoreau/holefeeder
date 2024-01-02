@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Transactions;
+
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -28,7 +30,7 @@ internal class PayCashflowRequestBuilder : FakerBuilder<Request>
 
     public static PayCashflowRequestBuilder GivenAnInvalidCashflowPayment()
     {
-        PayCashflowRequestBuilder builder = new PayCashflowRequestBuilder();
+        var builder = new PayCashflowRequestBuilder();
         builder.FakerRules.RuleFor(x => x.CashflowId, Guid.Empty);
         return builder;
     }

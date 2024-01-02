@@ -1,20 +1,17 @@
 using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
+
 using Holefeeder.FunctionalTests.Drivers;
+
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class AccountStepDefinition : StepDefinition
+public class AccountStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
+    : StepDefinition(httpClientDriver)
 {
-    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
     public const string ContextExistingAccount = $"{nameof(AccountStepDefinition)}_{nameof(ContextExistingAccount)}";
-
-    public AccountStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver) : base(httpClientDriver)
-    {
-        _budgetingDatabaseDriver = budgetingDatabaseDriver;
-    }
 
     internal void Exists(IStepRunner runner)
     {
@@ -23,7 +20,7 @@ public class AccountStepDefinition : StepDefinition
         runner.Execute("a user has an active account", async () =>
         {
             var builder = GivenAnActiveAccount().ForUser(UserStepDefinition.HolefeederUserId);
-            var account = await builder.SavedInDbAsync(_budgetingDatabaseDriver);
+            var account = await builder.SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingAccount, account);
         });

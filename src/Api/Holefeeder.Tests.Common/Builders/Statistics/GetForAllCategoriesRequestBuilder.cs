@@ -2,6 +2,7 @@
 // The.NET Foundation licenses this file to you under the MIT license.
 
 using DrifterApps.Seeds.Testing;
+
 using static Holefeeder.Application.Features.Statistics.Queries.GetForAllCategories;
 
 namespace Holefeeder.Tests.Common.Builders.Statistics;

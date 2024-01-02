@@ -1,8 +1,10 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Domain.Features.StoreItem;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +18,7 @@ public class CreateStoreItem : ICarterModule
         app.MapPost("api/v2/store-items/create-store-item",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    Guid result = await mediator.Send(request, cancellationToken);
+                    var result = await mediator.Send(request, cancellationToken);
                     return Results.CreatedAtRoute(nameof(GetStoreItem), new { Id = result }, new { Id = result });
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
@@ -37,16 +39,10 @@ public class CreateStoreItem : ICarterModule
 
     internal record Request(string Code, string Data) : IRequest<Guid>, IUnitOfWorkRequest;
 
-    internal class Handler : IRequestHandler<Request, Guid>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Guid>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
@@ -56,7 +52,7 @@ public class CreateStoreItem : ICarterModule
                 throw new ObjectStoreDomainException($"Code '{request.Code}' already exists.");
             }
 
-            StoreItem storeItem = StoreItem.Create(request.Code, request.Data, _userContext.Id);
+            var storeItem = StoreItem.Create(request.Code, request.Data, _userContext.Id);
 
             _context.StoreItems.Add(storeItem);
 

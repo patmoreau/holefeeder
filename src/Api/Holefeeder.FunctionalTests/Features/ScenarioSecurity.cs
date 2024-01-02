@@ -1,7 +1,10 @@
 using System.Reflection;
+
 using DrifterApps.Seeds.Testing.Infrastructure;
+
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
@@ -9,14 +12,9 @@ using LightBDD.XUnit2;
 namespace Holefeeder.FunctionalTests.Features;
 
 [FeatureDescription(@"In order to test the security")]
-[ComponentTest]//feature description
-public partial class FeatureSecurity : BaseFeature
+[ComponentTest]
+public partial class FeatureSecurity(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : BaseFeature(apiApplicationDriver, testOutputHelper)
 {
-    public FeatureSecurity(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
-    {
-    }
-
     [Scenario]
     [ScenarioCategory("Security")]
     [MemberData(nameof(SecuredEndpointTestCases))]

@@ -10,9 +10,9 @@ public class CloseAccountTests
     public void GivenValidator_WhenIdIsEmpty_ThenValidationError()
     {
         // arrange
-        Request request = GivenACloseAccountRequest().WithNoId().Build();
+        var request = GivenACloseAccountRequest().WithNoId().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

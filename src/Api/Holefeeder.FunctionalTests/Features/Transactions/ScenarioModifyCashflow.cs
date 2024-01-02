@@ -1,11 +1,12 @@
 using System.Net;
 using System.Text.Json;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
+
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -17,17 +18,12 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioModifyCashflow : HolefeederScenario
+public class ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request request = GivenAnInvalidModifyCashflowRequest()
+        var request = GivenAnInvalidModifyCashflowRequest()
             .OfAmount(decimal.MinusOne)
             .Build();
 
@@ -41,15 +37,15 @@ public class ScenarioModifyCashflow : HolefeederScenario
     [Fact]
     public async Task WhenModifyACashflow()
     {
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Category category = await GivenACategory()
+        var category = await GivenACategory()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Cashflow cashflow = await GivenAnActiveCashflow()
+        var cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(HolefeederUserId)
@@ -57,7 +53,7 @@ public class ScenarioModifyCashflow : HolefeederScenario
 
         GivenUserIsAuthorized();
 
-        Request request = GivenAModifyCashflowRequest()
+        var request = GivenAModifyCashflowRequest()
             .WithId(cashflow.Id)
             .Build();
 
@@ -67,14 +63,14 @@ public class ScenarioModifyCashflow : HolefeederScenario
 
         using var dbContext = DatabaseDriver.CreateDbContext();
 
-        Cashflow? result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
+        var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiedACashflow(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyCashflow, json);
     }
 }

@@ -1,6 +1,9 @@
 using Carter;
+
 using HealthChecks.UI.Client;
+
 using Holefeeder.Web.Config;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -8,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,8 +31,8 @@ builder.Services
             new TokenValidationParameters { ValidateIssuer = true },
         options => builder.Configuration.Bind("AzureAdB2C", options));
 
-string apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
-                throw new InvalidOperationException("Missing `Api:Url` configuration");
+var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
+             throw new InvalidOperationException("Missing `Api:Url` configuration");
 
 builder.Services
     .AddHealthChecksUI(setup =>
@@ -44,11 +48,8 @@ builder.Services
 var tags = new[] { "holefeeder", "web", "service" };
 builder.Services.AddHealthChecks().AddCheck("web", () => HealthCheckResult.Healthy(), tags);
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("customPolicy", policy =>
-        policy.RequireAuthenticatedUser());
-});
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("customPolicy", policy => policy.RequireAuthenticatedUser());
 
 var app = builder.Build();
 

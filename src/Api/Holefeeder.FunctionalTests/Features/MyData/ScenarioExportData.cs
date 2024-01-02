@@ -1,10 +1,12 @@
 using System.Net;
+
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -15,13 +17,9 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioExportData : HolefeederScenario
+public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenDataIsExported()
     {
@@ -49,7 +47,7 @@ public class ScenarioExportData : HolefeederScenario
         await WhenUserExportsHisData();
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        ExportDataDto? result = HttpClientDriver.DeserializeContent<ExportDataDto>();
+        var result = HttpClientDriver.DeserializeContent<ExportDataDto>();
         AssertAll(() =>
         {
             result.Should().NotBeNull();

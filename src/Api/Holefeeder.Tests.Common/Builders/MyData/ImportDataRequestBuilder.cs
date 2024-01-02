@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Application.Features.MyData.Models;
+
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 
 namespace Holefeeder.Tests.Common.Builders.MyData;
@@ -13,7 +15,7 @@ internal class ImportDataRequestBuilder : FakerBuilder<Request>
 
     public override Request Build()
     {
-        Request.Dto? data = _dtoFaker.Generate();
+        var data = _dtoFaker.Generate();
 
         FakerRules.RuleFor(f => f.Data, data);
 

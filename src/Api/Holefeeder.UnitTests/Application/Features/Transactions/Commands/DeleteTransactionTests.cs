@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
 
@@ -11,9 +12,9 @@ public class DeleteTransactionTests
     public async Task GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        Request request = GivenAnInvalidDeleteTransactionRequest().Build();
+        var request = GivenAnInvalidDeleteTransactionRequest().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = await validator.TestValidateAsync(request);

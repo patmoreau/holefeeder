@@ -1,14 +1,7 @@
 namespace Holefeeder.Domain.Features.StoreItem;
 
 #pragma warning disable CA1032
-public class ObjectStoreDomainException : DomainException<StoreItem>
+public class ObjectStoreDomainException(string message) : DomainException<StoreItem>(message)
 #pragma warning restore CA1032
 {
-    public ObjectStoreDomainException(string message) : base(message)
-    {
-    }
-
-    public ObjectStoreDomainException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
 }

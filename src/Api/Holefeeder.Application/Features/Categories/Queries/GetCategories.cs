@@ -1,7 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Categories;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +17,7 @@ public class GetCategories : ICarterModule
         app.MapGet("api/v2/categories",
                 async (IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    (int total, IEnumerable<CategoryViewModel> viewModels) =
+                    var (total, viewModels) =
                         await mediator.Send(new Request(), cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
@@ -31,16 +33,10 @@ public class GetCategories : ICarterModule
 
     internal record Request : IRequest<QueryResult<CategoryViewModel>>;
 
-    internal class Handler : IRequestHandler<Request, QueryResult<CategoryViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {

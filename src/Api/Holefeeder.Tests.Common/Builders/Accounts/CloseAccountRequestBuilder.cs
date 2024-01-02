@@ -1,4 +1,5 @@
 using DrifterApps.Seeds.Testing;
+
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;

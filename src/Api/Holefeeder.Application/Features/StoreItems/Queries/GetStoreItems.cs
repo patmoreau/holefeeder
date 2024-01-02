@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
+
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+
 using Holefeeder.Application.Context;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +18,7 @@ public class GetStoreItems : ICarterModule
         app.MapGet("api/v2/store-items",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    QueryResult<Response> results = await mediator.Send(request, cancellationToken);
+                    var results = await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{results.Total}");
                     return Results.Ok(results.Items);
                 })
@@ -39,22 +42,16 @@ public class GetStoreItems : ICarterModule
 
     internal class Validator : QueryValidatorRoot<Request>;
 
-    internal class Handler : IRequestHandler<Request, QueryResult<Response>>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, QueryResult<Response>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<QueryResult<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-            int total = await _context.StoreItems.Where(e => e.UserId == _userContext.Id)
+            var total = await _context.StoreItems.Where(e => e.UserId == _userContext.Id)
                 .CountAsync(cancellationToken);
-            List<Response> items = await _context.StoreItems
+            var items = await _context.StoreItems
                 .Where(e => e.UserId == _userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)

@@ -1,13 +1,17 @@
 using Carter;
+
 using DrifterApps.Seeds.Infrastructure;
+
 using Hangfire;
+
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
+
 using Serilog;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
@@ -21,7 +25,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddHangfireRequestScheduler();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 app.UseCustomErrors(app.Environment);

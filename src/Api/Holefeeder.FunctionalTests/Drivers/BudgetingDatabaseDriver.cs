@@ -1,12 +1,15 @@
 using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Infrastructure.Persistence;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
+
 using Microsoft.EntityFrameworkCore;
+
 using MySqlConnector;
+
 using Respawn;
-using Respawn.Graph;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
@@ -19,9 +22,9 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     protected override RespawnerOptions Options { get; } = new()
     {
         DbAdapter = DbAdapter.MySql,
-        SchemasToInclude = new[] { Schema },
-        TablesToInclude = new Table[] { "accounts", "cashflows", "categories", "store_items", "transactions" },
-        TablesToIgnore = new Table[] { "schema_versions" },
+        SchemasToInclude = [Schema],
+        TablesToInclude = ["accounts", "cashflows", "categories", "store_items", "transactions"],
+        TablesToIgnore = ["schema_versions"],
         WithReseed = true
     };
 

@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application.Features.MyData.Models;
+namespace Holefeeder.Application.Features.MyData.Models;
 
 public record ImportDataStatusDto(
     CommandStatus Status,

@@ -2,23 +2,19 @@
 // The.NET Foundation licenses this file to you under the MIT license.
 
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Tags.Queries;
 
 public partial class GetTagsWithCount
 {
-    internal class Handler : IRequestHandler<Request, IEnumerable<TagDto>>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, IEnumerable<TagDto>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<IEnumerable<TagDto>> Handle(Request request, CancellationToken cancellationToken)
         {

@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+
 using DrifterApps.Seeds.Application;
+
 using Microsoft.OpenApi.Models;
+
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Holefeeder.Api.Swagger;
@@ -23,7 +25,7 @@ public class QueryRequestOperationFilter : IOperationFilter
             return;
         }
 
-        foreach (PropertyInfo properties in typeof(IRequestQuery).GetProperties())
+        foreach (var properties in typeof(IRequestQuery).GetProperties())
         {
             operation.Parameters.Add(new OpenApiParameter
             {

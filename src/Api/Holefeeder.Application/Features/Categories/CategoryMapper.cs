@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Categories;
 
@@ -13,7 +13,7 @@ internal static class CategoryMapper
 
     public static CategoryViewModel MapToDto(Category entity)
     {
-        CategoryViewModel dto = new CategoryViewModel
+        var dto = new CategoryViewModel
         {
             Id = entity.Id,
             BudgetAmount = entity.BudgetAmount,
@@ -29,7 +29,7 @@ internal static class CategoryMapper
 
     public static MyDataCategoryDto MapToMyDataCategoryDto(Category entity)
     {
-        MyDataCategoryDto dto = new MyDataCategoryDto
+        var dto = new MyDataCategoryDto
         {
             Id = entity.Id,
             Type = entity.Type,

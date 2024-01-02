@@ -1,4 +1,4 @@
-﻿using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems;
@@ -9,7 +9,7 @@ internal static class StoreItemMapper
 
     public static StoreItemViewModel MapToDto(StoreItem entity)
     {
-        StoreItemViewModel dto = new StoreItemViewModel(entity.Id, entity.Code, entity.Data);
+        var dto = new StoreItemViewModel(entity.Id, entity.Code, entity.Data);
 
         return dto;
     }

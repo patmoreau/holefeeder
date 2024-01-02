@@ -18,19 +18,19 @@ public abstract class NotFoundException : Exception
 
 public class NotFoundException<TContext> : NotFoundException where TContext : IAggregateRoot
 {
-    public NotFoundException(Guid id) : base(id, nameof(TContext))
+    protected NotFoundException(Guid id) : base(id, nameof(TContext))
     {
     }
 
-    public NotFoundException()
+    protected NotFoundException()
     {
     }
 
-    public NotFoundException(string message, Exception innerException) : base(message, innerException)
+    protected NotFoundException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
-    public NotFoundException(string message) : base(message)
+    protected NotFoundException(string message) : base(message)
     {
     }
 }

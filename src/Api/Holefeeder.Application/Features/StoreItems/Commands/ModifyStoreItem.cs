@@ -1,8 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
-using Holefeeder.Domain.Features.StoreItem;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -37,20 +38,14 @@ public class ModifyStoreItem : ICarterModule
 
     internal record Request(Guid Id, string Data) : IRequest<Unit>, IUnitOfWorkRequest;
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            StoreItem? storeItem = await _context.StoreItems
+            var storeItem = await _context.StoreItems
                 // .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
             if (storeItem is null)

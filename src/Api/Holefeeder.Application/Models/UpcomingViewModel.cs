@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
+
 using Holefeeder.Application.Features.Accounts.Queries;
 
 namespace Holefeeder.Application.Models;

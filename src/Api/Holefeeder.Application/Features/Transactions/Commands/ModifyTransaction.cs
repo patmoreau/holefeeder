@@ -1,8 +1,10 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -55,40 +57,31 @@ public class ModifyTransaction : ICarterModule
         }
     }
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (!await _context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == _userContext.Id,
+            if (!await context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Account '{request.AccountId}' does not exists.");
             }
 
-            if (!await _context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == _userContext.Id,
+            if (!await context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == userContext.Id,
                     cancellationToken))
             {
                 throw new TransactionDomainException($"Category '{request.CategoryId}' does not exists.");
             }
 
-            Transaction? exists =
-                await _context.Transactions.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
+            var exists =
+                await context.Transactions.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (exists is null)
             {
                 throw new TransactionNotFoundException(request.Id);
             }
 
-            Transaction transaction = exists with
+            var transaction = exists with
             {
                 Date = request.Date,
                 Amount = request.Amount,
@@ -99,7 +92,7 @@ public class ModifyTransaction : ICarterModule
 
             transaction = transaction.SetTags(request.Tags);
 
-            _context.Update(transaction);
+            context.Update(transaction);
 
             return Unit.Value;
         }

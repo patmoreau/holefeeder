@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+
 using static Holefeeder.Application.Features.Transactions.Commands.CancelCashflow;
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
 
@@ -11,9 +12,9 @@ public class CancelCashflowTests
     public async Task GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        Request request = GivenAnInvalidCancelCashflowRequest().Build();
+        var request = GivenAnInvalidCancelCashflowRequest().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = await validator.TestValidateAsync(request);

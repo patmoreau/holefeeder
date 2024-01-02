@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Accounts;
+
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -32,7 +34,7 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
 
     public static TransferRequestBuilder GivenAnInvalidTransfer()
     {
-        TransferRequestBuilder builder = new TransferRequestBuilder();
+        var builder = new TransferRequestBuilder();
         builder.FakerRules.RuleFor(x => x.FromAccountId, Guid.Empty);
         return builder;
     }

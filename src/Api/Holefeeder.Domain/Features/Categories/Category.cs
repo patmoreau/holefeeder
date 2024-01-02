@@ -57,15 +57,4 @@ public sealed record Category : IAggregateRoot
             _userId = value;
         }
     }
-
-    public static Category Create(CategoryType type, string name, decimal budgetAmount,
-        string description, Guid userId) =>
-        new()
-        {
-            Id = Guid.NewGuid(),
-            Type = type,
-            Name = name,
-            UserId = userId,
-            BudgetAmount = budgetAmount
-        };
 }

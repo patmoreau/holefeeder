@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
 
@@ -23,11 +24,10 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     public virtual DateOnly NextDate(DateOnly effectiveDate, DateOnly fromDate, int frequency)
     {
-        DateOnly start = effectiveDate;
-        DateOnly next = fromDate;
+        var start = effectiveDate;
 
-        int count = 0;
-        while (start < next)
+        var count = 0;
+        while (start < fromDate)
         {
             start = AddIteration(effectiveDate, frequency * count);
             count++;
@@ -43,9 +43,9 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             return effectiveDate;
         }
 
-        DateOnly start = effectiveDate;
+        var start = effectiveDate;
 
-        int count = 0;
+        var count = 0;
         while (start < fromDate)
         {
             count++;
@@ -58,10 +58,10 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
     public virtual IEnumerable<DateOnly> DatesInRange(DateOnly effectiveDate, DateOnly fromDate, DateOnly toDate,
         int frequency)
     {
-        List<DateOnly> dates = new List<DateOnly>();
-        DateOnly start = effectiveDate;
+        List<DateOnly> dates = [];
+        var start = effectiveDate;
 
-        int iteration = 1;
+        var iteration = 1;
         while (start < fromDate)
         {
             start = AddIteration(effectiveDate, frequency * iteration);
@@ -78,21 +78,16 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         return dates;
     }
 
-    private sealed class WeeklyDateIntervalType : DateIntervalType
+    private sealed class WeeklyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        public WeeklyDateIntervalType(string name, int id)
-            : base(name, id)
-        {
-        }
-
         protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             AddWeeks(effectiveDate, iteration);
 
         public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,
             int frequency)
         {
-            DateOnly start = effectiveDate;
-            DateOnly end = NextDate(effectiveDate, fromDate, frequency);
+            var start = effectiveDate;
+            var end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -109,21 +104,16 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         private static DateOnly AddWeeks(DateOnly effectiveDate, int weeks) => effectiveDate.AddDays(7 * weeks);
     }
 
-    private sealed class MonthlyDateIntervalType : DateIntervalType
+    private sealed class MonthlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        public MonthlyDateIntervalType(string name, int id)
-            : base(name, id)
-        {
-        }
-
         protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddMonths(iteration);
 
         public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,
             int frequency)
         {
-            DateOnly start = effectiveDate;
-            DateOnly end = NextDate(effectiveDate, fromDate, frequency);
+            var start = effectiveDate;
+            var end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -138,21 +128,16 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
     }
 
-    private sealed class YearlyDateIntervalType : DateIntervalType
+    private sealed class YearlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        public YearlyDateIntervalType(string name, int id)
-            : base(name, id)
-        {
-        }
-
         protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddYears(iteration);
 
         public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,
             int frequency)
         {
-            DateOnly start = effectiveDate;
-            DateOnly end = NextDate(effectiveDate, fromDate, frequency);
+            var start = effectiveDate;
+            var end = NextDate(effectiveDate, fromDate, frequency);
 
             if (end == start)
             {
@@ -167,13 +152,8 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
     }
 
-    private sealed class OneTimeDateIntervalType : DateIntervalType
+    private sealed class OneTimeDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        public OneTimeDateIntervalType(string name, int id)
-            : base(name, id)
-        {
-        }
-
         protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => effectiveDate;
 
         public override DateOnly NextDate(DateOnly effectiveDate, DateOnly fromDate, int frequency) => effectiveDate;
@@ -184,7 +164,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         public override IEnumerable<DateOnly> DatesInRange(DateOnly effectiveDate, DateOnly fromDate, DateOnly toDate,
             int frequency) =>
             effectiveDate >= fromDate && effectiveDate <= toDate
-                ? new[] { effectiveDate }
+                ? [effectiveDate]
                 : Array.Empty<DateOnly>();
 
         public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,

@@ -1,8 +1,11 @@
 using System.Net;
+
 using Bogus;
+
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
@@ -10,13 +13,9 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetAccounts : HolefeederScenario
+public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
@@ -30,8 +29,8 @@ public class ScenarioGetAccounts : HolefeederScenario
     [Fact]
     public async Task WhenAccountsExistsSortedByNameDesc()
     {
-        Faker faker = new Faker();
-        int count = faker.Random.Int(2, 10);
+        var faker = new Faker();
+        var count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)

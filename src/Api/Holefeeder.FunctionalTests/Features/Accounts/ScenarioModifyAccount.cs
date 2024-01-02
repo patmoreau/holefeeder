@@ -1,9 +1,12 @@
 using System.Net;
 using System.Text.Json;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,17 +16,13 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioModifyAccount : HolefeederScenario
+public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request entity = GivenAnInvalidModifyAccountRequest()
+        var entity = GivenAnInvalidModifyAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -36,7 +35,7 @@ public class ScenarioModifyAccount : HolefeederScenario
     [Fact]
     public async Task WhenAccountNotFound()
     {
-        Request request = GivenAModifyAccountRequest().Build();
+        var request = GivenAModifyAccountRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -48,11 +47,11 @@ public class ScenarioModifyAccount : HolefeederScenario
     [Fact]
     public async Task WhenModifyAccount()
     {
-        Account entity = await GivenAnActiveAccount()
+        var entity = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenAModifyAccountRequest()
+        var request = GivenAModifyAccountRequest()
             .WithId(entity.Id)
             .Build();
 
@@ -63,7 +62,7 @@ public class ScenarioModifyAccount : HolefeederScenario
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
         using var dbContext = DatabaseDriver.CreateDbContext();
 
-        Account? result = await dbContext.FindByIdAsync<Account>(entity.Id);
+        var result = await dbContext.FindByIdAsync<Account>(entity.Id);
         result.Should()
             .NotBeNull()
             .And
@@ -72,7 +71,7 @@ public class ScenarioModifyAccount : HolefeederScenario
 
     private async Task WhenUserModifiesAccount(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyAccount, json);
     }
 }

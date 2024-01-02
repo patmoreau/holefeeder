@@ -1,10 +1,11 @@
 using System.Net;
+
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -14,13 +15,9 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetCashflow : HolefeederScenario
+public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenNotFound()
     {
@@ -44,17 +41,17 @@ public class ScenarioGetCashflow : HolefeederScenario
     [Fact]
     public async Task WhenCashflowExists()
     {
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Category category = await GivenACategory()
+        var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Cashflow cashflow = await GivenAnActiveCashflow()
+        var cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
             .ForUser(HolefeederUserId)
@@ -65,7 +62,7 @@ public class ScenarioGetCashflow : HolefeederScenario
         await WhenUserGetCashflow(cashflow.Id);
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        CashflowInfoViewModel? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
+        var result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
         AssertAll(() =>
         {
             result.Should()

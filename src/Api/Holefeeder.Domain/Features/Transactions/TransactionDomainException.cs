@@ -6,10 +6,6 @@ public class TransactionDomainException : DomainException<Transaction>
 {
     public TransactionDomainException(string message, string context) : base(message) => Context = context;
 
-    public TransactionDomainException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
-
     public TransactionDomainException(string message) : base(message)
     {
     }

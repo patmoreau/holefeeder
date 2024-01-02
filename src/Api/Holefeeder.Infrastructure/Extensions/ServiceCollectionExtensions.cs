@@ -1,10 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.Scripts;
 using Holefeeder.Infrastructure.SeedWork;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using MySqlConnector;
 
 namespace Holefeeder.Infrastructure.Extensions;
@@ -25,7 +28,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<BudgetingContext>((provider, builder) =>
         {
             var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
-            string connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            var connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
             builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 

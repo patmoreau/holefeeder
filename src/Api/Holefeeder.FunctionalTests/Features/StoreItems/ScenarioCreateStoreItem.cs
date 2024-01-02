@@ -1,8 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using Holefeeder.Domain.Features.StoreItem;
+
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
@@ -11,17 +12,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioCreateStoreItem : HolefeederScenario
+public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request storeItem = GivenACreateStoreItemRequest()
+        var storeItem = GivenACreateStoreItemRequest()
             .WithCode(string.Empty)
             .Build();
 
@@ -35,7 +32,7 @@ public class ScenarioCreateStoreItem : HolefeederScenario
     [Fact]
     public async Task WhenCreateStoreItem()
     {
-        Request storeItem = GivenACreateStoreItemRequest().Build();
+        var storeItem = GivenACreateStoreItemRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -49,10 +46,10 @@ public class ScenarioCreateStoreItem : HolefeederScenario
     [Fact]
     public async Task WhenCodeAlreadyExist()
     {
-        StoreItem existingItem = await GivenAStoreItem()
+        var existingItem = await GivenAStoreItem()
             .SavedInDbAsync(DatabaseDriver);
 
-        Request storeItem = GivenACreateStoreItemRequest()
+        var storeItem = GivenACreateStoreItemRequest()
             .WithCode(existingItem.Code)
             .Build();
 
@@ -65,7 +62,7 @@ public class ScenarioCreateStoreItem : HolefeederScenario
 
     private async Task WhenUserCreateStoreItem(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
     }
 }

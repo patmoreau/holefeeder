@@ -1,24 +1,23 @@
 using System.Text.Json;
+
 using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
+
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.StoreItems;
+
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class StoreItemStepDefinition : StepDefinition
+public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepDefinition(httpClientDriver)
 {
     private const string ContextId = $"{nameof(StoreItemStepDefinition)}_Id";
     private const string ContextCreateStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_CreateStoreItemRequest";
     private const string ContextModifyStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_ModifyStoreItemRequest";
-
-    public StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : base(httpClientDriver)
-    {
-    }
 
     internal void GetsCreated(IStepRunner runner)
     {
@@ -29,7 +28,7 @@ public class StoreItemStepDefinition : StepDefinition
             var request = new CreateStoreItemRequestBuilder().Build();
             runner.SetContextData(ContextCreateStoreItemRequest, request);
 
-            string json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request);
             await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
@@ -46,7 +45,7 @@ public class StoreItemStepDefinition : StepDefinition
 
         runner.Execute("a store item is created", async () =>
         {
-            string json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
+            var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
             await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
@@ -64,7 +63,7 @@ public class StoreItemStepDefinition : StepDefinition
             var request = GivenAModifyStoreItemRequest().WithId(WithCreatedId()).Build();
             runner.SetContextData(ContextModifyStoreItemRequest, request);
 
-            string json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request);
             return HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
         });
     }

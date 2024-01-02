@@ -2,23 +2,19 @@
 // The.NET Foundation licenses this file to you under the MIT license.
 
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Holefeeder.Application.Features.Statistics.Queries;
 
 public partial class GetForAllCategories
 {
-    internal class Handler : IRequestHandler<Request, IEnumerable<StatisticsDto>>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, IEnumerable<StatisticsDto>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<IEnumerable<StatisticsDto>> Handle(Request request, CancellationToken cancellationToken)
         {

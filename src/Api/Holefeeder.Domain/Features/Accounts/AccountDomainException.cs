@@ -1,16 +1,7 @@
 namespace Holefeeder.Domain.Features.Accounts;
 
-public class AccountDomainException : DomainException<Account>
+#pragma warning disable CA1032
+public class AccountDomainException(string message) : DomainException<Account>(message)
+#pragma warning restore CA1032
 {
-    public AccountDomainException()
-    {
-    }
-
-    public AccountDomainException(string message) : base(message)
-    {
-    }
-
-    public AccountDomainException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
 }
