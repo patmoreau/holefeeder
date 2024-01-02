@@ -1,30 +1,28 @@
 using System.Text.Json;
+
 using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Infrastructure;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
+
 using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using MediatR;
+
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class CashflowStepDefinition : StepDefinition
+public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
+    : StepDefinition(httpClientDriver)
 {
-    private readonly BudgetingDatabaseDriver _budgetingDatabaseDriver;
     private const string ContextCashflowRequest = $"{nameof(CashflowStepDefinition)}_{nameof(ContextCashflowRequest)}";
     public const string ContextExistingCashflow = $"{nameof(CashflowStepDefinition)}_{nameof(ContextExistingCashflow)}";
-
-    public CashflowStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver) : base(
-        httpClientDriver)
-    {
-        _budgetingDatabaseDriver = budgetingDatabaseDriver;
-    }
 
 #pragma warning disable CA1822
     public void AnInvalidCancelRequest(IStepRunner runner)
@@ -34,7 +32,7 @@ public class CashflowStepDefinition : StepDefinition
 
         runner.Execute("an invalid cashflow request", () =>
         {
-            CancelCashflow.Request request = GivenAnInvalidCancelCashflowRequest().Build();
+            var request = GivenAnInvalidCancelCashflowRequest().Build();
             runner.SetContextData(ContextCashflowRequest, request);
         });
     }
@@ -45,7 +43,7 @@ public class CashflowStepDefinition : StepDefinition
         {
             var request = runner.GetContextData<IBaseRequest>(ContextCashflowRequest);
 
-            string json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request);
 
             ApiResource apiResource = default!;
             if (request is CancelCashflow.Request)
@@ -73,7 +71,7 @@ public class CashflowStepDefinition : StepDefinition
                 .ForAccount(account)
                 .ForCategory(category)
                 .ForUser(UserStepDefinition.HolefeederUserId)
-                .SavedInDbAsync(_budgetingDatabaseDriver);
+                .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingCashflow, cashflow);
         });

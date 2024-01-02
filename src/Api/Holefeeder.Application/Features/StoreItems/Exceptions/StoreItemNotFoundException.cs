@@ -3,21 +3,8 @@ using Holefeeder.Domain.Features.StoreItem;
 
 namespace Holefeeder.Application.Features.StoreItems.Exceptions;
 
-public class StoreItemNotFoundException : NotFoundException<StoreItem>
+#pragma warning disable CA1032
+public class StoreItemNotFoundException(Guid id) : NotFoundException<StoreItem>(id)
+#pragma warning restore CA1032
 {
-    public StoreItemNotFoundException(Guid id) : base(id)
-    {
-    }
-
-    public StoreItemNotFoundException()
-    {
-    }
-
-    public StoreItemNotFoundException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
-
-    public StoreItemNotFoundException(string message) : base(message)
-    {
-    }
 }

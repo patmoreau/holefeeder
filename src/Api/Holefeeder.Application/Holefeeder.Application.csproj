@@ -13,9 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Carter" Version="8.0.0" />
-    <PackageReference Include="DrifterApps.Seeds.Application" Version="0.1.67" />
-    <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" Version="0.1.67" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
+    <PackageReference Include="DrifterApps.Seeds.Application" Version="0.1.73" />
+    <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" Version="0.1.73" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.7" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

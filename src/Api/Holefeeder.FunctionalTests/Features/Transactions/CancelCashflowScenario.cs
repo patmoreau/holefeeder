@@ -1,25 +1,25 @@
 using System.Net;
 using System.Text.Json;
+
 using DrifterApps.Seeds.Testing.Attributes;
 using DrifterApps.Seeds.Testing.Scenarios;
+
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class CancelCashflowScenario : HolefeederScenario
+public class CancelCashflowScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public CancelCashflowScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public Task WhenInvalidRequest() =>
         ScenarioFor("an invalid request is sent", runner =>
@@ -45,7 +45,7 @@ public class CancelCashflowScenario : HolefeederScenario
 
             var request = GivenACancelCashflowRequest().WithId(cashflow.Id).Build();
 
-            string json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request);
             await HttpClientDriver.SendPostRequestAsync(ApiResources.CancelCashflow, json);
         });
     }

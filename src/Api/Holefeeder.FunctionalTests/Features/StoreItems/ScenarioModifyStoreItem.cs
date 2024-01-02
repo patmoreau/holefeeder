@@ -1,9 +1,12 @@
 using System.Net;
 using System.Text.Json;
+
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
@@ -13,17 +16,13 @@ namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioModifyStoreItem : HolefeederScenario
+public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request storeItem = GivenAModifyStoreItemRequest()
+        var storeItem = GivenAModifyStoreItemRequest()
             .WithId(Guid.Empty)
             .Build();
 
@@ -37,11 +36,11 @@ public class ScenarioModifyStoreItem : HolefeederScenario
     [Fact]
     public async Task WhenModifyStoreItem()
     {
-        StoreItem storeItem = await GivenAStoreItem()
+        var storeItem = await GivenAStoreItem()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenAModifyStoreItemRequest()
+        var request = GivenAModifyStoreItemRequest()
             .WithId(storeItem.Id)
             .Build();
 
@@ -53,14 +52,14 @@ public class ScenarioModifyStoreItem : HolefeederScenario
 
         using var dbContext = DatabaseDriver.CreateDbContext();
 
-        StoreItem? result = await dbContext.FindByIdAsync<StoreItem>(storeItem.Id);
+        var result = await dbContext.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
         result!.Data.Should().BeEquivalentTo(request.Data);
     }
 
     private async Task WhenUserModifyStoreItem(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
     }
 }

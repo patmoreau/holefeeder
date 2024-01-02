@@ -1,10 +1,14 @@
 using System.Net;
 using System.Text.Json;
+
 using DrifterApps.Seeds.Testing.Scenarios;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -14,19 +18,15 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioOpenAccount : HolefeederScenario
+public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private const string OpenAccountRequestKey = $"{nameof(ScenarioOpenAccount)}_OpenAccountRequest";
-
-    public ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
 
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request request = GivenAnInvalidOpenAccountRequest()
+        var request = GivenAnInvalidOpenAccountRequest()
             .Build();
 
         GivenUserIsAuthorized();
@@ -39,11 +39,11 @@ public class ScenarioOpenAccount : HolefeederScenario
     [Fact]
     public async Task WhenAccountNameAlreadyExistsRequest()
     {
-        Account entity = await GivenAnActiveAccount()
+        var entity = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenAnOpenAccountRequest()
+        var request = GivenAnOpenAccountRequest()
             .WithName(entity.Name)
             .Build();
 
@@ -60,8 +60,7 @@ public class ScenarioOpenAccount : HolefeederScenario
             .When(OpeningAccount)
             .Then(AccountShouldBeOpened));
 
-    private void OpeningAccount(IStepRunner runner)
-    {
+    private void OpeningAccount(IStepRunner runner) =>
         runner.Execute("opening an account", async () =>
         {
             var request = GivenAnOpenAccountRequest().Build();
@@ -70,11 +69,10 @@ public class ScenarioOpenAccount : HolefeederScenario
 
             await WhenUserOpensAnAccount(request);
         });
-    }
 
     private async Task WhenUserOpensAnAccount(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.OpenAccount, json);
     }
 
@@ -84,12 +82,12 @@ public class ScenarioOpenAccount : HolefeederScenario
         {
             ShouldExpectStatusCode(HttpStatusCode.Created);
 
-            Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+            var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
             var id = ResourceIdFromLocation(location);
 
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Account? result = await dbContext.FindByIdAsync<Account>(id);
+            var result = await dbContext.FindByIdAsync<Account>(id);
 
             var request = runner.GetContextData<Request>(OpenAccountRequestKey);
 

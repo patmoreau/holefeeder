@@ -1,9 +1,12 @@
 using System.Data;
+
 using DrifterApps.Seeds.Domain;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -16,11 +19,11 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
     public BudgetingContext(DbContextOptions<BudgetingContext> options) : base(options) =>
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-    public DbSet<Account> Accounts { get; set; } = default!;
-    public DbSet<Cashflow> Cashflows { get; set; } = default!;
-    public DbSet<Category> Categories { get; set; } = default!;
-    public DbSet<StoreItem> StoreItems { get; set; } = default!;
-    public DbSet<Transaction> Transactions { get; set; } = default!;
+    public DbSet<Account> Accounts { get; init; } = default!;
+    public DbSet<Cashflow> Cashflows { get; init; } = default!;
+    public DbSet<Category> Categories { get; init; } = default!;
+    public DbSet<StoreItem> StoreItems { get; init; } = default!;
+    public DbSet<Transaction> Transactions { get; init; } = default!;
 
     public async Task BeginWorkAsync(CancellationToken cancellationToken)
     {

@@ -4,10 +4,7 @@ using Holefeeder.Domain.Features.Transactions;
 namespace Holefeeder.Application.Features.Transactions.Exceptions;
 
 #pragma warning disable CA1032
-public class TransactionNotFoundException : NotFoundException<Transaction>
+public class TransactionNotFoundException(Guid id) : NotFoundException<Transaction>(id)
 #pragma warning restore CA1032
 {
-    public TransactionNotFoundException(Guid id) : base(id)
-    {
-    }
 }

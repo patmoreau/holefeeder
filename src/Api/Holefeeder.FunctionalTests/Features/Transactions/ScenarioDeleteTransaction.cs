@@ -1,10 +1,11 @@
 using System.Net;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
+
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -16,17 +17,13 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioDeleteTransaction : HolefeederScenario
+public class ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request request = GivenAnInvalidDeleteTransactionRequest().Build();
+        var request = GivenAnInvalidDeleteTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -38,20 +35,20 @@ public class ScenarioDeleteTransaction : HolefeederScenario
     [Fact]
     public async Task WhenDeletingATransaction()
     {
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Category category = await GivenACategory()
+        var category = await GivenACategory()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Transaction transaction = await GivenATransaction()
+        var transaction = await GivenATransaction()
             .ForAccount(account)
             .ForCategory(category)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
+        var request = GivenADeleteTransactionRequest().WithId(transaction.Id).Build();
 
         GivenUserIsAuthorized();
 
@@ -61,7 +58,7 @@ public class ScenarioDeleteTransaction : HolefeederScenario
 
         using var dbContext = DatabaseDriver.CreateDbContext();
 
-        Transaction? result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }

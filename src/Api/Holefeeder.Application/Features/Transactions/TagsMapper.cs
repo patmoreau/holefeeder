@@ -1,11 +1,8 @@
-﻿namespace Holefeeder.Application.Features.Transactions;
+namespace Holefeeder.Application.Features.Transactions;
 
 internal static class TagsMapper
 {
-    private const char DELIMITER = ',';
+    private const char Delimiter = ',';
 
-    public static string Map(IEnumerable<string> tagList) => string.Join(DELIMITER, tagList);
-
-    public static string[] Map(string tags) =>
-        string.IsNullOrWhiteSpace(tags) ? Array.Empty<string>() : tags.Split(DELIMITER);
+    public static string Map(IEnumerable<string> tagList) => string.Join(Delimiter, tagList);
 }

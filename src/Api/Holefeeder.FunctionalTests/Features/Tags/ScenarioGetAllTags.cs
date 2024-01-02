@@ -12,17 +12,12 @@ namespace Holefeeder.FunctionalTests.Features.Tags;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetAllTags : HolefeederScenario
+public class ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private readonly Guid _userId = UserStepDefinition.HolefeederUserId;
 
     private readonly Dictionary<string, Category> _categories = new();
     private readonly Dictionary<string, Account> _accounts = new();
-
-    public ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
 
     [Fact]
     public Task WhenGettingTagsWithCount() =>

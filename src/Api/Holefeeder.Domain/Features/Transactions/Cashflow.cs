@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
@@ -174,14 +174,14 @@ public record Cashflow : IAggregateRoot
 
     public Cashflow SetTags(params string[] tags)
     {
-        List<string> newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
         Tags = newTags.ToImmutableArray();
         return this;
     }
 
-    public IReadOnlyCollection<DateOnly> GetUpcoming(DateOnly to)
+    public IEnumerable<DateOnly> GetUpcoming(DateOnly to)
     {
-        List<DateOnly> dates = new();
+        List<DateOnly> dates = [];
 
         if (Inactive)
         {

@@ -1,10 +1,13 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
+
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -17,7 +20,7 @@ public sealed class ExportData : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/my-data/export-data", async (IMediator mediator) =>
             {
-                ExportDataDto requestResult = await mediator.Send(new Request());
+                var requestResult = await mediator.Send(new Request());
                 return Results.Ok(requestResult);
             })
             .Produces<ExportDataDto>()
@@ -30,16 +33,10 @@ public sealed class ExportData : ICarterModule
 
     internal record Request : IRequest<ExportDataDto>;
 
-    internal class Handler : IRequestHandler<Request, ExportDataDto>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, ExportDataDto>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<ExportDataDto> Handle(Request request, CancellationToken cancellationToken)
         {

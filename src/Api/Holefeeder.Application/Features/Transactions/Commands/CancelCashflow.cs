@@ -1,8 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
-using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -33,29 +34,20 @@ public class CancelCashflow : ICarterModule
         public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            Cashflow? exists =
-                await _context.Cashflows.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.Id,
+            var exists =
+                await context.Cashflows.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == userContext.Id,
                     cancellationToken);
             if (exists is null)
             {
                 throw new CashflowNotFoundException(request.Id);
             }
 
-            _context.Update(exists.Cancel());
+            context.Update(exists.Cancel());
 
             return Unit.Value;
         }

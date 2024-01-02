@@ -1,18 +1,20 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+
 using DbUp;
-using DbUp.Engine;
 using DbUp.MySql;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using MySqlConnector;
+
 using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 
 namespace Holefeeder.Infrastructure.Extensions;
@@ -22,20 +24,18 @@ public static class WebApplicationExtensions
 {
     private static readonly object Locker = new();
 
-    public static IApplicationBuilder MigrateDb(this IApplicationBuilder app)
+    public static void MigrateDb(this IApplicationBuilder app)
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        using var scope = app.ApplicationServices.CreateScope();
 
-        BudgetingConnectionStringBuilder connectionStringBuilder =
+        var connectionStringBuilder =
             scope.ServiceProvider.GetRequiredService<BudgetingConnectionStringBuilder>();
-        ILogger<BudgetingContext> holefeederLogger =
+        var holefeederLogger =
             scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
 
         MigrateDb(connectionStringBuilder, holefeederLogger);
-
-        return app;
     }
 
     public static void MigrateDb(this DatabaseFacade databaseFacade, BudgetingConnectionStringBuilder connectionStringBuilder)
@@ -50,8 +50,8 @@ public static class WebApplicationExtensions
 
     private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
-        bool completed = false;
-        int tryCount = 0;
+        var completed = false;
+        var tryCount = 0;
 
         while (tryCount++ < 3 && !completed)
         {
@@ -83,13 +83,13 @@ public static class WebApplicationExtensions
     {
         lock (Locker)
         {
-            MySqlConnectionStringBuilder builder = connectionStringBuilder.CreateBuilder();
+            var builder = connectionStringBuilder.CreateBuilder();
 
-            MySqlConnectionManager connectionManager = new MySqlConnectionManager(connectionStringBuilder);
+            var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
 
             EnsureDatabase.For.MySqlDatabase(builder.ConnectionString);
 
-            UpgradeEngine? upgradeEngine = DeployChanges.To
+            var upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .JournalTo(new MySqlTableJournal(
@@ -98,7 +98,7 @@ public static class WebApplicationExtensions
                 .LogToConsole()
                 .Build();
 
-            DatabaseUpgradeResult? result = upgradeEngine.PerformUpgrade();
+            var result = upgradeEngine.PerformUpgrade();
             if (!result.Successful)
             {
                 throw result.Error;

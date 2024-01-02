@@ -1,8 +1,9 @@
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +17,7 @@ public class GetCashflow : ICarterModule
         app.MapGet("api/v2/cashflows/{id:guid}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    CashflowInfoViewModel requestResult = await mediator.Send(new Request(id), cancellationToken);
+                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
                     return Results.Ok(requestResult);
                 })
             .Produces<CashflowInfoViewModel>()
@@ -33,22 +34,14 @@ public class GetCashflow : ICarterModule
         public Validator() => RuleFor(x => x.Id).NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, CashflowInfoViewModel>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, CashflowInfoViewModel>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<CashflowInfoViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            Cashflow? result = await _context.Cashflows
+            var result = await context.Cashflows
                 .Include(x => x.Account).Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (result is null)
             {
                 throw new CashflowNotFoundException(request.Id);

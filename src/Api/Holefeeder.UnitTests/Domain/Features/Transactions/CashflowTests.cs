@@ -1,21 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Tests.Common.Builders.Transactions;
+
 using Xunit.Abstractions;
+
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 [UnitTest]
-public class CashflowTests
+public class CashflowTests(ITestOutputHelper testOutputHelper)
 {
     private readonly Faker _faker = new();
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public CashflowTests(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
+    private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
 
     public static IEnumerable<object[]> GetUpcomingWithNonePaidTestCases
     {
@@ -132,7 +132,7 @@ public class CashflowTests
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().WithId(default);
+        var builder = GivenAnActiveCashflow().WithId(default);
 
         // act
         Action action = () => _ = builder.Build();
@@ -148,7 +148,7 @@ public class CashflowTests
     public void GivenConstructor_WhenEffectiveDateIsMissing_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().OnEffectiveDate(default);
+        var builder = GivenAnActiveCashflow().OnEffectiveDate(default);
 
         // act
         Action action = () => _ = builder.Build();
@@ -164,7 +164,7 @@ public class CashflowTests
     public void GivenConstructor_WhenAmountIsNegative_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder =
+        var builder =
             GivenAnActiveCashflow().OfAmount(_faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
 
         // act
@@ -181,7 +181,7 @@ public class CashflowTests
     public void GivenConstructor_WhenFrequencyIsNotPositive_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().OfFrequency(_faker.Random.Int(int.MinValue, 0));
+        var builder = GivenAnActiveCashflow().OfFrequency(_faker.Random.Int(int.MinValue, 0));
 
         // act
         Action action = () => _ = builder.Build();
@@ -197,7 +197,7 @@ public class CashflowTests
     public void GivenConstructor_WhenRecurrenceIsNegative_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().Recurring(_faker.Random.Int(int.MinValue, 0));
+        var builder = GivenAnActiveCashflow().Recurring(_faker.Random.Int(int.MinValue, 0));
 
         // act
         Action action = () => _ = builder.Build();
@@ -213,7 +213,7 @@ public class CashflowTests
     public void GivenConstructor_WhenAccountIdEmpty_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().ForAccount(Guid.Empty);
+        var builder = GivenAnActiveCashflow().ForAccount(Guid.Empty);
 
         // act
         Action action = () => _ = builder.Build();
@@ -229,7 +229,7 @@ public class CashflowTests
     public void GivenConstructor_WhenCategoryIdEmpty_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().ForCategory(Guid.Empty);
+        var builder = GivenAnActiveCashflow().ForCategory(Guid.Empty);
 
         // act
         Action action = () => _ = builder.Build();
@@ -245,7 +245,7 @@ public class CashflowTests
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        CashflowBuilder builder = GivenAnActiveCashflow().ForUser(default);
+        var builder = GivenAnActiveCashflow().ForUser(default);
 
         // act
         Action action = () => _ = builder.Build();
@@ -261,7 +261,7 @@ public class CashflowTests
     public void GivenCancel_WhenCashflowInactive_ThenThrowException()
     {
         // arrange
-        Cashflow cashflow = GivenAnInactiveCashflow().Build();
+        var cashflow = GivenAnInactiveCashflow().Build();
 
         // act
         Action action = () => _ = cashflow.Cancel();
@@ -277,13 +277,13 @@ public class CashflowTests
     public void GivenCancel_WhenCashflowActive_ThenCashflowIsInactive()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow().Build();
+        var cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        Cashflow result = cashflow.Cancel();
+        var result = cashflow.Cancel();
 
         // assert
-        using AssertionScope scope = new AssertionScope();
+        using var scope = new AssertionScope();
         result.Should().NotBeNull();
         result.Inactive.Should().BeTrue();
     }
@@ -292,10 +292,10 @@ public class CashflowTests
     public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow().Build();
+        var cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        Cashflow result = cashflow.SetTags(Array.Empty<string>());
+        var result = cashflow.SetTags(Array.Empty<string>());
 
         // assert
         result.Tags.Should().BeEmpty();
@@ -305,11 +305,11 @@ public class CashflowTests
     public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow().Build();
+        var cashflow = GivenAnActiveCashflow().Build();
         string[] newTags = _faker.Lorem.Words(_faker.Random.Int(1, 10)).Distinct().ToArray();
 
         // act
-        Cashflow result = cashflow.SetTags(newTags);
+        var result = cashflow.SetTags(newTags);
 
         // assert
         result.Tags.Should().Contain(newTags);
@@ -319,10 +319,10 @@ public class CashflowTests
     public void GivenLastPaidDate_WhenNoTransactions_ThenReturnNull()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow().Build();
+        var cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        DateOnly? result = cashflow.LastPaidDate;
+        var result = cashflow.LastPaidDate;
 
         // assert
         result.Should().BeNull();
@@ -332,12 +332,12 @@ public class CashflowTests
     public void GivenLastPaidDate_WhenTransactions_ThenReturnMaxDate()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow()
+        var cashflow = GivenAnActiveCashflow()
             .WithTransactions()
             .Build();
 
         // act
-        DateOnly? result = cashflow.LastPaidDate;
+        var result = cashflow.LastPaidDate;
 
         // assert
         result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().Date);
@@ -347,10 +347,10 @@ public class CashflowTests
     public void GivenLastCashflowDate_WhenNoTransactions_ThenReturnNull()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow().Build();
+        var cashflow = GivenAnActiveCashflow().Build();
 
         // act
-        DateOnly? result = cashflow.LastCashflowDate;
+        var result = cashflow.LastCashflowDate;
 
         // assert
         result.Should().BeNull();
@@ -360,12 +360,12 @@ public class CashflowTests
     public void GivenLastCashflowDate_WhenTransactions_ThenReturnMaxCashflowDate()
     {
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow()
+        var cashflow = GivenAnActiveCashflow()
             .WithTransactions()
             .Build();
 
         // act
-        DateOnly? result = cashflow.LastCashflowDate;
+        var result = cashflow.LastCashflowDate;
 
         // assert
         result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().CashflowDate);
@@ -375,10 +375,10 @@ public class CashflowTests
     public void GivenGetUpcoming_WhenInactiveCashflow_ThenReturnEmptyList()
     {
         // arrange
-        Cashflow cashflow = GivenAnInactiveCashflow().Build();
+        var cashflow = GivenAnInactiveCashflow().Build();
 
         // act
-        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(_faker.Date.FutureDateOnly());
+        var result = cashflow.GetUpcoming(_faker.Date.FutureDateOnly());
 
         // assert
         result.Should().BeEmpty();
@@ -397,13 +397,13 @@ public class CashflowTests
         ArgumentNullException.ThrowIfNull(expected);
 
         // arrange
-        Cashflow cashflow = GivenAnActiveCashflow()
+        var cashflow = GivenAnActiveCashflow()
             .OfFrequency(info.IntervalType, info.Frequency)
             .OnEffectiveDate(info.EffectiveDate)
             .Build();
 
         // act
-        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(to);
+        var result = cashflow.GetUpcoming(to);
 
         // assert
         result.Should().HaveCount(expected.Count).And.Equal(expected);
@@ -423,18 +423,18 @@ public class CashflowTests
         ArgumentNullException.ThrowIfNull(expected);
 
         // arrange
-        Transaction transaction = GivenATransaction()
+        var transaction = GivenATransaction()
             .OnDate(lastPaidDate.AddDays(_faker.Random.Int(0, 10)))
             .ForCashflowDate(lastPaidDate)
             .Build();
-        Cashflow cashflow = GivenAnActiveCashflow()
+        var cashflow = GivenAnActiveCashflow()
             .OfFrequency(info.IntervalType, info.Frequency)
             .OnEffectiveDate(info.EffectiveDate)
             .WithTransactions(transaction)
             .Build();
 
         // act
-        IReadOnlyCollection<DateOnly> result = cashflow.GetUpcoming(to);
+        var result = cashflow.GetUpcoming(to);
 
         // assert
         result.Should().HaveCount(expected.Count).And.Equal(expected);

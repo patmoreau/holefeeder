@@ -1,10 +1,13 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using FluentValidation.Results;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -18,7 +21,7 @@ public class Transfer : ICarterModule
         app.MapPost("api/v2/transactions/transfer",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    (Guid FromTransactionId, Guid ToTransactionId) result =
+                    var result =
                         await mediator.Send(request, cancellationToken);
                     return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result.FromTransactionId }, result);
                 })
@@ -42,21 +45,13 @@ public class Transfer : ICarterModule
         }
     }
 
-    internal class Handler : IRequestHandler<Request, (Guid FromTransactionId, Guid ToTransactionId)>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, (Guid FromTransactionId, Guid ToTransactionId)>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<(Guid FromTransactionId, Guid ToTransactionId)> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            List<(string, string)> errors = new List<(string, string)>();
+            var errors = new List<(string, string)>();
 
             if (!await ActiveAccountExistsAsync(request.FromAccountId, cancellationToken))
             {
@@ -68,18 +63,18 @@ public class Transfer : ICarterModule
                 errors.Add((nameof(request.ToAccountId), $"To account {request.ToAccountId} does not exists"));
             }
 
-            Category transferTo = await FirstCategoryAsync("Transfer In", cancellationToken);
-            Category transferFrom = await FirstCategoryAsync("Transfer Out", cancellationToken);
+            var transferTo = await FirstCategoryAsync("Transfer In", cancellationToken);
+            var transferFrom = await FirstCategoryAsync("Transfer Out", cancellationToken);
 
-            Transaction transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, transferFrom.Id, _userContext.Id);
+            var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
+                request.FromAccountId, transferFrom.Id, userContext.Id);
 
-            await _context.Transactions.AddAsync(transactionFrom, cancellationToken);
+            await context.Transactions.AddAsync(transactionFrom, cancellationToken);
 
-            Transaction transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.ToAccountId, transferTo.Id, _userContext.Id);
+            var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
+                request.ToAccountId, transferTo.Id, userContext.Id);
 
-            await _context.Transactions.AddAsync(transactionTo, cancellationToken);
+            await context.Transactions.AddAsync(transactionTo, cancellationToken);
 
             if (errors.Count > 0)
             {
@@ -91,12 +86,12 @@ public class Transfer : ICarterModule
         }
 
         private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>
-            await _context.Categories
-                .FirstAsync(x => x.UserId == _userContext.Id && x.Name == categoryName, cancellationToken);
+            await context.Categories
+                .FirstAsync(x => x.UserId == userContext.Id && x.Name == categoryName, cancellationToken);
 
         private async Task<bool> ActiveAccountExistsAsync(Guid accountId, CancellationToken cancellationToken) =>
-            await _context.Accounts.AnyAsync(
-                x => x.Id == accountId && x.UserId == _userContext.Id && !x.Inactive,
+            await context.Accounts.AnyAsync(
+                x => x.Id == accountId && x.UserId == userContext.Id && !x.Inactive,
                 cancellationToken);
     }
 }

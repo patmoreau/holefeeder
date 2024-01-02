@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
+
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
+// ReSharper disable UnusedMember.Global
 
 namespace Holefeeder.Domain.Features.Accounts;
 
@@ -21,21 +23,13 @@ public abstract class AccountType : SmartEnum<AccountType>
 
     public abstract int Multiplier { get; }
 
-    private sealed class CreditAccountType : AccountType
+    private sealed class CreditAccountType(int id, string name) : AccountType(id, name)
     {
-        public CreditAccountType(int id, string name) : base(id, name)
-        {
-        }
-
         public override int Multiplier => -1;
     }
 
-    private sealed class DebitAccountType : AccountType
+    private sealed class DebitAccountType(int id, string name) : AccountType(id, name)
     {
-        public DebitAccountType(int id, string name) : base(id, name)
-        {
-        }
-
         public override int Multiplier => 1;
     }
 }

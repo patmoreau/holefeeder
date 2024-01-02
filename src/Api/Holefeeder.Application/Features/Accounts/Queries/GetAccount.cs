@@ -1,7 +1,8 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Domain.Features.Accounts;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +16,7 @@ public class GetAccount : ICarterModule
         app.MapGet("api/v2/accounts/{id:guid}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    AccountViewModel requestResult = await mediator.Send(new Request(id), cancellationToken);
+                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
                     return Results.Ok(requestResult);
                 })
             .Produces<AccountViewModel>()
@@ -32,23 +33,15 @@ public class GetAccount : ICarterModule
         public Validator() => RuleFor(x => x.Id).NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, AccountViewModel>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, AccountViewModel>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<AccountViewModel> Handle(Request query, CancellationToken cancellationToken)
         {
-            Account? account = await _context.Accounts
+            var account = await context.Accounts
                 .Include(e => e.Transactions)
                 .ThenInclude(e => e.Category)
-                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.Id,
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id,
                     cancellationToken);
             if (account is null)
             {

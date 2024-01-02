@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
+
 using DrifterApps.Seeds.Testing.Scenarios;
+
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -68,7 +70,7 @@ public abstract partial class HolefeederScenario : Scenario
     {
         ArgumentNullException.ThrowIfNull(location);
 
-        Match match = ResourceIdRegex().Match(location.ToString());
+        var match = ResourceIdRegex().Match(location.ToString());
 
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }

@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
+
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+
 using Holefeeder.Application.Context;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +18,7 @@ public class GetAccounts : ICarterModule
         app.MapGet("api/v2/accounts",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    (int total, IEnumerable<AccountViewModel> accountViewModels) =
+                    var (total, accountViewModels) =
                         await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(accountViewModels);
@@ -38,24 +41,16 @@ public class GetAccounts : ICarterModule
 
     internal class Validator : QueryValidatorRoot<Request>;
 
-    internal class Handler : IRequestHandler<Request, QueryResult<AccountViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, QueryResult<AccountViewModel>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<QueryResult<AccountViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Accounts.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
-            List<AccountViewModel> items = await _context.Accounts
+            var total = await context.Accounts.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
+            var items = await context.Accounts
                 .Include(e => e.Transactions).ThenInclude(x => x.Category)
-                .Where(e => e.UserId == _userContext.Id)
+                .Where(e => e.UserId == userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

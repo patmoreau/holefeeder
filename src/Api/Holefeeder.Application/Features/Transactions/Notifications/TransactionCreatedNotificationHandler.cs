@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Application.Features.Transactions.Notifications;
+namespace Holefeeder.Application.Features.Transactions.Notifications;
 
 public class TransactionCreatedNotificationHandler : INotificationHandler<TransactionCreatedNotification>
 {

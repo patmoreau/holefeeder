@@ -10,9 +10,9 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        Request request = GivenAModifyStoreItemRequest().WithNoId().Build();
+        var request = GivenAModifyStoreItemRequest().WithNoId().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);
@@ -25,9 +25,9 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenDataIsEmpty_ThenError()
     {
         // arrange
-        Request request = GivenAModifyStoreItemRequest().WithNoData().Build();
+        var request = GivenAModifyStoreItemRequest().WithNoData().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);
@@ -40,9 +40,9 @@ public class ModifyStoreItemTests
     public void GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        Request request = GivenAModifyStoreItemRequest().Build();
+        var request = GivenAModifyStoreItemRequest().Build();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

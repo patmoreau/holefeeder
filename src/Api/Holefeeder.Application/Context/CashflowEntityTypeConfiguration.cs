@@ -1,5 +1,6 @@
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,7 +8,7 @@ namespace Holefeeder.Application.Context;
 
 internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashflow>
 {
-    private const char DELIMITER = ',';
+    private const char Delimiter = ',';
 
     public void Configure(EntityTypeBuilder<Cashflow> builder)
     {
@@ -59,10 +60,10 @@ internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashfl
         builder
             .Property(e => e.Tags)
             .HasColumnName("tags")
-            .HasConversion(p => string.Join(DELIMITER, p),
+            .HasConversion(p => string.Join(Delimiter, p),
                 p => string.IsNullOrWhiteSpace(p)
                     ? Array.Empty<string>()
-                    : p.Split(DELIMITER, StringSplitOptions.TrimEntries));
+                    : p.Split(Delimiter, StringSplitOptions.TrimEntries));
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")

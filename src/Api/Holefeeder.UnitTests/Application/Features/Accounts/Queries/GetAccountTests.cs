@@ -12,9 +12,9 @@ public class GetAccountTests
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
+        var request = _faker.RuleFor(x => x.Id, Guid.Empty).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

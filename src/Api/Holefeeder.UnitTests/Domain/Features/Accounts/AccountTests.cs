@@ -1,5 +1,5 @@
-﻿using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Tests.Common.Builders.Accounts;
+using Holefeeder.Domain.Features.Accounts;
+
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
@@ -13,7 +13,7 @@ public class AccountTests
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().WithId(default);
+        var builder = GivenAnActiveAccount().WithId(default);
 
         // act
         Action action = () => _ = builder.Build();
@@ -31,7 +31,7 @@ public class AccountTests
     public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string name)
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().WithName(name);
+        var builder = GivenAnActiveAccount().WithName(name);
 
         // act
         Action action = () => _ = builder.Build();
@@ -47,7 +47,7 @@ public class AccountTests
     public void GivenConstructor_WhenNameIsTooLong_ThenThrowException()
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().WithName(_faker.Random.Words().ClampLength(256));
+        var builder = GivenAnActiveAccount().WithName(_faker.Random.Words().ClampLength(256));
 
         // act
         Action action = () => _ = builder.Build();
@@ -63,7 +63,7 @@ public class AccountTests
     public void GivenConstructor_WhenOpenDateIsMissing_ThenThrowException()
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().WithOpenDate(default);
+        var builder = GivenAnActiveAccount().WithOpenDate(default);
 
         // act
         Action action = () => _ = builder.Build();
@@ -79,7 +79,7 @@ public class AccountTests
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        AccountBuilder builder = GivenAnActiveAccount().ForNoUser();
+        var builder = GivenAnActiveAccount().ForNoUser();
 
         // act
         Action action = () => _ = builder.Build();
@@ -95,7 +95,7 @@ public class AccountTests
     public void GivenCloseAccount_WhenClosing_ThenThrowException()
     {
         // arrange
-        Account account = GivenAnInactiveAccount().Build();
+        var account = GivenAnInactiveAccount().Build();
 
         // act
         Action action = () => account.Close();
@@ -111,7 +111,7 @@ public class AccountTests
     public void GivenOpenAccountWithCashflows_WhenClosing_ThenThrowException()
     {
         // arrange
-        Account account = GivenAnActiveAccount().WithActiveCashflows().Build();
+        var account = GivenAnActiveAccount().WithActiveCashflows().Build();
 
         // act
         Action action = () => account.Close();
@@ -129,7 +129,7 @@ public class AccountTests
     public void GivenAccount_WhenSetAsFavorite_ThenAccountIsModified(bool favorite)
     {
         // arrange
-        Account account = GivenAnActiveAccount().IsFavorite(!favorite).Build();
+        var account = GivenAnActiveAccount().IsFavorite(!favorite).Build();
 
         // act
         account = account with { Favorite = favorite };

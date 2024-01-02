@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+
 using HealthChecks.UI.Client;
+
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Serilog;
 
 namespace Holefeeder.Api.Extensions;
 
@@ -32,13 +33,6 @@ public static class WebApplicationExtensions
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-
-        return app;
-    }
-
-    public static WebApplication UseSerilog(this WebApplication app)
-    {
-        app.UseSerilogRequestLogging();
 
         return app;
     }

@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+
 using Holefeeder.Domain.Extensions;
+
 using Microsoft.AspNetCore.Http;
+
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
@@ -17,8 +20,8 @@ public class GetUpcomingTests
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
     {
         // arrange
-        Request? request = _faker.Generate();
-        DefaultHttpContext httpContext = new DefaultHttpContext
+        var request = _faker.Generate();
+        var httpContext = new DefaultHttpContext
         {
             Request =
             {
@@ -28,7 +31,7 @@ public class GetUpcomingTests
         };
 
         // act
-        Request? result = await Request.BindAsync(httpContext, null!);
+        var result = await Request.BindAsync(httpContext, null!);
 
         // assert
         result.Should().BeEquivalentTo(new Request(request.From, request.To));
@@ -38,9 +41,9 @@ public class GetUpcomingTests
     public void GivenValidator_WhenFromIsNull_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.From, _ => default).Generate();
+        var request = _faker.RuleFor(x => x.From, _ => default).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

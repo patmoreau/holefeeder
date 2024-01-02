@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Domain.Features.Transactions;
@@ -137,7 +137,7 @@ public record Transaction : IAggregateRoot
 
     public Transaction SetTags(params string[] tags)
     {
-        List<string> newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
+        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
 
         Tags = newTags.ToImmutableArray();
         return this;

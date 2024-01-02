@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Accounts;
+
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;

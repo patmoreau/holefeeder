@@ -1,8 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Domain.Features.Accounts;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -26,27 +27,18 @@ public class ModifyAccount : ICarterModule
             .WithName(nameof(ModifyAccount))
             .RequireAuthorization();
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            Account? exists = await _context.Accounts
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
+            var exists = await context.Accounts
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (exists is null)
             {
                 throw new AccountNotFoundException(request.Id);
             }
 
-            _context.Update(exists with
+            context.Update(exists with
             {
                 Name = request.Name,
                 Description = request.Description,

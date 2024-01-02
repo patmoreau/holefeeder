@@ -1,4 +1,5 @@
 using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -6,7 +7,7 @@ namespace Holefeeder.Application.Context;
 
 internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Transaction>
 {
-    private const char DELIMITER = ',';
+    private const char Delimiter = ',';
 
     public void Configure(EntityTypeBuilder<Transaction> builder)
     {
@@ -46,10 +47,10 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
             .HasColumnName("cashflow_date");
         builder
             .Property(e => e.Tags)
-            .HasColumnName("tags").HasConversion(p => string.Join(DELIMITER, p),
+            .HasColumnName("tags").HasConversion(p => string.Join(Delimiter, p),
                 p => string.IsNullOrWhiteSpace(p)
                     ? Array.Empty<string>()
-                    : p.Split(DELIMITER, StringSplitOptions.TrimEntries));
+                    : p.Split(Delimiter, StringSplitOptions.TrimEntries));
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")

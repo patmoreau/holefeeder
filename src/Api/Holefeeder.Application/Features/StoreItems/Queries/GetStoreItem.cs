@@ -1,7 +1,8 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
-using Holefeeder.Domain.Features.StoreItem;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +16,7 @@ public class GetStoreItem : ICarterModule
         app.MapGet("api/v2/store-items/{id}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    StoreItemViewModel result = await mediator.Send(new Request(id), cancellationToken);
+                    var result = await mediator.Send(new Request(id), cancellationToken);
                     return Results.Ok(result);
                 })
             .Produces<StoreItemViewModel>()
@@ -33,20 +34,14 @@ public class GetStoreItem : ICarterModule
         public Validator() => RuleFor(x => x.Id).NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, StoreItemViewModel>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, StoreItemViewModel>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
+        private readonly BudgetingContext _context = context;
+        private readonly IUserContext _userContext = userContext;
 
         public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
         {
-            StoreItem? result = await _context.StoreItems
+            var result = await _context.StoreItems
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id,
                     cancellationToken);
 

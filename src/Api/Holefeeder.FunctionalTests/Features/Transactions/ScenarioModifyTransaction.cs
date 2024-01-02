@@ -1,11 +1,12 @@
 using System.Net;
 using System.Text.Json;
-using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Categories;
+
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -17,17 +18,12 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioModifyTransaction : HolefeederScenario
+public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request request = GivenAnInvalidModifyTransactionRequest().Build();
+        var request = GivenAnInvalidModifyTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -39,7 +35,7 @@ public class ScenarioModifyTransaction : HolefeederScenario
     [Fact]
     public async Task WhenAccountDoesNotExists()
     {
-        Request request = GivenAModifyTransactionRequest().Build();
+        var request = GivenAModifyTransactionRequest().Build();
 
         GivenUserIsAuthorized();
 
@@ -52,11 +48,11 @@ public class ScenarioModifyTransaction : HolefeederScenario
     [Fact]
     public async Task WhenCategoryDoesNotExists()
     {
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenAModifyTransactionRequest()
+        var request = GivenAModifyTransactionRequest()
             .WithAccount(account).Build();
 
         GivenUserIsAuthorized();
@@ -70,15 +66,15 @@ public class ScenarioModifyTransaction : HolefeederScenario
     [Fact]
     public async Task WhenTransactionDoesNotExists()
     {
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Category category = await GivenACategory()
+        var category = await GivenACategory()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Request request = GivenAModifyTransactionRequest()
+        var request = GivenAModifyTransactionRequest()
             .WithAccount(account)
             .WithCategory(category)
             .Build();
@@ -109,7 +105,7 @@ public class ScenarioModifyTransaction : HolefeederScenario
 
         GivenUserIsAuthorized();
 
-        Request request = GivenAModifyTransactionRequest()
+        var request = GivenAModifyTransactionRequest()
             .WithId(transaction.Id)
             .WithAccount(accounts.ElementAt(1))
             .WithCategory(categories.ElementAt(1))
@@ -121,14 +117,14 @@ public class ScenarioModifyTransaction : HolefeederScenario
 
         using var dbContext = DatabaseDriver.CreateDbContext();
 
-        Transaction? result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiedATransaction(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyTransaction, json);
     }
 }

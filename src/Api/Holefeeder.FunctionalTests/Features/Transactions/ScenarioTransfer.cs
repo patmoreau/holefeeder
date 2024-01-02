@@ -1,8 +1,11 @@
 using System.Net;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -13,13 +16,9 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public sealed class ScenarioTransfer : HolefeederScenario
+public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioTransfer(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task InvalidRequest()
     {
@@ -110,7 +109,7 @@ public sealed class ScenarioTransfer : HolefeederScenario
                 {
                     using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(ids.FromTransactionId);
+                    var result = await dbContext.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
                     result.Should().NotBeNull($"because the FromTransactionId ({ids.FromTransactionId}) was not found");
 
@@ -123,7 +122,7 @@ public sealed class ScenarioTransfer : HolefeederScenario
                 {
                     using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(ids.ToTransactionId);
+                    var result = await dbContext.FindByIdAsync<Transaction>(ids.ToTransactionId);
 
                     result.Should()
                         .NotBeNull($"because the ToTransactionId ({ids.ToTransactionId}) was not found")

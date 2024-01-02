@@ -1,10 +1,12 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Reflection;
+
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -18,8 +20,7 @@ public class GetUpcoming : ICarterModule
         app.MapGet("api/v2/cashflows/get-upcoming",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    (int total, IEnumerable<UpcomingViewModel> viewModels) =
-                        await mediator.Send(request, cancellationToken);
+                    var (total, viewModels) = await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
                 })
@@ -38,8 +39,8 @@ public class GetUpcoming : ICarterModule
             const string fromKey = "from";
             const string toKey = "to";
 
-            bool hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], out DateOnly from);
-            bool hasTo = DateOnly.TryParse(context.Request.Query[toKey], out DateOnly to);
+            var hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], out var from);
+            var hasTo = DateOnly.TryParse(context.Request.Query[toKey], out var to);
 
             Request result = new(hasFrom ? from : DateOnly.MinValue, hasTo ? to : DateOnly.MaxValue);
 
@@ -59,27 +60,19 @@ public class GetUpcoming : ICarterModule
         }
     }
 
-    internal class Handler : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<QueryResult<UpcomingViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            List<Cashflow> cashflows = await _context.Cashflows
-                .Where(c => c.UserId == _userContext.Id)
+            var cashflows = await context.Cashflows
+                .Where(c => c.UserId == userContext.Id)
                 .Include(c => c.Account)
                 .Include(c => c.Category)
                 .Include(c => c.Transactions)
                 .ToListAsync(cancellationToken);
 
-            List<UpcomingViewModel> results = cashflows
+            var results = cashflows
                 .SelectMany(x => x.GetUpcoming(request.To)
                     .Select(d => new UpcomingViewModel
                     {

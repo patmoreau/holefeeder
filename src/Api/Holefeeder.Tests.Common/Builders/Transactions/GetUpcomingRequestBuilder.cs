@@ -1,4 +1,5 @@
 using DrifterApps.Seeds.Testing;
+
 using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;

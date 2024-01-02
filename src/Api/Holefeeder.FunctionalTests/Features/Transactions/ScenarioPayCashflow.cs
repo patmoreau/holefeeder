@@ -1,9 +1,12 @@
 using System.Net;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
@@ -15,13 +18,8 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public sealed class ScenarioPayCashflow : HolefeederScenario
+public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioPayCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task InvalidRequest()
     {
@@ -102,12 +100,12 @@ public sealed class ScenarioPayCashflow : HolefeederScenario
                 .Then("the response should be created", () => ShouldExpectStatusCode(HttpStatusCode.Created))
                 .And("the cashflow paid saved in the database should match the request", async () =>
                 {
-                    Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+                    var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
                     var id = ResourceIdFromLocation(location);
 
                     using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    Transaction? result = await dbContext.FindByIdAsync<Transaction>(id);
+                    var result = await dbContext.FindByIdAsync<Transaction>(id);
 
                     result.Should().NotBeNull($"because the TransactionId ({id}) was not found")
                         .And.BeEquivalentTo(request);

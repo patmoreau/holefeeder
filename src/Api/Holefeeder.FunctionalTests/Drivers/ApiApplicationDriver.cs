@@ -1,9 +1,13 @@
 using System.Security.Claims;
+
 using Bogus;
+
 using DrifterApps.Seeds.Testing;
 using DrifterApps.Seeds.Testing.Drivers;
+
 using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Infrastructure.SeedWork;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

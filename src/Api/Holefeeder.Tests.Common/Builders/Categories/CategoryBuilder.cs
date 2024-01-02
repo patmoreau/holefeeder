@@ -1,4 +1,5 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Categories;
 
 namespace Holefeeder.Tests.Common.Builders.Categories;

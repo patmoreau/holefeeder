@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+
 using MediatR;
 
 namespace Holefeeder.UnitTests.Application;
@@ -18,7 +19,7 @@ public class HandlerRegistrationTests
             .Where(IsIRequestHandler)
             .ToList();
 
-        foreach (Type requestType in requestTypes)
+        foreach (var requestType in requestTypes)
         {
             ShouldContainHandlerForRequest(handlerTypes, requestType);
         }

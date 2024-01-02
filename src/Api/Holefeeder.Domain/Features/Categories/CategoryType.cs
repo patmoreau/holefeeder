@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
 
@@ -18,21 +19,14 @@ public abstract class CategoryType : SmartEnum<CategoryType>
 
     public virtual bool IsExpense => false;
 
-    private sealed class ExpenseCategoryType : CategoryType
+    private sealed class ExpenseCategoryType(int id, string name) : CategoryType(id, name)
     {
-        public ExpenseCategoryType(int id, string name) : base(id, name)
-        {
-        }
-
         public override int Multiplier => -1;
         public override bool IsExpense => true;
     }
 
-    private sealed class GainCategoryType : CategoryType
+    private sealed class GainCategoryType(int id, string name) : CategoryType(id, name)
     {
-        public GainCategoryType(int id, string name) : base(id, name)
-        {
-        }
         public override bool IsExpense => false;
     }
 }

@@ -1,8 +1,11 @@
 using System.Reflection;
+
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +19,7 @@ public class GetCashflows : ICarterModule
         app.MapGet("api/v2/cashflows",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    (int total, IEnumerable<CashflowInfoViewModel> viewModels) =
+                    var (total, viewModels) =
                         await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
@@ -39,25 +42,17 @@ public class GetCashflows : ICarterModule
 
     internal class Validator : QueryValidatorRoot<Request>;
 
-    internal class Handler : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<QueryResult<CashflowInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Cashflows.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
-            List<CashflowInfoViewModel> items = await _context.Cashflows
+            var total = await context.Cashflows.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
+            var items = await context.Cashflows
                 .Include(e => e.Account)
                 .Include(e => e.Category)
-                .Where(e => e.UserId == _userContext.Id)
+                .Where(e => e.UserId == userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

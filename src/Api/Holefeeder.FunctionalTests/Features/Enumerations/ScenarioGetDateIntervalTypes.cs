@@ -1,4 +1,5 @@
 using System.Net;
+
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -7,13 +8,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetDateIntervalTypes : HolefeederScenario
+public class ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenAnonymousUser()
     {

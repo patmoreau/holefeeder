@@ -1,8 +1,9 @@
 using System.Net;
+
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
@@ -10,26 +11,22 @@ namespace Holefeeder.FunctionalTests.Features.Categories;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetCategories : HolefeederScenario
+public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenCategoriesExists()
     {
         const string firstName = nameof(firstName);
         const string secondName = nameof(secondName);
 
-        Category firstCategory = await GivenACategory()
+        var firstCategory = await GivenACategory()
             .WithName(firstName)
             .ForUser(HolefeederUserId)
             .IsNotFavorite()
             .SavedInDbAsync(DatabaseDriver);
 
-        Category secondCategory = await GivenACategory()
+        var secondCategory = await GivenACategory()
             .WithName(secondName)
             .ForUser(HolefeederUserId)
             .IsFavorite()

@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
+
 using Holefeeder.Application.Features.StoreItems.Queries;
+
 using Microsoft.AspNetCore.Http;
+
 using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItems;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
@@ -18,7 +21,7 @@ public class GetStoreItemsTests
 
     public GetStoreItemsTests()
     {
-        int countDummy = Fakerizer.Random.Number(100);
+        var countDummy = Fakerizer.Random.Number(100);
         new Faker<StoreItemViewModel>()
             .CustomInstantiator(faker =>
                 new StoreItemViewModel(faker.Random.Guid(), faker.Random.Hash(), faker.Lorem.Paragraph()))
@@ -32,17 +35,17 @@ public class GetStoreItemsTests
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
     {
         // arrange
-        DefaultHttpContext httpContext = new DefaultHttpContext
+        var httpContext = new DefaultHttpContext
         {
             Request = { QueryString = new QueryString("?offset=10&limit=100&sort=data&filter=code:eq:settings") }
         };
 
         // act
-        Request? result = await Request.BindAsync(httpContext, null!);
+        var result = await Request.BindAsync(httpContext, null!);
 
         // assert
-        string[] sort = new[] { "data" };
-        string[] filter = new[] { "code:eq:settings" };
+        string[] sort = ["data"];
+        string[] filter = ["code:eq:settings"];
         result.Should().BeEquivalentTo(new Request(10, 100, sort, filter));
     }
 
@@ -50,9 +53,9 @@ public class GetStoreItemsTests
     public void GivenValidator_WhenOffsetIsInvalid_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Offset, -1).Generate();
+        var request = _faker.RuleFor(x => x.Offset, -1).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);
@@ -65,9 +68,9 @@ public class GetStoreItemsTests
     public void GivenValidator_WhenLimitIsInvalid_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Limit, 0).Generate();
+        var request = _faker.RuleFor(x => x.Limit, 0).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

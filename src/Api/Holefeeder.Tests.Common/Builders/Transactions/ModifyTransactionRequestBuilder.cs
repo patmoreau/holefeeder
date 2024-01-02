@@ -1,6 +1,8 @@
 using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;

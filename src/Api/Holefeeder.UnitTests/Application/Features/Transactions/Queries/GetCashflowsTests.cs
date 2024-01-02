@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
+
 using static Holefeeder.Application.Features.Transactions.Queries.GetCashflows;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
@@ -19,17 +21,17 @@ public class GetCashflowsTests
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
     {
         // arrange
-        DefaultHttpContext httpContext = new DefaultHttpContext
+        var httpContext = new DefaultHttpContext
         {
             Request = { QueryString = new QueryString("?offset=10&limit=100&sort=data&filter=code:eq:settings") }
         };
 
         // act
-        Request? result = await Request.BindAsync(httpContext, null!);
+        var result = await Request.BindAsync(httpContext, null!);
 
         // assert
-        string[] sort = new[] { "data" };
-        string[] filter = new[] { "code:eq:settings" };
+        string[] sort = ["data"];
+        string[] filter = ["code:eq:settings"];
         result.Should().BeEquivalentTo(new Request(10, 100, sort, filter));
     }
 
@@ -37,9 +39,9 @@ public class GetCashflowsTests
     public void GivenValidator_WhenOffsetIsInvalid_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Offset, -1).Generate();
+        var request = _faker.RuleFor(x => x.Offset, -1).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);
@@ -52,9 +54,9 @@ public class GetCashflowsTests
     public void GivenValidator_WhenLimitIsInvalid_ThenError()
     {
         // arrange
-        Request? request = _faker.RuleFor(x => x.Limit, 0).Generate();
+        var request = _faker.RuleFor(x => x.Limit, 0).Generate();
 
-        Validator validator = new Validator();
+        var validator = new Validator();
 
         // act
         TestValidationResult<Request>? result = validator.TestValidate(request);

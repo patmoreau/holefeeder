@@ -10,11 +10,11 @@ public record MyDataCashflowDto
 
     public decimal Amount { get; init; }
 
-    public DateIntervalType IntervalType { get; set; } = null!;
+    public DateIntervalType IntervalType { get; init; } = null!;
 
-    public int Frequency { get; set; }
+    public int Frequency { get; init; }
 
-    public int Recurrence { get; set; }
+    public int Recurrence { get; init; }
 
     public string Description { get; init; } = null!;
 

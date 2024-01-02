@@ -1,8 +1,11 @@
 using System.Reflection;
+
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +19,7 @@ public class GetTransactions : ICarterModule
         app.MapGet("api/v2/transactions",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    (int total, IEnumerable<TransactionInfoViewModel> viewModels) =
+                    var (total, viewModels) =
                         await mediator.Send(request, cancellationToken);
                     ctx.Response.Headers.Append("X-Total-Count", $"{total}");
                     return Results.Ok(viewModels);
@@ -39,25 +42,17 @@ public class GetTransactions : ICarterModule
 
     internal class Validator : QueryValidatorRoot<Request>;
 
-    internal class Handler : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, QueryResult<TransactionInfoViewModel>>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<QueryResult<TransactionInfoViewModel>> Handle(Request request,
             CancellationToken cancellationToken)
         {
-            int total = await _context.Transactions.CountAsync(e => e.UserId == _userContext.Id, cancellationToken);
-            List<TransactionInfoViewModel> items = await _context.Transactions
+            var total = await context.Transactions.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
+            var items = await context.Transactions
                 .Include(e => e.Account)
                 .Include(e => e.Category)
-                .Where(e => e.UserId == _userContext.Id)
+                .Where(e => e.UserId == userContext.Id)
                 .Filter(request.Filter)
                 .Sort(request.Sort)
                 .Skip(request.Offset)

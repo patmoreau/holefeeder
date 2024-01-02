@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Tests.Common.Builders.Transactions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;

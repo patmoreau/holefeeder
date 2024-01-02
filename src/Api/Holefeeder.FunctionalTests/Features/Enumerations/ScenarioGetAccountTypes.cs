@@ -1,4 +1,5 @@
 using System.Net;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
@@ -7,13 +8,8 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetAccountTypes : HolefeederScenario
+public class ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenAnonymousUser()
     {

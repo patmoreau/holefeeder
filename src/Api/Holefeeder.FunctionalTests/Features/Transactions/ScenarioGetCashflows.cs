@@ -1,10 +1,12 @@
 using System.Net;
+
 using Bogus;
+
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -14,13 +16,9 @@ namespace Holefeeder.FunctionalTests.Features.Transactions;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetCashflows : HolefeederScenario
+public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
@@ -34,14 +32,14 @@ public class ScenarioGetCashflows : HolefeederScenario
     [Fact]
     public async Task WhenCashflowsExistsSortedByDescriptionDesc()
     {
-        Faker faker = new Faker();
-        int count = faker.Random.Int(2, 10);
+        var faker = new Faker();
+        var count = faker.Random.Int(2, 10);
 
-        Account account = await GivenAnActiveAccount()
+        var account = await GivenAnActiveAccount()
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);
 
-        Category category = await GivenACategory()
+        var category = await GivenACategory()
             .OfType(CategoryType.Expense)
             .ForUser(HolefeederUserId)
             .SavedInDbAsync(DatabaseDriver);

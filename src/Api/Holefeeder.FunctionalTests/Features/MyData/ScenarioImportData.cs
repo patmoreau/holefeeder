@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+
 using Holefeeder.Application;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
@@ -7,7 +8,9 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
+
 using static Holefeeder.Application.Features.MyData.Commands.ImportData;
 using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.MyData.MyDataAccountDtoBuilder;
@@ -19,17 +22,13 @@ namespace Holefeeder.FunctionalTests.Features.MyData;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioImportData : HolefeederScenario
+public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    public ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-        : base(applicationDriver, testOutputHelper)
-    {
-    }
-
     [Fact]
     public async Task WhenInvalidRequest()
     {
-        Request request = GivenAnImportDataRequest()
+        var request = GivenAnImportDataRequest()
             .WithNoData()
             .Build();
 
@@ -54,7 +53,7 @@ public class ScenarioImportData : HolefeederScenario
             .WithCategory(categories.ElementAt(0))
             .BuildCollection(2);
 
-        Request request = GivenAnImportDataRequest()
+        var request = GivenAnImportDataRequest()
             .WithUpdateExisting()
             .WithAccounts(accounts.ToArray())
             .WithCategories(categories.ToArray())
@@ -68,10 +67,10 @@ public class ScenarioImportData : HolefeederScenario
 
         ShouldExpectStatusCode(HttpStatusCode.Accepted);
 
-        Uri location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
+        var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
         var id = ResourceIdFromLocation(location);
 
-        ImportDataStatusDto? dto = await ThenWaitForCompletion(id);
+        var dto = await ThenWaitForCompletion(id);
 
         AssertAll(async () =>
         {
@@ -92,7 +91,7 @@ public class ScenarioImportData : HolefeederScenario
         {
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Account? result = await dbContext.FindByIdAsync<Account>(account.Id);
+            var result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
@@ -101,7 +100,7 @@ public class ScenarioImportData : HolefeederScenario
         {
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Category? result = await dbContext.FindByIdAsync<Category>(category.Id);
+            var result = await dbContext.FindByIdAsync<Category>(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
@@ -110,7 +109,7 @@ public class ScenarioImportData : HolefeederScenario
         {
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Cashflow? result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
+            var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
@@ -119,7 +118,7 @@ public class ScenarioImportData : HolefeederScenario
         {
             using var dbContext = DatabaseDriver.CreateDbContext();
 
-            Transaction? result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+            var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }
@@ -127,14 +126,14 @@ public class ScenarioImportData : HolefeederScenario
 
     private async Task WhenUserImportsData(Request request)
     {
-        string json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request);
         await HttpClientDriver.SendPostRequestAsync(ApiResources.ImportData, json);
     }
 
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
     {
-        int tries = 0;
-        bool inProgress = true;
+        var tries = 0;
+        var inProgress = true;
         const int retryDelayInSeconds = 5;
         const int numberOfRetry = 10;
 
@@ -146,7 +145,7 @@ public class ScenarioImportData : HolefeederScenario
 
             ShouldExpectStatusCode(HttpStatusCode.OK);
 
-            ImportDataStatusDto? dto = HttpClientDriver.DeserializeContent<ImportDataStatusDto>();
+            var dto = HttpClientDriver.DeserializeContent<ImportDataStatusDto>();
             dto.Should().NotBeNull();
             if (dto!.Status == CommandStatus.Completed)
             {

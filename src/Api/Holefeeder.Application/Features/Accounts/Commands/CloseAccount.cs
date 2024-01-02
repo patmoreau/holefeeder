@@ -1,8 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
-using Holefeeder.Domain.Features.Accounts;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -26,28 +27,19 @@ public class CloseAccount : ICarterModule
             .WithName(nameof(CloseAccount))
             .RequireAuthorization();
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            Account? account = await _context.Accounts
+            var account = await context.Accounts
                 // .AsNoTracking()
-                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == _userContext.Id, cancellationToken);
+                .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
                 throw new AccountNotFoundException(request.Id);
             }
 
-            _context.Update(account.Close());
+            context.Update(account.Close());
 
             return Unit.Value;
         }

@@ -1,8 +1,9 @@
 using DrifterApps.Seeds.Application;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +17,7 @@ public class GetTransaction : ICarterModule
         app.MapGet("api/v2/transactions/{id:guid}",
                 async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    TransactionInfoViewModel requestResult = await mediator.Send(new Request(id), cancellationToken);
+                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
                     return Results.Ok(requestResult);
                 })
             .Produces<TransactionInfoViewModel>()
@@ -34,24 +35,16 @@ public class GetTransaction : ICarterModule
         public Validator() => RuleFor(x => x.Id).NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, TransactionInfoViewModel>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, TransactionInfoViewModel>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<TransactionInfoViewModel> Handle(Request query,
             CancellationToken cancellationToken)
         {
-            Transaction? transaction = await _context.Transactions
+            var transaction = await context.Transactions
                 .Include(x => x.Account)
                 .Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == _userContext.Id, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(query.Id);

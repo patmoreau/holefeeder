@@ -1,8 +1,9 @@
-﻿using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
-using Holefeeder.Domain.Features.Transactions;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -33,28 +34,19 @@ public class DeleteTransaction : ICarterModule
         public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
     }
 
-    internal class Handler : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {
-        private readonly BudgetingContext _context;
-        private readonly IUserContext _userContext;
-
-        public Handler(IUserContext userContext, BudgetingContext context)
-        {
-            _userContext = userContext;
-            _context = context;
-        }
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            Transaction? transaction =
-                await _context.Transactions.SingleOrDefaultAsync(
-                    x => x.Id == request.Id && x.UserId == _userContext.Id, cancellationToken);
+            var transaction =
+                await context.Transactions.SingleOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (transaction is null)
             {
                 throw new TransactionNotFoundException(request.Id);
             }
 
-            _context.Remove(transaction);
+            context.Remove(transaction);
 
             return Unit.Value;
         }

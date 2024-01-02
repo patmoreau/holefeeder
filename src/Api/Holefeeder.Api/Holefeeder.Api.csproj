@@ -21,7 +21,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
     <PackageReference Include="Carter" Version="8.0.0" />
-    <PackageReference Include="DrifterApps.Seeds.Infrastructure" Version="0.1.67" />
+    <PackageReference Include="DrifterApps.Seeds.Infrastructure" Version="0.1.73" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.0.0" />
@@ -47,6 +47,10 @@
     <None Update="appsettings.Development.json">
       <DependentUpon>appsettings.json</DependentUpon>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\" />
   </ItemGroup>
 
 </Project>

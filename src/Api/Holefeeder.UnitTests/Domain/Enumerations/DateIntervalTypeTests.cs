@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+
 using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.UnitTests.Domain.Enumerations;
