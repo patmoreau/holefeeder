@@ -1,9 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { Category, CategoryType } from '@app/shared/models';
 import { catchError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { formatErrors } from '@app/core/utils/api.utils';
-import { map } from 'rxjs/operators';
 import { Tag } from '@app/shared/models/tag.model';
 
 const apiRoute = 'api/v2/tags';

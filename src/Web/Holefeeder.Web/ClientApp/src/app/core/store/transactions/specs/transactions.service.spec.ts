@@ -4,17 +4,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TransactionDetailAdapter } from '@app/core/adapters';
 
 // write test for TransactionsService here
-// mock response data
-const mockResponse = [
-  {
-    id: 1,
-    name: 'Category 1',
-    description: 'Description 1',
-    // ... Add more properties here as needed
-  },
-  // Add more mock data as needed
-];
-
 const baseUrl = 'api/v2/transactions';
 
 describe('TransactionsService', () => {

@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { authenticationGuard } from '@app/core/auth/authorization.guard';
-import { UnauthorizedComponent } from '@app/modules/home/unauthorized/unauthorized.component';
 
 export const HOME_ROUTES: Routes = [
   {
