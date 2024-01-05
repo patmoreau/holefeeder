@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { Component, inject, OnInit } from '@angular/core';
