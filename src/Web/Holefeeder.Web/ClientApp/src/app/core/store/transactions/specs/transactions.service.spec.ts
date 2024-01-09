@@ -4,7 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TransactionDetailAdapter } from '@app/core/adapters';
 
 // write test for TransactionsService here
-const baseUrl = 'api/v2/transactions';
+const baseUrl = 'transactions';
 
 describe('TransactionsService', () => {
   beforeEach(() => {
@@ -45,7 +45,7 @@ describe('TransactionsService', () => {
   //       });
   //
   //     // Expect a single HTTP GET request to the specified API URL
-  //     const req = httpMock.expectOne(`${apiUrl}/api/v2/transactions`); // Use apiUrl here
+  //     const req = httpMock.expectOne(`${apiUrl}/transactions`); // Use apiUrl here
   //     expect(req.request.method).toBe('GET');
   //   }
   // ));

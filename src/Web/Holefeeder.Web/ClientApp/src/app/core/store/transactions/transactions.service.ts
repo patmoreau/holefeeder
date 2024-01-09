@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TransactionDetailAdapter } from '../../adapters';
 
-const apiRoute = 'api/v2/transactions';
+const apiRoute = 'transactions';
 
 interface TransactionDetailResponse {
   id: string;

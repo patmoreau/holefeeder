@@ -16,7 +16,7 @@ import { Observable, of, tap } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { transactionDetailType, TransactionDetailAdapter } from '../adapters';
 
-const apiRoute = 'api/v2/transactions';
+const apiRoute = 'transactions';
 
 type idType = { id: string };
 

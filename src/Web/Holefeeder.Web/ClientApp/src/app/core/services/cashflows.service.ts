@@ -14,7 +14,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { CashflowDetailAdapter } from '../adapters';
 import { StateService } from './state.service';
 
-const apiRoute = 'api/v2/cashflows';
+const apiRoute = 'cashflows';
 
 interface CashflowState {
   cashflows: CashflowDetail[];

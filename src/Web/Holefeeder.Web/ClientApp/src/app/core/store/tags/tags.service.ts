@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { Tag } from '@app/shared/models/tag.model';
 
-const apiRoute = 'api/v2/tags';
+const apiRoute = 'tags';
 
 @Injectable({ providedIn: 'root' })
 export class TagsService {

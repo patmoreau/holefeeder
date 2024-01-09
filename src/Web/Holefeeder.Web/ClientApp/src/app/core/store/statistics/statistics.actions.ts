@@ -1,0 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Summary } from '@app/shared/models';
+
+export const StatisticsActions = createActionGroup({
+  source: 'Statistics API',
+  events: {
+    loadSummary: emptyProps(),
+    loadSummarySuccess: props<{ summary: Summary }>(),
+    loadSummaryFailure: props<{ error: string }>(),
+    // addCategory: props<{ category: Category }>(),
+    // removeCategory: props<{ id: string }>(),
+    // updateCategory: props<{ category: Category }>(),
+    // upsertCategory: props<{ category: Category }>(),
+    // addStatistics: props<{ statistics: ReadonlyArray<Category> }>(),
+    // removeStatistics: props<{ ids: ReadonlyArray<string> }>(),
+    // updateStatistics: props<{ statistics: ReadonlyArray<Category> }>(),
+    // upsertStatistics: props<{ statistics: ReadonlyArray<Category> }>(),
+    clearSummary: emptyProps(),
+  },
+});
+
+// generated action creators:
+const {
+  loadSummary,
+  loadSummarySuccess,
+  loadSummaryFailure,
+  clearSummary,
+} = StatisticsActions;

@@ -14,7 +14,7 @@ import { AccountAdapter, accountType } from '@app/core/adapters';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
 import { StateService } from './state.service';
 
-const apiRoute = 'api/v2/accounts';
+const apiRoute = 'accounts';
 
 interface AccountState {
   accounts: Account[];
