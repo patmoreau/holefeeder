@@ -26,6 +26,7 @@ export * from './statistics-monthly.model';
 export * from './statistics-yearly.model';
 export * from './statistics.model';
 export * from './store-item.model';
+export * from './summary.model';
 export * from './tag.model';
 export * from './toast-item.model';
 export * from './transaction-detail.model';

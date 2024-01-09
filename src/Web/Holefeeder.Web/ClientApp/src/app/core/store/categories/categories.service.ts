@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { formatErrors } from '@app/core/utils/api.utils';
 import { map } from 'rxjs/operators';
 
-const apiRoute = 'api/v2/categories';
+const apiRoute = 'categories';
 
 type categoryType = {
   id: string;
