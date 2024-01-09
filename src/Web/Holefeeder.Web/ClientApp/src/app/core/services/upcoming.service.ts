@@ -10,7 +10,7 @@ import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
 
-const apiRoute = 'api/v2/cashflows/get-upcoming';
+const apiRoute = 'cashflows/get-upcoming';
 
 interface UpcomingState {
   upcoming: Upcoming[];

@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http/testing';
 import { Category } from '@app/shared/models';
 
-const baseUrl = 'api/v2/categories';
+const baseUrl = 'categories';
 
 describe('CategoriesService', () => {
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe('CategoriesService', () => {
       });
 
       // Expect a single HTTP GET request to the specified API URL
-      const req = httpMock.expectOne(`${apiUrl}/api/v2/categories`); // Use apiUrl here
+      const req = httpMock.expectOne(`${apiUrl}/categories`); // Use apiUrl here
       expect(req.request.method).toBe('GET');
 
       // Respond to the request with mock data

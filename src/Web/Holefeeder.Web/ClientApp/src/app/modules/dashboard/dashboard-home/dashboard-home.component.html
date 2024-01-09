@@ -1,6 +1,18 @@
 <div class="container pt-3 pb-4">
   <div class="d-flex flex-wrap justify-content-between align-items-center">
     <div class="d-flex align-items-center">
+      <h4 class="mb-0 line-height-1 text-truncate">Trend</h4>
+    </div>
+  </div>
+  <ng-container *ngIf="chartData$ | async; else loader">
+    <div class="pt-3">
+      <canvas baseChart class="chart" [data]="chartData$ | async | filterNonNullish" [type]="chartType"
+        [options]="chartOptions" [plugins]="chartPlugins">
+      </canvas>
+    </div>
+  </ng-container>
+  <div class="d-flex flex-wrap justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
       <h4 class="mb-0 line-height-1 text-truncate">Upcoming</h4>
       <span>
         <ng-container *ngIf="upcoming$ | async as upcoming; else loader">
@@ -19,9 +31,8 @@
 </div>
 <div class="container">
   <app-transaction-list-item (action)="action($event, upcoming)" *ngFor="let upcoming of (upcoming$ | async)"
-                             [allowSave]="true" [amount]="upcoming.amount" [date]="upcoming.date"
-                             [description]="upcoming.description ? upcoming.description : upcoming.category.name"
-                             [tags]="upcoming.tags">
+    [allowSave]="true" [amount]="upcoming.amount" [date]="upcoming.date"
+    [description]="upcoming.description ? upcoming.description : upcoming.category.name" [tags]="upcoming.tags">
   </app-transaction-list-item>
 </div>
 <ng-template #loader>

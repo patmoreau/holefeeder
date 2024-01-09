@@ -592,5 +592,19 @@
         }
       ]
     }
-  ]
+  ],
+  "summary": {
+    "last": {
+      "gains": 1000.1,
+      "expenses": 100.1
+    },
+    "current": {
+      "gains": 2000.2,
+      "expenses": 200.2
+    },
+    "average": {
+      "gains": 3000.3,
+      "expenses": 300.3
+    }
+  }
 }

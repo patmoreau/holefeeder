@@ -10,7 +10,7 @@ import { ModifyAccountCommand } from '../models/modify-account-command.model';
 import { OpenAccountCommand } from '../models/open-account-command.model';
 import { IdResultType } from '@app/shared/types/id-result.type';
 
-const apiRoute = 'api/v2/accounts';
+const apiRoute = 'accounts';
 
 @Injectable({ providedIn: 'root' })
 export class AccountCommandsService {

@@ -30,7 +30,7 @@ import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import { filterTrue, tapTrace } from '@app/shared/helpers';
 import { LoggerService } from '@app/core/logger';
 
-const apiRoute = 'api/v2/store-items';
+const apiRoute = 'store-items';
 
 interface SettingsState {
   period: DateInterval;

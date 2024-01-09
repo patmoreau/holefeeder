@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http/testing';
 import { Tag } from '@app/shared/models/tag.model';
 
-const baseUrl = 'api/v2/tags';
+const baseUrl = 'tags';
 
 describe('TagsService', () => {
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe('TagsService', () => {
       });
 
       // Expect a single HTTP GET request to the specified API URL
-      const req = httpMock.expectOne(`${apiUrl}/api/v2/tags`); // Use apiUrl here
+      const req = httpMock.expectOne(`${apiUrl}/tags`); // Use apiUrl here
       expect(req.request.method).toBe('GET');
 
       // Respond to the request with mock data

@@ -34,7 +34,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}/gateway` },
+    { provide: 'BASE_API_URL', useValue: `${environment.baseUrl}/gateway/api/v2` },
     loadConfigProvider,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     importProvidersFrom(
