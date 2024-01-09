@@ -155,7 +155,7 @@ export class DashboardHomeComponent implements OnInit {
         },
       },
       y: {
-        display: false,
+        display: true,
         grid: {
           display: false,
         },
