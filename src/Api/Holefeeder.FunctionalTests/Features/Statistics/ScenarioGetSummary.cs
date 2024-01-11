@@ -31,7 +31,7 @@ public class ScenarioGetSummary(ApiApplicationDriver applicationDriver, ITestOut
                 .And("an 'income' gain was made to the 'checking' account in December 2022", () => CreateGain("income", "checking", new DateOnly(2022, 12, 1), 1000.1m))
                 .And("an 'income' gain was made to the 'checking' account in January 2023", () => CreateGain("income", "checking", new DateOnly(2023, 1, 1), 2000.2m))
                 .And("an 'income' gain was made to the 'checking' account in February 2023", () => CreateGain("income", "checking", new DateOnly(2023, 2, 1), 3000.3m))
-                .When("user gets their Febuary summary statistics", () => HttpClientDriver.SendGetRequestAsync(ApiResources.GetSummary, new DateOnly(2023, 2, 1)))
+                .When("user gets their Febuary summary statistics", () => HttpClientDriver.SendGetRequestAsync(ApiResources.GetSummary, new DateOnly(2023, 2, 1), new DateOnly(2023, 2, 28)))
                 .Then("the summary should match the expected", ValidateResponse));
 
     private Task ValidateResponse()

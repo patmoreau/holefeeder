@@ -35,7 +35,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
     {
     }
 
-    protected abstract DateOnly AddIteration(DateOnly effectiveDate, int iteration);
+    public abstract DateOnly AddIteration(DateOnly effectiveDate, int iteration);
 
     public virtual (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly lookupDate, int frequency)
     {
@@ -111,13 +111,13 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class DailyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
+        public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddDays(iteration);
     }
 
     private sealed class WeeklyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
+        public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             AddWeeks(effectiveDate, iteration);
 
         private static DateOnly AddWeeks(DateOnly effectiveDate, int weeks) => effectiveDate.AddDays(7 * weeks);
@@ -141,7 +141,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class MonthlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
+        public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddMonths(iteration);
 
         internal static bool IsMonthlyRange(DateOnly fromDate, DateOnly toDate, out int frequency)
@@ -163,7 +163,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class YearlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
+        public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddYears(iteration);
 
         internal static bool IsYearlyRange(DateOnly fromDate, DateOnly toDate, out int frequency)
@@ -185,7 +185,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
     private sealed class OneTimeDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => effectiveDate;
+        public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => effectiveDate;
 
         public override DateOnly NextDate(DateOnly effectiveDate, DateOnly fromDate, int frequency) => effectiveDate;
 

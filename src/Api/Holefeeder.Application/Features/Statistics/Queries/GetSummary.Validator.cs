@@ -9,7 +9,8 @@ public partial class GetSummary
     {
         public Validator()
         {
-            RuleFor(command => command.AsOf).NotEmpty();
+            RuleFor(command => command.From).NotEmpty();
+            RuleFor(command => command.To).NotEmpty();
         }
     }
 }
