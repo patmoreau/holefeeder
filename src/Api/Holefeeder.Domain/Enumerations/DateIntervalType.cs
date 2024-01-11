@@ -8,13 +8,30 @@ namespace Holefeeder.Domain.Enumerations;
 [JsonConverter(typeof(SmartEnumNameConverter<DateIntervalType, int>))]
 public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 {
+    public static readonly DateIntervalType Daily = new DailyDateIntervalType(nameof(Daily), 0);
     public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(nameof(Weekly), 1);
     public static readonly DateIntervalType Monthly = new MonthlyDateIntervalType(nameof(Monthly), 2);
     public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(nameof(Yearly), 3);
     public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(nameof(OneTime), 4);
 
-    private DateIntervalType(string name, int id)
-        : base(name, id)
+    public static (DateIntervalType IntervalType, int Frequency) GetIntervalTypeFromRange(DateOnly from, DateOnly to)
+    {
+        if (YearlyDateIntervalType.IsYearlyRange(from, to, out var frequency))
+        {
+            return (Yearly, frequency);
+        }
+        else if (MonthlyDateIntervalType.IsMonthlyRange(from, to, out frequency))
+        {
+            return (Monthly, frequency);
+        }
+        else if (WeeklyDateIntervalType.IsWeeklyRange(from, to, out frequency))
+        {
+            return (Weekly, frequency);
+        }
+        return (Daily, (to.ToDateTime(TimeOnly.MinValue) - from.ToDateTime(TimeOnly.MinValue)).Days + 1);
+    }
+
+    private DateIntervalType(string name, int id) : base(name, id)
     {
     }
 
@@ -78,10 +95,31 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         return dates;
     }
 
+    private sealed class DailyDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    {
+        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => effectiveDate.AddDays(iteration);
+
+        public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate, int frequency)
+        {
+            var start = effectiveDate;
+            var end = NextDate(effectiveDate, fromDate, frequency);
+
+            if (end == start)
+            {
+                end = end.AddDays(frequency);
+            }
+            else
+            {
+                start = end.AddDays(-frequency);
+            }
+
+            return (start, end.AddDays(-1));
+        }
+    }
+
     private sealed class WeeklyDateIntervalType(string name, int id) : DateIntervalType(name, id)
     {
-        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
-            AddWeeks(effectiveDate, iteration);
+        protected override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => AddWeeks(effectiveDate, iteration);
 
         public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,
             int frequency)
@@ -102,6 +140,21 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
 
         private static DateOnly AddWeeks(DateOnly effectiveDate, int weeks) => effectiveDate.AddDays(7 * weeks);
+
+        internal static bool IsWeeklyRange(DateOnly fromDate, DateOnly toDate, out int frequency)
+        {
+            var weekly = false;
+            frequency = 0;
+
+            var start = fromDate;
+            while (start < toDate)
+            {
+                frequency++;
+                start = AddWeeks(start, 1);
+                weekly = start.AddDays(-1) == toDate;
+            }
+            return weekly;
+        }
     }
 
     private sealed class MonthlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
@@ -126,6 +179,21 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
 
             return (start, end.AddDays(-1));
         }
+
+        internal static bool IsMonthlyRange(DateOnly fromDate, DateOnly toDate, out int frequency)
+        {
+            var monthly = false;
+            frequency = 0;
+
+            var start = fromDate;
+            while (start < toDate)
+            {
+                frequency++;
+                start = start.AddMonths(1);
+                monthly = start.AddDays(-1) == toDate;
+            }
+            return monthly;
+        }
     }
 
     private sealed class YearlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
@@ -149,6 +217,21 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             }
 
             return (start, end.AddDays(-1));
+        }
+
+        internal static bool IsYearlyRange(DateOnly fromDate, DateOnly toDate, out int frequency)
+        {
+            var yearly = false;
+            frequency = 0;
+
+            var start = fromDate;
+            while (start < toDate)
+            {
+                frequency++;
+                start = start.AddYears(1);
+                yearly = start.AddDays(-1) == toDate;
+            }
+            return yearly;
         }
     }
 
