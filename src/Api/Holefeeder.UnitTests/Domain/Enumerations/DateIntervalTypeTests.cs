@@ -102,7 +102,8 @@ public class DateIntervalTypeTests
             { new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Monthly, 1, (From: new DateOnly(2015, 3, 9), To: new DateOnly(2015, 4, 8)) },
             { new DateOnly(2014, 1, 1), new DateOnly(2016, 2, 15), DateIntervalType.Monthly, 2, (From: new DateOnly(2016, 1, 1), To: new DateOnly(2016, 2, 29)) },
             { new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Yearly, 1, (From: new DateOnly(2015, 1, 9), To: new DateOnly(2016, 1, 8)) },
-            { new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Daily, 3, (From: new DateOnly(2015, 4, 4), To: new DateOnly(2015, 4, 6)) },
+            { new DateOnly(2014, 1, 9), new DateOnly(2012, 4, 7), DateIntervalType.Yearly, 1, (From: new DateOnly(2012, 1, 9), To: new DateOnly(2013, 1, 8)) },
+            { new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Daily, 3, (From: new DateOnly(2015, 4, 7), To: new DateOnly(2015, 4, 9)) },
             { new DateOnly(2014, 1, 9), new DateOnly(2015, 4, 7), DateIntervalType.Daily, 300, (From: new DateOnly(2014, 11, 5), To: new DateOnly(2015, 8, 31)) }
         };
         return testCases;
@@ -110,8 +111,7 @@ public class DateIntervalTypeTests
 
     [Theory]
     [MemberData(nameof(IntervalTestCases))]
-    public void TestInterval(DateOnly originalDate, DateOnly effectiveDate, DateIntervalType intervalType,
-        int frequency, (DateOnly From, DateOnly To) expected)
+    public void TestInterval(DateOnly originalDate, DateOnly effectiveDate, DateIntervalType intervalType, int frequency, (DateOnly From, DateOnly To) expected)
     {
         ArgumentNullException.ThrowIfNull(intervalType);
 
@@ -152,8 +152,7 @@ public class DateIntervalTypeTests
 
     [Theory]
     [MemberData(nameof(DatesInRangeTestCases))]
-    public void GivenDatesInRange_WhenValidDateOnly_ThenListOfDatesInRange(DateIntervalType intervalType,
-        int frequency, DateOnly effective, DateOnly from, DateOnly to, DateOnly[] expected)
+    public void GivenDatesInRange_WhenValidDateOnly_ThenListOfDatesInRange(DateIntervalType intervalType, int frequency, DateOnly effective, DateOnly from, DateOnly to, DateOnly[] expected)
     {
         ArgumentNullException.ThrowIfNull(intervalType);
 
