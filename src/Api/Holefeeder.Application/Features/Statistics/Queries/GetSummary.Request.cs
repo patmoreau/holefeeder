@@ -9,15 +9,17 @@ namespace Holefeeder.Application.Features.Statistics.Queries;
 
 public partial class GetSummary
 {
-    internal record Request(DateOnly AsOf) : IRequest<SummaryDto>
+    internal record Request(DateOnly From, DateOnly To) : IRequest<SummaryDto>
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
-            const string asOfKey = "as-of";
+            const string fromKey = "from";
+            const string toKey = "to";
 
-            var hasAsOfDate = DateOnly.TryParse(context.Request.Query[asOfKey], out var asOf);
+            var hasFromDate = DateOnly.TryParse(context.Request.Query[fromKey], out var from);
+            var hasToDate = DateOnly.TryParse(context.Request.Query[toKey], out var to);
 
-            Request result = new(hasAsOfDate ? asOf : DateOnly.FromDateTime(DateTime.Today));
+            Request result = new(hasFromDate ? from : default, hasToDate ? to : default);
 
             return ValueTask.FromResult<Request?>(result);
         }

@@ -27,13 +27,12 @@ export class StatisticsService {
       .pipe(catchError(formatErrors));
   }
 
-  fetchSummary(
-    asOf: Date
-  ): Observable<Summary> {
+  fetchSummary(from: Date, to: Date): Observable<Summary> {
     return this.http
       .get<Summary>(`${this.apiUrl}/${apiSummaryRoute}`, {
         params: new HttpParams()
-          .set('as-of', format(asOf, 'yyyy-MM-dd')),
+          .set('from', format(from, 'yyyy-MM-dd'))
+          .set('to', format(to, 'yyyy-MM-dd')),
       })
       .pipe(catchError(formatErrors));
   }
