@@ -16,7 +16,7 @@ export const fetchStatistics = createEffect(
       exhaustMap(() =>
         settingsService.period$.pipe(
           switchMap(period =>
-            statisticsService.fetchSummary(period.start).pipe(
+            statisticsService.fetchSummary(period.start, period.end).pipe(
               map(summary =>
                 StatisticsActions.loadSummarySuccess({ summary: summary })
               ),

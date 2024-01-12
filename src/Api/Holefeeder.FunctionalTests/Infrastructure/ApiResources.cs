@@ -41,7 +41,7 @@ public static class ApiResources
     public static readonly ApiResource GetTransactions = ApiResource.DefineApi("api/v2/transactions", HttpMethod.Get);
 
     public static readonly ApiResource GetForAllCategories = ApiResource.DefineApi("api/v2/categories/statistics", HttpMethod.Get);
-    public static readonly ApiResource GetSummary = ApiResource.DefineApi("api/v2/summary/statistics?as-of={0}", HttpMethod.Get);
+    public static readonly ApiResource GetSummary = ApiResource.DefineApi("api/v2/summary/statistics?from={0}&to={1}", HttpMethod.Get);
 
     public static readonly ApiResource GetTagsWithCount = ApiResource.DefineApi("api/v2/tags", HttpMethod.Get);
 }
