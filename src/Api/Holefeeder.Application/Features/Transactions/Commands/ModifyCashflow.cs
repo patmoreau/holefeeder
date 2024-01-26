@@ -33,6 +33,8 @@ public class ModifyCashflow : ICarterModule
 
         public decimal Amount { get; init; }
 
+        public DateOnly EffectiveDate { get; init; }
+
         public string Description { get; init; } = null!;
 
         public string[] Tags { get; init; } = Array.Empty<string>();
@@ -44,6 +46,7 @@ public class ModifyCashflow : ICarterModule
         {
             RuleFor(command => command.Id).NotNull().NotEmpty();
             RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
+            RuleFor(command => command.EffectiveDate).NotEmpty();
         }
     }
 
@@ -54,13 +57,9 @@ public class ModifyCashflow : ICarterModule
             var exists =
                 await context.Cashflows.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id,
-                    cancellationToken);
-            if (exists is null)
-            {
-                throw new CashflowNotFoundException(request.Id);
-            }
+                    cancellationToken) ?? throw new CashflowNotFoundException(request.Id);
 
-            var cashflow = exists with { Amount = request.Amount, Description = request.Description };
+            var cashflow = exists with { Amount = request.Amount, EffectiveDate = request.EffectiveDate, Description = request.Description };
 
             cashflow = cashflow.SetTags(request.Tags);
 

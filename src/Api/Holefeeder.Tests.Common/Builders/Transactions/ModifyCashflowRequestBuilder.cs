@@ -9,6 +9,7 @@ internal class ModifyCashflowRequestBuilder : FakerBuilder<Request>
     protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.EffectiveDate, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 

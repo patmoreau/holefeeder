@@ -10,6 +10,7 @@ public class ModifyCashflowTests
     private readonly Faker<Request> _faker = new Faker<Request>()
         .RuleFor(x => x.Id, faker => faker.Random.Guid())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.EffectiveDate, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Tags, Array.Empty<string>());
 
@@ -22,7 +23,7 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
@@ -38,10 +39,25 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Amount);
+    }
+
+    [Fact]
+    public async Task GivenValidator_WhenEffectiveDateIsEmpty_ThenError()
+    {
+        // arrange
+        var request = _faker.RuleFor(x => x.EffectiveDate, faker => default).Generate();
+
+        var validator = new Validator();
+
+        // act
+        var result = await validator.TestValidateAsync(request);
+
+        // assert
+        result.ShouldHaveValidationErrorFor(r => r.EffectiveDate);
     }
 
     [Fact]
@@ -53,7 +69,7 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

@@ -8,12 +8,14 @@ export class ModifyCashflowCommandAdapter
   adapt(item: {
     id: string;
     amount: number;
+    effectiveDate: Date;
     description: string;
     tags: string[];
   }): ModifyCashflowCommand {
     return new ModifyCashflowCommand(
       item.id,
       item.amount,
+      item.effectiveDate,
       item.description,
       item.tags
     );
