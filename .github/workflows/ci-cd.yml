@@ -11,8 +11,10 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/README.md",
+        "**/renovate.json",
       ]
 
   pull_request:
@@ -24,8 +26,10 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/README.md",
+        "**/renovate.json",
       ]
 
   workflow_dispatch:
