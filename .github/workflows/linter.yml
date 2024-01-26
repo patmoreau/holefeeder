@@ -10,8 +10,10 @@ on:
         "**/ci-cd.yml",
         "**/codeql-analysis.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   pull_request:
@@ -22,8 +24,10 @@ on:
         "**/ci-cd.yml",
         "**/codeql-analysis.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   workflow_dispatch:

@@ -11,8 +11,10 @@ on:
         "**/codeql-analysis.yml",
         "**/dependabot.yml",
         "**/linter.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   pull_request:
@@ -24,8 +26,10 @@ on:
         "**/codeql-analysis.yml",
         "**/dependabot.yml",
         "**/linter.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   workflow_dispatch:

@@ -21,8 +21,10 @@ on:
         "**/ci-cd.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   pull_request:
@@ -35,8 +37,10 @@ on:
         "**/ci-cd.yml",
         "**/linter.yml",
         "**/mutation-tests.yml",
+        "**/renovate.yml",
         "**/unit-test-results.yml",
         "kubernetes/**",
+        "**/renovate.json",
       ]
 
   schedule:
