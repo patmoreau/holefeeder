@@ -107,7 +107,7 @@ export class ModifyCashflowComponent implements OnInit {
       amount: ['', [Validators.required, Validators.min(0)]],
       intervalType: [{ value: '', disabled: true }],
       frequency: [{ value: '', disabled: true }],
-      effectiveDate: [{ value: '', disabled: true }, [Validators.required]],
+      effectiveDate: [{ value: '' }, [Validators.required]],
       account: [{ value: '', disabled: true }, [Validators.required]],
       category: [{ value: '', disabled: true }, [Validators.required]],
       description: ['', [Validators.required]],
