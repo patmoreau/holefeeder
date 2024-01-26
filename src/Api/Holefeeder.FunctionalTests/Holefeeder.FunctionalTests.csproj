@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DrifterApps.Seeds.Testing" Version="0.1.80" />
+    <PackageReference Include="DrifterApps.Seeds.Testing" Version="0.1.87" />
     <PackageReference Include="IdentityModel" Version="6.2.0" />
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
     <PackageReference Include="LightBDD.XUnit2" Version="3.7.0" />
