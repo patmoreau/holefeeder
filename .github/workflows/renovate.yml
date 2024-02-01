@@ -1,24 +1,25 @@
 name: renovate
 
 on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Override default log level"
+        required: false
+        default: "info"
+        type: string
+      overrideSchedule:
+        description: "Override all schedules"
+        required: false
+        default: "false"
+        type: string
   schedule:
-    - cron: '0 3 * * *' # Run daily at 3 AM
+    - cron: '0 4,5 * * Sat'
 
 jobs:
-  renovate:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install Renovate
-        run: npm install -g renovate
-
-      - name: Run Renovate
-        run: renovate
+  call-workflow:
+    uses: patmoreau/renovate-config/.github/workflows/renovate.yml@main
+    with:
+      logLevel: ${{ inputs.logLevel || 'info' }}
+      overrideSchedule: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
+    secrets: inherit
