@@ -1,0 +1,3 @@
+{
+    "extends": ["github>patmoreau/renovate-config"]
+}
