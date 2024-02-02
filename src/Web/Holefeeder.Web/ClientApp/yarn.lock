@@ -9166,10 +9166,10 @@ ng2-charts-schematics@0.1.7:
     jasmine "^3.0.0"
     typescript "~3.2.2"
 
-ng2-charts@5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/ng2-charts/-/ng2-charts-5.0.3.tgz#ce48e85ba375864928ca5c2788e11cbf1023cea2"
-  integrity sha512-/lTY64tiCN/pJPx+oIWRWOhtCk+ZbAU9yAUDNnRJwhe+a8ajcO5yS0tVOm5k7pj3doVp9+UdBRahyt6woJ95Rw==
+ng2-charts@5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/ng2-charts/-/ng2-charts-5.0.4.tgz#306431e8b28532e22bcd877622b990c306516508"
+  integrity sha512-AnOZ2KSRw7QjiMMNtXz9tdnO+XrIKP/2MX1TfqEEo2fwFU5c8LFJIYqmkMPkIzAEm/U9y/1psA5TDNmxxjEdgA==
   dependencies:
     lodash-es "^4.17.15"
     tslib "^2.3.0"
