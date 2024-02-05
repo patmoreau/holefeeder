@@ -14,7 +14,7 @@ on:
         default: "false"
         type: string
   schedule:
-    - cron: '0 4,5 * * Sat'
+    - cron: '0 4,5 * * *' # Every day at 4 and 5am
 
 jobs:
   call-workflow:
