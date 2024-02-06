@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />
     <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" Version="8.0.0" />
-    <PackageReference Include="DrifterApps.Seeds.Domain" Version="0.1.95" />
+    <PackageReference Include="DrifterApps.Seeds.Domain" Version="0.1.96" />
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
