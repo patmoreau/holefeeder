@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DrifterApps.Seeds.Testing" Version="0.1.96" />
+    <PackageReference Include="DrifterApps.Seeds.Testing" Version="0.1.97" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="FluentAssertions.Analyzers" Version="0.30.0">
       <PrivateAssets>all</PrivateAssets>
