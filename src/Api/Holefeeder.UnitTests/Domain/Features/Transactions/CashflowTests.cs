@@ -132,7 +132,7 @@ public class CashflowTests(ITestOutputHelper testOutputHelper)
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveCashflow().WithId(default);
+        var builder = GivenAnActiveCashflow().WithId(Guid.Empty);
 
         // act
         Action action = () => _ = builder.Build();
@@ -245,7 +245,7 @@ public class CashflowTests(ITestOutputHelper testOutputHelper)
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveCashflow().ForUser(default);
+        var builder = GivenAnActiveCashflow().ForUser(Guid.Empty);
 
         // act
         Action action = () => _ = builder.Build();

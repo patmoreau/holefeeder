@@ -6,6 +6,8 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
+using Microsoft.OpenApi.Models;
+
 using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -89,5 +91,5 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetTransaction, new object[] { id.ToString() });
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetTransaction, parameters: id.ToString());
 }

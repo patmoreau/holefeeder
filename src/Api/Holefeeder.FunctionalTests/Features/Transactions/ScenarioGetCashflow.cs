@@ -95,5 +95,5 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
         });
     }
 
-    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCashflow, new object[] { id.ToString() });
+    private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCashflow, parameters: id.ToString());
 }

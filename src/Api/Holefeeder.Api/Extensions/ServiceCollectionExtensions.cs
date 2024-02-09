@@ -51,6 +51,7 @@ internal static class ServiceCollectionExtensions
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
                     {
+#pragma warning disable S1075
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl =
@@ -66,6 +67,7 @@ internal static class ServiceCollectionExtensions
                                 ["https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user"] =
                                     "API permission"
                             }
+#pragma warning restore S1075
                         }
                     },
                     Description = "Azure AD Authorization Code Flow authorization",

@@ -133,11 +133,10 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
     {
         var tries = 0;
-        var inProgress = true;
         const int retryDelayInSeconds = 5;
         const int numberOfRetry = 10;
 
-        while (tries < numberOfRetry && inProgress)
+        while (tries < numberOfRetry)
         {
             await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
 

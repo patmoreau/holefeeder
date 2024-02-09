@@ -1,40 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>66510254-e437-414e-986e-d59d04ff1d07</UserSecretsId>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <UserSecretsId>66510254-e437-414e-986e-d59d04ff1d07</UserSecretsId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DrifterApps.Seeds.Testing" Version="0.1.96" />
-    <PackageReference Include="IdentityModel" Version="6.2.0" />
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
-    <PackageReference Include="LightBDD.XUnit2" Version="3.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="Respawn" Version="6.2.1" />
-    <PackageReference Include="WireMock.Net" Version="1.5.47" />
-    <PackageReference Include="xunit" Version="2.6.6" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="DrifterApps.Seeds.Testing" />
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="FluentAssertions.Analyzers" />
+        <PackageReference Include="IdentityModel"/>
+        <PackageReference Include="JunitXml.TestLogger" />
+        <PackageReference Include="LightBDD.XUnit2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Nito.AsyncEx" />
+        <PackageReference Include="Respawn" />
+        <PackageReference Include="WireMock.Net" />
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.analyzers"/>
+        <PackageReference Include="xunit.categories"/>
+        <PackageReference Include="xunit.runner.visualstudio"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Api\Holefeeder.Api.csproj" />
-    <ProjectReference Include="..\Holefeeder.Tests.Common\Holefeeder.Tests.Common.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Holefeeder.Api\Holefeeder.Api.csproj" />
+        <ProjectReference Include="..\Holefeeder.Tests.Common\Holefeeder.Tests.Common.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="appsettings.tests.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="appsettings.tests.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>

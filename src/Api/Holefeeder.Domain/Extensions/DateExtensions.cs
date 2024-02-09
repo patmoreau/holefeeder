@@ -9,5 +9,5 @@ public static class DateExtensions
     public static string ToPersistent(this DateOnly date) => date.ToString(DateFormat, CultureInfo.InvariantCulture);
 
     public static DateOnly ParsePersistent(this string persistentDate) =>
-        DateOnly.ParseExact(persistentDate, DateFormat, null);
+        DateOnly.ParseExact(persistentDate, DateFormat, CultureInfo.InvariantCulture);
 }
