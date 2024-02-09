@@ -33,6 +33,7 @@ COPY *.sln .
 COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .
+COPY Directory.Build.targets .
 COPY Directory.Packages.props .
 COPY nuget.config .
 
