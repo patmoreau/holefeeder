@@ -13,7 +13,7 @@ public class AccountTests
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveAccount().WithId(default);
+        var builder = GivenAnActiveAccount().WithId(Guid.Empty);
 
         // act
         Action action = () => _ = builder.Build();

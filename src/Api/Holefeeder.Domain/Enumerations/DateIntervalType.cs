@@ -198,7 +198,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
                 ? [effectiveDate]
                 : Array.Empty<DateOnly>();
 
-        public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly fromDate,
+        public override (DateOnly from, DateOnly to) Interval(DateOnly effectiveDate, DateOnly lookupDate,
             int frequency) =>
             (effectiveDate, effectiveDate);
     }

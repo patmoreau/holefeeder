@@ -8,6 +8,8 @@ COPY *.sln .
 COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .
+COPY Directory.Build.targets .
+COPY Directory.Packages.props .
 COPY nuget.config .
 
 COPY src/Api/Holefeeder.Api/*.csproj src/Api/Holefeeder.Api/

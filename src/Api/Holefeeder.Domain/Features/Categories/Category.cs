@@ -11,7 +11,7 @@ public sealed record Category : IAggregateRoot
         get => _id;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new CategoryDomainException($"{nameof(Id)} is required");
             }
@@ -49,7 +49,7 @@ public sealed record Category : IAggregateRoot
         get => _userId;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new CategoryDomainException($"{nameof(UserId)} is required");
             }

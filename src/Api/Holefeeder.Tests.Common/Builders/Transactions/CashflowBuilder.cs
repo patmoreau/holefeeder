@@ -68,7 +68,6 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
     public CashflowBuilder ForAccount(Account entity)
     {
         FakerRules.RuleFor(x => x.AccountId, entity.Id);
-        // FakerRules.RuleFor(x => x.Account, entity);
         return this;
     }
 

@@ -11,7 +11,7 @@ public sealed record StoreItem : IAggregateRoot
         get => _id;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new ObjectStoreDomainException($"'{nameof(Id)}' is required");
             }
@@ -41,7 +41,7 @@ public sealed record StoreItem : IAggregateRoot
         get => _userId;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new ObjectStoreDomainException($"'{nameof(UserId)}' is required");
             }

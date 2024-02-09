@@ -49,5 +49,5 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
         result.Should().NotBeNull().And.BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId));
     }
 
-    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetStoreItem, new object[] { id.ToString() });
+    private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetStoreItem, parameters: id.ToString());
 }

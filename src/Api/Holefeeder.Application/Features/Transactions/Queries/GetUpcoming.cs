@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Reflection;
 
 using DrifterApps.Seeds.Application;
@@ -39,8 +40,8 @@ public class GetUpcoming : ICarterModule
             const string fromKey = "from";
             const string toKey = "to";
 
-            var hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], out var from);
-            var hasTo = DateOnly.TryParse(context.Request.Query[toKey], out var to);
+            var hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], CultureInfo.InvariantCulture, out var from);
+            var hasTo = DateOnly.TryParse(context.Request.Query[toKey], CultureInfo.InvariantCulture, out var to);
 
             Request result = new(hasFrom ? from : DateOnly.MinValue, hasTo ? to : DateOnly.MaxValue);
 

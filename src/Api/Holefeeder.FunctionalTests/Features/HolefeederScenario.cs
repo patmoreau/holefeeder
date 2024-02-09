@@ -60,11 +60,13 @@ public abstract partial class HolefeederScenario : Scenario
 
     protected BudgetingDatabaseDriver DatabaseDriver { get; }
 
+#pragma warning disable S1135
     // TODO: remove
     protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
 
     // TODO: remove
     protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId.ToString());
+#pragma warning restore S1135
 
     protected static Guid ResourceIdFromLocation(Uri location)
     {

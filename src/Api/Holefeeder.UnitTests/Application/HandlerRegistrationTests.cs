@@ -31,10 +31,12 @@ public class HandlerRegistrationTests
 
     private static bool IsRequest(Type type) => typeof(IBaseRequest).IsAssignableFrom(type);
 
+#pragma warning disable S6605
     private static bool IsIRequestHandler(Type type) =>
         type.GetInterfaces().Any(interfaceType =>
             interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IRequestHandler<,>));
 
     private static bool IsHandlerForRequest(Type handlerType, Type requestType) => handlerType.GetInterfaces()
         .Any(i => i.GenericTypeArguments.Any(ta => ta == requestType));
+#pragma warning restore S6605
 }

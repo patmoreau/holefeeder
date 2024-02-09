@@ -14,7 +14,7 @@ public sealed record Account : IAggregateRoot
         get => _id;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new AccountDomainException($"{nameof(Id)} is required");
             }
@@ -66,7 +66,7 @@ public sealed record Account : IAggregateRoot
         get => _userId;
         init
         {
-            if (value.Equals(default))
+            if (value.Equals(Guid.Empty))
             {
                 throw new AccountDomainException($"{nameof(UserId)} is required");
             }

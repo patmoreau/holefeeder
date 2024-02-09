@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.Testing.Attributes;
+
 using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -31,6 +33,7 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
                 .When("user gets their statistics", () => QueryEndpoint(ApiResources.GetForAllCategories))
                 .Then("the total for the year should match the expected", ValidateResponse));
 
+    [AssertionMethod]
     private Task ValidateResponse()
     {
         var expectedFoodAndDrink = new StatisticsDto(_categories["food and drink"].Id,
