@@ -80,7 +80,7 @@
     "eslint-formatter-github": "1.1.4",
     "eslint-formatter-pretty": "5.0.0",
     "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-jsdoc": "46.8.2",
+    "eslint-plugin-jsdoc": "46.10.1",
     "eslint-plugin-prefer-arrow-functions": "3.2.4",
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react-hooks": "4.6.0",
