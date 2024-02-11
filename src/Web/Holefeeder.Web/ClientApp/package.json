@@ -105,6 +105,6 @@
     "protractor": "7.0.0",
     "source-map-explorer": "2.5.3",
     "ts-node": "10.9.2",
-    "typescript": "5.1.6"
+    "typescript": "5.3.3"
   }
 }
