@@ -15,7 +15,7 @@
     <PackageVersion Include="Dapper.Transaction" Version="2.1.28" />
     <PackageVersion Include="dbup-core" Version="5.0.76" />
     <PackageVersion Include="dbup-mysql" Version="5.0.40" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="0.1.100" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="0.1.103" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="0.1.97" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="0.1.103" />
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="0.1.97" />
