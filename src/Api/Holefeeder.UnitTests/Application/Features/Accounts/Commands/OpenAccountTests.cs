@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Holefeeder.Domain.Features.Accounts;
 
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;

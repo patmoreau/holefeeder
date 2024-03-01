@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Transactions;
 

@@ -33,11 +33,9 @@ public class ImportDataStatus : ICarterModule
 
     internal class Handler(IMemoryCache memoryCache) : IRequestHandler<Request, ImportDataStatusDto>
     {
-        private readonly IMemoryCache _memoryCache = memoryCache;
-
         public Task<ImportDataStatusDto> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (_memoryCache.TryGetValue(request.RequestId, out var status) && status is ImportDataStatusDto dto)
+            if (memoryCache.TryGetValue(request.RequestId, out var status) && status is ImportDataStatusDto dto)
             {
                 return Task.FromResult(dto);
             }

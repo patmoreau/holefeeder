@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Holefeeder.Domain.Extensions;
 
 using Microsoft.AspNetCore.Http;

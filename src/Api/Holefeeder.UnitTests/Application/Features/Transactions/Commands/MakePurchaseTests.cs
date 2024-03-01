@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;

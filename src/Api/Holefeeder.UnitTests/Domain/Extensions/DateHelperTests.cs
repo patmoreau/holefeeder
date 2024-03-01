@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using Holefeeder.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Extensions;
