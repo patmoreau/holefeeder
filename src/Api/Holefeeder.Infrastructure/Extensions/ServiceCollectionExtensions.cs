@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
+using Hangfire;
+
 using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.Scripts;
 using Holefeeder.Infrastructure.SeedWork;
@@ -22,18 +24,41 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
         {
-            ConnectionString = configuration.GetConnectionString("BudgetingConnectionString")!
+            ConnectionString =
+                configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!
         });
 
-        services.AddDbContext<BudgetingContext>((provider, builder) =>
+        services.AddSingleton<DbContextOptions>(provider =>
         {
+            var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
+
             var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
             var connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
-            builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+            return optionsBuilder.Options;
         });
+
+        services.AddDbContext<BudgetingContext>((provider, builder) => builder.UseInternalServiceProvider(provider));
+        services.AddDbContextFactory<BudgetingContext>();
 
         services.AddScoped<Script000InitDatabase>();
 
+        services.AddHangfireServices();
+
         return services;
+    }
+
+    private static void AddHangfireServices(this IServiceCollection services)
+    {
+        // Add Hangfire services.
+        services.AddHangfire(globalConfiguration => globalConfiguration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseInMemoryStorage());
+
+        // Add the processing server as IHostedService
+        services.AddHangfireServer(options => { options.WorkerCount = 1; });
     }
 }

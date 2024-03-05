@@ -140,6 +140,14 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         {
             await HttpClientDriver.SendGetRequestAsync(ApiResources.ImportDataStatus, importId);
 
+            if (HttpClientDriver.ResponseMessage?.StatusCode == HttpStatusCode.NotFound)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
+                tries++;
+
+                continue;
+            }
+
             ShouldExpectStatusCode(HttpStatusCode.OK);
 
             var dto = HttpClientDriver.DeserializeContent<ImportDataStatusDto>();
