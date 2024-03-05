@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.CancelCashflow;
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
 

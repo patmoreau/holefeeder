@@ -133,14 +133,20 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
     {
         var tries = 0;
-        const int retryDelayInSeconds = 5;
+        const int retryDelayInSeconds = 50;
         const int numberOfRetry = 10;
 
         while (tries < numberOfRetry)
         {
-            await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
-
             await HttpClientDriver.SendGetRequestAsync(ApiResources.ImportDataStatus, importId);
+
+            if (HttpClientDriver.ResponseMessage?.StatusCode == HttpStatusCode.NotFound)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
+                tries++;
+
+                continue;
+            }
 
             ShouldExpectStatusCode(HttpStatusCode.OK);
 
@@ -155,6 +161,8 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
             {
                 return dto;
             }
+
+            await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
 
             tries++;
         }

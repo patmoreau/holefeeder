@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
@@ -49,7 +47,7 @@ public class ModifyCashflowTests
     public async Task GivenValidator_WhenEffectiveDateIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.EffectiveDate, faker => default).Generate();
+        var request = _faker.RuleFor(x => x.EffectiveDate, () => default).Generate();
 
         var validator = new Validator();
 

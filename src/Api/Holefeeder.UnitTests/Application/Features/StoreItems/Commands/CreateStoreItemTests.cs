@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 

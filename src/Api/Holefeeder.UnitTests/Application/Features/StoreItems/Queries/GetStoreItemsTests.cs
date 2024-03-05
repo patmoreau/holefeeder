@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Holefeeder.Application.Features.StoreItems.Queries;
 
 using Microsoft.AspNetCore.Http;

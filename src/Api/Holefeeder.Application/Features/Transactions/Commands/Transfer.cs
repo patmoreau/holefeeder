@@ -82,7 +82,7 @@ public class Transfer : ICarterModule
                     errors.Select(x => new ValidationFailure(x.Item1, x.Item2)));
             }
 
-            return errors.Count > 0 ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
+            return errors is [_, ..] ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
         }
 
         private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>

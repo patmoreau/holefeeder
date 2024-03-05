@@ -79,6 +79,8 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
+        base.OnModelCreating(modelBuilder);
+
         new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
         new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
         new CashflowEntityTypeConfiguration().Configure(modelBuilder.Entity<Cashflow>());

@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequestBuilder;
 

@@ -4,9 +4,6 @@ using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
 using DrifterApps.Seeds.Domain;
 
-using Hangfire;
-using Hangfire.MemoryStorage;
-
 using Holefeeder.Application.Context;
 
 using Microsoft.Extensions.Configuration;
@@ -19,8 +16,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHangfireServices();
-
         services.AddUserContext();
 
         // For all the validators, register them with dependency injection as scoped
@@ -38,18 +33,5 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
 
         return services;
-    }
-
-    private static void AddHangfireServices(this IServiceCollection services)
-    {
-        // Add Hangfire services.
-        services.AddHangfire(globalConfiguration => globalConfiguration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseMemoryStorage());
-
-        // Add the processing server as IHostedService
-        services.AddHangfireServer();
     }
 }

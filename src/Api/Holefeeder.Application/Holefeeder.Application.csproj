@@ -8,8 +8,6 @@
     <PackageReference Include="Carter" />
     <PackageReference Include="DrifterApps.Seeds.Application" />
     <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" />
-    <PackageReference Include="Hangfire.AspNetCore" />
-    <PackageReference Include="Hangfire.MemoryStorage" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

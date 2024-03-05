@@ -1,3 +1,3 @@
-namespace Holefeeder.Application;
+namespace Holefeeder.Application.Features.Statistics.Queries;
 
-public record class SummaryDto(SummaryValue Last, SummaryValue Current, SummaryValue Average);
+public record SummaryDto(SummaryValue Last, SummaryValue Current, SummaryValue Average);
