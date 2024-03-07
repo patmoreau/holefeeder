@@ -39,8 +39,8 @@ public static class ServiceCollectionExtensions
             return optionsBuilder.Options;
         });
 
-        services.AddDbContext<BudgetingContext>((provider, builder) => builder.UseInternalServiceProvider(provider));
         services.AddDbContextFactory<BudgetingContext>();
+        services.AddDbContext<BudgetingContext>();
 
         services.AddScoped<Script000InitDatabase>();
 
