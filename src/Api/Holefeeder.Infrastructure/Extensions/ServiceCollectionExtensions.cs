@@ -28,16 +28,8 @@ public static class ServiceCollectionExtensions
                 configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!
         });
 
-        services.AddSingleton<DbContextOptions>(provider =>
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
-
-            var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
-            var connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-
-            return optionsBuilder.Options;
-        });
+        services.AddSingleton<DbContextOptions>(OptionsBuilderOptions);
+        services.AddSingleton(OptionsBuilderOptions);
 
         services.AddDbContextFactory<BudgetingContext>();
         services.AddDbContext<BudgetingContext>();
@@ -47,6 +39,17 @@ public static class ServiceCollectionExtensions
         services.AddHangfireServices();
 
         return services;
+
+        DbContextOptions<BudgetingContext> OptionsBuilderOptions(IServiceProvider provider)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
+
+            var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
+            var connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+            return optionsBuilder.Options;
+        }
     }
 
     private static void AddHangfireServices(this IServiceCollection services)
