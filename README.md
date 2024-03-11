@@ -3,7 +3,7 @@
 [![Continuous Integration](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/DrifterApps/Holefeeder/actions/workflows/ci-cd.yml)
 [![CodeQL](https://github.com/patmoreau/Holefeeder/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/patmoreau/Holefeeder/actions/workflows/codeql-analysis.yml)
 [![Linter](https://github.com/patmoreau/Holefeeder/actions/workflows/linter.yml/badge.svg)](https://github.com/patmoreau/Holefeeder/actions/workflows/linter.yml)
-![Test Results](https://gist.github.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6/raw/holefeeder-tests-badge.svg)
+![Test Results](https://gist.githubusercontent.com/patmoreau/230a77d0ee69381bbe869c0fc62f9cc6/raw/holefeeder-tests-badge.svg)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fpatmoreau%2FHolefeeder%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/patmoreau/Holefeeder/main)
 
 ## Introduction
