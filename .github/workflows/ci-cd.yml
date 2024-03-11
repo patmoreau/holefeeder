@@ -12,7 +12,6 @@ on:
         "**/linter.yml",
         "**/mutation-tests.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/README.md",
         "**/renovate.json",
       ]
@@ -27,7 +26,6 @@ on:
         "**/linter.yml",
         "**/mutation-tests.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/README.md",
         "**/renovate.json",
       ]
@@ -412,13 +410,3 @@ jobs:
 
       - name: Deploy to DigitalOcean Kubernetes
         run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
-
-  event_file:
-    name: "Event File"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: Event File
-          path: ${{ github.event_path }}

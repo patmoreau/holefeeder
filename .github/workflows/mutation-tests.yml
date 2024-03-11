@@ -12,7 +12,6 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/**",
         "**/renovate.json",
       ]
@@ -27,7 +26,6 @@ on:
         "**/dependabot.yml",
         "**/linter.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/**",
         "**/renovate.json",
       ]
