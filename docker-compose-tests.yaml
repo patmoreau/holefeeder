@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   mysql-data-test:
-    image: mariadb:10.5.13
+    image: mariadb:10.11.7
     container_name: mysql-data-test
 
   api-functional-tests:
