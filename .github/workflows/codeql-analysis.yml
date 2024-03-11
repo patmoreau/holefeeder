@@ -22,7 +22,6 @@ on:
         "**/linter.yml",
         "**/mutation-tests.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/**",
         "**/renovate.json",
       ]
@@ -38,7 +37,6 @@ on:
         "**/linter.yml",
         "**/mutation-tests.yml",
         "**/renovate.yml",
-        "**/unit-test-results.yml",
         "kubernetes/**",
         "**/renovate.json",
       ]
