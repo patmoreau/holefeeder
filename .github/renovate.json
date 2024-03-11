@@ -1,4 +1,11 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["github>patmoreau/renovate-config#main"]
+    "extends": ["github>patmoreau/renovate-config#main"],
+    "packageRules": [
+        {
+            "matchPackageNames": ["typescript"],
+            "matchUpdateTypes": ["minor", "major"],
+            "allowedVersions": "<5.2.0"
+        }
+    ]
 }
