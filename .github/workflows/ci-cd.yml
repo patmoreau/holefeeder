@@ -228,13 +228,53 @@ jobs:
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
-      - name: Upload Test Results
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        id: test-results
+        if: always()
+        with:
+          name: .Net Tests
+          path: ./tests-results/**/*.trx
+          reporter: dotnet-trx
+
+      - name: Set badge color
+        shell: bash
+        run: |
+          case ${{ steps.test-results.outputs.conclusion }} in
+            success)
+              echo "BADGE_COLOR=31c653" >> $GITHUB_ENV
+              ;;
+            failure)
+              echo "BADGE_COLOR=800000" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Create badge
+        uses: emibcn/badge-action@v2.0.2
+        with:
+          label: Tests
+          status: "${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}"
+          color: ${{ env.BADGE_COLOR }}
+          path: holefeeder-tests-badge.svg
+
+      - name: Upload badge to artifacts
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Test Results
+          name: Test Results Badge
           path: |
-            ./tests-results/**/*.trx
+            holefeeder-tests-badge.svg
+
+      - name: Upload badge to Gist
+        if: >
+          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 230a77d0ee69381bbe869c0fc62f9cc6
+          file_path: holefeeder-tests-badge.svg
+          file_type: text
 
   publish-docker-images:
     name: Publish Docker Images
