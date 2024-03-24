@@ -97,7 +97,7 @@ jobs:
           install: true
 
       - name: Restore Docker cache for api
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
           key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
@@ -105,7 +105,7 @@ jobs:
             ${{ runner.os }}-api-
 
       - name: Restore Docker cache for web
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
           key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
@@ -147,13 +147,13 @@ jobs:
           mv /tmp/.buildx-web-cache-new /tmp/.buildx-web-cache
 
       - name: Save Docker cache for api
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
           key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
 
       - name: Save Docker cache for web
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
           key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
@@ -182,7 +182,7 @@ jobs:
           DOCKER_BUILDKIT=1" > .env
 
       - name: Restore Docker cache for api
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
           key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
@@ -190,7 +190,7 @@ jobs:
             ${{ runner.os }}-api-
 
       - name: Restore Docker cache for web
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
           key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
@@ -282,7 +282,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Restore Docker cache for api
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
           key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
@@ -290,7 +290,7 @@ jobs:
             ${{ runner.os }}-api-
 
       - name: Restore Docker cache for web
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
           key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
