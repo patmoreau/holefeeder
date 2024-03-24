@@ -41,7 +41,7 @@ jobs:
       assembly-version: ${{ steps.gitversion.outputs.semVer }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -85,7 +85,7 @@ jobs:
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -168,7 +168,7 @@ jobs:
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -266,7 +266,7 @@ jobs:
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -353,7 +353,7 @@ jobs:
       name: production
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: yokawasa/action-setup-kube-tools@v0.11.0
         with:
