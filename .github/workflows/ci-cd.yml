@@ -259,7 +259,7 @@ jobs:
   publish-docker-images:
     name: Publish Docker Images
     needs: [set-version, tests]
-    if: ${{ env.IS_PUSH_TO_MAIN }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
