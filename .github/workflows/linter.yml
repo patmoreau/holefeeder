@@ -3,40 +3,33 @@ name: linter
 on:
   push:
     branches: [main]
-    paths-ignore:
-      [
-        "docs/**",
-        ".vscode/**",
-        "**/ci-cd.yml",
-        "**/codeql-analysis.yml",
-        "**/mutation-tests.yml",
-        "**/renovate.yml",
-        "kubernetes/**",
-        "**/renovate.json",
-      ]
 
   pull_request:
-    paths-ignore:
-      [
-        "docs/**",
-        ".vscode/**",
-        "**/ci-cd.yml",
-        "**/codeql-analysis.yml",
-        "**/mutation-tests.yml",
-        "**/renovate.yml",
-        "kubernetes/**",
-        "**/renovate.json",
-      ]
-
-  workflow_dispatch:
+    # The branches below must be a subset of the branches above
+    branches: [main]
 
 concurrency:
   group: linter-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug Action
+        uses: hmarr/debug-action@v3
+
+  check_changes:
+    uses: patmoreau/workflow-config/.github/workflows/check-changes-action.yml@main
+    with:
+      file_patterns: ${{ vars.CODE_FILE_PATTERNS }}
+
   typescript:
     runs-on: ubuntu-latest
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.code_was_changed == 'true' }}
 
     steps:
       - name: Checkout code
@@ -74,6 +67,9 @@ jobs:
 
   csharp:
     runs-on: ubuntu-latest
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.code_was_changed == 'true' }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -96,3 +92,12 @@ jobs:
       - name: Check for errors
         if: ${{ steps.lint.outcome != 'success' }}
         run: echo "::error::dotnet format found issues in the code. Please fix them."
+
+  create_check:
+    needs: [check_changes, csharp, typescript]
+    uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
+    if: always() && needs.check_changes.result == 'success'
+    with:
+      code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
+      check_name: 'linter-completed'
+      check_result: ${{ needs.csharp.result }}
