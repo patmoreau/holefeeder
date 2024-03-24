@@ -355,7 +355,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: yokawasa/action-setup-kube-tools@v0.8.0
+      - uses: yokawasa/action-setup-kube-tools@v0.11.0
         with:
           kubectl: "1.25.2"
           kustomize: "4.5.7"
