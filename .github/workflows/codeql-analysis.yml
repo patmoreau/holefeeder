@@ -35,7 +35,7 @@ jobs:
   check_changes:
     uses: patmoreau/workflow-config/.github/workflows/check-changes-action.yml@main
     with:
-      file_patterns: ${{ vars.CODE_FILE_PATTERNS }}
+      file_patterns: ${{ vars.CODEQL_CODE_FILE_PATTERNS }}
 
   analyze:
     name: Analyze
