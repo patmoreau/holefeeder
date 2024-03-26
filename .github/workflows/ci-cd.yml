@@ -256,10 +256,16 @@ jobs:
           file_path: holefeeder-tests-badge.svg
           file_type: text
 
+  tagging:
+    needs: [set-version, tests]
+    uses: patmoreau/workflow-config/.github/workflows/tag-version.yml@main
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    with:
+      version: ${{ needs.set-version.outputs.version }}
+
   publish-docker-images:
     name: Publish Docker Images
-    needs: [set-version, tests]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: [set-version, tests, tagging]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
@@ -318,27 +324,6 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-web-cache
-
-      - name: Tag version
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              await github.git.deleteRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: "tags/${{ env.VERSION }}"
-              })
-            } catch (e) {
-              console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
-            }
-            await github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{ env.VERSION }}",
-              sha: context.sha
-            })
 
   deploy:
     name: Deploy to DigitalOcean
