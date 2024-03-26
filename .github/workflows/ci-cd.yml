@@ -113,7 +113,7 @@ jobs:
             ${{ runner.os }}-web-
 
       - name: Build api container
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           load: true
           context: .
@@ -125,7 +125,7 @@ jobs:
           cache-to: type=local,mode=max,dest=/tmp/.buildx-api-cache-new
 
       - name: Build Holefeeder.Web container
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           load: true
           context: .
@@ -298,7 +298,7 @@ jobs:
             ${{ runner.os }}-web-
 
       - name: Publish api container
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./src/Api/Holefeeder.Api/Dockerfile
@@ -309,7 +309,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-api-cache
 
       - name: Publish web container
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./src/Web/Holefeeder.Web/Dockerfile
