@@ -319,26 +319,10 @@ jobs:
           tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-web-cache
 
-      - name: Tag version
-        uses: actions/github-script@v7
+      - name: tagging
+        uses: patmoreau/workflow-config/.github/workflows/tag-version.yml@main
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              await github.git.deleteRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: "tags/${{ env.VERSION }}"
-              })
-            } catch (e) {
-              console.log("The ${{ env.VERSION }} tag doesn't exist yet: " + e)
-            }
-            await github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{ env.VERSION }}",
-              sha: context.sha
-            })
+          version: ${{ env.VERSION }}
 
   deploy:
     name: Deploy to DigitalOcean
