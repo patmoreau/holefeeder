@@ -24,7 +24,7 @@ jobs:
   check_changes:
     uses: patmoreau/workflow-config/.github/workflows/check-changes-action.yml@main
     with:
-      file_patterns: ${{ vars.CODE_FILE_PATTERNS }}
+      file_patterns: ${{ vars.LINTER_CODE_FILE_PATTERNS }}
 
   typescript:
     runs-on: ubuntu-latest
