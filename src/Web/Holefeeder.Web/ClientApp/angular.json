@@ -92,11 +92,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "holefeeder-web:build:production"
+              "buildTarget": "holefeeder-web:build:production"
             },
             "development": {
-              "browserTarget": "holefeeder-web:build:development",
-              "proxyConfig": "proxy.conf.js"
+              "proxyConfig": "proxy.conf.js",
+              "buildTarget": "holefeeder-web:build:development"
             }
           },
           "defaultConfiguration": "development"
