@@ -14,7 +14,7 @@ import {
 } from '@app/shared/components';
 import { MessageAction, MessageType, Upcoming } from '@app/shared/models';
 import { ChartConfiguration, ChartData, ChartType, ChartTypeRegistry, Color, LegendItem } from 'chart.js';
-import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import { Observable, map, of } from 'rxjs';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { FilterNonNullishPipe } from '@app/shared/pipes';
@@ -33,7 +33,7 @@ import { StatisticsActions, StatisticsFeature } from '@app/core/store/statistics
   imports: [
     CommonModule,
     RouterModule,
-    NgChartsModule,
+    BaseChartDirective,
     TransactionsListComponent,
     TransactionListItemComponent,
     LoaderComponent,

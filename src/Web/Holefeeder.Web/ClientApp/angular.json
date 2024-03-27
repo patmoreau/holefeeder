@@ -92,21 +92,15 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "holefeeder-web:build:production"
+              "buildTarget": "holefeeder-web:build:production"
             },
             "development": {
-              "browserTarget": "holefeeder-web:build:development",
-              "proxyConfig": "proxy.conf.js"
+              "proxyConfig": "proxy.conf.js",
+              "buildTarget": "holefeeder-web:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
-//        "extract-i18n": {
-//          "builder": "@angular-devkit/build-angular:extract-i18n",
-//          "options": {
-//            "browserTarget": "holefeeder-web:build"
-//          }
-//        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
