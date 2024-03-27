@@ -27,6 +27,7 @@ import { appEffects, appStore } from '@app/core/store';
 import { provideEffects } from '@ngrx/effects';
 import { HttpRequestLoggerInterceptor } from '@app/core/interceptors/http-request-logger.interceptor';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 if (environment.production) {
   enableProdMode();
@@ -75,6 +76,7 @@ bootstrapApplication(AppComponent, {
         },
       })
     ),
+    provideCharts(withDefaultRegisterables()),
     provideStore(appStore),
     provideEffects(appEffects),
     provideStoreDevtools({
@@ -83,7 +85,7 @@ bootstrapApplication(AppComponent, {
       autoPause: true,
       trace: false,
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
-    }),
+      connectInZone: true}),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoadingInterceptor,

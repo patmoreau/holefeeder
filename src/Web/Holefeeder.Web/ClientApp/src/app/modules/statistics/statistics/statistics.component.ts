@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { Statistics } from '@app/shared/models';
 import { StatisticsService } from '@app/core/services';
-import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import {
   ChartConfiguration,
   ChartData,
@@ -31,7 +31,7 @@ import { FilterNonNullishPipe } from '@app/shared/pipes';
   imports: [
     CommonModule,
     RouterModule,
-    NgChartsModule,
+    BaseChartDirective,
     LoaderComponent,
     FilterNonNullishPipe,
   ],
