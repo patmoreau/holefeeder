@@ -143,7 +143,7 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
         });
     }
 
-    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetUpcoming, request.From, request.To);
+    private async Task WhenUserGetsUpcoming(Request request) => await HttpClientDriver.SendRequestAsync(ApiResources.GetUpcoming, request.From, request.To);
 
     private static Request BuildUpcomingRequest(DateOnly from, DateOnly to) => GivenAnUpcomingRequest()
         .From(from).To(to).Build();

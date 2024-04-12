@@ -31,7 +31,7 @@ public class ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOut
                 .When("user gets their tags", () => QueryEndpoint(ApiResources.GetTagsWithCount))
                 .Then("the results by CategoryId should match the expected", ValidateResponse));
 
-    private Task ValidateResponse()
+    private void ValidateResponse()
     {
         var expectedForGroceries = new TagDto("groceries", 3);
         var expectedForRestaurant = new TagDto("restaurant", 2);
@@ -42,8 +42,6 @@ public class ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOut
             .NotBeNull()
             .And.HaveCount(3)
             .And.ContainInOrder(expectedForGroceries, expectedForRestaurant, expectedForAlcohol);
-
-        return Task.CompletedTask;
     }
 
     private async Task CreateTransaction(string categoryName, string accountName, params string[] tags)

@@ -103,7 +103,7 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
                     var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
                     var id = ResourceIdFromLocation(location);
 
-                    using var dbContext = DatabaseDriver.CreateDbContext();
+                    await using var dbContext = DatabaseDriver.CreateDbContext();
 
                     var result = await dbContext.FindByIdAsync<Transaction>(id);
 

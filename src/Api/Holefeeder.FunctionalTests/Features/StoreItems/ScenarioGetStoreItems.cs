@@ -48,7 +48,7 @@ public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITest
         await QueryEndpoint(ApiResources.GetStoreItems, sorts: "-code");
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        StoreItemViewModel[]? result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
+        var result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
         AssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2);

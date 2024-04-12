@@ -34,7 +34,7 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
                 .Then("the total for the year should match the expected", ValidateResponse));
 
     [AssertionMethod]
-    private Task ValidateResponse()
+    private void ValidateResponse()
     {
         var expectedFoodAndDrink = new StatisticsDto(_categories["food and drink"].Id,
             _categories["food and drink"].Name, _categories["food and drink"].Color, 333.67m,
@@ -61,8 +61,6 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
                 first => first.Should().BeEquivalentTo(expectedFoodAndDrink),
                 second => second.Should().BeEquivalentTo(expectedPurchase)
             );
-
-        return Task.CompletedTask;
     }
 
     private async Task CreateTransaction(string categoryName, string accountName, DateOnly date, decimal amount)

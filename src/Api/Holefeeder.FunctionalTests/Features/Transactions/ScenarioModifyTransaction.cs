@@ -115,7 +115,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
 
@@ -125,6 +125,6 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     private async Task WhenUserModifiedATransaction(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyTransaction, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyTransaction, json);
     }
 }

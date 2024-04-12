@@ -18,9 +18,9 @@ public class ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver
         await WhenUserGetEnumeration();
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        DateIntervalType[]? result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
+        var result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
         AssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetDateIntervalTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetDateIntervalTypes);
 }

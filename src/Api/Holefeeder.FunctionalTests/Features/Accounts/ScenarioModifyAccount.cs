@@ -60,7 +60,7 @@ public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITest
         await WhenUserModifiesAccount(request);
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<Account>(entity.Id);
         result.Should()
@@ -72,6 +72,6 @@ public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITest
     private async Task WhenUserModifiesAccount(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyAccount, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyAccount, json);
     }
 }

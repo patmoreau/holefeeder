@@ -89,5 +89,5 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
         });
     }
 
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetTransaction, parameters: id.ToString());
+    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetTransaction, id);
 }

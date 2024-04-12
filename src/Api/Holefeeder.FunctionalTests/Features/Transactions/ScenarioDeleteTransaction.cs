@@ -56,12 +56,12 @@ public class ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, I
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
 
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendDeleteRequestAsync(ApiResources.DeleteTransaction, request.Id);
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendRequestAsync(ApiResources.DeleteTransaction, request.Id);
 }

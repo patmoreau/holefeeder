@@ -15,10 +15,10 @@
     <PackageVersion Include="Dapper.Transaction" Version="2.1.28" />
     <PackageVersion Include="dbup-core" Version="5.0.87" />
     <PackageVersion Include="dbup-mysql" Version="5.0.44" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.9" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.9" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.9" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.9" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.15" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.15" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.15" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.15" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.11" />
     <PackageVersion Include="Hangfire.InMemory" Version="0.8.1" />
@@ -57,7 +57,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.9" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.15" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.31.0">
       <PrivateAssets>all</PrivateAssets>

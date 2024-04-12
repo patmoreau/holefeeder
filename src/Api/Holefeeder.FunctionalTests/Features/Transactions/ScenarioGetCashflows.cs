@@ -55,7 +55,7 @@ public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestO
         await QueryEndpoint(ApiResources.GetCashflows, sorts: "-description");
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        CashflowInfoViewModel[]? result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel[]>();
+        var result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Description);
     }
 }

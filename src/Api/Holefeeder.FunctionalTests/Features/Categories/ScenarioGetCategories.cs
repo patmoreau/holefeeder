@@ -37,7 +37,7 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
         await WhenUserGetCategories();
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        CategoryViewModel[]? result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
+        var result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
         AssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
@@ -48,5 +48,5 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
         });
     }
 
-    private async Task WhenUserGetCategories() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCategories);
+    private async Task WhenUserGetCategories() => await HttpClientDriver.SendRequestAsync(ApiResources.GetCategories);
 }

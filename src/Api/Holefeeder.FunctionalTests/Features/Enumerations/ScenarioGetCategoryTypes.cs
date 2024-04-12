@@ -18,9 +18,9 @@ public class ScenarioGetCategoryTypes(ApiApplicationDriver applicationDriver, IT
         await WhenUserGetEnumeration();
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        CategoryType[]? result = HttpClientDriver.DeserializeContent<CategoryType[]>();
+        var result = HttpClientDriver.DeserializeContent<CategoryType[]>();
         AssertAll(() => { result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetCategoryTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetCategoryTypes);
 }

@@ -37,8 +37,7 @@ public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, Budgetin
         });
     }
 
-    internal void RequestIsSent(IStepRunner runner)
-    {
+    internal void RequestIsSent(IStepRunner runner) =>
         runner.Execute("the cashflow request is sent", async () =>
         {
             var request = runner.GetContextData<IBaseRequest>(ContextCashflowRequest);
@@ -51,9 +50,8 @@ public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, Budgetin
                 apiResource = ApiResources.CancelCashflow;
             }
 
-            await HttpClientDriver.SendPostRequestAsync(apiResource, json);
+            await HttpClientDriver.SendRequestWithBodyAsync(apiResource, json);
         });
-    }
 
     internal void Exists(IStepRunner runner)
     {

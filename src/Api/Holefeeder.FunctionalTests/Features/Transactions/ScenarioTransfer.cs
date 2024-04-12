@@ -107,7 +107,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
                 })
                 .And("the data of the outgoing transaction be valid", async () =>
                 {
-                    using var dbContext = DatabaseDriver.CreateDbContext();
+                    await using var dbContext = DatabaseDriver.CreateDbContext();
 
                     var result = await dbContext.FindByIdAsync<Transaction>(ids.FromTransactionId);
 
@@ -120,7 +120,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
                 })
                 .And("the data of the incoming transaction be valid", async () =>
                 {
-                    using var dbContext = DatabaseDriver.CreateDbContext();
+                    await using var dbContext = DatabaseDriver.CreateDbContext();
 
                     var result = await dbContext.FindByIdAsync<Transaction>(ids.ToTransactionId);
 

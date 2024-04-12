@@ -18,38 +18,32 @@ public partial class FeatureSecurity(ApiApplicationDriver apiApplicationDriver, 
     [Scenario]
     [ScenarioCategory("Security")]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenAuthorizedUser(ApiResource endpoint)
-    {
+    public async Task WhenAuthorizedUser(ApiResource endpoint) =>
         await Runner.RunScenarioAsync(
             _ => Given_an_authorized_user(),
             _ => When_I_invoke_the_resource(endpoint),
             _ => Then_user_should_be_authorized_to_access_endpoint()
         );
-    }
 
     [Scenario]
     [ScenarioCategory("Security")]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenForbiddenUser(ApiResource endpoint)
-    {
+    public async Task WhenForbiddenUser(ApiResource endpoint) =>
         await Runner.RunScenarioAsync(
             _ => Given_a_forbidden_user(),
             _ => When_I_invoke_the_resource(endpoint),
             _ => Then_user_should_be_forbidden_to_access_endpoint()
         );
-    }
 
     [Scenario]
     [ScenarioCategory("Security")]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenUnauthorizedUser(ApiResource endpoint)
-    {
+    public async Task WhenUnauthorizedUser(ApiResource endpoint) =>
         await Runner.RunScenarioAsync(
             _ => Given_an_unauthorized_user(),
             _ => When_I_invoke_the_resource(endpoint),
             _ => Then_user_should_not_be_authorized_to_access_endpoint()
         );
-    }
 
     public static IEnumerable<object[]> SecuredEndpointTestCases
     {

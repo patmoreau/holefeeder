@@ -73,11 +73,10 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
     private async Task WhenUserOpensAnAccount(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.OpenAccount, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.OpenAccount, json);
     }
 
-    private void AccountShouldBeOpened(IStepRunner runner)
-    {
+    private void AccountShouldBeOpened(IStepRunner runner) =>
         runner.Execute("the account was created successfully", async () =>
         {
             ShouldExpectStatusCode(HttpStatusCode.Created);
@@ -85,7 +84,7 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
             var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
             var id = ResourceIdFromLocation(location);
 
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Account>(id);
 
@@ -93,5 +92,4 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
 
             result.Should().NotBeNull().And.BeEquivalentTo(request);
         });
-    }
 }

@@ -130,5 +130,5 @@ public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOut
         });
     }
 
-    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetAccount, parameters: id.ToString());
+    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetAccount, id.ToString());
 }
