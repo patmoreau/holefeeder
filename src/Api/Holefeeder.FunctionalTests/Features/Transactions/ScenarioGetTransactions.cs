@@ -53,7 +53,7 @@ public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITe
         await QueryEndpoint(ApiResources.GetTransactions, sorts: "-description");
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        TransactionInfoViewModel[]? result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel[]>();
+        var result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Description);
     }
 }

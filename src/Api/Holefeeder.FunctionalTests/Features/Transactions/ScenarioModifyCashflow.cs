@@ -61,7 +61,7 @@ public class ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITes
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
 
@@ -71,6 +71,6 @@ public class ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITes
     private async Task WhenUserModifiedACashflow(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyCashflow, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyCashflow, json);
     }
 }

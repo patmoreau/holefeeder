@@ -62,7 +62,7 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<Account>(entity.Id);
         result.Should().NotBeNull();
@@ -72,6 +72,6 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
     private async Task WhenUserSetsFavoriteAccount(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.FavoriteAccount, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.FavoriteAccount, json);
     }
 }

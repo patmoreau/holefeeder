@@ -43,26 +43,21 @@ public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestO
             .When(TheAccountIsClosed)
             .Then(TheAccountShouldBeClosed));
 
-    private void TheAccountIsClosedWithAnInvalidRequest(IStepRunner runner)
-    {
+    private void TheAccountIsClosedWithAnInvalidRequest(IStepRunner runner) =>
         runner.Execute("the account is closed with an invalid request", async () =>
         {
             var request = GivenAnInvalidCloseAccountRequest().Build();
             await SendRequest(request);
         });
-    }
 
-    private void AnAccountThatDoesNotExistIsClosed(IStepRunner runner)
-    {
+    private void AnAccountThatDoesNotExistIsClosed(IStepRunner runner) =>
         runner.Execute("an account that does not exist is closed", async () =>
         {
             var request = GivenACloseAccountRequest().Build();
             await SendRequest(request);
         });
-    }
 
-    private void TheAccountIsClosed(IStepRunner runner)
-    {
+    private void TheAccountIsClosed(IStepRunner runner) =>
         runner.Execute("the account is closed", async () =>
         {
             var account = runner.GetContextData<Account>(AccountStepDefinition.ContextExistingAccount);
@@ -71,24 +66,17 @@ public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestO
             var request = GivenACloseAccountRequest().WithId(account.Id).Build();
             await SendRequest(request);
         });
-    }
 
     [AssertionMethod]
-    private void AValidationErrorShouldBeReceived(IStepRunner runner)
-    {
+    private void AValidationErrorShouldBeReceived(IStepRunner runner) =>
         runner.Execute("should receive a validation error",
             () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
-    }
 
     [AssertionMethod]
-    private void TheAccountShouldNotBeFound(IStepRunner runner)
-    {
-        runner.Execute("the account should not be found", () => ShouldExpectStatusCode(HttpStatusCode.NotFound));
-    }
+    private void TheAccountShouldNotBeFound(IStepRunner runner) => runner.Execute("the account should not be found", () => ShouldExpectStatusCode(HttpStatusCode.NotFound));
 
     [AssertionMethod]
-    private void TheAccountShouldBeClosed(IStepRunner runner)
-    {
+    private void TheAccountShouldBeClosed(IStepRunner runner) =>
         runner.Execute("the account should be closed", async () =>
         {
             ShouldExpectStatusCode(HttpStatusCode.NoContent);
@@ -96,17 +84,16 @@ public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestO
             var account = runner.GetContextData<Account>(AccountStepDefinition.ContextExistingAccount);
             account.Should().NotBeNull();
 
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
             result!.Inactive.Should().BeTrue();
         });
-    }
 
     private async Task SendRequest(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.CloseAccount, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CloseAccount, json);
     }
 }

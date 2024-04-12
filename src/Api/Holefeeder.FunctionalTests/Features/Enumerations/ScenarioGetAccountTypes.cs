@@ -18,9 +18,9 @@ public class ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITe
         await WhenUserGetEnumeration();
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        AccountType[]? result = HttpClientDriver.DeserializeContent<AccountType[]>();
+        var result = HttpClientDriver.DeserializeContent<AccountType[]>();
         AssertAll(() => { result.Should().NotBeNull().And.HaveCount(AccountType.List.Count); });
     }
 
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendGetRequestAsync(ApiResources.GetAccountTypes);
+    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetAccountTypes);
 }

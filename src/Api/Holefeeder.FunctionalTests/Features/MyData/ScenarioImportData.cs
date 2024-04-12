@@ -89,7 +89,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
         async Task AssertAccount(MyDataAccountDto account)
         {
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Account>(account.Id);
             result.Should().NotBeNull();
@@ -98,7 +98,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
         async Task AssertCategory(MyDataCategoryDto category)
         {
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Category>(category.Id);
             result.Should().NotBeNull();
@@ -107,7 +107,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
         async Task AssertCashflow(MyDataCashflowDto cashflow)
         {
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
             result.Should().NotBeNull();
@@ -116,7 +116,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
         async Task AssertTransaction(MyDataTransactionDto transaction)
         {
-            using var dbContext = DatabaseDriver.CreateDbContext();
+            await using var dbContext = DatabaseDriver.CreateDbContext();
 
             var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
             result.Should().NotBeNull();
@@ -127,7 +127,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private async Task WhenUserImportsData(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.ImportData, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ImportData, json);
     }
 
     private async Task<ImportDataStatusDto?> ThenWaitForCompletion(Guid importId)
@@ -138,9 +138,9 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
         while (tries < numberOfRetry)
         {
-            await HttpClientDriver.SendGetRequestAsync(ApiResources.ImportDataStatus, importId);
+            await HttpClientDriver.SendRequestAsync(ApiResources.ImportDataStatus, importId);
 
-            if (HttpClientDriver.ResponseMessage?.StatusCode == HttpStatusCode.NotFound)
+            if (HttpClientDriver.ResponseStatusCode == HttpStatusCode.NotFound)
             {
                 await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
                 tries++;

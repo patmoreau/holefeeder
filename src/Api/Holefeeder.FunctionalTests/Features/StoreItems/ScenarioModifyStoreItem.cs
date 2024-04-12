@@ -50,7 +50,7 @@ public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITe
 
         ShouldExpectStatusCode(HttpStatusCode.NoContent);
 
-        using var dbContext = DatabaseDriver.CreateDbContext();
+        await using var dbContext = DatabaseDriver.CreateDbContext();
 
         var result = await dbContext.FindByIdAsync<StoreItem>(storeItem.Id);
         result.Should().NotBeNull();
@@ -60,6 +60,6 @@ public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITe
     private async Task WhenUserModifyStoreItem(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
     }
 }

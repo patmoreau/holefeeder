@@ -63,6 +63,6 @@ public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITe
     private async Task WhenUserCreateStoreItem(Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
     }
 }

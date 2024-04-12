@@ -15,7 +15,7 @@ public class TransactionStepDefinition(IHttpClientDriver httpClientDriver) : Ste
         ArgumentNullException.ThrowIfNull(request);
 
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.MakePurchase, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.MakePurchase, json);
     }
 
     internal async Task PayACashflow(PayCashflow.Request request)
@@ -23,12 +23,12 @@ public class TransactionStepDefinition(IHttpClientDriver httpClientDriver) : Ste
         ArgumentNullException.ThrowIfNull(request);
 
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.PayCashflow, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.PayCashflow, json);
     }
 
     internal async Task Transfer(Transfer.Request request)
     {
         var json = JsonSerializer.Serialize(request);
-        await HttpClientDriver.SendPostRequestAsync(ApiResources.Transfer, json);
+        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.Transfer, json);
     }
 }

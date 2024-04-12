@@ -78,5 +78,5 @@ public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOut
         }
     }
 
-    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendGetRequestAsync(ApiResources.ExportData);
+    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendRequestAsync(ApiResources.ExportData);
 }

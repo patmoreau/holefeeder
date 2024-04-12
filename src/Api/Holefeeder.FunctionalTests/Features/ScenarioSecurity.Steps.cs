@@ -2,6 +2,8 @@ using System.Net;
 
 using DrifterApps.Seeds.Testing.Infrastructure;
 
+using Holefeeder.FunctionalTests.Infrastructure;
+
 namespace Holefeeder.FunctionalTests.Features;
 
 public partial class FeatureSecurity
@@ -10,31 +12,36 @@ public partial class FeatureSecurity
     {
         if (apiResources.HttpMethod == HttpMethod.Post)
         {
-            return HttpClientDriver.SendPostRequestAsync(apiResources);
+            return HttpClientDriver.SendRequestAsync(apiResources);
+        }
+
+        if (apiResources.IsQuery())
+        {
+            return HttpClientDriver.SendRequestAsync(apiResources, string.Empty);
         }
 
         var parameters = Fakerizer.Make(apiResources.ParameterCount, () => Fakerizer.Random.Guid().ToString())
             .Cast<object>()
             .ToArray();
 
-        return apiResources.HttpMethod == HttpMethod.Delete ? HttpClientDriver.SendDeleteRequestAsync(apiResources, parameters) : HttpClientDriver.SendGetRequestAsync(apiResources, parameters);
+        return HttpClientDriver.SendRequestAsync(apiResources, parameters);
     }
 
     private Task Then_user_should_be_authorized_to_access_endpoint()
     {
-        HttpClientDriver.ResponseMessage.Should().NotBeNull().And.NotHaveStatusCode(HttpStatusCode.Unauthorized).And.NotHaveStatusCode(HttpStatusCode.Forbidden);
+        HttpClientDriver.ResponseStatusCode.Should().NotBe(HttpStatusCode.Unauthorized).And.NotBe(HttpStatusCode.Forbidden);
         return Task.CompletedTask;
     }
 
     private Task Then_user_should_not_be_authorized_to_access_endpoint()
     {
-        HttpClientDriver.ResponseMessage.Should().NotBeNull().And.HaveStatusCode(HttpStatusCode.Unauthorized);
+        HttpClientDriver.ResponseStatusCode.Should().Be(HttpStatusCode.Unauthorized);
         return Task.CompletedTask;
     }
 
     private Task Then_user_should_be_forbidden_to_access_endpoint()
     {
-        HttpClientDriver.ResponseMessage.Should().NotBeNull().And.HaveStatusCode(HttpStatusCode.Forbidden);
+        HttpClientDriver.ResponseStatusCode.Should().Be(HttpStatusCode.Forbidden);
         return Task.CompletedTask;
     }
 }

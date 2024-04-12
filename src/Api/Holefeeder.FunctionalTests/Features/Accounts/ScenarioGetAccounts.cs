@@ -44,7 +44,7 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
         await QueryEndpoint(ApiResources.GetAccounts, sorts: "-name");
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
-        AccountViewModel[]? result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
+        var result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
         result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Name);
     }
 }

@@ -29,7 +29,7 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
             runner.SetContextData(ContextCreateStoreItemRequest, request);
 
             var json = JsonSerializer.Serialize(request);
-            await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
+            await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
 
@@ -46,7 +46,7 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
         runner.Execute("a store item is created", async () =>
         {
             var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
-            await HttpClientDriver.SendPostRequestAsync(ApiResources.CreateStoreItem, json);
+            await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
 
@@ -58,13 +58,13 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
     {
         ArgumentNullException.ThrowIfNull(runner);
 
-        runner.Execute($"a {nameof(ApiResources.ModifyStoreItem)} request is sent", () =>
+        runner.Execute($"a {nameof(ApiResources.ModifyStoreItem)} request is sent", async () =>
         {
             var request = GivenAModifyStoreItemRequest().WithId(WithCreatedId()).Build();
             runner.SetContextData(ContextModifyStoreItemRequest, request);
 
             var json = JsonSerializer.Serialize(request);
-            return HttpClientDriver.SendPostRequestAsync(ApiResources.ModifyStoreItem, json);
+            await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
         });
     }
 
@@ -96,5 +96,5 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
         });
     }
 
-    private Task RetrievedById(Guid id) => HttpClientDriver.SendGetRequestAsync(ApiResources.GetStoreItem, id);
+    private Task RetrievedById(Guid id) => HttpClientDriver.SendRequestAsync(ApiResources.GetStoreItem, id);
 }
