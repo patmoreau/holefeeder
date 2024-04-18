@@ -63,9 +63,8 @@ bootstrapApplication(AppComponent, {
           maxIdTokenIatOffsetAllowedInSeconds: 600,
           issValidationOff: false,
           autoUserInfo: false,
-          logLevel: LogLevel.Debug,
+          logLevel: LogLevel.Warn,
           customParamsAuthRequest: {
-            prompt: 'select_account', // login, consent
           },
           postLoginRoute: '/dashboard',
           secureRoutes: [
