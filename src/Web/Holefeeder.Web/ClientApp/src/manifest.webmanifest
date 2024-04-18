@@ -4,14 +4,29 @@
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "assets/images/safe.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Purchase",
+      "short_name": "Purchase something",
+      "description": "Make a purchase",
+      "url": "./transactions/make-purchase",
+      "icons": [
+        {
+          "src": "assets/images/cash-coin.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     }
   ]
 }
