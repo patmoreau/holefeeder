@@ -51,7 +51,7 @@
     "core-js": "3.37.0",
     "date-fns": "3.6.0",
     "help": "3.0.2",
-    "ng2-charts": "6.0.0",
+    "ng2-charts": "6.0.1",
     "ngx-toaster": "1.0.1",
     "ngx-toastr": "18.0.0",
     "run-script-os": "1.1.6",
