@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <Project>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -20,35 +21,9 @@
     <Copyright>Drifter Apps Inc.</Copyright>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);S2094</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="SonarAnalyzer.CSharp"/>
   </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Holefeeder.UnitTests"/>
-    <InternalsVisibleTo Include="Holefeeder.FunctionalTests"/>
-    <InternalsVisibleTo Include="Holefeeder.Tests.Common"/>
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.CLSCompliantAttribute">
-      <_Parameter1>false</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-
-  <!-- to allow stryker to run against projects -->
-  <PropertyGroup>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub"/>

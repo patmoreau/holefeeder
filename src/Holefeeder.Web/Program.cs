@@ -88,4 +88,4 @@ app.MapHealthChecksUI(config =>
     config.UseRelativeWebhookPath = true;
 });
 
-app.Run();
+await app.RunAsync();

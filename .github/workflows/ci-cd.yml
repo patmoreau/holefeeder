@@ -57,7 +57,7 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v1.1.1
         with:
-          versionSpec: "5.x"
+          versionSpec: '5.x'
 
       - name: Determine Version
         id: gitversion
@@ -100,7 +100,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-api-
 
@@ -108,7 +108,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-web-
 
@@ -117,7 +117,7 @@ jobs:
         with:
           load: true
           context: .
-          file: ./src/Api/Holefeeder.Api/Dockerfile
+          file: ./src/Holefeeder.Api/Dockerfile
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-api:${{ env.VERSION }}
@@ -129,7 +129,7 @@ jobs:
         with:
           load: true
           context: .
-          file: ./src/Web/Holefeeder.Web/Dockerfile
+          file: ./src/Holefeeder.Web/Dockerfile
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-web:${{ env.VERSION }}
@@ -150,13 +150,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
 
       - name: Save Docker cache for web
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
 
   tests:
     name: Tests
@@ -185,7 +185,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-api-
 
@@ -193,7 +193,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-web-
 
@@ -235,7 +235,7 @@ jobs:
         uses: emibcn/badge-action@v2.0.3
         with:
           label: Tests
-          status: "${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}"
+          status: '${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}'
           color: ${{ env.BADGE_COLOR }}
           path: holefeeder-tests-badge.svg
 
@@ -291,7 +291,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Api/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-api-
 
@@ -299,7 +299,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Web/Holefeeder.Web/Dockerfile') }}
+          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-web-
 
@@ -307,7 +307,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/Api/Holefeeder.Api/Dockerfile
+          file: ./src/Holefeeder.Api/Dockerfile
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
@@ -318,7 +318,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/Web/Holefeeder.Web/Dockerfile
+          file: ./src/Holefeeder.Web/Dockerfile
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
@@ -332,7 +332,7 @@ jobs:
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
-      POD_KUBECONFIG: "${{ github.workspace }}/.kube/pod-kubeconfig"
+      POD_KUBECONFIG: '${{ github.workspace }}/.kube/pod-kubeconfig'
 
     environment:
       name: production
@@ -342,8 +342,8 @@ jobs:
 
       - uses: yokawasa/action-setup-kube-tools@v0.11.1
         with:
-          kubectl: "1.25.2"
-          kustomize: "4.5.7"
+          kubectl: '1.25.2'
+          kustomize: '4.5.7'
 
       - name: Create kube config
         run: |

@@ -41,20 +41,17 @@ public class CreateStoreItem : ICarterModule
 
     internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Guid>
     {
-        private readonly BudgetingContext _context = context;
-        private readonly IUserContext _userContext = userContext;
-
         public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
         {
-            if (await _context.StoreItems
+            if (await context.StoreItems
                     .AnyAsync(e => e.Code == request.Code, cancellationToken))
             {
                 throw new ObjectStoreDomainException($"Code '{request.Code}' already exists.");
             }
 
-            var storeItem = StoreItem.Create(request.Code, request.Data, _userContext.Id);
+            var storeItem = StoreItem.Create(request.Code, request.Data, userContext.Id);
 
-            _context.StoreItems.Add(storeItem);
+            await context.StoreItems.AddAsync(storeItem, cancellationToken);
 
             return storeItem.Id;
         }

@@ -4,7 +4,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

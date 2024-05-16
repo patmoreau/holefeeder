@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   mysql-data-test:
     image: mariadb:11.3.2
@@ -10,7 +8,7 @@ services:
     container_name: api-functional-tests
     build:
       context: .
-      dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Api/Dockerfile
       target: functionaltests
     depends_on:
       - mysql-data-test
@@ -22,7 +20,7 @@ services:
     container_name: api-unit-tests
     build:
       context: .
-      dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Api/Dockerfile
       target: unittests
     volumes:
       - ./tests-results/:/TestResults
@@ -32,7 +30,7 @@ services:
     container_name: web-angular-tests
     build:
       context: .
-      dockerfile: ./src/Web/Holefeeder.Web/Dockerfile
+      dockerfile: ./src/Holefeeder.Web/Dockerfile
       target: angulartests
     volumes:
       - ./tests-results/:/TestResults
