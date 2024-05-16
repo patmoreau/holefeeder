@@ -36,18 +36,11 @@ COPY Directory.Build.props .
 COPY Directory.Build.targets .
 COPY Directory.Packages.props .
 COPY nuget.config .
+COPY src/Directory.Build.props src/
 
-COPY src/Api/Holefeeder.Api/*.csproj src/Api/Holefeeder.Api/
-COPY src/Api/Holefeeder.Application/*.csproj src/Api/Holefeeder.Application/
-COPY src/Api/Holefeeder.Domain/*.csproj src/Api/Holefeeder.Domain/
-COPY src/Api/Holefeeder.Infrastructure/*.csproj src/Api/Holefeeder.Infrastructure/
-COPY src/Web/Holefeeder.Web/*.csproj src/Web/Holefeeder.Web/
+COPY src/Holefeeder.Web/*.csproj src/Holefeeder.Web/
 
-COPY src/Api/Holefeeder.UnitTests/*.csproj src/Api/Holefeeder.UnitTests/
-COPY src/Api/Holefeeder.Tests.Common/*.csproj src/Api/Holefeeder.Tests.Common/
-COPY src/Api/Holefeeder.FunctionalTests/*.csproj src/Api/Holefeeder.FunctionalTests/
-
-RUN dotnet restore
+RUN dotnet restore src/Holefeeder.Web/Holefeeder.Web.csproj
 
 ###################################
 # Build stage
@@ -57,8 +50,8 @@ ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 
 WORKDIR /source
-COPY src/. src/.
-WORKDIR /source/src/Web/Holefeeder.Web
+COPY src/Holefeeder.Web/. src/Holefeeder.Web/.
+WORKDIR /source/src/Holefeeder.Web
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 

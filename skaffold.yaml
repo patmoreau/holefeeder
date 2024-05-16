@@ -12,14 +12,14 @@ build:
     - image: holefeeder/holefeeder-web
       context: .
       docker:
-        dockerfile: src/Web/Holefeeder.Web/Dockerfile
+        dockerfile: src/Holefeeder.Web/Dockerfile
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
         noCache: false
     - image: holefeeder/holefeeder-api
       context: .
       docker:
-        dockerfile: src/Api/Holefeeder.Api/Dockerfile
+        dockerfile: src/Holefeeder.Api/Dockerfile
         buildArgs:
           BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
         noCache: false
@@ -29,22 +29,22 @@ profiles:
       - kubeContext: k3d-dev
     build:
       artifacts:
-      - image: holefeeder/holefeeder-web
-        context: .
-        docker:
-          dockerfile: src/Web/Holefeeder.Web/Dockerfile
-          target: debugger
-          buildArgs:
-            BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
-          noCache: false
-      - image: holefeeder/holefeeder-api
-        context: .
-        docker:
-          dockerfile: src/Api/Holefeeder.Api/Dockerfile
-          target: debugger
-          buildArgs:
-            BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
-          noCache: false
+        - image: holefeeder/holefeeder-web
+          context: .
+          docker:
+            dockerfile: src/Holefeeder.Web/Dockerfile
+            target: debugger
+            buildArgs:
+              BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
+            noCache: false
+        - image: holefeeder/holefeeder-api
+          context: .
+          docker:
+            dockerfile: src/Holefeeder.Api/Dockerfile
+            target: debugger
+            buildArgs:
+              BUILD_VERSION: "{{if .ASSEMBLY_VERSION}}{{.ASSEMBLY_VERSION}}{{else}}99.99.99{{end}}"
+            noCache: false
     manifests:
       kustomize:
         paths:

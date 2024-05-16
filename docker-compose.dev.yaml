@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-
   reverse-proxy:
     ports:
       - 5011:5011
@@ -26,9 +23,9 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./src/Api/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Api/Dockerfile
       tags:
-        - "${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}"
+        - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}'
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=root;Password=${MARIADB_ROOT_PASSWORD};Database=budgeting_dev;
@@ -39,9 +36,9 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./src/Web/Holefeeder.Web/Dockerfile
+      dockerfile: ./src/Holefeeder.Web/Dockerfile
       tags:
-        - "${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}"
+        - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}'
     expose:
       - 80
     environment:
