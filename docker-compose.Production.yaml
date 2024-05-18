@@ -1,0 +1,10 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    image: ${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}
+    security_opt:
+      - no-new-privileges:true

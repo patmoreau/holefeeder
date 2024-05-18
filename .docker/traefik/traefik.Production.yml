@@ -16,7 +16,7 @@ providers:
     watch: true
 
 log:
-  level: Warning
+  level: INFO
   format: common
 
 entryPoints:
@@ -29,3 +29,10 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
+
+certificatesResolvers:
+  acme_certresolver:
+    acme:
+      email: patrick@drifterapps.com
+      storage: /letsencrypt/acme.json
+      tlsChallenge: {}

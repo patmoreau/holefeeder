@@ -33,3 +33,13 @@ entryPoints:
     address: ":3306"
   whoami:
     address: ":5011"
+
+certificatesResolvers:
+  acme_certresolver:
+    acme:
+      email: patrick@drifterapps.com
+      storage: /letsencrypt/acme.json
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      keyType: "RSA4096"
+      # Note: Since we're using mkcert, the CA server is not used,
+      # but the structure is maintained for consistency.

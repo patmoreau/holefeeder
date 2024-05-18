@@ -4,14 +4,13 @@ http:
       rule: "Host(`traefik.localtest.me`)"
       service: "api@internal"
       tls:
+        certResolver: acme_certresolver
         domains:
           - main: "localtest.me"
             sans:
               - "*.localtest.me"
 
 tls:
-  stores:
-    default:
-      defaultCertificate:
-        certFile: "/etc/certs/localtest.me+4.pem"
-        keyFile: "/etc/certs/localtest.me+4-key.pem"
+  certificates:
+    - certFile: "/etc/certs/localtest.me+4.pem"
+      keyFile: "/etc/certs/localtest.me+4-key.pem"
