@@ -1,8 +1,10 @@
 services:
   reverse-proxy:
-    image: traefik
+    image: traefik:v3.0.0
     container_name: reverse-proxy
     restart: unless-stopped
+    command:
+      - '--configFile=/etc/traefik/traefik.yml'
     security_opt:
       - no-new-privileges:true
     ports:
@@ -10,21 +12,32 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Map the static configuration into the container
+      - .docker/traefik/traefik.${ENV}.yml:/etc/traefik/traefik.yml:ro
+      # Map the dynamic configuration into the container
+      - .docker/traefik/dynamic.${ENV}.yml:/etc/traefik/dynamic.yml:ro
+      - traefik_certs:/letsencrypt
 
   whoami:
-    image: traefik/whoami
+    image: traefik/whoami:v1.10
     container_name: whoami
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
       traefik.http.routers.whoami-router.entrypoints: websecure
+      traefik.http.routers.whoami-router.rule: Host(`whoami.${DOMAIN}`)
       traefik.http.routers.whoami-router.tls: true
+      traefik.http.routers.whoami-router.tls.certresolver: acme_certresolver
 
   seq:
-    image: datalust/seq
+    image: datalust/seq:2024.3
     container_name: seq
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       - ACCEPT_EULA=Y
       - SEQ_API_KEY=${SEQ_API_KEY}
@@ -36,14 +49,18 @@ services:
       traefik.enable: true
       traefik.docker.network: proxy
       traefik.http.routers.seq-router.entrypoints: websecure
+      traefik.http.routers.seq-router.rule: Host(`seq.${DOMAIN}`)
       traefik.http.routers.seq-router.tls: true
+      traefik.http.routers.seq-router.tls.certresolver: acme_certresolver
     volumes:
       - seq-data:/data
 
   mariadb:
-    image: mariadb
+    image: mariadb:10.11.7
     container_name: mariadb
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MYSQL_DATABASE: holefeeder
@@ -57,10 +74,26 @@ services:
     labels:
       traefik.enable: false
 
+  mariadb_upgrade:
+    image: mariadb:10.11.7
+    container_name: mariadb_upgrade
+    command:
+      [
+        'sh',
+        '-c',
+        'sleep 10 && mysql_upgrade -h mariadb -u root -p${MARIADB_ROOT_PASSWORD}',
+      ]
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - mariadb
+
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     container_name: adminer
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - mariadb
     expose:
@@ -69,7 +102,9 @@ services:
       traefik.enable: true
       traefik.docker.network: proxy
       traefik.http.routers.adminer-router.entrypoints: websecure
+      traefik.http.routers.adminer-router.rule: Host(`adminer.${DOMAIN}`)
       traefik.http.routers.adminer-router.tls: true
+      traefik.http.routers.adminer-router.tls.certresolver: acme_certresolver
 
   api:
     container_name: api
@@ -79,28 +114,40 @@ services:
     expose:
       - 80
     environment:
+      ASPNETCORE_ENVIRONMENT: ${ENV}
       ASPNETCORE_URLS: http://+
+      ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=${MARIADB_USER};Password=${MARIADB_PASSWORD};Database=holefeeder;
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
       traefik.http.routers.api-router.entrypoints: websecure
+      traefik.http.routers.api-router.rule: 'Host(`holefeeder.${DOMAIN}`) && (PathPrefix(`/gateway`) || PathPrefix(`/swagger`))'
       traefik.http.routers.api-router.tls: true
+      traefik.http.routers.api-router.tls.certresolver: acme_certresolver
       traefik.http.routers.api-router.middlewares: gateway-remover
       traefik.http.middlewares.gateway-remover.stripprefix.prefixes: /gateway
 
   web:
     container_name: web
     restart: unless-stopped
+    depends_on:
+      - api
     expose:
       - 80
     environment:
+      ASPNETCORE_ENVIRONMENT: ${ENV}
       ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
       ASPNETCORE_URLS: http://+
+      AngularSettings__RedirectUrl: https://holefeeder.${DOMAIN}
+      Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
       traefik.http.routers.web-router.entrypoints: websecure
+      traefik.http.routers.web-router.rule: 'Host(`holefeeder.${DOMAIN}`) && !(PathPrefix(`/api`) || PathPrefix(`/swagger`))'
       traefik.http.routers.web-router.tls: true
+      traefik.http.routers.web-router.tls.certresolver: acme_certresolver
 
 networks:
   default:
@@ -109,3 +156,4 @@ networks:
 volumes:
   mariadb-data:
   seq-data:
+  traefik_certs:

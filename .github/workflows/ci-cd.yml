@@ -340,36 +340,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: yokawasa/action-setup-kube-tools@v0.11.1
-        with:
-          kubectl: '1.25.2'
-          kustomize: '4.5.7'
-
-      - name: Create kube config
-        run: |
-          mkdir -p '${{ github.workspace }}/.kube' \
-            && echo '${{ secrets.KUBE_CONFIG}}' > $POD_KUBECONFIG
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Create .env.secrets file
         run: |
-          printf "BUDGETING_CONNECTION_STRING=Server=mysql;Port=3306;User Id=${{ secrets.MYSQL_USER }};Password=${{ secrets.MYSQL_PASSWORD }};Database=budgeting_prd;
-          MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_USER=${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" > $GITHUB_WORKSPACE/kubernetes/prd/.env.secrets
+          printf "
+          COMPOSE_DOCKER_CLI_BUILD=1
+          DOCKER_BUILDKIT=1
+          VERSION=${{ env.VERSION }}
+          ASSEMBLY_VERSION=${{ env.VERSION }}
+          ENV=Production
+          DOMAIN=drifterapps.app
+          SEQ_API_KEY=${{ secrets.SEQ_APIKEY }}
+          MARIADB_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MARIADB_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+          MARIADB_USER=${{ secrets.MYSQL_USER }}" > $GITHUB_WORKSPACE/.env
 
-      - name: Create .env.token file
+      - name: Create Docker config
         run: |
-          printf ".dockerconfigjson=$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > $GITHUB_WORKSPACE/kubernetes/prd/.env.token
+          mkdir -p ~/.docker
+          printf "$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > ~/.docker/config.json
 
-      - name: Set image tags
+      - name: Securely copy Docker config, Docker Compose file, and .env file to the remote server
         run: |
-          cd $GITHUB_WORKSPACE/kubernetes/prd
-          kustomize edit set image holefeeder/holefeeder-api=${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          kustomize edit set image holefeeder/holefeeder-web=${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ~/.docker/config.json docker-compose.yml .env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:/path/to/your/app
 
-      - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -k $GITHUB_WORKSPACE/kubernetes/prd --kubeconfig $POD_KUBECONFIG
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
 
   create_check:
     needs: [check_changes, tests]

@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using Hangfire;
 
 using Holefeeder.Application.Context;
-using Holefeeder.Infrastructure.Scripts;
 using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +32,6 @@ public static class ServiceCollectionExtensions
 
         services.AddDbContextFactory<BudgetingContext>();
         services.AddDbContext<BudgetingContext>();
-
-        services.AddScoped<Script000InitDatabase>();
 
         services.AddHangfireServices();
 
