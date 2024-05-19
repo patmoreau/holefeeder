@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik
+    image: traefik:v3.0.0
     container_name: reverse-proxy
     restart: unless-stopped
     command:
@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   whoami:
-    image: traefik/whoami
+    image: traefik/whoami:v1.10
     container_name: whoami
     restart: unless-stopped
     security_opt:
@@ -33,7 +33,7 @@ services:
       traefik.http.routers.whoami-router.tls.certresolver: acme_certresolver
 
   seq:
-    image: datalust/seq
+    image: datalust/seq:2024.3
     container_name: seq
     restart: unless-stopped
     security_opt:
@@ -56,7 +56,7 @@ services:
       - seq-data:/data
 
   mariadb:
-    image: mariadb:10.5.13
+    image: mariadb:10.11.7
     container_name: mariadb
     restart: unless-stopped
     security_opt:
@@ -75,7 +75,7 @@ services:
       traefik.enable: false
 
   mariadb_upgrade:
-    image: mariadb:10.5.13
+    image: mariadb:10.11.7
     container_name: mariadb_upgrade
     command:
       [
@@ -89,7 +89,7 @@ services:
       - mariadb
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     container_name: adminer
     restart: unless-stopped
     security_opt:
@@ -116,7 +116,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ENV}
       ASPNETCORE_URLS: http://+
-      ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=${MARIADB_USER};Password=${MARIADB_PASSWORD};Database=budgeting;
+      ConnectionStrings__BudgetingConnectionString: Server=mariadb;Port=3306;User Id=${MARIADB_USER};Password=${MARIADB_PASSWORD};Database=holefeeder;
       Serilog__WriteTo__1__Args__apiKey: ${SEQ_API_KEY}
     labels:
       traefik.enable: true

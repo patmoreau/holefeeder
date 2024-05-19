@@ -87,8 +87,6 @@ public static class WebApplicationExtensions
 
             var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
 
-            EnsureDatabase.For.MySqlDatabase(builder.ConnectionString);
-
             var upgradeEngine = DeployChanges.To
                 .MySqlDatabase(connectionManager)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
