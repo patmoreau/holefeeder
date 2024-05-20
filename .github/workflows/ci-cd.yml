@@ -365,7 +365,7 @@ jobs:
           echo '{
             "auths": {
               "ghcr.io": {
-                "auth": "'$(echo -n "${{ secrets.READ_PACKAGES_TOKEN }}" | base64 -w 0)'"
+                "auth": "${{ secrets.READ_PACKAGES_TOKEN }}"
               }
             }
           }' > $GITHUB_WORKSPACE/.docker/config.json
