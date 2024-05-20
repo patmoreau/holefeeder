@@ -361,7 +361,13 @@ jobs:
       - name: Create Docker config
         run: |
           mkdir -p ~/.docker
-          printf "$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > $GITHUB_WORKSPACE/.docker/config.json
+          echo '{
+            "auths": {
+              "https://index.docker.io/v1/": {
+                "auth": "'$(echo -n "${{ secrets.READ_PACKAGES_TOKEN }}" | base64 -w 0)'"
+              }
+            }
+          }' > $GITHUB_WORKSPACE/.docker/config.json
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -370,7 +376,7 @@ jobs:
 
       - name: Securely copy Docker config, Docker Compose file, and .env file to the remote server
         run: |
-          scp -v -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.docker
+          scp -v -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
           scp -v -o StrictHostKeyChecking=no $GITHUB_WORKSPACE/docker-compose.yaml $GITHUB_WORKSPACE/docker-compose.Production.yaml $GITHUB_WORKSPACE/.env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
 
       # - name: Deploy to server
