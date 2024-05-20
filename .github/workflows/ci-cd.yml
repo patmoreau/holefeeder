@@ -362,10 +362,11 @@ jobs:
       - name: Create Docker config
         run: |
           mkdir -p ~/.docker
+          auth_string="$(echo -n "${{ secrets.READ_PACKAGES_TOKEN }}" | base64)"
           echo '{
             "auths": {
               "ghcr.io": {
-                "auth": "${{ secrets.READ_PACKAGES_TOKEN }}"
+                "auth": "'"$auth_string"'"
               }
             }
           }' > $GITHUB_WORKSPACE/.docker/config.json
