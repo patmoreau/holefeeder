@@ -360,15 +360,16 @@ jobs:
       - name: Create Docker config
         run: |
           mkdir -p ~/.docker
-          printf "$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > ~/.docker/config.json
+          printf "$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > $GITHUB_WORKSPACE/.docker/config.json
 
       - name: Securely copy Docker config, Docker Compose file, and .env file to the remote server
         run: |
-          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ~/.docker/config.json docker-compose.yml .env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:/path/to/your/app
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.docker
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} docker-compose.yaml docker-compose.Production.yaml .env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.
 
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
+      # - name: Deploy to server
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
 
   create_check:
     needs: [check_changes, tests]
