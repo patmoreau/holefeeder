@@ -346,11 +346,12 @@ jobs:
       - name: Create .env.secrets file
         run: |
           printf "
+          COMPOSE_PROJECT_NAME=holefeeder
           COMPOSE_DOCKER_CLI_BUILD=1
           DOCKER_BUILDKIT=1
           VERSION=${{ env.VERSION }}
           ASSEMBLY_VERSION=${{ env.VERSION }}
-          ENV=Production
+          ENV=${{ env.ENVIRONMENT }}
           DOMAIN=drifterapps.app
           SEQ_API_KEY=${{ secrets.SEQ_APIKEY }}
           MARIADB_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -362,14 +363,19 @@ jobs:
           mkdir -p ~/.docker
           printf "$(echo -n '${{ secrets.READ_PACKAGES_TOKEN }}' | base64)" > $GITHUB_WORKSPACE/.docker/config.json
 
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+
       - name: Securely copy Docker config, Docker Compose file, and .env file to the remote server
         run: |
-          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.docker
-          scp -o StrictHostKeyChecking=no -i ${{ secrets.DIGITALOCEAN_SSH_KEY }} docker-compose.yaml docker-compose.Production.yaml .env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.
+          scp -v -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:.docker
+          scp -v -o StrictHostKeyChecking=no $GITHUB_WORKSPACE/docker-compose.yaml $GITHUB_WORKSPACE/docker-compose.Production.yaml $GITHUB_WORKSPACE/.env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
 
       # - name: Deploy to server
       #   run: |
-      #     ssh -o StrictHostKeyChecking=no -i ${{ secrets.DIGITAL_OCEAN_SSH_KEY }} ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
+      #     ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
 
   create_check:
     needs: [check_changes, tests]
