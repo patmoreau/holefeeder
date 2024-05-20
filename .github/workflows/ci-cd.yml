@@ -332,7 +332,6 @@ jobs:
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
-      POD_KUBECONFIG: '${{ github.workspace }}/.kube/pod-kubeconfig'
 
     environment:
       name: production
@@ -349,6 +348,7 @@ jobs:
           COMPOSE_PROJECT_NAME=holefeeder
           COMPOSE_DOCKER_CLI_BUILD=1
           DOCKER_BUILDKIT=1
+          DOCKER_REGISTRY=${{ env.DOCKER_REGISTRY }}
           VERSION=${{ env.VERSION }}
           ASSEMBLY_VERSION=${{ env.VERSION }}
           ENV=${{ env.ENVIRONMENT }}
@@ -356,14 +356,15 @@ jobs:
           SEQ_API_KEY=${{ secrets.SEQ_APIKEY }}
           MARIADB_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           MARIADB_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          MARIADB_USER=${{ secrets.MYSQL_USER }}" > $GITHUB_WORKSPACE/.env
+          MARIADB_USER=${{ secrets.MYSQL_USER }}
+          " > $GITHUB_WORKSPACE/.env
 
       - name: Create Docker config
         run: |
           mkdir -p ~/.docker
           echo '{
             "auths": {
-              "https://index.docker.io/v1/": {
+              "ghcr.io": {
                 "auth": "'$(echo -n "${{ secrets.READ_PACKAGES_TOKEN }}" | base64 -w 0)'"
               }
             }
@@ -379,9 +380,9 @@ jobs:
           scp -v -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
           scp -v -o StrictHostKeyChecking=no $GITHUB_WORKSPACE/docker-compose.yaml $GITHUB_WORKSPACE/docker-compose.Production.yaml $GITHUB_WORKSPACE/.env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
 
-      # - name: Deploy to server
-      #   run: |
-      #     ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "mkdir -p ~/.docker && mv /path/to/your/app/config.json ~/.docker/config.json && cd /path/to/your/app && docker-compose down && docker-compose up -d"
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml pull && docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
 
   create_check:
     needs: [check_changes, tests]
