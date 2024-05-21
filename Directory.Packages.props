@@ -16,10 +16,10 @@
     <PackageVersion Include="Dapper.Transaction" Version="2.1.28" />
     <PackageVersion Include="dbup-core" Version="5.0.87" />
     <PackageVersion Include="dbup-mysql" Version="5.0.44" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.15" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.15" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.15" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.15" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.19" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.19" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.19" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.19" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.12" />
     <PackageVersion Include="Hangfire.InMemory" Version="0.9.0" />
