@@ -37,7 +37,9 @@ var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
 builder.Services
     .AddHealthChecksUI(setup =>
     {
-        setup.AddHealthCheckEndpoint("web", "/healthz");
+#pragma warning disable S1075
+        setup.AddHealthCheckEndpoint("web", "http://127.0.0.1/healthz");
+#pragma warning restore S1075
         setup.AddHealthCheckEndpoint("api", $"{apiUri}/healthz");
     })
     .AddInMemoryStorage();
