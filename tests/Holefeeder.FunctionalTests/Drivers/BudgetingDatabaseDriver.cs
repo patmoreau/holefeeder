@@ -33,7 +33,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         var connectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            DatabaseServer = MariaDatabaseServer.CreateServer(Schema);
+            DatabaseServer = MariaDatabaseServer.CreateServer(Schema, "mariadb:10.11.7");
         }
         else
         {
@@ -69,7 +69,6 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     {
         await using var dbContext = new BudgetingContext(GetDbContextOptions());
 
-        await dbContext.Database.EnsureCreatedAsync();
         dbContext.Database.MigrateDb(new BudgetingConnectionStringBuilder { ConnectionString = ConnectionString });
     }
 }

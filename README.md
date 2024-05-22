@@ -22,8 +22,5 @@ Here are some of the key concepts and articles which drives my thinking today:
 
 You will need the following:
 
-1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 1. [Docker](https://www.docker.com/)
-1. [kustomize](https://kustomize.io/)
-1. [skaffold](https://skaffold.dev/)
-1. [.Net 7](https://dotnet.microsoft.com/en-us/download)
+1. [.Net 8](https://dotnet.microsoft.com/en-us/download)

@@ -1,4 +1,5 @@
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Tests.Common.Extensions;
 
 using Microsoft.AspNetCore.Http;
 
@@ -22,8 +23,8 @@ public class GetStoreItemsTests
         var countDummy = Fakerizer.Random.Number(100);
         new Faker<StoreItemViewModel>()
             .CustomInstantiator(faker =>
-                new StoreItemViewModel(faker.Random.Guid(), faker.Random.Hash(), faker.Lorem.Paragraph()))
-            .RuleFor(x => x.Id, faker => faker.Random.Guid())
+                new StoreItemViewModel(faker.RandomGuid(), faker.Random.Hash(), faker.Lorem.Paragraph()))
+            .RuleFor(x => x.Id, faker => faker.RandomGuid())
             .RuleFor(x => x.Code, faker => faker.Random.Hash())
             .RuleFor(x => x.Data, faker => faker.Lorem.Paragraph())
             .Generate(countDummy);

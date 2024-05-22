@@ -3,6 +3,7 @@ using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
@@ -20,8 +21,8 @@ internal class MakePurchaseRequestBuilder : FakerBuilder<Request>
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-        .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
-        .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+        .RuleFor(x => x.AccountId, faker => faker.RandomGuid())
+        .RuleFor(x => x.CategoryId, faker => faker.RandomGuid())
         .RuleFor(x => x.Cashflow, () => null)
         // .RuleForType(typeof(Request.CashflowRequest), _ => CashflowRequestBuilder.GivenACashflowPurchase().Build())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());

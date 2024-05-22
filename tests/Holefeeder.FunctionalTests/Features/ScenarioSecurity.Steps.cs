@@ -3,6 +3,7 @@ using System.Net;
 using DrifterApps.Seeds.Testing.Infrastructure;
 
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.FunctionalTests.Features;
 
@@ -20,7 +21,7 @@ public partial class FeatureSecurity
             return HttpClientDriver.SendRequestAsync(apiResources, string.Empty);
         }
 
-        var parameters = Fakerizer.Make(apiResources.ParameterCount, () => Fakerizer.Random.Guid().ToString())
+        var parameters = Fakerizer.Make(apiResources.ParameterCount, () => Fakerizer.RandomGuid().ToString())
             .Cast<object>()
             .ToArray();
 

@@ -2,11 +2,13 @@ using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
 
+using Holefeeder.Tests.Common.Extensions;
+
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
 public class UserStepDefinition(IHttpClientDriver httpClientDriver) : StepDefinition(httpClientDriver)
 {
-    public static readonly Guid HolefeederUserId = Fakerizer.Random.Guid();
+    public static readonly Guid HolefeederUserId = Fakerizer.RandomGuid();
 
     public void IsUnauthorized(IStepRunner runner)
     {

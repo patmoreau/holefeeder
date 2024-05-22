@@ -3,24 +3,25 @@ using DrifterApps.Seeds.Testing;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransactionBuilder : FakerBuilder<Transaction>
 {
     protected override Faker<Transaction> FakerRules { get; } = new Faker<Transaction>()
-        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.Id, faker => faker.RandomGuid())
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: 1))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-        .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
+        .RuleFor(x => x.AccountId, faker => faker.RandomGuid())
         .RuleFor(x => x.Account, _ => default)
-        .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+        .RuleFor(x => x.CategoryId, faker => faker.RandomGuid())
         .RuleFor(x => x.Category, _ => default)
         .RuleFor(x => x.CashflowId, _ => default)
         .RuleFor(x => x.CashflowDate, _ => default)
         .RuleFor(x => x.Cashflow, _ => default)
-        .RuleFor(x => x.UserId, faker => faker.Random.Guid())
+        .RuleFor(x => x.UserId, faker => faker.RandomGuid())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray());
 
     public static TransactionBuilder GivenATransaction() => new();

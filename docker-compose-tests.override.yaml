@@ -4,6 +4,7 @@ services:
       - 3306
     environment:
       - MYSQL_ROOT_PASSWORD=mypass
+      - MYSQL_DATABASE=budgeting_tests
 
   api-functional-tests:
     environment:
@@ -22,7 +23,7 @@ services:
       - --results-directory
       - /TestResults
       - --collect
-      - "XPlat Code Coverage"
+      - 'XPlat Code Coverage'
 
   api-unit-tests:
     environment:
@@ -39,10 +40,9 @@ services:
       - --results-directory
       - /TestResults
       - --collect
-      - "XPlat Code Coverage"
+      - 'XPlat Code Coverage'
 
   web-angular-tests:
     entrypoint:
       - yarn
       - test:ci
-

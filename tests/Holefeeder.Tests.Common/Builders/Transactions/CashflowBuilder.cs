@@ -4,6 +4,7 @@ using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
@@ -18,7 +19,7 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
     }
 
     protected override Faker<Cashflow> FakerRules { get; } = new Faker<Cashflow>()
-        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .RuleFor(x => x.Id, faker => faker.RandomGuid())
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.IntervalType, faker => faker.PickRandom<DateIntervalType>(DateIntervalType.List))
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))
@@ -26,12 +27,12 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount(min: 1))
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Tags, faker => faker.Lorem.Words(faker.Random.Int(1, 10)).Distinct().ToArray())
-        .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
+        .RuleFor(x => x.AccountId, faker => faker.RandomGuid())
         .RuleFor(x => x.Account, _ => null)
-        .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+        .RuleFor(x => x.CategoryId, faker => faker.RandomGuid())
         .RuleFor(x => x.Category, _ => null)
         .RuleFor(x => x.Transactions, new List<Transaction>())
-        .RuleFor(x => x.UserId, faker => faker.Random.Guid());
+        .RuleFor(x => x.UserId, faker => faker.RandomGuid());
 
     public static CashflowBuilder GivenAnActiveCashflow()
     {

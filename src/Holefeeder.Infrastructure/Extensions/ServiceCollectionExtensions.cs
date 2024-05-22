@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
             var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
 
             var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
-            var connectionString = connectionStringBuilder.CreateBuilder(MySqlGuidFormat.Binary16).ConnectionString;
+            var connectionString = connectionStringBuilder.CreateBuilder().ConnectionString;
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
             return optionsBuilder.Options;

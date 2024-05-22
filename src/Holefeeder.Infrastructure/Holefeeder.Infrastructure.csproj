@@ -1,42 +1,46 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj" />
-    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj" />
+        <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum.Dapper" />
-    <PackageReference Include="Ardalis.SmartEnum.EFCore" />
-    <PackageReference Include="Dapper" />
-    <PackageReference Include="Dapper.FluentMap" />
-    <PackageReference Include="Dapper.SqlBuilder" />
-    <PackageReference Include="Dapper.Transaction" />
-    <PackageReference Include="dbup-core" />
-    <PackageReference Include="dbup-mysql" />
-    <PackageReference Include="Hangfire.AspNetCore" />
-    <PackageReference Include="Hangfire.InMemory" />
-    <PackageReference Include="Humanizer.Core" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.Options" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
-    <PackageReference Include="MySqlConnector" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
-    <PackageReference Include="System.Data.SqlClient" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Ardalis.SmartEnum.Dapper" />
+        <PackageReference Include="Ardalis.SmartEnum.EFCore" />
+        <PackageReference Include="Dapper" />
+        <PackageReference Include="Dapper.FluentMap" />
+        <PackageReference Include="Dapper.SqlBuilder" />
+        <PackageReference Include="Dapper.Transaction" />
+        <PackageReference Include="dbup-core" />
+        <PackageReference Include="dbup-mysql" />
+        <PackageReference Include="Hangfire.AspNetCore" />
+        <PackageReference Include="Hangfire.InMemory" />
+        <PackageReference Include="Humanizer.Core" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+        <PackageReference Include="MySqlConnector" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
+        <PackageReference Include="System.Data.SqlClient" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql" />
-    <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql" />
-    <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql" />
-    <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
-    <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
-    <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Scripts\001-CreateAccountsTable.sql" />
+        <EmbeddedResource Include="Scripts\002-CreateCategoriesTable.sql" />
+        <EmbeddedResource Include="Scripts\003-CreateCashflowsTable.sql" />
+        <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
+        <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
+        <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql" />
+        <EmbeddedResource Include="Scripts\007-AddBinToUuidFunction.sql" />
+        <EmbeddedResource Include="Scripts\008-AddUuidToBinFunction.sql" />
+        <EmbeddedResource Include="Scripts\009-StoreItemsToUUID.sql" />
+        <EmbeddedResource Include="Scripts\010-BinaryToUUIDFields.sql" />
+    </ItemGroup>
 
 </Project>
