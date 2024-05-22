@@ -1,3 +1,5 @@
+using Holefeeder.Tests.Common.Extensions;
+
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
@@ -6,12 +8,12 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 public class ModifyTransactionTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
-            .RuleFor(x => x.Id, faker => faker.Random.Guid())
+            .RuleFor(x => x.Id, faker => faker.RandomGuid())
             .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
             .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
             .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-            .RuleFor(x => x.AccountId, faker => faker.Random.Guid())
-            .RuleFor(x => x.CategoryId, faker => faker.Random.Guid())
+            .RuleFor(x => x.AccountId, faker => faker.RandomGuid())
+            .RuleFor(x => x.CategoryId, faker => faker.RandomGuid())
             .RuleFor(x => x.Tags, faker => faker.Lorem.Words());
 
     public ModifyTransactionTests() =>

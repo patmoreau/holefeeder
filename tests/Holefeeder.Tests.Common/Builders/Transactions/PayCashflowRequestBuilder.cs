@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
@@ -11,7 +12,7 @@ internal class PayCashflowRequestBuilder : FakerBuilder<Request>
     protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
-        .RuleFor(x => x.CashflowId, faker => faker.Random.Guid())
+        .RuleFor(x => x.CashflowId, faker => faker.RandomGuid())
         .RuleFor(x => x.CashflowDate, faker => faker.Date.SoonDateOnly());
 
     public PayCashflowRequestBuilder ForCashflow(Cashflow cashflow)

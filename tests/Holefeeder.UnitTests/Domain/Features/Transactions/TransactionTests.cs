@@ -1,5 +1,6 @@
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Tests.Common.Builders.Transactions;
+using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
@@ -152,7 +153,7 @@ public class TransactionTests
         var transaction = TransactionBuilder.GivenATransaction().Build();
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(Fakerizer.Random.Guid(), default);
+        Action action = () => _ = transaction.ApplyCashflow(Fakerizer.RandomGuid(), default);
 
         // assert
         action.Should().Throw<TransactionDomainException>()
@@ -166,7 +167,7 @@ public class TransactionTests
     {
         // arrange
         var transaction = TransactionBuilder.GivenATransaction().Build();
-        var cashflowId = Fakerizer.Random.Guid();
+        var cashflowId = Fakerizer.RandomGuid();
         var cashflowDate = Fakerizer.Date.RecentDateOnly();
 
         // act

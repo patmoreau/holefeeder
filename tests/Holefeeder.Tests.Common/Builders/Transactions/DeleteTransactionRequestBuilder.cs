@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
 
+using Holefeeder.Tests.Common.Extensions;
+
 using static Holefeeder.Application.Features.Transactions.Commands.DeleteTransaction;
 
 namespace Holefeeder.Tests.Common.Builders.Transactions;
@@ -7,7 +9,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 internal class DeleteTransactionRequestBuilder : FakerBuilder<Request>
 {
     protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Random.Guid()));
+        .CustomInstantiator(faker => new Request(faker.RandomGuid()));
 
     public DeleteTransactionRequestBuilder WithId(Guid id)
     {

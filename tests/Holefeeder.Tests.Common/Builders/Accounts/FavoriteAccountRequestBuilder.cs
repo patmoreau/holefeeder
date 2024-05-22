@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.Testing;
 
+using Holefeeder.Tests.Common.Extensions;
+
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
 
 namespace Holefeeder.Tests.Common.Builders.Accounts;
@@ -7,8 +9,8 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 internal class FavoriteAccountRequestBuilder : FakerBuilder<Request>
 {
     protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Random.Guid(), faker.Random.Bool()))
-        .RuleFor(x => x.Id, faker => faker.Random.Guid())
+        .CustomInstantiator(faker => new Request(faker.RandomGuid(), faker.Random.Bool()))
+        .RuleFor(x => x.Id, faker => faker.RandomGuid())
         .RuleFor(x => x.IsFavorite, faker => faker.Random.Bool());
 
     public FavoriteAccountRequestBuilder WithId(Guid id)

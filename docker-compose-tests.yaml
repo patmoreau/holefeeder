@@ -1,6 +1,6 @@
 services:
   mysql-data-test:
-    image: mariadb:11.3.2
+    image: mariadb:10.11.7
     container_name: mysql-data-test
 
   api-functional-tests:

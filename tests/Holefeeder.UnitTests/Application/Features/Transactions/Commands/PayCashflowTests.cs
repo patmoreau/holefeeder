@@ -1,3 +1,5 @@
+using Holefeeder.Tests.Common.Extensions;
+
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
@@ -8,7 +10,7 @@ public class PayCashflowTests
     private readonly Faker<Request> _faker = new Faker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
         .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
-        .RuleFor(x => x.CashflowId, faker => faker.Random.Guid())
+        .RuleFor(x => x.CashflowId, faker => faker.RandomGuid())
         .RuleFor(x => x.CashflowDate, faker => faker.Date.RecentDateOnly());
 
     [Fact]

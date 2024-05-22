@@ -1,0 +1,15 @@
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS UUID_TO_BIN;
+CREATE FUNCTION UUID_TO_BIN(uuid_str CHAR(36))
+    RETURNS BINARY(16)
+    DETERMINISTIC
+BEGIN
+    DECLARE uuid_bin BINARY(16);
+
+    SET uuid_bin = UNHEX(REPLACE(uuid_str, '-', ''));
+
+    RETURN uuid_bin;
+END $$
+
+DELIMITER ;
