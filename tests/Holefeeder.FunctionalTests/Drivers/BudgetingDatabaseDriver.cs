@@ -33,7 +33,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         var connectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            DatabaseServer = MariaDatabaseServer.CreateServer(Schema, "mariadb:10.11.7");
+            DatabaseServer = MariaDatabaseServer.CreateServer(Schema, "mariadb:11.3.2");
         }
         else
         {

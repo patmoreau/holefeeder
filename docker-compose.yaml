@@ -74,20 +74,6 @@ services:
     labels:
       traefik.enable: false
 
-  mariadb_upgrade:
-    image: mariadb:11.3.2
-    container_name: mariadb_upgrade
-    command:
-      [
-        'sh',
-        '-c',
-        'sleep 10 && mysql_upgrade -h mariadb -u root -p${MARIADB_ROOT_PASSWORD}',
-      ]
-    security_opt:
-      - no-new-privileges:true
-    depends_on:
-      - mariadb
-
   adminer:
     image: adminer:4.8.1
     container_name: adminer
