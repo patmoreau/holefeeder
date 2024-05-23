@@ -56,7 +56,7 @@ services:
       - seq-data:/data
 
   mariadb:
-    image: mariadb:10.11.7
+    image: mariadb:11.3.2
     container_name: mariadb
     restart: unless-stopped
     security_opt:
@@ -75,7 +75,7 @@ services:
       traefik.enable: false
 
   mariadb_upgrade:
-    image: mariadb:10.11.7
+    image: mariadb:11.3.2
     container_name: mariadb_upgrade
     command:
       [
