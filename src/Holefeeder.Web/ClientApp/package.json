@@ -43,7 +43,7 @@
     "@ngx-loading-bar/router": "6.0.2",
     "@popperjs/core": "2.11.8",
     "add": "2.0.6",
-    "angular-auth-oidc-client": "17.0.0",
+    "angular-auth-oidc-client": "17.1.0",
     "bootstrap": "5.3.3",
     "bootstrap-icons": "1.11.3",
     "chart.js": "4.4.3",
