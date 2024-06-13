@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Domain.Features.Users;
+namespace Holefeeder.Domain.Features.Users;
 
 #pragma warning disable CA1032
 public class UserDomainException(string message) : DomainException<User>(message)

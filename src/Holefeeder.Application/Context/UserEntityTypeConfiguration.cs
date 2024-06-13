@@ -1,4 +1,4 @@
-﻿using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

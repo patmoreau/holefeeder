@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS user_identities
 (
-    user_id   UUID           NOT NULL,
-    sub       NVARCHAR(255)  NOT NULL,
-    inactive  BOOL           NOT NULL
+    user_id             UUID           NOT NULL,
+    identity_object_id  NVARCHAR(255)  NOT NULL,
+    inactive            BOOL           NOT NULL,
+    PRIMARY KEY (user_id, identity_object_id)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS sub_idx ON users_identities (sub);
-CREATE UNIQUE INDEX IF NOT EXISTS user_id_sub_idx ON users_identities (user_id, sub);
+CREATE UNIQUE INDEX IF NOT EXISTS identity_object_id_idx ON users_identities (identity_object_id);
 
 -- Step 1: Generate UUIDs for each distinct user_id from accounts
 CREATE TEMPORARY TABLE temp_users AS
@@ -25,7 +25,7 @@ SELECT new_id, FALSE
 FROM temp_users;
 
 -- Step 3: Insert the user_id from accounts into user_identities
-INSERT INTO user_identities (user_id, sub, inactive)
+INSERT INTO user_identities (user_id, identity_object_id, inactive)
 SELECT new_id, user_id, FALSE
 FROM temp_users;
 

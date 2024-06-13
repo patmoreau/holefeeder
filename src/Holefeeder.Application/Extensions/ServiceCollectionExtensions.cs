@@ -5,6 +5,7 @@ using DrifterApps.Seeds.Application.Mediatr;
 using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Context;
+using Holefeeder.Application.UserContext;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,7 @@ public static class ServiceCollectionExtensions
                     .RegisterServicesFromApplicationSeeds());
 
         services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
+        services.AddScoped<IUserContext, UserContext.UserContext>();
 
         return services;
     }

@@ -1,7 +1,6 @@
-﻿
-using Holefeeder.Application.Context;
+using DrifterApps.Seeds.Application;
 
-using IHttpUserContext = DrifterApps.Seeds.Application.IUserContext;
+using Holefeeder.Application.Context;
 
 namespace Holefeeder.Application.UserContext;
 
@@ -12,9 +11,9 @@ internal class UserContext : IUserContext
     internal UserContext(IHttpUserContext userContext, BudgetingContext context)
     {
         Id = context.Users
-            .Where(e => e.UserIdentities.Any(e => e.Sub == userContext.Id))
-            .Select(e => e.Id)
+            .Where(user =>
+                user.UserIdentities.Any(identity => identity.IdentityObjectId == userContext.IdentityObjectId))
+            .Select(user => user.Id)
             .Single();
     }
-
 }

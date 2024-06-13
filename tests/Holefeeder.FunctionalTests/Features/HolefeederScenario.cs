@@ -42,7 +42,7 @@ public abstract partial class HolefeederScenario : Scenario
         Category = new CategoryStepDefinition(HttpClientDriver, DatabaseDriver);
         StoreItem = new StoreItemStepDefinition(HttpClientDriver);
         Transaction = new TransactionStepDefinition(HttpClientDriver);
-        User = new UserStepDefinition(HttpClientDriver);
+        User = new UserStepDefinition(HttpClientDriver, DatabaseDriver);
     }
 
     public AccountStepDefinition Account { get; }

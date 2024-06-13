@@ -3,6 +3,7 @@ using DrifterApps.Seeds.Application;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
+using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

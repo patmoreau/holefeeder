@@ -3,6 +3,7 @@ using DrifterApps.Seeds.Application.Mediatr;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.AspNetCore.Builder;

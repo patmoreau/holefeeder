@@ -4,6 +4,7 @@
 using DrifterApps.Seeds.Application;
 
 using Holefeeder.Application.Context;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;
 

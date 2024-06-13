@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Domain.Features.Users;
+namespace Holefeeder.Domain.Features.Users;
 
 public sealed record User : IAggregateRoot
 {

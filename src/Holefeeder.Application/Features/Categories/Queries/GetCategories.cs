@@ -2,6 +2,7 @@ using DrifterApps.Seeds.Application;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Categories;
 
 using Microsoft.AspNetCore.Builder;
@@ -33,15 +34,13 @@ public class GetCategories : ICarterModule
 
     internal record Request : IRequest<QueryResult<CategoryViewModel>>;
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, QueryResult<CategoryViewModel>>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, QueryResult<CategoryViewModel>>
     {
-        private readonly BudgetingContext _context = context;
-        private readonly IUserContext _userContext = userContext;
-
         public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            List<Category> result = await _context.Categories
-                .Where(x => x.UserId == _userContext.Id)
+            List<Category> result = await context.Categories
+                .Where(x => x.UserId == userContext.Id)
                 .OrderByDescending(x => x.Favorite)
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);

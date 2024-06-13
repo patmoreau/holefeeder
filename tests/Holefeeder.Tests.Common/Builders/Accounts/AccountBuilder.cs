@@ -10,12 +10,6 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class AccountBuilder : FakerBuilder<Account>
 {
-    public override Account Build()
-    {
-        var a = base.Build();
-        return a;
-    }
-
     protected override Faker<Account> FakerRules { get; } = new Faker<Account>()
         .RuleFor(x => x.Id, faker => faker.RandomGuid())
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))

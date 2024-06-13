@@ -1,24 +1,21 @@
-﻿namespace Holefeeder.Domain.Features.Users;
+namespace Holefeeder.Domain.Features.Users;
 
-public sealed record class UserIdentity
+public sealed record UserIdentity
 {
     private UserIdentity()
     {
     }
 
-    public required Guid Id { get; init; }
-    public required string Sub { get; init; }
+    public required string IdentityObjectId { get; init; }
     public bool Inactive { get; init; }
 
-    // Navigation property
     public required User User { get; init; }
     public required Guid UserId { get; init; }
 
-    internal static UserIdentity Create(User user, string sub) =>
+    internal static UserIdentity Create(User user, string identityObjectId) =>
         new()
         {
-            Id = user.Id,
-            Sub = sub,
+            IdentityObjectId = identityObjectId,
             Inactive = false,
             User = user,
             UserId = user.Id
