@@ -21,7 +21,7 @@
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.19" />
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.19" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.12" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.14" />
     <PackageVersion Include="Hangfire.InMemory" Version="0.10.3" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="MediatR" Version="12.3.0" />
