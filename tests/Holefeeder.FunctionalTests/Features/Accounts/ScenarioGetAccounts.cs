@@ -33,10 +33,7 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
         var count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, count);
-
-        await GivenAnActiveAccount()
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, count);
 
         GivenUserIsAuthorized();

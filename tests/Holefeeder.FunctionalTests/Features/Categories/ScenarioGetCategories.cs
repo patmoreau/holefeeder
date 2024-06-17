@@ -22,13 +22,13 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
 
         var firstCategory = await GivenACategory()
             .WithName(firstName)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsNotFavorite()
             .SavedInDbAsync(DatabaseDriver);
 
         var secondCategory = await GivenACategory()
             .WithName(secondName)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsFavorite()
             .SavedInDbAsync(DatabaseDriver);
 

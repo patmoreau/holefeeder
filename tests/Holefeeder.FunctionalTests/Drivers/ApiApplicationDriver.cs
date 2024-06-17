@@ -5,8 +5,8 @@ using Bogus;
 using DrifterApps.Seeds.Testing;
 using DrifterApps.Seeds.Testing.Drivers;
 
-using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Infrastructure.SeedWork;
+using Holefeeder.Tests.Common.Builders.Users;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -48,8 +48,9 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
             services.AddScoped<BudgetingDatabaseDriver>();
             services.AddMockAuthentication(options =>
             {
-                options.AdditionalUserClaims.Add(UserStepDefinition.HolefeederUserId.ToString(),
-                    new List<Claim> { new(ClaimConstants.Scope, "holefeeder.user") });
+                var authorizedUser = TestUsers[AuthorizedUser];
+                options.AdditionalUserClaims.Add(authorizedUser.IdentityObjectId,
+                    [new Claim(ClaimConstants.Scope, authorizedUser.Scope)]);
             });
             services.AddDatabaseDriver(DatabaseDriver);
         });
@@ -67,7 +68,17 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
         }
     }
 
-    Task IAsyncLifetime.InitializeAsync() => DatabaseDriver.InitializeAsync();
+    async Task IAsyncLifetime.InitializeAsync()
+    {
+        await DatabaseDriver.InitializeAsync().ConfigureAwait(false);
+
+        var user = UserBuilder.GivenAUser()
+            .WithId(TestUsers[AuthorizedUser].UserId)
+            .Build();
+        await UserIdentityBuilder.GivenAUserIdentity(user)
+            .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
+            .SavedInDbAsync(DatabaseDriver).ConfigureAwait(false);
+    }
 
     Task IAsyncLifetime.DisposeAsync() => DatabaseDriver.DisposeAsync();
 }

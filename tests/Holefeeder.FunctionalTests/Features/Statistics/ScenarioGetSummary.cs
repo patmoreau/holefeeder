@@ -14,7 +14,7 @@ namespace Holefeeder.FunctionalTests.Features.Statistics;
 [Collection("Api collection")]
 public class ScenarioGetSummary(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    private readonly Guid _userId = UserStepDefinition.HolefeederUserId;
+    private readonly Guid _userId = TestUsers[AuthorizedUser].UserId;
 
     private readonly Dictionary<string, Category> _categories = [];
     private readonly Dictionary<string, Account> _accounts = [];

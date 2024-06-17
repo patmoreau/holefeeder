@@ -151,18 +151,18 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
     private async Task<(Cashflow, Account, Category)> BuildCashflow(DateIntervalType intervalType, int frequency = 1, int recurrence = 1)
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         return (await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .OfFrequency(intervalType, frequency)
             .Recurring(recurrence)
             .SavedInDbAsync(DatabaseDriver), account, category);

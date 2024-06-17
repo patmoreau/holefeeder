@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS user_identities
     PRIMARY KEY (user_id, identity_object_id)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS identity_object_id_idx ON users_identities (identity_object_id);
+CREATE UNIQUE INDEX IF NOT EXISTS identity_object_id_idx ON user_identities (identity_object_id);
 
 -- Step 1: Generate UUIDs for each distinct user_id from accounts
 CREATE TEMPORARY TABLE temp_users AS

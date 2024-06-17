@@ -13,16 +13,13 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestB
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepDefinition(httpClientDriver)
+internal sealed class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepDefinition(httpClientDriver)
 {
     private const string ContextId = $"{nameof(StoreItemStepDefinition)}_Id";
     private const string ContextCreateStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_CreateStoreItemRequest";
     private const string ContextModifyStoreItemRequest = $"{nameof(StoreItemStepDefinition)}_ModifyStoreItemRequest";
 
-    internal void GetsCreated(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void GetsCreated(IStepRunner runner) =>
         runner.Execute("a store item is created", async () =>
         {
             var request = new CreateStoreItemRequestBuilder().Build();
@@ -35,14 +32,10 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
 
             runner.SetContextData(ContextId, id);
         });
-    }
 
-    internal void Exists(IStepRunner runner) => Exists(runner, default);
+    public void Exists(IStepRunner runner) => Exists(runner, default);
 
-    internal void Exists(IStepRunner runner, CreateStoreItem.Request? request)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void Exists(IStepRunner runner, CreateStoreItem.Request? request) =>
         runner.Execute("a store item is created", async () =>
         {
             var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
@@ -52,12 +45,8 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
 
             runner.SetContextData(ContextId, id);
         });
-    }
 
-    internal void GetsModified(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void GetsModified(IStepRunner runner) =>
         runner.Execute($"a {nameof(ApiResources.ModifyStoreItem)} request is sent", async () =>
         {
             var request = GivenAModifyStoreItemRequest().WithId(WithCreatedId()).Build();
@@ -66,12 +55,8 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
             var json = JsonSerializer.Serialize(request);
             await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
         });
-    }
 
-    internal void ShouldMatchTheModificationRequest(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void ShouldMatchTheModificationRequest(IStepRunner runner) =>
         runner.Execute("the StoreItem should match the request", async () =>
         {
             var id = runner.GetContextData<Guid>(ContextId);
@@ -80,12 +65,8 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
             await RetrievedById(id);
             WithResultAs<StoreItemViewModel>().Should().BeEquivalentTo(request);
         });
-    }
 
-    internal void ShouldMatchTheCreationRequest(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void ShouldMatchTheCreationRequest(IStepRunner runner) =>
         runner.Execute("the StoreItem should match the request", async () =>
         {
             var id = runner.GetContextData<Guid>(ContextId);
@@ -94,7 +75,6 @@ public class StoreItemStepDefinition(IHttpClientDriver httpClientDriver) : StepD
             await RetrievedById(id);
             WithResultAs<StoreItemViewModel>().Should().BeEquivalentTo(request);
         });
-    }
 
     private Task RetrievedById(Guid id) => HttpClientDriver.SendRequestAsync(ApiResources.GetStoreItem, id);
 }

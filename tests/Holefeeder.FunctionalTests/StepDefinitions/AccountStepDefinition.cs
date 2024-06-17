@@ -8,21 +8,17 @@ using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class AccountStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
+internal sealed class AccountStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
     : StepDefinition(httpClientDriver)
 {
     public const string ContextExistingAccount = $"{nameof(AccountStepDefinition)}_{nameof(ContextExistingAccount)}";
 
-    internal void Exists(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void Exists(IStepRunner runner) =>
         runner.Execute("a user has an active account", async () =>
         {
-            var builder = GivenAnActiveAccount().ForUser(UserStepDefinition.HolefeederUserId);
+            var builder = GivenAnActiveAccount().ForUser(TestUsers[AuthorizedUser].UserId);
             var account = await builder.SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingAccount, account);
         });
-    }
 }

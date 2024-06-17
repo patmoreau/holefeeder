@@ -36,7 +36,7 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
     }
 
     [Fact]
-    public async Task AuthorizedUser()
+    public async Task GivenAuthorizedUser()
     {
         Request request = null!;
 
@@ -51,7 +51,7 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
     }
 
     [Fact]
-    public async Task ForbiddenUser()
+    public async Task GivenForbiddenUser()
     {
         Request request = null!;
 
@@ -92,9 +92,9 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
         {
             player
                 .Given(User.IsAuthorized)
-                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
-                .And("a category", async () => category = await GivenACategory().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
-                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .And("has an active account", async () => account = await GivenAnActiveAccount().ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
+                .And("a category", async () => category = await GivenACategory().ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
+                .And("a cashflow setup", async () => cashflow = await GivenAnActiveCashflow().ForAccount(account).ForCategory(category).ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
                 .And("and wanting to pay a cashflow", () => request = GivenACashflowPayment().ForCashflow(cashflow).ForDate(cashflow.EffectiveDate).Build())
                 .When("the payment is made", () => Transaction.PayACashflow(request))
                 .Then("the response should be created", () => ShouldExpectStatusCode(HttpStatusCode.Created))

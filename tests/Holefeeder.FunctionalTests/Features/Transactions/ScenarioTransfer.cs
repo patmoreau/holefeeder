@@ -35,7 +35,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
     }
 
     [Fact]
-    public async Task AuthorizedUser()
+    public async Task GivenAuthorizedUser()
     {
         Request request = default!;
 
@@ -50,7 +50,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
     }
 
     [Fact]
-    public async Task ForbiddenUser()
+    public async Task GivenForbiddenUser()
     {
         Request request = null!;
 
@@ -90,10 +90,10 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
         await ScenarioFor("a valid transfer request", runner =>
         {
             runner
-                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
-                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
-                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
-                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(HolefeederUserId).SavedInDbAsync(DatabaseDriver))
+                .Given("the user has an account to transfer from", async () => fromAccount = await GivenAnActiveAccount().ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
+                .And("an account to transfer to", async () => toAccount = await GivenAnActiveAccount().ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
+                .And("they hava a category to receive money", async () => await GivenACategory().WithName("Transfer In").ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
+                .And("a category to send money", async () => await GivenACategory().WithName("Transfer Out").ForUser(TestUsers[AuthorizedUser].UserId).SavedInDbAsync(DatabaseDriver))
                 .And("their request is valid", () => request = GivenATransfer().FromAccount(fromAccount).ToAccount(toAccount).Build())
                 .And(User.IsAuthorized)
                 .When("the transfer request is sent", () => Transaction.Transfer(request))

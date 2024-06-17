@@ -36,11 +36,11 @@ public class ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenDeletingATransaction()
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var transaction = await GivenATransaction()

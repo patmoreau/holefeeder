@@ -40,7 +40,7 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
     public async Task WhenAccountNameAlreadyExistsRequest()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAnOpenAccountRequest()

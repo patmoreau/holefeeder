@@ -31,16 +31,13 @@ public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITest
         const string secondCode = nameof(secondCode);
 
         await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .WithCode(firstCode)
             .SavedInDbAsync(DatabaseDriver);
 
         await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .WithCode(secondCode)
-            .SavedInDbAsync(DatabaseDriver);
-
-        await GivenAStoreItem()
             .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();

@@ -47,7 +47,7 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
     public async Task WhenFavoriteAccount()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsFavorite(false)
             .SavedInDbAsync(DatabaseDriver);
 

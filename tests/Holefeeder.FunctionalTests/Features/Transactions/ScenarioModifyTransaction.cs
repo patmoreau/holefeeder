@@ -49,7 +49,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenCategoryDoesNotExists()
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
@@ -67,11 +67,11 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenTransactionDoesNotExists()
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
@@ -91,11 +91,11 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenModifyATransaction()
     {
         var accounts = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var transaction = await GivenATransaction()

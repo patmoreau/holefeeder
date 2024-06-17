@@ -42,12 +42,7 @@ public class CancelCashflow : ICarterModule
             var exists =
                 await context.Cashflows.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id,
-                    cancellationToken);
-            if (exists is null)
-            {
-                throw new CashflowNotFoundException(request.Id);
-            }
-
+                    cancellationToken) ?? throw new CashflowNotFoundException(request.Id);
             context.Update(exists.Cancel());
 
             return Unit.Value;

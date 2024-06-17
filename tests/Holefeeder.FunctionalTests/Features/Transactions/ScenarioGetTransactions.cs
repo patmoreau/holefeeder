@@ -35,12 +35,12 @@ public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITe
         var count = faker.Random.Int(2, 10);
 
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         await GivenATransaction()

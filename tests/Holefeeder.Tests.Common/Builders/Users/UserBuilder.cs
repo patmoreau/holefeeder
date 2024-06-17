@@ -13,7 +13,8 @@ public class UserBuilder : FakerBuilder<User>
 
     protected override Faker<User> FakerRules { get; } = new Faker<User>()
         .RuleFor(x => x.Id, faker => faker.RandomGuid())
-        .RuleFor(x => x.Inactive, false);
+        .RuleFor(x => x.Inactive, false)
+        .RuleFor(x => x.UserIdentities, new List<UserIdentity>());
 
     public UserBuilder WithId(Guid id)
     {

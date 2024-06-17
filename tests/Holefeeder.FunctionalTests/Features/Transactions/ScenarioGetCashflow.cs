@@ -43,18 +43,18 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
     {
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var cashflow = await GivenAnActiveCashflow()
             .ForAccount(account)
             .ForCategory(category)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();

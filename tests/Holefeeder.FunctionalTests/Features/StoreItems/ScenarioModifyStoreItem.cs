@@ -37,7 +37,7 @@ public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITe
     public async Task WhenModifyStoreItem()
     {
         var storeItem = await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyStoreItemRequest()

@@ -1,3 +1,18 @@
 {
-    "WhiteSource Advise.Diff.BaseBranch": "main"
+    "WhiteSource Advise.Diff.BaseBranch": "main",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 52339,
+            "driver": "MariaDB",
+            "name": "localhost",
+            "username": "root",
+            "database": "budgeting_tests"
+        }
+    ]
 }

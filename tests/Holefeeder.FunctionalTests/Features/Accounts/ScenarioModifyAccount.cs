@@ -48,7 +48,7 @@ public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITest
     public async Task WhenModifyAccount()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyAccountRequest()

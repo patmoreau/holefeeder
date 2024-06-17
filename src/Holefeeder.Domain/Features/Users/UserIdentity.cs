@@ -2,10 +2,6 @@ namespace Holefeeder.Domain.Features.Users;
 
 public sealed record UserIdentity
 {
-    private UserIdentity()
-    {
-    }
-
     public required string IdentityObjectId { get; init; }
     public bool Inactive { get; init; }
 

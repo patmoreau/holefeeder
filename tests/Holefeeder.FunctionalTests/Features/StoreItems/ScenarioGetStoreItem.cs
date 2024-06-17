@@ -37,7 +37,7 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
     public async Task WhenStoreItemExists()
     {
         var storeItem = await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();

@@ -4,16 +4,11 @@ using Holefeeder.Application.Context;
 
 namespace Holefeeder.Application.UserContext;
 
-internal class UserContext : IUserContext
+internal class UserContext(IHttpUserContext userContext, BudgetingContext context) : IUserContext
 {
-    public Guid Id { get; }
-
-    internal UserContext(IHttpUserContext userContext, BudgetingContext context)
-    {
-        Id = context.Users
-            .Where(user =>
-                user.UserIdentities.Any(identity => identity.IdentityObjectId == userContext.IdentityObjectId))
-            .Select(user => user.Id)
-            .Single();
-    }
+    public Guid Id { get; } = context.Users
+        .Where(user =>
+            user.UserIdentities.Any(identity => identity.IdentityObjectId == userContext.IdentityObjectId))
+        .Select(user => user.Id)
+        .Single();
 }

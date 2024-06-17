@@ -18,26 +18,22 @@ using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
+internal sealed class CashflowStepDefinition(
+    IHttpClientDriver httpClientDriver,
+    BudgetingDatabaseDriver budgetingDatabaseDriver)
     : StepDefinition(httpClientDriver)
 {
     private const string ContextCashflowRequest = $"{nameof(CashflowStepDefinition)}_{nameof(ContextCashflowRequest)}";
     public const string ContextExistingCashflow = $"{nameof(CashflowStepDefinition)}_{nameof(ContextExistingCashflow)}";
 
 #pragma warning disable CA1822
-    public void AnInvalidCancelRequest(IStepRunner runner)
-#pragma warning restore CA1822
+    public void AnInvalidCancelRequest(IStepRunner runner) => runner.Execute("an invalid cashflow request", () =>
     {
-        ArgumentNullException.ThrowIfNull(runner);
+        var request = GivenAnInvalidCancelCashflowRequest().Build();
+        runner.SetContextData(ContextCashflowRequest, request);
+    });
 
-        runner.Execute("an invalid cashflow request", () =>
-        {
-            var request = GivenAnInvalidCancelCashflowRequest().Build();
-            runner.SetContextData(ContextCashflowRequest, request);
-        });
-    }
-
-    internal void RequestIsSent(IStepRunner runner) =>
+    public void RequestIsSent(IStepRunner runner) =>
         runner.Execute("the cashflow request is sent", async () =>
         {
             var request = runner.GetContextData<IBaseRequest>(ContextCashflowRequest);
@@ -53,10 +49,7 @@ public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, Budgetin
             await HttpClientDriver.SendRequestWithBodyAsync(apiResource, json);
         });
 
-    internal void Exists(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void Exists(IStepRunner runner) =>
         runner.Execute("a user has an active cashflow", () =>
         {
             var account = runner.GetContextData<Account>(AccountStepDefinition.ContextExistingAccount);
@@ -68,11 +61,9 @@ public class CashflowStepDefinition(IHttpClientDriver httpClientDriver, Budgetin
             var cashflow = GivenAnActiveCashflow()
                 .ForAccount(account)
                 .ForCategory(category)
-                .ForUser(UserStepDefinition.HolefeederUserId)
+                .ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingCashflow, cashflow);
         });
-    }
-
 }

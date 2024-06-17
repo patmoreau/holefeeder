@@ -42,12 +42,12 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
     {
         var account = await GivenAnActiveAccount()
             .OfType(AccountType.Checking)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
             .OfType(CategoryType.Expense)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var transaction = await GivenATransaction()

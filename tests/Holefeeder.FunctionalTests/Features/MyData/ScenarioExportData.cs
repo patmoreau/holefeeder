@@ -24,17 +24,17 @@ public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOut
     public async Task WhenDataIsExported()
     {
         var accounts = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var cashflows = await GivenAnActiveCashflow()
             .ForAccount(accounts.ElementAt(0))
             .ForCategory(categories.ElementAt(0))
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var transactions = await GivenATransaction()
