@@ -24,12 +24,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(
-        options => options.TokenValidationParameters =
-            new TokenValidationParameters { ValidateIssuer = true },
-        options => builder.Configuration.Bind("AzureAdB2C", options));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
 var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
              throw new InvalidOperationException("Missing `Api:Url` configuration");

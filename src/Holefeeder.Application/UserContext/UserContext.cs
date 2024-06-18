@@ -1,3 +1,5 @@
+using System.Linq.Dynamic.Core;
+
 using DrifterApps.Seeds.Application;
 
 using Holefeeder.Application.Context;
@@ -10,5 +12,5 @@ internal class UserContext(IHttpUserContext userContext, BudgetingContext contex
         .Where(user =>
             user.UserIdentities.Any(identity => identity.IdentityObjectId == userContext.IdentityObjectId))
         .Select(user => user.Id)
-        .Single();
+        .SingleOrDefault();
 }

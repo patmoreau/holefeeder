@@ -1,16 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 
-using Holefeeder.Api.Authorization;
 using Holefeeder.Api.Swagger;
+using Holefeeder.Application.Authorization;
 using Holefeeder.Infrastructure.SeedWork;
 
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Holefeeder.Api.Extensions;
@@ -20,12 +18,7 @@ internal static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(
-                options => options.TokenValidationParameters =
-                    new TokenValidationParameters { ValidateIssuer = true },
-                options => configuration.Bind("AzureAdB2C", options));
+        services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
 
         services.AddAuthorizationBuilder()
             .SetDefaultPolicy(new AuthorizationPolicyBuilder()
@@ -101,6 +94,23 @@ internal static class ServiceCollectionExtensions
             .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags)
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
                 name: "budgeting-db-check", tags: DatabaseTags);
+
+        return services;
+    }
+
+    public static IServiceCollection AddCors(this IServiceCollection services, IConfiguration configuration)
+    {
+        var allowedOrigins = configuration.GetValue<string[]>("AllowedOrigins") ?? [];
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder
+                    .WithOrigins(allowedOrigins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
 
         return services;
     }

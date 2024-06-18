@@ -17,10 +17,11 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
 builder.Services
+    .AddCors(builder.Configuration)
+    .AddSecurity(builder.Configuration)
     .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
     .AddSwagger(builder.Environment)
     .AddHealthChecks(builder.Configuration)
-    .AddSecurity(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddHangfireRequestScheduler();

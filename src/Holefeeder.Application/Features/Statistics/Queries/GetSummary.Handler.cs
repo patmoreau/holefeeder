@@ -59,6 +59,6 @@ public partial class GetSummary
             dto.FirstOrDefault(x => x.Key.From == asOf).Value;
 
         private static decimal Average(IDictionary<(DateOnly From, DateOnly To), decimal> dto) =>
-            Math.Round(dto.Sum(x => x.Value) / dto.Count, 2);
+            dto.Count > 0 ? Math.Round(dto.Sum(x => x.Value) / dto.Count, 2) : 0;
     }
 }
