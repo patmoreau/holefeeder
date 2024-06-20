@@ -8,7 +8,6 @@ using Holefeeder.FunctionalTests.Drivers;
 using Microsoft.EntityFrameworkCore;
 
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;

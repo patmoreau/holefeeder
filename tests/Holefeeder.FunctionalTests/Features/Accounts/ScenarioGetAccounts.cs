@@ -6,7 +6,6 @@ using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;

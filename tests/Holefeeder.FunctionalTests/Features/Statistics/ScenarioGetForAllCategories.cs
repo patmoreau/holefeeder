@@ -5,7 +5,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Tests.Common.Builders.Accounts;
 using Holefeeder.Tests.Common.Builders.Categories;
 using Holefeeder.Tests.Common.Builders.Transactions;

@@ -1,5 +1,3 @@
-using DrifterApps.Seeds.Application;
-
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.UserContext;

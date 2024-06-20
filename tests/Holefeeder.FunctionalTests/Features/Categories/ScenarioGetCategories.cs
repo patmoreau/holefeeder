@@ -4,7 +4,6 @@ using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;

@@ -16,6 +16,12 @@ namespace Holefeeder.Api.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
+    private const string HolefeederScope = "https://holefeeder.onmicrosoft.com/api/holefeeder.user";
+
+    private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
+    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mariadb"];
+    private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
+
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
@@ -38,7 +44,7 @@ internal static class ServiceCollectionExtensions
             {
                 options.EnableAnnotations();
                 options.SwaggerDoc("v2",
-                    new OpenApiInfo {Title = environment.ApplicationName, Version = "v2"});
+                    new OpenApiInfo { Title = environment.ApplicationName, Version = "v2" });
                 options.CustomSchemaIds(type => type.ToString());
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -56,7 +62,7 @@ internal static class ServiceCollectionExtensions
                             {
                                 ["openid"] = "Sign In Permissions",
                                 ["profile"] = "Read profile Permission",
-                                ["https://holefeeder.onmicrosoft.com/api/holefeeder.user"] = "API permission"
+                                [HolefeederScope] = "API permission"
                             }
                         }
                     }
@@ -68,7 +74,7 @@ internal static class ServiceCollectionExtensions
                         {
                             Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
                         },
-                        value
+                        [HolefeederScope]
                     }
                 });
                 options.OperationFilter<QueryRequestOperationFilter>();
@@ -78,11 +84,6 @@ internal static class ServiceCollectionExtensions
 
         return services;
     }
-
-    private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
-    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mariadb"];
-    private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
-    private static readonly string[] value = ["https://holefeeder.onmicrosoft.com/api/holefeeder.user"];
 
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
