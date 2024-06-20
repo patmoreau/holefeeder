@@ -33,10 +33,8 @@ var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
 builder.Services
     .AddHealthChecksUI(setup =>
     {
-#pragma warning disable S1075
-        setup.AddHealthCheckEndpoint("web", "http://127.0.0.1/healthz");
-#pragma warning restore S1075
-        setup.AddHealthCheckEndpoint("api", $"{apiUri}/healthz");
+        setup.AddHealthCheckEndpoint("hc-web", "/healthz");
+        setup.AddHealthCheckEndpoint("hc-api", $"{apiUri}/healthz");
     })
     .AddInMemoryStorage();
 
@@ -79,7 +77,7 @@ app.MapHealthChecksUI(config =>
 {
     config.UIPath = "/hc-ui";
     config.ResourcesPath = "/hc-ui/resources";
-    config.ApiPath = "/hc-ui/api";
+    config.ApiPath = "/hc-ui/hc-api";
     config.WebhookPath = "/hc-ui/webhooks";
     config.UseRelativeApiPath = true;
     config.UseRelativeResourcesPath = true;

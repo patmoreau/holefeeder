@@ -29,7 +29,8 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment)
+    public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment,
+        IConfiguration configuration)
     {
         services
             .AddEndpointsApiExplorer()
@@ -37,47 +38,41 @@ internal static class ServiceCollectionExtensions
             {
                 options.EnableAnnotations();
                 options.SwaggerDoc("v2",
-                    new OpenApiInfo { Title = environment.ApplicationName, Version = "v2" });
+                    new OpenApiInfo {Title = environment.ApplicationName, Version = "v2"});
                 options.CustomSchemaIds(type => type.ToString());
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
                     {
-#pragma warning disable S1075
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl =
                                 new Uri(
-                                    "https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/b2c_1a_signup_signin_drifterapps/oauth2/v2.0/authorize"),
-                            TokenUrl =
-                                new Uri(
-                                    "https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/b2c_1a_signup_signin_drifterapps/oauth2/v2.0/token"),
+                                    $"{configuration["AzureAdB2C:Instance"]}/{configuration["AzureAdB2C:Domain"]}/oauth2/v2.0/authorize?p={configuration["AzureAdB2C:SignUpSignInPolicyId"]}"),
+                            TokenUrl = new Uri(
+                                $"{configuration["AzureAdB2C:Instance"]}/{configuration["AzureAdB2C:Domain"]}/oauth2/v2.0/token?p={configuration["AzureAdB2C:SignUpSignInPolicyId"]}"),
                             Scopes = new Dictionary<string, string>
                             {
                                 ["openid"] = "Sign In Permissions",
                                 ["profile"] = "Read profile Permission",
-                                ["https://holefeeder.onmicrosoft.com/holefeeder.api/holefeeder.user"] =
-                                    "API permission"
+                                ["https://holefeeder.onmicrosoft.com/api/holefeeder.user"] = "API permission"
                             }
-#pragma warning restore S1075
                         }
-                    },
-                    Description = "Azure AD Authorization Code Flow authorization",
-                    In = ParameterLocation.Header,
-                    Name = "Authorization"
+                    }
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
                         },
-                        new List<string>()
+                        value
                     }
                 });
                 options.OperationFilter<QueryRequestOperationFilter>();
+                options.DocumentFilter<HideInDocsFilter>();
             })
             .AddFluentValidationRulesToSwagger();
 
@@ -85,7 +80,9 @@ internal static class ServiceCollectionExtensions
     }
 
     private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
-    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mysql"];
+    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mariadb"];
+    private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
+    private static readonly string[] value = ["https://holefeeder.onmicrosoft.com/api/holefeeder.user"];
 
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
@@ -93,7 +90,11 @@ internal static class ServiceCollectionExtensions
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags)
             .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
-                name: "budgeting-db-check", tags: DatabaseTags);
+                name: "holefeeder-db", tags: DatabaseTags)
+            .AddHangfire(options => options.MinimumAvailableServers = 1, name: "hangfire", tags: HangfireTags);
+        services
+            .AddHealthChecksUI(setup => { setup.AddHealthCheckEndpoint("hc-api", "/healthz"); })
+            .AddInMemoryStorage();
 
         return services;
     }

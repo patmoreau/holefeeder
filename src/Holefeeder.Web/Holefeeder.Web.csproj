@@ -36,6 +36,9 @@
     <Content Remove="ClientApp\.angular\**" />
     <None Remove="ClientApp\dist\**" />
     <Content Remove="ClientApp\dist\**" />
+    <Content Update="appsettings.Development.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

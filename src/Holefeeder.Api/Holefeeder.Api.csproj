@@ -10,8 +10,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.Hangfire" />
         <PackageReference Include="AspNetCore.HealthChecks.MySql" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" />
         <PackageReference Include="Carter" />
         <PackageReference Include="DrifterApps.Seeds.Infrastructure" />
         <PackageReference Include="FluentValidation.AspNetCore" />
@@ -39,6 +42,20 @@
         <None Update="appsettings.Development.json">
             <DependentUpon>appsettings.json</DependentUpon>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <DependentUpon>appsettings.json</DependentUpon>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="http\http-client.env.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\" />
     </ItemGroup>
 
 </Project>
