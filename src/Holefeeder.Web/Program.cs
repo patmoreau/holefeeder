@@ -32,7 +32,9 @@ var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
 builder.Services
     .AddHealthChecksUI(setup =>
     {
-        setup.AddHealthCheckEndpoint("hc-web", "/healthz");
+#pragma warning disable S1075
+        setup.AddHealthCheckEndpoint("hc-web", "http://127.0.0.1/healthz");
+#pragma warning restore S1075
         setup.AddHealthCheckEndpoint("hc-api", $"{apiUri}/healthz");
     })
     .AddInMemoryStorage();
@@ -58,6 +60,8 @@ else
 }
 
 app.UseSerilogRequestLogging();
+app.UseHttpLogging();
+
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -66,12 +70,9 @@ app.UseAuthorization();
 
 app.MapCarter();
 
-app.MapFallbackToFile("index.html");
-
 app.MapHealthChecks("/healthz",
     new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
 );
-app.UseHttpLogging();
 app.MapHealthChecksUI(config =>
 {
     config.UIPath = "/hc-ui";
@@ -82,5 +83,7 @@ app.MapHealthChecksUI(config =>
     config.UseRelativeResourcesPath = true;
     config.UseRelativeWebhookPath = true;
 });
+
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

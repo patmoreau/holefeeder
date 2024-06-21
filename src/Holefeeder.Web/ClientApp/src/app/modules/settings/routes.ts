@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authenticationGuard } from "@app/core/auth/authorization.guard";
+import { authenticationGuard } from '@app/core/auth/authorization.guard';
 
 export const SETTINGS_ROUTES: Routes = [
   { path: '', redirectTo: '/settings/account', pathMatch: 'full' },

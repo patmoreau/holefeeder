@@ -94,7 +94,9 @@ internal static class ServiceCollectionExtensions
                 name: "holefeeder-db", tags: DatabaseTags)
             .AddHangfire(options => options.MinimumAvailableServers = 1, name: "hangfire", tags: HangfireTags);
         services
-            .AddHealthChecksUI(setup => { setup.AddHealthCheckEndpoint("hc-api", "/healthz"); })
+#pragma warning disable S1075
+            .AddHealthChecksUI(setup => { setup.AddHealthCheckEndpoint("hc-api", "http://127.0.0.1/healthz"); })
+#pragma warning restore S1075
             .AddInMemoryStorage();
 
         return services;

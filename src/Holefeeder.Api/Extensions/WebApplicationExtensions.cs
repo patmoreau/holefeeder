@@ -17,7 +17,7 @@ public static class WebApplicationExtensions
         app.UseSwagger()
             .UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v2/swagger.json",
+                c.SwaggerEndpoint($"{configuration["Swagger:Prefix"]}/swagger/v2/swagger.json",
                     $"{environment.ApplicationName} {environment.EnvironmentName} v2");
                 c.OAuthClientId(configuration["AzureAdB2C:SwaggerClientId"]);
                 c.OAuthAppName($"{environment.ApplicationName}");
