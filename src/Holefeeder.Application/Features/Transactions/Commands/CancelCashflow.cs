@@ -1,8 +1,8 @@
-using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
+using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -41,12 +41,7 @@ public class CancelCashflow : ICarterModule
             var exists =
                 await context.Cashflows.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id,
-                    cancellationToken);
-            if (exists is null)
-            {
-                throw new CashflowNotFoundException(request.Id);
-            }
-
+                    cancellationToken) ?? throw new CashflowNotFoundException(request.Id);
             context.Update(exists.Cancel());
 
             return Unit.Value;

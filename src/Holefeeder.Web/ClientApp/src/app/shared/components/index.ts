@@ -8,7 +8,6 @@ export * from './modals/delete-dialog/delete-dialog.component';
 export * from './modals/input-dialog/input-dialog.component';
 export * from './modals/message-dialog/message-dialog.component';
 export * from './recurring-cashflow/recurring-cashflow.component';
-export * from './resource-notfound/resource-notfound.component';
 export * from './tags-input/tags-input.component';
 export * from './toast-view/toast-view.component';
 export * from './transaction-list-item/transaction-list-item.component';

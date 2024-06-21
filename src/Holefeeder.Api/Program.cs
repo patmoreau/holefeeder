@@ -2,8 +2,6 @@ using Carter;
 
 using DrifterApps.Seeds.Infrastructure;
 
-using Hangfire;
-
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Extensions;
@@ -17,10 +15,11 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
 builder.Services
-    .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
-    .AddSwagger(builder.Environment)
-    .AddHealthChecks(builder.Configuration)
+    .AddCors(builder.Configuration)
     .AddSecurity(builder.Configuration)
+    .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
+    .AddSwagger(builder.Environment, builder.Configuration)
+    .AddHealthChecks(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddHangfireRequestScheduler();
@@ -35,13 +34,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapSwagger(builder.Environment)
-    .MapHealthChecks()
+app.UseSwagger(builder.Environment, builder.Configuration)
+    .UseHealthChecks()
+    .UseHangfire()
     .MapCarter();
-app.UseHealthChecks("/ready");
-app.UseHealthChecks("/health/startup");
-app.UseHangfireDashboard();
-app.MapHangfireDashboard();
 
 app.UseAuthentication()
     .UseAuthorization();

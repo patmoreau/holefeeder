@@ -4,6 +4,7 @@ using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
 
 using Holefeeder.Application.Context;
+using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

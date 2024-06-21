@@ -9,6 +9,7 @@ public static class FakerExtensions
         ArgumentNullException.ThrowIfNull(faker);
 
 #pragma warning disable CS0162 // Unreachable code detected
+        // ReSharper disable once HeuristicUnreachableCode
         return DotNetGeneratedGuid ? Guid.NewGuid() : faker.Random.Guid();
 #pragma warning restore CS0162 // Unreachable code detected
     }

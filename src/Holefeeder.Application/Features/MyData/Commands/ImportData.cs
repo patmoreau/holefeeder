@@ -6,6 +6,7 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.MyData.Queries;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;

@@ -23,7 +23,8 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     {
         DbAdapter = DbAdapter.MySql,
         SchemasToInclude = [Schema],
-        TablesToInclude = ["accounts", "cashflows", "categories", "store_items", "transactions"],
+        TablesToInclude =
+            ["accounts", "cashflows", "categories", "store_items", "transactions"],
         TablesToIgnore = ["schema_versions"],
         WithReseed = true
     };

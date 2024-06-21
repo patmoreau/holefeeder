@@ -6,7 +6,6 @@ using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
@@ -33,10 +32,7 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
         var count = faker.Random.Int(2, 10);
 
         await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, count);
-
-        await GivenAnActiveAccount()
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, count);
 
         GivenUserIsAuthorized();

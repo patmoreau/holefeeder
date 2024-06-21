@@ -29,12 +29,14 @@ public class CancelCashflowScenario(ApiApplicationDriver applicationDriver, ITes
                 .Then(ReturnsAnError));
 
     [Fact]
-    public void WhenCancellingACashflow() => ScenarioFor("when user cancels a cashflow", runner =>
-        runner.Given(Account.Exists)
-            .And(Category.Exists)
-            .And(Cashflow.Exists)
-            .When(CashflowIsCanceled)
-            .Then(CashflowIsInactive));
+    public void WhenCancellingACashflow() =>
+        ScenarioFor("when user cancels a cashflow", runner =>
+            runner.Given(User.IsAuthorized)
+                .And(Account.Exists)
+                .And(Category.Exists)
+                .And(Cashflow.Exists)
+                .When(CashflowIsCanceled)
+                .Then(CashflowIsInactive));
 
     private void CashflowIsCanceled(IStepRunner runner) =>
         runner.Execute("a request to cancel a cashflow is made", async () =>
@@ -66,5 +68,6 @@ public class CancelCashflowScenario(ApiApplicationDriver applicationDriver, ITes
         });
 
     [AssertionMethod]
-    private void ReturnsAnError(IStepRunner runner) => runner.Execute("a validation error is expected", () => { ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."); });
+    private void ReturnsAnError(IStepRunner runner) => runner.Execute("a validation error is expected",
+        () => { ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."); });
 }

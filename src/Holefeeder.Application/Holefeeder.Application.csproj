@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <NoWarn>1701;1702;S3925</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <NoWarn>1701;1702;S3925</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Carter" />
-    <PackageReference Include="DrifterApps.Seeds.Application" />
-    <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Identity.Web" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
-    <PackageReference Include="System.Linq.Dynamic.Core" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Carter" />
+        <PackageReference Include="DrifterApps.Seeds.Application" />
+        <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="Microsoft.Identity.Web" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
+        <PackageReference Include="System.Linq.Dynamic.Core" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj" />
+    </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
-using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
 
 using FluentValidation.Results;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 

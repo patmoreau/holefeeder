@@ -45,17 +45,17 @@ public abstract partial class HolefeederScenario : Scenario
         User = new UserStepDefinition(HttpClientDriver);
     }
 
-    public AccountStepDefinition Account { get; }
+    internal AccountStepDefinition Account { get; }
 
-    public CashflowStepDefinition Cashflow { get; }
+    internal CashflowStepDefinition Cashflow { get; }
 
-    public CategoryStepDefinition Category { get; }
+    internal CategoryStepDefinition Category { get; }
 
-    public StoreItemStepDefinition StoreItem { get; }
+    internal StoreItemStepDefinition StoreItem { get; }
 
-    public TransactionStepDefinition Transaction { get; }
+    internal TransactionStepDefinition Transaction { get; }
 
-    public UserStepDefinition User { get; }
+    internal UserStepDefinition User { get; }
 
 
     protected BudgetingDatabaseDriver DatabaseDriver { get; }
@@ -65,7 +65,7 @@ public abstract partial class HolefeederScenario : Scenario
     protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
 
     // TODO: remove
-    protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(UserStepDefinition.HolefeederUserId.ToString());
+    protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(TestUsers[AuthorizedUser].IdentityObjectId);
 #pragma warning restore S1135
 
     protected static Guid ResourceIdFromLocation(Uri location)

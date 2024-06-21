@@ -6,6 +6,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -24,6 +25,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
     public DbSet<Category> Categories { get; init; } = default!;
     public DbSet<StoreItem> StoreItems { get; init; } = default!;
     public DbSet<Transaction> Transactions { get; init; } = default!;
+    public DbSet<User> Users { get; init; } = default!;
 
     public async Task BeginWorkAsync(CancellationToken cancellationToken)
     {
@@ -86,5 +88,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
         new CashflowEntityTypeConfiguration().Configure(modelBuilder.Entity<Cashflow>());
         new StoreItemEntityTypeConfiguration().Configure(modelBuilder.Entity<StoreItem>());
         new TransactionEntityTypeConfiguration().Configure(modelBuilder.Entity<Transaction>());
+        new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
+        new UserIdentityEntityTypeConfiguration().Configure(modelBuilder.Entity<UserIdentity>());
     }
 }

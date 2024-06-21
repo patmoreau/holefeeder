@@ -10,7 +10,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 using Serilog;
 
@@ -24,12 +23,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(
-        options => options.TokenValidationParameters =
-            new TokenValidationParameters { ValidateIssuer = true },
-        options => builder.Configuration.Bind("AzureAdB2C", options));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
 var apiUri = builder.Configuration.GetValue<string>("Api:Url") ??
              throw new InvalidOperationException("Missing `Api:Url` configuration");
@@ -38,9 +33,9 @@ builder.Services
     .AddHealthChecksUI(setup =>
     {
 #pragma warning disable S1075
-        setup.AddHealthCheckEndpoint("web", "http://127.0.0.1/healthz");
+        setup.AddHealthCheckEndpoint("hc-web", "http://127.0.0.1/healthz");
 #pragma warning restore S1075
-        setup.AddHealthCheckEndpoint("api", $"{apiUri}/healthz");
+        setup.AddHealthCheckEndpoint("hc-api", $"{apiUri}/healthz");
     })
     .AddInMemoryStorage();
 
@@ -65,6 +60,8 @@ else
 }
 
 app.UseSerilogRequestLogging();
+app.UseHttpLogging();
+
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -73,21 +70,20 @@ app.UseAuthorization();
 
 app.MapCarter();
 
-app.MapFallbackToFile("index.html");
-
 app.MapHealthChecks("/healthz",
     new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
 );
-app.UseHttpLogging();
 app.MapHealthChecksUI(config =>
 {
     config.UIPath = "/hc-ui";
     config.ResourcesPath = "/hc-ui/resources";
-    config.ApiPath = "/hc-ui/api";
+    config.ApiPath = "/hc-ui/hc-api";
     config.WebhookPath = "/hc-ui/webhooks";
     config.UseRelativeApiPath = true;
     config.UseRelativeResourcesPath = true;
     config.UseRelativeWebhookPath = true;
 });
+
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

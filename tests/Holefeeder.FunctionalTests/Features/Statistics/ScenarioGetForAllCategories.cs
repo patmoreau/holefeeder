@@ -5,7 +5,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.FunctionalTests.StepDefinitions;
 using Holefeeder.Tests.Common.Builders.Accounts;
 using Holefeeder.Tests.Common.Builders.Categories;
 using Holefeeder.Tests.Common.Builders.Transactions;
@@ -16,7 +15,7 @@ namespace Holefeeder.FunctionalTests.Features.Statistics;
 [Collection("Api collection")]
 public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    private readonly Guid _userId = UserStepDefinition.HolefeederUserId;
+    private readonly Guid _userId = TestUsers[AuthorizedUser].UserId;
 
     private readonly Dictionary<string, Category> _categories = new();
     private readonly Dictionary<string, Account> _accounts = new();

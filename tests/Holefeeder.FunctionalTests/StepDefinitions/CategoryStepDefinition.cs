@@ -8,21 +8,17 @@ using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class CategoryStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
+internal sealed class CategoryStepDefinition(IHttpClientDriver httpClientDriver, BudgetingDatabaseDriver budgetingDatabaseDriver)
     : StepDefinition(httpClientDriver)
 {
     public const string ContextExistingCategory = $"{nameof(CategoryStepDefinition)}_{nameof(ContextExistingCategory)}";
 
-    internal void Exists(IStepRunner runner)
-    {
-        ArgumentNullException.ThrowIfNull(runner);
-
+    public void Exists(IStepRunner runner) =>
         runner.Execute("a user has an active category", async () =>
         {
-            var category = await GivenACategory().ForUser(UserStepDefinition.HolefeederUserId)
+            var category = await GivenACategory().ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(ContextExistingCategory, category);
         });
-    }
 }

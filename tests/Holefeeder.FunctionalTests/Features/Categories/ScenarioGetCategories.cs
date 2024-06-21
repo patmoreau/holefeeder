@@ -4,7 +4,6 @@ using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
@@ -22,13 +21,13 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
 
         var firstCategory = await GivenACategory()
             .WithName(firstName)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsNotFavorite()
             .SavedInDbAsync(DatabaseDriver);
 
         var secondCategory = await GivenACategory()
             .WithName(secondName)
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsFavorite()
             .SavedInDbAsync(DatabaseDriver);
 

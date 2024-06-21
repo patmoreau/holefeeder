@@ -1,4 +1,4 @@
-namespace Holefeeder.Api.Authorization;
+namespace Holefeeder.Application.Authorization;
 
 public static class Policies
 {

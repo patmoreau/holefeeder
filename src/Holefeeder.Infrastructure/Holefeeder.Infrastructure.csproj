@@ -41,6 +41,9 @@
         <EmbeddedResource Include="Scripts\008-AddUuidToBinFunction.sql" />
         <EmbeddedResource Include="Scripts\009-StoreItemsToUUID.sql" />
         <EmbeddedResource Include="Scripts\010-BinaryToUUIDFields.sql" />
+        <EmbeddedResource Include="Scripts\011-CreateUsersTable.sql" />
+        <EmbeddedResource Include="Scripts\012-MigrateUserIds.sql" />
+        <EmbeddedResource Include="Scripts\013-FixTagsToLower.sql" />
     </ItemGroup>
 
 </Project>

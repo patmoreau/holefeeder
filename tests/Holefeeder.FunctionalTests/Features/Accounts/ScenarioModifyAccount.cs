@@ -8,7 +8,6 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuilder;
 
@@ -48,7 +47,7 @@ public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITest
     public async Task WhenModifyAccount()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyAccountRequest()

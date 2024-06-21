@@ -4,7 +4,6 @@ using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
@@ -37,7 +36,7 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
     public async Task WhenStoreItemExists()
     {
         var storeItem = await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();

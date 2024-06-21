@@ -1,9 +1,8 @@
 // Licensed to the.NET Foundation under one or more agreements.
 // The.NET Foundation licenses this file to you under the MIT license.
 
-using DrifterApps.Seeds.Application;
-
 using Holefeeder.Application.Context;
+using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;
 
@@ -58,6 +57,6 @@ public partial class GetSummary
             dto.FirstOrDefault(x => x.Key.From == asOf).Value;
 
         private static decimal Average(IDictionary<(DateOnly From, DateOnly To), decimal> dto) =>
-            Math.Round(dto.Sum(x => x.Value) / dto.Count, 2);
+            dto.Count > 0 ? Math.Round(dto.Sum(x => x.Value) / dto.Count, 2) : 0;
     }
 }

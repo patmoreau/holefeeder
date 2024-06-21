@@ -4,6 +4,10 @@ services:
       # Map the certificats into the container
       - .docker/certs:/etc/certs:ro
 
+  mariadb:
+    ports:
+      - 3306:3306
+
   api:
     build:
       context: .

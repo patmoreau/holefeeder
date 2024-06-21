@@ -8,7 +8,6 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
@@ -49,7 +48,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenCategoryDoesNotExists()
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
@@ -67,11 +66,11 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenTransactionDoesNotExists()
     {
         var account = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var category = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAModifyTransactionRequest()
@@ -91,11 +90,11 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     public async Task WhenModifyATransaction()
     {
         var accounts = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var categories = await GivenACategory()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .CollectionSavedInDbAsync(DatabaseDriver, 2);
 
         var transaction = await GivenATransaction()

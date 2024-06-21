@@ -10,7 +10,6 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder;
 
@@ -40,7 +39,7 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
     public async Task WhenAccountNameAlreadyExistsRequest()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var request = GivenAnOpenAccountRequest()

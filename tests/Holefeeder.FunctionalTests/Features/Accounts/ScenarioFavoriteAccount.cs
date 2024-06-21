@@ -8,7 +8,6 @@ using Holefeeder.FunctionalTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBuilder;
 
@@ -47,7 +46,7 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
     public async Task WhenFavoriteAccount()
     {
         var entity = await GivenAnActiveAccount()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .IsFavorite(false)
             .SavedInDbAsync(DatabaseDriver);
 

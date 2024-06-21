@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { LoggerService } from '@app/core/logger';
 import { SettingsService, SubscriberService } from '@app/core/services';
-import { DateInterval, Settings, User } from '@app/shared/models';
-import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { addDays, startOfToday } from 'date-fns';
-import { Observable, of } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { AppStore } from '@app/core/store';
 import { AuthActions } from '@app/core/store/auth/auth.actions';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
-import { LoggerService } from '@app/core/logger';
+import { DateInterval, Settings, User } from '@app/shared/models';
+import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngrx/store';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { addDays, startOfToday } from 'date-fns';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-header',

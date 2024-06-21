@@ -5,6 +5,7 @@ using DrifterApps.Seeds.Application.Extensions;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
+using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

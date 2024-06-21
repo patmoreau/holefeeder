@@ -47,6 +47,7 @@ public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITe
     public async Task WhenCodeAlreadyExist()
     {
         var existingItem = await GivenAStoreItem()
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(DatabaseDriver);
 
         var storeItem = GivenACreateStoreItemRequest()

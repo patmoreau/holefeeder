@@ -4,7 +4,6 @@ using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
@@ -31,16 +30,13 @@ public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITest
         const string secondCode = nameof(secondCode);
 
         await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .WithCode(firstCode)
             .SavedInDbAsync(DatabaseDriver);
 
         await GivenAStoreItem()
-            .ForUser(HolefeederUserId)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
             .WithCode(secondCode)
-            .SavedInDbAsync(DatabaseDriver);
-
-        await GivenAStoreItem()
             .SavedInDbAsync(DatabaseDriver);
 
         GivenUserIsAuthorized();

@@ -94,6 +94,7 @@ public static class WebApplicationExtensions
                     () => connectionManager,
                     () => MySqlConnectionManager.Log, builder.Database, "schema_versions"))
                 .LogToConsole()
+                .WithTransactionPerScript()
                 .Build();
 
             var result = upgradeEngine.PerformUpgrade();
