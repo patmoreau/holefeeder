@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { AppStore, TagsFeature } from '@app/core/store';
 import { NgbTypeahead, NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
@@ -29,6 +29,7 @@ export class TagsInputComponent {
   @Input() isReadonly = false;
 
   @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
+  @ViewChild('newTag') newTagInput!: ElementRef; // Access the input element
 
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
@@ -71,6 +72,10 @@ export class TagsInputComponent {
 
   selectItemFn = (value: string, event: NgbTypeaheadSelectItemEvent) => {
     this.addTag(value);
+    // Clear the input field after adding the tag
+    if (this.newTagInput && this.newTagInput.nativeElement) {
+      this.newTagInput.nativeElement.value = '';
+    }
     // prevent selection so value does not remain in input
     event.preventDefault();
     return null;
