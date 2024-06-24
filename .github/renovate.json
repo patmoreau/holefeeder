@@ -1,12 +1,42 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>patmoreau/workflow-config#main"
-  ],
+  "extends": ["github>patmoreau/workflow-config#main"],
   "packageRules": [
     {
-      "matchPackagePrefixes": ["DrifterApps.Seeds"],
-      "groupName": "drifterapps-seeds-updates"
+      "matchManagers": ["nuget"],
+      "matchPackagePatterns": ["^DrifterApps.Seeds."],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Drifterapps minor and patch updates",
+      "groupSlug": "drifterapps-seeds-updates"
+    },
+    {
+      "matchManagers": ["nuget"],
+      "matchPackagePatterns": ["^Microsoft.", "^System."],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Microsoft minor and patch updates",
+      "groupSlug": "microsoft-minor-patch-updates"
+    },
+    {
+      "matchManagers": ["nuget"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "excludePackagePatterns": ["^Microsoft.", "^System."],
+      "excludePackageNames": [
+        "Microsoft.EntityFrameworkCore",
+        "Pomelo.EntityFrameworkCore.MySql"
+      ],
+      "groupName": "3rd parties .NET packages updates",
+      "groupSlug": "other-dotnet-updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<5.5.0"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "NPM minor and patch updates",
+      "groupSlug": "npm-minor-patch-updates"
     },
     {
       "matchUpdateTypes": ["major"],
