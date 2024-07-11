@@ -44,5 +44,5 @@ services:
 
   web-angular-tests:
     entrypoint:
-      - yarn
+      - pnpm
       - test:ci

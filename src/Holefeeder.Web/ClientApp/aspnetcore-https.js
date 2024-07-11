@@ -17,7 +17,7 @@ const certificateName = certificateArg
 
 if (!certificateName) {
   console.error(
-    'Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.'
+    'Invalid certificate name. Run this script in the context of an npm/yarn/pnpm script or pass --name=<<app>> explicitly.'
   );
   process.exit(-1);
 }
