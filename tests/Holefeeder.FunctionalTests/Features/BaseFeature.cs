@@ -9,12 +9,12 @@ using LightBDD.XUnit2;
 
 namespace Holefeeder.FunctionalTests.Features;
 
-[Collection("Api collection")]
+[Collection("Api Security collection")]
 public class BaseFeature : FeatureFixture
 {
     protected IHttpClientDriver HttpClientDriver { get; }
 
-    protected BaseFeature(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
+    protected BaseFeature(ApiApplicationSecurityDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
         : base(testOutputHelper)
     {
         ArgumentNullException.ThrowIfNull(apiApplicationDriver);

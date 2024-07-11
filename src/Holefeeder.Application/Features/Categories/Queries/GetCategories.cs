@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
@@ -28,7 +29,7 @@ public class GetCategories : ICarterModule
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithTags(nameof(Categories))
             .WithName(nameof(GetCategories))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal class Validator : AbstractValidator<Request>;
 

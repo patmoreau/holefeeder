@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application.Mediatr;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.UserContext;
@@ -25,7 +26,7 @@ public class FavoriteAccount : ICarterModule
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags(nameof(Accounts))
             .WithName(nameof(FavoriteAccount))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
     {

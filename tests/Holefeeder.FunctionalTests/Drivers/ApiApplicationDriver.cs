@@ -11,21 +11,35 @@ using Holefeeder.Tests.Common.Builders.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Identity.Web;
 
 namespace Holefeeder.FunctionalTests.Drivers;
 
-public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
+public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
 {
-    internal BudgetingDatabaseDriver DatabaseDriver { get; }
+    private readonly bool _useDatabaseDriver;
+    private readonly string _domain = new Faker().Internet.DomainName();
+    private readonly BudgetingDatabaseDriver? _databaseDriver;
 
-    public ApiApplicationDriver()
+    internal BudgetingDatabaseDriver DatabaseDriver =>
+        _databaseDriver ?? throw new InvalidOperationException("Database driver is not available");
+
+    public ApiApplicationDriver() : this(true)
     {
+    }
+
+    protected ApiApplicationDriver(bool useDatabaseDriver)
+    {
+        _useDatabaseDriver = useDatabaseDriver;
+
         Faker.DefaultStrictMode = true;
 
-        DatabaseDriver = new BudgetingDatabaseDriver();
+        if (_useDatabaseDriver)
+        {
+            _databaseDriver = new BudgetingDatabaseDriver();
+        }
     }
 
     public IHttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
@@ -35,10 +49,25 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.ConfigureServices(services =>
+        var configPath = Path.Combine(GetProjectPath(string.Empty, "Holefeeder.FunctionalTests"),
+            "appsettings.tests.json");
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile(configPath)
+            .AddInMemoryCollection(new List<KeyValuePair<string, string?>>()
+            {
+                new("Auth0:Domain", _domain)
+            }).Build();
+        builder.UseConfiguration(configuration);
+        builder.ConfigureServices(collection =>
         {
-            services.RemoveAll<BudgetingConnectionStringBuilder>();
-            services.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
+            if (!_useDatabaseDriver)
+            {
+                return;
+            }
+
+            collection.RemoveAll<BudgetingConnectionStringBuilder>();
+            collection.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
             {
                 ConnectionString = DatabaseDriver.ConnectionString
             });
@@ -50,9 +79,12 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
             {
                 var authorizedUser = TestUsers[AuthorizedUser];
                 options.AdditionalUserClaims.Add(authorizedUser.IdentityObjectId,
-                    [new Claim(ClaimConstants.Scope, authorizedUser.Scope)]);
+                    [new Claim("scope", authorizedUser.Scope, null, _domain)]);
             });
-            services.AddDatabaseDriver(DatabaseDriver);
+            if (_useDatabaseDriver)
+            {
+                services.AddDatabaseDriver(DatabaseDriver);
+            }
         });
     }
 
@@ -60,7 +92,10 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
     {
         try
         {
-            await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+            if (_useDatabaseDriver)
+            {
+                await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+            }
         }
         catch (InvalidOperationException e)
         {
@@ -68,17 +103,47 @@ public sealed class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IAppl
         }
     }
 
-    async Task IAsyncLifetime.InitializeAsync()
+    public async Task InitializeAsync()
     {
-        await DatabaseDriver.InitializeAsync().ConfigureAwait(false);
+        if (_useDatabaseDriver)
+        {
+            await DatabaseDriver.InitializeAsync().ConfigureAwait(false);
 
-        var user = UserBuilder.GivenAUser()
-            .WithId(TestUsers[AuthorizedUser].UserId)
-            .Build();
-        await UserIdentityBuilder.GivenAUserIdentity(user)
-            .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
-            .SavedInDbAsync(DatabaseDriver).ConfigureAwait(false);
+            var user = UserBuilder.GivenAUser()
+                .WithId(TestUsers[AuthorizedUser].UserId)
+                .Build();
+            await UserIdentityBuilder.GivenAUserIdentity(user)
+                .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
+                .SavedInDbAsync(DatabaseDriver).ConfigureAwait(false);
+        }
     }
 
-    Task IAsyncLifetime.DisposeAsync() => DatabaseDriver.DisposeAsync();
+    async Task IAsyncLifetime.DisposeAsync()
+    {
+        if (_useDatabaseDriver)
+        {
+            await DatabaseDriver.DisposeAsync();
+        }
+    }
+
+    private static string GetProjectPath(string projectRelativePath, string projectName)
+    {
+        var applicationBasePath = AppContext.BaseDirectory;
+        var directoryInfo = new DirectoryInfo(applicationBasePath);
+        do
+        {
+            directoryInfo = directoryInfo.Parent;
+
+            var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo!.FullName, projectRelativePath));
+
+            if (projectDirectoryInfo.Exists &&
+                new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName, $"{projectName}.csproj")).Exists)
+            {
+                return Path.Combine(projectDirectoryInfo.FullName, projectName);
+            }
+        } while (directoryInfo.Parent is not null);
+
+        throw new InvalidOperationException(
+            $"Project root could not be located using the application root {applicationBasePath}.");
+    }
 }

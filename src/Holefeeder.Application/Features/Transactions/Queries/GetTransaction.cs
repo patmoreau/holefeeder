@@ -1,3 +1,4 @@
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.Models;
@@ -25,7 +26,7 @@ public class GetTransaction : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(GetTransaction))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
 

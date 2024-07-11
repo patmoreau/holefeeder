@@ -13,7 +13,7 @@ namespace Holefeeder.FunctionalTests.Features;
 
 [FeatureDescription(@"In order to test the security")]
 [ComponentTest]
-public partial class FeatureSecurity(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : BaseFeature(apiApplicationDriver, testOutputHelper)
+public partial class FeatureSecurity(ApiApplicationSecurityDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : BaseFeature(apiApplicationDriver, testOutputHelper)
 {
     [Scenario]
     [ScenarioCategory("Security")]
@@ -56,7 +56,7 @@ public partial class FeatureSecurity(ApiApplicationDriver apiApplicationDriver, 
 
             foreach (var apiResource in apiResources)
             {
-                yield return new object[] { apiResource };
+                yield return [apiResource];
             }
         }
     }

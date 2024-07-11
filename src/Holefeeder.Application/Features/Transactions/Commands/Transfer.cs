@@ -2,6 +2,7 @@ using DrifterApps.Seeds.Application.Mediatr;
 
 using FluentValidation.Results;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.UserContext;
@@ -30,7 +31,7 @@ public class Transfer : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(Transfer))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal record Request(DateOnly Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<(Guid FromTransactionId, Guid ToTransactionId)>, IUnitOfWorkRequest;
 

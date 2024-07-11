@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application.Mediatr;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.UserContext;
@@ -26,7 +27,7 @@ public class OpenAccount : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Accounts))
             .WithName(nameof(OpenAccount))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal record Request(AccountType Type, string Name, DateOnly OpenDate, decimal OpenBalance, string Description)
         : IRequest<Guid>, IUnitOfWorkRequest;

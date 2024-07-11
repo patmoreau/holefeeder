@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 using DrifterApps.Seeds.Application;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.MyData.Models;
@@ -54,7 +55,7 @@ public class ImportData : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(MyData))
             .WithName(nameof(ImportData))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal class Handler(BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger) : IRequestHandler<InternalRequest, Unit>
     {

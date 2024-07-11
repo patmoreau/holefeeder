@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using Holefeeder.Api.Swagger;
 using Holefeeder.Application.Authorization;
@@ -6,9 +7,9 @@ using Holefeeder.Infrastructure.SeedWork;
 
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Holefeeder.Api.Extensions;
@@ -16,23 +17,42 @@ namespace Holefeeder.Api.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
-    private const string HolefeederScope = "https://holefeeder.onmicrosoft.com/api/holefeeder.user";
-
     private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
     private static readonly string[] DatabaseTags = ["holefeeder", "api", "mariadb"];
     private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
 
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAdB2C");
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var domain = GetDomain();
+                var audience = GetAudience();
+                options.Authority = $"https://{domain}/";
+                options.Audience = audience;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+            });
 
-        services.AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireClaim(ClaimConstants.Scope, Policies.HolefeederUser)
-                .Build());
+        services
+            .AddAuthorization(options =>
+            {
+                var domain = $"https://{GetDomain()}/";
+                options.AddPolicy(Policies.ReadUser,
+                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.ReadUser, domain)));
+                options.AddPolicy(Policies.WriteUser,
+                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.WriteUser, domain)));
+            });
 
         return services;
+
+        string GetDomain() => configuration["Auth0:Domain"] ??
+                              throw new InvalidOperationException("Auth0 domain is missing");
+
+        string GetAudience() => configuration["Auth0:Audience"] ??
+                                throw new InvalidOperationException("Auth0 audience is missing");
     }
 
     public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment,
@@ -53,16 +73,16 @@ internal static class ServiceCollectionExtensions
                     {
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
+                            TokenUrl = new Uri($"https://{configuration["Auth0:Domain"]}/oauth/token"),
                             AuthorizationUrl =
                                 new Uri(
-                                    $"{configuration["AzureAdB2C:Instance"]}/{configuration["AzureAdB2C:Domain"]}/oauth2/v2.0/authorize?p={configuration["AzureAdB2C:SignUpSignInPolicyId"]}"),
-                            TokenUrl = new Uri(
-                                $"{configuration["AzureAdB2C:Instance"]}/{configuration["AzureAdB2C:Domain"]}/oauth2/v2.0/token?p={configuration["AzureAdB2C:SignUpSignInPolicyId"]}"),
+                                    $"https://{configuration["Auth0:Domain"]}/authorize?audience={configuration["Auth0:Audience"]}"),
                             Scopes = new Dictionary<string, string>
                             {
                                 ["openid"] = "Sign In Permissions",
                                 ["profile"] = "Read profile Permission",
-                                [HolefeederScope] = "API permission"
+                                [Policies.ReadUser] = "read:user",
+                                [Policies.WriteUser] = "write:user",
                             }
                         }
                     }
@@ -72,9 +92,16 @@ internal static class ServiceCollectionExtensions
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "oauth2"
+                            },
+                            Scheme = "oauth2",
+                            Name = "oauth2",
+                            In = ParameterLocation.Header,
                         },
-                        [HolefeederScope]
+                        new List<string>()
                     }
                 });
                 options.OperationFilter<QueryRequestOperationFilter>();

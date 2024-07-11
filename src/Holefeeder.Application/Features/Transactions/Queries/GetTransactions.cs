@@ -3,6 +3,7 @@ using System.Reflection;
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
@@ -32,7 +33,7 @@ public class GetTransactions : ICarterModule
             .WithMetadata(nameof(IRequestQuery))
             .WithTags(nameof(Transactions))
             .WithName(nameof(GetTransactions))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<TransactionInfoViewModel>>, IRequestQuery

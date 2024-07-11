@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application.Mediatr;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.UserContext;
@@ -25,7 +26,7 @@ public class ModifyStoreItem : ICarterModule
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags(nameof(StoreItems))
             .WithName(nameof(ModifyStoreItem))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal class Validator : AbstractValidator<Request>
     {

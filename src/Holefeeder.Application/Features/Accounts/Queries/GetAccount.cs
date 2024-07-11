@@ -1,3 +1,4 @@
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Exceptions;
 using Holefeeder.Application.UserContext;
@@ -23,7 +24,7 @@ public class GetAccount : ICarterModule
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithTags(nameof(Accounts))
             .WithName(nameof(GetAccount))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(Guid Id) : IRequest<AccountViewModel>;
 
