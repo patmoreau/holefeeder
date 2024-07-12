@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;
@@ -28,7 +29,7 @@ public sealed class ExportData : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(MyData))
             .WithName(nameof(ExportData))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request : IRequest<ExportDataDto>;
 

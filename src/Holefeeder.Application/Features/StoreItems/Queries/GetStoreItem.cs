@@ -1,3 +1,4 @@
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.StoreItems.Exceptions;
 using Holefeeder.Application.UserContext;
@@ -24,7 +25,7 @@ public class GetStoreItem : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(StoreItems))
             .WithName(nameof(GetStoreItem))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(Guid Id) : IRequest<StoreItemViewModel>;
 

@@ -40,14 +40,17 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
         working-directory: src/Holefeeder.Web/ClientApp
-        run: yarn install
+        run: pnpm install
 
       - name: Lint code with ESLint
         id: lint
         working-directory: src/Holefeeder.Web/ClientApp
-        run: yarn lint --format stylish --output-file ./eslint-report.txt
+        run: pnpm lint --format stylish --output-file ./eslint-report.txt
 
       - name: Print ESLint report
         if: always()

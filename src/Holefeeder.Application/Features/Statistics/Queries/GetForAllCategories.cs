@@ -1,6 +1,8 @@
 // Licensed to the.NET Foundation under one or more agreements.
 // The.NET Foundation licenses this file to you under the MIT license.
 
+using Holefeeder.Application.Authorization;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,5 +24,5 @@ public partial class GetForAllCategories : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Statistics))
             .WithName(nameof(GetForAllCategories))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 }

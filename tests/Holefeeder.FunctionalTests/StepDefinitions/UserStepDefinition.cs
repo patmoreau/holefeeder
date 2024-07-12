@@ -16,7 +16,7 @@ internal sealed class UserStepDefinition : StepDefinition
         {
             UserId = Fakerizer.RandomGuid(),
             IdentityObjectId = Fakerizer.Random.Hash(),
-            Scope = "holefeeder.user"
+            Scope = "read:user write:user"
         },
         [ForbiddenUser] = new()
         {

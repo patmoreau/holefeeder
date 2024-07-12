@@ -1,3 +1,4 @@
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 
@@ -22,7 +23,7 @@ public class ImportDataStatus : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(MyData))
             .WithName(nameof(ImportDataStatus))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
 

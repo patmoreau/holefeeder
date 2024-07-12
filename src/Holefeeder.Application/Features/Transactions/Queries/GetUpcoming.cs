@@ -4,6 +4,7 @@ using System.Reflection;
 
 using DrifterApps.Seeds.Application;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Models;
@@ -32,7 +33,7 @@ public class GetUpcoming : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(GetUpcoming))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(DateOnly From, DateOnly To) : IRequest<QueryResult<UpcomingViewModel>>
     {

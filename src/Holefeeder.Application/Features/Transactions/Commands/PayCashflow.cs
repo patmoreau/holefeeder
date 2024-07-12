@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application.Mediatr;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.UserContext;
@@ -26,7 +27,7 @@ public class PayCashflow : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(PayCashflow))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal record Request : IRequest<Guid>, IUnitOfWorkRequest
     {

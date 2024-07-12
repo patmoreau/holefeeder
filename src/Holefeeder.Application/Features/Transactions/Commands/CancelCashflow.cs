@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Application.Mediatr;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Transactions.Exceptions;
 using Holefeeder.Application.UserContext;
@@ -25,7 +26,7 @@ public class CancelCashflow : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(CancelCashflow))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.WriteUser);
 
     internal record Request(Guid Id) : IRequest<Unit>, IUnitOfWorkRequest;
 

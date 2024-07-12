@@ -47,28 +47,19 @@ bootstrapApplication(AppComponent, {
       }),
       AuthModule.forRoot({
         config: {
-          authority:
-            'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1_Signup_Signin/v2.0',
-          authWellknownEndpointUrl:
-            'https://holefeeder.b2clogin.com/holefeeder.onmicrosoft.com/B2C_1_Signup_Signin/v2.0/.well-known/openid-configuration',
+          authority: 'https://dev-vx1jio3owhaqdmqa.ca.auth0.com',
+          clientId: 'gXVZOUw6cxoIR6N5qqXFyRVuZDbkkVxu',
           redirectUrl: window.location.origin,
           postLogoutRedirectUri: window.location.origin,
-          clientId: '9814ecda-b8db-4775-a361-714af29fe486',
-          scope:
-            'openid profile offline_access https://holefeeder.onmicrosoft.com/api/holefeeder.user',
           responseType: 'code',
+          scope: 'openid profile email offline_access read:user write:user',
           silentRenew: true,
-          silentRenewUrl: `${window.location.origin}/silent-renew.html`,
           useRefreshToken: true,
-          triggerAuthorizationResultEvent: false,
-          renewTimeBeforeTokenExpiresInSeconds: 30,
-          ignoreNonceAfterRefresh: true,
-          maxIdTokenIatOffsetAllowedInSeconds: 600,
-          issValidationOff: false,
-          autoUserInfo: false,
           logLevel: LogLevel.Warn,
-          customParamsAuthRequest: {},
           postLoginRoute: '/dashboard',
+          customParamsAuthRequest: {
+            audience: 'https://holefeeder-api.drifterapps.app',
+          },
           secureRoutes: [
             'https://holefeeder.localtest.me',
             'http://localhost:3000',

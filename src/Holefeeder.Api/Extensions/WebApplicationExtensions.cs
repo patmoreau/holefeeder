@@ -19,8 +19,9 @@ public static class WebApplicationExtensions
             {
                 c.SwaggerEndpoint($"{configuration["Swagger:Prefix"]}/swagger/v2/swagger.json",
                     $"{environment.ApplicationName} {environment.EnvironmentName} v2");
-                c.OAuthClientId(configuration["AzureAdB2C:SwaggerClientId"]);
                 c.OAuthAppName($"{environment.ApplicationName}");
+                c.OAuthClientId("YOUR_AUTH0_CLIENT_ID");
+                c.OAuthClientSecret("YOUR_AUTH0_CLIENT_SECRET");
                 c.OAuthUsePkce();
             });
 

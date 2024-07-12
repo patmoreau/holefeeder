@@ -1,3 +1,5 @@
+using Holefeeder.Application.Authorization;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -19,5 +21,5 @@ public partial class GetSummary : ICarterModule
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Statistics))
             .WithName(nameof(GetSummary))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 }

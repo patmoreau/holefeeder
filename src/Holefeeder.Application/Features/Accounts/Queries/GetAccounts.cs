@@ -3,6 +3,7 @@ using System.Reflection;
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
 
+using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.UserContext;
 
@@ -31,7 +32,7 @@ public class GetAccounts : ICarterModule
             .WithMetadata(nameof(IRequestQuery))
             .WithTags(nameof(Accounts))
             .WithName(nameof(GetAccounts))
-            .RequireAuthorization();
+            .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
         : IRequest<QueryResult<AccountViewModel>>, IRequestQuery
