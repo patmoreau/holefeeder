@@ -79,7 +79,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             {
                 var authorizedUser = TestUsers[AuthorizedUser];
                 options.AdditionalUserClaims.Add(authorizedUser.IdentityObjectId,
-                    [new Claim("scope", authorizedUser.Scope, null, _domain)]);
+                    [new Claim("scope", authorizedUser.Scope, null, $"https://{_domain}/")]);
             });
             if (_useDatabaseDriver)
             {
