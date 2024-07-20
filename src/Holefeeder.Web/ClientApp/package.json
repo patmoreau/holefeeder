@@ -32,7 +32,7 @@
     "@angular/platform-server": "17.3.12",
     "@angular/router": "17.3.12",
     "@angular/service-worker": "17.3.12",
-    "@ng-bootstrap/ng-bootstrap": "16.0.0",
+    "@ng-bootstrap/ng-bootstrap": "17.0.0",
     "@ngrx/effects": "18.0.1",
     "@ngrx/entity": "18.0.1",
     "@ngrx/schematics": "18.0.1",
