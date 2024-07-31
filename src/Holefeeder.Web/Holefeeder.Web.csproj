@@ -36,7 +36,6 @@
         <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" />
         <PackageReference Include="Carter" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" />
         <PackageReference Include="Microsoft.Identity.Web" />
         <PackageReference Include="Serilog.AspNetCore" />

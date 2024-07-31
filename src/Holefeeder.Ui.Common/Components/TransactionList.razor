@@ -1,15 +1,21 @@
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudStack Row="true">
+            <MudStack Row Justify="Justify.SpaceBetween">
                 <MudText Typo="Typo.body1">@Description</MudText>
                 <MudText Typo="Typo.body1">@Amount.ToString("C", CultureInfo.CurrentUICulture)</MudText>
             </MudStack>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudStack Row="true">
-            <MudText Style="width: fit-content" Typo="Typo.caption">@Tags</MudText>
+        <MudStack Row Justify="Justify.SpaceBetween">
+            @if (Tags.Count > 0)
+            {
+                foreach (var tag in Tags)
+                {
+                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary">@tag</MudChip>
+                }
+            }
             <MudText Typo="Typo.caption">@Date.ToString("ddd, d MMM yyyy", CultureInfo.CurrentUICulture)</MudText>
         </MudStack>
     </MudCardContent>

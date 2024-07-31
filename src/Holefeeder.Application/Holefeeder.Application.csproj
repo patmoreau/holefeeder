@@ -12,7 +12,6 @@
         <PackageReference Include="DrifterApps.Seeds.Application" />
         <PackageReference Include="DrifterApps.Seeds.Application.Mediatr" />
         <PackageReference Include="MediatR" />
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Identity.Web" />

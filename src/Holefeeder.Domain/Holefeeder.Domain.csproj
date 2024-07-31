@@ -8,7 +8,6 @@
         <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" />
         <PackageReference Include="DrifterApps.Seeds.Domain" />
         <PackageReference Include="MediatR.Contracts" />
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     </ItemGroup>
 
 </Project>

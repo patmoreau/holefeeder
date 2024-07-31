@@ -6,6 +6,9 @@ namespace Holefeeder.Ui.Common.Services;
 
 public interface IHolefeederApiService
 {
+    [Get("/api/v2/accounts?sort=-favorite&sort=name")]
+    Task<ApiResponse<IList<Account>>> GetAccounts();
+
     [Get("/api/v2/enumerations/get-account-types")]
     Task<ApiResponse<IList<string>>> GetAccountTypes();
 

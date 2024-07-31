@@ -1,3 +1,15 @@
+using System.Text.Json.Serialization;
+
 namespace Holefeeder.Ui.Common.Models;
 
-public record AccountType(string Name, int Value, int Multiplier);
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum AccountType
+{
+    Checking,
+    CreditCard,
+    CreditLine,
+    Investment,
+    Loan,
+    Mortgage,
+    Savings
+}
