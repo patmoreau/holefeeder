@@ -181,8 +181,8 @@ importers:
         specifier: 48.11.0
         version: 48.11.0(eslint@9.9.0(jiti@1.21.6))
       eslint-plugin-prefer-arrow-functions:
-        specifier: 3.4.0
-        version: 3.4.0(eslint@9.9.0(jiti@1.21.6))
+        specifier: 3.4.1
+        version: 3.4.1(eslint@9.9.0(jiti@1.21.6))
       eslint-plugin-prettier:
         specifier: 5.2.1
         version: 5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.9.0(jiti@1.21.6)))(eslint@9.9.0(jiti@1.21.6))(prettier@3.3.3)
@@ -3633,11 +3633,11 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
 
-  eslint-plugin-prefer-arrow-functions@3.4.0:
-    resolution: {integrity: sha512-YNusmVYGVQzRRWPpCHZh+Yql/igQqpDrrHn8IMXLxoLbSz/D7L+cmzoJ6M8+SY9H5mVvSMRC3/GzFoGuAc2P0w==}
+  eslint-plugin-prefer-arrow-functions@3.4.1:
+    resolution: {integrity: sha512-c8NP0E8xpkRqDq2eDSRr+wA4jwkwOEVNnZx4YY3O0V9M7OhtKdQIj5zmzIXwu+ueURmbwYrnz65sEoLLoIVZpg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      eslint: '>=9.0.0'
+      eslint: '>=8.0.0'
 
   eslint-plugin-prettier@5.2.1:
     resolution: {integrity: sha512-gH3iR3g4JfF+yYPaJYkN7jEl9QbweL/YfkoRlNnuIEHEz1vHVlCmWOS+eGGiRuzHQXdJFCOTxRgvju9b8VUmrw==}
@@ -11239,7 +11239,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-prefer-arrow-functions@3.4.0(eslint@9.9.0(jiti@1.21.6)):
+  eslint-plugin-prefer-arrow-functions@3.4.1(eslint@9.9.0(jiti@1.21.6)):
     dependencies:
       eslint: 9.9.0(jiti@1.21.6)
 
