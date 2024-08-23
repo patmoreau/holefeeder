@@ -79,31 +79,31 @@ jobs:
           global-json-file: ./global.json
 
       - name: Restore Api dependencies
-        run: dotnet restore src/Api/Holefeeder.Api/Holefeeder.Api.csproj
+        run: dotnet restore src/Holefeeder.Api/Holefeeder.Api.csproj
 
       - name: Build Api
-        run: dotnet build src/Api/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
+        run: dotnet build src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
 
       - name: Install .NET MAUI Workloads
         run: dotnet workload install maui-android
 
       - name: Restore Ui.Maui dependencies
-        run: dotnet restore src/Ui/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj -p:RuntimeIdentifier=android
+        run: dotnet restore src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj -p:RuntimeIdentifier=android
 
       - name: Build Ui.Maui
-        run: dotnet build src/Ui/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj --no-restore -p:RuntimeIdentifier=android
+        run: dotnet build src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj --no-restore -p:RuntimeIdentifier=android
 
       - name: Restore Ui.Web dependencies
-        run: dotnet restore src/Ui/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
+        run: dotnet restore src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
 
       - name: Build Ui.Web
-        run: dotnet build src/Ui/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj --no-restore
+        run: dotnet build src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj --no-restore
 
       - name: Restore Web dependencies
-        run: dotnet restore src/Web/Holefeeder.Web/Holefeeder.Web.csproj
+        run: dotnet restore src/Holefeeder.Web/Holefeeder.Web.csproj
 
       - name: Build Web
-        run: dotnet build src/Web/Holefeeder.Web/Holefeeder.Web.csproj --no-restore
+        run: dotnet build src/Holefeeder.Web/Holefeeder.Web.csproj --no-restore
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       # If this step fails, then you should remove it and run the build manually (see below)
