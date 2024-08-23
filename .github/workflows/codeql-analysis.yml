@@ -46,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["csharp", "javascript"]
+        language: ['csharp', 'javascript']
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
@@ -77,6 +77,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: ./global.json
+
+      - name: Install .NET MAUI Workloads
+        run: dotnet workload install maui-android
 
       - name: Restore dependencies
         run: dotnet restore
