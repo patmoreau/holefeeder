@@ -84,14 +84,14 @@ jobs:
       - name: Build Api
         run: dotnet build src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
 
-      - name: Install .NET MAUI Workloads
-        run: dotnet workload install maui-android
+      # - name: Install .NET MAUI Workloads
+      #   run: dotnet workload install maui-android
 
-      - name: Restore Ui.Maui dependencies
-        run: dotnet restore src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj -p:RuntimeIdentifier=android
+      # - name: Restore Ui.Maui dependencies
+      #   run: dotnet restore src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj -p:RuntimeIdentifier=android
 
-      - name: Build Ui.Maui
-        run: dotnet build src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj --no-restore -p:RuntimeIdentifier=android
+      # - name: Build Ui.Maui
+      #   run: dotnet build src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj --no-restore -p:RuntimeIdentifier=android
 
       - name: Restore Ui.Web dependencies
         run: dotnet restore src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
