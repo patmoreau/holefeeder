@@ -26,7 +26,6 @@ internal sealed class CashflowStepDefinition(
     private const string ContextCashflowRequest = $"{nameof(CashflowStepDefinition)}_{nameof(ContextCashflowRequest)}";
     public const string ContextExistingCashflow = $"{nameof(CashflowStepDefinition)}_{nameof(ContextExistingCashflow)}";
 
-#pragma warning disable CA1822
     public void AnInvalidCancelRequest(IStepRunner runner) => runner.Execute("an invalid cashflow request", () =>
     {
         var request = GivenAnInvalidCancelCashflowRequest().Build();
