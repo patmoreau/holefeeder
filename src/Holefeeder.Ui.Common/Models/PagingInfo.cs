@@ -1,4 +1,4 @@
-﻿namespace Holefeeder.Ui.Common.Models;
+namespace Holefeeder.Ui.Common.Models;
 
 public class PagingInfo<T>
 {

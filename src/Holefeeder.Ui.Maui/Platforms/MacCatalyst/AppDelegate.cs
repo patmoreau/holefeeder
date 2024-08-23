@@ -15,8 +15,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         ArgumentNullException.ThrowIfNull(completionHandler);
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        var app = IPlatformApplication.Current?.Application as App;
-        app?.PerformActionForShortcutItem(shortcutItem.Type);
+        App.PerformActionForShortcutItem(shortcutItem.Type);
 
         completionHandler(true);
     }

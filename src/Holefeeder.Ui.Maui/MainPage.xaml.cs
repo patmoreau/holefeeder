@@ -7,11 +7,9 @@ public partial class MainPage
         InitializeComponent();
     }
 
-#pragma warning disable CA1822
-    public void NavigateToPurchase()
+    public static void NavigateToPurchase()
     {
         var mainComponent = Main.Instance;
         mainComponent?.NavigateToPurchase();
     }
-#pragma warning restore CA1822
 }

@@ -9,7 +9,7 @@ public partial class App
         MainPage = new MainPage();
     }
 
-    public void PerformActionForShortcutItem(string shortcutItemType)
+    public static void PerformActionForShortcutItem(string shortcutItemType)
     {
         if (shortcutItemType == "com.drifterapps.Holefeeder.purchase")
         {
@@ -17,9 +17,5 @@ public partial class App
         }
     }
 
-    private void NavigateToPurchase()
-    {
-        var mainPage = MainPage as MainPage;
-        mainPage?.NavigateToPurchase();
-    }
+    private static void NavigateToPurchase() => Holefeeder.Ui.Maui.MainPage.NavigateToPurchase();
 }

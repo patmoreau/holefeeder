@@ -1,5 +1,3 @@
-﻿using System;
-
 namespace Holefeeder.Ui.Common.Models;
 
 public class Account

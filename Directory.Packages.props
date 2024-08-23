@@ -13,7 +13,7 @@
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.0.1" />
     <PackageVersion Include="Carter" Version="8.2.1" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="9.0.2" />
+    <PackageVersion Include="CommunityToolkit.Maui" Version="9.0.3" />
     <PackageVersion Include="Dapper" Version="2.1.44" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
@@ -33,12 +33,12 @@
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="MicroElements.Swashbuckle.FluentValidation" Version="6.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" PrivateAssets="all" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.80" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="8.0.8" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.11.0" />
@@ -55,17 +55,17 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.61.3" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.63.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.1.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="7.5.1" />
-    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.0.2" />
     <PackageVersion Include="Microsoft.JSInterop" Version="8.0.4" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.80" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageVersion Include="MudBlazor" Version="7.2.0" />
+    <PackageVersion Include="MudBlazor" Version="7.6.0" />
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageVersion Include="Refit" Version="7.1.2" />
@@ -80,7 +80,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.4.5" />
     <PackageVersion Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
