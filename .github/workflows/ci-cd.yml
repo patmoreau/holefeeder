@@ -80,9 +80,15 @@ jobs:
     needs: set-version
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api, web]
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+      DOCKERFILE_PATH: ''
 
     steps:
       - uses: actions/checkout@v4
@@ -96,72 +102,53 @@ jobs:
         with:
           install: true
 
-      - name: Restore Docker cache for api
+      - name: Set Dockerfile path
+        id: dockerfile-path
+        run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+
+      - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
+          path: /tmp/.buildx-${{ matrix.target }}-cache
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
           restore-keys: |
-            ${{ runner.os }}-api-
+            ${{ runner.os }}-${{ matrix.target }}-
 
-      - name: Restore Docker cache for web
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
-          restore-keys: |
-            ${{ runner.os }}-web-
-
-      - name: Build api container
+      - name: Build ${{ matrix.target }} container
         uses: docker/build-push-action@v6
         with:
           load: true
           context: .
-          file: ./src/Holefeeder.Api/Dockerfile
+          file: ${{ env.DOCKERFILE_PATH }}
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
-          tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-api-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-api-cache-new
-
-      - name: Build Holefeeder.Web container
-        uses: docker/build-push-action@v6
-        with:
-          load: true
-          context: .
-          file: ./src/Holefeeder.Web/Dockerfile
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: false
-          tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-web-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-web-cache-new
+          tags: holefeeder/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-${{ matrix.target }}-cache-new
 
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
       - name: Move cache
         run: |
-          rm -rf /tmp/.buildx-api-cache
-          mv /tmp/.buildx-api-cache-new /tmp/.buildx-api-cache
-          rm -rf /tmp/.buildx-web-cache
-          mv /tmp/.buildx-web-cache-new /tmp/.buildx-web-cache
+          rm -rf /tmp/.buildx-${{ matrix.target }}-cache
+          mv /tmp/.buildx-${{ matrix.target }}-cache-new /tmp/.buildx-${{ matrix.target }}-cache
 
-      - name: Save Docker cache for api
+      - name: Save Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
-
-      - name: Save Docker cache for web
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
+          path: /tmp/.buildx-${{ matrix.target }}-cache
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
 
   tests:
     name: Tests
     needs: [set-version, build]
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api-unit-tests, api-functional-tests]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
@@ -197,18 +184,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-web-
 
-      - name: Api unit tests
+      - name: Running ${{ matrix.target }}
         run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
-
-      - name: Api functional tests
-        run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run ${{ matrix.target }}
 
       - name: Tests cleanup
         run: |
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.target }}
+          path: ./tests-results/**/*.trx
+          retention-days: 1 # Keep for 1 day
+
+  tests-reporter:
+    name: Tests reporter
+    needs: [tests]
+    runs-on: ubuntu-latest
+
+    env:
+      BADGE_COLOR: ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          path: ./tests-results
+          pattern: test-results-*
+          merge-multiple: true
 
       - name: Test Report
         uses: dorny/test-reporter@v1
@@ -267,9 +275,16 @@ jobs:
     name: Publish Docker Images
     needs: [set-version, tests, tagging]
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api, web]
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+      DOCKERFILE_PATH: ''
 
     steps:
       - uses: actions/checkout@v4
@@ -287,43 +302,28 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Restore Docker cache for api
+      - name: Set Dockerfile path
+        id: dockerfile-path
+        run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+
+      - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
+          path: /tmp/.buildx-${{ matrix.target }}-cache
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
           restore-keys: |
-            ${{ runner.os }}-api-
+            ${{ runner.os }}-${{ matrix.target }}-
 
-      - name: Restore Docker cache for web
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
-          restore-keys: |
-            ${{ runner.os }}-web-
-
-      - name: Publish api container
+      - name: Publish ${{ matrix.target }} container
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./src/Holefeeder.Api/Dockerfile
+          file: ${{ env.DOCKERFILE_PATH }}
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-api:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-api-cache
-
-      - name: Publish web container
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./src/Holefeeder.Web/Dockerfile
-          target: final
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-web:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-web-cache
+          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
 
   deploy:
     name: Deploy to DigitalOcean
@@ -391,5 +391,5 @@ jobs:
     if: always() && needs.check_changes.result == 'success'
     with:
       code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
-      check_name: "build-completed"
+      check_name: 'build-completed'
       check_result: ${{ needs.tests.result }}

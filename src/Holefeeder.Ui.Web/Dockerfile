@@ -21,7 +21,7 @@ RUN dotnet restore src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
 ###################################
 # Build stage
 ###################################
-FROM restore as build
+FROM restore AS build
 ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /source
@@ -34,7 +34,7 @@ RUN dotnet publish /property:Version=${VERSION} /property:UseAppHost=false -c Re
 ###################################
 # Final stage
 ###################################
-FROM nginx:alpine as final
+FROM nginx:alpine AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 8080
 
