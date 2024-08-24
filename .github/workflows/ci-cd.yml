@@ -83,11 +83,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ['api', 'web']
+        target: [api, web]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+      DOCKERFILE_PATH: ''
 
     steps:
       - uses: actions/checkout@v4
@@ -101,11 +102,15 @@ jobs:
         with:
           install: true
 
+      - name: Set Dockerfile path
+        id: dockerfile-path
+        run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-${{ matrix.target }}-cache
-          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile') }}
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.target }}-
 
@@ -114,7 +119,7 @@ jobs:
         with:
           load: true
           context: .
-          file: ./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile
+          file: ${{ env.DOCKERFILE_PATH }}
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
           tags: holefeeder/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
@@ -133,7 +138,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-${{ matrix.target }}-cache
-          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile') }}
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
 
   tests:
     name: Tests
