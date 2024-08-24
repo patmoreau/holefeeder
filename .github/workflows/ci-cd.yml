@@ -80,6 +80,11 @@ jobs:
     needs: set-version
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ['api', 'web']
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -96,67 +101,39 @@ jobs:
         with:
           install: true
 
-      - name: Restore Docker cache for api
+      - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
+          path: /tmp/.buildx-${{ matrix.target }}-cache
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile') }}
           restore-keys: |
-            ${{ runner.os }}-api-
+            ${{ runner.os }}-${{ matrix.target }}-
 
-      - name: Restore Docker cache for web
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
-          restore-keys: |
-            ${{ runner.os }}-web-
-
-      - name: Build api container
+      - name: Build ${{ matrix.target }} container
         uses: docker/build-push-action@v6
         with:
           load: true
           context: .
-          file: ./src/Holefeeder.Api/Dockerfile
+          file: ./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
-          tags: holefeeder/holefeeder-api:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-api-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-api-cache-new
-
-      - name: Build Holefeeder.Web container
-        uses: docker/build-push-action@v6
-        with:
-          load: true
-          context: .
-          file: ./src/Holefeeder.Web/Dockerfile
-          build-args: BUILD_VERSION=${{ env.VERSION }}
-          push: false
-          tags: holefeeder/holefeeder-web:${{ env.VERSION }}
-          cache-from: type=local,src=/tmp/.buildx-web-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-web-cache-new
+          tags: holefeeder/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-${{ matrix.target }}-cache-new
 
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
       - name: Move cache
         run: |
-          rm -rf /tmp/.buildx-api-cache
-          mv /tmp/.buildx-api-cache-new /tmp/.buildx-api-cache
-          rm -rf /tmp/.buildx-web-cache
-          mv /tmp/.buildx-web-cache-new /tmp/.buildx-web-cache
+          rm -rf /tmp/.buildx-${{ matrix.target }}-cache
+          mv /tmp/.buildx-${{ matrix.target }}-cache-new /tmp/.buildx-${{ matrix.target }}-cache
 
-      - name: Save Docker cache for api
+      - name: Save Docker cache for ${{ matrix.target }}
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
-
-      - name: Save Docker cache for web
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
+          path: /tmp/.buildx-${{ matrix.target }}-cache
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('./src/Holefeeder.${{ matrix.target | capitalize }}/Dockerfile') }}
 
   tests:
     name: Tests
@@ -391,5 +368,5 @@ jobs:
     if: always() && needs.check_changes.result == 'success'
     with:
       code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
-      check_name: "build-completed"
+      check_name: 'build-completed'
       check_result: ${{ needs.tests.result }}
