@@ -145,6 +145,11 @@ jobs:
     needs: [set-version, build]
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api-unit-tests, api-functional-tests]
+
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
@@ -179,18 +184,35 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-web-
 
-      - name: Api unit tests
+      - name: Running ${{ matrix.target }}
         run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-unit-tests
-
-      - name: Api functional tests
-        run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run api-functional-tests
+          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run ${{ matrix.target }}
 
       - name: Tests cleanup
         run: |
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ./tests-results/**/*.trx
+
+  tests-reporter:
+    name: Tests reporter
+    needs: [tests]
+    runs-on: ubuntu-latest
+
+    env:
+      BADGE_COLOR: ''
+
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: ./tests-results
 
       - name: Test Report
         uses: dorny/test-reporter@v1
