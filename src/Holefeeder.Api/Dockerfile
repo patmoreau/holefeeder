@@ -33,7 +33,7 @@ RUN dotnet restore tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.c
 ###################################
 # Build stage
 ###################################
-FROM restore as build
+FROM restore AS build
 ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /source
@@ -51,19 +51,19 @@ RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 ###################################
 # Unit tests stage
 ###################################
-FROM build as unittests
+FROM build AS unittests
 WORKDIR /source/tests/Holefeeder.UnitTests
 
 ###################################
 # Functional tests stage
 ###################################
-FROM build as functionaltests
+FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
 
 ###################################
 # Final stage
 ###################################
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 as final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 EXPOSE 443
