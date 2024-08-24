@@ -5,45 +5,36 @@ using DrifterApps.Seeds.Testing.Infrastructure;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 
-using LightBDD.Framework;
-using LightBDD.Framework.Scenarios;
-using LightBDD.XUnit2;
-
 namespace Holefeeder.FunctionalTests.Features;
 
-[FeatureDescription(@"In order to test the security")]
+[Collection("Api Security collection")]
 [ComponentTest]
-public partial class FeatureSecurity(ApiApplicationSecurityDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : BaseFeature(apiApplicationDriver, testOutputHelper)
+[Category("Security")]
+public partial class FeatureSecurity(ApiApplicationSecurityDriver apiApplicationDriver, ITestOutputHelper testOutputHelper) : SecurityScenario(apiApplicationDriver, testOutputHelper)
 {
-    [Scenario]
-    [ScenarioCategory("Security")]
+    [Theory]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenAuthorizedUser(ApiResource endpoint) =>
-        await Runner.RunScenarioAsync(
-            _ => Given_an_authorized_user(),
-            _ => When_I_invoke_the_resource(endpoint),
-            _ => Then_user_should_be_authorized_to_access_endpoint()
-        );
+    public Task WhenAuthorizedUser(ApiResource endpoint) =>
+        ScenarioFor("an authorized user", runner =>
+            runner.Given(User.IsAuthorized)
+                .When(stepRunner => TheResourceIsInvoked(stepRunner, endpoint))
+                .Then(UserShouldBeAuthorizedToAccessEndpoint));
 
-    [Scenario]
-    [ScenarioCategory("Security")]
+    [Theory]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenForbiddenUser(ApiResource endpoint) =>
-        await Runner.RunScenarioAsync(
-            _ => Given_a_forbidden_user(),
-            _ => When_I_invoke_the_resource(endpoint),
-            _ => Then_user_should_be_forbidden_to_access_endpoint()
-        );
+    public Task WhenForbiddenUser(ApiResource endpoint) =>
+        ScenarioFor("a forbidden user", runner =>
+            runner.Given(User.IsForbidden)
+                .When(stepRunner => TheResourceIsInvoked(stepRunner, endpoint))
+                .Then(UserShouldBeForbiddenToAccessEndpoint));
 
-    [Scenario]
-    [ScenarioCategory("Security")]
+    [Theory]
     [MemberData(nameof(SecuredEndpointTestCases))]
-    public async Task WhenUnauthorizedUser(ApiResource endpoint) =>
-        await Runner.RunScenarioAsync(
-            _ => Given_an_unauthorized_user(),
-            _ => When_I_invoke_the_resource(endpoint),
-            _ => Then_user_should_not_be_authorized_to_access_endpoint()
-        );
+    public Task WhenUnauthorizedUser(ApiResource endpoint) =>
+        ScenarioFor("an unauthorized user", runner =>
+            runner.Given(User.IsUnauthorized)
+                .When(stepRunner => TheResourceIsInvoked(stepRunner, endpoint))
+                .Then(UserShouldNotBeAuthorizedToAccessEndpoint));
 
     public static IEnumerable<object[]> SecuredEndpointTestCases
     {
