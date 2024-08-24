@@ -55,13 +55,13 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.63.0" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.64.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.1.0" />
-    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="7.5.1" />
+    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="7.7.1" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.2" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.2" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.JSInterop" Version="8.0.4" />
+    <PackageVersion Include="Microsoft.JSInterop" Version="8.0.8" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.80" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
