@@ -1,0 +1,84 @@
+services:
+  reverse-proxy:
+    volumes:
+      # Map the certificats into the container
+      - .docker/certs:/etc/certs:ro
+
+  mariadb:
+    ports:
+      - 3306:3306
+
+  api:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    # build:
+    #   context: .
+    #   dockerfile: ./src/Holefeeder.Api/Dockerfile
+    #   tags:
+    #     - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}'
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      FeatureManagement__temp-new-azure-b2c-config: true
+    command:
+      [
+        'dotnet',
+        'watch',
+        'run',
+        '--project',
+        'src/Holefeeder.Api/Holefeeder.Api.csproj',
+      ]
+
+  web:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    # build:
+    #   context: .
+    #   dockerfile: ./src/Holefeeder.Web/Dockerfile
+    #   tags:
+    #     - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}'
+    volumes:
+      - .:/app
+    working_dir: /app
+    command:
+      [
+        'dotnet',
+        'watch',
+        'run',
+        '--project',
+        'src/Holefeeder.Web/Holefeeder.Web.csproj',
+      ]
+
+  ui:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    container_name: ui
+    restart: unless-stopped
+    depends_on:
+      - api
+    # build:
+    #   context: .
+    #   dockerfile: ./src/Holefeeder.Ui.Web/Dockerfile
+    #   tags:
+    #     - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-ui:${VERSION:-latest}'
+    expose:
+      - 80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${Env}
+    volumes:
+      - .:/app
+      - .docker/nginx/nginx.Staging.conf:/etc/nginx/nginx.conf:ro
+    working_dir: /app
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'traefik.http.routers.ui-router.entrypoints=websecure'
+      - 'traefik.http.routers.ui-router.rule=Host(`holefeeder-ui.${DOMAIN}`)'
+      - 'traefik.http.routers.ui-router.tls=true'
+      - 'traefik.http.routers.ui-router.tls.certresolver=acme_certresolver'
+    command:
+      [
+        'dotnet',
+        'watch',
+        'run',
+        '--project',
+        'src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj',
+      ]

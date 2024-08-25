@@ -1,4 +1,0 @@
-services:
-  dotnet-container:
-    build: .
-    command: sleep infinity

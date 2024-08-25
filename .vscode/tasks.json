@@ -2,49 +2,61 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Holefeeder.Api/Holefeeder.Api.csproj",
+                "${workspaceFolder}/src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj",
+                "${workspaceFolder}/src/Holefeeder.Web/Holefeeder.Web.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "type": "dotnet-meteor.task",
             "target": "build",
             "args": [],
             "problemMatcher": [],
             "label": "dotnet-meteor: build",
         },
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
+        // {
+        //     "label": "build",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "build",
+        //         "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+        //         "/property:GenerateFullPaths=true",
+        //         "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
+        // {
+        //     "label": "publish",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "publish",
+        //         "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+        //         "/property:GenerateFullPaths=true",
+        //         "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
+        // {
+        //     "label": "watch",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "watch",
+        //         "run",
+        //         "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+        //         "/property:GenerateFullPaths=true",
+        //         "/consoleloggerparameters:NoSummary"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
         {
             "label": "holefeeder test",
             "command": "dotnet",

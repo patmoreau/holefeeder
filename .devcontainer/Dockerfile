@@ -13,5 +13,8 @@ RUN mkdir -p $NVM_DIR \
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
+# Install Angular CLI
+RUN npm install -g @angular/cli
+
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH

@@ -2,10 +2,77 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Holefeeder.Ui.Web",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/Holefeeder.Ui.Web/bin/Debug/net8.0/BlazorApp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Holefeeder.Ui.Web",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Holefeeder.Api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/Holefeeder.Api/bin/Debug/net8.0/Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Holefeeder.Api",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Holefeeder.Web",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/Holefeeder.Web/bin/Debug/net8.0/Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Holefeeder.Web",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
             "name": ".NET Meteor Debugger",
             "type": "dotnet-meteor.debugger",
             "request": "launch",
             "preLaunchTask": "dotnet-meteor: build"
+        },
+        {
+            "name": "Blazor Debug",
+            "type": "blazorwasm",
+            "request": "launch",
+            "url": "https://localhost:7172",
+            "webRoot": "${workspaceFolder}/bin/Debug/net8.0/wwwroot"
         },
         {
             "name": "Launch and Debug Blazor WebAssembly",
