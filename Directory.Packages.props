@@ -38,7 +38,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.80" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.82" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="8.0.8" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.11.0" />
@@ -62,8 +62,8 @@
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.0.2" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.0.2" />
     <PackageVersion Include="Microsoft.JSInterop" Version="8.0.8" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.80" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.82" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="MudBlazor" Version="7.6.0" />
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
