@@ -7,7 +7,7 @@
     <PackageVersion Include="Ardalis.SmartEnum.SystemTextJson" Version="8.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Hangfire" Version="8.0.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.MySql" Version="8.0.1" />
-    <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="8.0.1" />
+    <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="8.0.2" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.1" />
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
