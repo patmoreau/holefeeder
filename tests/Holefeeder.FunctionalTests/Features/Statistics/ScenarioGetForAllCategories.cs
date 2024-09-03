@@ -3,6 +3,8 @@ using DrifterApps.Seeds.Testing.Attributes;
 using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.Accounts;
@@ -15,7 +17,7 @@ namespace Holefeeder.FunctionalTests.Features.Statistics;
 [Collection("Api collection")]
 public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    private readonly Guid _userId = TestUsers[AuthorizedUser].UserId;
+    private readonly UserId _userId = TestUsers[AuthorizedUser].UserId;
 
     private readonly Dictionary<string, Category> _categories = new();
     private readonly Dictionary<string, Account> _accounts = new();
@@ -24,11 +26,11 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
     public Task WhenGettingStatistics() =>
         ScenarioFor("A user sends was to know his statistics", runner =>
             runner.Given("the user is authorized", GivenUserIsAuthorized)
-                .And("a 'purchase' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("purchase", "credit card", new DateOnly(2023, 2, 1), 500.5m))
-                .And("a 'food and drink' transaction was made on the 'credit card' account in December 2022", () => CreateTransaction("food and drink", "credit card", new DateOnly(2022, 12, 1), 100.1m))
-                .And("a 'food and drink' transaction was made on the 'credit card' account in January 2023", () => CreateTransaction("food and drink", "credit card", new DateOnly(2023, 1, 1), 200.2m))
-                .And("a 'food and drink' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("food and drink", "credit card", new DateOnly(2023, 2, 1), 300.3m))
-                .And("a second 'food and drink' transaction was made on the 'checking' account in February 2023", () => CreateTransaction("food and drink", "checking", new DateOnly(2023, 2, 10), 400.4m))
+                .And("a 'purchase' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("purchase", "credit card", new DateOnly(2023, 2, 1), Money.Create(500.5m).Value))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in December 2022", () => CreateTransaction("food and drink", "credit card", new DateOnly(2022, 12, 1), Money.Create(100.1m).Value))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in January 2023", () => CreateTransaction("food and drink", "credit card", new DateOnly(2023, 1, 1), Money.Create(200.2m).Value))
+                .And("a 'food and drink' transaction was made on the 'credit card' account in February 2023", () => CreateTransaction("food and drink", "credit card", new DateOnly(2023, 2, 1), Money.Create(300.3m).Value))
+                .And("a second 'food and drink' transaction was made on the 'checking' account in February 2023", () => CreateTransaction("food and drink", "checking", new DateOnly(2023, 2, 10), Money.Create(400.4m).Value))
                 .When("user gets their statistics", () => QueryEndpoint(ApiResources.GetForAllCategories))
                 .Then("the total for the year should match the expected", ValidateResponse));
 
@@ -62,7 +64,7 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
             );
     }
 
-    private async Task CreateTransaction(string categoryName, string accountName, DateOnly date, decimal amount)
+    private async Task CreateTransaction(string categoryName, string accountName, DateOnly date, Money amount)
     {
         if (!_categories.TryGetValue(categoryName, out var category))
         {

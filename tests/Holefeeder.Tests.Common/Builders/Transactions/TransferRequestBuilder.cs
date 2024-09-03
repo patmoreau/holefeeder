@@ -9,25 +9,46 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransferRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Date.RecentDateOnly(), faker.Finance.Amount(),
-            faker.Lorem.Sentence(),
-            faker.RandomGuid(), faker.RandomGuid()))
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
+        .RuleFor(x => x.Amount, MoneyBuilder.Create().Build())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
-        .RuleFor(x => x.FromAccountId, faker => faker.RandomGuid())
-        .RuleFor(x => x.ToAccountId, faker => faker.RandomGuid());
+        .RuleFor(x => x.FromAccountId, faker => (AccountId)faker.RandomGuid())
+        .RuleFor(x => x.ToAccountId, faker => (AccountId)faker.RandomGuid());
 
     public TransferRequestBuilder FromAccount(Account account)
     {
-        FakerRules.RuleFor(x => x.FromAccountId, account.Id);
+        Faker.RuleFor(x => x.FromAccountId, account.Id);
+        return this;
+    }
+
+    public TransferRequestBuilder WithNoDestinationAccount()
+    {
+        Faker.RuleFor(x => x.ToAccountId, faker => faker.PickRandom(AccountId.Empty, default, null!));
+        return this;
+    }
+
+    public TransferRequestBuilder WithNoSourceAccount()
+    {
+        Faker.RuleFor(x => x.FromAccountId, faker => faker.PickRandom(AccountId.Empty, default, null!));
         return this;
     }
 
     public TransferRequestBuilder ToAccount(Account account)
     {
-        FakerRules.RuleFor(x => x.ToAccountId, account.Id);
+        Faker.RuleFor(x => x.ToAccountId, account.Id);
+        return this;
+    }
+
+    public TransferRequestBuilder WithNoDate()
+    {
+        Faker.RuleFor(x => x.Date, faker => faker.PickRandom(DateOnly.MinValue, default));
+        return this;
+    }
+
+    public TransferRequestBuilder WithAmount(decimal amount)
+    {
+        Faker.RuleFor(x => x.Amount, amount);
         return this;
     }
 
@@ -36,7 +57,7 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
     public static TransferRequestBuilder GivenAnInvalidTransfer()
     {
         var builder = new TransferRequestBuilder();
-        builder.FakerRules.RuleFor(x => x.FromAccountId, Guid.Empty);
+        builder.Faker.RuleFor(x => x.FromAccountId, AccountId.Empty);
         return builder;
     }
 }

@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestB
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class CreateStoreItemTests
 {
     [Fact]
@@ -15,7 +15,7 @@ public class CreateStoreItemTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Code);
@@ -30,7 +30,7 @@ public class CreateStoreItemTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Data);
@@ -45,7 +45,7 @@ public class CreateStoreItemTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

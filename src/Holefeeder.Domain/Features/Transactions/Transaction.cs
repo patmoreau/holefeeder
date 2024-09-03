@@ -1,162 +1,49 @@
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
 
 namespace Holefeeder.Domain.Features.Transactions;
 
-public record Transaction : IAggregateRoot
+public partial record Transaction : IAggregateRoot
 {
-    private readonly Guid _accountId;
-    private readonly decimal _amount;
-    private readonly Guid _categoryId;
-    private readonly DateOnly _date;
-    private readonly Guid _id;
-    private readonly Guid _userId;
+    private IReadOnlyCollection<string> _tags = [];
 
-    public required Guid Id
+    private Transaction(TransactionId id, DateOnly date, Money amount, AccountId accountId, CategoryId categoryId, UserId userId)
     {
-        get => _id;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new TransactionDomainException($"{nameof(Id)} is required", nameof(Transaction));
-            }
-
-            _id = value;
-        }
+        Id = id;
+        Date = date;
+        Amount = amount;
+        AccountId = accountId;
+        CategoryId = categoryId;
+        UserId = userId;
     }
 
-    public required DateOnly Date
-    {
-        get => _date;
-        init
-        {
-            if (value.Equals(default))
-            {
-                throw new TransactionDomainException($"{nameof(Date)} is required", nameof(Transaction));
-            }
+    public TransactionId Id { get; private init; }
 
-            _date = value;
-        }
-    }
+    public DateOnly Date { get; private init; }
 
-    public required decimal Amount
-    {
-        get => _amount;
-        init
-        {
-            if (value < 0m)
-            {
-                throw new TransactionDomainException($"{nameof(Amount)} cannot be negative", nameof(Transaction));
-            }
-
-            _amount = value;
-        }
-    }
+    public Money Amount { get; private init; }
 
     public string Description { get; init; } = string.Empty;
 
-    public required Guid AccountId
-    {
-        get => _accountId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new TransactionDomainException($"{nameof(AccountId)} is required", nameof(Transaction));
-            }
-
-            _accountId = value;
-        }
-    }
+    public AccountId AccountId { get; init; }
 
     public Account? Account { get; init; }
 
-    public required Guid CategoryId
-    {
-        get => _categoryId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new TransactionDomainException($"{nameof(CategoryId)} is required", nameof(Transaction));
-            }
-
-            _categoryId = value;
-        }
-    }
+    public CategoryId CategoryId { get; init; }
 
     public Category? Category { get; init; }
 
-    public Guid? CashflowId { get; private set; }
+    public CashflowId? CashflowId { get; private init; }
+
     public Cashflow? Cashflow { get; init; }
 
-    public DateOnly? CashflowDate { get; private set; }
+    public DateOnly? CashflowDate { get; private init; }
 
-    public IReadOnlyCollection<string> Tags { get; private set; } = ImmutableList<string>.Empty;
+    public IReadOnlyCollection<string> Tags => _tags.ToImmutableList();
 
-    public required Guid UserId
-    {
-        get => _userId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new TransactionDomainException($"{nameof(UserId)} is required", nameof(Transaction));
-            }
-
-            _userId = value;
-        }
-    }
-
-    public static Transaction Create(Guid id, DateOnly date, decimal amount, string description, Guid accountId,
-        Guid categoryId, Guid userId) =>
-        new()
-        {
-            Id = id,
-            Date = date,
-            Amount = amount,
-            AccountId = accountId,
-            CategoryId = categoryId,
-            UserId = userId,
-            Description = description
-        };
-
-    public static Transaction Create(DateOnly date, decimal amount, string description, Guid accountId, Guid categoryId,
-        Guid userId) =>
-        new()
-        {
-            Id = Guid.NewGuid(),
-            Date = date,
-            Amount = amount,
-            AccountId = accountId,
-            CategoryId = categoryId,
-            UserId = userId,
-            Description = description
-        };
-
-    public Transaction SetTags(params string[] tags)
-    {
-        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().ToList();
-
-        Tags = newTags.ToImmutableArray();
-        return this;
-    }
-
-    public Transaction ApplyCashflow(Guid cashflowId, DateOnly cashflowDate)
-    {
-        if (cashflowId.Equals(Guid.Empty))
-        {
-            throw new TransactionDomainException($"{nameof(CashflowId)} is required", nameof(Transaction));
-        }
-
-        if (cashflowDate.Equals(default))
-        {
-            throw new TransactionDomainException($"{nameof(CashflowDate)} is required", nameof(Transaction));
-        }
-
-        CashflowId = cashflowId;
-        CashflowDate = cashflowDate;
-        return this;
-    }
+    public UserId UserId { get; init; }
 }
+
+public sealed record TransactionId : StronglyTypedId<TransactionId>;

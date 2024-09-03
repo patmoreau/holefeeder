@@ -1,71 +1,88 @@
+using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.StoreItem;
-using Holefeeder.Tests.Common.Builders.StoreItems;
+using Holefeeder.Domain.Features.Users;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class StoreItemTests
 {
-    [Fact]
-    public void GivenStoreItem_WhenIdIsNull_ThenThrowException()
-    {
-        // arrange
-
-        // act
-        Action action = () => _ = StoreItemBuilder.GivenAStoreItem().WithNoId().Build();
-
-        // assert
-        action.Should()
-            .Throw<ObjectStoreDomainException>()
-            .WithMessage("'Id' is required")
-            .And
-            .Context.Should().Be(nameof(StoreItem));
-    }
+    private readonly Driver _driver = new();
 
     [Theory]
     [InlineData("")]
     [InlineData(null)]
     [InlineData(" ")]
-    public void GivenStoreItem_WhenCodeIsNull_ThenThrowException(string? code)
+    public void GivenCreate_WhenCodeIsInvalid_ThenReturnFailure(string? code)
     {
         // arrange
+        var driver = _driver.WithCode(code!);
 
         // act
-        Action action = () => _ = StoreItemBuilder.GivenAStoreItem().WithCode(code!).Build();
+        var result = driver.Build();
 
         // assert
-        action.Should()
-            .Throw<ObjectStoreDomainException>()
-            .WithMessage("'Code' is required")
-            .And
-            .Context.Should().Be(nameof(StoreItem));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([StoreItemErrors.CodeRequired]));
     }
 
     [Fact]
-    public void GivenStoreItem_WhenUserIdIsNull_ThenThrowException()
+    public void GivenCreate_WhenUserIdIsInvalid_ThenReturnFailure()
     {
         // arrange
+        var driver = _driver.WithEmptyUserId();
 
         // act
-        Action action = () => _ = StoreItemBuilder.GivenAStoreItem().ForNoUser().Build();
+        var result = driver.Build();
 
         // assert
-        action.Should()
-            .Throw<ObjectStoreDomainException>()
-            .WithMessage("'UserId' is required")
-            .And
-            .Context.Should().Be(nameof(StoreItem));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([StoreItemErrors.UserIdRequired]));
     }
 
     [Fact]
-    public void GivenStoreItem_WhenValid_ThenValidEntity()
+    public void GivenCreate_WhenValid_ThenReturnSuccessWithObject()
     {
         // arrange
 
         // act
-        var item = StoreItemBuilder.GivenAStoreItem().Build();
+        var result = _driver.Build();
 
         // assert
-        item.Should().NotBeNull();
+        using var scope = new AssertionScope();
+        result.Should().BeSuccessful().WithValue(result.Value);
+        _driver.ShouldBeValidStoreItem(result.Value);
+    }
+
+    private sealed class Driver : IDriverOf<Result<StoreItem>>
+    {
+        private static readonly Faker Faker = new();
+        private string _code = Faker.Random.Word();
+        private readonly string _data = Faker.Random.Words();
+        private UserId _userId = (UserId)Faker.Random.Guid();
+
+        public Result<StoreItem> Build() => StoreItem.Create(_code, _data, _userId);
+
+        public Driver WithCode(string code)
+        {
+            _code = code;
+            return this;
+        }
+
+        public Driver WithEmptyUserId()
+        {
+            _userId = UserId.Empty;
+            return this;
+        }
+
+        public void ShouldBeValidStoreItem(StoreItem storeItem)
+        {
+            using var scope = new AssertionScope();
+            storeItem.Id.Should().NotBe(StoreItemId.Empty);
+            storeItem.Code.Should().Be(_code);
+            storeItem.Data.Should().Be(_data);
+        }
     }
 }

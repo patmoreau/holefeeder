@@ -6,20 +6,19 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class GetUpcomingRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.Date.PastDateOnly(), faker.Date.FutureDateOnly()))
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
         .RuleFor(fake => fake.From, fake => fake.Date.PastDateOnly())
         .RuleFor(fake => fake.To, fake => fake.Date.FutureDateOnly());
 
     public GetUpcomingRequestBuilder From(DateOnly from)
     {
-        FakerRules.RuleFor(x => x.From, from);
+        Faker.RuleFor(x => x.From, from);
         return this;
     }
 
     public GetUpcomingRequestBuilder To(DateOnly to)
     {
-        FakerRules.RuleFor(x => x.To, to);
+        Faker.RuleFor(x => x.To, to);
         return this;
     }
 
@@ -27,8 +26,8 @@ internal class GetUpcomingRequestBuilder : FakerBuilder<Request>
 
     public static GetUpcomingRequestBuilder GivenAnInvalidUpcomingRequest()
     {
-        GetUpcomingRequestBuilder builder = new();
-        builder.FakerRules
+        var builder = new GetUpcomingRequestBuilder();
+        builder.Faker
             .RuleFor(fake => fake.To, fake => fake.Date.PastDateOnly())
             .RuleFor(fake => fake.From, fake => fake.Date.FutureDateOnly());
         return builder;

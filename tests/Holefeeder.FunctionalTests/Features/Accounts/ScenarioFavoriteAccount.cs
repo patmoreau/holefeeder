@@ -4,6 +4,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +28,7 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
 
         await WhenUserSetsFavoriteAccount(request);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -63,14 +64,14 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
 
         await using var dbContext = DatabaseDriver.CreateDbContext();
 
-        var result = await dbContext.FindByIdAsync<Account>(entity.Id);
+        var result = await dbContext.Accounts.FindAsync(entity.Id);
         result.Should().NotBeNull();
         result!.Favorite.Should().BeTrue();
     }
 
     private async Task WhenUserSetsFavoriteAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.FavoriteAccount, json);
     }
 }

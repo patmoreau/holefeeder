@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.DeleteTransactionRequ
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class DeleteTransactionTests
 {
     [Fact]
@@ -15,7 +15,7 @@ public class DeleteTransactionTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);

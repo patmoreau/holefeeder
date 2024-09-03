@@ -11,6 +11,7 @@ end_of_line = crlf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+max_line_length = 120
 
 # C# files
 [*.cs]
@@ -60,6 +61,7 @@ dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1812.severity = none # this is not needed because using IoC
 dotnet_diagnostic.CA2007.severity = none # this is not relevant when in ASP.NET Core application
+dotnet_diagnostic.S125.severity = suggestion
 dotnet_diagnostic.S2094.severity = none
 dotnet_diagnostic.S2699.severity = none
 resharper_class_never_instantiated_global_highlighting = none # this is not needed because using IoC

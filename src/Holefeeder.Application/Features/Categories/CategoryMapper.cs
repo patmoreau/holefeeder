@@ -7,9 +7,7 @@ namespace Holefeeder.Application.Features.Categories;
 internal static class CategoryMapper
 {
     public static CategoryInfoViewModel MapToCategoryInfoViewModel(Category entity) =>
-        new CategoryInfoViewModel(entity.Id, entity.Name, entity.Type, entity.Color);
-
-    public static CategoryViewModel? MapToDtoOrNull(Category? entity) => entity is null ? null : MapToDto(entity);
+        new(entity.Id, entity.Name, entity.Type, entity.Color);
 
     public static CategoryViewModel MapToDto(Category entity)
     {

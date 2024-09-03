@@ -1,13 +1,16 @@
 using DrifterApps.Seeds.Application.Mediatr;
-
-using FluentValidation.Results;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Features.StoreItems;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -22,77 +25,117 @@ public class Transfer : ICarterModule
         app.MapPost("api/v2/transactions/transfer",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result =
-                        await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetTransaction), new { Id = result.FromTransactionId }, result);
+                    var result = await mediator.Send(request, cancellationToken);
+                    return result switch
+                    {
+                        { IsFailure: true } => result.Error.ToProblem(),
+                        _ => Results.CreatedAtRoute(nameof(GetTransaction), new { Id = (Guid)result.Value.FromTransactionId },
+                            result.Value)
+                    };
                 })
-            .Produces<Guid>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .WithTags(nameof(Transactions))
             .WithName(nameof(Transfer))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request(DateOnly Date, decimal Amount, string Description, Guid FromAccountId, Guid ToAccountId) : IRequest<(Guid FromTransactionId, Guid ToTransactionId)>, IUnitOfWorkRequest;
+    internal record Request(
+        DateOnly Date,
+        Money Amount,
+        string Description,
+        AccountId FromAccountId,
+        AccountId ToAccountId) : IRequest<Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>,
+        IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
-            RuleFor(command => command.FromAccountId).NotNull().NotEmpty();
-            RuleFor(command => command.ToAccountId).NotNull().NotEmpty();
+            RuleFor(command => command.FromAccountId).NotNull().NotEqual(AccountId.Empty);
+            RuleFor(command => command.ToAccountId).NotNull().NotEqual(AccountId.Empty);
             RuleFor(command => command.Date).NotEmpty();
-            RuleFor(command => command.Amount).GreaterThanOrEqualTo(0);
         }
     }
 
     internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, (Guid FromTransactionId, Guid ToTransactionId)>
+        : IRequestHandler<Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>
     {
-        public async Task<(Guid FromTransactionId, Guid ToTransactionId)> Handle(Request request,
-            CancellationToken cancellationToken)
-        {
-            var errors = new List<(string, string)>();
+        public Task<Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>> Handle(
+            Request request, CancellationToken cancellationToken) =>
+            ActiveAccountExistsAsync(request.FromAccountId, cancellationToken)
+                .OnSuccess(() => ActiveAccountExistsAsync(request.ToAccountId, cancellationToken))
+                .OnSuccess(FindCategoriesAsync(cancellationToken))
+                .OnSuccess(CreateTransactionsAsync(request, cancellationToken));
 
-            if (!await ActiveAccountExistsAsync(request.FromAccountId, cancellationToken))
-            {
-                errors.Add((nameof(request.FromAccountId), $"From account {request.FromAccountId} does not exists"));
-            }
-
-            if (!await ActiveAccountExistsAsync(request.ToAccountId, cancellationToken))
-            {
-                errors.Add((nameof(request.ToAccountId), $"To account {request.ToAccountId} does not exists"));
-            }
-
-            var transferTo = await FirstCategoryAsync("Transfer In", cancellationToken);
-            var transferFrom = await FirstCategoryAsync("Transfer Out", cancellationToken);
-
-            var transactionFrom = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, transferFrom.Id, userContext.Id);
-
-            await context.Transactions.AddAsync(transactionFrom, cancellationToken);
-
-            var transactionTo = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.ToAccountId, transferTo.Id, userContext.Id);
-
-            await context.Transactions.AddAsync(transactionTo, cancellationToken);
-
-            if (errors.Count > 0)
-            {
-                throw new ValidationException("Transfer error",
-                    errors.Select(x => new ValidationFailure(x.Item1, x.Item2)));
-            }
-
-            return errors is [_, ..] ? (Guid.Empty, Guid.Empty) : (transactionFrom.Id, transactionTo.Id);
-        }
-
-        private async Task<Category> FirstCategoryAsync(string categoryName, CancellationToken cancellationToken) =>
-            await context.Categories
-                .FirstAsync(x => x.UserId == userContext.Id && x.Name == categoryName, cancellationToken);
-
-        private async Task<bool> ActiveAccountExistsAsync(Guid accountId, CancellationToken cancellationToken) =>
+        private async Task<Result> ActiveAccountExistsAsync(AccountId accountId, CancellationToken cancellationToken) =>
             await context.Accounts.AnyAsync(
                 x => x.Id == accountId && x.UserId == userContext.Id && !x.Inactive,
-                cancellationToken);
+                cancellationToken)
+                ? Result.Success()
+                : Result.Failure(TransactionErrors.AccountNotFound(accountId));
+
+        private Func<Task<Result<(Category TransferFrom, Category TransferTo)>>> FindCategoriesAsync(
+            CancellationToken cancellationToken) =>
+            async () =>
+            {
+                const string categoryFromName = "Transfer In";
+                const string categoryToName = "Transfer Out";
+                var categoryFrom = await context.Categories
+                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == categoryFromName,
+                        cancellationToken);
+                if (categoryFrom is null)
+                {
+                    return Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
+                        TransactionErrors.CategoryNameNotFound(categoryFromName));
+                }
+
+                var categoryTo = await context.Categories
+                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == categoryToName,
+                        cancellationToken);
+                return categoryTo is null
+                    ? Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
+                        TransactionErrors.CategoryNameNotFound(categoryToName))
+                    : Result<(Category CategoryFrom, Category CategoryTo)>.Success((categoryFrom, categoryTo));
+            };
+
+        private Func<(Category TransferFrom, Category TransferTo),
+                Task<Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>>
+            CreateTransactionsAsync(Request request, CancellationToken cancellationToken) =>
+            async categories =>
+            {
+                var transactionFrom = await CreateTransactionAsync(categories.TransferFrom, request, cancellationToken);
+                if (transactionFrom.IsFailure)
+                {
+                    return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
+                        transactionFrom
+                            .Error);
+                }
+
+                var transactionTo = await CreateTransactionAsync(categories.TransferTo, request, cancellationToken);
+                if (transactionTo.IsFailure)
+                {
+                    return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
+                        transactionTo
+                            .Error);
+                }
+
+                return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>
+                    .Success((transactionFrom.Value.Id, transactionTo.Value.Id));
+            };
+
+        private async Task<Result<Transaction>> CreateTransactionAsync(Category category, Request request,
+            CancellationToken cancellationToken)
+        {
+            var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
+                request.FromAccountId, category.Id, userContext.Id);
+            if (transaction.IsFailure)
+            {
+                return Result<Transaction>.Failure(transaction.Error);
+            }
+
+            await context.Transactions.AddAsync(transaction.Value, cancellationToken);
+            return Result<Transaction>.Success(transaction.Value);
+        }
     }
 }

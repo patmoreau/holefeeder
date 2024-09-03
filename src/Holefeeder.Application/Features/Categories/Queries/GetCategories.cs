@@ -4,7 +4,6 @@ using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
-using Holefeeder.Domain.Features.Categories;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +39,7 @@ public class GetCategories : ICarterModule
     {
         public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            List<Category> result = await context.Categories
+            var result = await context.Categories
                 .Where(x => x.UserId == userContext.Id)
                 .OrderByDescending(x => x.Favorite)
                 .ThenBy(x => x.Name)

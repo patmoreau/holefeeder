@@ -8,6 +8,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.FunctionalTests.StepDefinitions;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -70,7 +71,7 @@ public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestO
     [AssertionMethod]
     private void AValidationErrorShouldBeReceived(IStepRunner runner) =>
         runner.Execute("should receive a validation error",
-            () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+            () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest));
 
     [AssertionMethod]
     private void TheAccountShouldNotBeFound(IStepRunner runner) => runner.Execute("the account should not be found", () => ShouldExpectStatusCode(HttpStatusCode.NotFound));
@@ -86,14 +87,14 @@ public class CloseAccountScenario(ApiApplicationDriver applicationDriver, ITestO
 
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Account>(account.Id);
+            var result = await dbContext.Accounts.FindAsync(account.Id);
             result.Should().NotBeNull();
             result!.Inactive.Should().BeTrue();
         });
 
     private async Task SendRequest(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CloseAccount, json);
     }
 }

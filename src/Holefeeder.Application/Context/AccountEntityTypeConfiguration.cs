@@ -1,4 +1,8 @@
+using DrifterApps.Seeds.Application.Context;
+
+using Holefeeder.Application.Context.Converters;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,6 +22,7 @@ internal class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder
             .Property(e => e.Id)
             .HasColumnName("id")
+            .HasConversion<StronglyTypedIdValueConverter<AccountId>>()
             .IsRequired();
         builder
             .Property(e => e.Type)
@@ -35,6 +40,7 @@ internal class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder
             .Property(e => e.OpenBalance)
             .HasColumnName("open_balance")
+            .HasConversion<MoneyValueConverter>()
             .IsRequired();
         builder
             .Property(e => e.OpenDate)
@@ -50,6 +56,7 @@ internal class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")
+            .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
         builder
             .HasMany(e => e.Cashflows)

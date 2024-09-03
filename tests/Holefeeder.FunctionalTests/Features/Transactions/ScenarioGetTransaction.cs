@@ -33,7 +33,7 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
 
         await WhenUserGetTransaction(Guid.Empty);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -67,21 +67,21 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
                 .And
                 .BeEquivalentTo(new
                 {
-                    transaction.Id,
+                    Id = (Guid)transaction.Id,
                     transaction.Date,
-                    transaction.Amount,
+                    Amount = (decimal)transaction.Amount,
                     transaction.Description,
                     transaction.Tags,
                     Category = new
                     {
-                        category.Id,
+                        Id = (Guid)category.Id,
                         category.Name,
                         category.Type,
-                        category.Color
+                        Color = (string)category.Color
                     },
                     Account = new
                     {
-                        account.Id,
+                        Id = (Guid)account.Id,
                         account.Name
                     }
                 });

@@ -1,126 +1,86 @@
-using Holefeeder.Domain.Features.Accounts;
+using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.Testing;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
+using Holefeeder.Tests.Common.Builders;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class AccountTests
 {
-    private readonly Faker _faker = new();
+    private readonly Driver _driver = new();
 
     [Fact]
     public void GivenConstructor_WhenIdEmpty_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveAccount().WithId(Guid.Empty);
+        var driver = _driver.WithEmptyId();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.BuildWithImport();
 
         // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("Id is required")
-            .And
-            .Context.Should().Be(nameof(Account));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.IdRequired]));
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string name)
+    [ClassData(typeof(NameValidationData))]
+    public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string? name)
     {
         // arrange
-        var builder = GivenAnActiveAccount().WithName(name);
+        var driver = _driver.WithName(name!);
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("Name must be from 1 to 100 characters")
-            .And
-            .Context.Should().Be(nameof(Account));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenNameIsTooLong_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveAccount().WithName(_faker.Random.Words().ClampLength(256));
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("Name must be from 1 to 100 characters")
-            .And
-            .Context.Should().Be(nameof(Account));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.NameRequired]));
     }
 
     [Fact]
     public void GivenConstructor_WhenOpenDateIsMissing_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveAccount().WithOpenDate(default);
+        var driver = _driver.WithOpenDate(default);
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("OpenDate is required")
-            .And
-            .Context.Should().Be(nameof(Account));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.OpenDateRequired]));
     }
 
     [Fact]
     public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
     {
         // arrange
-        var builder = GivenAnActiveAccount().ForNoUser();
+        var driver = _driver.WithEmptyUserId();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.BuildWithImport();
 
         // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("UserId is required")
-            .And
-            .Context.Should().Be(nameof(Account));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.UserIdRequired]));
     }
 
     [Fact]
     public void GivenCloseAccount_WhenClosing_ThenThrowException()
     {
         // arrange
-        var account = GivenAnInactiveAccount().Build();
+        var account = _driver.IsInactive().BuildWithImport().Value;
 
         // act
-        Action action = () => account.Close();
+        var result = account.Close();
 
         // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("Account already closed")
-            .And
-            .Context.Should().Be(nameof(Account));
-    }
-
-    [Fact]
-    public void GivenOpenAccountWithCashflows_WhenClosing_ThenThrowException()
-    {
-        // arrange
-        var account = GivenAnActiveAccount().WithActiveCashflows().Build();
-
-        // act
-        Action action = () => account.Close();
-
-        // assert
-        action.Should().Throw<AccountDomainException>()
-            .WithMessage("Account has active cashflows")
-            .And
-            .Context.Should().Be(nameof(Account));
+        result.Should().BeFailure().WithError(AccountErrors.AccountClosed);
     }
 
     [Theory]
@@ -129,12 +89,106 @@ public class AccountTests
     public void GivenAccount_WhenSetAsFavorite_ThenAccountIsModified(bool favorite)
     {
         // arrange
-        var account = GivenAnActiveAccount().IsFavorite(!favorite).Build();
+        var account = _driver.IsFavorite(!favorite).Build().Value;
 
         // act
-        account = account with { Favorite = favorite };
+        var result = account.Modify(favorite: favorite);
 
         // assert
-        account.Favorite.Should().Be(favorite);
+        result.Should().BeSuccessful();
+        result.Value.Favorite.Should().Be(favorite);
+    }
+
+    private sealed class Driver : IDriverOf<Result<Account>>
+    {
+        private static readonly Faker Faker = new();
+        private AccountId _accountId = AccountId.New;
+        private readonly AccountType _accountType = Faker.PickRandom<AccountType>(AccountType.List);
+        private string _name = Faker.Lorem.Word();
+        private readonly Money _openBalance = MoneyBuilder.Create().Build();
+        private DateOnly _openDate = Faker.Date.RecentDateOnly();
+        private readonly string _description = Faker.Lorem.Sentence();
+        private bool _favorite = Faker.Random.Bool();
+        private bool _inactive = Faker.Random.Bool();
+        private UserId _userId = (UserId)Faker.Random.Guid();
+
+        public Result<Account> Build() =>
+            Account.Create(_accountType,
+                _name,
+                _openBalance,
+                _openDate,
+                _description,
+                _userId);
+
+        public Result<Account> BuildWithImport() =>
+            Account.Import(_accountId,
+                _accountType,
+                _name,
+                _openBalance,
+                _openDate,
+                _description,
+                _favorite,
+                _inactive,
+                _userId);
+
+        public Driver WithEmptyId()
+        {
+            _accountId = AccountId.Empty;
+            return this;
+        }
+
+        public Driver WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+
+        public Driver WithOpenDate(DateOnly openDate)
+        {
+            _openDate = openDate;
+            return this;
+        }
+
+        public Driver IsFavorite(bool favorite)
+        {
+            _favorite = favorite;
+            return this;
+        }
+
+        public Driver IsInactive()
+        {
+            _inactive = true;
+            return this;
+        }
+
+        public Driver WithEmptyUserId()
+        {
+            _userId = UserId.Empty;
+            return this;
+        }
+
+        public void ShouldBeValid(Account account)
+        {
+            using var scope = new AssertionScope();
+            account.Id.Should().Be(_accountId);
+            account.Type.Should().Be(_accountType);
+            account.Name.Should().Be(_name);
+            account.OpenBalance.Should().Be(_openBalance);
+            account.OpenDate.Should().Be(_openDate);
+            account.Favorite.Should().Be(_favorite);
+            account.Inactive.Should().Be(_inactive);
+            account.UserId.Should().Be(_userId);
+        }
+    }
+
+    internal sealed class NameValidationData : TheoryData<string?>
+    {
+        public NameValidationData()
+        {
+            Add(null);
+            Add(string.Empty);
+            Add("       ");
+            Add(new Faker().Random.Words().ClampLength(256));
+        }
     }
 }

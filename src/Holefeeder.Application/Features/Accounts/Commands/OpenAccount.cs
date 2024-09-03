@@ -1,10 +1,14 @@
 using DrifterApps.Seeds.Application.Mediatr;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.Accounts.Queries;
+using Holefeeder.Application.Features.StoreItems;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +24,12 @@ public class OpenAccount : ICarterModule
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(request, cancellationToken);
-                    return Results.CreatedAtRoute(nameof(GetAccount), new { Id = result }, new { Id = result });
+                    return result switch
+                    {
+                        { IsSuccess: false } => result.Error.ToProblem(),
+                        _ => Results.CreatedAtRoute(nameof(GetAccount), new { Id = (Guid)result.Value },
+                            new { Id = (Guid)result.Value })
+                    };
                 })
             .Produces<Guid>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -29,8 +38,8 @@ public class OpenAccount : ICarterModule
             .WithName(nameof(OpenAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request(AccountType Type, string Name, DateOnly OpenDate, decimal OpenBalance, string Description)
-        : IRequest<Guid>, IUnitOfWorkRequest;
+    internal record Request(AccountType Type, string Name, DateOnly OpenDate, Money OpenBalance, string Description)
+        : IRequest<Result<AccountId>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
@@ -42,22 +51,28 @@ public class OpenAccount : ICarterModule
         }
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Guid>
+    internal class Handler(IUserContext userContext, BudgetingContext context)
+        : IRequestHandler<Request, Result<AccountId>>
     {
-        public async Task<Guid> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<AccountId>> Handle(Request request, CancellationToken cancellationToken)
         {
             if (await context.Accounts.AnyAsync(x => x.Name == request.Name && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                throw new AccountDomainException($"Name '{request.Name}' already exists.");
+                return Result<AccountId>.Failure(AccountErrors.NameAlreadyExists(request.Name));
             }
 
-            var account = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
+            var result = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
                 request.Description, userContext.Id);
 
-            await context.Accounts.AddAsync(account, cancellationToken);
+            if (result.IsFailure)
+            {
+                return Result<AccountId>.Failure(result.Error);
+            }
 
-            return account.Id;
+            await context.Accounts.AddAsync(result.Value, cancellationToken);
+
+            return Result<AccountId>.Success(result.Value.Id);
         }
     }
 }

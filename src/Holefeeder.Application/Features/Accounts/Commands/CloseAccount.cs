@@ -1,9 +1,12 @@
 using DrifterApps.Seeds.Application.Mediatr;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Features.Accounts.Exceptions;
+using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Features.StoreItems;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.Accounts;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +21,12 @@ public class CloseAccount : ICarterModule
         app.MapPost("api/v2/accounts/close-account",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    _ = await mediator.Send(request, cancellationToken);
-                    return Results.NoContent();
+                    var result = await mediator.Send(request, cancellationToken);
+                    return result switch
+                    {
+                        { IsSuccess: false } => result.Error.ToProblem(),
+                        _ => Results.NoContent()
+                    };
                 })
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status204NoContent)
@@ -28,28 +35,32 @@ public class CloseAccount : ICarterModule
             .WithName(nameof(CloseAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
     {
-        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
         {
             var account = await context.Accounts
-                // .AsNoTracking()
                 .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
-                throw new AccountNotFoundException(request.Id);
+                return Result.Failure(AccountErrors.NotFound(request.Id));
             }
 
-            context.Update(account.Close());
+            var closedAccount = account.Close();
+            if (closedAccount.IsFailure)
+            {
+                return closedAccount;
+            }
+            context.Update(closedAccount.Value);
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 
-    internal record Request(Guid Id) : IRequest<Unit>, IUnitOfWorkRequest;
+    internal record Request(AccountId Id) : IRequest<Result>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
+        public Validator() => RuleFor(command => command.Id).NotNull().NotEqual(AccountId.Empty);
     }
 }

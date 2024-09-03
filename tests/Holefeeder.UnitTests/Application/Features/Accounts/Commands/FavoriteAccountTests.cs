@@ -1,29 +1,38 @@
-using Holefeeder.Tests.Common.Extensions;
-
 using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
+using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBuilder;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class FavoriteAccountTests
 {
-    private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.RandomGuid(), faker.Random.Bool()))
-        .RuleFor(x => x.Id, faker => faker.RandomGuid())
-        .RuleFor(x => x.IsFavorite, faker => faker.Random.Bool());
-
     [Fact]
-    public void GivenValidator_WhenIdIsEmpty_ThenValidationError()
+    public void GivenValidator_WhenIdIsMissing_ThenValidationError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, _ => Guid.Empty).Generate();
+        var request = GivenAFavoriteAccountRequest().WithMissingId().Build();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
+    }
+
+    [Fact]
+    public void GivenValidator_WhenValidRequest_ThenNoValidationError()
+    {
+        // arrange
+        var request = GivenAFavoriteAccountRequest().Build();
+
+        var validator = new Validator();
+
+        // act
+        var result = validator.TestValidate(request);
+
+        // assert
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }

@@ -12,7 +12,7 @@ public class GetAccountTypes : ICarterModule
         app.MapGet("api/v2/enumerations/get-account-types",
                 async (IMediator mediator) =>
                 {
-                    IReadOnlyCollection<AccountType> result = await mediator.Send(new Request());
+                    var result = await mediator.Send(new Request());
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<AccountType>>()

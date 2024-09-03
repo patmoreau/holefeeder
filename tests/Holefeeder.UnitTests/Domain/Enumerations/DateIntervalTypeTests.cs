@@ -2,7 +2,7 @@ using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.UnitTests.Domain.Enumerations;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class DateIntervalTypeTests
 {
     public static TheoryData<DateOnly, DateOnly, DateIntervalType, int, DateOnly> NextDateTestCases()

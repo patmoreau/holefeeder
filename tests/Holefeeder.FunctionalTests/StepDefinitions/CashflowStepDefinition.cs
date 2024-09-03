@@ -10,6 +10,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using MediatR;
 
@@ -37,7 +38,7 @@ internal sealed class CashflowStepDefinition(
         {
             var request = runner.GetContextData<IBaseRequest>(ContextCashflowRequest);
 
-            var json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
 
             ApiResource apiResource = default!;
             if (request is CancelCashflow.Request)

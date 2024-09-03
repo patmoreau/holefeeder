@@ -8,25 +8,34 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker =>
-            new Request(faker.PickRandom<AccountType>(AccountType.List),
-                faker.Lorem.Word(), faker.Date.PastDateOnly(), faker.Finance.Amount(), faker.Lorem.Sentence()))
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word())
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
+        .RuleFor(x => x.OpenBalance, MoneyBuilder.Create().Build())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.OpenDate, faker => faker.Date.PastDateOnly());
 
     public OpenAccountRequestBuilder WithName(string name)
     {
-        FakerRules.RuleFor(x => x.Name, name);
+        Faker.RuleFor(x => x.Name, name);
         return this;
     }
 
     public OpenAccountRequestBuilder WithNoName()
     {
-        FakerRules.RuleFor(x => x.Name, string.Empty);
+        Faker.RuleFor(x => x.Name, string.Empty);
+        return this;
+    }
+
+    public OpenAccountRequestBuilder WithNoType()
+    {
+        Faker.RuleFor(x => x.Type, faker => null!);
+        return this;
+    }
+
+    public OpenAccountRequestBuilder WithNoOpenDate()
+    {
+        Faker.RuleFor(x => x.OpenDate, DateOnly.MinValue);
         return this;
     }
 

@@ -1,41 +1,17 @@
 namespace Holefeeder.Domain.Features.Users;
 
-public sealed record User : IAggregateRoot
+public sealed partial record User : IAggregateRoot
 {
-    private readonly Guid _id;
-
-    public required Guid Id
+    private User(UserId id)
     {
-        get => _id;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new UserDomainException($"{nameof(Id)} is required");
-            }
-
-            _id = value;
-        }
+        Id = id;
     }
 
-    public bool Inactive { get; init; }
+    public UserId Id { get; }
 
-    public ICollection<UserIdentity> UserIdentities { get; init; } = [];
+    public bool Inactive { get; private init; }
 
-    public static User Create() =>
-        new()
-        {
-            Id = Guid.NewGuid(),
-            Inactive = false
-        };
-
-    public User Close()
-    {
-        if (Inactive)
-        {
-            throw new UserDomainException("User already closed");
-        }
-
-        return this with { Inactive = true };
-    }
+    public IReadOnlyCollection<UserIdentity> UserIdentities { get; private init; } = [];
 }
+
+public sealed record UserId : StronglyTypedId<UserId>;

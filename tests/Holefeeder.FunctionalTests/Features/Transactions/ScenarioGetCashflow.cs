@@ -34,7 +34,7 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
 
         await WhenUserGetCashflow(Guid.Empty);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -69,9 +69,9 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
                 .And
                 .BeEquivalentTo(new
                 {
-                    cashflow.Id,
+                    Id = (Guid)cashflow.Id,
                     cashflow.EffectiveDate,
-                    cashflow.Amount,
+                    Amount = (decimal)cashflow.Amount,
                     cashflow.IntervalType,
                     cashflow.Frequency,
                     cashflow.Recurrence,
@@ -80,14 +80,14 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
                     cashflow.Tags,
                     Category = new
                     {
-                        category.Id,
+                        Id = (Guid)category.Id,
                         category.Name,
                         category.Type,
-                        category.Color
+                        Color = (string)category.Color
                     },
                     Account = new
                     {
-                        account.Id,
+                        Id = (Guid)account.Id,
                         account.Name
                     }
                 });

@@ -4,6 +4,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
 
         await WhenUserModifiedATransaction(request);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -41,7 +42,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
         await WhenUserModifiedATransaction(request);
 
         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
-            $"Account '{request.AccountId}' does not exists.");
+            $"Account '{request.AccountId.Value}' does not exists.");
     }
 
     [Fact]
@@ -59,7 +60,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
         await WhenUserModifiedATransaction(request);
 
         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
-            $"Category '{request.CategoryId}' does not exists.");
+            $"Category '{request.CategoryId.Value}' does not exists.");
     }
 
     [Fact]
@@ -83,7 +84,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
         await WhenUserModifiedATransaction(request);
 
         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.NotFound,
-            $"'{request.Id}' not found");
+            $"Transaction '{request.Id.Value}' not found");
     }
 
     [Fact]
@@ -116,14 +117,14 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
 
         await using var dbContext = DatabaseDriver.CreateDbContext();
 
-        var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await dbContext.Transactions.FindAsync(transaction.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiedATransaction(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyTransaction, json);
     }
 }

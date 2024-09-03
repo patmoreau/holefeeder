@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Holefeeder.UnitTests.Application;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class HandlerRegistrationTests
 {
     [Fact]

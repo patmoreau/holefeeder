@@ -1,7 +1,9 @@
+using Holefeeder.Domain.Features.Users;
+
 namespace Holefeeder.Application.UserContext;
 
 internal interface IUserContext
 {
-    Guid Id { get; }
+    UserId Id { get; }
 }
 

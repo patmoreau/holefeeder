@@ -45,5 +45,6 @@
                 "askForPassword": true
             }
         ],
+        "diffEditor.codeLens": true,
     }
 }

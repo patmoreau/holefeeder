@@ -12,7 +12,7 @@ public class GetDateIntervalTypes : ICarterModule
         app.MapGet("api/v2/enumerations/get-date-interval-types",
                 async (IMediator mediator) =>
                 {
-                    IReadOnlyCollection<DateIntervalType> result = await mediator.Send(new Request());
+                    var result = await mediator.Send(new Request());
                     return Results.Ok(result);
                 })
             .Produces<IReadOnlyCollection<DateIntervalType>>()

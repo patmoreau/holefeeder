@@ -8,6 +8,7 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -91,7 +92,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         {
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Account>(account.Id);
+            var result = await dbContext.Accounts.FindAsync(account.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(account);
         }
@@ -100,7 +101,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         {
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Category>(category.Id);
+            var result = await dbContext.Categories.FindAsync(category.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(category);
         }
@@ -109,7 +110,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         {
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
+            var result = await dbContext.Cashflows.FindAsync(cashflow.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(cashflow);
         }
@@ -118,7 +119,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         {
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+            var result = await dbContext.Transactions.FindAsync(transaction.Id);
             result.Should().NotBeNull();
             result!.Should().BeEquivalentTo(transaction);
         }
@@ -126,7 +127,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
 
     private async Task WhenUserImportsData(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ImportData, json);
     }
 
