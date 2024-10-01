@@ -25,7 +25,7 @@ public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestO
 
         await QueryEndpoint(ApiResources.GetCashflows, -1);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]

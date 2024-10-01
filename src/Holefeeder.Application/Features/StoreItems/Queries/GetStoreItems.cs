@@ -2,9 +2,11 @@ using System.Reflection;
 
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;
@@ -20,9 +22,16 @@ public class GetStoreItems : ICarterModule
         app.MapGet("api/v2/store-items",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var results = await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Append("X-Total-Count", $"{results.Total}");
-                    return Results.Ok(results.Items);
+                    var result = await mediator.Send(request, cancellationToken);
+                    switch (result)
+                    {
+                        case { IsFailure: true }:
+                            return result.Error.ToProblem();
+                        default:
+                            ctx.Response.Headers.Append("X-Total-Count", $"{result.Value.Total}");
+                            return Results.Ok(result.Value.Items);
+                    }
+
                 })
             .Produces<QueryResult<Response>>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -34,7 +43,7 @@ public class GetStoreItems : ICarterModule
             .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
-        : IRequest<QueryResult<Response>>, IRequestQuery
+        : IRequest<Result<QueryResult<Response>>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter) =>
             context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
@@ -44,25 +53,24 @@ public class GetStoreItems : ICarterModule
 
     internal class Validator : QueryValidatorRoot<Request>;
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, QueryResult<Response>>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<QueryResult<Response>>>
     {
-        private readonly BudgetingContext _context = context;
-        private readonly IUserContext _userContext = userContext;
-
-        public async Task<QueryResult<Response>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<QueryResult<Response>>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var total = await _context.StoreItems.Where(e => e.UserId == _userContext.Id)
+            var queryParams = QueryParams.Create(request);
+            if (queryParams.IsFailure)
+            {
+                return Result<QueryResult<Response>>.Failure(queryParams.Error);
+            }
+            var total = await context.StoreItems.Where(e => e.UserId == userContext.Id)
                 .CountAsync(cancellationToken);
-            var items = await _context.StoreItems
-                .Where(e => e.UserId == _userContext.Id)
-                .Filter(request.Filter)
-                .Sort(request.Sort)
-                .Skip(request.Offset)
-                .Take(request.Limit)
+            var items = await context.StoreItems
+                .Where(e => e.UserId == userContext.Id)
+                .Query(queryParams.Value)
                 .Select(e => new Response(e.Id, e.Code, e.Data))
                 .ToListAsync(cancellationToken);
 
-            return new QueryResult<Response>(total, items);
+            return Result<QueryResult<Response>>.Success(new QueryResult<Response>(total, items));
         }
     }
 }

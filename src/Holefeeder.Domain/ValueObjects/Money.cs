@@ -1,6 +1,6 @@
 namespace Holefeeder.Domain.ValueObjects;
 
-public readonly struct Money : IEquatable<Money>
+public readonly struct Money : IEquatable<Money>, IPrimitiveType<decimal>
 {
     public decimal Value { get; private init; }
 
@@ -11,6 +11,8 @@ public readonly struct Money : IEquatable<Money>
         : Result<Money>.Success(new Money { Value = value });
 
     public static implicit operator decimal(Money value) => value.Value;
+
+    public static implicit operator Money(decimal value) => Money.Create(value).Value;
 
     public static Money Zero => new() { Value = decimal.Zero };
 
@@ -29,6 +31,8 @@ public readonly struct Money : IEquatable<Money>
             decimal otherDecimal => Value == otherDecimal,
             _ => false
         };
+
+    public Money ToMoney() => Value;
 }
 
 public static class MoneyValueErrors

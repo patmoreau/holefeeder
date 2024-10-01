@@ -25,7 +25,7 @@ public class ModifyAccount : ICarterModule
                     var result = await mediator.Send(request, cancellationToken);
                     return result switch
                     {
-                        { IsSuccess: false } => result.Error.ToProblem(),
+                        { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.NoContent()
                     };
                 })

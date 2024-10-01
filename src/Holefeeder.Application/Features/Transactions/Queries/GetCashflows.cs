@@ -2,9 +2,11 @@ using System.Reflection;
 
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Extensions;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
 
@@ -21,10 +23,15 @@ public class GetCashflows : ICarterModule
         app.MapGet("api/v2/cashflows",
                 async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var (total, viewModels) =
-                        await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
-                    return Results.Ok(viewModels);
+                    var result = await mediator.Send(request, cancellationToken);
+                    switch (result)
+                    {
+                        case { IsFailure: true }:
+                            return result.Error.ToProblem();
+                        default:
+                            ctx.Response.Headers.Append("X-Total-Count", $"{result.Value.Total}");
+                            return Results.Ok(result.Value.Items);
+                    }
                 })
             .Produces<IEnumerable<CashflowInfoViewModel>>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -36,7 +43,7 @@ public class GetCashflows : ICarterModule
             .RequireAuthorization(Policies.ReadUser);
 
     internal record Request(int Offset, int Limit, string[] Sort, string[] Filter)
-        : IRequest<QueryResult<CashflowInfoViewModel>>, IRequestQuery
+        : IRequest<Result<QueryResult<CashflowInfoViewModel>>>, IRequestQuery
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter) =>
             context.ToQueryRequest((offset, limit, sort, filter) => new Request(offset, limit, sort, filter));
@@ -45,24 +52,27 @@ public class GetCashflows : ICarterModule
     internal class Validator : QueryValidatorRoot<Request>;
 
     internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, QueryResult<CashflowInfoViewModel>>
+        : IRequestHandler<Request, Result<QueryResult<CashflowInfoViewModel>>>
     {
-        public async Task<QueryResult<CashflowInfoViewModel>> Handle(Request request,
+        public async Task<Result<QueryResult<CashflowInfoViewModel>>> Handle(Request request,
             CancellationToken cancellationToken)
         {
+            var queryParams = QueryParams.Create(request);
+            if (queryParams.IsFailure)
+            {
+                return Result<QueryResult<CashflowInfoViewModel>>.Failure(queryParams.Error);
+            }
+
             var total = await context.Cashflows.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
             var items = await context.Cashflows
                 .Include(e => e.Account)
                 .Include(e => e.Category)
                 .Where(e => e.UserId == userContext.Id)
-                .Filter(request.Filter)
-                .Sort(request.Sort)
-                .Skip(request.Offset)
-                .Take(request.Limit)
+                .Query(queryParams.Value)
                 .Select(e => CashflowMapper.MapToDto(e))
                 .ToListAsync(cancellationToken);
 
-            return new QueryResult<CashflowInfoViewModel>(total, items);
+            return Result<QueryResult<CashflowInfoViewModel>>.Success(new QueryResult<CashflowInfoViewModel>(total, items));
         }
     }
 }

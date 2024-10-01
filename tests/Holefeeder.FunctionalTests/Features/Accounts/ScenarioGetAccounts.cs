@@ -22,7 +22,7 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
 
         await QueryEndpoint(ApiResources.GetAccounts, -1);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.Transfer;
@@ -46,7 +47,7 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
         return this;
     }
 
-    public TransferRequestBuilder WithAmount(decimal amount)
+    public TransferRequestBuilder WithAmount(Money amount)
     {
         Faker.RuleFor(x => x.Amount, amount);
         return this;

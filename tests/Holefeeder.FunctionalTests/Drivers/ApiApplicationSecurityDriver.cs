@@ -81,8 +81,8 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
     private IRequestHandler<ModifyAccount.Request, Result> ModifyAccountHandler { get; } = CreateSubstitute<ModifyAccount.Request, Result>();
     private IRequestHandler<OpenAccount.Request, Result<AccountId>> OpenAccountHandler { get; } = CreateSubstitute<OpenAccount.Request, Result<AccountId>>();
     private IRequestHandler<GetAccount.Request, Result<AccountViewModel>> GetAccountHandler { get; } = CreateSubstitute<GetAccount.Request, Result<AccountViewModel>>();
-    private IRequestHandler<GetAccounts.Request, QueryResult<AccountViewModel>> GetAccountsHandler { get; } = CreateSubstitute<GetAccounts.Request, QueryResult<AccountViewModel>>();
-    private IRequestHandler<GetCategories.Request, QueryResult<CategoryViewModel>> GetCategoriesHandler { get; } = CreateSubstitute<GetCategories.Request, QueryResult<CategoryViewModel>>();
+    private IRequestHandler<GetAccounts.Request, Result<QueryResult<AccountViewModel>>> GetAccountsHandler { get; } = CreateSubstitute<GetAccounts.Request, Result<QueryResult<AccountViewModel>>>();
+    private IRequestHandler<GetCategories.Request, Result<QueryResult<CategoryViewModel>>> GetCategoriesHandler { get; } = CreateSubstitute<GetCategories.Request, Result<QueryResult<CategoryViewModel>>>();
     private IRequestHandler<GetAccountTypes.Request, IReadOnlyCollection<AccountType>> GetAccountTypesHandler { get; } = CreateSubstitute<GetAccountTypes.Request, IReadOnlyCollection<AccountType>>();
     private IRequestHandler<GetCategoryTypes.Request, IReadOnlyCollection<CategoryType>> GetCategoryTypesHandler { get; } = CreateSubstitute<GetCategoryTypes.Request, IReadOnlyCollection<CategoryType>>();
     private IRequestHandler<GetDateIntervalTypes.Request, IReadOnlyCollection<DateIntervalType>> GetDateIntervalTypesHandler { get; } = CreateSubstitute<GetDateIntervalTypes.Request, IReadOnlyCollection<DateIntervalType>>();
@@ -94,7 +94,7 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
     private IRequestHandler<CreateStoreItem.Request, Result<StoreItemId>> CreateStoreItemHandler { get; } = CreateSubstitute<CreateStoreItem.Request, Result<StoreItemId>>();
     private IRequestHandler<ModifyStoreItem.Request, Result> ModifyStoreItemHandler { get; } = CreateSubstitute<ModifyStoreItem.Request, Result>();
     private IRequestHandler<GetStoreItem.Request, Result<StoreItemViewModel>> GetStoreItemHandler { get; } = CreateSubstitute<GetStoreItem.Request, Result<StoreItemViewModel>>();
-    private IRequestHandler<GetStoreItems.Request, QueryResult<GetStoreItems.Response>> GetStoreItemsHandler { get; } = CreateSubstitute<GetStoreItems.Request, QueryResult<GetStoreItems.Response>>();
+    private IRequestHandler<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>> GetStoreItemsHandler { get; } = CreateSubstitute<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>>();
     private IRequestHandler<GetTagsWithCount.Request, IEnumerable<TagDto>> GetTagsWithCountHandler { get; } = CreateSubstitute<GetTagsWithCount.Request, IEnumerable<TagDto>>();
     private IRequestHandler<CancelCashflow.Request, Result> CancelCashflowHandler { get; } = CreateSubstitute<CancelCashflow.Request, Result>();
     private IRequestHandler<DeleteTransaction.Request, Result> DeleteTransactionHandler { get; } = CreateSubstitute<DeleteTransaction.Request, Result>();
@@ -104,9 +104,9 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
     private IRequestHandler<PayCashflow.Request, Result<TransactionId>> PayCashflowHandler { get; } = CreateSubstitute<PayCashflow.Request, Result<TransactionId>>();
     private IRequestHandler<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>> TransferHandler { get; } = CreateSubstitute<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>();
     private IRequestHandler<GetCashflow.Request, Result<CashflowInfoViewModel>> GetCashflowHandler { get; } = CreateSubstitute<GetCashflow.Request, Result<CashflowInfoViewModel>>();
-    private IRequestHandler<GetCashflows.Request, QueryResult<CashflowInfoViewModel>> GetCashflowsHandler { get; } = CreateSubstitute<GetCashflows.Request, QueryResult<CashflowInfoViewModel>>();
+    private IRequestHandler<GetCashflows.Request, Result<QueryResult<CashflowInfoViewModel>>> GetCashflowsHandler { get; } = CreateSubstitute<GetCashflows.Request, Result<QueryResult<CashflowInfoViewModel>>>();
     private IRequestHandler<GetTransaction.Request, Result<TransactionInfoViewModel>> GetTransactionHandler { get; } = CreateSubstitute<GetTransaction.Request, Result<TransactionInfoViewModel>>();
-    private IRequestHandler<GetTransactions.Request, QueryResult<TransactionInfoViewModel>> GetTransactionsHandler { get; } = CreateSubstitute<GetTransactions.Request, QueryResult<TransactionInfoViewModel>>();
+    private IRequestHandler<GetTransactions.Request, Result<QueryResult<TransactionInfoViewModel>>> GetTransactionsHandler { get; } = CreateSubstitute<GetTransactions.Request, Result<QueryResult<TransactionInfoViewModel>>>();
     private IRequestHandler<GetUpcoming.Request, QueryResult<UpcomingViewModel>> GetUpcomingHandler { get; } = CreateSubstitute<GetUpcoming.Request, QueryResult<UpcomingViewModel>>();
 
     private static IRequestHandler<TRequest, TResponse> CreateSubstitute<TRequest, TResponse>()

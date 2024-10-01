@@ -1,7 +1,9 @@
 using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
 
@@ -18,10 +20,15 @@ public class GetCategories : ICarterModule
         app.MapGet("api/v2/categories",
                 async (IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var (total, viewModels) =
-                        await mediator.Send(new Request(), cancellationToken);
-                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
-                    return Results.Ok(viewModels);
+                    var result = await mediator.Send(new Request(), cancellationToken);
+                    switch (result)
+                    {
+                        case { IsFailure: true }:
+                            return result.Error.ToProblem();
+                        default:
+                            ctx.Response.Headers.Append("X-Total-Count", $"{result.Value.Total}");
+                            return Results.Ok(result.Value.Items);
+                    }
                 })
             .Produces<IEnumerable<CategoryViewModel>>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -32,12 +39,13 @@ public class GetCategories : ICarterModule
 
     internal class Validator : AbstractValidator<Request>;
 
-    internal record Request : IRequest<QueryResult<CategoryViewModel>>;
+    internal record Request : IRequest<Result<QueryResult<CategoryViewModel>>>;
 
     internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, QueryResult<CategoryViewModel>>
+        : IRequestHandler<Request, Result<QueryResult<CategoryViewModel>>>
     {
-        public async Task<QueryResult<CategoryViewModel>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<QueryResult<CategoryViewModel>>> Handle(Request request,
+            CancellationToken cancellationToken)
         {
             var result = await context.Categories
                 .Where(x => x.UserId == userContext.Id)
@@ -45,7 +53,8 @@ public class GetCategories : ICarterModule
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
+            return Result<QueryResult<CategoryViewModel>>.Success(
+                new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result)));
         }
     }
 }

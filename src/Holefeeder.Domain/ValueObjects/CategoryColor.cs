@@ -4,7 +4,7 @@ using System.Drawing;
 namespace Holefeeder.Domain.ValueObjects;
 
 [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
-public readonly struct CategoryColor : IEquatable<CategoryColor>
+public readonly struct CategoryColor : IEquatable<CategoryColor>, IPrimitiveType<Color>
 {
     public Color Value { get; private init; }
 

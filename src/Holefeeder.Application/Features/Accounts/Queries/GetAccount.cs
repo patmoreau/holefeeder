@@ -23,7 +23,7 @@ public class GetAccount : ICarterModule
                     var result = await mediator.Send(new Request(AccountId.Create(id)), cancellationToken);
                     return result switch
                     {
-                        { IsSuccess: false } => result.Error.ToProblem(),
+                        { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.Ok(result.Value)
                     };
                 })

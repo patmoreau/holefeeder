@@ -26,7 +26,7 @@ public class OpenAccount : ICarterModule
                     var result = await mediator.Send(request, cancellationToken);
                     return result switch
                     {
-                        { IsSuccess: false } => result.Error.ToProblem(),
+                        { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.CreatedAtRoute(nameof(GetAccount), new { Id = (Guid)result.Value },
                             new { Id = (Guid)result.Value })
                     };

@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Carter;
 
 using DrifterApps.Seeds.Application.Converters;
@@ -26,7 +28,14 @@ builder.Services
     .AddHealthChecks(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
-    .AddHangfireRequestScheduler();
+    .AddHangfireRequestScheduler(() =>
+    {
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        options.Converters.Add(new StronglyTypedIdJsonConverterFactory());
+        options.Converters.Add(new MoneyJsonConverterFactory());
+        options.Converters.Add(new CategoryColorJsonConverterFactory());
+        return options;
+    });
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

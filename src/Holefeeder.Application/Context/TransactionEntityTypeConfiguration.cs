@@ -42,7 +42,8 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
         builder
             .Property(e => e.AccountId)
             .HasColumnName("account_id")
-            .HasConversion<StronglyTypedIdValueConverter<AccountId>>()
+            .HasConversion(a => a.Value, guid => AccountId.Create(guid))
+            // .HasConversion<StronglyTypedIdValueConverter<AccountId>>()
             .IsRequired();
         builder
             .Property(e => e.CategoryId)
