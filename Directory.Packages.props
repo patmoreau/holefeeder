@@ -13,7 +13,7 @@
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.0.1" />
     <PackageVersion Include="Carter" Version="8.2.1" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="9.0.3" />
+    <PackageVersion Include="CommunityToolkit.Maui" Version="9.1.0" />
     <PackageVersion Include="Dapper" Version="2.1.44" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
@@ -27,7 +27,7 @@
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.76" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.14" />
-    <PackageVersion Include="Hangfire.InMemory" Version="0.10.3" />
+    <PackageVersion Include="Hangfire.InMemory" Version="0.11.0" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
@@ -68,8 +68,8 @@
     <PackageVersion Include="MudBlazor" Version="7.8.0" />
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-    <PackageVersion Include="Refit" Version="7.1.2" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="7.1.2" />
+    <PackageVersion Include="Refit" Version="7.2.1" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="7.2.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="8.0.0" />
@@ -77,8 +77,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.3" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.8.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.4.5" />
