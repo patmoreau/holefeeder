@@ -5,6 +5,7 @@ using DrifterApps.Seeds.Testing.StepDefinitions;
 
 using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -12,19 +13,19 @@ internal sealed class TransactionStepDefinition(IHttpClientDriver httpClientDriv
 {
     public async Task MakesPurchase(MakePurchase.Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.MakePurchase, json);
     }
 
     public async Task PayACashflow(PayCashflow.Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.PayCashflow, json);
     }
 
     public async Task Transfer(Transfer.Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.Transfer, json);
     }
 }

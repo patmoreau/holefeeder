@@ -1,55 +1,23 @@
+using Holefeeder.Domain.Features.Users;
+
 namespace Holefeeder.Domain.Features.StoreItem;
 
-public sealed record StoreItem : IAggregateRoot
+public sealed partial record StoreItem : IAggregateRoot<StoreItemId>
 {
-    private readonly string _code = null!;
-    private readonly Guid _id;
-    private readonly Guid _userId;
-
-    public required Guid Id
+    private StoreItem(StoreItemId id, string code, UserId userId)
     {
-        get => _id;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new ObjectStoreDomainException($"'{nameof(Id)}' is required");
-            }
-
-            _id = value;
-        }
+        Id = id;
+        Code = code;
+        UserId = userId;
     }
+    public StoreItemId Id { get; }
 
-    public required string Code
-    {
-        get => _code;
-        init
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ObjectStoreDomainException($"'{nameof(Code)}' is required");
-            }
+    public string Code { get; }
 
-            _code = value;
-        }
-    }
+    public required string Data { get; init; }
 
-    public string Data { get; init; } = string.Empty;
-
-    public required Guid UserId
-    {
-        get => _userId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new ObjectStoreDomainException($"'{nameof(UserId)}' is required");
-            }
-
-            _userId = value;
-        }
-    }
-
-    public static StoreItem Create(string code, string data, Guid userId) =>
-        new() { Id = Guid.NewGuid(), Code = code, UserId = userId, Data = data };
+    public UserId UserId { get; }
 }
+
+public sealed record StoreItemId : StronglyTypedId<StoreItemId>;
+

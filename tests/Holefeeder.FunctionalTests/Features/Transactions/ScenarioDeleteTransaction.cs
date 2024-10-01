@@ -28,7 +28,7 @@ public class ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, I
 
         await WhenUserDeletesATransaction(request);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -57,10 +57,10 @@ public class ScenarioDeleteTransaction(ApiApplicationDriver applicationDriver, I
 
         await using var dbContext = DatabaseDriver.CreateDbContext();
 
-        var result = await dbContext.FindByIdAsync<Transaction>(transaction.Id);
+        var result = await dbContext.Transactions.FindAsync(transaction.Id);
 
         result.Should().BeNull();
     }
 
-    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendRequestAsync(ApiResources.DeleteTransaction, request.Id);
+    private async Task WhenUserDeletesATransaction(Request request) => await HttpClientDriver.SendRequestAsync(ApiResources.DeleteTransaction, request.Id.Value);
 }

@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Testing;
 
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
@@ -8,34 +9,33 @@ namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
 internal class ModifyStoreItemRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.RandomGuid(), faker.Lorem.Paragraphs()))
-        .RuleFor(x => x.Id, faker => faker.RandomGuid())
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+        .RuleFor(x => x.Id, faker => (StoreItemId)faker.RandomGuid())
         .RuleFor(x => x.Data, faker => faker.Lorem.Paragraphs());
 
     public static ModifyStoreItemRequestBuilder GivenAModifyStoreItemRequest() => new();
 
-    public ModifyStoreItemRequestBuilder WithId(Guid id)
+    public ModifyStoreItemRequestBuilder WithId(StoreItemId id)
     {
-        FakerRules.RuleFor(x => x.Id, id);
+        Faker.RuleFor(x => x.Id, id);
         return this;
     }
 
     public ModifyStoreItemRequestBuilder WithNoId()
     {
-        FakerRules.RuleFor(x => x.Id, Guid.Empty);
+        Faker.RuleFor(x => x.Id, StoreItemId.Empty);
         return this;
     }
 
     public ModifyStoreItemRequestBuilder WithData(string data)
     {
-        FakerRules.RuleFor(x => x.Data, data);
+        Faker.RuleFor(x => x.Data, data);
         return this;
     }
 
     public ModifyStoreItemRequestBuilder WithNoData()
     {
-        FakerRules.RuleFor(x => x.Data, string.Empty);
+        Faker.RuleFor(x => x.Data, string.Empty);
         return this;
     }
 }

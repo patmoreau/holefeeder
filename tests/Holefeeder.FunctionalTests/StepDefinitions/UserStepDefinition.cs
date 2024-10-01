@@ -2,6 +2,7 @@ using DrifterApps.Seeds.Testing.Drivers;
 using DrifterApps.Seeds.Testing.Scenarios;
 using DrifterApps.Seeds.Testing.StepDefinitions;
 
+using Holefeeder.Domain.Features.Users;
 using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
@@ -14,13 +15,13 @@ internal sealed class UserStepDefinition : StepDefinition
     {
         [AuthorizedUser] = new()
         {
-            UserId = Fakerizer.RandomGuid(),
+            UserId = (UserId)Fakerizer.RandomGuid(),
             IdentityObjectId = Fakerizer.Random.Hash(),
             Scope = "read:user write:user"
         },
         [ForbiddenUser] = new()
         {
-            UserId = Fakerizer.RandomGuid(),
+            UserId = (UserId)Fakerizer.RandomGuid(),
             IdentityObjectId = Fakerizer.Random.Hash(),
             Scope = "forbidden.scope"
         }
@@ -44,7 +45,7 @@ internal sealed class UserStepDefinition : StepDefinition
 
 internal sealed record TestUser
 {
-    public required Guid UserId { get; init; }
+    public required UserId UserId { get; init; }
     public required string IdentityObjectId { get; init; }
     public required string Scope { get; init; }
 }

@@ -30,7 +30,7 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
                 .Given(User.IsAuthorized)
                 .And("creates an invalid payment", () => request = GivenAnInvalidCashflowPayment().Build())
                 .When("sending the request", () => Transaction.PayACashflow(request))
-                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest));
         });
     }
 
@@ -104,7 +104,7 @@ public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, 
 
                     await using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    var result = await dbContext.FindByIdAsync<Transaction>(id);
+                    var result = await dbContext.Transactions.FindAsync(TransactionId.Create(id));
 
                     result.Should().NotBeNull($"because the TransactionId ({id}) was not found")
                         .And.BeEquivalentTo(request);

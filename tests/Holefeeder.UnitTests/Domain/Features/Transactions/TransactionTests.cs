@@ -1,173 +1,236 @@
+using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.Testing;
+
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
-using Holefeeder.Tests.Common.Builders.Transactions;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
+using Holefeeder.Tests.Common.Builders;
 using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class TransactionTests
 {
+    private readonly Driver _driver = new();
+
     [Fact]
-    public void GivenConstructor_WhenIdEmpty_ThenThrowException()
+    public void GivenCreate_WhenDateIsMissing_ThenReturnFailure()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNoId();
+        var driver = _driver.WithNoDate();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Id is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.DateRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenDateIsMissing_ThenThrowException()
+    public void GivenCreate_WhenAccountIdIsMissing_ThenReturnFailure()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNoDate();
+        var driver = _driver.WithNoAccount();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Date is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.AccountIdRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenAmountIsNegative_ThenThrowException()
+    public void GivenCreate_WhenCategoryIdIsMissing_ThenReturnFailure()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNegativeAmount();
+        var driver = _driver.WithNoCategory();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Amount cannot be negative")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CategoryIdRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenAccountIdEmpty_ThenThrowException()
+    public void GivenCreate_WhenUserIdIsMissing_ThenReturnFailure()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNoAccount();
+        var driver = _driver.WithNoUser();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.Build();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("AccountId is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.UserIdRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenCategoryIdEmpty_ThenThrowException()
+    public void GivenCreate_WhenValid_ThenReturnSuccess()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNoCategory();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = _driver.Build();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("CategoryId is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeSuccessful();
+        _driver.ShouldBeValid(result.Value);
     }
 
     [Fact]
-    public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
+    public void GivenImport_WhenIdIsMissing_ThenReturnFailure()
     {
         // arrange
-        var builder = TransactionBuilder.GivenATransaction().WithNoUser();
+        var driver = _driver.WithNoId();
 
         // act
-        Action action = () => _ = builder.Build();
+        var result = driver.BuildWithImport();
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("UserId is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.IdRequired]));
+    }
+
+    [Fact]
+    public void GivenImport_WhenDateIsMissing_ThenReturnFailure()
+    {
+        // arrange
+        var driver = _driver.WithNoDate();
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.DateRequired]));
+    }
+
+    [Fact]
+    public void GivenImport_WhenAccountIdIsMissing_ThenReturnFailure()
+    {
+        // arrange
+        var driver = _driver.WithNoAccount();
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.AccountIdRequired]));
+    }
+
+    [Fact]
+    public void GivenImport_WhenCategoryIdIsMissing_ThenReturnFailure()
+    {
+        // arrange
+        var driver = _driver.WithNoCategory();
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CategoryIdRequired]));
+    }
+
+    [Fact]
+    public void GivenImport_WhenUserIdIsMissing_ThenReturnFailure()
+    {
+        // arrange
+        var driver = _driver.WithNoUser();
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.UserIdRequired]));
+    }
+
+    [Fact]
+    public void GivenImport_WhenValid_ThenReturnSuccess()
+    {
+        // arrange
+
+        // act
+        var result = _driver.BuildWithImport();
+
+        // assert
+        result.Should().BeSuccessful();
+        _driver.ShouldBeValidWithImport(result.Value);
     }
 
     [Fact]
     public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
     {
         // arrange
-        var transaction = TransactionBuilder.GivenATransaction().Build();
+        var transaction = _driver.Build().Value;
 
         // act
-        var result = transaction.SetTags(Array.Empty<string>());
+        var result = transaction.SetTags();
 
         // assert
-        result.Tags.Should().BeEmpty();
+        result.Should().BeSuccessful();
+        result.Value.Tags.Should().BeEmpty();
     }
 
     [Fact]
     public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
     {
         // arrange
-        var transaction = TransactionBuilder.GivenATransaction().Build();
+        var transaction = _driver.Build().Value;
         string[]? newTags = Fakerizer.Random.WordsArray(RandomCollectionCount());
 
         // act
         var result = transaction.SetTags(newTags);
 
         // assert
-        result.Tags.Should().Contain(newTags);
+        result.Should().BeSuccessful();
+        result.Value.Tags.Should().Contain(newTags.Select(x => x.ToLowerInvariant()));
     }
 
     [Fact]
-    public void GivenApplyCashflow_WhenCashflowIdEmpty_ThenThrowException()
+    public void GivenApplyCashflow_WhenCashflowIdEmpty_ThenReturnFailure()
     {
         // arrange
-        var transaction = TransactionBuilder.GivenATransaction().Build();
+        var transaction = _driver.Build().Value;
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(Guid.Empty, Fakerizer.Date.RecentDateOnly());
+        var result = transaction.ApplyCashflow(CashflowId.Empty, Fakerizer.Date.RecentDateOnly());
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("CashflowId is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CashflowRequired]));
     }
 
     [Fact]
-    public void GivenApplyCashflow_WhenDateIsMissing_ThenThrowException()
+    public void GivenApplyCashflow_WhenDateIsMissing_ThenReturnFailure()
     {
         // arrange
-        var transaction = TransactionBuilder.GivenATransaction().Build();
+        var transaction = _driver.Build().Value;
 
         // act
-        Action action = () => _ = transaction.ApplyCashflow(Fakerizer.RandomGuid(), default);
+        var result = transaction.ApplyCashflow(CashflowId.New, default);
 
         // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("CashflowDate is required")
-            .And
-            .Context.Should().Be(nameof(Transaction));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CashflowRequired]));
     }
 
     [Fact]
     public void GivenApplyCashflow_WhenValid_ThenSetTransaction()
     {
         // arrange
-        var transaction = TransactionBuilder.GivenATransaction().Build();
-        var cashflowId = Fakerizer.RandomGuid();
+        var transaction = _driver.Build().Value;
+        var cashflowId = (CashflowId)Fakerizer.RandomGuid();
         var cashflowDate = Fakerizer.Date.RecentDateOnly();
 
         // act
@@ -176,9 +239,98 @@ public class TransactionTests
         // assert
         using (new AssertionScope())
         {
-            result.Should().NotBeNull();
-            result.CashflowId.Should().Be(cashflowId);
-            result.CashflowDate.Should().Be(cashflowDate);
+            result.Should().BeSuccessful();
+            result.Value.CashflowId.Should().Be(cashflowId);
+            result.Value.CashflowDate.Should().Be(cashflowDate);
+        }
+    }
+
+    private sealed class Driver : IDriverOf<Result<Transaction>>
+    {
+        private static readonly Faker Faker = new();
+        private TransactionId _id = TransactionId.New;
+        private DateOnly _date = Faker.Date.RecentDateOnly();
+        private readonly Money _amount = MoneyBuilder.Create().Build();
+        private readonly string _description = Faker.Lorem.Sentence();
+        private AccountId _accountId = (AccountId)Faker.Random.Guid();
+        private CategoryId _categoryId = (CategoryId)Faker.Random.Guid();
+        private UserId _userId = (UserId)Faker.Random.Guid();
+
+        public Result<Transaction> Build() =>
+            Transaction.Create(_date,
+                _amount,
+                _description,
+                _accountId,
+                _categoryId,
+                _userId);
+
+        public Result<Transaction> BuildWithImport() =>
+            Transaction.Import(_id,
+                _date,
+                _amount,
+                _description,
+                _accountId,
+                _categoryId,
+                null,
+                null,
+                _userId);
+
+        public Driver WithNoId()
+        {
+            _id = TransactionId.Empty;
+            return this;
+        }
+
+        public Driver WithNoDate()
+        {
+            _date = default;
+            return this;
+        }
+
+        public Driver WithNoAccount()
+        {
+            _accountId = AccountId.Empty;
+            return this;
+        }
+
+        public Driver WithNoCategory()
+        {
+            _categoryId = CategoryId.Empty;
+            return this;
+        }
+
+        public Driver WithNoUser()
+        {
+            _userId = UserId.Empty;
+            return this;
+        }
+
+        public void ShouldBeValid(Transaction value)
+        {
+            using var scope = new AssertionScope();
+            value.Id.Should().NotBe(TransactionId.Empty);
+            value.Date.Should().Be(_date);
+            value.Amount.Should().Be(_amount);
+            value.Description.Should().Be(_description);
+            value.AccountId.Should().Be(_accountId);
+            value.CategoryId.Should().Be(_categoryId);
+            value.CashflowId.Should().BeNull();
+            value.CashflowDate.Should().BeNull();
+            value.UserId.Should().Be(_userId);
+        }
+
+        public void ShouldBeValidWithImport(Transaction value)
+        {
+            using var scope = new AssertionScope();
+            value.Id.Should().Be(_id);
+            value.Date.Should().Be(_date);
+            value.Amount.Should().Be(_amount);
+            value.Description.Should().Be(_description);
+            value.AccountId.Should().Be(_accountId);
+            value.CategoryId.Should().Be(_categoryId);
+            value.CashflowId.Should().BeNull();
+            value.CashflowDate.Should().BeNull();
+            value.UserId.Should().Be(_userId);
         }
     }
 }

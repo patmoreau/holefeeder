@@ -34,7 +34,7 @@ public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOut
 
         await WhenUserGetAccount(Guid.Empty);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -68,10 +68,10 @@ public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOut
                 .And
                 .BeEquivalentTo(new
                 {
-                    account.Id,
+                    Id = (Guid)account.Id,
                     account.Type,
                     account.Name,
-                    account.OpenBalance,
+                    OpenBalance = (decimal)account.OpenBalance,
                     account.OpenDate,
                     TransactionCount = 1,
                     Balance = decimal.Subtract(account.OpenBalance, transaction.Amount),
@@ -114,10 +114,10 @@ public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOut
                 .And
                 .BeEquivalentTo(new
                 {
-                    account.Id,
+                    Id = (Guid)account.Id,
                     account.Type,
                     account.Name,
-                    account.OpenBalance,
+                    OpenBalance = (decimal)account.OpenBalance,
                     account.OpenDate,
                     TransactionCount = 1,
                     Balance = decimal.Add(account.OpenBalance, transaction.Amount),

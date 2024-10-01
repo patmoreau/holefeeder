@@ -1,9 +1,6 @@
-using System.Collections.Immutable;
-
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
-using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Application.Features.Accounts;
 
@@ -39,28 +36,4 @@ internal static class AccountMapper
             entity.Description,
             entity.Favorite,
             entity.Inactive);
-
-    public static Account? MapToModelOrNull(Account? entity, IEnumerable<Cashflow>? cashflows = null)
-    {
-        if (entity is null)
-        {
-            return null;
-        }
-
-        Account model = new()
-        {
-            Id = entity.Id,
-            Type = entity.Type,
-            Name = entity.Name,
-            OpenDate = entity.OpenDate,
-            UserId = entity.UserId,
-            Favorite = entity.Favorite,
-            Cashflows = cashflows?.ToImmutableArray() ?? ImmutableArray<Cashflow>.Empty,
-            Description = entity.Description,
-            Inactive = entity.Inactive,
-            OpenBalance = entity.OpenBalance
-        };
-
-        return model;
-    }
 }

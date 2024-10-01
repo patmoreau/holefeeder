@@ -1,4 +1,8 @@
+using DrifterApps.Seeds.Application.Context;
+
+using Holefeeder.Application.Context.Converters;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +18,7 @@ internal class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Catego
         builder
             .Property(e => e.Id)
             .HasColumnName("id")
+            .HasConversion<StronglyTypedIdValueConverter<CategoryId>>()
             .IsRequired();
         builder
             .Property(e => e.Type)
@@ -27,6 +32,7 @@ internal class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Catego
         builder
             .Property(e => e.Color)
             .HasColumnName("color")
+            .HasConversion<CategoryColorValueConverter>()
             .IsRequired();
         builder
             .Property(e => e.Favorite)
@@ -39,10 +45,12 @@ internal class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Catego
         builder
             .Property(e => e.BudgetAmount)
             .HasColumnName("budget_amount")
+            .HasConversion<MoneyValueConverter>()
             .IsRequired();
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")
+            .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
     }
 }

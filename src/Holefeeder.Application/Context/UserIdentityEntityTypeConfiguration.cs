@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.Application.Context;
+
 using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ internal class UserIdentityEntityTypeConfiguration : IEntityTypeConfiguration<Us
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")
+            .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
         builder
             .Property(e => e.IdentityObjectId)

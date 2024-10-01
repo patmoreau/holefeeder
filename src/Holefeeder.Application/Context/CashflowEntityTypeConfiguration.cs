@@ -1,5 +1,11 @@
+using DrifterApps.Seeds.Application.Context;
+
+using Holefeeder.Application.Context.Converters;
 using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,6 +24,7 @@ internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashfl
         builder
             .Property(e => e.Id)
             .HasColumnName("id")
+            .HasConversion<StronglyTypedIdValueConverter<CashflowId>>()
             .IsRequired();
         builder
             .Property(e => e.EffectiveDate)
@@ -27,6 +34,7 @@ internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashfl
             .Property(e => e.Amount)
             .HasColumnName("amount")
             .HasPrecision(19, 2)
+            .HasConversion<MoneyValueConverter>()
             .IsRequired();
         builder
             .Property(e => e.IntervalType)
@@ -48,10 +56,12 @@ internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashfl
         builder
             .Property(e => e.AccountId)
             .HasColumnName("account_id")
+            .HasConversion<StronglyTypedIdValueConverter<AccountId>>()
             .IsRequired();
         builder
             .Property(e => e.CategoryId)
             .HasColumnName("category_id")
+            .HasConversion<StronglyTypedIdValueConverter<CategoryId>>()
             .IsRequired();
         builder
             .Property(e => e.Inactive)
@@ -67,6 +77,7 @@ internal class CashflowEntityTypeConfiguration : IEntityTypeConfiguration<Cashfl
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")
+            .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
         builder
             .HasOne(c => c.Account)

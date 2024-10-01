@@ -1,8 +1,11 @@
+using DrifterApps.Seeds.Domain;
+
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Features.Transactions.Exceptions;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +17,15 @@ namespace Holefeeder.Application.Features.Transactions.Queries;
 public class GetTransaction : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("api/v2/transactions/{id:guid}",
-                async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
+        app.MapGet("api/v2/transactions/{id}",
+                async (TransactionId id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var requestResult = await mediator.Send(new Request(id), cancellationToken);
-                    return Results.Ok(requestResult);
+                    var result = await mediator.Send(new Request(id), cancellationToken);
+                    return result switch
+                    {
+                        { IsFailure: true } => result.Error.ToProblem(),
+                        _ => Results.Ok(result.Value)
+                    };
                 })
             .Produces<TransactionInfoViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -28,29 +35,26 @@ public class GetTransaction : ICarterModule
             .WithName(nameof(GetTransaction))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(Guid Id) : IRequest<TransactionInfoViewModel>;
+    internal record Request(TransactionId Id) : IRequest<Result<TransactionInfoViewModel>>;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator() => RuleFor(x => x.Id).NotEmpty();
+        public Validator() => RuleFor(x => x.Id).NotEqual(TransactionId.Empty);
     }
 
     internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, TransactionInfoViewModel>
+        : IRequestHandler<Request, Result<TransactionInfoViewModel>>
     {
-        public async Task<TransactionInfoViewModel> Handle(Request query,
+        public async Task<Result<TransactionInfoViewModel>> Handle(Request query,
             CancellationToken cancellationToken)
         {
             var transaction = await context.Transactions
                 .Include(x => x.Account)
                 .Include(x => x.Category)
                 .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id, cancellationToken);
-            if (transaction is null)
-            {
-                throw new TransactionNotFoundException(query.Id);
-            }
-
-            return TransactionMapper.MapToDto(transaction);
+            return transaction is null
+                ? Result<TransactionInfoViewModel>.Failure(TransactionErrors.NotFound(query.Id))
+                : Result<TransactionInfoViewModel>.Success(TransactionMapper.MapToDto(transaction));
         }
     }
 }

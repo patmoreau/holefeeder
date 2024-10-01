@@ -1,24 +1,19 @@
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Users;
-using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.Tests.Common.Builders.Users;
 
-public class UserBuilder : FakerBuilder<User>
+internal class UserBuilder : FakerBuilder<User>
 {
-    private UserBuilder()
-    {
-    }
-
-    protected override Faker<User> FakerRules { get; } = new Faker<User>()
-        .RuleFor(x => x.Id, faker => faker.RandomGuid())
+    protected override Faker<User> Faker { get; } = CreatePrivateFaker()
+        .RuleFor(x => x.Id, faker => (UserId)faker.Random.Guid())
         .RuleFor(x => x.Inactive, false)
         .RuleFor(x => x.UserIdentities, new List<UserIdentity>());
 
-    public UserBuilder WithId(Guid id)
+    public UserBuilder WithId(UserId userid)
     {
-        FakerRules.RuleFor(x => x.Id, id);
+        Faker.RuleFor(x => x.Id, _ => userid);
         return this;
     }
 

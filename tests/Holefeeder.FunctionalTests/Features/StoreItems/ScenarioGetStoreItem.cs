@@ -29,7 +29,7 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
 
         await WhenUserGetStoreItem(Guid.Empty);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -45,7 +45,10 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
 
         ShouldExpectStatusCode(HttpStatusCode.OK);
         var result = HttpClientDriver.DeserializeContent<StoreItemViewModel>();
-        result.Should().NotBeNull().And.BeEquivalentTo(storeItem, options => options.Excluding(x => x.UserId));
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(storeItem.Id.Value);
+        result.Code.Should().Be(storeItem.Code);
+        result.Data.Should().Be(storeItem.Data);
     }
 
     private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetStoreItem, id);

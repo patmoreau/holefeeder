@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
@@ -26,7 +27,7 @@ public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITe
 
         await WhenUserCreateStoreItem(storeItem);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -63,7 +64,7 @@ public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITe
 
     private async Task WhenUserCreateStoreItem(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
     }
 }

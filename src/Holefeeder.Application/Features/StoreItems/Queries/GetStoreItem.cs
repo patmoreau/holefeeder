@@ -1,7 +1,10 @@
+using DrifterApps.Seeds.Domain;
+
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Features.StoreItems.Exceptions;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.StoreItem;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +17,14 @@ public class GetStoreItem : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/store-items/{id}",
-                async (Guid id, IMediator mediator, CancellationToken cancellationToken) =>
+                async (StoreItemId id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
                     var result = await mediator.Send(new Request(id), cancellationToken);
-                    return Results.Ok(result);
+                    return result switch
+                    {
+                        { IsSuccess: true } => Results.Ok(result.Value),
+                        _ => result.Error.ToProblem()
+                    };
                 })
             .Produces<StoreItemViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
@@ -27,30 +34,27 @@ public class GetStoreItem : ICarterModule
             .WithName(nameof(GetStoreItem))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(Guid Id) : IRequest<StoreItemViewModel>;
+    internal record Request(StoreItemId Id) : IRequest<Result<StoreItemViewModel>>;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator() => RuleFor(x => x.Id).NotEmpty();
+        public Validator() => RuleFor(x => x.Id).NotEqual(StoreItemId.Empty);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, StoreItemViewModel>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<StoreItemViewModel>>
     {
-        private readonly BudgetingContext _context = context;
-        private readonly IUserContext _userContext = userContext;
-
-        public async Task<StoreItemViewModel> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<StoreItemViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
-            var result = await _context.StoreItems
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == _userContext.Id,
+            var result = await context.StoreItems
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id,
                     cancellationToken);
 
             if (result is null)
             {
-                throw new StoreItemNotFoundException(request.Id);
+                return Result<StoreItemViewModel>.Failure(StoreItemErrors.NotFound(request.Id));
             }
 
-            return StoreItemMapper.MapToDto(result);
+            return Result<StoreItemViewModel>.Success(StoreItemMapper.MapToDto(result));
         }
     }
 }

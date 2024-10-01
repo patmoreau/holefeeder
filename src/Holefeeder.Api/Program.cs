@@ -1,9 +1,13 @@
+using System.Text.Json;
+
 using Carter;
 
+using DrifterApps.Seeds.Application.Converters;
 using DrifterApps.Seeds.Infrastructure;
 
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
+using Holefeeder.Application.Converters;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
 
@@ -24,7 +28,21 @@ builder.Services
     .AddHealthChecks(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
-    .AddHangfireRequestScheduler();
+    .AddHangfireRequestScheduler(() =>
+    {
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        options.Converters.Add(new StronglyTypedIdJsonConverterFactory());
+        options.Converters.Add(new MoneyJsonConverterFactory());
+        options.Converters.Add(new CategoryColorJsonConverterFactory());
+        return options;
+    });
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new StronglyTypedIdJsonConverterFactory());
+    options.SerializerOptions.Converters.Add(new MoneyJsonConverterFactory());
+    options.SerializerOptions.Converters.Add(new CategoryColorJsonConverterFactory());
+});
 
 var app = builder.Build();
 

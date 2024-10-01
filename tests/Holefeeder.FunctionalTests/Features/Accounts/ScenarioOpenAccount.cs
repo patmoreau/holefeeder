@@ -6,6 +6,7 @@ using DrifterApps.Seeds.Testing.Scenarios;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,7 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
 
         await WhenUserOpensAnAccount(request);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -71,7 +72,7 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
 
     private async Task WhenUserOpensAnAccount(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.OpenAccount, json);
     }
 
@@ -83,9 +84,10 @@ public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOu
             var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
             var id = ResourceIdFromLocation(location);
 
+            var accountId = AccountId.Create(id);
             await using var dbContext = DatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.FindByIdAsync<Account>(id);
+            var result = await dbContext.Accounts.FindAsync(accountId);
 
             var request = runner.GetContextData<Request>(OpenAccountRequestKey);
 

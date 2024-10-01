@@ -1,4 +1,10 @@
+using DrifterApps.Seeds.Application.Context;
+
+using Holefeeder.Application.Context.Converters;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,6 +23,7 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
         builder
             .Property(e => e.Id)
             .HasColumnName("id")
+            .HasConversion<StronglyTypedIdValueConverter<TransactionId>>()
             .IsRequired();
         builder
             .Property(e => e.Date)
@@ -27,6 +34,7 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
             .Property(e => e.Amount)
             .HasColumnName("amount")
             .HasPrecision(19, 2)
+            .HasConversion<MoneyValueConverter>()
             .IsRequired();
         builder
             .Property(e => e.Description)
@@ -34,14 +42,18 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
         builder
             .Property(e => e.AccountId)
             .HasColumnName("account_id")
+            .HasConversion(a => a.Value, guid => AccountId.Create(guid))
+            // .HasConversion<StronglyTypedIdValueConverter<AccountId>>()
             .IsRequired();
         builder
             .Property(e => e.CategoryId)
             .HasColumnName("category_id")
+            .HasConversion<StronglyTypedIdValueConverter<CategoryId>>()
             .IsRequired();
         builder
             .Property(e => e.CashflowId)
-            .HasColumnName("cashflow_id");
+            .HasColumnName("cashflow_id")
+            .HasConversion<StronglyTypedIdValueConverter<CashflowId>>();
         builder
             .Property(e => e.CashflowDate)
             .HasColumnName("cashflow_date");
@@ -54,6 +66,7 @@ internal class TransactionEntityTypeConfiguration : IEntityTypeConfiguration<Tra
         builder
             .Property(e => e.UserId)
             .HasColumnName("user_id")
+            .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
         builder
             .HasOne(e => e.Account)

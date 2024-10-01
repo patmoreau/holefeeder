@@ -59,21 +59,21 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
                         {
                             new
                             {
-                                cashflow.Id,
+                                Id = (Guid)cashflow.Id,
                                 Date = cashflow.EffectiveDate,
-                                cashflow.Amount,
+                                Amount = (decimal)cashflow.Amount,
                                 cashflow.Description,
                                 cashflow.Tags,
                                 Category = new
                                 {
-                                    category.Id,
+                                    Id = (Guid)category.Id,
                                     category.Name,
                                     category.Type,
-                                    category.Color
+                                    Color = (string)category.Color
                                 },
                                 Account = new
                                 {
-                                    account.Id,
+                                    Id = (Guid)account.Id,
                                     account.Name
                                 }
                             }

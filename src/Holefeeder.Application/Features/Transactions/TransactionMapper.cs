@@ -37,7 +37,7 @@ internal static class TransactionMapper
             Tags = entity.Tags.ToArray(),
             AccountId = entity.AccountId,
             CategoryId = entity.CategoryId,
-            CashflowId = entity.CashflowId,
+            CashflowId = entity.CashflowId?.Value,
             CashflowDate = entity.CashflowDate
         };
 

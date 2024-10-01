@@ -1,9 +1,11 @@
 using DrifterApps.Seeds.Application.Mediatr;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Features.Transactions.Exceptions;
+using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.Transactions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +20,12 @@ public class CancelCashflow : ICarterModule
         app.MapPost("api/v2/cashflows/cancel",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    await mediator.Send(request, cancellationToken);
-                    return Results.NoContent();
+                    var result = await mediator.Send(request, cancellationToken);
+                    return result switch
+                    {
+                        { IsFailure: true } => result.Error.ToProblem(),
+                        _ => Results.NoContent()
+                    };
                 })
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -28,24 +34,34 @@ public class CancelCashflow : ICarterModule
             .WithName(nameof(CancelCashflow))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request(Guid Id) : IRequest<Unit>, IUnitOfWorkRequest;
+    internal record Request(CashflowId Id) : IRequest<Result>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
-        public Validator() => RuleFor(command => command.Id).NotNull().NotEmpty();
+        public Validator() => RuleFor(command => command.Id).NotNull().NotEqual(CashflowId.Empty);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Unit>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
     {
-        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
         {
             var exists =
                 await context.Cashflows.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id,
-                    cancellationToken) ?? throw new CashflowNotFoundException(request.Id);
-            context.Update(exists.Cancel());
+                    cancellationToken);
+            if (exists is null)
+            {
+                return Result.Failure(CashflowErrors.NotFound(request.Id));
+            }
 
-            return Unit.Value;
+            var result = exists.Cancel();
+            if (result.IsFailure)
+            {
+                return result;
+            }
+            context.Update(result.Value);
+
+            return Result.Success();
         }
     }
 }

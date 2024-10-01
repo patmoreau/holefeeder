@@ -1,5 +1,14 @@
+using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Enumerations;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
+using Holefeeder.Tests.Common.Builders;
+using Holefeeder.Tests.Common.Builders.Transactions;
 
 using Xunit.Abstractions;
 
@@ -8,11 +17,457 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class CashflowTests(ITestOutputHelper testOutputHelper)
 {
-    private readonly Faker _faker = new();
-    private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
+    private readonly Driver _driver = new();
+
+    [Theory, ClassData(typeof(CreateValidationData))]
+    public void GivenCreate_WhenInvalidData_ThenReturnFailure(
+        DateOnly effectiveDate,
+        int frequency,
+        int recurrence,
+        AccountId accountId,
+        CategoryId categoryId,
+        UserId userId,
+        ResultError error)
+    {
+        // arrange
+        var driver = _driver
+            .WithEffectiveDate(effectiveDate)
+            .WithFrequency(frequency)
+            .WithRecurrence(recurrence)
+            .WithAccount(accountId)
+            .WithCategory(categoryId)
+            .WithUser(userId);
+
+        // act
+        var result = driver.Build();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([error]));
+    }
+
+    [Theory, ClassData(typeof(ImportValidationData))]
+    public void GivenImport_WhenInvalidData_ThenReturnFailure(
+        CashflowId id,
+        DateOnly effectiveDate,
+        int frequency,
+        int recurrence,
+        AccountId accountId,
+        CategoryId categoryId,
+        UserId userId,
+        ResultError error)
+    {
+        // arrange
+        var driver = _driver
+            .WithId(id)
+            .WithEffectiveDate(effectiveDate)
+            .WithFrequency(frequency)
+            .WithRecurrence(recurrence)
+            .WithAccount(accountId)
+            .WithCategory(categoryId)
+            .WithUser(userId);
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([error]));
+    }
+
+    [Fact]
+    public void GivenCancel_WhenCashflowActive_ThenCashflowIsInactive()
+    {
+        // arrange
+        var cashflow = _driver.IsActive().Build().Value;
+
+        // act
+        var result = cashflow.Cancel();
+
+        // assert
+        using var scope = new AssertionScope();
+        result.Should().BeSuccessful();
+        result.Value.Inactive.Should().BeTrue();
+    }
+
+    [Fact]
+    public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
+    {
+        // arrange
+        var cashflow = _driver.Build().Value;
+
+        // act
+        var result = cashflow.SetTags();
+
+        // assert
+        result.Should().BeSuccessful();
+        result.Value.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
+    {
+        // arrange
+        var cashflow = _driver.Build().Value;
+        string[]? newTags = Fakerizer.Random.WordsArray(RandomCollectionCount());
+
+        // act
+        var result = cashflow.SetTags(newTags);
+
+        // assert
+        result.Should().BeSuccessful();
+        result.Value.Tags.Should().Contain(newTags.Select(x => x.ToLowerInvariant()));
+    }
+
+    [Fact]
+    public void GivenLastPaidDate_WhenNoTransactions_ThenReturnNull()
+    {
+        // arrange
+        var cashflow = GivenAnActiveCashflow().Build();
+
+        // act
+        var result = cashflow.LastPaidDate;
+
+        // assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GivenLastPaidDate_WhenTransactions_ThenReturnMaxDate()
+    {
+        // arrange
+        var cashflow = GivenAnActiveCashflow().WithTransactions().Build();
+
+        // act
+        var result = cashflow.LastPaidDate;
+
+        // assert
+        result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().Date);
+    }
+
+    [Fact]
+    public void GivenLastCashflowDate_WhenNoTransactions_ThenReturnNull()
+    {
+        // arrange
+        var cashflow = _driver.Build().Value;
+
+        // act
+        var result = cashflow.LastCashflowDate;
+
+        // assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GivenLastCashflowDate_WhenTransactions_ThenReturnMaxCashflowDate()
+    {
+        // arrange
+        var cashflow = GivenAnActiveCashflow()
+            .WithTransactions()
+            .Build();
+
+        // act
+        var result = cashflow.LastCashflowDate;
+
+        // assert
+        result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().CashflowDate);
+    }
+
+    [Fact]
+    public void GivenGetUpcoming_WhenInactiveCashflow_ThenReturnEmptyList()
+    {
+        // arrange
+        var cashflow = _driver.Build().Value;
+        cashflow = cashflow.Cancel().Value;
+
+        // act
+        var result = cashflow.GetUpcoming(Fakerizer.Date.FutureDateOnly());
+
+        // assert
+        result.Should().BeEmpty();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetUpcomingWithNonePaidTestCases))]
+    public void GivenGetUpcoming_WhenNoCashflowsPaid_ThenReturnExpectedDates(
+        string testName,
+        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
+        DateOnly to,
+        IReadOnlyCollection<DateOnly> expected)
+    {
+        testOutputHelper.WriteLine(testName);
+
+        ArgumentNullException.ThrowIfNull(expected);
+
+        // arrange
+        var cashflow = GivenAnActiveCashflow()
+            .OfFrequency(info.IntervalType, info.Frequency)
+            .OnEffectiveDate(info.EffectiveDate)
+            .Build();
+
+        // act
+        var result = cashflow.GetUpcoming(to);
+
+        // assert
+        result.Should().HaveCount(expected.Count).And.Equal(expected);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetUpcomingWithPaidTestCases))]
+    public void GivenGetUpcoming_WhenSomeCashflowsPaid_ThenReturnExpectedDates(
+        string testName,
+        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
+        DateOnly to,
+        DateOnly lastPaidDate,
+        IReadOnlyCollection<DateOnly> expected)
+    {
+        testOutputHelper.WriteLine(testName);
+
+        ArgumentNullException.ThrowIfNull(expected);
+
+        // arrange
+        var transaction = GivenATransaction()
+            .OnDate(lastPaidDate.AddDays(Fakerizer.Random.Int(0, 10)))
+            .ForCashflowDate(lastPaidDate)
+            .Build();
+        var cashflow = GivenAnActiveCashflow()
+            .OfFrequency(info.IntervalType, info.Frequency)
+            .OnEffectiveDate(info.EffectiveDate)
+            .WithTransactions(transaction)
+            .Build();
+
+        // act
+        var result = cashflow.GetUpcoming(to);
+
+        // assert
+        result.Should().HaveCount(expected.Count).And.Equal(expected);
+    }
+
+    private sealed class Driver : IDriverOf<Result<Cashflow>>
+    {
+        private static readonly Faker Faker = new();
+        private CashflowId _id = CashflowId.New;
+        private DateOnly _effectiveDate = Faker.Date.RecentDateOnly();
+        private readonly DateIntervalType _intervalType = Fakerizer.PickRandom<DateIntervalType>(DateIntervalType.List);
+        private int _frequency = Faker.Random.Int(1, 10);
+        private int _recurrence = Faker.Random.Int(1, 10);
+        private readonly Money _amount = MoneyBuilder.Create().Build();
+        private readonly string _description = Faker.Lorem.Sentence();
+        private AccountId _accountId = (AccountId)Faker.Random.Guid();
+        private CategoryId _categoryId = (CategoryId)Faker.Random.Guid();
+        private bool _inactive;
+        private UserId _userId = (UserId)Faker.Random.Guid();
+
+        public Result<Cashflow> Build() =>
+            Cashflow.Create(
+                _effectiveDate,
+                _intervalType,
+                _frequency,
+                _recurrence,
+                _amount,
+                _description,
+                _categoryId,
+                _accountId,
+                _userId);
+
+        public Result<Cashflow> BuildWithImport() =>
+            Cashflow.Import(_id,
+                _effectiveDate,
+                _intervalType,
+                _frequency,
+                _recurrence,
+                _amount,
+                _description,
+                _categoryId,
+                _accountId,
+                _inactive,
+                _userId);
+
+        public Driver WithId(CashflowId id)
+        {
+            _id = id;
+            return this;
+        }
+
+        public Driver WithEffectiveDate(DateOnly effectiveDate)
+        {
+            _effectiveDate = effectiveDate;
+            return this;
+        }
+
+        public Driver WithFrequency(int frequency)
+        {
+            _frequency = frequency;
+            return this;
+        }
+
+        public Driver WithRecurrence(int recurrence)
+        {
+            _recurrence = recurrence;
+            return this;
+        }
+
+        public Driver WithAccount(AccountId accountId)
+        {
+            _accountId = accountId;
+            return this;
+        }
+
+        public Driver WithCategory(CategoryId category)
+        {
+            _categoryId = category;
+            return this;
+        }
+
+        public Driver IsActive()
+        {
+            _inactive = false;
+            return this;
+        }
+
+        public Driver IsInactive()
+        {
+            _inactive = true;
+            return this;
+        }
+
+        public Driver WithUser(UserId userId)
+        {
+            _userId = userId;
+            return this;
+        }
+
+        public void ShouldBeValid(Cashflow value)
+        {
+            using var scope = new AssertionScope();
+            value.Id.Should().Be(_id);
+            value.EffectiveDate.Should().Be(_effectiveDate);
+            value.Amount.Should().Be(_amount);
+            value.Description.Should().Be(_description);
+            value.AccountId.Should().Be(_accountId);
+            value.CategoryId.Should().Be(_categoryId);
+            value.Frequency.Should().Be(_frequency);
+            value.Recurrence.Should().Be(_recurrence);
+            value.UserId.Should().Be(_userId);
+        }
+    }
+
+    internal sealed class CreateValidationData :
+        TheoryData<DateOnly, int, int, AccountId, CategoryId, UserId, ResultError>
+    {
+        public CreateValidationData()
+        {
+            Add(default,
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.EffectiveDateRequired);
+            Add(Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(max: 0),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.FrequencyInvalid);
+            Add(Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(max: -1),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.RecurrenceInvalid);
+            Add(Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                AccountId.Empty,
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.AccountIdRequired);
+            Add(Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                CategoryId.Empty,
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.CategoryIdRequired);
+            Add(Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                UserId.Empty,
+                CashflowErrors.UserIdRequired);
+        }
+    }
+
+    internal sealed class ImportValidationData :
+        TheoryData<CashflowId, DateOnly, int, int, AccountId, CategoryId, UserId, ResultError>
+    {
+        public ImportValidationData()
+        {
+            Add(CashflowId.Empty,
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.IdRequired);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                default,
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.EffectiveDateRequired);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(max: 0),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.FrequencyInvalid);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(max: -1),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.RecurrenceInvalid);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                AccountId.Empty,
+                (CategoryId)Fakerizer.Random.Guid(),
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.AccountIdRequired);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                CategoryId.Empty,
+                (UserId)Fakerizer.Random.Guid(),
+                CashflowErrors.CategoryIdRequired);
+            Add((CashflowId)Fakerizer.Random.Guid(),
+                Fakerizer.Date.RecentDateOnly(),
+                Fakerizer.Random.Int(1),
+                Fakerizer.Random.Int(0),
+                (AccountId)Fakerizer.Random.Guid(),
+                (CategoryId)Fakerizer.Random.Guid(),
+                UserId.Empty,
+                CashflowErrors.UserIdRequired);
+        }
+    }
 
     public static IEnumerable<object[]> GetUpcomingWithNonePaidTestCases
     {
@@ -123,317 +578,5 @@ public class CashflowTests(ITestOutputHelper testOutputHelper)
                 new DateOnly(2024, 12, 31), new DateOnly(2023, 1, 1), new[] {new DateOnly(2024, 1, 1)}
             };
         }
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenIdEmpty_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().WithId(Guid.Empty);
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Id is required")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenEffectiveDateIsMissing_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().OnEffectiveDate(default);
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("EffectiveDate is required")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenAmountIsNegative_ThenThrowException()
-    {
-        // arrange
-        var builder =
-            GivenAnActiveCashflow().OfAmount(_faker.Finance.Amount(decimal.MinValue, decimal.MinusOne));
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Amount cannot be negative")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenFrequencyIsNotPositive_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().OfFrequency(_faker.Random.Int(int.MinValue, 0));
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Frequency must be positive")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenRecurrenceIsNegative_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().Recurring(_faker.Random.Int(int.MinValue, 0));
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("Recurrence cannot be negative")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenAccountIdEmpty_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().ForAccount(Guid.Empty);
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("AccountId is required")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenCategoryIdEmpty_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().ForCategory(Guid.Empty);
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("CategoryId is required")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenConstructor_WhenUserIdEmpty_ThenThrowException()
-    {
-        // arrange
-        var builder = GivenAnActiveCashflow().ForUser(Guid.Empty);
-
-        // act
-        Action action = () => _ = builder.Build();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage("UserId is required")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenCancel_WhenCashflowInactive_ThenThrowException()
-    {
-        // arrange
-        var cashflow = GivenAnInactiveCashflow().Build();
-
-        // act
-        Action action = () => _ = cashflow.Cancel();
-
-        // assert
-        action.Should().Throw<TransactionDomainException>()
-            .WithMessage($"Cashflow {cashflow.Id} already inactive")
-            .And
-            .Context.Should().Be(nameof(Cashflow));
-    }
-
-    [Fact]
-    public void GivenCancel_WhenCashflowActive_ThenCashflowIsInactive()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow().Build();
-
-        // act
-        var result = cashflow.Cancel();
-
-        // assert
-        using var scope = new AssertionScope();
-        result.Should().NotBeNull();
-        result.Inactive.Should().BeTrue();
-    }
-
-    [Fact]
-    public void GivenSetTags_WhenEmptyList_ThenTagListIsEmpty()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow().Build();
-
-        // act
-        var result = cashflow.SetTags(Array.Empty<string>());
-
-        // assert
-        result.Tags.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void GivenSetTags_WhenAddingTags_ThenTagListIsSet()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow().Build();
-        string[] newTags = _faker.Lorem.Words(_faker.Random.Int(1, 10)).Distinct().ToArray();
-
-        // act
-        var result = cashflow.SetTags(newTags);
-
-        // assert
-        result.Tags.Should().Contain(newTags);
-    }
-
-    [Fact]
-    public void GivenLastPaidDate_WhenNoTransactions_ThenReturnNull()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow().Build();
-
-        // act
-        var result = cashflow.LastPaidDate;
-
-        // assert
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public void GivenLastPaidDate_WhenTransactions_ThenReturnMaxDate()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow()
-            .WithTransactions()
-            .Build();
-
-        // act
-        var result = cashflow.LastPaidDate;
-
-        // assert
-        result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().Date);
-    }
-
-    [Fact]
-    public void GivenLastCashflowDate_WhenNoTransactions_ThenReturnNull()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow().Build();
-
-        // act
-        var result = cashflow.LastCashflowDate;
-
-        // assert
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public void GivenLastCashflowDate_WhenTransactions_ThenReturnMaxCashflowDate()
-    {
-        // arrange
-        var cashflow = GivenAnActiveCashflow()
-            .WithTransactions()
-            .Build();
-
-        // act
-        var result = cashflow.LastCashflowDate;
-
-        // assert
-        result.Should().Be(cashflow.Transactions.OrderByDescending(x => x.Date).First().CashflowDate);
-    }
-
-    [Fact]
-    public void GivenGetUpcoming_WhenInactiveCashflow_ThenReturnEmptyList()
-    {
-        // arrange
-        var cashflow = GivenAnInactiveCashflow().Build();
-
-        // act
-        var result = cashflow.GetUpcoming(_faker.Date.FutureDateOnly());
-
-        // assert
-        result.Should().BeEmpty();
-    }
-
-    [Theory]
-    [MemberData(nameof(GetUpcomingWithNonePaidTestCases))]
-    public void GivenGetUpcoming_WhenNoCashflowsPaid_ThenReturnExpectedDates(
-        string testName,
-        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
-        DateOnly to,
-        IReadOnlyCollection<DateOnly> expected)
-    {
-        _testOutputHelper.WriteLine(testName);
-
-        ArgumentNullException.ThrowIfNull(expected);
-
-        // arrange
-        var cashflow = GivenAnActiveCashflow()
-            .OfFrequency(info.IntervalType, info.Frequency)
-            .OnEffectiveDate(info.EffectiveDate)
-            .Build();
-
-        // act
-        var result = cashflow.GetUpcoming(to);
-
-        // assert
-        result.Should().HaveCount(expected.Count).And.Equal(expected);
-    }
-
-    [Theory]
-    [MemberData(nameof(GetUpcomingWithPaidTestCases))]
-    public void GivenGetUpcoming_WhenSomeCashflowsPaid_ThenReturnExpectedDates(
-        string testName,
-        (DateIntervalType IntervalType, int Frequency, DateOnly EffectiveDate) info,
-        DateOnly to,
-        DateOnly lastPaidDate,
-        IReadOnlyCollection<DateOnly> expected)
-    {
-        _testOutputHelper.WriteLine(testName);
-
-        ArgumentNullException.ThrowIfNull(expected);
-
-        // arrange
-        var transaction = GivenATransaction()
-            .OnDate(lastPaidDate.AddDays(_faker.Random.Int(0, 10)))
-            .ForCashflowDate(lastPaidDate)
-            .Build();
-        var cashflow = GivenAnActiveCashflow()
-            .OfFrequency(info.IntervalType, info.Frequency)
-            .OnEffectiveDate(info.EffectiveDate)
-            .WithTransactions(transaction)
-            .Build();
-
-        // act
-        var result = cashflow.GetUpcoming(to);
-
-        // assert
-        result.Should().HaveCount(expected.Count).And.Equal(expected);
     }
 }

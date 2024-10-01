@@ -5,6 +5,8 @@ using Bogus;
 using DrifterApps.Seeds.Testing;
 using DrifterApps.Seeds.Testing.Drivers;
 
+using FluentAssertionsEquivalency;
+
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Tests.Common.Builders.Users;
 
@@ -35,6 +37,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         _useDatabaseDriver = useDatabaseDriver;
 
         Faker.DefaultStrictMode = true;
+        FluentAssertionsExtensions.RegisterGlobalEquivalencySteps();
 
         if (_useDatabaseDriver)
         {

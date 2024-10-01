@@ -12,7 +12,7 @@ public class GetCategoryTypes : ICarterModule
         app.MapGet("api/v2/enumerations/get-category-types",
                 async (IMediator mediator) =>
                 {
-                    IReadOnlyCollection<CategoryType> result = await mediator.Send(new Request());
+                    var result = await mediator.Send(new Request());
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<CategoryType>>()

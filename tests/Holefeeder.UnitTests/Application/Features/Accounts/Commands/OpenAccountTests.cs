@@ -1,31 +1,24 @@
-using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Tests.Common.Builders.Accounts;
 
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class OpenAccountTests
 {
-    private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.PickRandom<AccountType>(AccountType.List), faker.Lorem.Word(),
-            faker.Date.RecentDateOnly(), faker.Finance.Amount(), faker.Lorem.Sentence()))
-        .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
-        .RuleFor(x => x.Name, faker => faker.Lorem.Word())
-        .RuleFor(x => x.OpenDate, faker => faker.Date.RecentDateOnly())
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
-        .RuleFor(x => x.Description, faker => faker.Lorem.Sentence());
-
     [Fact]
-    public async Task GivenValidator_WhenTypeIsNull_ThenError()
+    public async Task GivenValidator_WhenNoType_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Type, _ => null!).Generate();
+        var request = OpenAccountRequestBuilder.GivenAnOpenAccountRequest()
+            .WithNoType()
+            .Build();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Type);
@@ -35,30 +28,34 @@ public class OpenAccountTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public async Task GivenValidator_WhenNameIsInvalid_ThenError(string? name)
+    public async Task GivenValidator_WhenNoName_ThenError(string? name)
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Name, _ => name).Generate();
+        var request = OpenAccountRequestBuilder.GivenAnOpenAccountRequest()
+            .WithName(name!)
+            .Build();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Name);
     }
 
     [Fact]
-    public async Task GivenValidator_WhenOpenDateIsInvalid_ThenError()
+    public async Task GivenValidator_WhenNoOpenDate_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.OpenDate, _ => DateOnly.MinValue).Generate();
+        var request = OpenAccountRequestBuilder.GivenAnOpenAccountRequest()
+            .WithNoOpenDate()
+            .Build();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.OpenDate);
@@ -68,12 +65,13 @@ public class OpenAccountTests
     public async Task GivenValidator_WhenRequestValid_ThenNoErrors()
     {
         // arrange
-        var request = _faker.Generate();
+        var request = OpenAccountRequestBuilder.GivenAnOpenAccountRequest()
+            .Build();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

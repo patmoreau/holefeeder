@@ -1,73 +1,162 @@
+using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.Testing;
+
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Tests.Common.Builders.Categories;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
+using Holefeeder.Tests.Common.Builders;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
-[UnitTest]
+[UnitTest, Category("Domain")]
 public class CategoryTests
 {
-    private readonly Faker _faker = new();
+    private readonly Driver _driver = new();
 
     [Fact]
-    public void GivenConstructor_WhenIdIsEmpty_ThenThrowException()
+    public void GivenImport_WhenNoValidationError_ThenReturnSuccessWithObject()
     {
         // arrange
 
         // act
-        Action action = () => _ = CategoryBuilder.GivenACategory().WithNoId().Build();
+        var result = _driver.BuildWithImport();
 
         // assert
-        action.Should().Throw<CategoryDomainException>()
-            .WithMessage("Id is required")
-            .And
-            .Context.Should().Be(nameof(Category));
+        using var scope = new AssertionScope();
+        result.Should().BeSuccessful().WithValue(result.Value);
+        _driver.ShouldBeValidCategory(result.Value);
+    }
+
+    [Fact]
+    public void GivenImport_WhenIdIsInvalid_ThenReturnFailure()
+    {
+        // arrange
+        var driver = _driver.WithEmptyId();
+
+        // act
+        var result = driver.BuildWithImport();
+
+        // assert
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.IdRequired]));
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void GivenConstructor_WhenNameIsEmpty_ThenThrowException(string name)
+    [ClassData(typeof(NameValidationData))]
+    public void GivenImport_WhenNameIsInvalid_ThenReturnFailure(string? name)
     {
         // arrange
+        var driver = _driver.WithName(name!);
 
         // act
-        Action action = () => _ = CategoryBuilder.GivenACategory().WithName(name).Build();
+        var result = driver.BuildWithImport();
+
 
         // assert
-        action.Should().Throw<CategoryDomainException>()
-            .WithMessage("Name must be from 1 to 255 characters")
-            .And
-            .Context.Should().Be(nameof(Category));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.NameRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenNameIsTooLong_ThenThrowException()
+    public void GivenImport_WhenUserIdIsInvalid_ThenReturnFailure()
     {
         // arrange
+        var driver = _driver.WithEmptyUserId();
 
         // act
-        Action action = () =>
-            _ = CategoryBuilder.GivenACategory().WithName(_faker.Random.Words().ClampLength(256)).Build();
+        var result = driver.BuildWithImport();
 
         // assert
-        action.Should().Throw<CategoryDomainException>()
-            .WithMessage("Name must be from 1 to 255 characters")
-            .And
-            .Context.Should().Be(nameof(Category));
+        result.Should().BeFailure()
+            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.UserIdRequired]));
     }
 
     [Fact]
-    public void GivenConstructor_WhenUserIdIsEmpty_ThenThrowException()
+    public void GivenCreate_WhenNoValidationError_ThenReturnSuccessWithObject()
     {
         // arrange
 
         // act
-        Action action = () => _ = CategoryBuilder.GivenACategory().ForNoUser().Build();
+        var result = _driver.Build();
 
         // assert
-        action.Should().Throw<CategoryDomainException>()
-            .WithMessage("UserId is required")
-            .And
-            .Context.Should().Be(nameof(Category));
+        using var scope = new AssertionScope();
+        result.Should().BeSuccessful().WithValue(result.Value);
+        _driver.ShouldBeValidCategory(result.Value);
+    }
+
+    internal sealed class NameValidationData : TheoryData<string?>
+    {
+        public NameValidationData()
+        {
+            Add(null);
+            Add(string.Empty);
+            Add("       ");
+            Add(new Faker().Random.Words().ClampLength(256));
+        }
+    }
+
+    private sealed class Driver : IDriverOf<Result<Category>>
+    {
+        private static readonly Faker Faker = new();
+        private CategoryId _categoryId = CategoryId.New;
+        private readonly CategoryType _categoryType = Faker.PickRandom<CategoryType>(CategoryType.List);
+        private string _name = Faker.Lorem.Word();
+        private readonly CategoryColor _categoryColor = CategoryColorBuilder.Create().Build();
+        private readonly bool _favorite = Faker.Random.Bool();
+        private readonly bool _system = Faker.Random.Bool();
+        private readonly Money _budgetAmount = MoneyBuilder.Create().Build();
+        private UserId _userId = (UserId)Faker.Random.Guid();
+
+        public Result<Category> Build() =>
+            Category.Import(_categoryId,
+                _categoryType,
+                _name,
+                _categoryColor,
+                _favorite,
+                _system,
+                _budgetAmount,
+                _userId);
+
+        public Result<Category> BuildWithImport() =>
+            Category.Import(_categoryId,
+                _categoryType,
+                _name,
+                _categoryColor,
+                _favorite,
+                _system,
+                _budgetAmount,
+                _userId);
+
+        public Driver WithEmptyId()
+        {
+            _categoryId = CategoryId.Empty;
+            return this;
+        }
+
+        public Driver WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+
+        public Driver WithEmptyUserId()
+        {
+            _userId = UserId.Empty;
+            return this;
+        }
+
+        public void ShouldBeValidCategory(Category category)
+        {
+            using var scope = new AssertionScope();
+            category.Id.Should().Be(_categoryId);
+            category.Type.Should().Be(_categoryType);
+            category.Name.Should().Be(_name);
+            category.Color.Should().Be(_categoryColor);
+            category.Favorite.Should().Be(_favorite);
+            category.System.Should().Be(_system);
+            category.BudgetAmount.Should().Be(_budgetAmount);
+            category.UserId.Should().Be(_userId);
+        }
     }
 }

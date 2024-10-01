@@ -24,7 +24,7 @@ public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITe
 
         await QueryEndpoint(ApiResources.GetTransactions, -1);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]

@@ -1,113 +1,47 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-public sealed record Account : IAggregateRoot
+public sealed partial record Account : IAggregateRoot
 {
-    private readonly Guid _id;
-    private readonly string _name = string.Empty;
-    private readonly DateOnly _openDate;
-    private readonly Guid _userId;
-
-    public required Guid Id
+    private Account(AccountId id, AccountType type, string name, DateOnly openDate, UserId userId)
     {
-        get => _id;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new AccountDomainException($"{nameof(Id)} is required");
-            }
-
-            _id = value;
-        }
+        Id = id;
+        Type = type;
+        Name = name;
+        OpenDate = openDate;
+        UserId = userId;
     }
 
-    public required AccountType Type { get; init; }
+    public AccountId Id { get; }
 
-    public required string Name
-    {
-        get => _name;
-        init
-        {
-            if (string.IsNullOrWhiteSpace(value) || value.Length > 100)
-            {
-                throw new AccountDomainException($"{nameof(Name)} must be from 1 to 100 characters");
-            }
+    public AccountType Type { get; private init; }
 
-            _name = value;
-        }
-    }
+    public string Name { get; private init; }
 
-    public bool Favorite { get; init; }
+    public bool Favorite { get; private init; }
 
-    public decimal OpenBalance { get; init; }
+    public Money OpenBalance { get; private init; }
 
-    public required DateOnly OpenDate
-    {
-        get => _openDate;
-        init
-        {
-            if (value.Equals(default))
-            {
-                throw new AccountDomainException($"{nameof(OpenDate)} is required");
-            }
+    public DateOnly OpenDate { get; private init; }
 
-            _openDate = value;
-        }
-    }
+    public string Description { get; private init; } = string.Empty;
 
-    public string Description { get; init; } = string.Empty;
+    public bool Inactive { get; private init; }
 
-    public bool Inactive { get; init; }
-
-    public required Guid UserId
-    {
-        get => _userId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new AccountDomainException($"{nameof(UserId)} is required");
-            }
-
-            _userId = value;
-        }
-    }
+    public UserId UserId { get; }
 
     public IReadOnlyCollection<Cashflow> Cashflows { get; init; } = new List<Cashflow>();
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
-
-    public static Account Create(AccountType type, string name, decimal openBalance, DateOnly openDate,
-        string description, Guid userId) =>
-        new()
-        {
-            Id = Guid.NewGuid(),
-            Type = type,
-            Name = name,
-            OpenDate = openDate,
-            UserId = userId,
-            OpenBalance = openBalance,
-            Description = description
-        };
-
-    public Account Close()
-    {
-        if (Inactive)
-        {
-            throw new AccountDomainException("Account already closed");
-        }
-
-        if (Cashflows.Count > 0)
-        {
-            throw new AccountDomainException("Account has active cashflows");
-        }
-
-        return this with { Inactive = true };
-    }
 
     public decimal CalculateBalance() =>
         OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
 
     public DateOnly CalculateLastTransactionDate() => Transactions.Count > 0 ? Transactions.Max(t => t.Date) : OpenDate;
 }
+
+public sealed record AccountId : StronglyTypedId<AccountId>;

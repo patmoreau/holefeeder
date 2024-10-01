@@ -6,7 +6,9 @@ using DrifterApps.Seeds.Testing.StepDefinitions;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 using Holefeeder.Tests.Common.Builders.StoreItems;
 
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
@@ -22,10 +24,10 @@ internal sealed class StoreItemStepDefinition(IHttpClientDriver httpClientDriver
     public void GetsCreated(IStepRunner runner) =>
         runner.Execute("a store item is created", async () =>
         {
-            var request = new CreateStoreItemRequestBuilder().Build();
+            var request = CreateStoreItemRequestBuilder.GivenACreateStoreItemRequest().Build();
             runner.SetContextData(ContextCreateStoreItemRequest, request);
 
-            var json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
             await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
@@ -38,7 +40,9 @@ internal sealed class StoreItemStepDefinition(IHttpClientDriver httpClientDriver
     public void Exists(IStepRunner runner, CreateStoreItem.Request? request) =>
         runner.Execute("a store item is created", async () =>
         {
-            var json = JsonSerializer.Serialize(request ?? new CreateStoreItemRequestBuilder().Build());
+            var json = JsonSerializer.Serialize(
+                request ?? CreateStoreItemRequestBuilder.GivenACreateStoreItemRequest().Build(),
+                Globals.JsonSerializerOptions);
             await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
 
             var id = WithCreatedId();
@@ -49,10 +53,11 @@ internal sealed class StoreItemStepDefinition(IHttpClientDriver httpClientDriver
     public void GetsModified(IStepRunner runner) =>
         runner.Execute($"a {nameof(ApiResources.ModifyStoreItem)} request is sent", async () =>
         {
-            var request = GivenAModifyStoreItemRequest().WithId(WithCreatedId()).Build();
+            var createdId = StoreItemId.Create(WithCreatedId());
+            var request = GivenAModifyStoreItemRequest().WithId(createdId).Build();
             runner.SetContextData(ContextModifyStoreItemRequest, request);
 
-            var json = JsonSerializer.Serialize(request);
+            var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
             await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
         });
 

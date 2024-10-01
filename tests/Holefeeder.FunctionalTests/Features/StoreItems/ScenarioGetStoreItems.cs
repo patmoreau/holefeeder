@@ -20,7 +20,7 @@ public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITest
 
         await QueryEndpoint(ApiResources.GetStoreItems, -1);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]

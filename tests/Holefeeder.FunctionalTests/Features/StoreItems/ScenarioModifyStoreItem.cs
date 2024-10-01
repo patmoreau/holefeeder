@@ -4,6 +4,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -22,14 +23,14 @@ public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITe
     public async Task WhenInvalidRequest()
     {
         var storeItem = GivenAModifyStoreItemRequest()
-            .WithId(Guid.Empty)
+            .WithId(StoreItemId.Empty)
             .Build();
 
         GivenUserIsAuthorized();
 
         await WhenUserModifyStoreItem(storeItem);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -51,14 +52,14 @@ public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITe
 
         await using var dbContext = DatabaseDriver.CreateDbContext();
 
-        var result = await dbContext.FindByIdAsync<StoreItem>(storeItem.Id);
+        var result = await dbContext.StoreItems.FindAsync(storeItem.Id);
         result.Should().NotBeNull();
         result!.Data.Should().BeEquivalentTo(request.Data);
     }
 
     private async Task WhenUserModifyStoreItem(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
     }
 }

@@ -40,10 +40,17 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
         AssertAll(() =>
         {
             result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
-            result![0].Should().BeEquivalentTo(secondCategory,
-                options => options.ExcludingMissingMembers());
+            result![0].Should()
+                .BeEquivalentTo(secondCategory, options =>
+                    options
+                        // .Using(new MoneyEquivalencyStep())
+                        // .Using(new ColorEquivalencyStep())
+                        .ExcludingMissingMembers());
             result[1].Should().BeEquivalentTo(firstCategory,
-                options => options.ExcludingMissingMembers());
+                options => options
+                    // .Using(new MoneyEquivalencyStep())
+                    // .Using(new ColorEquivalencyStep())
+                    .ExcludingMissingMembers());
         });
     }
 

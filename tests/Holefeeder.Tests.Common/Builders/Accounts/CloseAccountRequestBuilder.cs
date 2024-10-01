@@ -1,6 +1,6 @@
 using DrifterApps.Seeds.Testing;
 
-using Holefeeder.Tests.Common.Extensions;
+using Holefeeder.Domain.Features.Accounts;
 
 using static Holefeeder.Application.Features.Accounts.Commands.CloseAccount;
 
@@ -8,24 +8,23 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class CloseAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> FakerRules { get; } = new Faker<Request>()
-        .CustomInstantiator(faker => new Request(faker.RandomGuid()))
-        .RuleFor(x => x.Id, faker => faker.RandomGuid());
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+            .RuleFor(x => x.Id, faker => (AccountId)faker.Random.Guid());
 
-    public CloseAccountRequestBuilder WithId(Guid id)
+    public CloseAccountRequestBuilder WithId(AccountId id)
     {
-        FakerRules.RuleFor(x => x.Id, id);
+        Faker.RuleFor(x => x.Id, id);
         return this;
     }
 
-    public CloseAccountRequestBuilder WithNoId()
+    public CloseAccountRequestBuilder WithMissingId()
     {
-        FakerRules.RuleFor(x => x.Id, Guid.Empty);
+        Faker.RuleFor(x => x.Id, faker => faker.PickRandom(AccountId.Empty, null!));
         return this;
     }
 
     public static CloseAccountRequestBuilder GivenACloseAccountRequest() => new();
 
     public static CloseAccountRequestBuilder GivenAnInvalidCloseAccountRequest() =>
-        new CloseAccountRequestBuilder().WithNoId();
+        new CloseAccountRequestBuilder().WithMissingId();
 }

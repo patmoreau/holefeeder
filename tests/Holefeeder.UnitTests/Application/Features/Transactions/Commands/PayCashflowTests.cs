@@ -1,16 +1,18 @@
+using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Tests.Common.Builders;
 using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class PayCashflowTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
-        .RuleFor(x => x.Amount, faker => faker.Finance.Amount())
-        .RuleFor(x => x.CashflowId, faker => faker.RandomGuid())
+        .RuleFor(x => x.Amount, MoneyBuilder.Create().Build())
+        .RuleFor(x => x.CashflowId, faker => (CashflowId)faker.RandomGuid())
         .RuleFor(x => x.CashflowDate, faker => faker.Date.RecentDateOnly());
 
     [Fact]
@@ -29,31 +31,15 @@ public class PayCashflowTests
     }
 
     [Fact]
-    public async Task GivenValidator_WhenAmountNotGreaterThanZero_ThenError()
-    {
-        // arrange
-        var request = _faker.RuleFor(x => x.Amount, faker => faker.Random.Decimal(decimal.MinValue, decimal.Zero))
-            .Generate();
-
-        var validator = new Validator();
-
-        // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
-
-        // assert
-        result.ShouldHaveValidationErrorFor(r => r.Amount);
-    }
-
-    [Fact]
     public async Task GivenValidator_WhenCashflowIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.CashflowId, Guid.Empty).Generate();
+        var request = _faker.RuleFor(x => x.CashflowId, CashflowId.Empty).Generate();
 
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.CashflowId);

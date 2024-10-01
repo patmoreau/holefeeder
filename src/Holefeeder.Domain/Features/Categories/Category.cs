@@ -1,60 +1,35 @@
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
+
 namespace Holefeeder.Domain.Features.Categories;
 
-public sealed record Category : IAggregateRoot
+public sealed partial record Category : IAggregateRoot<CategoryId>
 {
-    private readonly Guid _id;
-    private readonly string _name = string.Empty;
-    private readonly Guid _userId;
-
-    public required Guid Id
+    private Category(CategoryId id, CategoryType type, string name, CategoryColor color, Money budgetAmount, UserId userId)
     {
-        get => _id;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new CategoryDomainException($"{nameof(Id)} is required");
-            }
-
-            _id = value;
-        }
+        Id = id;
+        Type = type;
+        Name = name;
+        Color = color;
+        BudgetAmount = budgetAmount;
+        UserId = userId;
     }
 
-    public required CategoryType Type { get; init; }
+    public CategoryId Id { get; }
 
-    public required string Name
-    {
-        get => _name;
-        init
-        {
-            if (string.IsNullOrWhiteSpace(value) || value.Length > 255)
-            {
-                throw new CategoryDomainException($"{nameof(Name)} must be from 1 to 255 characters");
-            }
+    public CategoryType Type { get; }
 
-            _name = value;
-        }
-    }
+    public string Name { get; }
 
-    public string Color { get; init; } = string.Empty;
+    public CategoryColor Color { get; }
 
-    public bool Favorite { get; init; }
+    public bool Favorite { get; private init; }
 
-    public bool System { get; init; }
+    public bool System { get; private init; }
 
-    public decimal BudgetAmount { get; init; }
+    public Money BudgetAmount { get; }
 
-    public required Guid UserId
-    {
-        get => _userId;
-        init
-        {
-            if (value.Equals(Guid.Empty))
-            {
-                throw new CategoryDomainException($"{nameof(UserId)} is required");
-            }
-
-            _userId = value;
-        }
-    }
+    public UserId UserId { get; }
 }
+
+public sealed record CategoryId : StronglyTypedId<CategoryId>;

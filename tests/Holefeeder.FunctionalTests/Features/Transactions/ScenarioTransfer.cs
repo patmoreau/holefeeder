@@ -29,7 +29,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
                 .Given("an invalid transfer", () => request = GivenAnInvalidTransfer().Build())
                 .And(User.IsAuthorized)
                 .When("a transfer is made", () => Transaction.Transfer(request))
-                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest));
         });
     }
 
@@ -108,7 +108,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
                 {
                     await using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    var result = await dbContext.FindByIdAsync<Transaction>(ids.FromTransactionId);
+                    var result = await dbContext.Transactions.FindAsync(ids.FromTransactionId);
 
                     result.Should().NotBeNull($"because the FromTransactionId ({ids.FromTransactionId}) was not found");
 
@@ -121,7 +121,7 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
                 {
                     await using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    var result = await dbContext.FindByIdAsync<Transaction>(ids.ToTransactionId);
+                    var result = await dbContext.Transactions.FindAsync(ids.ToTransactionId);
 
                     result.Should()
                         .NotBeNull($"because the ToTransactionId ({ids.ToTransactionId}) was not found")

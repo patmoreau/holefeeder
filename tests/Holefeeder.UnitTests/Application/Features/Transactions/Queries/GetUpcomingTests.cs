@@ -6,7 +6,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetUpcoming;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
-[UnitTest]
+[UnitTest, Category("Application")]
 public class GetUpcomingTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

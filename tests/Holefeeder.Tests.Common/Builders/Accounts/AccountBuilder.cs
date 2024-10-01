@@ -1,6 +1,8 @@
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Extensions;
 
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
@@ -9,37 +11,37 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class AccountBuilder : FakerBuilder<Account>
 {
-    protected override Faker<Account> FakerRules { get; } = new Faker<Account>()
-        .RuleFor(x => x.Id, faker => faker.RandomGuid())
+    protected override Faker<Account> Faker { get; } = CreatePrivateFaker()
+        .RuleFor(x => x.Id, faker => (AccountId)faker.RandomGuid())
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
         .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
-        .RuleFor(x => x.OpenBalance, faker => faker.Finance.Amount())
+        .RuleFor(x => x.OpenBalance, MoneyBuilder.Create().Build())
         .RuleFor(x => x.OpenDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
         .RuleFor(x => x.Inactive, faker => faker.Random.Bool())
-        .RuleFor(x => x.UserId, faker => faker.RandomGuid())
+        .RuleFor(x => x.UserId, faker => (UserId)faker.Random.Guid())
         .RuleFor(x => x.Transactions, [])
         .RuleFor(x => x.Cashflows, []);
 
     public static AccountBuilder GivenAnActiveAccount()
     {
-        AccountBuilder builder = new();
-        builder.FakerRules.RuleFor(f => f.Inactive, false);
+        var builder = new AccountBuilder();
+        builder.Faker.RuleFor(f => f.Inactive, false);
         return builder;
     }
 
     public static AccountBuilder GivenAnInactiveAccount()
     {
-        AccountBuilder builder = new();
-        builder.FakerRules.RuleFor(f => f.Inactive, true);
+        var builder = new AccountBuilder();
+        builder.Faker.RuleFor(f => f.Inactive, true);
         return builder;
     }
 
     public static AccountBuilder GivenAnExistingAccount(Account entity)
     {
-        AccountBuilder builder = new();
-        builder.FakerRules
+        var builder = new AccountBuilder();
+        builder.Faker
             .RuleFor(f => f.Id, entity.Id)
             .RuleFor(f => f.Type, entity.Type)
             .RuleFor(f => f.Name, entity.Name)
@@ -52,63 +54,63 @@ internal class AccountBuilder : FakerBuilder<Account>
         return builder;
     }
 
-    public AccountBuilder WithId(Guid id)
+    public AccountBuilder WithId(AccountId id)
     {
-        FakerRules.RuleFor(f => f.Id, id);
+        Faker.RuleFor(f => f.Id, id);
         return this;
     }
 
     public AccountBuilder WithActiveCashflows()
     {
-        FakerRules.RuleFor(f => f.Cashflows, GivenAnActiveCashflow().BuildCollection());
+        Faker.RuleFor(f => f.Cashflows, GivenAnActiveCashflow().BuildCollection());
         return this;
     }
 
     public AccountBuilder OfType(AccountType type)
     {
-        FakerRules.RuleFor(f => f.Type, type);
+        Faker.RuleFor(f => f.Type, type);
         return this;
     }
 
     public AccountBuilder IsFavorite(bool favorite)
     {
-        FakerRules.RuleFor(f => f.Favorite, favorite);
+        Faker.RuleFor(f => f.Favorite, favorite);
         return this;
     }
 
     public AccountBuilder WithName(string name)
     {
-        FakerRules.RuleFor(f => f.Name, name);
+        Faker.RuleFor(f => f.Name, name);
         return this;
     }
 
     public AccountBuilder WithDescription(string description)
     {
-        FakerRules.RuleFor(f => f.Description, description);
+        Faker.RuleFor(f => f.Description, description);
         return this;
     }
 
-    public AccountBuilder WithOpenBalance(decimal openBalance)
+    public AccountBuilder WithOpenBalance(Money openBalance)
     {
-        FakerRules.RuleFor(f => f.OpenBalance, openBalance);
+        Faker.RuleFor(f => f.OpenBalance, openBalance);
         return this;
     }
 
     public AccountBuilder WithOpenDate(DateOnly openDate)
     {
-        FakerRules.RuleFor(f => f.OpenDate, openDate);
+        Faker.RuleFor(f => f.OpenDate, openDate);
         return this;
     }
 
-    public AccountBuilder ForUser(Guid userId)
+    public AccountBuilder ForUser(UserId userId)
     {
-        FakerRules.RuleFor(f => f.UserId, userId);
+        Faker.RuleFor(f => f.UserId, userId);
         return this;
     }
 
     public AccountBuilder ForNoUser()
     {
-        FakerRules.RuleFor(f => f.UserId, Guid.Empty);
+        Faker.RuleFor(f => f.UserId, UserId.Empty);
         return this;
     }
 }

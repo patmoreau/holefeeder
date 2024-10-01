@@ -1,16 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 
 using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.MyData.Queries;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
+using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -57,7 +61,8 @@ public class ImportData : ICarterModule
             .WithName(nameof(ImportData))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger) : IRequestHandler<InternalRequest, Unit>
+    internal class Handler(BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger)
+        : IRequestHandler<InternalRequest, Unit>
     {
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
@@ -68,10 +73,10 @@ public class ImportData : ICarterModule
                 await context.BeginWorkAsync(cancellationToken);
 
                 UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.InProgress });
-                await ImportAccountsAsync(request, cancellationToken);
-                await ImportCategoriesAsync(request, cancellationToken);
-                await ImportCashflowsAsync(request, cancellationToken);
-                await ImportTransactionsAsync(request, cancellationToken);
+                ThrowImportExceptionOnFailure(await ImportAccountsAsync(request, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportCategoriesAsync(request, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportCashflowsAsync(request, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportTransactionsAsync(request, cancellationToken));
 
                 await context.CommitWorkAsync(cancellationToken);
 
@@ -87,19 +92,27 @@ public class ImportData : ICarterModule
 #pragma warning restore CA1031
 
             return Unit.Value;
+
+            void ThrowImportExceptionOnFailure(Result result)
+            {
+                if (result.IsFailure)
+                {
+                    throw new ImportException(result.Error);
+                }
+            }
         }
 
         private void UpdateProgress(Guid requestId, ImportDataStatusDto response) =>
             memoryCache.Set(requestId, response, TimeSpan.FromHours(1));
 
-        private async Task ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result> ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Accounts.Length == 0)
             {
-                return;
+                return Result.Success();
             }
 
-            MyDataAccountDto[] accounts = request.Data.Accounts;
+            var accounts = request.Data.Accounts;
 
             _importDataStatus = _importDataStatus with
             {
@@ -110,25 +123,36 @@ public class ImportData : ICarterModule
 
             foreach (var element in accounts)
             {
+                var elementId = AccountId.Create(element.Id);
+                var elementOpenBalance = Money.Create(element.OpenBalance);
+                if (elementOpenBalance.IsFailure)
+                {
+                    return elementOpenBalance;
+                }
+
                 var exists = await context.Accounts
-                    .SingleOrDefaultAsync(account => account.Id == element.Id && account.UserId == request.UserId,
+                    .SingleOrDefaultAsync(account => account.Id == elementId && account.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
-                        exists = exists with
+                        var result = exists.Modify(
+                            element.Type,
+                            element.Name,
+                            elementOpenBalance.Value,
+                            element.OpenDate,
+                            element.Description,
+                            element.Favorite,
+                            element.Inactive
+                        );
+                        if (result.IsFailure)
                         {
-                            Type = element.Type,
-                            Name = element.Name,
-                            Favorite = element.Favorite,
-                            OpenBalance = element.OpenBalance,
-                            OpenDate = element.OpenDate,
-                            Description = element.Description,
-                            Inactive = element.Inactive
-                        };
-                        logger.LogAccount("Modify", exists);
-                        context.Update(exists);
+                            return result;
+                        }
+
+                        logger.LogAccount("Modify", result.Value);
+                        context.Update(result.Value);
                     }
                     else
                     {
@@ -137,21 +161,24 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    Account account =
-                        new()
-                        {
-                            Id = element.Id,
-                            Type = element.Type,
-                            Name = element.Name,
-                            OpenDate = element.OpenDate,
-                            UserId = request.UserId,
-                            Favorite = element.Favorite,
-                            OpenBalance = element.OpenBalance,
-                            Description = element.Description,
-                            Inactive = element.Inactive
-                        };
-                    logger.LogAccount("Create", account);
-                    await context.Accounts.AddAsync(account, cancellationToken);
+                    var result = Account.Import(
+                        elementId,
+                        element.Type,
+                        element.Name,
+                        elementOpenBalance.Value,
+                        element.OpenDate,
+                        element.Description,
+                        element.Favorite,
+                        element.Inactive,
+                        request.UserId
+                    );
+                    if (result.IsFailure)
+                    {
+                        return result;
+                    }
+
+                    logger.LogAccount("Create", result.Value);
+                    await context.Accounts.AddAsync(result.Value, cancellationToken);
                 }
 
                 _importDataStatus = _importDataStatus with
@@ -162,16 +189,17 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
 
-        private async Task ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result> ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Categories.Length == 0)
             {
-                return;
+                return Result.Success();
             }
 
-            MyDataCategoryDto[] categories = request.Data.Categories;
+            var categories = request.Data.Categories;
 
             _importDataStatus = _importDataStatus with
             {
@@ -182,24 +210,41 @@ public class ImportData : ICarterModule
 
             foreach (var element in categories)
             {
+                var elementId = CategoryId.Create(element.Id);
+                var elementBudgetAmount = Money.Create(element.BudgetAmount);
+                if (elementBudgetAmount.IsFailure)
+                {
+                    return elementBudgetAmount;
+                }
+
+                var elementColor = CategoryColor.Create(element.Color);
+                if (elementColor.IsFailure)
+                {
+                    return elementColor;
+                }
+
                 var exists = await context.Categories
-                    .SingleOrDefaultAsync(category => category.Id == element.Id && category.UserId == request.UserId,
+                    .SingleOrDefaultAsync(category => category.Id == elementId && category.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
-                        exists = exists with
+                        var result = exists.Modify(
+                            element.Type,
+                            element.Name,
+                            elementColor.Value,
+                            element.Favorite,
+                            element.System,
+                            elementBudgetAmount.Value
+                        );
+                        if (result.IsFailure)
                         {
-                            Type = element.Type,
-                            Name = element.Name,
-                            Favorite = element.Favorite,
-                            System = element.System,
-                            BudgetAmount = element.BudgetAmount,
-                            Color = element.Color
-                        };
-                        logger.LogCategory("Modify", exists);
-                        context.Update(exists);
+                            return result;
+                        }
+
+                        logger.LogCategory("Modify", result.Value);
+                        context.Update(result.Value);
                     }
                     else
                     {
@@ -208,19 +253,23 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    Category category = new()
+                    var result = Category.Import(
+                        elementId,
+                        element.Type,
+                        element.Name,
+                        elementColor.Value,
+                        element.Favorite,
+                        element.System,
+                        elementBudgetAmount.Value,
+                        request.UserId);
+
+                    if (result.IsFailure)
                     {
-                        Id = element.Id,
-                        Type = element.Type,
-                        Name = element.Name,
-                        UserId = request.UserId,
-                        Favorite = element.Favorite,
-                        System = element.System,
-                        BudgetAmount = element.BudgetAmount,
-                        Color = element.Color
-                    };
-                    logger.LogCategory("Create", category);
-                    await context.Categories.AddAsync(category, cancellationToken);
+                        return result;
+                    }
+
+                    logger.LogCategory("Create", result.Value);
+                    await context.Categories.AddAsync(result.Value, cancellationToken);
                 }
 
                 _importDataStatus = _importDataStatus with
@@ -231,16 +280,17 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
 
-        private async Task ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result> ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Cashflows.Length == 0)
             {
-                return;
+                return Result.Success();
             }
 
-            MyDataCashflowDto[] cashflows = request.Data.Cashflows;
+            var cashflows = request.Data.Cashflows;
 
             _importDataStatus = _importDataStatus with
             {
@@ -251,28 +301,41 @@ public class ImportData : ICarterModule
 
             foreach (var element in cashflows)
             {
+                var elementId = CashflowId.Create(element.Id);
+                var elementAmount = Money.Create(element.Amount);
+                if (elementAmount.IsFailure)
+                {
+                    return elementAmount;
+                }
+
+                var elementCategoryId = CategoryId.Create(element.CategoryId);
+                var elementAccountId = AccountId.Create(element.AccountId);
+
                 var exists = await context.Cashflows
-                    .SingleOrDefaultAsync(cashflow => cashflow.Id == element.Id && cashflow.UserId == request.UserId,
+                    .SingleOrDefaultAsync(cashflow => cashflow.Id == elementId && cashflow.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
-                        exists = exists with
+                        var result = exists.Modify(element.EffectiveDate,
+                            element.IntervalType,
+                            element.Frequency,
+                            element.Recurrence,
+                            elementAmount.Value,
+                            element.Description,
+                            elementCategoryId,
+                            elementAccountId,
+                            element.Inactive
+                        );
+                        if (result.IsFailure)
                         {
-                            EffectiveDate = element.EffectiveDate,
-                            IntervalType = element.IntervalType,
-                            Frequency = element.Frequency,
-                            Recurrence = element.Recurrence,
-                            Amount = element.Amount,
-                            Description = element.Description,
-                            CategoryId = element.CategoryId,
-                            AccountId = element.AccountId,
-                            Inactive = element.Inactive
-                        };
-                        exists = exists.SetTags(element.Tags);
-                        logger.LogCashflow("Modify", exists);
-                        context.Update(exists);
+                            return result;
+                        }
+
+                        var cashflow = result.Value.SetTags(element.Tags);
+                        logger.LogCashflow("Modify", cashflow.Value);
+                        context.Update(cashflow.Value);
                     }
                     else
                     {
@@ -281,23 +344,27 @@ public class ImportData : ICarterModule
                 }
                 else
                 {
-                    var cashflow = new Cashflow
+                    var result = Cashflow.Import(
+                        elementId,
+                        element.EffectiveDate,
+                        element.IntervalType,
+                        element.Frequency,
+                        element.Recurrence,
+                        elementAmount.Value,
+                        element.Description,
+                        elementCategoryId,
+                        elementAccountId,
+                        element.Inactive,
+                        request.UserId
+                    );
+                    if (result.IsFailure)
                     {
-                        Id = element.Id,
-                        EffectiveDate = element.EffectiveDate,
-                        Amount = element.Amount,
-                        UserId = request.UserId,
-                        IntervalType = element.IntervalType,
-                        Frequency = element.Frequency,
-                        Recurrence = element.Recurrence,
-                        Description = element.Description,
-                        CategoryId = element.CategoryId,
-                        AccountId = element.AccountId,
-                        Inactive = element.Inactive
-                    };
-                    cashflow = cashflow.SetTags(element.Tags);
-                    logger.LogCashflow("Create", cashflow);
-                    await context.Cashflows.AddAsync(cashflow, cancellationToken);
+                        return result;
+                    }
+
+                    var cashflow = result.Value.SetTags(element.Tags);
+                    logger.LogCashflow("Create", cashflow.Value);
+                    await context.Cashflows.AddAsync(cashflow.Value, cancellationToken);
                 }
 
                 _importDataStatus = _importDataStatus with
@@ -308,17 +375,18 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
 
 
-        private async Task ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result> ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Transactions.Length == 0)
             {
-                return;
+                return Result.Success();
             }
 
-            MyDataTransactionDto[] transactions = request.Data.Transactions;
+            var transactions = request.Data.Transactions;
 
             _importDataStatus = _importDataStatus with
             {
@@ -329,51 +397,68 @@ public class ImportData : ICarterModule
 
             foreach (var element in transactions)
             {
+                var elementId = TransactionId.Create(element.Id);
+                var elementAmount = Money.Create(element.Amount);
+                if (elementAmount.IsFailure)
+                {
+                    return elementAmount;
+                }
+                var elementCategoryId = CategoryId.Create(element.CategoryId);
+                var elementAccountId = AccountId.Create(element.AccountId);
+                var elementCashflowId =
+                    element.CashflowId is not null ? CashflowId.Create(element.CashflowId.Value) : null;
+
                 var exists = await context.Transactions
                     .SingleOrDefaultAsync(
-                        transaction => transaction.Id == element.Id && transaction.UserId == request.UserId,
+                        transaction => transaction.Id == elementId && transaction.UserId == request.UserId,
                         cancellationToken);
                 if (exists is not null)
                 {
                     if (request.UpdateExisting)
                     {
-                        exists = exists with
+                        var result = exists.Modify(
+                            element.Date,
+                            elementAmount.Value,
+                            element.Description,
+                            elementAccountId,
+                            elementCategoryId,
+                            elementCashflowId,
+                            element.CashflowDate);
+
+                        if (result.IsFailure)
                         {
-                            Date = element.Date,
-                            Amount = element.Amount,
-                            Description = element.Description,
-                            CategoryId = element.CategoryId,
-                            AccountId = element.AccountId,
-                            UserId = request.UserId
-                        };
-                        exists = exists.SetTags(element.Tags);
-                        logger.LogTransaction("Modify", exists);
-                        context.Update(exists);
+                            return result;
+                        }
+                        var transaction = result.Value.SetTags(element.Tags);
+                        logger.LogTransaction("Modify", transaction.Value);
+                        context.Update(transaction.Value);
                     }
                     else
                     {
                         logger.LogTransaction("Ignore", exists);
                     }
                 }
+
                 else
                 {
-                    var transaction = Transaction.Create(element.Id,
+                    var result = Transaction.Import(elementId,
                         element.Date,
-                        element.Amount,
+                        elementAmount.Value,
                         element.Description,
-                        element.AccountId,
-                        element.CategoryId,
+                        elementAccountId,
+                        elementCategoryId,
+                        elementCashflowId,
+                        element.CashflowDate.GetValueOrDefault(),
                         request.UserId);
 
-                    if (element.CashflowId is not null)
+                    if (result.IsFailure)
                     {
-                        transaction = transaction.ApplyCashflow(element.CashflowId.GetValueOrDefault(),
-                            element.CashflowDate.GetValueOrDefault());
+                        return result;
                     }
 
-                    transaction = transaction.SetTags(element.Tags);
-                    logger.LogTransaction("Create", transaction);
-                    await context.Transactions.AddAsync(transaction, cancellationToken);
+                    var transaction = result.Value.SetTags(element.Tags);
+                    logger.LogTransaction("Create", transaction.Value);
+                    await context.Transactions.AddAsync(transaction.Value, cancellationToken);
                 }
 
                 _importDataStatus = _importDataStatus with
@@ -384,6 +469,7 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
     }
 
@@ -408,10 +494,10 @@ public class ImportData : ICarterModule
 
         public record Dto
         {
-            public MyDataAccountDto[] Accounts { get; init; } = Array.Empty<MyDataAccountDto>();
-            public MyDataCategoryDto[] Categories { get; init; } = Array.Empty<MyDataCategoryDto>();
-            public MyDataCashflowDto[] Cashflows { get; init; } = Array.Empty<MyDataCashflowDto>();
-            public MyDataTransactionDto[] Transactions { get; init; } = Array.Empty<MyDataTransactionDto>();
+            public MyDataAccountDto[] Accounts { get; init; } = [];
+            public MyDataCategoryDto[] Categories { get; init; } = [];
+            public MyDataCashflowDto[] Cashflows { get; init; } = [];
+            public MyDataTransactionDto[] Transactions { get; init; } = [];
         }
     }
 
@@ -419,6 +505,6 @@ public class ImportData : ICarterModule
     {
         public Guid RequestId { get; init; }
 
-        public Guid UserId { get; init; }
+        public required UserId UserId { get; init; }
     }
 }

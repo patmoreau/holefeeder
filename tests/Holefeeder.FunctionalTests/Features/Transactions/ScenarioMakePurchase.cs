@@ -3,6 +3,7 @@ using System.Net;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.ValueObjects;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -26,9 +27,9 @@ public sealed class ScenarioMakePurchase(ApiApplicationDriver applicationDriver,
         {
             player
                 .Given(User.IsAuthorized)
-                .And("making a purchase of negative amount", () => request = GivenAPurchase().OfAmount(-1).Build())
+                .And("making a purchase with no date", () => request = GivenAPurchase().WithNoDate().Build())
                 .When("sending the request", () => Transaction.MakesPurchase(request))
-                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred."));
+                .Then("should receive a validation error", () => ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest));
         });
     }
 
@@ -105,7 +106,7 @@ public sealed class ScenarioMakePurchase(ApiApplicationDriver applicationDriver,
 
                     await using var dbContext = DatabaseDriver.CreateDbContext();
 
-                    var result = await dbContext.FindByIdAsync<Transaction>(id);
+                    var result = await dbContext.Transactions.FindAsync(TransactionId.Create(id));
 
                     result.Should()
                         .NotBeNull($"because the TransactionId ({id}) was not found")

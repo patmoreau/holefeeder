@@ -4,29 +4,27 @@ using Holefeeder.Domain.Features.Users;
 
 namespace Holefeeder.Tests.Common.Builders.Users;
 
-public class UserIdentityBuilder : FakerBuilder<UserIdentity>
+internal class UserIdentityBuilder : FakerBuilder<UserIdentity>
 {
-    private UserIdentityBuilder()
-    {
-    }
+    private static readonly User User = new UserBuilder().Build();
 
-    protected override Faker<UserIdentity> FakerRules { get; } = new Faker<UserIdentity>()
+    protected override Faker<UserIdentity> Faker { get; } = CreateUninitializedFaker()
+        .RuleFor(x => x.IdentityObjectId, faker => faker.Random.Hash())
+        .RuleFor(x => x.UserId, _ => User.Id)
+        .RuleFor(x => x.User, _ => User)
         .RuleFor(x => x.Inactive, false);
 
     public UserIdentityBuilder WithIdentityObjectId(string identityObjectId)
     {
-        FakerRules.RuleFor(x => x.IdentityObjectId, identityObjectId);
+        Faker.RuleFor(x => x.IdentityObjectId, identityObjectId);
         return this;
     }
 
     public static UserIdentityBuilder GivenAUserIdentity(User user)
     {
-        ArgumentNullException.ThrowIfNull(user);
-
         var builder = new UserIdentityBuilder();
-        builder.FakerRules.RuleFor(x => x.UserId, user.Id);
-        builder.FakerRules.RuleFor(x => x.User, user);
-        builder.FakerRules.RuleFor(x => x.IdentityObjectId, f => f.Random.Hash());
+        builder.Faker.RuleFor(x => x.UserId, user.Id);
+        builder.Faker.RuleFor(x => x.User, user);
         return builder;
     }
 }

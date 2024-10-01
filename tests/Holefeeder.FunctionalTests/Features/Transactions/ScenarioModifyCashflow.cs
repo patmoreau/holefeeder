@@ -4,6 +4,7 @@ using System.Text.Json;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Infrastructure;
+using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -23,14 +24,13 @@ public class ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITes
     public async Task WhenInvalidRequest()
     {
         var request = GivenAnInvalidModifyCashflowRequest()
-            .OfAmount(decimal.MinusOne)
             .Build();
 
         GivenUserIsAuthorized();
 
         await WhenUserModifiedACashflow(request);
 
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.");
+        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -62,14 +62,14 @@ public class ScenarioModifyCashflow(ApiApplicationDriver applicationDriver, ITes
 
         await using var dbContext = DatabaseDriver.CreateDbContext();
 
-        var result = await dbContext.FindByIdAsync<Cashflow>(cashflow.Id);
+        var result = await dbContext.Cashflows.FindAsync(cashflow.Id);
 
         result.Should().NotBeNull().And.BeEquivalentTo(request);
     }
 
     private async Task WhenUserModifiedACashflow(Request request)
     {
-        var json = JsonSerializer.Serialize(request);
+        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyCashflow, json);
     }
 }
