@@ -12,7 +12,7 @@
     </PackageVersion>
     <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.76" />
     <PackageVersion Include="FluentAssertions" Version="6.12.1" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.33.0">
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
