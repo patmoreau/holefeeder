@@ -65,7 +65,7 @@
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.91" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.91" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageVersion Include="MudBlazor" Version="7.8.0" />
+    <PackageVersion Include="MudBlazor" Version="7.9.0" />
     <PackageVersion Include="MySqlConnector" Version="2.3.7" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageVersion Include="Refit" Version="7.2.1" />
