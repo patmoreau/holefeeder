@@ -7,6 +7,7 @@ import { AppStore } from '@app/core/store';
 import { AuthActions } from '@app/core/store/auth/auth.actions';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import { DateInterval, Settings, User } from '@app/shared/models';
+import { environment } from '@env/environment';
 import { NgbDate, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
@@ -169,11 +170,20 @@ export class HeaderComponent implements OnInit {
   }
 
   reloadToHealthChecks() {
-    window.location.href = '/hc-ui';
+    const modifiedHost = this.getModifiedHost();
+    window.location.href = `https://${modifiedHost}/hc-ui`;
   }
 
   reloadToGateway() {
-    window.location.href = '/gateway';
+    const modifiedHost = this.getModifiedHost();
+    window.location.href = `https://${modifiedHost}/gateway`;
+  }
+
+  private getModifiedHost(): string {
+    const host = window.location.host;
+    const [subdomain, ...domainParts] = host.split('.');
+    const modifiedSubdomain = `${subdomain}${environment.subDomainSuffix}`;
+    return [modifiedSubdomain, ...domainParts].join('.');
   }
 
   private getDate(ngbDate: NgbDate): Date {

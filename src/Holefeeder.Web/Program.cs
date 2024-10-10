@@ -5,6 +5,7 @@ using HealthChecks.UI.Client;
 using Holefeeder.Web.Config;
 
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
@@ -16,7 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddHttpLogging(_ => { });
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.All;
+});
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);
