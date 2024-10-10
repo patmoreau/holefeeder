@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Hangfire;
+using Hangfire.Dashboard;
 
 using HealthChecks.UI.Client;
 
@@ -9,15 +10,15 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 namespace Holefeeder.Api.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static class WebApplicationExtensions
+internal static class WebApplicationExtensions
 {
-    public static WebApplication UseSwagger(this WebApplication app, IHostEnvironment environment,
+    internal static WebApplication UseSwagger(this WebApplication app, IHostEnvironment environment,
         IConfiguration configuration)
     {
         app.UseSwagger()
             .UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{configuration["Swagger:Prefix"]}/swagger/v2/swagger.json",
+                c.SwaggerEndpoint($"{configuration[Constants.ProxyPrefix]}/swagger/v2/swagger.json",
                     $"{environment.ApplicationName} {environment.EnvironmentName} v2");
                 c.OAuthAppName($"{environment.ApplicationName}");
                 c.OAuthClientId("YOUR_AUTH0_CLIENT_ID");
@@ -28,7 +29,7 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static WebApplication UseHealthChecks(this WebApplication app)
+    internal static WebApplication UseHealthChecks(this WebApplication app)
     {
         app.UseHealthChecks("/ready");
         app.UseHealthChecks("/health/startup");
@@ -52,11 +53,29 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static WebApplication UseHangfire(this WebApplication app)
+    internal static WebApplication UseHangfire(this WebApplication app, IConfiguration configuration)
     {
-        app.UseHangfireDashboard();
+        app.UseHangfireDashboard(options: new DashboardOptions
+        {
+            PrefixPath = configuration[Constants.ProxyPrefix],
+            Authorization =
+            [
+                new HangFireAuthorizationFilter()
+            ]
+        });
         app.MapHangfireDashboard();
 
         return app;
+    }
+
+
+    public class HangFireAuthorizationFilter : IDashboardAuthorizationFilter
+    {
+        public bool Authorize([NotNull] DashboardContext context)
+        {
+            // var httpCtx = context.GetHttpContext();
+            // return httpCtx.User.Identity.IsAuthenticated; //is always false
+            return true;
+        }
     }
 }

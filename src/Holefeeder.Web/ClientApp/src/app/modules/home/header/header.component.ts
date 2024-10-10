@@ -168,6 +168,14 @@ export class HeaderComponent implements OnInit {
     );
   }
 
+  reloadToHealthChecks() {
+    window.location.href = '/hc-ui';
+  }
+
+  reloadToGateway() {
+    window.location.href = '/gateway';
+  }
+
   private getDate(ngbDate: NgbDate): Date {
     const jsDate = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day);
     jsDate.setFullYear(ngbDate.year);

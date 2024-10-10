@@ -60,8 +60,12 @@
                       class="bi bi-gear"></em>&nbsp;Settings</a>
                 </li>
                 <li>
-                  <a [routerLink]="['/hc-ui']" data-bs-dismiss="offcanvas" class="dropdown-item" target="_blank"><em
-                      class="bi bi-file-medical"></em>&nbsp;Health Checks</a>
+                  <a (click)="reloadToHealthChecks()" data-bs-dismiss="offcanvas" class="dropdown-item" role="button"
+                    target="_blank"><em class="bi bi-file-medical"></em>&nbsp;Health Checks</a>
+                </li>
+                <li>
+                  <a (click)="reloadToGateway()" data-bs-dismiss="offcanvas" class="dropdown-item" role="button"
+                    target="_blank"><em class="bi bi-hdd-network"></em>&nbsp;Backend</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider" />

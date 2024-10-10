@@ -56,7 +56,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseSwagger(builder.Environment, builder.Configuration)
     .UseHealthChecks()
-    .UseHangfire()
+    .UseHangfire(builder.Configuration)
     .UseRouting();
 
 app.UseCors(ServiceCollectionExtensions.AllowBlazorClientPolicy)
