@@ -44,11 +44,11 @@ export const HOME_ROUTES: Routes = [
           ),
         pathMatch: 'full',
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('@app/shared/components').then(m => m.ErrorNotfoundComponent),
+      },
     ],
-  },
-  {
-    path: '**',
-    loadComponent: () =>
-      import('@app/shared/components').then(m => m.ErrorNotfoundComponent),
   },
 ];

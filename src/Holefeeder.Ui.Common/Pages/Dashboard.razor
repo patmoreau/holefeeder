@@ -12,7 +12,7 @@
 else
 {
     <MudGrid>
-    @foreach (var account in _accounts.Items.Where(a => !a.Inactive))
+    @foreach (var account in _accounts.Items)
         {
             <MudItem xs="3">
                 <MudCard Outlined="true">
@@ -80,7 +80,7 @@ else
 
     private async Task LoadAccounts()
     {
-        var result = await HolefeederApiService.GetAccounts();
+        var result = await HolefeederApiService.GetAccounts(["-favorite", "name"], ["inactive:eq:false"]);
         if (result is { IsSuccessStatusCode: true, Content: not null })
         {
             result.ContentHeaders.TryGetValues("X-Total-Count", out var totalCount);

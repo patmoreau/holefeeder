@@ -8,8 +8,9 @@ namespace Holefeeder.Api.Features.Home;
 public class Home : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("/", async (HttpContext context, IHostEnvironment environment) =>
+        app.MapGet("/", async (HttpContext context, IHostEnvironment environment, IConfiguration configuration) =>
         {
+            var proxyPrefix = configuration[Constants.ProxyPrefix];
             context.Response.ContentType = "text/html; charset=utf-8";
             await context.Response.WriteAsync($"""
                                                <!DOCTYPE html>
@@ -26,9 +27,9 @@ public class Home : ICarterModule
                                                  <div class="container my-5">
                                                    <h1>{environment.ApplicationName}</h1>
                                                    <p>Environment: {environment.EnvironmentName}</p>
-                                                   <p><a href='/swagger'>Swagger</a></p>
-                                                   <p><a href='/hangfire'>Hangfire Dashboard</a></p>
-                                                   <p><a href='/hc-ui'>Health Checks</a></p>
+                                                   <p><a href='{proxyPrefix}/swagger'>Swagger</a></p>
+                                                   <p><a href='{proxyPrefix}/hangfire'>Hangfire Dashboard</a></p>
+                                                   <p><a href='{proxyPrefix}/hc-ui'>Health Checks</a></p>
                                                  </div>
                                                </body>
                                                </html>

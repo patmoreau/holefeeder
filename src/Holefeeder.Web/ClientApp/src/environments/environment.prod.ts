@@ -3,4 +3,5 @@ export const environment = {
   loggingLevel: 'Info',
   production: true,
   enableTracing: false,
+  subDomainSuffix: '-admin',
 };

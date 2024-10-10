@@ -7,6 +7,7 @@ export const environment = {
   loggingLevel: 'Verbose',
   production: false,
   enableTracing: false,
+  subDomainSuffix: '-admin',
 };
 
 /*

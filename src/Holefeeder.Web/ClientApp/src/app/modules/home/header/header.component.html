@@ -49,7 +49,7 @@
             </li>
             <li class="nav-item dropdown">
               <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                id="offcanvasNavbarDropdown" role="button">
+                id="offcanvasNavbarDropdown" role="button" tabindex="0">
                 <em class="bi bi-person-circle"></em>&nbsp;{{
                 (user$ | async)?.userPrincipalName
                 }}
@@ -57,18 +57,24 @@
               <ul aria-labelledby="offcanvasNavbarDropdown" class="dropdown-menu dropdown-menu-end">
                 <li>
                   <a [routerLink]="['/settings']" data-bs-dismiss="offcanvas" class="dropdown-item"><em
-                      class="bi bi-gear"></em>&nbsp;Settings</a>
+                      class="bi bi-gear" tabindex="1"></em>&nbsp;Settings</a>
                 </li>
                 <li>
-                  <a [routerLink]="['/hc-ui']" data-bs-dismiss="offcanvas" class="dropdown-item" target="_blank"><em
-                      class="bi bi-file-medical"></em>&nbsp;Health Checks</a>
+                  <a (click)="reloadToHealthChecks()" data-bs-dismiss="offcanvas" (keydown.enter)="logout()"
+                    class="dropdown-item" role="button" tabindex="2"><em class="bi bi-file-medical"></em>&nbsp;Health
+                    Checks</a>
+                </li>
+                <li>
+                  <a (click)="reloadToGateway()" data-bs-dismiss="offcanvas" (keydown.enter)="logout()"
+                    class="dropdown-item" role="button" tabindex="3"><em
+                      class="bi bi-hdd-network"></em>&nbsp;Backend</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
                 <li>
                   <a (click)="logout()" data-bs-dismiss="offcanvas" (keydown.enter)="logout()" role="button"
-                    tabindex="0" class="dropdown-item">
+                    tabindex="4" class="dropdown-item">
                     <em class="bi bi-box-arrow-left"></em>&nbsp;Log out
                   </a>
                 </li>
