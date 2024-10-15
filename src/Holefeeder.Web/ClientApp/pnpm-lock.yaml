@@ -87,11 +87,11 @@ importers:
         specifier: 1.11.3
         version: 1.11.3
       chart.js:
-        specifier: 4.4.4
-        version: 4.4.4
+        specifier: 4.4.5
+        version: 4.4.5
       chartjs-plugin-datalabels:
         specifier: 2.2.0
-        version: 2.2.0(chart.js@4.4.4)
+        version: 2.2.0(chart.js@4.4.5)
       core-js:
         specifier: 3.38.1
         version: 3.38.1
@@ -103,7 +103,7 @@ importers:
         version: 3.0.2
       ng2-charts:
         specifier: 6.0.1
-        version: 6.0.1(@angular/cdk@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(chart.js@4.4.4)(rxjs@7.8.1)
+        version: 6.0.1(@angular/cdk@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(chart.js@4.4.5)(rxjs@7.8.1)
       ngx-toaster:
         specifier: 1.0.1
         version: 1.0.1(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/forms@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))(rxjs@7.8.1)(typescript@5.4.5)
@@ -117,8 +117,8 @@ importers:
         specifier: 7.8.1
         version: 7.8.1
       tslib:
-        specifier: 2.7.0
-        version: 2.7.0
+        specifier: 2.8.0
+        version: 2.8.0
       zone.js:
         specifier: 0.15.0
         version: 0.15.0
@@ -2858,8 +2858,8 @@ packages:
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
 
-  chart.js@4.4.4:
-    resolution: {integrity: sha512-emICKGBABnxhMjUjlYRR12PmOXhJ2eJjEHL2/dZlWjxRAZT1D8xplLFq5M0tMQK8ja+wBS/tuVEJB5C6r7VxJA==}
+  chart.js@4.4.5:
+    resolution: {integrity: sha512-CVVjg1RYTJV9OCC8WeJPMx8gsV8K6WIyIEQUE3ui4AR9Hfgls9URri6Ja3hyMVBbTF8Q2KFa19PE815gWcWhng==}
     engines: {pnpm: '>=8'}
 
   chartjs-plugin-datalabels@2.2.0:
@@ -6704,8 +6704,8 @@ packages:
   tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
 
-  tslib@2.7.0:
-    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
+  tslib@2.8.0:
+    resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
 
   tslint@6.1.3:
     resolution: {integrity: sha512-IbR4nkT96EQOvKE2PW/djGz8iGNeJ4rF2mBfiYaR/nvUWYKJhLwimoJKgjIFEIDibBtOevj7BqCRL4oHeWWUCg==}
@@ -7419,7 +7419,7 @@ snapshots:
   '@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@angular/build@18.2.8(owa44yrqxmxoscxsidywczwv6q)':
     dependencies:
@@ -7471,7 +7471,7 @@ snapshots:
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
     optionalDependencies:
       parse5: 7.1.2
 
@@ -7503,7 +7503,7 @@ snapshots:
     dependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@angular/compiler-cli@18.2.8(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.4.5)':
     dependencies:
@@ -7514,7 +7514,7 @@ snapshots:
       convert-source-map: 1.9.0
       reflect-metadata: 0.2.2
       semver: 7.6.3
-      tslib: 2.7.0
+      tslib: 2.8.0
       typescript: 5.4.5
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -7522,14 +7522,14 @@ snapshots:
 
   '@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
     optionalDependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
 
   '@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)':
     dependencies:
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
       zone.js: 0.15.0
 
   '@angular/forms@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)':
@@ -7538,7 +7538,7 @@ snapshots:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@angular/language-service@18.2.8': {}
 
@@ -7559,13 +7559,13 @@ snapshots:
       '@angular/compiler': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
-      tslib: 2.7.0
+      tslib: 2.8.0
     optionalDependencies:
       '@angular/animations': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
 
@@ -7576,7 +7576,7 @@ snapshots:
       '@angular/compiler': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
-      tslib: 2.7.0
+      tslib: 2.8.0
       xhr2: 0.2.1
 
   '@angular/router@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)':
@@ -7585,13 +7585,13 @@ snapshots:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@angular/service-worker@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@babel/code-frame@7.24.7':
     dependencies:
@@ -8943,21 +8943,21 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@jsonjoy.com/base64@1.1.2(tslib@2.7.0)':
+  '@jsonjoy.com/base64@1.1.2(tslib@2.8.0)':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
-  '@jsonjoy.com/json-pack@1.0.4(tslib@2.7.0)':
+  '@jsonjoy.com/json-pack@1.0.4(tslib@2.8.0)':
     dependencies:
-      '@jsonjoy.com/base64': 1.1.2(tslib@2.7.0)
-      '@jsonjoy.com/util': 1.2.0(tslib@2.7.0)
+      '@jsonjoy.com/base64': 1.1.2(tslib@2.8.0)
+      '@jsonjoy.com/util': 1.2.0(tslib@2.8.0)
       hyperdyperid: 1.2.0
-      thingies: 1.21.0(tslib@2.7.0)
-      tslib: 2.7.0
+      thingies: 1.21.0(tslib@2.8.0)
+      tslib: 2.8.0
 
-  '@jsonjoy.com/util@1.2.0(tslib@2.7.0)':
+  '@jsonjoy.com/util@1.2.0(tslib@2.8.0)':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@kurkle/color@0.3.2': {}
 
@@ -9012,21 +9012,21 @@ snapshots:
       '@angular/localize': 18.2.8(@angular/compiler-cli@18.2.8(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.4.5))(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))
       '@popperjs/core': 2.11.8
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngrx/effects@18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@ngrx/store@18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(rxjs@7.8.1)':
     dependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@ngrx/store': 18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngrx/entity@18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@ngrx/store@18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(rxjs@7.8.1)':
     dependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@ngrx/store': 18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngrx/schematics@18.1.0': {}
 
@@ -9035,13 +9035,13 @@ snapshots:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@ngrx/store': 18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngrx/store@18.1.0(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)':
     dependencies:
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngtools/webpack@18.2.8(@angular/compiler-cli@18.2.8(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.4.5))(typescript@5.4.5)(webpack@5.94.0(esbuild@0.23.0))':
     dependencies:
@@ -9059,13 +9059,13 @@ snapshots:
     dependencies:
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@ngx-loading-bar/router@6.0.2(@angular/router@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))(@ngx-loading-bar/core@6.0.2(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(rxjs@7.8.1))':
     dependencies:
       '@angular/router': 18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@ngx-loading-bar/core': 6.0.2(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(rxjs@7.8.1)
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -9776,7 +9776,7 @@ snapshots:
       '@angular/router': 18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       rfc4648: 1.5.3
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   ansi-colors@4.1.3: {}
 
@@ -10255,13 +10255,13 @@ snapshots:
 
   chardet@0.7.0: {}
 
-  chart.js@4.4.4:
+  chart.js@4.4.5:
     dependencies:
       '@kurkle/color': 0.3.2
 
-  chartjs-plugin-datalabels@2.2.0(chart.js@4.4.4):
+  chartjs-plugin-datalabels@2.2.0(chart.js@4.4.5):
     dependencies:
-      chart.js: 4.4.4
+      chart.js: 4.4.5
 
   chokidar@2.0.4:
     dependencies:
@@ -12880,7 +12880,7 @@ snapshots:
     dependencies:
       copy-anything: 2.0.6
       parse-node-version: 1.0.1
-      tslib: 2.7.0
+      tslib: 2.8.0
     optionalDependencies:
       errno: 0.1.8
       graceful-fs: 4.2.11
@@ -13071,10 +13071,10 @@ snapshots:
 
   memfs@4.9.3:
     dependencies:
-      '@jsonjoy.com/json-pack': 1.0.4(tslib@2.7.0)
-      '@jsonjoy.com/util': 1.2.0(tslib@2.7.0)
-      tree-dump: 1.0.2(tslib@2.7.0)
-      tslib: 2.7.0
+      '@jsonjoy.com/json-pack': 1.0.4(tslib@2.8.0)
+      '@jsonjoy.com/util': 1.2.0(tslib@2.8.0)
+      tree-dump: 1.0.2(tslib@2.8.0)
+      tslib: 2.8.0
 
   merge-descriptors@1.0.1: {}
 
@@ -13292,16 +13292,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ng2-charts@6.0.1(@angular/cdk@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(chart.js@4.4.4)(rxjs@7.8.1):
+  ng2-charts@6.0.1(@angular/cdk@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(chart.js@4.4.5)(rxjs@7.8.1):
     dependencies:
       '@angular/cdk': 18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
-      chart.js: 4.4.4
+      chart.js: 4.4.5
       lodash-es: 4.17.21
       rxjs: 7.8.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   ngx-toaster@1.0.1(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/forms@18.2.8(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))(rxjs@7.8.1)(typescript@5.4.5):
     dependencies:
@@ -13317,7 +13317,7 @@ snapshots:
       '@angular/common': 18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 18.2.8(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.8(@angular/animations@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.15.0))
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   nice-napi@1.0.2:
     dependencies:
@@ -14117,7 +14117,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   safe-array-concat@1.1.2:
     dependencies:
@@ -14649,7 +14649,7 @@ snapshots:
   synckit@0.9.1:
     dependencies:
       '@pkgr/core': 0.1.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   tapable@2.2.1: {}
 
@@ -14693,9 +14693,9 @@ snapshots:
 
   text-table@0.2.0: {}
 
-  thingies@1.21.0(tslib@2.7.0):
+  thingies@1.21.0(tslib@2.8.0):
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   through@2.3.8: {}
 
@@ -14753,9 +14753,9 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  tree-dump@1.0.2(tslib@2.7.0):
+  tree-dump@1.0.2(tslib@2.8.0):
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   tree-kill@1.2.2: {}
 
@@ -14811,7 +14811,7 @@ snapshots:
 
   tslib@2.6.3: {}
 
-  tslib@2.7.0: {}
+  tslib@2.8.0: {}
 
   tslint@6.1.3(typescript@5.4.5):
     dependencies:
