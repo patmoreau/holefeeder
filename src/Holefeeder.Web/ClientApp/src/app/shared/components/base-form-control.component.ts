@@ -83,7 +83,7 @@ export abstract class BaseFormControlComponent<T>
           break;
         }
       }
-    } catch (error) {
+    } catch {
       this.control = new FormControl();
     }
   }
