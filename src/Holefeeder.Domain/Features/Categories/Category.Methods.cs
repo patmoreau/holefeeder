@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.ValueObjects;
 
 namespace Holefeeder.Domain.Features.Categories;
@@ -14,16 +16,15 @@ public sealed partial record Category
         var newSystem = system ?? System;
         var newBudgetAmount = budgetAmount ?? BudgetAmount;
 
-        var result = Result.Validate(NameValidation(newName));
-        if (result.IsFailure)
-        {
-            return Result<Category>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(NameValidation(newName));
 
-        return Result<Category>.Success(new Category(Id, newType, newName, newColor, newBudgetAmount, UserId)
-        {
-            Favorite = newFavorite,
-            System = newSystem,
-        });
+        return result.Switch(
+            () => Result<Category>.Success(new Category(Id, newType, newName, newColor, newBudgetAmount, UserId)
+            {
+                Favorite = newFavorite,
+                System = newSystem,
+            }),
+            Result<Category>.Failure);
     }
 }

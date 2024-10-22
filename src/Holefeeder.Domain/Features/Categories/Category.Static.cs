@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 
@@ -8,32 +10,33 @@ public sealed partial record Category
     public static Result<Category> Create(CategoryType type, string name, CategoryColor color, bool favorite,
         bool system, Money budgetAmount, UserId userId)
     {
-        var result = Result.Validate(NameValidation(name), UserIdValidation(userId));
-        if (result.IsFailure)
-        {
-            return Result<Category>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(NameValidation(name))
+            .Ensure(UserIdValidation(userId));
 
-        return Result<Category>.Success(new Category(CategoryId.New, type, name, color, budgetAmount, userId)
-        {
-            Favorite = favorite,
-            System = system
-        });
+        return result.Switch(
+            () => Result<Category>.Success(new Category(CategoryId.New, type, name, color, budgetAmount, userId)
+            {
+                Favorite = favorite,
+                System = system
+            }),
+            Result<Category>.Failure);
     }
 
     public static Result<Category> Import(CategoryId id, CategoryType type, string name, CategoryColor color,
         bool favorite, bool system, Money budgetAmount, UserId userId)
     {
-        var result = Result.Validate(IdValidation(id), NameValidation(name), UserIdValidation(userId));
-        if (result.IsFailure)
-        {
-            return Result<Category>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(IdValidation(id))
+            .Ensure(NameValidation(name))
+            .Ensure(UserIdValidation(userId));
 
-        return Result<Category>.Success(new Category(id, type, name, color, budgetAmount, userId)
-        {
-            Favorite = favorite,
-            System = system
-        });
+        return result.Switch(
+            () => Result<Category>.Success(new Category(id, type, name, color, budgetAmount, userId)
+            {
+                Favorite = favorite,
+                System = system
+            }),
+            Result<Category>.Failure);
     }
 }

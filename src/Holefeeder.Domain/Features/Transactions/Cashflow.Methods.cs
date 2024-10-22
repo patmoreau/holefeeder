@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -9,7 +11,7 @@ public partial record Cashflow
 {
     public Result<Cashflow> Cancel() => Inactive
         ? Result<Cashflow>.Failure(CashflowErrors.AlreadyInactive(Id))
-        : Result<Cashflow>.Success(this with { Inactive = true });
+        : Result<Cashflow>.Success(this with {Inactive = true});
 
     public Result<Cashflow> SetTags(params string[] tags)
     {
@@ -49,26 +51,27 @@ public partial record Cashflow
         var newAccountId = accountId ?? AccountId;
         var newInactive = inactive ?? Inactive;
 
-        var result = Result.Validate(EffectiveDateValidation(newEffectiveDate),
-            FrequencyValidation(newFrequency), RecurrenceValidation(newRecurrence), AccountIdValidation(newAccountId),
-            CategoryIdValidation(newCategoryId));
-        if (result.IsFailure)
-        {
-            return Result<Cashflow>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(EffectiveDateValidation(newEffectiveDate))
+            .Ensure(FrequencyValidation(newFrequency))
+            .Ensure(RecurrenceValidation(newRecurrence))
+            .Ensure(AccountIdValidation(newAccountId))
+            .Ensure(CategoryIdValidation(newCategoryId));
 
-        return Result<Cashflow>.Success(
-            this with
-            {
-                EffectiveDate = newEffectiveDate,
-                IntervalType = newIntervalType,
-                Frequency = newFrequency,
-                Recurrence = newRecurrence,
-                Amount = newAmount,
-                Description = newDescription,
-                CategoryId = newCategoryId,
-                AccountId = newAccountId,
-                Inactive = newInactive
-            });
+        return result.Switch(
+            () => Result<Cashflow>.Success(
+                this with
+                {
+                    EffectiveDate = newEffectiveDate,
+                    IntervalType = newIntervalType,
+                    Frequency = newFrequency,
+                    Recurrence = newRecurrence,
+                    Amount = newAmount,
+                    Description = newDescription,
+                    CategoryId = newCategoryId,
+                    AccountId = newAccountId,
+                    Inactive = newInactive
+                }),
+            Result<Cashflow>.Failure);
     }
 }

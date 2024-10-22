@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -35,7 +35,7 @@ public class ModifyCashflow : ICarterModule
             .WithName(nameof(ModifyCashflow))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request : IRequest<Result>, IUnitOfWorkRequest
+    internal record Request : IRequest<Result<Nothing>>, IUnitOfWorkRequest
     {
         public required CashflowId Id { get; init; }
 
@@ -57,9 +57,9 @@ public class ModifyCashflow : ICarterModule
         }
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public Task<Result> Handle(Request request, CancellationToken cancellationToken) =>
+        public Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken) =>
             GetExistingCashflow(request, cancellationToken)
                 .OnSuccess(ModifyCashflow(request));
 
@@ -73,7 +73,7 @@ public class ModifyCashflow : ICarterModule
                 : Result<Cashflow>.Success(cashflow);
         }
 
-        private Func<Cashflow, Task<Result>> ModifyCashflow(Request request) =>
+        private Func<Cashflow, Task<Result<Nothing>>> ModifyCashflow(Request request) =>
             cashflow => Task.FromResult(
                 cashflow.Modify(amount: request.Amount, effectiveDate: request.EffectiveDate,
                         description: request.Description)
@@ -82,11 +82,11 @@ public class ModifyCashflow : ICarterModule
 
         private static Func<Cashflow, Result<Cashflow>> SetTags(Request request) => cashflow => cashflow.SetTags(request.Tags);
 
-        private Func<Cashflow, Result> SaveCashflow() =>
+        private Func<Cashflow, Result<Nothing>> SaveCashflow() =>
             cashflow =>
             {
                 context.Update(cashflow);
-                return Result.Success();
+                return Result<Nothing>.Success();
             };
     }
 }

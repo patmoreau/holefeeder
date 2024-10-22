@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -34,16 +34,16 @@ public class CancelCashflow : ICarterModule
             .WithName(nameof(CancelCashflow))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request(CashflowId Id) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(CashflowId Id) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
         public Validator() => RuleFor(command => command.Id).NotNull().NotEqual(CashflowId.Empty);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var exists =
                 await context.Cashflows.SingleOrDefaultAsync(
@@ -51,17 +51,17 @@ public class CancelCashflow : ICarterModule
                     cancellationToken);
             if (exists is null)
             {
-                return Result.Failure(CashflowErrors.NotFound(request.Id));
+                return Result<Nothing>.Failure(CashflowErrors.NotFound(request.Id));
             }
 
             var result = exists.Cancel();
             if (result.IsFailure)
             {
-                return result;
+                return Result<Nothing>.Failure(result.Error);
             }
             context.Update(result.Value);
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 }

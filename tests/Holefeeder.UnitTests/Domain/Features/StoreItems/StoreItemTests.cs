@@ -1,8 +1,9 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Users;
+using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
@@ -24,8 +25,7 @@ public class StoreItemTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([StoreItemErrors.CodeRequired]));
+        result.ShouldHaveError(StoreItemErrors.CodeRequired);
     }
 
     [Fact]
@@ -38,8 +38,7 @@ public class StoreItemTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([StoreItemErrors.UserIdRequired]));
+        result.ShouldHaveError(StoreItemErrors.UserIdRequired);
     }
 
     [Fact]
@@ -52,7 +51,7 @@ public class StoreItemTests
 
         // assert
         using var scope = new AssertionScope();
-        result.Should().BeSuccessful().WithValue(result.Value);
+        result.Should().BeSuccessful().And.WithValue(result.Value);
         _driver.ShouldBeValidStoreItem(result.Value);
     }
 

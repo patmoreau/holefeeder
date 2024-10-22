@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.ValueObjects;
 
 public readonly struct Money : IEquatable<Money>, IPrimitiveType<decimal>

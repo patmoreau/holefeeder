@@ -1,4 +1,4 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Users;
@@ -20,7 +20,7 @@ public class UserTests
 
         // assert
         using var scope = new AssertionScope();
-        result.Should().BeSuccessful().WithValue(result.Value);
+        result.Should().BeSuccessful().And.WithValue(result.Value);
         _driver.ShouldBeValid(result.Value);
     }
 

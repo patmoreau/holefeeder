@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -37,7 +37,7 @@ public class ModifyTransaction : ICarterModule
             .WithName(nameof(ModifyTransaction))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request : IRequest<Result>, IUnitOfWorkRequest
+    internal record Request : IRequest<Result<Nothing>>, IUnitOfWorkRequest
     {
         public required TransactionId Id { get; init; }
 
@@ -65,12 +65,12 @@ public class ModifyTransaction : ICarterModule
         }
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken) =>
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken) =>
             (await CheckIfAccountExits(request, cancellationToken)
-                .OnSuccess(() => CheckIfCategoryExist(request, cancellationToken))
-                .OnSuccess(() => GetExistingTransaction(request, cancellationToken)))
+                .OnSuccess(_ => CheckIfCategoryExist(request, cancellationToken))
+                .OnSuccess(_ => GetExistingTransaction(request, cancellationToken)))
             .OnSuccess(ModifyTransaction(request))
             .OnSuccess(SetTags(request))
             .OnSuccess(SaveTransaction());
@@ -94,36 +94,36 @@ public class ModifyTransaction : ICarterModule
                 : Result<Transaction>.Success(transaction);
         }
 
-        private async Task<Result> CheckIfCategoryExist(Request request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> CheckIfCategoryExist(Request request, CancellationToken cancellationToken)
         {
             if (!await context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result.Failure(TransactionErrors.CategoryNotFound(request.CategoryId));
+                return Result<Nothing>.Failure(TransactionErrors.CategoryNotFound(request.CategoryId));
             }
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
 
-        private async Task<Result> CheckIfAccountExits(Request request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> CheckIfAccountExits(Request request, CancellationToken cancellationToken)
         {
             if (!await context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result.Failure(TransactionErrors.AccountNotFound(request.AccountId));
+                return Result<Nothing>.Failure(TransactionErrors.AccountNotFound(request.AccountId));
             }
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
 
         private static Func<Transaction, Result<Transaction>> SetTags(Request request) =>
             transaction => transaction.SetTags(request.Tags);
 
-        private Func<Transaction, Result> SaveTransaction() =>
+        private Func<Transaction, Result<Nothing>> SaveTransaction() =>
             transaction =>
             {
                 context.Update(transaction);
-                return Result.Success();
+                return Result<Nothing>.Success();
             };
     }
 }

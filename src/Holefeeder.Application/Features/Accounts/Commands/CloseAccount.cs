@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -34,29 +34,29 @@ public class CloseAccount : ICarterModule
             .WithName(nameof(CloseAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var account = await context.Accounts
                 .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
-                return Result.Failure(AccountErrors.NotFound(request.Id));
+                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
             }
 
             var closedAccount = account.Close();
             if (closedAccount.IsFailure)
             {
-                return closedAccount;
+                return Result<Nothing>.Failure(closedAccount.Error);
             }
             context.Update(closedAccount.Value);
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 
-    internal record Request(AccountId Id) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(AccountId Id) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

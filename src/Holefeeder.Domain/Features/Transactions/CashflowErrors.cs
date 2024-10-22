@@ -1,14 +1,16 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.Features.Transactions;
 
 public static class CashflowErrors
 {
-    public const string CodeIdRequired = $"{nameof(Cashflow)}.{nameof(IdRequired)}";
-    public const string CodeEffectiveDateRequired = $"{nameof(Cashflow)}.{nameof(EffectiveDateRequired)}";
-    public const string CodeFrequencyInvalid = $"{nameof(Cashflow)}.{nameof(FrequencyInvalid)}";
-    public const string CodeRecurrenceInvalid = $"{nameof(Cashflow)}.{nameof(RecurrenceInvalid)}";
-    public const string CodeAccountIdRequired = $"{nameof(Cashflow)}.{nameof(AccountIdRequired)}";
-    public const string CodeCategoryIdRequired = $"{nameof(Cashflow)}.{nameof(CategoryIdRequired)}";
-    public const string CodeUserIdRequired = $"{nameof(Cashflow)}.{nameof(UserIdRequired)}";
+    public const string CodeIdRequired = $"{nameof(Cashflow)}.{nameof(Cashflow.Id)}";
+    public const string CodeEffectiveDateRequired = $"{nameof(Cashflow)}.{nameof(Cashflow.EffectiveDate)}";
+    public const string CodeFrequencyInvalid = $"{nameof(Cashflow)}.{nameof(Cashflow.Frequency)}";
+    public const string CodeRecurrenceInvalid = $"{nameof(Cashflow)}.{nameof(Cashflow.Recurrence)}";
+    public const string CodeAccountIdRequired = $"{nameof(Cashflow)}.{nameof(Cashflow.AccountId)}";
+    public const string CodeCategoryIdRequired = $"{nameof(Cashflow)}.{nameof(Cashflow.CategoryId)}";
+    public const string CodeUserIdRequired = $"{nameof(Cashflow)}.{nameof(Cashflow.UserId)}";
     public const string CodeAlreadyInactive = $"{nameof(Cashflow)}.{nameof(AlreadyInactive)}";
     public const string CodeNotFound = $"{nameof(Cashflow)}.{nameof(NotFound)}";
 

@@ -1,4 +1,6 @@
-using DrifterApps.Seeds.Domain;
+using System.Diagnostics.CodeAnalysis;
+
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Enumerations;
@@ -8,6 +10,7 @@ using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
+using Holefeeder.UnitTests.Domain.Extensions;
 
 using Xunit.Abstractions;
 
@@ -17,6 +20,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
 [UnitTest, Category("Domain")]
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public class CashflowTests(ITestOutputHelper testOutputHelper)
 {
     private readonly Driver _driver = new();
@@ -44,8 +48,7 @@ public class CashflowTests(ITestOutputHelper testOutputHelper)
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([error]));
+        result.ShouldHaveError(error);
     }
 
     [Theory, ClassData(typeof(ImportValidationData))]
@@ -73,8 +76,7 @@ public class CashflowTests(ITestOutputHelper testOutputHelper)
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([error]));
+        result.ShouldHaveError(error);
     }
 
     [Fact]

@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions" />
         <PackageReference Include="DrifterApps.Seeds.Testing" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="FluentAssertions.Analyzers" />

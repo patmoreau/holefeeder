@@ -1,5 +1,6 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
+using DrifterApps.Seeds.Testing.Attributes;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -8,6 +9,7 @@ using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
 using Holefeeder.Tests.Common.Extensions;
+using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
@@ -26,8 +28,7 @@ public class TransactionTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.DateRequired]));
+        result.ShouldHaveError(TransactionErrors.DateRequired);
     }
 
     [Fact]
@@ -40,8 +41,7 @@ public class TransactionTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.AccountIdRequired]));
+        result.ShouldHaveError(TransactionErrors.AccountIdRequired);
     }
 
     [Fact]
@@ -54,8 +54,7 @@ public class TransactionTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CategoryIdRequired]));
+        result.ShouldHaveError(TransactionErrors.CategoryIdRequired);
     }
 
     [Fact]
@@ -68,8 +67,7 @@ public class TransactionTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.UserIdRequired]));
+        result.ShouldHaveError(TransactionErrors.UserIdRequired);
     }
 
     [Fact]
@@ -95,8 +93,7 @@ public class TransactionTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.IdRequired]));
+        result.ShouldHaveError(TransactionErrors.IdRequired);
     }
 
     [Fact]
@@ -109,8 +106,7 @@ public class TransactionTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.DateRequired]));
+        result.ShouldHaveError(TransactionErrors.DateRequired);
     }
 
     [Fact]
@@ -123,8 +119,7 @@ public class TransactionTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.AccountIdRequired]));
+        result.ShouldHaveError(TransactionErrors.AccountIdRequired);
     }
 
     [Fact]
@@ -137,8 +132,7 @@ public class TransactionTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CategoryIdRequired]));
+        result.ShouldHaveError(TransactionErrors.CategoryIdRequired);
     }
 
     [Fact]
@@ -151,8 +145,7 @@ public class TransactionTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.UserIdRequired]));
+        result.ShouldHaveError(TransactionErrors.UserIdRequired);
     }
 
     [Fact]
@@ -207,8 +200,7 @@ public class TransactionTests
         var result = transaction.ApplyCashflow(CashflowId.Empty, Fakerizer.Date.RecentDateOnly());
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CashflowRequired]));
+        result.ShouldHaveError(TransactionErrors.CashflowRequired);
     }
 
     [Fact]
@@ -221,8 +213,7 @@ public class TransactionTests
         var result = transaction.ApplyCashflow(CashflowId.New, default);
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([TransactionErrors.CashflowRequired]));
+        result.ShouldHaveError(TransactionErrors.CashflowRequired);
     }
 
     [Fact]

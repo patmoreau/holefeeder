@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.Accounts.Queries;
@@ -76,9 +76,9 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
         });
     }
 
-    private IRequestHandler<CloseAccount.Request, Result> CloseAccountHandler { get; } = CreateSubstitute<CloseAccount.Request, Result>();
-    private IRequestHandler<FavoriteAccount.Request, Result> FavoriteAccountHandler { get; } = CreateSubstitute<FavoriteAccount.Request, Result>();
-    private IRequestHandler<ModifyAccount.Request, Result> ModifyAccountHandler { get; } = CreateSubstitute<ModifyAccount.Request, Result>();
+    private IRequestHandler<CloseAccount.Request, Result<Nothing>> CloseAccountHandler { get; } = CreateSubstitute<CloseAccount.Request, Result<Nothing>>();
+    private IRequestHandler<FavoriteAccount.Request, Result<Nothing>> FavoriteAccountHandler { get; } = CreateSubstitute<FavoriteAccount.Request, Result<Nothing>>();
+    private IRequestHandler<ModifyAccount.Request, Result<Nothing>> ModifyAccountHandler { get; } = CreateSubstitute<ModifyAccount.Request, Result<Nothing>>();
     private IRequestHandler<OpenAccount.Request, Result<AccountId>> OpenAccountHandler { get; } = CreateSubstitute<OpenAccount.Request, Result<AccountId>>();
     private IRequestHandler<GetAccount.Request, Result<AccountViewModel>> GetAccountHandler { get; } = CreateSubstitute<GetAccount.Request, Result<AccountViewModel>>();
     private IRequestHandler<GetAccounts.Request, Result<QueryResult<AccountViewModel>>> GetAccountsHandler { get; } = CreateSubstitute<GetAccounts.Request, Result<QueryResult<AccountViewModel>>>();
@@ -92,15 +92,15 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
     private IRequestHandler<GetForAllCategories.Request, IEnumerable<StatisticsDto>> GetForAllCategoriesHandler { get; } = CreateSubstitute<GetForAllCategories.Request, IEnumerable<StatisticsDto>>();
     private IRequestHandler<GetSummary.Request, SummaryDto> GetSummaryHandler { get; } = CreateSubstitute<GetSummary.Request, SummaryDto>();
     private IRequestHandler<CreateStoreItem.Request, Result<StoreItemId>> CreateStoreItemHandler { get; } = CreateSubstitute<CreateStoreItem.Request, Result<StoreItemId>>();
-    private IRequestHandler<ModifyStoreItem.Request, Result> ModifyStoreItemHandler { get; } = CreateSubstitute<ModifyStoreItem.Request, Result>();
+    private IRequestHandler<ModifyStoreItem.Request, Result<Nothing>> ModifyStoreItemHandler { get; } = CreateSubstitute<ModifyStoreItem.Request, Result<Nothing>>();
     private IRequestHandler<GetStoreItem.Request, Result<StoreItemViewModel>> GetStoreItemHandler { get; } = CreateSubstitute<GetStoreItem.Request, Result<StoreItemViewModel>>();
     private IRequestHandler<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>> GetStoreItemsHandler { get; } = CreateSubstitute<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>>();
     private IRequestHandler<GetTagsWithCount.Request, IEnumerable<TagDto>> GetTagsWithCountHandler { get; } = CreateSubstitute<GetTagsWithCount.Request, IEnumerable<TagDto>>();
-    private IRequestHandler<CancelCashflow.Request, Result> CancelCashflowHandler { get; } = CreateSubstitute<CancelCashflow.Request, Result>();
-    private IRequestHandler<DeleteTransaction.Request, Result> DeleteTransactionHandler { get; } = CreateSubstitute<DeleteTransaction.Request, Result>();
+    private IRequestHandler<CancelCashflow.Request, Result<Nothing>> CancelCashflowHandler { get; } = CreateSubstitute<CancelCashflow.Request, Result<Nothing>>();
+    private IRequestHandler<DeleteTransaction.Request, Result<Nothing>> DeleteTransactionHandler { get; } = CreateSubstitute<DeleteTransaction.Request, Result<Nothing>>();
     private IRequestHandler<MakePurchase.Request, Result<TransactionId>> MakePurchaseHandler { get; } = CreateSubstitute<MakePurchase.Request, Result<TransactionId>>();
-    private IRequestHandler<ModifyCashflow.Request, Result> ModifyCashflowHandler { get; } = CreateSubstitute<ModifyCashflow.Request, Result>();
-    private IRequestHandler<ModifyTransaction.Request, Result> ModifyTransactionHandler { get; } = CreateSubstitute<ModifyTransaction.Request, Result>();
+    private IRequestHandler<ModifyCashflow.Request, Result<Nothing>> ModifyCashflowHandler { get; } = CreateSubstitute<ModifyCashflow.Request, Result<Nothing>>();
+    private IRequestHandler<ModifyTransaction.Request, Result<Nothing>> ModifyTransactionHandler { get; } = CreateSubstitute<ModifyTransaction.Request, Result<Nothing>>();
     private IRequestHandler<PayCashflow.Request, Result<TransactionId>> PayCashflowHandler { get; } = CreateSubstitute<PayCashflow.Request, Result<TransactionId>>();
     private IRequestHandler<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>> TransferHandler { get; } = CreateSubstitute<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>();
     private IRequestHandler<GetCashflow.Request, Result<CashflowInfoViewModel>> GetCashflowHandler { get; } = CreateSubstitute<GetCashflow.Request, Result<CashflowInfoViewModel>>();

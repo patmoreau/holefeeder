@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -34,29 +34,29 @@ public class FavoriteAccount : ICarterModule
             .WithName(nameof(FavoriteAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var account = await context.Accounts
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
-                return Result.Failure(AccountErrors.NotFound(request.Id));
+                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
             }
 
             var result = account.Modify(favorite: request.IsFavorite);
             if (result.IsFailure)
             {
-                return Result.Failure(result.Error);
+                return Result<Nothing>.Failure(result.Error);
             }
             context.Update(result.Value);
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 
-    internal record Request(AccountId Id, bool IsFavorite) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(AccountId Id, bool IsFavorite) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

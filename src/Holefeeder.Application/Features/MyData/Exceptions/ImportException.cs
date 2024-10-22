@@ -1,4 +1,4 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 namespace Holefeeder.Application.Features.MyData.Exceptions;
 

@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.ValueObjects;
@@ -17,17 +19,16 @@ public partial record Transaction
 
     public Result<Transaction> ApplyCashflow(CashflowId cashflowId, DateOnly cashflowDate)
     {
-        var result = Result.Validate(CashflowValidation(cashflowId, cashflowDate));
-        if (result.IsFailure)
-        {
-            return Result<Transaction>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(CashflowValidation(cashflowId, cashflowDate));
 
-        return Result<Transaction>.Success(this with
-        {
-            CashflowId = cashflowId,
-            CashflowDate = cashflowDate
-        });
+        return result.Switch(
+            () => Result<Transaction>.Success(this with
+            {
+                CashflowId = cashflowId,
+                CashflowDate = cashflowDate
+            }),
+            Result<Transaction>.Failure);
     }
 
     public Result<Transaction> Modify(DateOnly? date = null, Money? amount = null, string? description = null,
@@ -42,23 +43,23 @@ public partial record Transaction
         var newCashflowId = cashflowId ?? CashflowId;
         var newCashflowDate = cashflowDate ?? CashflowDate;
 
-        var result = Result.Validate(DateValidation(newDate), AccountIdValidation(newAccountId),
-            CategoryIdValidation(newCategoryId));
-        if (result.IsFailure)
-        {
-            return Result<Transaction>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(DateValidation(newDate))
+            .Ensure(AccountIdValidation(newAccountId))
+            .Ensure(CategoryIdValidation(newCategoryId));
 
-        return Result<Transaction>.Success(
-            this with
-            {
-                Date = newDate,
-                Amount = newAmount,
-                Description = newDescription,
-                AccountId = newAccountId,
-                CategoryId = newCategoryId,
-                CashflowId = newCashflowId,
-                CashflowDate = newCashflowDate
-            });
+        return result.Switch(
+            () => Result<Transaction>.Success(
+                this with
+                {
+                    Date = newDate,
+                    Amount = newAmount,
+                    Description = newDescription,
+                    AccountId = newAccountId,
+                    CategoryId = newCategoryId,
+                    CashflowId = newCashflowId,
+                    CashflowDate = newCashflowDate
+                }),
+            Result<Transaction>.Failure);
     }
 }
