@@ -1,7 +1,8 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed, inject } from '@angular/core/testing';
-import { TransactionsService } from '../transactions.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TransactionDetailAdapter } from '@app/core/adapters';
+import { TransactionsService } from '../transactions.service';
 
 // write test for TransactionsService here
 const baseUrl = 'transactions';
@@ -9,8 +10,9 @@ const baseUrl = 'transactions';
 describe('TransactionsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         TransactionsService,
         TransactionDetailAdapter,
         { provide: 'BASE_API_URL', useValue: baseUrl },

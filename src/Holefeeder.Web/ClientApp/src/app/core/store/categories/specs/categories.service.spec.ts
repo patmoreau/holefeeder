@@ -1,18 +1,20 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { CategoriesService } from '../categories.service';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { Category } from '@app/shared/models';
+import { CategoriesService } from '../categories.service';
 
 const baseUrl = 'categories';
 
 describe('CategoriesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         CategoriesService,
         { provide: 'BASE_API_URL', useValue: baseUrl },
       ],

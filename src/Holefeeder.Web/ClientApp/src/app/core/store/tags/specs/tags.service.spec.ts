@@ -1,18 +1,23 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { TagsService } from '../tags.service';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { Tag } from '@app/shared/models/tag.model';
+import { TagsService } from '../tags.service';
 
 const baseUrl = 'tags';
 
 describe('TagsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [TagsService, { provide: 'BASE_API_URL', useValue: baseUrl }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        TagsService,
+        { provide: 'BASE_API_URL', useValue: baseUrl },
+      ],
     });
   });
 

@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
 import {
   AuthenticatedResult,
   LoginResponse,
   OidcSecurityService,
   UserDataResult,
 } from 'angular-auth-oidc-client';
+import { of, Subject } from 'rxjs';
 import { AuthService } from '../auth.service';
 
 const isAuthenticatedResult: AuthenticatedResult = {
@@ -21,7 +21,7 @@ const isNotAuthenticatedResult: AuthenticatedResult = {
 describe('AuthService', () => {
   let authService: AuthService;
   let oidcSecurityServiceSpy: jasmine.SpyObj<OidcSecurityService>;
-  const authenticatedResult = new Subject<AuthenticatedResult<Nothing>();
+  const authenticatedResult = new Subject<AuthenticatedResult>();
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj(
