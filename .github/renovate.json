@@ -39,6 +39,20 @@
       "groupSlug": "npm-minor-patch-updates"
     },
     {
+      "matchManagers": ["nuget"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "groupName": "Nuget major updates",
+      "groupSlug": "nuger-major-updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "groupName": "NPM major updates",
+      "groupSlug": "npm-major-updates"
+    },
+    {
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }
