@@ -38,7 +38,6 @@
     "@ngrx/schematics": "18.1.0",
     "@ngrx/store": "18.1.0",
     "@ngrx/store-devtools": "18.1.0",
-    "@nguniversal/module-map-ngfactory-loader": "8.2.6",
     "@ngx-loading-bar/core": "7.0.0",
     "@ngx-loading-bar/router": "7.0.0",
     "@popperjs/core": "2.11.8",
@@ -100,7 +99,6 @@
     "ng2-charts-schematics": "0.1.7",
     "prettier": "3.3.3",
     "prettier-eslint": "16.3.0",
-    "protractor": "7.0.0",
     "source-map-explorer": "2.5.3",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
