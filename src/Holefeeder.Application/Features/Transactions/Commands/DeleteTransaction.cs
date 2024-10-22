@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -34,28 +34,28 @@ public class DeleteTransaction : ICarterModule
             .WithName(nameof(DeleteTransaction))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal record Request(TransactionId Id) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(TransactionId Id) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {
         public Validator() => RuleFor(command => command.Id).NotNull().NotEqual(TransactionId.Empty);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var transaction =
                 await context.Transactions.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (transaction is null)
             {
-                return Result.Failure(TransactionErrors.NotFound(request.Id));
+                return Result<Nothing>.Failure(TransactionErrors.NotFound(request.Id));
             }
 
             context.Remove(transaction);
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 }

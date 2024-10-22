@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -43,22 +43,22 @@ public class ModifyStoreItem : ICarterModule
         }
     }
 
-    internal record Request(StoreItemId Id, string Data) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(StoreItemId Id, string Data) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var storeItem = await context.StoreItems
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (storeItem is null)
             {
-                return Result.Failure(StoreItemErrors.NotFound(StoreItemId.Create(request.Id)));
+                return Result<Nothing>.Failure(StoreItemErrors.NotFound(StoreItemId.Create(request.Id)));
             }
 
             context.Update(storeItem with { Data = request.Data });
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 }

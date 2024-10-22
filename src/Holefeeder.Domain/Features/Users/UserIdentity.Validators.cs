@@ -1,7 +1,11 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.Features.Users;
 
 public sealed partial record UserIdentity
 {
-    private static ResultValidation UserIdValidation(UserId id) =>
-        ResultValidation.Create(() => id != UserId.Empty, UserErrors.UserIdRequired);
+    private static Func<Result<Nothing>> UserIdValidation(UserId id) =>
+        () => id != UserId.Empty
+            ? Result<Nothing>.Success()
+            : Result<Nothing>.Failure(UserErrors.UserIdRequired);
 }

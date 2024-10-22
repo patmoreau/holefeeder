@@ -21,10 +21,11 @@
     <PackageVersion Include="dbup-core" Version="5.0.87" />
     <PackageVersion Include="dbup-mysql" Version="5.0.44" />
     <PackageVersion Include="DotNetMeteor.HotReload.Plugin" Version="3.3.0" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.76" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.76" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.76" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.76" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.82" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.82" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.82" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="0.1.6" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.82" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.14" />
     <PackageVersion Include="Hangfire.InMemory" Version="0.11.0" />

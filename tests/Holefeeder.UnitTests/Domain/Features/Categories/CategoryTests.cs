@@ -1,10 +1,11 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
+using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
@@ -23,7 +24,7 @@ public class CategoryTests
 
         // assert
         using var scope = new AssertionScope();
-        result.Should().BeSuccessful().WithValue(result.Value);
+        result.Should().BeSuccessful().And.WithValue(result.Value);
         _driver.ShouldBeValidCategory(result.Value);
     }
 
@@ -37,8 +38,7 @@ public class CategoryTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.IdRequired]));
+        result.ShouldHaveError(CategoryErrors.IdRequired);
     }
 
     [Theory]
@@ -53,8 +53,7 @@ public class CategoryTests
 
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.NameRequired]));
+        result.ShouldHaveError(CategoryErrors.NameRequired);
     }
 
     [Fact]
@@ -67,8 +66,7 @@ public class CategoryTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([CategoryErrors.UserIdRequired]));
+        result.ShouldHaveError(CategoryErrors.UserIdRequired);
     }
 
     [Fact]
@@ -81,7 +79,7 @@ public class CategoryTests
 
         // assert
         using var scope = new AssertionScope();
-        result.Should().BeSuccessful().WithValue(result.Value);
+        result.Should().BeSuccessful().And.WithValue(result.Value);
         _driver.ShouldBeValidCategory(result.Value);
     }
 

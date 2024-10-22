@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -63,20 +63,20 @@ public class Transfer : ICarterModule
         public Task<Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>> Handle(
             Request request, CancellationToken cancellationToken) =>
             ActiveAccountExistsAsync(request.FromAccountId, cancellationToken)
-                .OnSuccess(() => ActiveAccountExistsAsync(request.ToAccountId, cancellationToken))
+                .OnSuccess(_ => ActiveAccountExistsAsync(request.ToAccountId, cancellationToken))
                 .OnSuccess(FindCategoriesAsync(cancellationToken))
                 .OnSuccess(CreateTransactionsAsync(request, cancellationToken));
 
-        private async Task<Result> ActiveAccountExistsAsync(AccountId accountId, CancellationToken cancellationToken) =>
+        private async Task<Result<Nothing>> ActiveAccountExistsAsync(AccountId accountId, CancellationToken cancellationToken) =>
             await context.Accounts.AnyAsync(
                 x => x.Id == accountId && x.UserId == userContext.Id && !x.Inactive,
                 cancellationToken)
-                ? Result.Success()
-                : Result.Failure(TransactionErrors.AccountNotFound(accountId));
+                ? Result<Nothing>.Success()
+                : Result<Nothing>.Failure(TransactionErrors.AccountNotFound(accountId));
 
-        private Func<Task<Result<(Category TransferFrom, Category TransferTo)>>> FindCategoriesAsync(
+        private Func<Nothing, Task<Result<(Category TransferFrom, Category TransferTo)>>> FindCategoriesAsync(
             CancellationToken cancellationToken) =>
-            async () =>
+            async _ =>
             {
                 const string categoryFromName = "Transfer In";
                 const string categoryToName = "Transfer Out";

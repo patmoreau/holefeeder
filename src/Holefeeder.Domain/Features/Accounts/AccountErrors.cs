@@ -1,11 +1,13 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.Features.Accounts;
 
 public static class AccountErrors
 {
-    public const string CodeIdRequired = $"{nameof(Account)}.{nameof(IdRequired)}";
-    public const string CodeNameRequired = $"{nameof(Account)}.{nameof(NameRequired)}";
-    public const string CodeOpenDateRequired = $"{nameof(Account)}.{nameof(OpenDateRequired)}";
-    public const string CodeUserIdRequired = $"{nameof(Account)}.{nameof(UserIdRequired)}";
+    public const string CodeIdRequired = $"{nameof(Account)}.{nameof(Account.Id)}";
+    public const string CodeNameRequired = $"{nameof(Account)}.{nameof(Account.Name)}";
+    public const string CodeOpenDateRequired = $"{nameof(Account)}.{nameof(Account.OpenDate)}";
+    public const string CodeUserIdRequired = $"{nameof(Account)}.{nameof(Account.UserId)}";
     public const string CodeAccountClosed = $"{nameof(Account)}.{nameof(AccountClosed)}";
     public const string CodeActiveCashflows = $"{nameof(Account)}.{nameof(ActiveCashflows)}";
     public const string CodeNameAlreadyExists = $"{nameof(Account)}.{nameof(NameAlreadyExists)}";

@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.ValueObjects;
 
 [SuppressMessage("Design", "CA1031:Do not catch general exception types")]

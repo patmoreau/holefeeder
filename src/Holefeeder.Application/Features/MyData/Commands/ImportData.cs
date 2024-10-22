@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using DrifterApps.Seeds.Application;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -93,7 +93,7 @@ public class ImportData : ICarterModule
 
             return Unit.Value;
 
-            void ThrowImportExceptionOnFailure(Result result)
+            void ThrowImportExceptionOnFailure(Result<Nothing> result)
             {
                 if (result.IsFailure)
                 {
@@ -105,11 +105,11 @@ public class ImportData : ICarterModule
         private void UpdateProgress(Guid requestId, ImportDataStatusDto response) =>
             memoryCache.Set(requestId, response, TimeSpan.FromHours(1));
 
-        private async Task<Result> ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Accounts.Length == 0)
             {
-                return Result.Success();
+                return Result<Nothing>.Success();
             }
 
             var accounts = request.Data.Accounts;
@@ -127,7 +127,7 @@ public class ImportData : ICarterModule
                 var elementOpenBalance = Money.Create(element.OpenBalance);
                 if (elementOpenBalance.IsFailure)
                 {
-                    return elementOpenBalance;
+                    return Result<Nothing>.Failure(elementOpenBalance.Error);
                 }
 
                 var exists = await context.Accounts
@@ -148,7 +148,7 @@ public class ImportData : ICarterModule
                         );
                         if (result.IsFailure)
                         {
-                            return result;
+                            return Result<Nothing>.Failure(result.Error);
                         }
 
                         logger.LogAccount("Modify", result.Value);
@@ -174,7 +174,7 @@ public class ImportData : ICarterModule
                     );
                     if (result.IsFailure)
                     {
-                        return result;
+                        return Result<Nothing>.Failure(result.Error);
                     }
 
                     logger.LogAccount("Create", result.Value);
@@ -189,14 +189,14 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
 
-        private async Task<Result> ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Categories.Length == 0)
             {
-                return Result.Success();
+                return Result<Nothing>.Success();
             }
 
             var categories = request.Data.Categories;
@@ -214,13 +214,13 @@ public class ImportData : ICarterModule
                 var elementBudgetAmount = Money.Create(element.BudgetAmount);
                 if (elementBudgetAmount.IsFailure)
                 {
-                    return elementBudgetAmount;
+                    return Result<Nothing>.Failure(elementBudgetAmount.Error);
                 }
 
                 var elementColor = CategoryColor.Create(element.Color);
                 if (elementColor.IsFailure)
                 {
-                    return elementColor;
+                    return Result<Nothing>.Failure(elementColor.Error);
                 }
 
                 var exists = await context.Categories
@@ -240,7 +240,7 @@ public class ImportData : ICarterModule
                         );
                         if (result.IsFailure)
                         {
-                            return result;
+                            return Result<Nothing>.Failure(result.Error);
                         }
 
                         logger.LogCategory("Modify", result.Value);
@@ -265,7 +265,7 @@ public class ImportData : ICarterModule
 
                     if (result.IsFailure)
                     {
-                        return result;
+                        return Result<Nothing>.Failure(result.Error);
                     }
 
                     logger.LogCategory("Create", result.Value);
@@ -280,14 +280,14 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
 
-        private async Task<Result> ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Cashflows.Length == 0)
             {
-                return Result.Success();
+                return Result<Nothing>.Success();
             }
 
             var cashflows = request.Data.Cashflows;
@@ -305,7 +305,7 @@ public class ImportData : ICarterModule
                 var elementAmount = Money.Create(element.Amount);
                 if (elementAmount.IsFailure)
                 {
-                    return elementAmount;
+                    return Result<Nothing>.Failure(elementAmount.Error);
                 }
 
                 var elementCategoryId = CategoryId.Create(element.CategoryId);
@@ -330,7 +330,7 @@ public class ImportData : ICarterModule
                         );
                         if (result.IsFailure)
                         {
-                            return result;
+                            return Result<Nothing>.Failure(result.Error);
                         }
 
                         var cashflow = result.Value.SetTags(element.Tags);
@@ -359,7 +359,7 @@ public class ImportData : ICarterModule
                     );
                     if (result.IsFailure)
                     {
-                        return result;
+                        return Result<Nothing>.Failure(result.Error);
                     }
 
                     var cashflow = result.Value.SetTags(element.Tags);
@@ -375,15 +375,15 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
 
 
-        private async Task<Result> ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
         {
             if (request.Data.Transactions.Length == 0)
             {
-                return Result.Success();
+                return Result<Nothing>.Success();
             }
 
             var transactions = request.Data.Transactions;
@@ -401,7 +401,7 @@ public class ImportData : ICarterModule
                 var elementAmount = Money.Create(element.Amount);
                 if (elementAmount.IsFailure)
                 {
-                    return elementAmount;
+                    return Result<Nothing>.Failure(elementAmount.Error);
                 }
                 var elementCategoryId = CategoryId.Create(element.CategoryId);
                 var elementAccountId = AccountId.Create(element.AccountId);
@@ -427,7 +427,7 @@ public class ImportData : ICarterModule
 
                         if (result.IsFailure)
                         {
-                            return result;
+                            return Result<Nothing>.Failure(result.Error);
                         }
                         var transaction = result.Value.SetTags(element.Tags);
                         logger.LogTransaction("Modify", transaction.Value);
@@ -453,7 +453,7 @@ public class ImportData : ICarterModule
 
                     if (result.IsFailure)
                     {
-                        return result;
+                        return Result<Nothing>.Failure(result.Error);
                     }
 
                     var transaction = result.Value.SetTags(element.Tags);
@@ -469,7 +469,7 @@ public class ImportData : ICarterModule
             }
 
             await context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 

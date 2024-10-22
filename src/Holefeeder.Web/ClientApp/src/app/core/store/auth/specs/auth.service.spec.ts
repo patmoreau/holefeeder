@@ -21,7 +21,7 @@ const isNotAuthenticatedResult: AuthenticatedResult = {
 describe('AuthService', () => {
   let authService: AuthService;
   let oidcSecurityServiceSpy: jasmine.SpyObj<OidcSecurityService>;
-  const authenticatedResult = new Subject<AuthenticatedResult>();
+  const authenticatedResult = new Subject<AuthenticatedResult<Nothing>();
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj(

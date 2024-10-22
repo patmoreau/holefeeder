@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -12,46 +14,51 @@ public partial record Cashflow
         int recurrence,
         Money amount, string description, CategoryId categoryId, AccountId accountId, UserId userId)
     {
-        var result = Result.Validate(EffectiveDateValidation(effectiveDate), FrequencyValidation(frequency),
-            RecurrenceValidation(recurrence), AccountIdValidation(accountId), CategoryIdValidation(categoryId),
-            UserIdValidation(userId));
-        if (result.IsFailure)
-        {
-            return Result<Cashflow>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(EffectiveDateValidation(effectiveDate))
+            .Ensure(FrequencyValidation(frequency))
+            .Ensure(RecurrenceValidation(recurrence))
+            .Ensure(AccountIdValidation(accountId))
+            .Ensure(CategoryIdValidation(categoryId))
+            .Ensure(UserIdValidation(userId));
 
-        return Result<Cashflow>.Success(
-            new Cashflow(CashflowId.New, effectiveDate, intervalType, accountId, categoryId, userId)
-            {
-                Amount = amount,
-                IntervalType = intervalType,
-                Frequency = frequency,
-                Recurrence = recurrence,
-                Description = description,
-            });
+        return result.Switch(
+            () => Result<Cashflow>.Success(
+                new Cashflow(CashflowId.New, effectiveDate, intervalType, accountId, categoryId, userId)
+                {
+                    Amount = amount,
+                    IntervalType = intervalType,
+                    Frequency = frequency,
+                    Recurrence = recurrence,
+                    Description = description,
+                }),
+            Result<Cashflow>.Failure);
     }
 
     public static Result<Cashflow> Import(CashflowId id, DateOnly effectiveDate, DateIntervalType intervalType,
         int frequency, int recurrence, Money amount, string description, CategoryId categoryId, AccountId accountId,
         bool inactive, UserId userId)
     {
-        var result = Result.Validate(IdValidation(id), EffectiveDateValidation(effectiveDate),
-            FrequencyValidation(frequency), RecurrenceValidation(recurrence), AccountIdValidation(accountId),
-            CategoryIdValidation(categoryId), UserIdValidation(userId));
-        if (result.IsFailure)
-        {
-            return Result<Cashflow>.Failure(result.Error);
-        }
+        var result = ResultAggregate.Create()
+            .Ensure(IdValidation(id))
+            .Ensure(EffectiveDateValidation(effectiveDate))
+            .Ensure(FrequencyValidation(frequency))
+            .Ensure(RecurrenceValidation(recurrence))
+            .Ensure(AccountIdValidation(accountId))
+            .Ensure(CategoryIdValidation(categoryId))
+            .Ensure(UserIdValidation(userId));
 
-        return Result<Cashflow>.Success(
-            new Cashflow(id, effectiveDate, intervalType, accountId, categoryId, userId)
-            {
-                Amount = amount,
-                IntervalType = intervalType,
-                Frequency = frequency,
-                Recurrence = recurrence,
-                Description = description,
-            });
+        return result.Switch(
+            () => Result<Cashflow>.Success(
+                new Cashflow(id, effectiveDate, intervalType, accountId, categoryId, userId)
+                {
+                    Amount = amount,
+                    IntervalType = intervalType,
+                    Frequency = frequency,
+                    Recurrence = recurrence,
+                    Description = description,
+                }),
+            Result<Cashflow>.Failure);
     }
 
     private bool IsUnpaid(DateOnly effectiveDate, DateOnly nextDate) =>

@@ -1,10 +1,11 @@
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
+using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
@@ -23,8 +24,7 @@ public class AccountTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.IdRequired]));
+        result.ShouldHaveError(AccountErrors.IdRequired);
     }
 
     [Theory]
@@ -38,8 +38,7 @@ public class AccountTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.NameRequired]));
+        result.ShouldHaveError(AccountErrors.NameRequired);
     }
 
     [Fact]
@@ -52,8 +51,7 @@ public class AccountTests
         var result = driver.Build();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.OpenDateRequired]));
+        result.ShouldHaveError(AccountErrors.OpenDateRequired);
     }
 
     [Fact]
@@ -66,8 +64,7 @@ public class AccountTests
         var result = driver.BuildWithImport();
 
         // assert
-        result.Should().BeFailure()
-            .WithError(ResultAggregateError.CreateValidationError([AccountErrors.UserIdRequired]));
+        result.ShouldHaveError(AccountErrors.UserIdRequired);
     }
 
     [Fact]
@@ -80,7 +77,7 @@ public class AccountTests
         var result = account.Close();
 
         // assert
-        result.Should().BeFailure().WithError(AccountErrors.AccountClosed);
+        result.Should().BeFailure().And.WithError(AccountErrors.AccountClosed);
     }
 
     [Theory]

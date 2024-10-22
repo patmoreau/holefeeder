@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Mediatr;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
@@ -35,29 +35,29 @@ public class ModifyAccount : ICarterModule
             .WithName(nameof(ModifyAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result>
+    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
     {
-        public async Task<Result> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
         {
             var exists = await context.Accounts
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (exists is null)
             {
-                return Result.Failure(AccountErrors.NotFound(request.Id));
+                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
             }
 
             var result = exists.Modify(name: request.Name, openBalance: request.OpenBalance, description: request.Description);
             if (result.IsFailure)
             {
-                return Result.Failure(result.Error);
+                return Result<Nothing>.Failure(result.Error);
             }
             context.Update(result.Value);
 
-            return Result.Success();
+            return Result<Nothing>.Success();
         }
     }
 
-    internal record Request(AccountId Id, string Name, Money OpenBalance, string Description) : IRequest<Result>, IUnitOfWorkRequest;
+    internal record Request(AccountId Id, string Name, Money OpenBalance, string Description) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

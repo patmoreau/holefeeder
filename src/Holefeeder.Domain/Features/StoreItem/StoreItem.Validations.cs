@@ -1,10 +1,16 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.Features.StoreItem;
 
 public sealed partial record StoreItem
 {
-    private static ResultValidation CodeValidation(string code) =>
-        ResultValidation.Create(() => !string.IsNullOrWhiteSpace(code), StoreItemErrors.CodeRequired);
+    private static Func<Result<Nothing>> CodeValidation(string code) =>
+        () => !string.IsNullOrWhiteSpace(code)
+            ? Result<Nothing>.Success()
+            : Result<Nothing>.Failure(StoreItemErrors.CodeRequired);
 
-    private static ResultValidation UserIdValidation(Guid id) =>
-        ResultValidation.Create(() => id != Guid.Empty, StoreItemErrors.UserIdRequired);
+    private static Func<Result<Nothing>> UserIdValidation(Guid id) =>
+        () => id != Guid.Empty
+            ? Result<Nothing>.Success()
+            : Result<Nothing>.Failure(StoreItemErrors.UserIdRequired);
 }

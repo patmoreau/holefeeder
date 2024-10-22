@@ -1,5 +1,5 @@
 using DrifterApps.Seeds.Application.Extensions;
-using DrifterApps.Seeds.Domain;
+using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -15,8 +15,7 @@ public static class ResultErrorExtensions
     internal static IResult ToProblem(this ResultError error) =>
         error switch
         {
-            ResultValidationError validationError => validationError.ToValidationProblemDetails(),
-            ResultAggregateError aggregateError => aggregateError.Errors.First().ToProblemDetails(StatusCodes.Status400BadRequest),
+            ResultErrorAggregate validationError => validationError.ToValidationProblemDetails(),
             { Code: AccountErrors.CodeNotFound } => error.ToProblemDetails(StatusCodes.Status404NotFound),
             { Code: AccountErrors.CodeIdRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: AccountErrors.CodeNameRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),

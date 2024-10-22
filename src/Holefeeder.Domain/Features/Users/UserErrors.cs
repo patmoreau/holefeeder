@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 namespace Holefeeder.Domain.Features.Users;
 
 public static class UserErrors

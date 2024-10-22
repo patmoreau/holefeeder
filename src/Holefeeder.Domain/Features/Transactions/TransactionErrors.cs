@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 
@@ -5,14 +7,14 @@ namespace Holefeeder.Domain.Features.Transactions;
 
 public static class TransactionErrors
 {
-    public const string CodeIdRequired = $"{nameof(Transaction)}.{nameof(IdRequired)}";
-    public const string CodeDateRequired = $"{nameof(Transaction)}.{nameof(DateRequired)}";
+    public const string CodeIdRequired = $"{nameof(Transaction)}.{nameof(Transaction.Id)}";
+    public const string CodeDateRequired = $"{nameof(Transaction)}.{nameof(Transaction.Date)}";
+    public const string CodeAccountIdRequired = $"{nameof(Transaction)}.{nameof(Transaction.AccountId)}";
+    public const string CodeCategoryIdRequired = $"{nameof(Transaction)}.{nameof(Transaction.CategoryId)}";
+    public const string CodeUserIdRequired = $"{nameof(Transaction)}.{nameof(Transaction.UserId)}";
+    public const string CodeCashflowRequired = $"{nameof(Transaction)}.{nameof(Transaction.Cashflow)}";
     public const string CodeFrequencyInvalid = $"{nameof(Transaction)}.{nameof(FrequencyInvalid)}";
     public const string CodeRecurrenceInvalid = $"{nameof(Transaction)}.{nameof(RecurrenceInvalid)}";
-    public const string CodeAccountIdRequired = $"{nameof(Transaction)}.{nameof(AccountIdRequired)}";
-    public const string CodeCategoryIdRequired = $"{nameof(Transaction)}.{nameof(CategoryIdRequired)}";
-    public const string CodeUserIdRequired = $"{nameof(Transaction)}.{nameof(UserIdRequired)}";
-    public const string CodeCashflowRequired = $"{nameof(Transaction)}.{nameof(CashflowRequired)}";
     public const string CodeNotFound = $"{nameof(Transaction)}.{nameof(NotFound)}";
     public const string CodeAccountNotFound = $"{nameof(Transaction)}.{nameof(AccountNotFound)}";
     public const string CodeCategoryNotFound = $"{nameof(Transaction)}.{nameof(CategoryNotFound)}";
