@@ -18,8 +18,8 @@
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
-    <PackageVersion Include="dbup-core" Version="5.0.87" />
-    <PackageVersion Include="dbup-mysql" Version="5.0.44" />
+    <PackageVersion Include="dbup-core" Version="6.0.3" />
+    <PackageVersion Include="dbup-mysql" Version="6.0.4" />
     <PackageVersion Include="DotNetMeteor.HotReload.Plugin" Version="3.3.0" />
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.82" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.82" />
