@@ -1,0 +1,59 @@
+@page "/purchase"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager Navigation
+
+<MudContainer Class="pt-3 pb-4 mb-3">
+    <MudContainer>
+        <MudText Typo="Typo.h4" Class="mb-5">Sample Form</MudText>
+        @* ReSharper disable once CSharpWarnings::CS8974 *@
+        <EditForm Model="@formModel" OnValidSubmit="@OnSubmit">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="formModel.TextInput" Label="Text Input" Required="true" />
+            <MudSelect T="string" Label="Select Coffee With Keys" @bind-Value="formModel.DropdownInput"  AnchorOrigin="Origin.BottomCenter">
+                <MudSelectItem Value="@("Cappuccino")" />
+                <MudSelectItem Value="@("Cafe Latte")" />
+                <MudSelectItem Value="@("Espresso")" />
+                <MudSelectItem Value="@("Irish Coffee")" />
+            </MudSelect>
+            <MudNumericField T="decimal" @bind-Value="formModel.DecimalInput" Label="Decimal Input" Required="true" />
+            <MudDatePicker @bind-Date="formModel.DateInput" Label="Date Input" Required="true" />
+            <MudButtonGroup Class="d-flex justify-content-end mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@GoBack">Cancel</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Save</MudButton>
+            </MudButtonGroup>
+            <ValidationSummary />
+        </EditForm>
+    </MudContainer>
+</MudContainer>
+
+@code {
+    private FormModel formModel = new();
+
+    private void OnSubmit()
+    {
+        // Handle form submission logic
+        Navigation.NavigateTo("/success");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/previous-page");
+    }
+
+    public class FormModel
+    {
+        [Required]
+        public string TextInput { get; set; } = string.Empty;
+
+        [Required]
+        public string DropdownInput { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter a valid decimal number.")]
+        public decimal DecimalInput { get; set; }
+
+        [Required]
+        public DateTime? DateInput { get; set; } = DateTime.Now;
+    }
+}

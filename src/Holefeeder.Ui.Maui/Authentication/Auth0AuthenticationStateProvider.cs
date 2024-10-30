@@ -63,8 +63,7 @@ internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, I
 
         _currentUser = authenticatedUser;
 
-        var state = new AuthenticationState(_currentUser);
-        NotifyAuthenticationStateChanged(Task.FromResult(state));
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_currentUser)));
     }
 
     public async Task LogoutAsync()

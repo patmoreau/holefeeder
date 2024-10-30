@@ -1,4 +1,5 @@
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] {typeof(MainLayout).Assembly}">
@@ -28,10 +29,29 @@
     protected override void OnInitialized()
     {
         Instance = this;
+
+        AuthenticationStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+    }
+
+    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        var authState = await task;
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            // Navigate to the specific page
+            Navigation.NavigateTo("/dashboard");
+        }
+        else
+        {
+            // Navigate to the login page
+            Navigation.NavigateTo("/");
+        }
     }
 
     public void NavigateToPurchase()
     {
-        Navigation.NavigateTo("/about");
+        Navigation.NavigateTo("/purchase");
     }
 }

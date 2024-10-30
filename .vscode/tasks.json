@@ -2,8 +2,72 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Run Holefeeder on iPhone",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj",
+                "-t:Run",
+                "-f",
+                "net8.0-ios",
+                "-p:_DeviceName=:v2:udid=${env:IPHONE_UDID}",
+                "-p:RuntimeIdentifier=ios-arm64"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Build and run the .NET MAUI application on a physical iPhone."
+        },
+        {
+            "label": "Run Holefeeder on Mac",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj",
+                "-t:Run",
+                "-f",
+                "net8.0-maccatalyst",
+                "-p:_DeviceName=:v2:udid=${env:MACBOOK_UDID}",
+                "-p:RuntimeIdentifier=maccatalyst-arm64"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Build and run the .NET MAUI application on a physical iPhone."
+        },
+        {
+            "label": "Build Holefeeder for iPhone",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj",
+                "-f",
+                "net8.0-ios",
+                "-p:RuntimeIdentifier=ios-arm64"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Build and run the .NET MAUI application on a physical iPhone."
+        },
+        {
             "type": "dotnet-meteor.task",
-            "target": "build",
+            // "target": "build",
             "args": [],
             "problemMatcher": [],
             "label": "dotnet-meteor: build",
