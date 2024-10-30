@@ -1,8 +1,9 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
+
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
@@ -11,16 +12,17 @@ namespace Holefeeder.FunctionalTests.Features.Enumerations;
 public class ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenAnonymousUser()
-    {
-        GivenUserIsUnauthorized();
+    public Task WhenGettingTheListOfAccountTypes() =>
+    ScenarioRunner.Create(ScenarioOutput)
+        .When(TheUser.GetsTheListOfAccountTypes)
+        .Then(TheListShouldContainTheExpectedValues)
+        .PlayAsync();
 
-        await WhenUserGetEnumeration();
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountType[]>();
-        AssertAll(() => { result.Should().NotBeNull().And.HaveCount(AccountType.List.Count); });
-    }
-
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetAccountTypes);
+    private static void TheListShouldContainTheExpectedValues(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<AccountType>>>(result =>
+        {
+            result.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveEquivalentContent(AccountType.List);
+        });
 }

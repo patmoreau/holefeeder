@@ -1,26 +1,28 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
+
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
 [ComponentTest]
 [Collection("Api collection")]
-public class ScenarioGetDateIntervalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
+public class ScenarioGetDateInternalTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenAnonymousUser()
-    {
-        GivenUserIsUnauthorized();
+    public Task WhenGettingTheListOfDateInternalTypes() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .When(TheUser.GetsTheListOfDateIntervalTypes)
+            .Then(TheListShouldContainTheExpectedValues)
+            .PlayAsync();
 
-        await WhenUserGetEnumeration();
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<DateIntervalType[]>();
-        AssertAll(() => { result.Should().NotBeNull().And.HaveCount(DateIntervalType.List.Count); });
-    }
-
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetDateIntervalTypes);
+    private static void TheListShouldContainTheExpectedValues(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<DateIntervalType>>>(result =>
+        {
+            result.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveEquivalentContent(DateIntervalType.List);
+        });
 }

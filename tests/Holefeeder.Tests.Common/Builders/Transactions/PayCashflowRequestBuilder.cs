@@ -9,7 +9,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class PayCashflowRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateFaker()
+    protected override Faker<Request> Faker { get; } = CreateFaker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.SoonDateOnly())
         .RuleFor(x => x.Amount, faker => MoneyBuilder.Create().Build())
         .RuleFor(x => x.CashflowId, faker => (CashflowId)faker.RandomGuid())

@@ -1,12 +1,15 @@
+using DrifterApps.Seeds.FluentScenario;
+
 using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Tests.Common.Builders.Accounts;
 using Holefeeder.Tests.Common.Builders.Categories;
 using Holefeeder.Tests.Common.Builders.Transactions;
+
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Tags;
 
@@ -21,23 +24,26 @@ public class ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOut
 
     [Fact]
     public Task WhenGettingTagsWithCount() =>
-        ScenarioFor("A user gets his tags", runner =>
-            runner.Given("the user is authorized", GivenUserIsAuthorized)
-                .And("a 'purchase' transaction was made on the 'credit card' with tag 'groceries'", () => CreateTransaction("purchase", "credit card", "groceries"))
-                .And("a 'food and drink' transaction was made on the 'credit card' account with tag 'groceries'", () => CreateTransaction("food and drink", "credit card", "groceries"))
-                .And("a 'food and drink' transaction was made on the 'credit card' account with tag 'restaurant'", () => CreateTransaction("food and drink", "credit card", "restaurant"))
-                .And("a 'food and drink' transaction was made on the 'credit card' account with tags 'restaurant' and 'alcohol'", () => CreateTransaction("food and drink", "credit card", "restaurant", "alcohol"))
-                .And("a second 'food and drink' transaction was made on the 'checking' account with tag 'groceries'", () => CreateTransaction("food and drink", "checking", "groceries"))
-                .When("user gets their tags", () => QueryEndpoint(ApiResources.GetTagsWithCount))
-                .Then("the results by CategoryId should match the expected", ValidateResponse));
+        ScenarioRunner.Create("A user gets his tags", ScenarioOutput)
+            .Given("a 'purchase' transaction was made on the 'credit card' with tag 'groceries'", () => CreateTransaction("purchase", "credit card", "groceries"))
+            .And("a 'food and drink' transaction was made on the 'credit card' account with tag 'groceries'", () => CreateTransaction("food and drink", "credit card", "groceries"))
+            .And("a 'food and drink' transaction was made on the 'credit card' account with tag 'restaurant'", () => CreateTransaction("food and drink", "credit card", "restaurant"))
+            .And("a 'food and drink' transaction was made on the 'credit card' account with tags 'restaurant' and 'alcohol'", () => CreateTransaction("food and drink", "credit card", "restaurant", "alcohol"))
+            .And("a second 'food and drink' transaction was made on the 'checking' account with tag 'groceries'", () => CreateTransaction("food and drink", "checking", "groceries"))
+            .When(TheUser.GetsTheirTags)
+            .Then<IApiResponse<IEnumerable<TagDto>>>("the results by CategoryId should match the expected", ValidateResponse)
+            .PlayAsync();
 
-    private void ValidateResponse()
+    private void ValidateResponse(Ensure<IApiResponse<IEnumerable<TagDto>>> response)
     {
         var expectedForGroceries = new TagDto("groceries", 3);
         var expectedForRestaurant = new TagDto("restaurant", 2);
         var expectedForAlcohol = new TagDto("alcohol", 1);
 
-        var results = HttpClientDriver.DeserializeContent<TagDto[]>();
+        response.Should().BeValid()
+            .And.Subject.Value.Should().BeSuccessful()
+            .And.HaveContent();
+        var results = response.Value.Content;
         results.Should()
             .NotBeNull()
             .And.HaveCount(3)

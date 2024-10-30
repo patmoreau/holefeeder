@@ -8,7 +8,7 @@ namespace Holefeeder.Tests.Common.Builders.MyData;
 
 internal class ImportDataRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateFaker()
+    protected override Faker<Request> Faker { get; } = CreateFaker<Request>()
         .RuleFor(x => x.UpdateExisting, false);
 
     private readonly Faker<Request.Dto> _dtoFaker = new();
@@ -26,10 +26,10 @@ internal class ImportDataRequestBuilder : FakerBuilder<Request>
 
     public ImportDataRequestBuilder WithNoData()
     {
-        _dtoFaker.RuleFor(f => f.Accounts, Array.Empty<MyDataAccountDto>());
-        _dtoFaker.RuleFor(f => f.Cashflows, Array.Empty<MyDataCashflowDto>());
-        _dtoFaker.RuleFor(f => f.Categories, Array.Empty<MyDataCategoryDto>());
-        _dtoFaker.RuleFor(f => f.Transactions, Array.Empty<MyDataTransactionDto>());
+        _dtoFaker.RuleFor(f => f.Accounts, []);
+        _dtoFaker.RuleFor(f => f.Cashflows, []);
+        _dtoFaker.RuleFor(f => f.Categories, []);
+        _dtoFaker.RuleFor(f => f.Transactions, []);
         return this;
     }
 

@@ -2,17 +2,16 @@ using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Users;
-using Holefeeder.Tests.Common.Extensions;
 
 namespace Holefeeder.Tests.Common.Builders.StoreItems;
 
 internal class StoreItemBuilder : FakerBuilder<StoreItem>
 {
-    protected override Faker<StoreItem> Faker { get; } = CreatePrivateFaker()
+    protected override Faker<StoreItem> Faker { get; } = CreatePrivateFaker<StoreItem>()
         .RuleFor(x => x.Id, StoreItemId.New)
         .RuleFor(x => x.Code, faker => faker.Random.String2(1, 100))
         .RuleFor(x => x.Data, faker => faker.Random.Words())
-        .RuleFor(x => x.UserId, faker => faker.RandomGuid());
+        .RuleFor(x => x.UserId, UserId.New);
 
     public static StoreItemBuilder GivenAStoreItem() => new();
 

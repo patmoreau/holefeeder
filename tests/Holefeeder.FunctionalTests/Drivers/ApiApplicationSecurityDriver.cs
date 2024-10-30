@@ -1,5 +1,9 @@
+using System.Net.Http.Headers;
+using System.Reflection;
+
 using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.FluentResult;
+using DrifterApps.Seeds.Testing.Infrastructure.Authentication;
 
 using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.Accounts.Queries;
@@ -20,6 +24,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.FunctionalTests.Infrastructure;
 
 using MediatR;
 
@@ -29,6 +34,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using NSubstitute;
+
+using Refit;
 
 using AccountViewModel = Holefeeder.Application.Features.Accounts.Queries.AccountViewModel;
 
@@ -41,77 +48,72 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
         base.ConfigureWebHost(builder);
         builder.ConfigureTestServices(services =>
         {
-            ReplaceHandler(services, CloseAccountHandler);
-            ReplaceHandler(services, FavoriteAccountHandler);
-            ReplaceHandler(services, ModifyAccountHandler);
-            ReplaceHandler(services, OpenAccountHandler);
-            ReplaceHandler(services, GetAccountHandler);
-            ReplaceHandler(services, GetAccountsHandler);
-            ReplaceHandler(services, GetCategoriesHandler);
-            ReplaceHandler(services, GetAccountTypesHandler);
-            ReplaceHandler(services, GetCategoryTypesHandler);
-            ReplaceHandler(services, GetDateIntervalTypesHandler);
-            ReplaceHandler(services, ImportDataHandler);
-            ReplaceHandler(services, ExportDataHandler);
-            ReplaceHandler(services, ImportDataStatusHandler);
-            ReplaceHandler(services, GetForAllCategoriesHandler);
-            ReplaceHandler(services, GetSummaryHandler);
-            ReplaceHandler(services, CreateStoreItemHandler);
-            ReplaceHandler(services, ModifyStoreItemHandler);
-            ReplaceHandler(services, GetStoreItemHandler);
-            ReplaceHandler(services, GetStoreItemsHandler);
-            ReplaceHandler(services, GetTagsWithCountHandler);
-            ReplaceHandler(services, CancelCashflowHandler);
-            ReplaceHandler(services, DeleteTransactionHandler);
-            ReplaceHandler(services, MakePurchaseHandler);
-            ReplaceHandler(services, ModifyCashflowHandler);
-            ReplaceHandler(services, ModifyTransactionHandler);
-            ReplaceHandler(services, PayCashflowHandler);
-            ReplaceHandler(services, TransferHandler);
-            ReplaceHandler(services, GetCashflowHandler);
-            ReplaceHandler(services, GetCashflowsHandler);
-            ReplaceHandler(services, GetTransactionHandler);
-            ReplaceHandler(services, GetTransactionsHandler);
-            ReplaceHandler(services, GetUpcomingHandler);
+            services.AddSingleton<IForbiddenUser>(_ =>
+            {
+                var httpClient = CreateClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", new JwtTokenBuilder().Build());
+                return RestService.For<IForbiddenUser>(httpClient);
+            });
+            services.AddSingleton<IUnauthenticatedUser>(_ =>
+            {
+                var httpClient = CreateClient();
+                return RestService.For<IUnauthenticatedUser>(httpClient);
+            });
+            ReplaceHandler<CloseAccount.Request, Result<Nothing>>(services);
+            ReplaceHandler<FavoriteAccount.Request, Result<Nothing>>(services);
+            ReplaceHandler<ModifyAccount.Request, Result<Nothing>>(services);
+            ReplaceHandler<OpenAccount.Request, Result<AccountId>>(services);
+            ReplaceHandler<GetAccount.Request, Result<AccountViewModel>>(services);
+            ReplaceHandler<GetAccounts.Request, Result<QueryResult<AccountViewModel>>>(services);
+            ReplaceHandler<GetCategories.Request, Result<QueryResult<CategoryViewModel>>>(services);
+            ReplaceHandler<GetAccountTypes.Request, IReadOnlyCollection<AccountType>>(services);
+            ReplaceHandler<GetCategoryTypes.Request, IReadOnlyCollection<CategoryType>>(services);
+            ReplaceHandler<GetDateIntervalTypes.Request, IReadOnlyCollection<DateIntervalType>>(services);
+            ReplaceHandler<ImportData.InternalRequest, Unit>(services);
+            ReplaceHandler<ExportData.Request, ExportDataDto>(services);
+            ReplaceHandler<ImportDataStatus.Request, ImportDataStatusDto>(services);
+            ReplaceHandler<GetForAllCategories.Request, IEnumerable<StatisticsDto>>(services);
+            ReplaceHandler<GetSummary.Request, SummaryDto>(services);
+            ReplaceHandler<CreateStoreItem.Request, Result<StoreItemId>>(services);
+            ReplaceHandler<ModifyStoreItem.Request, Result<Nothing>>(services);
+            ReplaceHandler<GetStoreItem.Request, Result<StoreItemViewModel>>(services);
+            ReplaceHandler<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>>(services);
+            ReplaceHandler<GetTagsWithCount.Request, IEnumerable<TagDto>>(services);
+            ReplaceHandler<CancelCashflow.Request, Result<Nothing>>(services);
+            ReplaceHandler<DeleteTransaction.Request, Result<Nothing>>(services);
+            ReplaceHandler<MakePurchase.Request, Result<TransactionId>>(services);
+            ReplaceHandler<ModifyCashflow.Request, Result<Nothing>>(services);
+            ReplaceHandler<ModifyTransaction.Request, Result<Nothing>>(services);
+            ReplaceHandler<PayCashflow.Request, Result<TransactionId>>(services);
+            ReplaceHandler<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>(
+                services);
+            ReplaceHandler<GetCashflow.Request, Result<CashflowInfoViewModel>>(services);
+            ReplaceHandler<GetCashflows.Request, Result<QueryResult<CashflowInfoViewModel>>>(services);
+            ReplaceHandler<GetTransaction.Request, Result<TransactionInfoViewModel>>(services);
+            ReplaceHandler<GetTransactions.Request, Result<QueryResult<TransactionInfoViewModel>>>(services);
+            ReplaceHandler<GetUpcoming.Request, QueryResult<UpcomingViewModel>>(services);
         });
     }
 
-    private IRequestHandler<CloseAccount.Request, Result<Nothing>> CloseAccountHandler { get; } = CreateSubstitute<CloseAccount.Request, Result<Nothing>>();
-    private IRequestHandler<FavoriteAccount.Request, Result<Nothing>> FavoriteAccountHandler { get; } = CreateSubstitute<FavoriteAccount.Request, Result<Nothing>>();
-    private IRequestHandler<ModifyAccount.Request, Result<Nothing>> ModifyAccountHandler { get; } = CreateSubstitute<ModifyAccount.Request, Result<Nothing>>();
-    private IRequestHandler<OpenAccount.Request, Result<AccountId>> OpenAccountHandler { get; } = CreateSubstitute<OpenAccount.Request, Result<AccountId>>();
-    private IRequestHandler<GetAccount.Request, Result<AccountViewModel>> GetAccountHandler { get; } = CreateSubstitute<GetAccount.Request, Result<AccountViewModel>>();
-    private IRequestHandler<GetAccounts.Request, Result<QueryResult<AccountViewModel>>> GetAccountsHandler { get; } = CreateSubstitute<GetAccounts.Request, Result<QueryResult<AccountViewModel>>>();
-    private IRequestHandler<GetCategories.Request, Result<QueryResult<CategoryViewModel>>> GetCategoriesHandler { get; } = CreateSubstitute<GetCategories.Request, Result<QueryResult<CategoryViewModel>>>();
-    private IRequestHandler<GetAccountTypes.Request, IReadOnlyCollection<AccountType>> GetAccountTypesHandler { get; } = CreateSubstitute<GetAccountTypes.Request, IReadOnlyCollection<AccountType>>();
-    private IRequestHandler<GetCategoryTypes.Request, IReadOnlyCollection<CategoryType>> GetCategoryTypesHandler { get; } = CreateSubstitute<GetCategoryTypes.Request, IReadOnlyCollection<CategoryType>>();
-    private IRequestHandler<GetDateIntervalTypes.Request, IReadOnlyCollection<DateIntervalType>> GetDateIntervalTypesHandler { get; } = CreateSubstitute<GetDateIntervalTypes.Request, IReadOnlyCollection<DateIntervalType>>();
-    private IRequestHandler<ImportData.InternalRequest, Unit> ImportDataHandler { get; } = CreateSubstitute<ImportData.InternalRequest, Unit>();
-    private IRequestHandler<ExportData.Request, ExportDataDto> ExportDataHandler { get; } = CreateSubstitute<ExportData.Request, ExportDataDto>();
-    private IRequestHandler<ImportDataStatus.Request, ImportDataStatusDto> ImportDataStatusHandler { get; } = CreateSubstitute<ImportDataStatus.Request, ImportDataStatusDto>();
-    private IRequestHandler<GetForAllCategories.Request, IEnumerable<StatisticsDto>> GetForAllCategoriesHandler { get; } = CreateSubstitute<GetForAllCategories.Request, IEnumerable<StatisticsDto>>();
-    private IRequestHandler<GetSummary.Request, SummaryDto> GetSummaryHandler { get; } = CreateSubstitute<GetSummary.Request, SummaryDto>();
-    private IRequestHandler<CreateStoreItem.Request, Result<StoreItemId>> CreateStoreItemHandler { get; } = CreateSubstitute<CreateStoreItem.Request, Result<StoreItemId>>();
-    private IRequestHandler<ModifyStoreItem.Request, Result<Nothing>> ModifyStoreItemHandler { get; } = CreateSubstitute<ModifyStoreItem.Request, Result<Nothing>>();
-    private IRequestHandler<GetStoreItem.Request, Result<StoreItemViewModel>> GetStoreItemHandler { get; } = CreateSubstitute<GetStoreItem.Request, Result<StoreItemViewModel>>();
-    private IRequestHandler<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>> GetStoreItemsHandler { get; } = CreateSubstitute<GetStoreItems.Request, Result<QueryResult<GetStoreItems.Response>>>();
-    private IRequestHandler<GetTagsWithCount.Request, IEnumerable<TagDto>> GetTagsWithCountHandler { get; } = CreateSubstitute<GetTagsWithCount.Request, IEnumerable<TagDto>>();
-    private IRequestHandler<CancelCashflow.Request, Result<Nothing>> CancelCashflowHandler { get; } = CreateSubstitute<CancelCashflow.Request, Result<Nothing>>();
-    private IRequestHandler<DeleteTransaction.Request, Result<Nothing>> DeleteTransactionHandler { get; } = CreateSubstitute<DeleteTransaction.Request, Result<Nothing>>();
-    private IRequestHandler<MakePurchase.Request, Result<TransactionId>> MakePurchaseHandler { get; } = CreateSubstitute<MakePurchase.Request, Result<TransactionId>>();
-    private IRequestHandler<ModifyCashflow.Request, Result<Nothing>> ModifyCashflowHandler { get; } = CreateSubstitute<ModifyCashflow.Request, Result<Nothing>>();
-    private IRequestHandler<ModifyTransaction.Request, Result<Nothing>> ModifyTransactionHandler { get; } = CreateSubstitute<ModifyTransaction.Request, Result<Nothing>>();
-    private IRequestHandler<PayCashflow.Request, Result<TransactionId>> PayCashflowHandler { get; } = CreateSubstitute<PayCashflow.Request, Result<TransactionId>>();
-    private IRequestHandler<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>> TransferHandler { get; } = CreateSubstitute<Transfer.Request, Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>>();
-    private IRequestHandler<GetCashflow.Request, Result<CashflowInfoViewModel>> GetCashflowHandler { get; } = CreateSubstitute<GetCashflow.Request, Result<CashflowInfoViewModel>>();
-    private IRequestHandler<GetCashflows.Request, Result<QueryResult<CashflowInfoViewModel>>> GetCashflowsHandler { get; } = CreateSubstitute<GetCashflows.Request, Result<QueryResult<CashflowInfoViewModel>>>();
-    private IRequestHandler<GetTransaction.Request, Result<TransactionInfoViewModel>> GetTransactionHandler { get; } = CreateSubstitute<GetTransaction.Request, Result<TransactionInfoViewModel>>();
-    private IRequestHandler<GetTransactions.Request, Result<QueryResult<TransactionInfoViewModel>>> GetTransactionsHandler { get; } = CreateSubstitute<GetTransactions.Request, Result<QueryResult<TransactionInfoViewModel>>>();
-    private IRequestHandler<GetUpcoming.Request, QueryResult<UpcomingViewModel>> GetUpcomingHandler { get; } = CreateSubstitute<GetUpcoming.Request, QueryResult<UpcomingViewModel>>();
+    private static void ReplaceHandler<TRequest, TResponse>(IServiceCollection services,
+        Action<IRequestHandler<TRequest, TResponse>>? options = null)
+        where TRequest : IRequest<TResponse>  =>
+        services.Replace(ServiceDescriptor.Transient<IRequestHandler<TRequest, TResponse>>(_ =>
+        {
+            var mockHandler = Substitute.For<IRequestHandler<TRequest, TResponse>>();
+            var objType = typeof(TResponse);
+            if(objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(Result<>))
+            {
+                var resultType = typeof(Result<>).MakeGenericType(objType.GetGenericArguments()[0]);
+                var successMethod = resultType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .FirstOrDefault(m => m.Name == "Success" && m.GetParameters().Length == 0);
+                var result = successMethod?.Invoke(null, null);
 
-    private static IRequestHandler<TRequest, TResponse> CreateSubstitute<TRequest, TResponse>()
-        where TRequest : IRequest<TResponse> => Substitute.For<IRequestHandler<TRequest, TResponse>>();
-
-    private static void ReplaceHandler<TRequest, TResponse>(IServiceCollection services, IRequestHandler<TRequest, TResponse> handler)
-        where TRequest : IRequest<TResponse> => services.Replace(ServiceDescriptor.Transient<IRequestHandler<TRequest, TResponse>>(_ => handler));
+                mockHandler.Handle(Arg.Any<TRequest>(), Arg.Any<CancellationToken>())
+                    .Returns(Task.FromResult<TResponse>((TResponse)result!));
+            }
+            options?.Invoke(mockHandler);
+            return mockHandler;
+        }));
 }

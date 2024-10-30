@@ -1,12 +1,9 @@
-using System.Net;
-using System.Text.Json;
+using DrifterApps.Seeds.FluentScenario;
 
+using Holefeeder.Application.Features.Accounts.Commands;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common;
 
-using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
@@ -16,59 +13,49 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        var entity = GivenAnInvalidModifyAccountRequest()
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifiesAccount(entity);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    private const string ModifiedName = nameof(ModifiedName);
 
     [Fact]
-    public async Task WhenAccountNotFound()
-    {
-        var request = GivenAModifyAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifiesAccount(request);
-
-        ShouldExpectStatusCode(HttpStatusCode.NotFound);
-    }
+    public Task ModifyingAnAccountWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.ModifiesAnAccount)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenModifyAccount()
-    {
-        var entity = await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task WhenAccountNotFound() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(RequestForAnAccountThatDoesNotExists)
+            .When(TheUser.ModifiesAnAccount)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
 
-        var request = GivenAModifyAccountRequest()
-            .WithId(entity.Id)
-            .Build();
+    [Fact]
+    public Task WhenModifyAccount() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(TheUserWantsToModifyTheirAccount)
+            .When(TheUser.ModifiesAnAccount)
+            .Then(TheNameOfTheAccountShouldBeModified)
+            .PlayAsync();
 
-        GivenUserIsAuthorized();
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() => InvalidRequest().Build());
 
-        await WhenUserModifiesAccount(request);
+    private static void RequestForAnAccountThatDoesNotExists(IStepRunner runner) =>
+        runner.Execute(() => GivenAModifyAccountRequest().Build());
 
-        ShouldExpectStatusCode(HttpStatusCode.NoContent);
-        await using var dbContext = DatabaseDriver.CreateDbContext();
+    private static void TheUserWantsToModifyTheirAccount(IStepRunner runner) =>
+        runner.Execute<Account, ModifyAccount.Request>(account =>
+        {
+            account.Should().BeValid();
+            return GivenAModifyAccountRequest()
+                .WithId(account.Value.Id)
+                .WithName(ModifiedName)
+                .Build();
+        });
 
-        var result = await dbContext.Accounts.FindAsync(entity.Id);
-        result.Should()
-            .NotBeNull()
-            .And
-            .BeEquivalentTo(request);
-    }
-
-    private async Task WhenUserModifiesAccount(Request request)
-    {
-        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyAccount, json);
-    }
+    private void TheNameOfTheAccountShouldBeModified(IStepRunner runner) =>
+        Account.NameShouldBeModified(runner, ModifiedName);
 }

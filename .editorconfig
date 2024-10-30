@@ -55,6 +55,7 @@ dotnet_remove_unnecessary_usings = true:warning
 dotnet_separate_import_directive_groups = true
 
 # Diagnostic analyzers
+dotnet_diagnostic.CA1034.severity = none
 dotnet_diagnostic.CA1040.severity = none
 dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1707.severity = none

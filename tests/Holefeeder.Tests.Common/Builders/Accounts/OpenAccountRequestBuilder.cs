@@ -8,7 +8,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
         .RuleFor(x => x.Name, faker => faker.Lorem.Word())
         .RuleFor(x => x.OpenBalance, MoneyBuilder.Create().Build())

@@ -1,74 +1,53 @@
-using System.Net;
-using System.Text.Json;
+using DrifterApps.Seeds.FluentScenario;
 
+using Holefeeder.Application.Features.Accounts.Commands;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common;
 
-using static Holefeeder.Application.Features.Accounts.Commands.FavoriteAccount;
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        var request = GivenAnInvalidFavoriteAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserSetsFavoriteAccount(request);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task SettingAFavoriteAccountWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.SetsAFavoriteAccount)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenAccountNotFound()
-    {
-        var request = GivenAFavoriteAccountRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserSetsFavoriteAccount(request);
-
-        ShouldExpectStatusCode(HttpStatusCode.NotFound);
-    }
+    public Task SettingAFavoriteAccountThatDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(RequestForAnAccountThatDoesNotExists)
+            .When(TheUser.SetsAFavoriteAccount)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenFavoriteAccount()
-    {
-        var entity = await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .IsFavorite(false)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task SettingAFavoriteAccount() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Account.Exists)
+            .And(WantsToSetAFavoriteAccount)
+            .When(TheUser.SetsAFavoriteAccount)
+            .Then(Account.ShouldBeAFavorite)
+            .PlayAsync();
 
-        var request = GivenAFavoriteAccountRequest()
-            .WithId(entity.Id)
-            .IsFavorite()
-            .Build();
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() => GivenAnInvalidFavoriteAccountRequest().Build());
 
-        GivenUserIsAuthorized();
+    private static void RequestForAnAccountThatDoesNotExists(IStepRunner runner) =>
+        runner.Execute(() => GivenAFavoriteAccountRequest().Build());
 
-        await WhenUserSetsFavoriteAccount(request);
 
-        ShouldExpectStatusCode(HttpStatusCode.NoContent);
-
-        await using var dbContext = DatabaseDriver.CreateDbContext();
-
-        var result = await dbContext.Accounts.FindAsync(entity.Id);
-        result.Should().NotBeNull();
-        result!.Favorite.Should().BeTrue();
-    }
-
-    private async Task WhenUserSetsFavoriteAccount(Request request)
-    {
-        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.FavoriteAccount, json);
-    }
+    private static void WantsToSetAFavoriteAccount(IStepRunner runner) =>
+        runner.Execute<Account, FavoriteAccount.Request>(account =>
+        {
+            account.Should().BeValid();
+            return GivenAFavoriteAccountRequest().WithId(account.Value.Id).Build();
+        });
 }

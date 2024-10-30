@@ -1,12 +1,11 @@
-using System.Net;
-
-using Bogus;
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Features.Accounts.Queries;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -16,31 +15,33 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetAccounts, -1);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task GettingAccountsWithInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsAccounts)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenAccountsExistsSortedByNameDesc()
-    {
-        var faker = new Faker();
-        var count = faker.Random.Int(2, 10);
+    public Task GettingAccountsSortedByNameDesc() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.CollectionExists)
+            .And(ARequestSortedByNameDesc)
+            .When(TheUser.GetsAccounts)
+            .Then(ShouldReceiveAccountsInProperOrder)
+            .PlayAsync();
 
-        await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, count);
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => new GetAccounts.Request(-1, 10, [], []));
+    private static void ARequestSortedByNameDesc(IStepRunner runner) => runner.Execute(() => new GetAccounts.Request(0, 10, ["-name"], []));
 
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetAccounts, sorts: "-name");
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel[]>();
-        result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Name);
-    }
+    [AssertionMethod]
+    private static void ShouldReceiveAccountsInProperOrder(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<AccountViewModel>>>(response =>
+        {
+            var expected = runner.GetContextData<IEnumerable<Account>>(AccountContexts.ExistingAccounts);
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful();
+            var accounts = response.Value;
+            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Name);
+        });
 }

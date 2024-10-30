@@ -56,7 +56,7 @@ public class FavoriteAccount : ICarterModule
         }
     }
 
-    internal record Request(AccountId Id, bool IsFavorite) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
+    public record Request(AccountId Id, bool IsFavorite) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

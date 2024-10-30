@@ -1,15 +1,9 @@
-using System.Net;
-using System.Text.Json;
-
-using DrifterApps.Seeds.Testing.Scenarios;
+using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common;
 
 using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
@@ -19,76 +13,48 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    private const string OpenAccountRequestKey = $"{nameof(ScenarioOpenAccount)}_OpenAccountRequest";
+    private const string NewAccountName = nameof(NewAccountName);
 
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        var request = GivenAnInvalidOpenAccountRequest()
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserOpensAnAccount(request);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task WhenInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.OpensAnAccount)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenAccountNameAlreadyExistsRequest()
-    {
-        var entity = await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
-
-        var request = GivenAnOpenAccountRequest()
-            .WithName(entity.Name)
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserOpensAnAccount(request);
-
-        ShouldExpectStatusCode(HttpStatusCode.BadRequest);
-    }
+    public Task WhenAccountNameAlreadyExistsRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(ARequestWithExistingAccountName)
+            .When(TheUser.OpensAnAccount)
+            .Then(ShouldExpectBadRequest)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenOpenAccount() => await ScenarioFor("opening an account", runner =>
-        runner.Given(User.IsAuthorized)
-            .When(OpeningAccount)
-            .Then(AccountShouldBeOpened));
+    public Task WhenOpenAccount() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(ARequestForANewAccount)
+            .When(TheUser.OpensAnAccount)
+            .Then(TheAccountShouldBeCreated)
+            .PlayAsync();
 
-    private void OpeningAccount(IStepRunner runner) =>
-        runner.Execute("opening an account", async () =>
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() => GivenAnInvalidOpenAccountRequest().Build());
+
+    private static void ARequestWithExistingAccountName(IStepRunner runner) =>
+        runner.Execute<Account, Request>(account =>
         {
-            var request = GivenAnOpenAccountRequest().Build();
-
-            runner.SetContextData(OpenAccountRequestKey, request);
-
-            await WhenUserOpensAnAccount(request);
+            account.Should().BeValid();
+            return GivenAnOpenAccountRequest()
+                .WithName(account.Value.Name)
+                .Build();
         });
 
-    private async Task WhenUserOpensAnAccount(Request request)
-    {
-        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.OpenAccount, json);
-    }
+    private static void ARequestForANewAccount(IStepRunner runner) =>
+        runner.Execute(() => GivenAnOpenAccountRequest().WithName(NewAccountName).Build());
 
-    private void AccountShouldBeOpened(IStepRunner runner) =>
-        runner.Execute("the account was created successfully", async () =>
-        {
-            ShouldExpectStatusCode(HttpStatusCode.Created);
-
-            var location = ShouldGetTheRouteOfTheNewResourceInTheHeader();
-            var id = ResourceIdFromLocation(location);
-
-            var accountId = AccountId.Create(id);
-            await using var dbContext = DatabaseDriver.CreateDbContext();
-
-            var result = await dbContext.Accounts.FindAsync(accountId);
-
-            var request = runner.GetContextData<Request>(OpenAccountRequestKey);
-
-            result.Should().NotBeNull().And.BeEquivalentTo(request);
-        });
+    private void TheAccountShouldBeCreated(IStepRunner runner) =>
+        Account.ShouldBeCreated(runner, NewAccountName);
 }

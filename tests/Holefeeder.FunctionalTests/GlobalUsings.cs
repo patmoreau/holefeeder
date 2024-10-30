@@ -9,3 +9,4 @@ global using Xunit.Categories;
 global using static DrifterApps.Seeds.Testing.Globals;
 
 global using static Holefeeder.FunctionalTests.StepDefinitions.UserStepDefinition;
+global using static Holefeeder.FunctionalTests.ContextConstants;

@@ -12,7 +12,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class MakePurchaseRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateFaker()
+    protected override Faker<Request> Faker { get; } = CreateFaker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, faker => MoneyBuilder.Create().Build())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())
@@ -56,7 +56,7 @@ internal class MakePurchaseRequestBuilder : FakerBuilder<Request>
 
 internal class CashflowRequestBuilder : FakerBuilder<Request.CashflowRequest>
 {
-    protected override Faker<Request.CashflowRequest> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request.CashflowRequest> Faker { get; } = CreateUninitializedFaker<Request.CashflowRequest>()
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.IntervalType, faker => faker.PickRandom<DateIntervalType>(DateIntervalType.List))
         .RuleFor(x => x.Frequency, faker => faker.Random.Int(1))

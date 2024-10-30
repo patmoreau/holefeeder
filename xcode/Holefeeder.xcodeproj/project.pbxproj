@@ -1,0 +1,767 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D01613C22BDA7A57001C2AF9 /* HolefeederApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01613C12BDA7A57001C2AF9 /* HolefeederApp.swift */; };
+		D01613C42BDA7A57001C2AF9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01613C32BDA7A57001C2AF9 /* ContentView.swift */; };
+		D01613C62BDA7A58001C2AF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D01613C52BDA7A58001C2AF9 /* Assets.xcassets */; };
+		D01613C92BDA7A58001C2AF9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D01613C82BDA7A58001C2AF9 /* Preview Assets.xcassets */; };
+		D01613D32BDA7A58001C2AF9 /* HolefeederTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01613D22BDA7A58001C2AF9 /* HolefeederTests.swift */; };
+		D01613DD2BDA7A58001C2AF9 /* HolefeederUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01613DC2BDA7A58001C2AF9 /* HolefeederUITests.swift */; };
+		D01613DF2BDA7A58001C2AF9 /* HolefeederUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01613DE2BDA7A58001C2AF9 /* HolefeederUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D01613CF2BDA7A58001C2AF9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D01613B62BDA7A57001C2AF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D01613BD2BDA7A57001C2AF9;
+			remoteInfo = Holefeeder;
+		};
+		D01613D92BDA7A58001C2AF9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D01613B62BDA7A57001C2AF9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D01613BD2BDA7A57001C2AF9;
+			remoteInfo = Holefeeder;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D01613BE2BDA7A57001C2AF9 /* Holefeeder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Holefeeder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01613C12BDA7A57001C2AF9 /* HolefeederApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolefeederApp.swift; sourceTree = "<group>"; };
+		D01613C32BDA7A57001C2AF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D01613C52BDA7A58001C2AF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D01613C82BDA7A58001C2AF9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D01613CE2BDA7A58001C2AF9 /* HolefeederTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HolefeederTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01613D22BDA7A58001C2AF9 /* HolefeederTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolefeederTests.swift; sourceTree = "<group>"; };
+		D01613D82BDA7A58001C2AF9 /* HolefeederUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HolefeederUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01613DC2BDA7A58001C2AF9 /* HolefeederUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolefeederUITests.swift; sourceTree = "<group>"; };
+		D01613DE2BDA7A58001C2AF9 /* HolefeederUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HolefeederUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D01F24462C49A48B008624CA /* Holefeeder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Holefeeder.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D01613BB2BDA7A57001C2AF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613CB2BDA7A58001C2AF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613D52BDA7A58001C2AF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D01613B52BDA7A57001C2AF9 = {
+			isa = PBXGroup;
+			children = (
+				D01613C02BDA7A57001C2AF9 /* Holefeeder */,
+				D01613D12BDA7A58001C2AF9 /* HolefeederTests */,
+				D01613DB2BDA7A58001C2AF9 /* HolefeederUITests */,
+				D01613BF2BDA7A57001C2AF9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D01613BF2BDA7A57001C2AF9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D01613BE2BDA7A57001C2AF9 /* Holefeeder.app */,
+				D01613CE2BDA7A58001C2AF9 /* HolefeederTests.xctest */,
+				D01613D82BDA7A58001C2AF9 /* HolefeederUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D01613C02BDA7A57001C2AF9 /* Holefeeder */ = {
+			isa = PBXGroup;
+			children = (
+				D01F24462C49A48B008624CA /* Holefeeder.entitlements */,
+				D01613C12BDA7A57001C2AF9 /* HolefeederApp.swift */,
+				D01613C32BDA7A57001C2AF9 /* ContentView.swift */,
+				D01613C52BDA7A58001C2AF9 /* Assets.xcassets */,
+				D01613C72BDA7A58001C2AF9 /* Preview Content */,
+			);
+			path = Holefeeder;
+			sourceTree = "<group>";
+		};
+		D01613C72BDA7A58001C2AF9 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				D01613C82BDA7A58001C2AF9 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D01613D12BDA7A58001C2AF9 /* HolefeederTests */ = {
+			isa = PBXGroup;
+			children = (
+				D01613D22BDA7A58001C2AF9 /* HolefeederTests.swift */,
+			);
+			path = HolefeederTests;
+			sourceTree = "<group>";
+		};
+		D01613DB2BDA7A58001C2AF9 /* HolefeederUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D01613DC2BDA7A58001C2AF9 /* HolefeederUITests.swift */,
+				D01613DE2BDA7A58001C2AF9 /* HolefeederUITestsLaunchTests.swift */,
+			);
+			path = HolefeederUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D01613BD2BDA7A57001C2AF9 /* Holefeeder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D01613E22BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "Holefeeder" */;
+			buildPhases = (
+				D01613BA2BDA7A57001C2AF9 /* Sources */,
+				D01613BB2BDA7A57001C2AF9 /* Frameworks */,
+				D01613BC2BDA7A57001C2AF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Holefeeder;
+			productName = Holefeeder;
+			productReference = D01613BE2BDA7A57001C2AF9 /* Holefeeder.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D01613CD2BDA7A58001C2AF9 /* HolefeederTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D01613E52BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "HolefeederTests" */;
+			buildPhases = (
+				D01613CA2BDA7A58001C2AF9 /* Sources */,
+				D01613CB2BDA7A58001C2AF9 /* Frameworks */,
+				D01613CC2BDA7A58001C2AF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D01613D02BDA7A58001C2AF9 /* PBXTargetDependency */,
+			);
+			name = HolefeederTests;
+			productName = HolefeederTests;
+			productReference = D01613CE2BDA7A58001C2AF9 /* HolefeederTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D01613D72BDA7A58001C2AF9 /* HolefeederUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D01613E82BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "HolefeederUITests" */;
+			buildPhases = (
+				D01613D42BDA7A58001C2AF9 /* Sources */,
+				D01613D52BDA7A58001C2AF9 /* Frameworks */,
+				D01613D62BDA7A58001C2AF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D01613DA2BDA7A58001C2AF9 /* PBXTargetDependency */,
+			);
+			name = HolefeederUITests;
+			productName = HolefeederUITests;
+			productReference = D01613D82BDA7A58001C2AF9 /* HolefeederUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D01613B62BDA7A57001C2AF9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+				);
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					D01613BD2BDA7A57001C2AF9 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					D01613CD2BDA7A58001C2AF9 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = D01613BD2BDA7A57001C2AF9;
+					};
+					D01613D72BDA7A58001C2AF9 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = D01613BD2BDA7A57001C2AF9;
+					};
+				};
+			};
+			buildConfigurationList = D01613B92BDA7A57001C2AF9 /* Build configuration list for PBXProject "Holefeeder" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D01613B52BDA7A57001C2AF9;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D01613BF2BDA7A57001C2AF9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D01613BD2BDA7A57001C2AF9 /* Holefeeder */,
+				D01613CD2BDA7A58001C2AF9 /* HolefeederTests */,
+				D01613D72BDA7A58001C2AF9 /* HolefeederUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D01613BC2BDA7A57001C2AF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01613C92BDA7A58001C2AF9 /* Preview Assets.xcassets in Resources */,
+				D01613C62BDA7A58001C2AF9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613CC2BDA7A58001C2AF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613D62BDA7A58001C2AF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D01613BA2BDA7A57001C2AF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01613C42BDA7A57001C2AF9 /* ContentView.swift in Sources */,
+				D01613C22BDA7A57001C2AF9 /* HolefeederApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613CA2BDA7A58001C2AF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01613D32BDA7A58001C2AF9 /* HolefeederTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D01613D42BDA7A58001C2AF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01613DD2BDA7A58001C2AF9 /* HolefeederUITests.swift in Sources */,
+				D01613DF2BDA7A58001C2AF9 /* HolefeederUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D01613D02BDA7A58001C2AF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D01613BD2BDA7A57001C2AF9 /* Holefeeder */;
+			targetProxy = D01613CF2BDA7A58001C2AF9 /* PBXContainerItemProxy */;
+		};
+		D01613DA2BDA7A58001C2AF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D01613BD2BDA7A57001C2AF9 /* Holefeeder */;
+			targetProxy = D01613D92BDA7A58001C2AF9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D00DC4C52CDFB06E0038EFB3 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "STAGING $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Staging;
+		};
+		D00DC4C62CDFB06E0038EFB3 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Holefeeder/Holefeeder.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Holefeeder/Preview Content\"";
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Holefeeder.Ui;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.Holefeeder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Staging;
+		};
+		D00DC4C72CDFB06E0038EFB3 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Holefeeder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Holefeeder";
+			};
+			name = Staging;
+		};
+		D00DC4C82CDFB06E0038EFB3 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Holefeeder;
+			};
+			name = Staging;
+		};
+		D01613E02BDA7A58001C2AF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D01613E12BDA7A58001C2AF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D01613E32BDA7A58001C2AF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Holefeeder/Holefeeder.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Holefeeder/Preview Content\"";
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Holefeeder.Ui;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.Holefeeder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D01613E42BDA7A58001C2AF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Holefeeder/Holefeeder.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Holefeeder/Preview Content\"";
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Holefeeder.Ui;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.Holefeeder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D01613E62BDA7A58001C2AF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Holefeeder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Holefeeder";
+			};
+			name = Debug;
+		};
+		D01613E72BDA7A58001C2AF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Holefeeder.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Holefeeder";
+			};
+			name = Release;
+		};
+		D01613E92BDA7A58001C2AF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Holefeeder;
+			};
+			name = Debug;
+		};
+		D01613EA2BDA7A58001C2AF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QY96U9XPBL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drifterapps.HolefeederUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Holefeeder;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D01613B92BDA7A57001C2AF9 /* Build configuration list for PBXProject "Holefeeder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01613E02BDA7A58001C2AF9 /* Debug */,
+				D00DC4C52CDFB06E0038EFB3 /* Staging */,
+				D01613E12BDA7A58001C2AF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D01613E22BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "Holefeeder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01613E32BDA7A58001C2AF9 /* Debug */,
+				D00DC4C62CDFB06E0038EFB3 /* Staging */,
+				D01613E42BDA7A58001C2AF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D01613E52BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "HolefeederTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01613E62BDA7A58001C2AF9 /* Debug */,
+				D00DC4C72CDFB06E0038EFB3 /* Staging */,
+				D01613E72BDA7A58001C2AF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D01613E82BDA7A58001C2AF9 /* Build configuration list for PBXNativeTarget "HolefeederUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01613E92BDA7A58001C2AF9 /* Debug */,
+				D00DC4C82CDFB06E0038EFB3 /* Staging */,
+				D01613EA2BDA7A58001C2AF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D01613B62BDA7A57001C2AF9 /* Project object */;
+}

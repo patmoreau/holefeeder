@@ -8,7 +8,7 @@ namespace Holefeeder.Tests.Common.Builders.Categories;
 
 internal class CategoryBuilder : FakerBuilder<Category>
 {
-    protected override Faker<Category> Faker { get; } = CreatePrivateFaker()
+    protected override Faker<Category> Faker { get; } = CreatePrivateFaker<Category>()
             .RuleFor(x => x.Id, faker => (CategoryId)faker.RandomGuid())
             .RuleFor(x => x.Type, faker => faker.PickRandom<CategoryType>(CategoryType.List))
             .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")

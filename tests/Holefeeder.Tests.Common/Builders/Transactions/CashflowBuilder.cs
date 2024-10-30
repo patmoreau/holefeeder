@@ -14,7 +14,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class CashflowBuilder : FakerBuilder<Cashflow>
 {
-    protected override Faker<Cashflow> Faker { get; } = CreatePrivateFaker()
+    protected override Faker<Cashflow> Faker { get; } = CreatePrivateFaker<Cashflow>()
         .RuleFor(x => x.Id, faker => (CashflowId)faker.RandomGuid())
         .RuleFor(x => x.EffectiveDate, faker => faker.Date.PastDateOnly())
         .RuleFor(x => x.IntervalType, faker => faker.PickRandom<DateIntervalType>(DateIntervalType.List))

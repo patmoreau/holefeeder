@@ -1,14 +1,15 @@
-using System.Net;
+using Bogus;
+
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
@@ -17,117 +18,73 @@ namespace Holefeeder.FunctionalTests.Features.Accounts;
 public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    [Fact]
-    public async Task WhenNotFound()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetAccount(Guid.NewGuid());
-
-        ShouldExpectStatusCode(HttpStatusCode.NotFound);
-    }
+    private readonly Faker _faker = new();
 
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetAccount(Guid.Empty);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task GettingAnAccountWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsAnAccount)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenAccountExistsWithExpenses()
-    {
-        var account = await GivenAnActiveAccount()
-            .OfType(AccountType.Checking)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task GettingAnAccountThatDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(ARequestForAnAccountThatDoesNotExist)
+            .When(TheUser.GetsAnAccount)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
 
-        var category = await GivenACategory()
-            .OfType(CategoryType.Expense)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    [Fact]
+    public Task GettingAnAccountWithExpenses() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.ExistsWithExpenses)
+            .When(TheUser.GetsAnAccount)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
 
-        var transaction = await GivenATransaction()
-            .ForAccount(account)
-            .ForCategory(category)
-            .SavedInDbAsync(DatabaseDriver);
+    [Fact]
+    public Task GettingAnAccountWithGains() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.ExistsWithGains)
+            .When(TheUser.GetsAnAccount)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
 
-        GivenUserIsAuthorized();
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => Guid.Empty);
 
-        await WhenUserGetAccount(account.Id);
+    private void ARequestForAnAccountThatDoesNotExist(IStepRunner runner) =>
+        runner.Execute(() => _faker.Random.Guid());
 
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel>();
-        AssertAll(() =>
+    [AssertionMethod]
+    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+        runner.Execute<IApiResponse<AccountViewModel>>(response =>
         {
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveContent();
+            var result = response.Value.Content;
+
+            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var transaction = runner.GetContextData<Transaction>(TransactionContexts.ExistingTransaction);
             result.Should()
                 .NotBeNull()
                 .And
                 .BeEquivalentTo(new
                 {
-                    Id = (Guid)account.Id,
+                    Id = (Guid) account.Id,
                     account.Type,
                     account.Name,
-                    OpenBalance = (decimal)account.OpenBalance,
+                    OpenBalance = (decimal) account.OpenBalance,
                     account.OpenDate,
                     TransactionCount = 1,
-                    Balance = decimal.Subtract(account.OpenBalance, transaction.Amount),
+                    Balance = decimal.Add(account.OpenBalance, transaction.Amount * category.Type.Multiplier),
                     Updated = transaction.Date,
                     account.Description,
                     account.Favorite,
                     account.Inactive
                 });
         });
-    }
-
-    [Fact]
-    public async Task WhenAccountExistsWithGains()
-    {
-        var account = await GivenAnActiveAccount()
-            .OfType(AccountType.Checking)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
-
-        var category = await GivenACategory()
-            .OfType(CategoryType.Gain)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
-
-        var transaction = await GivenATransaction()
-            .ForAccount(account)
-            .ForCategory(category)
-            .SavedInDbAsync(DatabaseDriver);
-
-        GivenUserIsAuthorized();
-
-        await WhenUserGetAccount(account.Id);
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<AccountViewModel>();
-        AssertAll(() =>
-        {
-            result.Should()
-                .NotBeNull()
-                .And
-                .BeEquivalentTo(new
-                {
-                    Id = (Guid)account.Id,
-                    account.Type,
-                    account.Name,
-                    OpenBalance = (decimal)account.OpenBalance,
-                    account.OpenDate,
-                    TransactionCount = 1,
-                    Balance = decimal.Add(account.OpenBalance, transaction.Amount),
-                    Updated = transaction.Date,
-                    account.Description,
-                    account.Favorite,
-                    account.Inactive
-                });
-        });
-    }
-
-    private async Task WhenUserGetAccount(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetAccount, id.ToString());
 }

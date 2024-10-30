@@ -1,9 +1,13 @@
+using System.Net;
 using System.Text.RegularExpressions;
 
-using DrifterApps.Seeds.Testing.Scenarios;
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.Testing.Attributes;
 
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.StepDefinitions;
+
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features;
 
@@ -12,24 +16,14 @@ namespace Holefeeder.FunctionalTests.Features;
 ///     <P>This class will clear the database using the Respawn package at beginning of every test.</P>
 ///     Implements Xunit.IAsyncLifetime to manage cleaning up after async tasks.
 /// </summary>
-public abstract partial class HolefeederScenario : Scenario
+[ComponentTest]
+[Collection(FunctionalTestMarker.Name)]
+public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
 {
     private readonly ApiApplicationDriver _apiApplicationDriver;
 
-    protected override async Task ResetStateAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            await _apiApplicationDriver.ResetStateAsync().ConfigureAwait(false);
-        }
-        catch (InvalidOperationException e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-
     protected HolefeederScenario(ApiApplicationDriver apiApplicationDriver, ITestOutputHelper testOutputHelper)
-        : base(apiApplicationDriver, testOutputHelper)
+        : base(testOutputHelper)
     {
         ArgumentNullException.ThrowIfNull(apiApplicationDriver);
 
@@ -37,35 +31,38 @@ public abstract partial class HolefeederScenario : Scenario
 
         DatabaseDriver = _apiApplicationDriver.DatabaseDriver;
 
-        Account = new AccountStepDefinition(HttpClientDriver, DatabaseDriver);
-        Cashflow = new CashflowStepDefinition(HttpClientDriver, DatabaseDriver);
-        Category = new CategoryStepDefinition(HttpClientDriver, DatabaseDriver);
-        StoreItem = new StoreItemStepDefinition(HttpClientDriver);
-        Transaction = new TransactionStepDefinition(HttpClientDriver);
-        User = new UserStepDefinition(HttpClientDriver);
+        Account = new AccountSteps(DatabaseDriver);
+        // Cashflow = new CashflowStepDefinition(HttpClientDriver, DatabaseDriver);
+        Category = new CategoryStepDefinition(DatabaseDriver);
+        // StoreItem = new StoreItemStepDefinition(HttpClientDriver);
+        // Transaction = new TransactionStepDefinition(HttpClientDriver);
+        // User = new UserStepDefinition(HttpClientDriver);
     }
 
-    internal AccountStepDefinition Account { get; }
+    protected UserSteps TheUser => new(_apiApplicationDriver);
 
-    internal CashflowStepDefinition Cashflow { get; }
+    internal DataSteps TheData => new(DatabaseDriver);
+    internal AccountSteps Account { get; }
+
+    // internal CashflowStepDefinition Cashflow { get; }
 
     internal CategoryStepDefinition Category { get; }
 
-    internal StoreItemStepDefinition StoreItem { get; }
+    // internal StoreItemStepDefinition StoreItem { get; }
 
-    internal TransactionStepDefinition Transaction { get; }
+    // internal TransactionStepDefinition Transaction { get; }
 
-    internal UserStepDefinition User { get; }
+    // internal UserStepDefinition User { get; }
 
 
     protected BudgetingDatabaseDriver DatabaseDriver { get; }
 
 #pragma warning disable S1135
     // TODO: remove
-    protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
+    // protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
 
     // TODO: remove
-    protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(TestUsers[AuthorizedUser].IdentityObjectId);
+    // protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(TestUsers[AuthorizedUser].IdentityObjectId);
 #pragma warning restore S1135
 
     protected static Guid ResourceIdFromLocation(Uri location)
@@ -77,6 +74,35 @@ public abstract partial class HolefeederScenario : Scenario
         return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
     }
 
+    [AssertionMethod]
+    protected static void ShouldReceiveAValidationError(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject
+                .Value.Should().BeFailure()
+                .And.HaveError("One or more validation errors occurred.");
+        });
+
+    [AssertionMethod]
+    protected static void ShouldExpectBadRequest(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject
+                .Value.Should().BeFailure().And.HaveStatusCode(HttpStatusCode.BadRequest);
+        });
+
     [GeneratedRegex("[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?")]
     private static partial Regex ResourceIdRegex();
+
+    public Task InitializeAsync() => _apiApplicationDriver.ResetStateAsync();
+
+    public Task DisposeAsync() => Task.CompletedTask;
+
+    [AssertionMethod]
+    protected static void ShouldNotBeFound(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NotFound));
 }

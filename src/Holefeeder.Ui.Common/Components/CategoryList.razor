@@ -1,0 +1,47 @@
+@inject IHolefeederApiService HolefeederApiService
+
+<MudSelect T="Category"
+           Label="Category"
+           @bind-Value="BoundAttributeValue"
+           AnchorOrigin="Origin.BottomCenter">
+    @foreach (var category in _categories)
+    {
+        <MudSelectItem Value="@category">@category.Name</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    private IReadOnlyCollection<Category> _categories = [];
+
+    private Category? BoundAttributeValue
+    {
+        get => SelectedCategory;
+        set => SelectedCategoryChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Category? SelectedCategory { get; set; }
+
+    [Parameter]
+    public EventCallback<Category> SelectedCategoryChanged { get; set; }
+
+    public bool IsLoaded { get; private set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoaded = false;
+        await LoadCategories();
+        IsLoaded = true;
+    }
+
+    private async Task LoadCategories()
+    {
+        var result = await HolefeederApiService.GetCategories();
+        if (result is {IsSuccessStatusCode: true, Content: not null})
+        {
+            _categories = result.Content.ToList();
+            SelectedCategory ??= _categories.First();
+            await SelectedCategoryChanged.InvokeAsync(SelectedCategory);
+        }
+    }
+}

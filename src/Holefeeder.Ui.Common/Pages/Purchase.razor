@@ -1,0 +1,83 @@
+@page "/purchase"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager Navigation
+@inject IHolefeederApiService HolefeederApiService
+
+<MudContainer Class="pt-3 pb-4 mb-3">
+    <MudText Typo="Typo.h4" Class="mb-5">Make purchase</MudText>
+    @* ReSharper disable once CSharpWarnings::CS8974 *@
+    <EditForm Model="@_formModel" OnValidSubmit="@OnSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <MudStack>
+            <MudNumericField T="decimal" @bind-Value="@_formModel.Amount" Label="Amount" Required="true"
+                Variant="Variant.Text" Min="decimal.Zero" Step="1.00m" HideSpinButtons="true" Format="F2" />
+            <ValidationMessage For="@(() => _formModel.Amount)" />
+            <MudDatePicker @bind-Date="@_formModel.DateInput" Label="Date" Required="true" />
+            <CategoryList @bind-SelectedCategory="@_formModel.Category" />
+            <AccountList @bind-SelectedAccount="@_formModel.Account" />
+            <MudTextField @bind-Value="@_formModel.Note" Label="Note" />
+
+            <MudButtonGroup Class="d-flex justify-content-end mt-4">
+                <MudButton Variant="@Variant.Filled" Color="@Color.Secondary" OnClick="@GoBack">Cancel</MudButton>
+                <MudButton Variant="@Variant.Filled" Color="@Color.Primary" ButtonType="ButtonType.Submit">
+                    Save
+                </MudButton>
+            </MudButtonGroup>
+
+            <Tags @bind-TagsSelected="@_formModel.Tags" />
+        </MudStack>
+    </EditForm>
+</MudContainer>
+
+@code {
+    private readonly FormModel _formModel = new();
+
+    private async Task OnSubmit()
+    {
+        var request = new MakePurchaseRequest
+        {
+            Amount = _formModel.Amount,
+            Date = DateOnly.FromDateTime(_formModel.DateInput ?? DateTime.Today),
+            CategoryId = _formModel.Category.Id,
+            AccountId = _formModel.Account.Id,
+            Description = _formModel.Note,
+            Tags = _formModel.Tags
+        };
+
+        var response = await HolefeederApiService.MakePurchase(request);
+        if(response is { IsSuccessful: true })
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+        else
+        {
+            // Handle error logic
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/previous-page");
+    }
+
+    public class FormModel
+    {
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter a valid decimal number.")]
+        public decimal Amount { get; set; }
+
+        [Required] public DateTime? DateInput { get; set; } = DateTime.Now;
+
+        [Required] public Category Category { get; set; } = null!;
+
+        [Required] public Account Account { get; set; } = null!;
+
+        public string Note { get; set; } = string.Empty;
+
+        public IReadOnlyCollection<string> Tags { get; set; } = [];
+    }
+
+}

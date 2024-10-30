@@ -11,7 +11,7 @@ public class ModifyAccountTests
     public void GivenValidator_WhenIdIsEmpty_ThenValidationError()
     {
         // arrange
-        var request = ModifyAccountRequestBuilder.GivenAnInvalidModifyAccountRequest().Build();
+        var request = ModifyAccountRequestBuilder.InvalidRequest().Build();
 
         var validator = new Validator();
 

@@ -1,10 +1,10 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Models;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
@@ -14,45 +14,24 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenCategoriesExists()
-    {
-        const string firstName = nameof(firstName);
-        const string secondName = nameof(secondName);
+    public Task WhenCategoriesExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Category.Exists)
+            .And(Category.Exists)
+            .When(TheUser.GetsCategories)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
 
-        var firstCategory = await GivenACategory()
-            .WithName(firstName)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .IsNotFavorite()
-            .SavedInDbAsync(DatabaseDriver);
-
-        var secondCategory = await GivenACategory()
-            .WithName(secondName)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .IsFavorite()
-            .SavedInDbAsync(DatabaseDriver);
-
-        GivenUserIsAuthorized();
-
-        await WhenUserGetCategories();
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CategoryViewModel[]>();
-        AssertAll(() =>
+    [AssertionMethod]
+    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<CategoryViewModel>>>(response =>
         {
-            result.Should().NotBeNull().And.HaveCount(2).And.BeInDescendingOrder(x => x.Favorite);
-            result![0].Should()
-                .BeEquivalentTo(secondCategory, options =>
-                    options
-                        // .Using(new MoneyEquivalencyStep())
-                        // .Using(new ColorEquivalencyStep())
-                        .ExcludingMissingMembers());
-            result[1].Should().BeEquivalentTo(firstCategory,
-                options => options
-                    // .Using(new MoneyEquivalencyStep())
-                    // .Using(new ColorEquivalencyStep())
-                    .ExcludingMissingMembers());
-        });
-    }
+            response.Should().BeValid();
+            response.Value.Should().BeSuccessful()
+                .And.HaveContent();
 
-    private async Task WhenUserGetCategories() => await HttpClientDriver.SendRequestAsync(ApiResources.GetCategories);
+            response.Value.Content.Should().HaveCount(2)
+                .And.BeInDescendingOrder(x => x.Favorite)
+                .And.BeInAscendingOrder(x =>x.Name);
+        });
 }

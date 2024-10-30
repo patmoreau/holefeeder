@@ -19,7 +19,7 @@ public class GetAccount : ICarterModule
         app.MapGet("api/v2/accounts/{id}",
                 async (AccountId id, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(AccountId.Create(id)), cancellationToken);
+                    var result = await mediator.Send(new Request(id), cancellationToken);
                     return result switch
                     {
                         { IsFailure: true } => result.Error.ToProblem(),

@@ -1,16 +1,12 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
@@ -20,62 +16,42 @@ public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOut
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenDataIsExported()
-    {
-        var accounts = await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, 2);
+    public Task WhenUserExportsTheirData() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(TheData.TheUserHasFullSetsOfData)
+            .When(TheUser.ExportsTheirData)
+            .Then(TheUserDataIsExported)
+            .PlayAsync();
 
-        var categories = await GivenACategory()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, 2);
-
-        var cashflows = await GivenAnActiveCashflow()
-            .ForAccount(accounts.ElementAt(0))
-            .ForCategory(categories.ElementAt(0))
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .CollectionSavedInDbAsync(DatabaseDriver, 2);
-
-        var transactions = await GivenATransaction()
-            .ForAccount(accounts.ElementAt(0))
-            .ForCategory(categories.ElementAt(0))
-            .CollectionSavedInDbAsync(DatabaseDriver, 2);
-
-        GivenUserIsAuthorized();
-
-        await WhenUserExportsHisData();
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<ExportDataDto>();
-        AssertAll(() =>
+    private static void TheUserDataIsExported(IStepRunner runner) =>
+        runner.Execute<IApiResponse<ExportDataDto>>(response =>
         {
+            response.Should().BeValid()
+                .And.Subject
+                .Value.Should().BeSuccessful();
+
+            var result = response.Value.Content;
             result.Should().NotBeNull();
+
+            var accounts = runner.GetContextData<IReadOnlyCollection<Account>>(AccountContexts.ExistingAccounts);
+            var cashflows = runner.GetContextData<IReadOnlyCollection<Cashflow>>(CashflowContexts.ExistingCashflows);
+            var categories = runner.GetContextData<IReadOnlyCollection<Category>>(CategoryContexts.ExistingCategory);
+            var transactions = runner.GetContextData<IReadOnlyCollection<Transaction>>(TransactionContexts.ExistingTransactions);
             AssertAccounts(result!, accounts);
             AssertCashflows(result!, cashflows);
             AssertCategories(result!, categories);
             AssertTransactions(result!, transactions);
         });
 
-        void AssertAccounts(ExportDataDto exported, IEnumerable<Account> expected)
-        {
-            exported.Accounts.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
-        }
+    private static void AssertAccounts(ExportDataDto exported, IEnumerable<Account> expected) =>
+        exported.Accounts.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
 
-        void AssertCashflows(ExportDataDto exported, IEnumerable<Cashflow> expected)
-        {
-            exported.Cashflows.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
-        }
+    private static void AssertCashflows(ExportDataDto exported, IEnumerable<Cashflow> expected) =>
+        exported.Cashflows.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
 
-        void AssertCategories(ExportDataDto exported, IEnumerable<Category> expected)
-        {
-            exported.Categories.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
-        }
+    private static void AssertCategories(ExportDataDto exported, IEnumerable<Category> expected) =>
+        exported.Categories.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
 
-        void AssertTransactions(ExportDataDto exported, IEnumerable<Transaction> expected)
-        {
-            exported.Transactions.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
-        }
-    }
-
-    private async Task WhenUserExportsHisData() => await HttpClientDriver.SendRequestAsync(ApiResources.ExportData);
+    private static void AssertTransactions(ExportDataDto exported, IEnumerable<Transaction> expected) =>
+        exported.Transactions.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
 }

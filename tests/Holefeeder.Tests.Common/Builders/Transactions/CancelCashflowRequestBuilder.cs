@@ -8,7 +8,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class CancelCashflowRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
         .RuleFor(x => x.Id, faker => (CashflowId)faker.Random.Guid());
 
     public CancelCashflowRequestBuilder WithId(CashflowId id)

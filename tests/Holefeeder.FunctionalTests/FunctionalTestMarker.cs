@@ -1,9 +1,17 @@
+using DrifterApps.Seeds.Testing.Drivers;
+
 using Holefeeder.FunctionalTests.Drivers;
 
 namespace Holefeeder.FunctionalTests;
 
-[CollectionDefinition("Api collection")]
-public sealed class FunctionalTestMarker : ICollectionFixture<ApiApplicationDriver>;
+[CollectionDefinition(Name)]
+public sealed class FunctionalTestMarker : ICollectionFixture<ApiApplicationDriver>, ICollectionFixture<AuthorityDriver>
+{
+    public const string Name = "Api collection";
+}
 
-[CollectionDefinition("Api Security collection")]
-public sealed class FunctionalSecurityTestMarker : ICollectionFixture<ApiApplicationSecurityDriver>;
+[CollectionDefinition(Name)]
+public sealed class FunctionalSecurityTestMarker : ICollectionFixture<ApiApplicationSecurityDriver>, ICollectionFixture<AuthorityDriver>
+{
+    public const string Name = "Api Security collection";
+}

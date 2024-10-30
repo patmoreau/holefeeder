@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class GetUpcomingRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
         .RuleFor(fake => fake.From, fake => fake.Date.PastDateOnly())
         .RuleFor(fake => fake.To, fake => fake.Date.FutureDateOnly());
 

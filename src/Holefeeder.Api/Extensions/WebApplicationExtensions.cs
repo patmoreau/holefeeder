@@ -69,7 +69,7 @@ internal static class WebApplicationExtensions
     }
 
 
-    public class HangFireAuthorizationFilter : IDashboardAuthorizationFilter
+    internal class HangFireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         public bool Authorize([NotNull] DashboardContext context)
         {

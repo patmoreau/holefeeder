@@ -1,16 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
+        <Configurations>Debug;Release;Staging</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup>
         <UserSecretsId>66510254-e437-414e-986e-d59d04ff1d07</UserSecretsId>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
+        <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+        <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions" />
+        <PackageReference Include="DrifterApps.Seeds.FluentScenario" />
+        <PackageReference Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" />
         <PackageReference Include="DrifterApps.Seeds.Testing" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="FluentAssertions.Analyzers" />
@@ -20,9 +29,15 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="Nito.AsyncEx" />
         <PackageReference Include="NSubstitute" />
+        <PackageReference Include="NSubstitute.Analyzers.CSharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Refit" />
         <PackageReference Include="Respawn" />
         <PackageReference Include="WireMock.Net" />
         <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.abstractions" />
         <PackageReference Include="xunit.analyzers" />
         <PackageReference Include="xunit.categories" />
         <PackageReference Include="xunit.runner.visualstudio" />
@@ -37,6 +52,12 @@
         <Content Include="appsettings.tests.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="StepDefinitions\AccountSteps.Assertions.cs">
+        <DependentUpon>AccountSteps.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

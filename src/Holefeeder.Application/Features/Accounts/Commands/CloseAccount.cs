@@ -56,7 +56,7 @@ public class CloseAccount : ICarterModule
         }
     }
 
-    internal record Request(AccountId Id) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
+    public record Request(AccountId Id) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
 
     internal class Validator : AbstractValidator<Request>
     {

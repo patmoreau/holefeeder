@@ -9,7 +9,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class FavoriteAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
         .RuleFor(x => x.Id, faker => (AccountId)faker.RandomGuid())
         .RuleFor(x => x.IsFavorite, faker => faker.Random.Bool());
 

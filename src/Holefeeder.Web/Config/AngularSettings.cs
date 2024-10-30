@@ -1,6 +1,6 @@
 namespace Holefeeder.Web.Config;
 
-public record AngularSettings
+internal record AngularSettings
 {
     public string LoggingLevel { get; init; } = null!;
 }

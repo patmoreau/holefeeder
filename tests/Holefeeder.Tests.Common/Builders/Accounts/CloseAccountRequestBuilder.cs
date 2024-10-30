@@ -8,7 +8,7 @@ namespace Holefeeder.Tests.Common.Builders.Accounts;
 
 internal class CloseAccountRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
             .RuleFor(x => x.Id, faker => (AccountId)faker.Random.Guid());
 
     public CloseAccountRequestBuilder WithId(AccountId id)
