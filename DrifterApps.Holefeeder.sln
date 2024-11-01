@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 17.5.002.0
@@ -44,8 +44,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui.Common", "src\Holefeeder.Ui.Common\Holefeeder.Ui.Common.csproj", "{CDB0E3FF-FBAC-4C17-A554-CA90CCE967A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui.Web", "src\Holefeeder.Ui.Web\Holefeeder.Ui.Web.csproj", "{41A608E3-F9D5-4088-8FA9-EC55FCD2705E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui.Maui", "src\Holefeeder.Ui.Maui\Holefeeder.Ui.Maui.csproj", "{6CCF7ACD-4BE4-4103-A35A-F2AE91987195}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui", "src\Holefeeder.Ui\Holefeeder.Ui.csproj", "{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}"
 EndProject
@@ -95,10 +93,6 @@ Global
 		{41A608E3-F9D5-4088-8FA9-EC55FCD2705E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A608E3-F9D5-4088-8FA9-EC55FCD2705E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A608E3-F9D5-4088-8FA9-EC55FCD2705E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CCF7ACD-4BE4-4103-A35A-F2AE91987195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CCF7ACD-4BE4-4103-A35A-F2AE91987195}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CCF7ACD-4BE4-4103-A35A-F2AE91987195}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CCF7ACD-4BE4-4103-A35A-F2AE91987195}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,7 +115,6 @@ Global
 		{76315CC1-F97E-43E7-BBCB-1982C383ECB8} = {D656D1B9-4F13-4BAB-9117-60F22C30F331}
 		{CDB0E3FF-FBAC-4C17-A554-CA90CCE967A9} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
 		{41A608E3-F9D5-4088-8FA9-EC55FCD2705E} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
-		{6CCF7ACD-4BE4-4103-A35A-F2AE91987195} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
