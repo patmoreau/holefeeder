@@ -57,11 +57,11 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.66.1" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.3.0" />
-    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.1.2" />
-    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.1.2" />
-    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.2" />
-    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.1.2" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.3.1" />
+    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.2.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.2.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.2.0" />
     <PackageVersion Include="Microsoft.JSInterop" Version="8.0.10" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.92" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
@@ -81,7 +81,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.4.8" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
