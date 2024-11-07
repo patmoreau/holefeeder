@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
         <TargetFrameworks>net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
@@ -36,17 +36,17 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
-    <!-- <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-        <RuntimeIdentifiers>iossimulator-arm64;ios-arm64</RuntimeIdentifiers>
-    </PropertyGroup> -->
-
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>link</TrimMode>
         <CodesignEntitlements>iOS\Entitlements.plist</CodesignEntitlements>
         <CodesignKey>Apple Development: patrick@drifterapps.com (685MA6A62V)</CodesignKey>
         <CodesignProvision>iOS Team Provisioning Profile: com.drifterapps.Holefeeder</CodesignProvision>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>link</TrimMode>
         <CodesignEntitlements>MacCatalyst\Entitlements.plist</CodesignEntitlements>
         <CodesignKey>Apple Development: patrick@drifterapps.com (685MA6A62V)</CodesignKey>
         <CodesignProvision>Mac Catalyst Team Provisioning Profile: com.drifterapps.Holefeeder</CodesignProvision>
