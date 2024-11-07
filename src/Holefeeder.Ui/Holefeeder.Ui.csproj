@@ -19,11 +19,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>enable</Nullable>
+        <NoWarn>IL2008;IL2040</NoWarn>
 
         <!-- Display name -->
         <ApplicationTitle>Holefeeder</ApplicationTitle>
 
         <!-- App Identifier -->
+        <!-- <AppIdentifierPrefix>HOLEFEEDER_APP_IDENTIFIER_PREFIX.</AppIdentifierPrefix> -->
         <ApplicationId>com.drifterapps.Holefeeder</ApplicationId>
 
         <!-- Versions -->
@@ -32,6 +34,22 @@
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <!-- <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <RuntimeIdentifiers>iossimulator-arm64;ios-arm64</RuntimeIdentifiers>
+    </PropertyGroup> -->
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <CodesignEntitlements>iOS\Entitlements.plist</CodesignEntitlements>
+        <CodesignKey>Apple Development: patrick@drifterapps.com (685MA6A62V)</CodesignKey>
+        <CodesignProvision>iOS Team Provisioning Profile: com.drifterapps.Holefeeder</CodesignProvision>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <CodesignEntitlements>MacCatalyst\Entitlements.plist</CodesignEntitlements>
+        <CodesignKey>Apple Development: patrick@drifterapps.com (685MA6A62V)</CodesignKey>
+        <CodesignProvision>Mac Catalyst Team Provisioning Profile: com.drifterapps.Holefeeder</CodesignProvision>
     </PropertyGroup>
 
     <ItemGroup>

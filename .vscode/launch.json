@@ -2,10 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Meteor Debugger",
-            "type": "dotnet-meteor.debugger",
+            "name": "C#: Holefeeder.Api Debug",
+            "type": "dotnet",
             "request": "launch",
-            "preLaunchTask": "dotnet-meteor: Build"
+            "projectPath": "${workspaceFolder}/src/Holefeeder.Api/Holefeeder.Api.csproj"
+        },
+        {
+            "name": ".NET MAUI",
+            "type": "maui",
+            "request": "launch",
+            "preLaunchTask": "maui: Build"
         },
         {
             "name": "Launch and Debug Blazor WebAssembly",
