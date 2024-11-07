@@ -8,19 +8,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Holefeeder.Ui.Authentication;
 
-internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, IAuthNavigationManager
+internal class Auth0AuthenticationStateProvider(
+    Auth0Client client,
+    Auth0Config auth0Config,
+    ITokenProvider tokenProvider)
+    : AuthenticationStateProvider, IAuthNavigationManager
 {
-    private readonly Auth0Client _auth0Client;
-    private readonly Auth0Config _auth0Config;
-    private readonly ITokenProvider _tokenProvider;
     private ClaimsPrincipal? _currentUser;
-
-    public Auth0AuthenticationStateProvider(Auth0Client client, Auth0Config auth0Config, ITokenProvider tokenProvider)
-    {
-        _auth0Client = client;
-        _auth0Config = auth0Config;
-        _tokenProvider = tokenProvider;
-    }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -36,17 +30,17 @@ internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, I
     {
         var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity());
         var extraParameters = new Dictionary<string, string>();
-        var audience = _auth0Config.Audience;
+        var audience = auth0Config.Audience;
 
         if (!string.IsNullOrEmpty(audience))
         {
             extraParameters.Add("audience", audience);
         }
 
-        var loginResult = await _auth0Client.LoginAsync(extraParameters);
+        var loginResult = await client.LoginAsync(extraParameters);
         if (!loginResult.IsError)
         {
-            await _tokenProvider.SetTokensAsync(new Tokens(
+            await tokenProvider.SetTokensAsync(new Tokens(
                 loginResult.IdentityToken,
                 loginResult.AccessToken,
                 loginResult.RefreshToken,
@@ -56,7 +50,7 @@ internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, I
                 .Select(x => (x.Type, x.Value))
                 .ToList();
 
-            await _tokenProvider.SetClaimsAsync(claims);
+            await tokenProvider.SetClaimsAsync(claims);
 
             authenticatedUser = loginResult.User;
         }
@@ -68,9 +62,9 @@ internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, I
 
     public async Task LogoutAsync()
     {
-        await _auth0Client.LogoutAsync();
+        await client.LogoutAsync();
 
-        await _tokenProvider.ClearAllAsync();
+        await tokenProvider.ClearAllAsync();
 
         _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
 
@@ -79,8 +73,8 @@ internal class Auth0AuthenticationStateProvider : AuthenticationStateProvider, I
 
     private async Task Initialize()
     {
-        var tokens = await _tokenProvider.GetTokensAsync();
-        var claims = await _tokenProvider.GetClaimsAsync();
+        var tokens = await tokenProvider.GetTokensAsync();
+        var claims = await tokenProvider.GetClaimsAsync();
 
         if (tokens is not null && DateTime.Now < tokens.Expires)
         {
