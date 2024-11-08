@@ -13,7 +13,7 @@
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.0.1" />
     <PackageVersion Include="Carter" Version="8.2.1" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="9.1.0" />
+    <PackageVersion Include="CommunityToolkit.Maui" Version="9.1.1" />
     <PackageVersion Include="Dapper" Version="2.1.44" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
