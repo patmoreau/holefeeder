@@ -12,6 +12,9 @@ public interface IHolefeederApiService
     [Get("/api/v2/enumerations/get-account-types")]
     Task<ApiResponse<IList<string>>> GetAccountTypes();
 
+    [Get("/api/v2/categories")]
+    Task<ApiResponse<IList<Category>>> GetCategories();
+
     [Get("/api/v2/store-items/?filter=code:eq:{code}")]
     Task<ApiResponse<IList<StoreItem>>> GetStoreItem(string code);
 

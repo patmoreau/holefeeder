@@ -34,6 +34,8 @@
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+        <Configurations>Debug;Release;Staging</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
@@ -50,6 +52,11 @@
         <CodesignEntitlements>MacCatalyst\Entitlements.plist</CodesignEntitlements>
         <CodesignKey>Apple Development: patrick@drifterapps.com (685MA6A62V)</CodesignKey>
         <CodesignProvision>Mac Catalyst Team Provisioning Profile: com.drifterapps.Holefeeder</CodesignProvision>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
+        <DefineConstants>STAGING</DefineConstants>
+        <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
 
     <ItemGroup>

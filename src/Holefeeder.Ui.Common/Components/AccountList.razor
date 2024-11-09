@@ -1,0 +1,34 @@
+@inject IHolefeederApiService HolefeederApiService
+
+<MudSelect T="Account" Label="Select Account" @bind-Value="SelectedAccount" AnchorOrigin="Origin.BottomCenter">
+    @foreach (var category in _accounts)
+    {
+        <MudSelectItem Value="@category">@category.Name</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    private IReadOnlyCollection<Account> _accounts = [];
+
+    [Parameter]
+    public Account SelectedAccount { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Account> SelectedAccountChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAccounts();
+    }
+
+    private async Task LoadAccounts()
+    {
+        var result = await HolefeederApiService.GetAccounts(["-favorite", "name"], ["inactive:eq:false"]);
+        if (result is {IsSuccessStatusCode: true, Content: not null})
+        {
+            _accounts = result.Content.ToList();
+            SelectedAccount = _accounts.First();
+            await SelectedAccountChanged.InvokeAsync(SelectedAccount);
+        }
+    }
+}

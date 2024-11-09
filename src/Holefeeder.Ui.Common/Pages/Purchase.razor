@@ -5,24 +5,25 @@
 
 <MudContainer Class="pt-3 pb-4 mb-3">
     <MudContainer>
-        <MudText Typo="Typo.h4" Class="mb-5">Sample Form</MudText>
+        <MudText Typo="Typo.h4" Class="mb-5">Make purchase</MudText>
         @* ReSharper disable once CSharpWarnings::CS8974 *@
         <EditForm Model="@formModel" OnValidSubmit="@OnSubmit">
             <DataAnnotationsValidator />
-            <MudTextField @bind-Value="formModel.TextInput" Label="Text Input" Required="true" />
-            <MudSelect T="string" Label="Select Coffee With Keys" @bind-Value="formModel.DropdownInput"  AnchorOrigin="Origin.BottomCenter">
-                <MudSelectItem Value="@("Cappuccino")" />
-                <MudSelectItem Value="@("Cafe Latte")" />
-                <MudSelectItem Value="@("Espresso")" />
-                <MudSelectItem Value="@("Irish Coffee")" />
-            </MudSelect>
-            <MudNumericField T="decimal" @bind-Value="formModel.DecimalInput" Label="Decimal Input" Required="true" />
+            <ValidationSummary />
+
+            <MudNumericField T="decimal" @bind-Value="formModel.Amount" Label="Decimal Input" Required="true"
+                Step="0.01m" Pattern="^\d+(\.\d{1,2})?$" />
+            <ValidationMessage For="@(() => formModel.Amount)" />
             <MudDatePicker @bind-Date="formModel.DateInput" Label="Date Input" Required="true" />
+            <CategoryList @bind-SelectedCategory="formModel.Category" />
+            <AccountList @bind-SelectedAccount="formModel.Account" />
+            <MudTextField @bind-Value="formModel.Note" Label="Text Input" />
+
             <MudButtonGroup Class="d-flex justify-content-end mt-4">
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@GoBack">Cancel</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Save</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Save
+                </MudButton>
             </MudButtonGroup>
-            <ValidationSummary />
         </EditForm>
     </MudContainer>
 </MudContainer>
@@ -43,17 +44,20 @@
 
     public class FormModel
     {
-        [Required]
-        public string TextInput { get; set; } = string.Empty;
-
-        [Required]
-        public string DropdownInput { get; set; } = string.Empty;
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter a valid decimal number.")]
-        public decimal DecimalInput { get; set; }
+        public decimal Amount { get; set; }
 
         [Required]
         public DateTime? DateInput { get; set; } = DateTime.Now;
+
+        [Required]
+        public Category Category { get; set; } = null!;
+
+        [Required]
+        public Account Account { get; set; } = null!;
+
+        public string Note { get; set; } = string.Empty;
     }
 }

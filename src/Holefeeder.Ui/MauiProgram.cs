@@ -19,24 +19,24 @@ namespace Holefeeder.Ui;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .ConfigureEssentials()
             .BuildConfiguration()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-			});
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
 
-		builder.Services.AddMauiBlazorWebView();
+        builder.Services.AddMauiBlazorWebView();
 
-#if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+#if DEBUG || STAGING
+        builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Logging.AddDebug();
 #endif
         builder.Services.AddMudServices();
 
@@ -64,13 +64,13 @@ public static class MauiProgram
         builder.Services.AddTokenService();
         builder.Services.AddRefitClients(provider => provider.GetRequiredService<AuthenticationMessageHandler>());
 
-		return builder.Build();
-	}
+        return builder.Build();
+    }
 
     private static MauiAppBuilder BuildConfiguration(this MauiAppBuilder builder)
     {
         // Load environment-specific configuration
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var environment = GetEnvironment();
 
         // Get the executing assembly to access the embedded resources
         var assembly = Assembly.GetExecutingAssembly();
@@ -91,4 +91,18 @@ public static class MauiProgram
 
         return builder;
     }
+
+#pragma warning disable S3400 // Methods should not return constants
+    private static string GetEnvironment()
+    {
+#if DEBUG
+        const string env = "Development";
+#elif STAGING
+        const string env = "Staging";
+#else
+        const string env = "Production";
+#endif
+        return env;
+    }
+#pragma warning restore S3400 // Methods should not return constants
 }

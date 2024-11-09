@@ -2,10 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <Configurations>Debug;Release;Staging</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup>
         <UserSecretsId>66510254-e437-414e-986e-d59d04ff1d07</UserSecretsId>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
+      <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+      <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
