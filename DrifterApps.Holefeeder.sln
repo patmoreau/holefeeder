@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui.Web", "src\Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.Ui", "src\Holefeeder.Ui\Holefeeder.Ui.csproj", "{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holefeeder.UnitTests.Ui.Common", "tests\Holefeeder.UnitTests.Ui.Common\Holefeeder.UnitTests.Ui.Common.csproj", "{1A377B44-7527-40E9-B23D-3F033028C894}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,12 @@ Global
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A377B44-7527-40E9-B23D-3F033028C894}.Staging|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +146,7 @@ Global
 		{CDB0E3FF-FBAC-4C17-A554-CA90CCE967A9} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
 		{41A608E3-F9D5-4088-8FA9-EC55FCD2705E} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
 		{BE9A17DD-8EBA-4EC3-8E48-2B306D5676EC} = {76315CC1-F97E-43E7-BBCB-1982C383ECB8}
+		{1A377B44-7527-40E9-B23D-3F033028C894} = {71B41F94-986D-4BEB-A9F5-2C3875C57DBE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {083F9D38-7496-44CA-B1E2-9C04BA3DD0A6}

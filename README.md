@@ -37,3 +37,11 @@ dotnet tool install dotnet-reportgenerator-globaltool
 ### generate code coverage report
 
 Run task 'code coverage'
+
+## Issues
+
+When port is in use, run this command
+
+```bash
+lsof -ti :7021 | xargs kill
+```

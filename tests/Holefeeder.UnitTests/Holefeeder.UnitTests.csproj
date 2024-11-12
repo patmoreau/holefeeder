@@ -27,6 +27,7 @@
         <PackageReference Include="NSubstitute" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" />
         <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.abstractions" />
         <PackageReference Include="xunit.analyzers" />
         <PackageReference Include="xunit.categories" />
         <PackageReference Include="xunit.runner.visualstudio" />

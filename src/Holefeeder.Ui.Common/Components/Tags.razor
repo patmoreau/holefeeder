@@ -1,0 +1,118 @@
+@inject IHolefeederApiService HolefeederApiService
+
+<MudStack>
+    <MudChip T="string"
+             Text="Add Tag"
+             Icon="@Icons.Material.Filled.Add"
+             OnClick="OpenDialog"
+             Variant="@Variant.Filled"
+             SelectedColor="@Color.Secondary"></MudChip>
+</MudStack>
+
+<MudStack Justify="@Justify.Center" Class="mud-width-full">
+    <MudChipSet T="string" @bind-SelectedValues="BoundAttributeValue" CheckMark="@true"
+        SelectionMode="@SelectionMode.MultiSelection">
+        @foreach (var tag in _tags)
+        {
+            <MudChip Text="@tag.Tag" Variant="@Variant.Filled" Color="@Color.Default" SelectedColor="@Color.Primary"></MudChip>
+        }
+    </MudChipSet>
+</MudStack>
+
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3" />Add new tag
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="_newTagValue"
+                      Label="Tag name"
+                      Class="mt-3"
+                      Required="true"
+                      @ref="_newTagTextField"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   ButtonType="ButtonType.Submit"
+                   OnClick="Submit"
+                   Disabled="@string.IsNullOrWhiteSpace(_newTagValue)"
+                   Class="px-10">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private IReadOnlyCollection<HashTag> _tags = [];
+
+    private IReadOnlyCollection<string> BoundAttributeValue
+    {
+        get => TagsSelected;
+        set => TagsSelectedChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public IReadOnlyCollection<string> TagsSelected { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<IReadOnlyCollection<string>> TagsSelectedChanged { get; set; }
+
+    public bool IsLoaded { get; private set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoaded = false;
+        await LoadTags();
+        IsLoaded = true;
+    }
+
+    private async Task LoadTags()
+    {
+        var result = await HolefeederApiService.GetTags();
+        if (result is { IsSuccessStatusCode: true, Content: not null })
+        {
+            _tags = result.Content.OrderByDescending(x => x.Count).ToList();
+        }
+    }
+
+    private MudTextField<string>? _newTagTextField;
+
+    private async Task OnDialogOpened()
+    {
+        if (_newTagTextField is null)
+        {
+            return;
+        }
+        await _newTagTextField.FocusAsync();
+    }
+
+    private bool _visible;
+
+    private string _newTagValue = string.Empty;
+
+    private readonly DialogOptions _dialogOptions = new() { FullWidth = true, CloseOnEscapeKey = true };
+
+    private void OpenDialog() => _visible = true;
+
+    private void Submit()
+    {
+        var newTagName = _newTagValue.ToLowerInvariant().Trim();
+        if (_tags.All(x => x.Tag != newTagName))
+        {
+            _tags = _tags.Append(new HashTag(newTagName, 0)).ToList();
+        }
+        if (!BoundAttributeValue.Contains(newTagName))
+        {
+            BoundAttributeValue = BoundAttributeValue.Append(newTagName).ToList();
+        }
+        _visible = false;
+        _newTagValue = string.Empty;
+    }
+
+    private void Cancel()
+    {
+        _visible = false;
+        _newTagValue = string.Empty;
+    }
+}
