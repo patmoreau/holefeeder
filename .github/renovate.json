@@ -4,28 +4,29 @@
   "packageRules": [
     {
       "matchManagers": ["nuget"],
-      "matchPackagePatterns": ["^DrifterApps.Seeds."],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "Drifterapps minor and patch updates",
-      "groupSlug": "drifterapps-seeds-updates"
+      "groupSlug": "drifterapps-seeds-updates",
+      "matchPackageNames": ["/^DrifterApps.Seeds./"]
     },
     {
       "matchManagers": ["nuget"],
-      "matchPackagePatterns": ["^Microsoft.", "^System."],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "Microsoft minor and patch updates",
-      "groupSlug": "microsoft-minor-patch-updates"
+      "groupSlug": "microsoft-minor-patch-updates",
+      "matchPackageNames": ["/^Microsoft./", "/^System./"]
     },
     {
       "matchManagers": ["nuget"],
       "matchUpdateTypes": ["minor", "patch"],
-      "excludePackagePatterns": ["^Microsoft.", "^System."],
-      "excludePackageNames": [
-        "Microsoft.EntityFrameworkCore",
-        "Pomelo.EntityFrameworkCore.MySql"
-      ],
       "groupName": "3rd parties .NET packages updates",
-      "groupSlug": "other-dotnet-updates"
+      "groupSlug": "other-dotnet-updates",
+      "matchPackageNames": [
+        "!/^Microsoft./",
+        "!/^System./",
+        "!Microsoft.EntityFrameworkCore",
+        "!Pomelo.EntityFrameworkCore.MySql"
+      ]
     },
     {
       "matchManagers": ["npm"],
