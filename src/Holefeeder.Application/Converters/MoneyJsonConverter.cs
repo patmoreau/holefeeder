@@ -21,7 +21,6 @@ public class MoneyJsonConverter : JsonConverter<Money>
     public override void Write(Utf8JsonWriter writer, Money value, JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(writer);
-        ArgumentNullException.ThrowIfNull(value);
         writer.WriteNumberValue(value.Value);
     }
 }

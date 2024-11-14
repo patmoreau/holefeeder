@@ -6,7 +6,7 @@ using Holefeeder.Ui.Common.Models;
 
 namespace Holefeeder.UnitTests.Ui.Common.Builders;
 
-public class CategoryBuilder : FakerBuilder<Category>
+internal sealed class CategoryBuilder : FakerBuilder<Category>
 {
     protected override Faker<Category> Faker { get; } = CreateFaker()
         .RuleFor(x => x.Id, f => f.Random.Guid())

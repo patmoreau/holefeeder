@@ -10,7 +10,7 @@ namespace Holefeeder.Api.Swagger;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 [ExcludeFromCodeCoverage]
-public class QueryRequestOperationFilter : IOperationFilter
+internal class QueryRequestOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {

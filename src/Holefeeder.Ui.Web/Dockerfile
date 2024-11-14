@@ -1,7 +1,7 @@
 ﻿###################################
 # Restore stage
 ###################################
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
 WORKDIR /source
 
 COPY *.sln .

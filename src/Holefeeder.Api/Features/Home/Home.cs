@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Carter;
 
 using Microsoft.AspNetCore.Mvc;
@@ -5,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Holefeeder.Api.Features.Home;
 
 [ApiExplorerSettings(IgnoreApi = true)]
+[SuppressMessage("Maintainability", "CA1515:Consider making public types internal")]
 public class Home : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app) =>
+    public void AddRoutes(IEndpointRouteBuilder app)
+    {
         app.MapGet("/", async (HttpContext context, IHostEnvironment environment, IConfiguration configuration) =>
         {
             var proxyPrefix = configuration[Constants.ProxyPrefix];
@@ -35,4 +39,5 @@ public class Home : ICarterModule
                                                </html>
                                                """);
         });
+    }
 }

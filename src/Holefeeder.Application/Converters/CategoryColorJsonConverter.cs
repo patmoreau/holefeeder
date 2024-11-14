@@ -21,7 +21,6 @@ public class CategoryColorJsonConverter : JsonConverter<CategoryColor>
     public override void Write(Utf8JsonWriter writer, CategoryColor value, JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(writer);
-        ArgumentNullException.ThrowIfNull(value);
         writer.WriteStringValue(value.ToString());
     }
 }

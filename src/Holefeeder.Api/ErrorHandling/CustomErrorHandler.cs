@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Holefeeder.Api.ErrorHandling;
 
 [ExcludeFromCodeCoverage]
-public static class CustomErrorHandler
+internal static class CustomErrorHandler
 {
     public static void UseCustomErrors(this WebApplication app, IHostEnvironment environment) =>
         app.UseExceptionHandler(builder =>

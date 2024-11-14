@@ -5,8 +5,13 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+    }
 
-        MainPage = new MainPage();
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        Windows[0].Page = new MainPage();
+
+        return base.CreateWindow(activationState);
     }
 
     public static void PerformActionForShortcutItem(string shortcutItemType)

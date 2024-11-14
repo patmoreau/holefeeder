@@ -6,7 +6,7 @@ using Holefeeder.Ui.Common.Models;
 
 namespace Holefeeder.UnitTests.Ui.Common.Builders;
 
-public class AccountBuilder : FakerBuilder<Account>
+internal sealed class AccountBuilder : FakerBuilder<Account>
 {
     protected override Faker<Account> Faker { get; } = CreateFaker()
         .RuleFor(x => x.Id, f => f.Random.Guid())
