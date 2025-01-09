@@ -178,8 +178,8 @@ importers:
         specifier: 50.6.1
         version: 50.6.1(eslint@9.17.0(jiti@1.21.6))
       eslint-plugin-prefer-arrow-functions:
-        specifier: 3.4.2
-        version: 3.4.2(eslint@9.17.0(jiti@1.21.6))
+        specifier: 3.5.0
+        version: 3.5.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5)
       eslint-plugin-prettier:
         specifier: 5.2.1
         version: 5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.17.0(jiti@1.21.6)))(eslint@9.17.0(jiti@1.21.6))(prettier@3.4.2)
@@ -3558,11 +3558,11 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
 
-  eslint-plugin-prefer-arrow-functions@3.4.2:
-    resolution: {integrity: sha512-lwmu9Q4EfxR/R0g1xJ6XvhkMHKJlv3BtW9+RHctGIiDK+IjvhB7WkNtao646EOhFDLs9QoLUBVE+pnymarCk6w==}
+  eslint-plugin-prefer-arrow-functions@3.5.0:
+    resolution: {integrity: sha512-XY0Y6qAZf17Ij5LuPSE3G91LfAP6g7XViJ643MBczA988lkWsXmzB/0LheF7lDr4Xka9Horo7FU1F6SK1rRowA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      eslint: '>=8.0.0'
+      eslint: 9.17.0
 
   eslint-plugin-prettier@5.2.1:
     resolution: {integrity: sha512-gH3iR3g4JfF+yYPaJYkN7jEl9QbweL/YfkoRlNnuIEHEz1vHVlCmWOS+eGGiRuzHQXdJFCOTxRgvju9b8VUmrw==}
@@ -11092,9 +11092,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-prefer-arrow-functions@3.4.2(eslint@9.17.0(jiti@1.21.6)):
+  eslint-plugin-prefer-arrow-functions@3.5.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5):
     dependencies:
+      '@typescript-eslint/types': 8.19.1
+      '@typescript-eslint/utils': 8.19.1(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5)
       eslint: 9.17.0(jiti@1.21.6)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   eslint-plugin-prettier@5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.17.0(jiti@1.21.6)))(eslint@9.17.0(jiti@1.21.6))(prettier@3.4.2):
     dependencies:
