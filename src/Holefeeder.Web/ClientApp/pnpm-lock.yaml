@@ -178,8 +178,8 @@ importers:
         specifier: 50.6.1
         version: 50.6.1(eslint@9.17.0(jiti@1.21.6))
       eslint-plugin-prefer-arrow-functions:
-        specifier: 3.5.0
-        version: 3.5.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5)
+        specifier: 3.6.0
+        version: 3.6.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5)
       eslint-plugin-prettier:
         specifier: 5.2.1
         version: 5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.17.0(jiti@1.21.6)))(eslint@9.17.0(jiti@1.21.6))(prettier@3.4.2)
@@ -3558,8 +3558,8 @@ packages:
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
 
-  eslint-plugin-prefer-arrow-functions@3.5.0:
-    resolution: {integrity: sha512-XY0Y6qAZf17Ij5LuPSE3G91LfAP6g7XViJ643MBczA988lkWsXmzB/0LheF7lDr4Xka9Horo7FU1F6SK1rRowA==}
+  eslint-plugin-prefer-arrow-functions@3.6.0:
+    resolution: {integrity: sha512-gA/z9GNm7q4UiV8POLrsfnWTpCnQJbnDVTVlMAYOqT9atSf6oxVa6G2kTyOH1POHg7nFtUwD0eK7LG3iAqwlaA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: 9.17.0
@@ -11092,7 +11092,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-prefer-arrow-functions@3.5.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5):
+  eslint-plugin-prefer-arrow-functions@3.6.0(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5):
     dependencies:
       '@typescript-eslint/types': 8.19.1
       '@typescript-eslint/utils': 8.19.1(eslint@9.17.0(jiti@1.21.6))(typescript@5.4.5)
