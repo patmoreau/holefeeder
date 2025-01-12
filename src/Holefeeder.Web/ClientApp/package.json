@@ -78,7 +78,7 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jsdoc": "50.6.1",
-    "eslint-plugin-prefer-arrow-functions": "3.6.0",
+    "eslint-plugin-prefer-arrow-functions": "3.6.1",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react-hooks": "5.1.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
