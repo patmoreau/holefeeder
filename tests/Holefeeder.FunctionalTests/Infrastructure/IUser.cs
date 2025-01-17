@@ -78,7 +78,7 @@ public interface IStatistics
     Task<IApiResponse<IEnumerable<StatisticsDto>>> GetStatisticsForAllCategoriesAsync();
 
     [Get("/api/v2/summary/statistics?from={from}&to={until}")]
-    Task<IApiResponse<SummaryDto>> GetStatisticsSummaryAsync(string from, string until);
+    Task<IApiResponse<SummaryDto>> GetStatisticsSummaryAsync(DateOnly from, DateOnly until);
 }
 
 public interface IStoreItems

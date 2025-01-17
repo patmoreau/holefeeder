@@ -9,6 +9,7 @@ using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.Features.MyData.Models;
+using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.FunctionalTests.Infrastructure;
 
@@ -126,4 +127,10 @@ public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(a
         });
 
     internal void GetsTheirTags(IStepRunner runner) => runner.Execute(() => Api.GetTagsWithCountAsync());
+
+    internal void GetSummaryStatisticsForRange(IStepRunner runner, DateOnly from, DateOnly until) =>
+        runner.Execute(() => Api.GetStatisticsSummaryAsync(from, until));
+
+    internal void GetsTheirStatistics(IStepRunner runner) =>
+        runner.Execute(() => Api.GetStatisticsForAllCategoriesAsync());
 }

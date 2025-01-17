@@ -67,8 +67,8 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
         runner.Execute(() => Api.GetStatisticsForAllCategoriesAsync());
 
     internal void GetStatisticsSummary(IStepRunner runner) =>
-        runner.Execute(() => Api.GetStatisticsSummaryAsync(_faker.Date.RecentDateOnly().ToShortDateString(),
-            _faker.Date.SoonDateOnly().ToShortDateString()));
+        runner.Execute(() => Api.GetStatisticsSummaryAsync(_faker.Date.RecentDateOnly(),
+            _faker.Date.SoonDateOnly()));
 
     internal void GetStoreItems(IStepRunner runner) =>
         runner.Execute(() => Api.GetStoreItemsAsync(string.Empty));
