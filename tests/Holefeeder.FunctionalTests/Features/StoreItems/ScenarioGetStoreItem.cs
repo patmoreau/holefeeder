@@ -1,55 +1,80 @@
-// using System.Net;
-//
-// using Holefeeder.Application.Features.StoreItems.Queries;
-// using Holefeeder.FunctionalTests.Drivers;
-// using Holefeeder.FunctionalTests.Infrastructure;
-//
-// using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
-//
-// namespace Holefeeder.FunctionalTests.Features.StoreItems;
-//
-// [ComponentTest]
-// [Collection("Api collection")]
-// public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
-// {
-//     [Fact]
-//     public async Task WhenNotFound()
-//     {
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetStoreItem(Guid.NewGuid());
-//
-//         ShouldExpectStatusCode(HttpStatusCode.NotFound);
-//     }
-//
-//     [Fact]
-//     public async Task WhenInvalidRequest()
-//     {
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetStoreItem(Guid.Empty);
-//
-//         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-//     }
-//
-//     [Fact]
-//     public async Task WhenStoreItemExists()
-//     {
-//         var storeItem = await GivenAStoreItem()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetStoreItem(storeItem.Id);
-//
-//         ShouldExpectStatusCode(HttpStatusCode.OK);
-//         var result = HttpClientDriver.DeserializeContent<StoreItemViewModel>();
-//         result.Should().NotBeNull();
-//         result!.Id.Should().Be(storeItem.Id.Value);
-//         result.Code.Should().Be(storeItem.Code);
-//         result.Data.Should().Be(storeItem.Data);
-//     }
-//
-//     private async Task WhenUserGetStoreItem(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetStoreItem, id);
-// }
+using Bogus;
+
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
+
+using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.FunctionalTests.Drivers;
+
+using Refit;
+
+namespace Holefeeder.FunctionalTests.Features.StoreItems;
+
+[ComponentTest]
+[Collection("Api collection")]
+public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
+{
+    private readonly Faker _faker = new();
+
+    [Fact]
+    public Task GettingAnItemWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsAnItemInTheStore)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
+
+    [Fact]
+    public Task GettingAnItemThatDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(ARequestForAnItemThatDoesNotExist)
+            .When(TheUser.GetsAnItemInTheStore)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
+
+    [Fact]
+    public Task GettingAnItemThatExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .When(TheUserGetsAnItemInTheStore)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
+
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => Guid.Empty);
+
+    private void ARequestForAnItemThatDoesNotExist(IStepRunner runner) =>
+        runner.Execute(() => _faker.Random.Guid());
+
+    private void TheUserGetsAnItemInTheStore(IStepRunner runner)
+    {
+        runner.Execute<StoreItem, Guid>(item =>
+        {
+            item.Should().BeValid();
+            return item.Value.Id;
+        });
+        TheUser.GetsAnItemInTheStore(runner);
+    }
+
+    [AssertionMethod]
+    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+        runner.Execute<IApiResponse<StoreItemViewModel>>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveContent();
+            var result = response.Value.Content;
+
+            var item = runner.GetContextData<StoreItem>(StoreItemContext.ExistingStoreItem);
+            result.Should()
+                .NotBeNull()
+                .And
+                .BeEquivalentTo(new
+                {
+                    Id = (Guid) item.Id,
+                    item.Code,
+                    item.Data
+                });
+        });
+}

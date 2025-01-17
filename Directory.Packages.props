@@ -13,18 +13,18 @@
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.1.0" />
     <PackageVersion Include="Carter" Version="9.0.0" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="10.0.0" />
+    <PackageVersion Include="CommunityToolkit.Maui" Version="11.0.0" />
     <PackageVersion Include="Dapper" Version="2.1.44" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
     <PackageVersion Include="dbup-core" Version="6.0.4" />
     <PackageVersion Include="dbup-mysql" Version="6.0.4" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.124" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.124" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.125" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.125" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.124" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="0.1.19" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.124" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="0.1.21" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.125" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.17" />
     <PackageVersion Include="Hangfire.InMemory" Version="1.0.0" />
@@ -65,7 +65,7 @@
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.30" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.30" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageVersion Include="MudBlazor" Version="7.15.0" />
+    <PackageVersion Include="MudBlazor" Version="7.16.0" />
     <PackageVersion Include="MySqlConnector" Version="2.4.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageVersion Include="Refit" Version="8.0.0" />

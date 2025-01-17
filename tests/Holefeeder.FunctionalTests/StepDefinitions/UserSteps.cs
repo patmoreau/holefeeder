@@ -10,6 +10,8 @@ using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.Statistics.Queries;
+using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.FunctionalTests.Infrastructure;
 
@@ -133,4 +135,35 @@ public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(a
 
     internal void GetsTheirStatistics(IStepRunner runner) =>
         runner.Execute(() => Api.GetStatisticsForAllCategoriesAsync());
+
+    internal void CreatesAnItemInTheStore(IStepRunner runner) =>
+        runner.Execute<CreateStoreItem.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.CreateStoreItemAsync(request.Value);
+        });
+
+    internal void ModifiesAnItemInTheStore(IStepRunner runner) =>
+        runner.Execute<ModifyStoreItem.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.ModifyStoreItemAsync(request.Value);
+        });
+
+    internal void GetsAnItemInTheStore(IStepRunner runner) =>
+        runner.Execute<Guid, IApiResponse<StoreItemViewModel>>(async id =>
+        {
+            id.Should().BeValid();
+            var response = await Api.GetStoreItemAsync(id.Value);
+            return response;
+        });
+
+    internal void GetsItemsInTheStore(IStepRunner runner) =>
+        runner.Execute<GetStoreItems.Request, IApiResponse<IEnumerable<StoreItemViewModel>>>(async request =>
+        {
+            request.Should().BeValid();
+            var query = request.Value;
+            var response = await Api.GetStoreItemsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
+            return response;
+        });
 }

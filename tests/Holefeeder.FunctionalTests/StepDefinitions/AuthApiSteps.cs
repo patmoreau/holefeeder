@@ -71,7 +71,8 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
             _faker.Date.SoonDateOnly()));
 
     internal void GetStoreItems(IStepRunner runner) =>
-        runner.Execute(() => Api.GetStoreItemsAsync(string.Empty));
+        runner.Execute(() => Api.GetStoreItemsAsync(_faker.Random.Int(0, 5), _faker.Random.Int(1, 10),
+            _faker.Random.WordsArray(3), _faker.Random.WordsArray(3)));
 
     internal void GetStoreItem(IStepRunner runner) =>
         runner.Execute(() => Api.GetStoreItemAsync(_faker.Random.Guid()));

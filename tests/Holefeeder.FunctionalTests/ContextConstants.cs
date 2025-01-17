@@ -21,9 +21,20 @@ internal static class ContextConstants
         internal const string ExistingCategories = $"{nameof(CategoryContexts)}_{nameof(ExistingCategories)}";
     }
 
+    internal static class StoreItemContext
+    {
+        internal const string ExistingStoreItem = $"{nameof(StoreItemContext)}_{nameof(ExistingStoreItem)}";
+        internal const string ExistingStoreItems = $"{nameof(StoreItemContext)}_{nameof(ExistingStoreItems)}";
+    }
+
     internal static class TransactionContexts
     {
         internal const string ExistingTransaction = $"{nameof(TransactionContexts)}_{nameof(ExistingTransaction)}";
         internal const string ExistingTransactions = $"{nameof(TransactionContexts)}_{nameof(ExistingTransactions)}";
+    }
+
+    internal static class RequestContext
+    {
+        internal const string CurrentRequest = $"{nameof(RequestContext)}_{nameof(CurrentRequest)}";
     }
 }

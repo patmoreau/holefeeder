@@ -8,10 +8,10 @@ namespace Holefeeder.Tests.Common.Builders.StoreItems;
 internal class StoreItemBuilder : FakerBuilder<StoreItem>
 {
     protected override Faker<StoreItem> Faker { get; } = CreatePrivateFaker<StoreItem>()
-        .RuleFor(x => x.Id, StoreItemId.New)
+        .RuleFor(x => x.Id, () => StoreItemId.New)
         .RuleFor(x => x.Code, faker => faker.Random.String2(1, 100))
         .RuleFor(x => x.Data, faker => faker.Random.Words())
-        .RuleFor(x => x.UserId, UserId.New);
+        .RuleFor(x => x.UserId, () => UserId.New);
 
     public static StoreItemBuilder GivenAStoreItem() => new();
 

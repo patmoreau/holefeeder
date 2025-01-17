@@ -84,7 +84,8 @@ public interface IStatistics
 public interface IStoreItems
 {
     [Get("/api/v2/store-items")]
-    Task<IApiResponse<IEnumerable<StoreItemViewModel>>> GetStoreItemsAsync([Query] string queryParams);
+    Task<IApiResponse<IEnumerable<StoreItemViewModel>>> GetStoreItemsAsync([Query] int offset, [Query] int limit,
+        [Query(CollectionFormat.Multi)]string[] sort, [Query(CollectionFormat.Multi)]string[] filter);
 
     [Get("/api/v2/store-items/{storeItemId}")]
     Task<IApiResponse<StoreItemViewModel>> GetStoreItemAsync(Guid storeItemId);
