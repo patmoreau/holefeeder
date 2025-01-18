@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

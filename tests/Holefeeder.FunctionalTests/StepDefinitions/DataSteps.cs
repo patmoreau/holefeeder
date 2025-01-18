@@ -17,24 +17,24 @@ internal sealed class DataSteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
             var accounts = await GivenAnActiveAccount()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
-            runner.SetContextData(AccountContexts.ExistingAccounts, accounts);
+            runner.SetContextData(AccountContext.ExistingAccounts, accounts);
 
             var categories = await GivenACategory()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
-            runner.SetContextData(CategoryContexts.ExistingCategory, categories);
+            runner.SetContextData(CategoryContext.ExistingCategory, categories);
 
             var cashflows = await GivenAnActiveCashflow()
                 .ForAccount(accounts.ElementAt(0))
                 .ForCategory(categories.ElementAt(0))
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
-            runner.SetContextData(CashflowContexts.ExistingCashflows, cashflows);
+            runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
 
             var transactions = await GivenATransaction()
                 .ForAccount(accounts.ElementAt(0))
                 .ForCategory(categories.ElementAt(0))
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
-            runner.SetContextData(TransactionContexts.ExistingTransactions, transactions);
+            runner.SetContextData(TransactionContext.ExistingTransactions, transactions);
         });
 }

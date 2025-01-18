@@ -13,8 +13,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private readonly Faker _faker = new();
@@ -67,9 +65,9 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
                 .And.HaveContent();
             var result = response.Value.Content;
 
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
-            var transaction = runner.GetContextData<Transaction>(TransactionContexts.ExistingTransaction);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            var transaction = runner.GetContextData<Transaction>(TransactionContext.ExistingTransaction);
             result.Should()
                 .NotBeNull()
                 .And

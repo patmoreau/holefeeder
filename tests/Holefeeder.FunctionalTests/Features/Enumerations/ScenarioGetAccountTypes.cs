@@ -7,8 +7,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetAccountTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]

@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.MakePurchaseRequestBu
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public sealed class ScenarioMakePurchase(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
@@ -36,8 +34,8 @@ public sealed class ScenarioMakePurchase(ApiApplicationDriver applicationDriver,
     private static void AValidRequest(IStepRunner runner) =>
         runner.Execute(() =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             var request = GivenAPurchase()
                 .ForAccount(account)
                 .ForCategory(category)

@@ -21,10 +21,10 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
     public void Exists(IStepRunner runner) =>
         runner.Execute("a user has an active cashflow", async () =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             category.Should().NotBeNull();
 
             var cashflow = await GivenAnActiveCashflow()
@@ -33,17 +33,17 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(CashflowContexts.ExistingCashflow, cashflow);
+            runner.SetContextData(CashflowContext.ExistingCashflow, cashflow);
             return cashflow;
         });
 
     public void CollectionExists(IStepRunner runner) =>
         runner.Execute("the user has multiple cashflows", async () =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             category.Should().NotBeNull();
 
             var cashflows = await GivenAnActiveCashflow()
@@ -52,7 +52,7 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(CashflowContexts.ExistingCashflows, cashflows);
+            runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
 
             return cashflows;
         });
@@ -75,10 +75,10 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
 
     private async Task<Cashflow> BuildCashflow(IStepRunner runner, DateIntervalType dateIntervalType, int frequency)
     {
-        var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+        var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
         account.Should().NotBeNull();
 
-        var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+        var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
         category.Should().NotBeNull();
 
         var cashflow = await GivenAnActiveCashflow()
@@ -88,7 +88,7 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
             .ForUser(TestUsers[AuthorizedUser].UserId)
             .SavedInDbAsync(budgetingDatabaseDriver);
 
-        runner.SetContextData(CashflowContexts.ExistingCashflow, cashflow);
+        runner.SetContextData(CashflowContext.ExistingCashflow, cashflow);
         return cashflow;
     }
 

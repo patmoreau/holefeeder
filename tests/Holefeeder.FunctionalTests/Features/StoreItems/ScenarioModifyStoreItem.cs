@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestB
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

@@ -12,8 +12,6 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestB
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

@@ -11,8 +11,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.GetUpcomingRequestBui
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

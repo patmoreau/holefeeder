@@ -10,8 +10,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -33,10 +31,10 @@ public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOut
             var result = response.Value.Content;
             result.Should().NotBeNull();
 
-            var accounts = runner.GetContextData<IReadOnlyCollection<Account>>(AccountContexts.ExistingAccounts);
-            var cashflows = runner.GetContextData<IReadOnlyCollection<Cashflow>>(CashflowContexts.ExistingCashflows);
-            var categories = runner.GetContextData<IReadOnlyCollection<Category>>(CategoryContexts.ExistingCategory);
-            var transactions = runner.GetContextData<IReadOnlyCollection<Transaction>>(TransactionContexts.ExistingTransactions);
+            var accounts = runner.GetContextData<IReadOnlyCollection<Account>>(AccountContext.ExistingAccounts);
+            var cashflows = runner.GetContextData<IReadOnlyCollection<Cashflow>>(CashflowContext.ExistingCashflows);
+            var categories = runner.GetContextData<IReadOnlyCollection<Category>>(CategoryContext.ExistingCategory);
+            var transactions = runner.GetContextData<IReadOnlyCollection<Transaction>>(TransactionContext.ExistingTransactions);
             AssertAccounts(result!, accounts);
             AssertCashflows(result!, cashflows);
             AssertCategories(result!, categories);

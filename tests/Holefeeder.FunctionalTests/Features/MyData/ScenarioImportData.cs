@@ -20,8 +20,6 @@ using static Holefeeder.Tests.Common.Builders.MyData.MyDataTransactionDtoBuilder
 
 namespace Holefeeder.FunctionalTests.Features.MyData;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -51,22 +49,22 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
         runner.Execute(() =>
         {
             var accounts = GivenMyAccountData().BuildCollection(2);
-            runner.SetContextData(AccountContexts.ExistingAccounts, accounts);
+            runner.SetContextData(AccountContext.ExistingAccounts, accounts);
 
             var categories = GivenMyCategoryData().BuildCollection(2);
-            runner.SetContextData(CategoryContexts.ExistingCategories, categories);
+            runner.SetContextData(CategoryContext.ExistingCategories, categories);
 
             var cashflows = GivenMyCashflowData()
                 .WithAccount(accounts.ElementAt(0))
                 .WithCategory(categories.ElementAt(0))
                 .BuildCollection(2);
-            runner.SetContextData(CashflowContexts.ExistingCashflows, cashflows);
+            runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
 
             var transactions = GivenMyTransactionData()
                 .WithAccount(accounts.ElementAt(0))
                 .WithCategory(categories.ElementAt(0))
                 .BuildCollection(2);
-            runner.SetContextData(TransactionContexts.ExistingTransactions, transactions);
+            runner.SetContextData(TransactionContext.ExistingTransactions, transactions);
 
             var request = GivenAnImportDataRequest()
                 .WithUpdateExisting()
@@ -113,7 +111,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private void TheAccountsHaveBeenImported(IStepRunner runner) =>
         runner.Execute(async () =>
         {
-            var accounts = runner.GetContextData<IReadOnlyCollection<MyDataAccountDto>>(AccountContexts.ExistingAccounts);
+            var accounts = runner.GetContextData<IReadOnlyCollection<MyDataAccountDto>>(AccountContext.ExistingAccounts);
             await AssertAccount(accounts.ElementAt(0));
             await AssertAccount(accounts.ElementAt(1));
         });
@@ -121,7 +119,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private void TheCategoriesHaveBeenImported(IStepRunner runner) =>
         runner.Execute(async () =>
         {
-            var categories = runner.GetContextData<IReadOnlyCollection<MyDataCategoryDto>>(CategoryContexts.ExistingCategories);
+            var categories = runner.GetContextData<IReadOnlyCollection<MyDataCategoryDto>>(CategoryContext.ExistingCategories);
             await AssertCategory(categories.ElementAt(0));
             await AssertCategory(categories.ElementAt(1));
         });
@@ -129,7 +127,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private void TheCashflowsHaveBeenImported(IStepRunner runner) =>
         runner.Execute(async () =>
         {
-            var cashflows = runner.GetContextData<IReadOnlyCollection<MyDataCashflowDto>>(CashflowContexts.ExistingCashflows);
+            var cashflows = runner.GetContextData<IReadOnlyCollection<MyDataCashflowDto>>(CashflowContext.ExistingCashflows);
             await AssertCashflow(cashflows.ElementAt(0));
             await AssertCashflow(cashflows.ElementAt(1));
         });
@@ -137,7 +135,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
     private void TheTransactionsHaveBeenImported(IStepRunner runner) =>
         runner.Execute(async () =>
         {
-            var transactions = runner.GetContextData<IReadOnlyCollection<MyDataTransactionDto>>(TransactionContexts.ExistingTransactions);
+            var transactions = runner.GetContextData<IReadOnlyCollection<MyDataTransactionDto>>(TransactionContext.ExistingTransactions);
             await AssertTransaction(transactions.ElementAt(0));
             await AssertTransaction(transactions.ElementAt(1));
         });

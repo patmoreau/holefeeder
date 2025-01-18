@@ -19,7 +19,7 @@ internal sealed partial class AccountSteps
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
@@ -36,7 +36,7 @@ internal sealed partial class AccountSteps
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
@@ -53,7 +53,7 @@ internal sealed partial class AccountSteps
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();

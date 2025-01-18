@@ -15,7 +15,7 @@ internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDri
             var category = await GivenACategory().ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(CategoryContexts.ExistingCategory, category);
+            runner.SetContextData(CategoryContext.ExistingCategory, category);
         });
 
     public void TransferCategoriesExists(IStepRunner runner) =>
@@ -27,6 +27,6 @@ internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             var categories = new List<Category> {categoryIn, categoryOut};
-            runner.SetContextData(CategoryContexts.ExistingCategories, categories);
+            runner.SetContextData(CategoryContext.ExistingCategories, categories);
         });
 }

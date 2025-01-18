@@ -2,16 +2,9 @@ using DrifterApps.Seeds.FluentScenario;
 
 namespace Holefeeder.FunctionalTests.Infrastructure;
 
-public class ScenarioOutput : IScenarioOutput
+public class ScenarioOutput(ITestOutputHelper testOutputHelper) : IScenarioOutput
 {
-    private readonly ITestOutputHelper _testOutputHelper;
+    public void WriteLine(string message) => testOutputHelper.WriteLine(message);
 
-    public ScenarioOutput(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
-    public void WriteLine(string message) => _testOutputHelper.WriteLine(message);
-
-    public void WriteLine(string format, params object[] args) => _testOutputHelper.WriteLine(format, args);
+    public void WriteLine(string format, params object[] args) => testOutputHelper.WriteLine(format, args);
 }

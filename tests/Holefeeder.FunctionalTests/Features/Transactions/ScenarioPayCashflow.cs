@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBui
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public sealed class ScenarioPayCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]

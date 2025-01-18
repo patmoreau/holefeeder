@@ -18,7 +18,7 @@ namespace Holefeeder.FunctionalTests.Features;
 /// </summary>
 [ComponentTest]
 [Collection(FunctionalTestMarker.Name)]
-public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
+public abstract class HolefeederScenario : BaseScenario, IAsyncLifetime
 {
     private readonly ApiApplicationDriver _apiApplicationDriver;
 
@@ -31,17 +31,19 @@ public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
 
         DatabaseDriver = _apiApplicationDriver.DatabaseDriver;
 
+        TheUser = new UserSteps(_apiApplicationDriver);
+        TheData = new DataSteps(DatabaseDriver);
         Account = new AccountSteps(DatabaseDriver);
         Cashflow = new CashflowSteps(DatabaseDriver);
         Category = new CategorySteps(DatabaseDriver);
         StoreItem = new StoreItemSteps(DatabaseDriver);
         Transaction = new TransactionSteps(DatabaseDriver);
-        // User = new UserStepDefinition(HttpClientDriver);
     }
 
-    protected UserSteps TheUser => new(_apiApplicationDriver);
+    internal UserSteps TheUser { get; }
 
-    internal DataSteps TheData => new(DatabaseDriver);
+    internal DataSteps TheData { get; }
+
     internal AccountSteps Account { get; }
 
     internal CashflowSteps Cashflow { get; }
@@ -52,27 +54,7 @@ public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
 
     internal TransactionSteps Transaction { get; }
 
-    // internal UserStepDefinition User { get; }
-
-
     protected BudgetingDatabaseDriver DatabaseDriver { get; }
-
-#pragma warning disable S1135
-    // TODO: remove
-    // protected void GivenUserIsUnauthorized() => HttpClientDriver.UnAuthenticate();
-
-    // TODO: remove
-    // protected void GivenUserIsAuthorized() => HttpClientDriver.AuthenticateUser(TestUsers[AuthorizedUser].IdentityObjectId);
-#pragma warning restore S1135
-
-    protected static Guid ResourceIdFromLocation(Uri location)
-    {
-        ArgumentNullException.ThrowIfNull(location);
-
-        var match = ResourceIdRegex().Match(location.ToString());
-
-        return match.Success ? Guid.Parse(match.Value) : Guid.Empty;
-    }
 
     [AssertionMethod]
     protected static void ShouldReceiveAValidationError(IStepRunner runner) =>
@@ -93,16 +75,13 @@ public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
                 .Value.Should().BeFailure().And.HaveStatusCode(HttpStatusCode.BadRequest);
         });
 
-    [GeneratedRegex("[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?")]
-    private static partial Regex ResourceIdRegex();
-
-    public Task InitializeAsync() => _apiApplicationDriver.ResetStateAsync();
-
-    public Task DisposeAsync() => Task.CompletedTask;
-
     [AssertionMethod]
     protected static void ShouldNotBeFound(IStepRunner runner) =>
         runner.Execute<IApiResponse>(response =>
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NotFound));
+
+    public Task InitializeAsync() => _apiApplicationDriver.ResetStateAsync();
+
+    public Task DisposeAsync() => Task.CompletedTask;
 }

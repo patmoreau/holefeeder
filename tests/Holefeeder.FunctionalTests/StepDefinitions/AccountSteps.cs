@@ -19,7 +19,7 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
 
             var account = await builder.SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(AccountContexts.ExistingAccount, account);
+            runner.SetContextData(AccountContext.ExistingAccount, account);
 
             return account;
         });
@@ -31,7 +31,7 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
 
             var accounts = await builder.CollectionSavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(AccountContexts.ExistingAccounts, accounts);
+            runner.SetContextData(AccountContext.ExistingAccounts, accounts);
 
             return accounts;
         });
@@ -54,9 +54,9 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
                 .ForCategory(category)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(AccountContexts.ExistingAccount, account);
-            runner.SetContextData(CategoryContexts.ExistingCategory, category);
-            runner.SetContextData(TransactionContexts.ExistingTransaction, transaction);
+            runner.SetContextData(AccountContext.ExistingAccount, account);
+            runner.SetContextData(CategoryContext.ExistingCategory, category);
+            runner.SetContextData(TransactionContext.ExistingTransaction, transaction);
             return (Guid)account.Id;
         });
 
@@ -78,9 +78,9 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
                 .ForCategory(category)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(AccountContexts.ExistingAccount, account);
-            runner.SetContextData(CategoryContexts.ExistingCategory, category);
-            runner.SetContextData(TransactionContexts.ExistingTransaction, transaction);
+            runner.SetContextData(AccountContext.ExistingAccount, account);
+            runner.SetContextData(CategoryContext.ExistingCategory, category);
+            runner.SetContextData(TransactionContext.ExistingTransaction, transaction);
             return (Guid)account.Id;
         });
 }

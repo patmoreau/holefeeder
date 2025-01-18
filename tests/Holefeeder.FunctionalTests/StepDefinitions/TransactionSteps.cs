@@ -25,10 +25,10 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
     public void Exists(IStepRunner runner) =>
         runner.Execute("a user has a transaction", async () =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             category.Should().NotBeNull();
 
             var transaction = await GivenATransaction()
@@ -37,17 +37,17 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(TransactionContexts.ExistingTransaction, transaction);
+            runner.SetContextData(TransactionContext.ExistingTransaction, transaction);
             return transaction;
         });
 
     public void CollectionExists(IStepRunner runner) =>
         runner.Execute("the user has multiple cashflows", async () =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             account.Should().NotBeNull();
 
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             category.Should().NotBeNull();
 
             var transactions = await GivenATransaction()
@@ -56,7 +56,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
                 .ForUser(TestUsers[AuthorizedUser].UserId)
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver);
 
-            runner.SetContextData(TransactionContexts.ExistingTransactions, transactions);
+            runner.SetContextData(TransactionContext.ExistingTransactions, transactions);
 
             return transactions;
         });
@@ -135,7 +135,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
         runner.Execute<IApiResponse>("the new transactions should be created from the transfer", async response =>
         {
             var request = runner.GetContextData<Transfer.Request>(RequestContext.CurrentRequest);
-            var categories = runner.GetContextData<IEnumerable<Category>>(CategoryContexts.ExistingCategories).ToList();
+            var categories = runner.GetContextData<IEnumerable<Category>>(CategoryContext.ExistingCategories).ToList();
 
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);

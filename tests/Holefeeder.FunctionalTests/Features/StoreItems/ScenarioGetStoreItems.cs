@@ -9,8 +9,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

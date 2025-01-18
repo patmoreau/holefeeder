@@ -15,8 +15,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequ
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -93,7 +91,7 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     private static void ARequestWithNonExistentCategory(IStepRunner runner) =>
         runner.Execute(() =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
             var request = GivenAModifyTransactionRequest()
                 .WithAccount(account)
                 .Build();
@@ -104,8 +102,8 @@ public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, I
     private static void ARequestWithNonExistentTransaction(IStepRunner runner) =>
         runner.Execute(() =>
         {
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             var request = GivenAModifyTransactionRequest()
                 .WithAccount(account)
                 .WithCategory(category)

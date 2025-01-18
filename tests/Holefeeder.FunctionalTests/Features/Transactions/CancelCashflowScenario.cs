@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequest
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class CancelCashflowScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

@@ -14,8 +14,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Statistics;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private readonly UserId _userId = TestUsers[AuthorizedUser].UserId;

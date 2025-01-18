@@ -8,8 +8,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilde
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {

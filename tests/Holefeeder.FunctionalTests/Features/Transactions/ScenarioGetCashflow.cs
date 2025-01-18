@@ -15,8 +15,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -70,9 +68,9 @@ public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOu
                 .And.HaveContent();
             var result = response.Value.Content;
 
-            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
-            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
-            var cashflow = runner.GetContextData<Cashflow>(CashflowContexts.ExistingCashflow);
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            var cashflow = runner.GetContextData<Cashflow>(CashflowContext.ExistingCashflow);
             result.Should()
                 .NotBeNull()
                 .And

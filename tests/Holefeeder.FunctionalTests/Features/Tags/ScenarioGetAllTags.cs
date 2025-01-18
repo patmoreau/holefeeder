@@ -13,8 +13,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Tags;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetAllTags(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private readonly UserId _userId = TestUsers[AuthorizedUser].UserId;

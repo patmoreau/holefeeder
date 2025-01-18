@@ -10,8 +10,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
@@ -41,7 +39,7 @@ public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITe
     private static void ShouldReceiveItemsInProperOrder(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<TransactionInfoViewModel>>>(response =>
         {
-            var expected = runner.GetContextData<IEnumerable<Transaction>>(TransactionContexts.ExistingTransactions);
+            var expected = runner.GetContextData<IEnumerable<Transaction>>(TransactionContext.ExistingTransactions);
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;

@@ -44,7 +44,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
 
     protected ApiApplicationDriver(bool useDatabaseDriver)
     {
-        var jsonSettings = new JsonSerializerOptions()
+        var jsonSettings = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters =

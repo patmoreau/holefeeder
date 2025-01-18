@@ -9,8 +9,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -38,7 +36,7 @@ public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOu
     private static void ShouldReceiveAccountsInProperOrder(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<AccountViewModel>>>(response =>
         {
-            var expected = runner.GetContextData<IEnumerable<Account>>(AccountContexts.ExistingAccounts);
+            var expected = runner.GetContextData<IEnumerable<Account>>(AccountContext.ExistingAccounts);
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;

@@ -2,23 +2,22 @@ namespace Holefeeder.FunctionalTests;
 
 internal static class ContextConstants
 {
-    internal static class AccountContexts
+    internal static class AccountContext
     {
-        internal const string ExistingAccount = $"{nameof(AccountContexts)}_{nameof(ExistingAccount)}";
-        internal const string ExistingAccounts = $"{nameof(AccountContexts)}_{nameof(ExistingAccounts)}";
+        internal const string ExistingAccount = $"{nameof(AccountContext)}_{nameof(ExistingAccount)}";
+        internal const string ExistingAccounts = $"{nameof(AccountContext)}_{nameof(ExistingAccounts)}";
     }
 
-    internal static class CashflowContexts
+    internal static class CashflowContext
     {
-        internal const string CashflowRequest = $"{nameof(CashflowContexts)}_{nameof(CashflowRequest)}";
-        internal const string ExistingCashflow = $"{nameof(CashflowContexts)}_{nameof(ExistingCashflow)}";
-        internal const string ExistingCashflows = $"{nameof(CashflowContexts)}_{nameof(ExistingCashflows)}";
+        internal const string ExistingCashflow = $"{nameof(CashflowContext)}_{nameof(ExistingCashflow)}";
+        internal const string ExistingCashflows = $"{nameof(CashflowContext)}_{nameof(ExistingCashflows)}";
     }
 
-    internal static class CategoryContexts
+    internal static class CategoryContext
     {
-        internal const string ExistingCategory = $"{nameof(CategoryContexts)}_{nameof(ExistingCategory)}";
-        internal const string ExistingCategories = $"{nameof(CategoryContexts)}_{nameof(ExistingCategories)}";
+        internal const string ExistingCategory = $"{nameof(CategoryContext)}_{nameof(ExistingCategory)}";
+        internal const string ExistingCategories = $"{nameof(CategoryContext)}_{nameof(ExistingCategories)}";
     }
 
     internal static class StoreItemContext
@@ -27,10 +26,10 @@ internal static class ContextConstants
         internal const string ExistingStoreItems = $"{nameof(StoreItemContext)}_{nameof(ExistingStoreItems)}";
     }
 
-    internal static class TransactionContexts
+    internal static class TransactionContext
     {
-        internal const string ExistingTransaction = $"{nameof(TransactionContexts)}_{nameof(ExistingTransaction)}";
-        internal const string ExistingTransactions = $"{nameof(TransactionContexts)}_{nameof(ExistingTransactions)}";
+        internal const string ExistingTransaction = $"{nameof(TransactionContext)}_{nameof(ExistingTransaction)}";
+        internal const string ExistingTransactions = $"{nameof(TransactionContext)}_{nameof(ExistingTransactions)}";
     }
 
     internal static class RequestContext

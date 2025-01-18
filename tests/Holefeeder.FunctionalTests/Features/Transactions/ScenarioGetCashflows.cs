@@ -21,8 +21,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
@@ -53,7 +51,7 @@ public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestO
     private static void ShouldReceiveItemsInProperOrder(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<CashflowInfoViewModel>>>(response =>
         {
-            var expected = runner.GetContextData<IEnumerable<Cashflow>>(CashflowContexts.ExistingCashflows);
+            var expected = runner.GetContextData<IEnumerable<Cashflow>>(CashflowContext.ExistingCashflows);
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;

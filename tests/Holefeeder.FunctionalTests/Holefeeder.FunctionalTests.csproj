@@ -58,6 +58,9 @@
       <Compile Update="StepDefinitions\AccountSteps.Assertions.cs">
         <DependentUpon>AccountSteps.cs</DependentUpon>
       </Compile>
+      <Compile Update="StepDefinitions\UserSteps.static.cs">
+        <DependentUpon>UserSteps.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

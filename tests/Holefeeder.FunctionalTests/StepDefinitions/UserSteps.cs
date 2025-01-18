@@ -22,7 +22,7 @@ using AccountViewModel = Holefeeder.Application.Features.Accounts.Queries.Accoun
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(applicationDriver)
+internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(applicationDriver)
 {
     internal void ClosesTheAccount(IStepRunner runner) =>
         runner.Execute<CloseAccount.Request, IApiResponse>(request =>

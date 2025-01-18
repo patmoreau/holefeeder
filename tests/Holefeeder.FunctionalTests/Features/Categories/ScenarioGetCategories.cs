@@ -8,8 +8,6 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Categories;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
