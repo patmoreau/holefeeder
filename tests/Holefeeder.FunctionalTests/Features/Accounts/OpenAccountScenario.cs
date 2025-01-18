@@ -14,7 +14,7 @@ public class OpenAccountScenario(ApiApplicationDriver applicationDriver, ITestOu
     private const string NewAccountName = nameof(NewAccountName);
 
     [Fact]
-    public Task WhenInvalidRequest() =>
+    public Task OpeningAnAccountWithAnInvalidRequest() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(AnInvalidRequest)
             .When(TheUser.OpensAnAccount)
@@ -22,7 +22,7 @@ public class OpenAccountScenario(ApiApplicationDriver applicationDriver, ITestOu
             .PlayAsync();
 
     [Fact]
-    public Task WhenAccountNameAlreadyExistsRequest() =>
+    public Task OpeningAnAccountWithANameThatAlreadyExists() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(Account.Exists)
             .And(ARequestWithExistingAccountName)
@@ -31,7 +31,7 @@ public class OpenAccountScenario(ApiApplicationDriver applicationDriver, ITestOu
             .PlayAsync();
 
     [Fact]
-    public Task WhenOpenAccount() =>
+    public Task OpeningAnAccount() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(ARequestForANewAccount)
             .When(TheUser.OpensAnAccount)

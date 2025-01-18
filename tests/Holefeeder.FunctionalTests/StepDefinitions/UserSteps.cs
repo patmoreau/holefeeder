@@ -235,21 +235,21 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
         });
 
     internal void MakesAPurchase(IStepRunner runner) =>
-        runner.Execute<MakePurchase.Request, IApiResponse>("the user makes a purchase", request =>
+        runner.Execute<MakePurchase.Request, IApiResponse>(request =>
         {
             request.Should().BeValid();
             return Api.MakePurchaseAsync(request.Value);
         });
 
     internal void PaysACashflow(IStepRunner runner) =>
-        runner.Execute<PayCashflow.Request, IApiResponse>("the user pays a cashflow", request =>
+        runner.Execute<PayCashflow.Request, IApiResponse>(request =>
         {
             request.Should().BeValid();
             return Api.PayCashflowAsync(request.Value);
         });
 
     internal void MakesATransfer(IStepRunner runner) =>
-        runner.Execute<Transfer.Request, IApiResponse>("the user makes a transfer", request =>
+        runner.Execute<Transfer.Request, IApiResponse>(request =>
         {
             request.Should().BeValid();
             return Api.TransferAsync(request.Value);

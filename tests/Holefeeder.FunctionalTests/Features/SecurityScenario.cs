@@ -29,19 +29,19 @@ public abstract class SecurityScenario(ITestOutputHelper testOutputHelper) : Bas
             .PlayAsync();
 
     private static void ShouldBeAllowedToAccessEndpoint(IStepRunner runner) =>
-        runner.Execute<IApiResponse>("the user is authorized to access endpoint", response =>
+        runner.Execute<IApiResponse>("the user is authorized", response =>
             response.Should().BeValid()
                 .And.Subject.Value.Should().NotHaveStatusCode(HttpStatusCode.Forbidden)
                 .And.NotHaveStatusCode(HttpStatusCode.Unauthorized));
 
     private static void ShouldBeUnauthorizedToAccessEndpoint(IStepRunner runner) =>
-        runner.Execute<IApiResponse>("the user is not authorized to access endpoint", response =>
+        runner.Execute<IApiResponse>("the user is not authorized", response =>
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeFailure()
                 .And.HaveStatusCode(HttpStatusCode.Unauthorized));
 
     private static void ShouldBeForbiddenToAccessEndpoint(IStepRunner runner) =>
-        runner.Execute<IApiResponse>("the user is forbidden to access endpoint", response =>
+        runner.Execute<IApiResponse>("the user is forbidden", response =>
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeFailure()
                 .And.HaveStatusCode(HttpStatusCode.Forbidden));

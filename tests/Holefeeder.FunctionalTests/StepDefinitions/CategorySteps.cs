@@ -10,16 +10,27 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
 {
     public void Exists(IStepRunner runner) =>
-        runner.Execute("a user has an active category", async () =>
+        runner.Execute("category exists", async () =>
         {
-            var category = await GivenACategory().ForUser(TestUsers[AuthorizedUser].UserId)
+            var category = await GivenACategory()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(CategoryContext.ExistingCategory, category);
         });
 
+    public void CollectionExists(IStepRunner runner) =>
+        runner.Execute("multiple categories exists", async () =>
+        {
+            var categories = await GivenACategory()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+
+            runner.SetContextData(CategoryContext.ExistingCategories, categories);
+        });
+
     public void TransferCategoriesExists(IStepRunner runner) =>
-        runner.Execute("transfer categories exists", async () =>
+        runner.Execute(async () =>
         {
             var categoryIn = await GivenATransferInCategory().ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);

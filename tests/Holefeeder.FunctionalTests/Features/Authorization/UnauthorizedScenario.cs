@@ -9,112 +9,112 @@ public class UnauthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestO
     private readonly UnauthenticatedUserSteps _user = new(appDriver);
 
     [Fact]
-    public Task AttemptToCloseAccount() => ScenarioForUnauthenticatedUser("close an account", _user.ClosesAnyAccount);
+    public Task AttemptToCloseAccount() => ScenarioForUnauthenticatedUser("close an account", _user.ClosingAnAccount);
 
     [Fact]
     public Task AttemptToSetFavoriteAccount() =>
-        ScenarioForUnauthenticatedUser("set a favorite account", _user.SetFavoriteAccount);
+        ScenarioForUnauthenticatedUser("set a favorite account", _user.SettingAFavoriteAccount);
 
     [Fact]
-    public Task AttemptToModifyAnAccount() => ScenarioForUnauthenticatedUser("modify an account", _user.ModifyAccount);
+    public Task AttemptToModifyAnAccount() => ScenarioForUnauthenticatedUser("modify an account", _user.ModifyingAnAccount);
 
     [Fact]
-    public Task AttemptToOpenAnAccount() => ScenarioForUnauthenticatedUser("open an account", _user.OpenAccount);
+    public Task AttemptToOpenAnAccount() => ScenarioForUnauthenticatedUser("open an account", _user.OpeningAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccount() => ScenarioForUnauthenticatedUser("get an account", _user.GetAccount);
+    public Task AttemptToGetAccount() => ScenarioForUnauthenticatedUser("get an account", _user.GettingAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccounts() => ScenarioForUnauthenticatedUser("get a list of accounts", _user.GetAccounts);
+    public Task AttemptToGetAccounts() => ScenarioForUnauthenticatedUser("get a list of accounts", _user.GettingAccounts);
 
     [Fact]
     public Task AttemptToGetCategories() =>
-        ScenarioForUnauthenticatedUser("get a list of categories", _user.GetCategories);
+        ScenarioForUnauthenticatedUser("get a list of categories", _user.GettingCategories);
 
     [Fact]
     public Task AttemptToGetAccountTypes() =>
-        ScenarioForAuthorizedUser("get the list of account types", _user.GetAccountTypes);
+        ScenarioForAuthorizedUser("get the list of account types", _user.GettingAccountTypes);
 
     [Fact]
     public Task AttemptToGetCategoryTypes() =>
-        ScenarioForAuthorizedUser("get the list of category types", _user.GetCategoryTypes);
+        ScenarioForAuthorizedUser("get the list of category types", _user.GettingCategoryTypes);
 
     [Fact]
     public Task AttemptToGetDateIntervalTypes() =>
-        ScenarioForAuthorizedUser("get the list of date interval types", _user.GetDateIntervalTypes);
+        ScenarioForAuthorizedUser("get the list of date interval types", _user.GettingDateIntervalTypes);
 
     [Fact]
-    public Task AttemptToImportData() => ScenarioForUnauthenticatedUser("import data", _user.ImportData);
+    public Task AttemptToImportData() => ScenarioForUnauthenticatedUser("import data", _user.ImportingData);
 
     [Fact]
-    public Task AttemptToExportData() => ScenarioForUnauthenticatedUser("export data", _user.ExportData);
+    public Task AttemptToExportData() => ScenarioForUnauthenticatedUser("export data", _user.ExportingData);
 
     [Fact]
     public Task AttemptToGetImportDataStatus() =>
-        ScenarioForUnauthenticatedUser("get import data status", _user.GetImportStatus);
+        ScenarioForUnauthenticatedUser("get import data status", _user.GettingImportStatus);
 
     [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
-        ScenarioForUnauthenticatedUser("get statistics for all categories", _user.GetStatisticsForAllCategories);
+        ScenarioForUnauthenticatedUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 
     [Fact]
     public Task AttemptToGetStatisticsSummary() =>
-        ScenarioForUnauthenticatedUser("get statistics summary", _user.GetStatisticsSummary);
+        ScenarioForUnauthenticatedUser("get statistics summary", _user.GettingStatisticsSummary);
 
     [Fact]
     public Task AttemptToGetStoreItems() =>
-        ScenarioForUnauthenticatedUser("get store items", _user.GetStoreItems);
+        ScenarioForUnauthenticatedUser("get store items", _user.GettingItemsFromTheStore);
 
     [Fact]
     public Task AttemptToGetStoreItem() =>
-        ScenarioForUnauthenticatedUser("get store item", _user.GetStoreItem);
+        ScenarioForUnauthenticatedUser("get store item", _user.GettingAnItemFromTheStore);
 
     [Fact]
     public Task AttemptToCreateStoreItem() =>
-        ScenarioForUnauthenticatedUser("create a store item", _user.CreateStoreItem);
+        ScenarioForUnauthenticatedUser("create a store item", _user.CreatingAnItemInTheStore);
 
     [Fact]
     public Task AttemptToModifyStoreItem() =>
-        ScenarioForUnauthenticatedUser("modify a store item", _user.ModifyStoreItem);
+        ScenarioForUnauthenticatedUser("modify a store item", _user.ModifyingAnItemInTheStore);
 
     [Fact]
-    public Task AttemptToGetTags() => ScenarioForUnauthenticatedUser("get tags", _user.GetTags);
+    public Task AttemptToGetTags() => ScenarioForUnauthenticatedUser("get tags", _user.GettingTags);
 
     [Fact]
-    public Task AttemptToGetCashflows() => ScenarioForUnauthenticatedUser("get cashflows", _user.GetCashflows);
+    public Task AttemptToGetCashflows() => ScenarioForUnauthenticatedUser("get cashflows", _user.GettingCashflows);
 
     [Fact]
-    public Task AttemptToGetCashflow() => ScenarioForUnauthenticatedUser("get cashflow", _user.GetCashflow);
+    public Task AttemptToGetCashflow() => ScenarioForUnauthenticatedUser("get cashflow", _user.GettingACashflow);
 
     [Fact]
-    public Task AttemptToModifyCashflow() => ScenarioForUnauthenticatedUser("modify cashflow", _user.ModifyCashflow);
+    public Task AttemptToModifyCashflow() => ScenarioForUnauthenticatedUser("modify cashflow", _user.ModifyingACashflow);
 
     [Fact]
-    public Task AttemptToCancelCashflow() => ScenarioForUnauthenticatedUser("cancel cashflow", _user.CancelCashflow);
+    public Task AttemptToCancelCashflow() => ScenarioForUnauthenticatedUser("cancel cashflow", _user.CancellingACashflow);
 
     [Fact]
-    public Task AttemptToGetUpcoming() => ScenarioForUnauthenticatedUser("get upcoming", _user.GetUpcoming);
+    public Task AttemptToGetUpcoming() => ScenarioForUnauthenticatedUser("get upcoming", _user.GettingUpcomingCashflows);
 
     [Fact]
-    public Task AttemptToMakePurchase() => ScenarioForUnauthenticatedUser("make purchase", _user.MakePurchase);
+    public Task AttemptToMakePurchase() => ScenarioForUnauthenticatedUser("make purchase", _user.MakingAPurchase);
 
     [Fact]
-    public Task AttemptToPayCashflow() => ScenarioForUnauthenticatedUser("pay cashflow", _user.PayCashflow);
+    public Task AttemptToPayCashflow() => ScenarioForUnauthenticatedUser("pay cashflow", _user.PayingACashflow);
 
     [Fact]
-    public Task AttemptToTransfer() => ScenarioForUnauthenticatedUser("transfer", _user.Transfer);
+    public Task AttemptToTransfer() => ScenarioForUnauthenticatedUser("transfer", _user.TransferringMoneyBetweenTwoAccounts);
 
     [Fact]
     public Task AttemptToModifyTransaction() =>
-        ScenarioForUnauthenticatedUser("modify transaction", _user.ModifyTransaction);
+        ScenarioForUnauthenticatedUser("modify transaction", _user.ModifyingATransaction);
 
     [Fact]
     public Task AttemptToDeleteTransaction() =>
-        ScenarioForUnauthenticatedUser("delete transaction", _user.DeleteTransaction);
+        ScenarioForUnauthenticatedUser("delete transaction", _user.DeletingATransaction);
 
     [Fact]
-    public Task AttemptToGetTransaction() => ScenarioForUnauthenticatedUser("get transaction", _user.GetTransaction);
+    public Task AttemptToGetTransaction() => ScenarioForUnauthenticatedUser("get transaction", _user.GettingATransaction);
 
     [Fact]
-    public Task AttemptToGetTransactions() => ScenarioForUnauthenticatedUser("get transactions", _user.GetTransactions);
+    public Task AttemptToGetTransactions() => ScenarioForUnauthenticatedUser("get transactions", _user.GettingTransactions);
 }

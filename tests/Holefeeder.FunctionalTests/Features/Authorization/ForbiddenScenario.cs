@@ -9,97 +9,97 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
     private readonly ForbiddenUserSteps _user = new(appDriver);
 
     [Fact]
-    public Task AttemptToCloseAccount() => ScenarioForForbiddenUser("close an account", _user.ClosesAnyAccount);
+    public Task AttemptToCloseAccount() => ScenarioForForbiddenUser("close an account", _user.ClosingAnAccount);
 
     [Fact]
     public Task AttemptToSetFavoriteAccount() =>
-        ScenarioForForbiddenUser("set a favorite account", _user.SetFavoriteAccount);
+        ScenarioForForbiddenUser("set a favorite account", _user.SettingAFavoriteAccount);
 
     [Fact]
-    public Task AttemptToModifyAnAccount() => ScenarioForForbiddenUser("modify an account", _user.ModifyAccount);
+    public Task AttemptToModifyAnAccount() => ScenarioForForbiddenUser("modify an account", _user.ModifyingAnAccount);
 
     [Fact]
-    public Task AttemptToOpenAnAccount() => ScenarioForForbiddenUser("open an account", _user.OpenAccount);
+    public Task AttemptToOpenAnAccount() => ScenarioForForbiddenUser("open an account", _user.OpeningAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccount() => ScenarioForForbiddenUser("get an account", _user.GetAccount);
+    public Task AttemptToGetAccount() => ScenarioForForbiddenUser("get an account", _user.GettingAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccounts() => ScenarioForForbiddenUser("get a list of accounts", _user.GetAccounts);
+    public Task AttemptToGetAccounts() => ScenarioForForbiddenUser("get a list of accounts", _user.GettingAccounts);
 
     [Fact]
-    public Task AttemptToGetCategories() => ScenarioForForbiddenUser("get a list of categories", _user.GetCategories);
+    public Task AttemptToGetCategories() => ScenarioForForbiddenUser("get a list of categories", _user.GettingCategories);
 
     [Fact]
-    public Task AttemptToImportData() => ScenarioForForbiddenUser("import data", _user.ImportData);
+    public Task AttemptToImportData() => ScenarioForForbiddenUser("import data", _user.ImportingData);
 
     [Fact]
-    public Task AttemptToExportData() => ScenarioForForbiddenUser("export data", _user.ExportData);
+    public Task AttemptToExportData() => ScenarioForForbiddenUser("export data", _user.ExportingData);
 
     [Fact]
     public Task AttemptToGetImportDataStatus() =>
-        ScenarioForForbiddenUser("get import data status", _user.GetImportStatus);
+        ScenarioForForbiddenUser("get import data status", _user.GettingImportStatus);
 
     [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
-        ScenarioForForbiddenUser("get statistics for all categories", _user.GetStatisticsForAllCategories);
+        ScenarioForForbiddenUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 
     [Fact]
     public Task AttemptToGetStatisticsSummary() =>
-        ScenarioForForbiddenUser("get statistics summary", _user.GetStatisticsSummary);
+        ScenarioForForbiddenUser("get statistics summary", _user.GettingStatisticsSummary);
 
     [Fact]
     public Task AttemptToGetStoreItems() =>
-        ScenarioForForbiddenUser("get store items", _user.GetStoreItems);
+        ScenarioForForbiddenUser("get store items", _user.GettingItemsFromTheStore);
 
     [Fact]
     public Task AttemptToGetStoreItem() =>
-        ScenarioForForbiddenUser("get store item", _user.GetStoreItem);
+        ScenarioForForbiddenUser("get store item", _user.GettingAnItemFromTheStore);
 
     [Fact]
     public Task AttemptToCreateStoreItem() =>
-        ScenarioForForbiddenUser("create a store item", _user.CreateStoreItem);
+        ScenarioForForbiddenUser("create a store item", _user.CreatingAnItemInTheStore);
 
     [Fact]
     public Task AttemptToModifyStoreItem() =>
-        ScenarioForForbiddenUser("modify a store item", _user.ModifyStoreItem);
+        ScenarioForForbiddenUser("modify a store item", _user.ModifyingAnItemInTheStore);
 
     [Fact]
-    public Task AttemptToGetTags() => ScenarioForForbiddenUser("get tags", _user.GetTags);
+    public Task AttemptToGetTags() => ScenarioForForbiddenUser("get tags", _user.GettingTags);
 
     [Fact]
-    public Task AttemptToGetCashflows() => ScenarioForForbiddenUser("get cashflows", _user.GetCashflows);
+    public Task AttemptToGetCashflows() => ScenarioForForbiddenUser("get cashflows", _user.GettingCashflows);
 
     [Fact]
-    public Task AttemptToGetCashflow() => ScenarioForForbiddenUser("get cashflow", _user.GetCashflow);
+    public Task AttemptToGetCashflow() => ScenarioForForbiddenUser("get cashflow", _user.GettingACashflow);
 
     [Fact]
-    public Task AttemptToModifyCashflow() => ScenarioForForbiddenUser("modify cashflow", _user.ModifyCashflow);
+    public Task AttemptToModifyCashflow() => ScenarioForForbiddenUser("modify cashflow", _user.ModifyingACashflow);
 
     [Fact]
-    public Task AttemptToCancelCashflow() => ScenarioForForbiddenUser("cancel cashflow", _user.CancelCashflow);
+    public Task AttemptToCancelCashflow() => ScenarioForForbiddenUser("cancel cashflow", _user.CancellingACashflow);
 
     [Fact]
-    public Task AttemptToGetUpcoming() => ScenarioForForbiddenUser("get upcoming", _user.GetUpcoming);
+    public Task AttemptToGetUpcoming() => ScenarioForForbiddenUser("get upcoming", _user.GettingUpcomingCashflows);
 
     [Fact]
-    public Task AttemptToMakePurchase() => ScenarioForForbiddenUser("make purchase", _user.MakePurchase);
+    public Task AttemptToMakePurchase() => ScenarioForForbiddenUser("make purchase", _user.MakingAPurchase);
 
     [Fact]
-    public Task AttemptToPayCashflow() => ScenarioForForbiddenUser("pay cashflow", _user.PayCashflow);
+    public Task AttemptToPayCashflow() => ScenarioForForbiddenUser("pay cashflow", _user.PayingACashflow);
 
     [Fact]
-    public Task AttemptToTransfer() => ScenarioForForbiddenUser("transfer", _user.Transfer);
+    public Task AttemptToTransfer() => ScenarioForForbiddenUser("transfer", _user.TransferringMoneyBetweenTwoAccounts);
 
     [Fact]
-    public Task AttemptToModifyTransaction() => ScenarioForForbiddenUser("modify transaction", _user.ModifyTransaction);
+    public Task AttemptToModifyTransaction() => ScenarioForForbiddenUser("modify transaction", _user.ModifyingATransaction);
 
     [Fact]
-    public Task AttemptToDeleteTransaction() => ScenarioForForbiddenUser("delete transaction", _user.DeleteTransaction);
+    public Task AttemptToDeleteTransaction() => ScenarioForForbiddenUser("delete transaction", _user.DeletingATransaction);
 
     [Fact]
-    public Task AttemptToGetTransaction() => ScenarioForForbiddenUser("get transaction", _user.GetTransaction);
+    public Task AttemptToGetTransaction() => ScenarioForForbiddenUser("get transaction", _user.GettingATransaction);
 
     [Fact]
-    public Task AttemptToGetTransactions() => ScenarioForForbiddenUser("get transactions", _user.GetTransactions);
+    public Task AttemptToGetTransactions() => ScenarioForForbiddenUser("get transactions", _user.GettingTransactions);
 }

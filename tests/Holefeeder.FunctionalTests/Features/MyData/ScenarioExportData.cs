@@ -14,7 +14,7 @@ public class ScenarioExportData(ApiApplicationDriver applicationDriver, ITestOut
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public Task WhenUserExportsTheirData() =>
+    public Task TheUserExportingTheirData() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(TheData.TheUserHasFullSetsOfData)
             .When(TheUser.ExportsTheirData)

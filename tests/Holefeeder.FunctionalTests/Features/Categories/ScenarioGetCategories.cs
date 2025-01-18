@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 
 using Refit;
@@ -12,23 +13,24 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public Task WhenCategoriesExists() =>
+    public Task GettingCategories() =>
         ScenarioRunner.Create(ScenarioOutput)
-            .Given(Category.Exists)
-            .And(Category.Exists)
+            .Given(Category.CollectionExists)
             .When(TheUser.GetsCategories)
-            .Then(TheResultShouldBeAsExpected)
+            .Then(ShouldReceiveAllCategoriesOrderedByDescendingFavoriteAndAscendingName)
             .PlayAsync();
 
     [AssertionMethod]
-    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+    private static void ShouldReceiveAllCategoriesOrderedByDescendingFavoriteAndAscendingName(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<CategoryViewModel>>>(response =>
         {
+            var categories = runner.GetContextData<IEnumerable<Category>>(CategoryContext.ExistingCategories);
+
             response.Should().BeValid();
             response.Value.Should().BeSuccessful()
                 .And.HaveContent();
 
-            response.Value.Content.Should().HaveCount(2)
+            response.Value.Content.Should().HaveSameCount(categories)
                 .And.BeInDescendingOrder(x => x.Favorite)
                 .And.BeInAscendingOrder(x =>x.Name);
         });
