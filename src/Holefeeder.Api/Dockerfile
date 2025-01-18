@@ -62,6 +62,8 @@ WORKDIR /source/tests/Holefeeder.UnitTests
 FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
 
+RUN dotnet dev-certs https --trust
+
 ###################################
 # Final stage
 ###################################
