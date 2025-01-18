@@ -85,7 +85,8 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
 
     internal void GetTags(IStepRunner runner) => runner.Execute(() => Api.GetTagsWithCountAsync());
 
-    internal void GetCashflows(IStepRunner runner) => runner.Execute(() => Api.GetCashflowsAsync(string.Empty));
+    internal void GetCashflows(IStepRunner runner) => runner.Execute(() => Api.GetCashflowsAsync(
+        _faker.Random.Int(0, 5), _faker.Random.Int(1, 10), _faker.Random.WordsArray(3), _faker.Random.WordsArray(3)));
 
     internal void GetCashflow(IStepRunner runner) => runner.Execute(() => Api.GetCashflowAsync(_faker.Random.Guid()));
 

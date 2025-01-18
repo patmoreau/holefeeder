@@ -106,7 +106,8 @@ public interface ITags
 public interface ITransactions
 {
     [Get("/api/v2/cashflows")]
-    Task<IApiResponse<CashflowInfoViewModel[]>> GetCashflowsAsync([Query] string queryParams);
+    Task<IApiResponse<CashflowInfoViewModel[]>> GetCashflowsAsync([Query] int offset, [Query] int limit,
+        [Query(CollectionFormat.Multi)]string[] sort, [Query(CollectionFormat.Multi)]string[] filter);
 
     [Get("/api/v2/cashflows/{cashflowId}")]
     Task<IApiResponse<CashflowInfoViewModel>> GetCashflowAsync(Guid cashflowId);

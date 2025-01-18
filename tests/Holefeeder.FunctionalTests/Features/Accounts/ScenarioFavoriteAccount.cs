@@ -48,6 +48,6 @@ public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITe
         runner.Execute<Account, FavoriteAccount.Request>(account =>
         {
             account.Should().BeValid();
-            return GivenAFavoriteAccountRequest().WithId(account.Value.Id).Build();
+            return GivenAFavoriteAccountRequest().IsFavorite().WithId(account.Value.Id).Build();
         });
 }

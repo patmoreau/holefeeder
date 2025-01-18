@@ -6,7 +6,7 @@ using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-internal sealed class CategoryStepDefinition(BudgetingDatabaseDriver budgetingDatabaseDriver)
+internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
 {
     public void Exists(IStepRunner runner) =>
         runner.Execute("a user has an active category", async () =>

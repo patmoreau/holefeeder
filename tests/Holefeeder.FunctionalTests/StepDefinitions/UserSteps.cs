@@ -13,6 +13,10 @@ using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Features.Tags.Queries;
+using Holefeeder.Application.Features.Transactions.Commands;
+using Holefeeder.Application.Features.Transactions.Queries;
+using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Refit;
@@ -164,6 +168,36 @@ public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(a
             request.Should().BeValid();
             var query = request.Value;
             var response = await Api.GetStoreItemsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
+            return response;
+        });
+
+    internal void CancelsACashflow(IStepRunner runner) =>
+        runner.Execute<CancelCashflow.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.CancelCashflowAsync(request.Value);
+        });
+
+    internal void ModifiesACashflow(IStepRunner runner) =>
+        runner.Execute<ModifyCashflow.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.ModifyCashflowAsync(request.Value);
+        });
+
+    internal void GetsACashflow(IStepRunner runner) =>
+        runner.Execute<Guid, IApiResponse<CashflowInfoViewModel>>(id =>
+        {
+            id.Should().BeValid();
+            return Api.GetCashflowAsync(id.Value);
+        });
+
+    internal void GetsCashflows(IStepRunner runner) =>
+        runner.Execute<GetCashflows.Request, IApiResponse<IEnumerable<CashflowInfoViewModel>>>(async request =>
+        {
+            request.Should().BeValid();
+            var query = request.Value;
+            var response = await Api.GetCashflowsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
             return response;
         });
 }

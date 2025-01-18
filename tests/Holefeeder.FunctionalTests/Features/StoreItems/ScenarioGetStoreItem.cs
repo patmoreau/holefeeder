@@ -38,7 +38,8 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
     public Task GettingAnItemThatExists() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(StoreItem.Exists)
-            .When(TheUserGetsAnItemInTheStore)
+            .And(AValidRequest)
+            .When(TheUser.GetsAnItemInTheStore)
             .Then(TheResultShouldBeAsExpected)
             .PlayAsync();
 
@@ -47,15 +48,12 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
     private void ARequestForAnItemThatDoesNotExist(IStepRunner runner) =>
         runner.Execute(() => _faker.Random.Guid());
 
-    private void TheUserGetsAnItemInTheStore(IStepRunner runner)
-    {
+    private void AValidRequest(IStepRunner runner) =>
         runner.Execute<StoreItem, Guid>(item =>
         {
             item.Should().BeValid();
             return item.Value.Id;
         });
-        TheUser.GetsAnItemInTheStore(runner);
-    }
 
     [AssertionMethod]
     private static void TheResultShouldBeAsExpected(IStepRunner runner) =>

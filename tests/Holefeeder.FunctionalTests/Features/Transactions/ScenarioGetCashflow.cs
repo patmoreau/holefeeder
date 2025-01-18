@@ -1,98 +1,104 @@
-// using System.Net;
-//
-// using Holefeeder.Application.Models;
-// using Holefeeder.Domain.Features.Accounts;
-// using Holefeeder.Domain.Features.Categories;
-// using Holefeeder.FunctionalTests.Drivers;
-// using Holefeeder.FunctionalTests.Infrastructure;
-//
-// using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-// using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-// using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
-//
-// namespace Holefeeder.FunctionalTests.Features.Transactions;
-//
-// [ComponentTest]
-// [Collection("Api collection")]
-// public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
-//     : HolefeederScenario(applicationDriver, testOutputHelper)
-// {
-//     [Fact]
-//     public async Task WhenNotFound()
-//     {
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetCashflow(Guid.NewGuid());
-//
-//         ShouldExpectStatusCode(HttpStatusCode.NotFound);
-//     }
-//
-//     [Fact]
-//     public async Task WhenInvalidRequest()
-//     {
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetCashflow(Guid.Empty);
-//
-//         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-//     }
-//
-//     [Fact]
-//     public async Task WhenCashflowExists()
-//     {
-//         var account = await GivenAnActiveAccount()
-//             .OfType(AccountType.Checking)
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         var category = await GivenACategory()
-//             .OfType(CategoryType.Expense)
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         var cashflow = await GivenAnActiveCashflow()
-//             .ForAccount(account)
-//             .ForCategory(category)
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserGetCashflow(cashflow.Id);
-//
-//         ShouldExpectStatusCode(HttpStatusCode.OK);
-//         var result = HttpClientDriver.DeserializeContent<CashflowInfoViewModel>();
-//         AssertAll(() =>
-//         {
-//             result.Should()
-//                 .NotBeNull()
-//                 .And
-//                 .BeEquivalentTo(new
-//                 {
-//                     Id = (Guid)cashflow.Id,
-//                     cashflow.EffectiveDate,
-//                     Amount = (decimal)cashflow.Amount,
-//                     cashflow.IntervalType,
-//                     cashflow.Frequency,
-//                     cashflow.Recurrence,
-//                     cashflow.Description,
-//                     cashflow.Inactive,
-//                     cashflow.Tags,
-//                     Category = new
-//                     {
-//                         Id = (Guid)category.Id,
-//                         category.Name,
-//                         category.Type,
-//                         Color = (string)category.Color
-//                     },
-//                     Account = new
-//                     {
-//                         Id = (Guid)account.Id,
-//                         account.Name
-//                     }
-//                 });
-//         });
-//     }
-//
-//     private async Task WhenUserGetCashflow(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetCashflow, id.ToString());
-// }
+using Bogus;
+
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
+
+using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.FunctionalTests.Drivers;
+
+using Refit;
+
+namespace Holefeeder.FunctionalTests.Features.Transactions;
+
+[ComponentTest]
+[Collection("Api collection")]
+public class ScenarioGetCashflow(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
+{
+    private readonly Faker _faker = new();
+
+    [Fact]
+    public Task GettingACashflowWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsACashflow)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
+
+    [Fact]
+    public Task GettingACashflowThatDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(ARequestForACashflowThatDoesNotExist)
+            .When(TheUser.GetsACashflow)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
+
+    [Fact]
+    public Task GettingACashflowThatExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Cashflow.Exists)
+            .And(AValidRequest)
+            .When(TheUser.GetsACashflow)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
+
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => Guid.Empty);
+
+    private void ARequestForACashflowThatDoesNotExist(IStepRunner runner) =>
+        runner.Execute(() => _faker.Random.Guid());
+
+    private static void AValidRequest(IStepRunner runner) =>
+        runner.Execute<Cashflow, Guid>(cashflow =>
+        {
+            cashflow.Should().BeValid();
+            return cashflow.Value.Id;
+        });
+
+    [AssertionMethod]
+    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+        runner.Execute<IApiResponse<CashflowInfoViewModel>>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveContent();
+            var result = response.Value.Content;
+
+            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var cashflow = runner.GetContextData<Cashflow>(CashflowContexts.ExistingCashflow);
+            result.Should()
+                .NotBeNull()
+                .And
+                .BeEquivalentTo(new
+                {
+                    Id = (Guid)cashflow.Id,
+                    cashflow.EffectiveDate,
+                    Amount = (decimal)cashflow.Amount,
+                    cashflow.IntervalType,
+                    cashflow.Frequency,
+                    cashflow.Recurrence,
+                    cashflow.Description,
+                    cashflow.Inactive,
+                    cashflow.Tags,
+                    Category = new
+                    {
+                        Id = (Guid)category.Id,
+                        category.Name,
+                        category.Type,
+                        Color = (string)category.Color
+                    },
+                    Account = new
+                    {
+                        Id = (Guid)account.Id,
+                        account.Name
+                    }
+                });
+        });
+}
