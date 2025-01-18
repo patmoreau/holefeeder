@@ -8,7 +8,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioOpenAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+public class OpenAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private const string NewAccountName = nameof(NewAccountName);

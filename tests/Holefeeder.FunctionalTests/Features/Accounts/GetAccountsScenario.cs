@@ -9,7 +9,7 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioGetAccounts(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+public class GetAccountsScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]

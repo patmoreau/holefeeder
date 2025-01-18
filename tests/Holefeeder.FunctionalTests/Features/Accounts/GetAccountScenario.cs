@@ -13,7 +13,7 @@ using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioGetAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+public class GetAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private readonly Faker _faker = new();

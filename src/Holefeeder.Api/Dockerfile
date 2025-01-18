@@ -12,6 +12,8 @@ COPY Directory.Build.targets .
 COPY Directory.Packages.props .
 COPY nuget.config .
 COPY src/Directory.Build.props src/
+COPY tests/.editorconfig tests/
+COPY tests/coverlet.runsettings tests/
 COPY tests/Directory.Build.props tests/
 COPY tests/Directory.Packages.props tests/
 

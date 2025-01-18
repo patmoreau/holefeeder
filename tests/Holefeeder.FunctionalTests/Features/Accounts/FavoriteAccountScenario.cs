@@ -8,7 +8,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBui
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioFavoriteAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+public class FavoriteAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]

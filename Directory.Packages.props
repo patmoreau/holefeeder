@@ -22,7 +22,7 @@
     <PackageVersion Include="dbup-mysql" Version="6.0.4" />
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.125" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.125" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.124" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.125" />
     <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="0.1.21" />
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.125" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />

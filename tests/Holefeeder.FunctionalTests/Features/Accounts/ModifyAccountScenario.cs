@@ -8,7 +8,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuild
 
 namespace Holefeeder.FunctionalTests.Features.Accounts;
 
-public class ScenarioModifyAccount(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+public class ModifyAccountScenario(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     private const string ModifiedName = nameof(ModifiedName);
