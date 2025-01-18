@@ -119,7 +119,7 @@ public interface ITransactions
     Task<IApiResponse> CancelCashflowAsync([Body] object request);
 
     [Get("/api/v2/cashflows/get-upcoming?from={from}&to={until}")]
-    Task<IApiResponse<IEnumerable<CashflowInfoViewModel>>> GetUpcomingAsync(DateOnly from, DateOnly until);
+    Task<IApiResponse<IEnumerable<UpcomingViewModel>>> GetUpcomingAsync(DateOnly from, DateOnly until);
 
     [Post("/api/v2/transactions/make-purchase")]
     Task<IApiResponse> MakePurchaseAsync([Body] object request);

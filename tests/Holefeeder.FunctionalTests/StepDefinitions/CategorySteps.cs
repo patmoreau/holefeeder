@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.FluentScenario;
 
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
 
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
@@ -15,5 +16,17 @@ internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(CategoryContexts.ExistingCategory, category);
+        });
+
+    public void TransferCategoriesExists(IStepRunner runner) =>
+        runner.Execute("transfer categories exists", async () =>
+        {
+            var categoryIn = await GivenATransferInCategory().ForUser(TestUsers[AuthorizedUser].UserId)
+                .SavedInDbAsync(budgetingDatabaseDriver);
+            var categoryOut = await GivenATransferOutCategory().ForUser(TestUsers[AuthorizedUser].UserId)
+                .SavedInDbAsync(budgetingDatabaseDriver);
+
+            var categories = new List<Category> {categoryIn, categoryOut};
+            runner.SetContextData(CategoryContexts.ExistingCategories, categories);
         });
 }

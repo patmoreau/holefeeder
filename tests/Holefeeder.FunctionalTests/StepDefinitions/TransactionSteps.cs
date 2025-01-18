@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
+using DrifterApps.Seeds.Testing.Extensions;
 
 using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Domain.Features.Accounts;
@@ -10,6 +11,8 @@ using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.Tests.Common;
+
+using Microsoft.EntityFrameworkCore;
 
 using Refit;
 
@@ -87,5 +90,67 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             var result = await dbContext.Transactions.FindAsync(request.Id);
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
+
+    [AssertionMethod]
+    public void ShouldBeCreated(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the new transaction should be created", async response =>
+        {
+            var request = runner.GetContextData<MakePurchase.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            response.Value.Headers.Location.Should().NotBeNull();
+
+            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Transactions.FindAsync(id);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
+
+    [AssertionMethod]
+    public void ShouldBeCreatedFromCashflowPayment(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the new transaction should be created from cashflow payment", async response =>
+        {
+            var request = runner.GetContextData<PayCashflow.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            response.Value.Headers.Location.Should().NotBeNull();
+
+            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Transactions.FindAsync(id);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
+
+    [AssertionMethod]
+    public void ShouldBeCreatedForBothAccounts(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the new transactions should be created from the transfer", async response =>
+        {
+            var request = runner.GetContextData<Transfer.Request>(RequestContext.CurrentRequest);
+            var categories = runner.GetContextData<IEnumerable<Category>>(CategoryContexts.ExistingCategories).ToList();
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            response.Value.Headers.Location.Should().NotBeNull();
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.FromAccountId);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options =>
+                options.ExcludingMissingMembers());
+            result!.CategoryId.Should().Be(categories.First().Id);
+
+            result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.ToAccountId);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+            result!.CategoryId.Should().Be(categories.Last().Id);
         });
 }

@@ -103,7 +103,7 @@ public class Transfer : ICarterModule
             CreateTransactionsAsync(Request request, CancellationToken cancellationToken) =>
             async categories =>
             {
-                var transactionFrom = await CreateTransactionAsync(categories.TransferFrom, request, cancellationToken);
+                var transactionFrom = await CreateTransactionAsync(request.FromAccountId, categories.TransferFrom, request, cancellationToken);
                 if (transactionFrom.IsFailure)
                 {
                     return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
@@ -111,7 +111,7 @@ public class Transfer : ICarterModule
                             .Error);
                 }
 
-                var transactionTo = await CreateTransactionAsync(categories.TransferTo, request, cancellationToken);
+                var transactionTo = await CreateTransactionAsync(request.ToAccountId, categories.TransferTo, request, cancellationToken);
                 if (transactionTo.IsFailure)
                 {
                     return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
@@ -123,11 +123,11 @@ public class Transfer : ICarterModule
                     .Success((transactionFrom.Value.Id, transactionTo.Value.Id));
             };
 
-        private async Task<Result<Transaction>> CreateTransactionAsync(Category category, Request request,
-            CancellationToken cancellationToken)
+        private async Task<Result<Transaction>> CreateTransactionAsync(AccountId accountId, Category category,
+            Request request, CancellationToken cancellationToken)
         {
             var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
-                request.FromAccountId, category.Id, userContext.Id);
+                accountId, category.Id, userContext.Id);
             if (transaction.IsFailure)
             {
                 return Result<Transaction>.Failure(transaction.Error);

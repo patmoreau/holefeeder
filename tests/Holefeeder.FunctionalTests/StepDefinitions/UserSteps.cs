@@ -9,14 +9,11 @@ using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.Features.MyData.Models;
-using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Application.Features.StoreItems.Queries;
-using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Refit;
@@ -223,11 +220,38 @@ public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(a
         });
 
     internal void GetsTransactions(IStepRunner runner) =>
-        runner.Execute<GetTransactions.Request, IApiResponse<IEnumerable<TransactionInfoViewModel>>>(async request =>
+        runner.Execute<GetTransactions.Request, IApiResponse<IEnumerable<TransactionInfoViewModel>>>(request =>
         {
             request.Should().BeValid();
             var query = request.Value;
-            var response = await Api.GetTransactionsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
-            return response;
+            return Api.GetTransactionsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
+        });
+
+    internal void GetsUpcomingCashflows(IStepRunner runner) =>
+        runner.Execute<GetUpcoming.Request, IApiResponse<IEnumerable<UpcomingViewModel>>>(request =>
+        {
+            request.Should().BeValid();
+            return Api.GetUpcomingAsync(request.Value.From, request.Value.To);
+        });
+
+    internal void MakesAPurchase(IStepRunner runner) =>
+        runner.Execute<MakePurchase.Request, IApiResponse>("the user makes a purchase", request =>
+        {
+            request.Should().BeValid();
+            return Api.MakePurchaseAsync(request.Value);
+        });
+
+    internal void PaysACashflow(IStepRunner runner) =>
+        runner.Execute<PayCashflow.Request, IApiResponse>("the user pays a cashflow", request =>
+        {
+            request.Should().BeValid();
+            return Api.PayCashflowAsync(request.Value);
+        });
+
+    internal void MakesATransfer(IStepRunner runner) =>
+        runner.Execute<Transfer.Request, IApiResponse>("the user makes a transfer", request =>
+        {
+            request.Should().BeValid();
+            return Api.TransferAsync(request.Value);
         });
 }

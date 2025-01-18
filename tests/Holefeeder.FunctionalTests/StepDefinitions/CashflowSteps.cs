@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Features.Transactions.Commands;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -55,6 +56,41 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
 
             return cashflows;
         });
+
+    public void AnActiveOneTime(IStepRunner runner) =>
+        runner.Execute("a user has an active one time cashflow",
+            () => BuildCashflow(runner, DateIntervalType.OneTime, 1));
+
+    public void AnActiveBiWeekly(IStepRunner runner) =>
+        runner.Execute("a user has an active biweekly cashflow",
+            () => BuildCashflow(runner, DateIntervalType.Weekly, 2));
+
+    public void AnActiveMonthly(IStepRunner runner) =>
+        runner.Execute("a user has an active monthly cashflow",
+            () => BuildCashflow(runner, DateIntervalType.Monthly, 1));
+
+    public void AnActiveYearly(IStepRunner runner) =>
+        runner.Execute("a user has an active yearly cashflow",
+            () => BuildCashflow(runner, DateIntervalType.Yearly, 1));
+
+    private async Task<Cashflow> BuildCashflow(IStepRunner runner, DateIntervalType dateIntervalType, int frequency)
+    {
+        var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+        account.Should().NotBeNull();
+
+        var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+        category.Should().NotBeNull();
+
+        var cashflow = await GivenAnActiveCashflow()
+            .ForAccount(account)
+            .ForCategory(category)
+            .OfFrequency(dateIntervalType, frequency)
+            .ForUser(TestUsers[AuthorizedUser].UserId)
+            .SavedInDbAsync(budgetingDatabaseDriver);
+
+        runner.SetContextData(CashflowContexts.ExistingCashflow, cashflow);
+        return cashflow;
+    }
 
     [AssertionMethod]
     public void ShouldBeInactive(IStepRunner runner) =>

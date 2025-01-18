@@ -20,6 +20,14 @@ internal class CategoryBuilder : FakerBuilder<Category>
 
     public static CategoryBuilder GivenACategory() => new();
 
+    public static CategoryBuilder GivenATransferInCategory() => new CategoryBuilder()
+        .WithName("Transfer In")
+        .OfType(CategoryType.Gain);
+
+    public static CategoryBuilder GivenATransferOutCategory() => new CategoryBuilder()
+        .WithName("Transfer Out")
+        .OfType(CategoryType.Expense);
+
     public CategoryBuilder WithId(Guid id)
     {
         Faker.RuleFor(f => f.Id, id);
