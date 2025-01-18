@@ -89,6 +89,12 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         return this;
     }
 
+    public TransactionBuilder ForUser(UserId userId)
+    {
+        Faker.RuleFor(f => f.UserId, userId);
+        return this;
+    }
+
     public TransactionBuilder WithNoUser()
     {
         Faker.RuleFor(f => f.UserId, _ => UserId.Empty);

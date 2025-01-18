@@ -1,127 +1,151 @@
-// using System.Net;
-// using System.Text.Json;
-//
-// using Holefeeder.FunctionalTests.Drivers;
-// using Holefeeder.FunctionalTests.Infrastructure;
-// using Holefeeder.Tests.Common;
-//
-// using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
-// using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-// using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-// using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
-// using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
-//
-// namespace Holefeeder.FunctionalTests.Features.Transactions;
-//
-// [ComponentTest]
-// [Collection("Api collection")]
-// public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
-// {
-//     [Fact]
-//     public async Task WhenInvalidRequest()
-//     {
-//         var request = GivenAnInvalidModifyTransactionRequest().Build();
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserModifiedATransaction(request);
-//
-//         ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-//     }
-//
-//     [Fact]
-//     public async Task WhenAccountDoesNotExists()
-//     {
-//         var request = GivenAModifyTransactionRequest().Build();
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserModifiedATransaction(request);
-//
-//         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
-//             $"Account '{request.AccountId.Value}' does not exists.");
-//     }
-//
-//     [Fact]
-//     public async Task WhenCategoryDoesNotExists()
-//     {
-//         var account = await GivenAnActiveAccount()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         var request = GivenAModifyTransactionRequest()
-//             .WithAccount(account).Build();
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserModifiedATransaction(request);
-//
-//         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.BadRequest,
-//             $"Category '{request.CategoryId.Value}' does not exists.");
-//     }
-//
-//     [Fact]
-//     public async Task WhenTransactionDoesNotExists()
-//     {
-//         var account = await GivenAnActiveAccount()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         var category = await GivenACategory()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         var request = GivenAModifyTransactionRequest()
-//             .WithAccount(account)
-//             .WithCategory(category)
-//             .Build();
-//
-//         GivenUserIsAuthorized();
-//
-//         await WhenUserModifiedATransaction(request);
-//
-//         ShouldReceiveProblemDetailsWithErrorMessage(HttpStatusCode.NotFound,
-//             $"Transaction '{request.Id.Value}' not found");
-//     }
-//
-//     [Fact]
-//     public async Task WhenModifyATransaction()
-//     {
-//         var accounts = await GivenAnActiveAccount()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .CollectionSavedInDbAsync(DatabaseDriver, 2);
-//
-//         var categories = await GivenACategory()
-//             .ForUser(TestUsers[AuthorizedUser].UserId)
-//             .CollectionSavedInDbAsync(DatabaseDriver, 2);
-//
-//         var transaction = await GivenATransaction()
-//             .ForAccount(accounts.ElementAt(0))
-//             .ForCategory(categories.ElementAt(0))
-//             .SavedInDbAsync(DatabaseDriver);
-//
-//         GivenUserIsAuthorized();
-//
-//         var request = GivenAModifyTransactionRequest()
-//             .WithId(transaction.Id)
-//             .WithAccount(accounts.ElementAt(1))
-//             .WithCategory(categories.ElementAt(1))
-//             .Build();
-//
-//         await WhenUserModifiedATransaction(request);
-//
-//         ShouldExpectStatusCode(HttpStatusCode.NoContent);
-//
-//         await using var dbContext = DatabaseDriver.CreateDbContext();
-//
-//         var result = await dbContext.Transactions.FindAsync(transaction.Id);
-//
-//         result.Should().NotBeNull().And.BeEquivalentTo(request);
-//     }
-//
-//     private async Task WhenUserModifiedATransaction(Request request)
-//     {
-//         var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-//         await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyTransaction, json);
-//     }
-// }
+using System.Net;
+
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.Testing.Attributes;
+
+using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.FunctionalTests.Drivers;
+
+using Refit;
+
+using static Holefeeder.Application.Features.Transactions.Commands.ModifyTransaction;
+using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
+
+namespace Holefeeder.FunctionalTests.Features.Transactions;
+
+[ComponentTest]
+[Collection("Api collection")]
+public class ScenarioModifyTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
+    : HolefeederScenario(applicationDriver, testOutputHelper)
+{
+    [Fact]
+    public Task WhenInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.ModifiesATransaction)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenAccountDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.Exists)
+            .And(ARequestWithNonExistentAccount)
+            .When(TheUser.ModifiesATransaction)
+            .Then(ShouldReceiveAnAccountNotFound)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenCategoryDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.Exists)
+            .And(ARequestWithNonExistentCategory)
+            .When(TheUser.ModifiesATransaction)
+            .Then(ShouldReceiveACategoryNotFound)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenTransactionDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(ARequestWithNonExistentTransaction)
+            .When(TheUser.ModifiesATransaction)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenModifyATransaction() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.Exists)
+            .And(AValidRequest)
+            .When(TheUser.ModifiesATransaction)
+            .Then(Transaction.ShouldBeModified)
+            .PlayAsync();
+
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var request = GivenAnInvalidModifyTransactionRequest().Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void ARequestWithNonExistentAccount(IStepRunner runner) =>
+        runner.Execute<Transaction, Request>(transaction =>
+        {
+            transaction.Should().BeValid();
+            var request = GivenAModifyTransactionRequest()
+                .WithId(transaction.Value.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void ARequestWithNonExistentCategory(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var request = GivenAModifyTransactionRequest()
+                .WithAccount(account)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void ARequestWithNonExistentTransaction(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var account = runner.GetContextData<Account>(AccountContexts.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContexts.ExistingCategory);
+            var request = GivenAModifyTransactionRequest()
+                .WithAccount(account)
+                .WithCategory(category)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidRequest(IStepRunner runner) =>
+        runner.Execute<Transaction, Request>(transaction =>
+        {
+            transaction.Should().BeValid();
+            var request = GivenAModifyTransactionRequest()
+                .WithId(transaction.Value.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    [AssertionMethod]
+    private static void ShouldReceiveAnAccountNotFound(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+        {
+            var request = runner.GetContextData<Request>(RequestContext.CurrentRequest);
+            response.Should().BeValid()
+                .And.Subject
+                .Value.Should().BeFailure()
+                .And.HaveStatusCode(HttpStatusCode.BadRequest)
+                .And.HaveError($"Account '{request.AccountId.Value}' does not exists.");
+        });
+
+    [AssertionMethod]
+    private static void ShouldReceiveACategoryNotFound(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+        {
+            var request = runner.GetContextData<Request>(RequestContext.CurrentRequest);
+            response.Should().BeValid()
+                .And.Subject
+                .Value.Should().BeFailure()
+                .And.HaveStatusCode(HttpStatusCode.BadRequest)
+                .And.HaveError($"Category '{request.CategoryId.Value}' does not exists.");
+        });
+}

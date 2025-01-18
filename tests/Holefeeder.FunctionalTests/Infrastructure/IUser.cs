@@ -39,7 +39,7 @@ public interface IAccounts
 
     [Get("/api/v2/accounts")]
     Task<IApiResponse<IEnumerable<AccountViewModel>>> GetAccountsAsync([Query] int offset, [Query] int limit,
-        [Query(CollectionFormat.Multi)]string[] sort, [Query(CollectionFormat.Multi)]string[] filter);
+        [Query(CollectionFormat.Multi)] string[] sort, [Query(CollectionFormat.Multi)] string[] filter);
 }
 
 public interface ICategories
@@ -85,7 +85,7 @@ public interface IStoreItems
 {
     [Get("/api/v2/store-items")]
     Task<IApiResponse<IEnumerable<StoreItemViewModel>>> GetStoreItemsAsync([Query] int offset, [Query] int limit,
-        [Query(CollectionFormat.Multi)]string[] sort, [Query(CollectionFormat.Multi)]string[] filter);
+        [Query(CollectionFormat.Multi)] string[] sort, [Query(CollectionFormat.Multi)] string[] filter);
 
     [Get("/api/v2/store-items/{storeItemId}")]
     Task<IApiResponse<StoreItemViewModel>> GetStoreItemAsync(Guid storeItemId);
@@ -107,7 +107,7 @@ public interface ITransactions
 {
     [Get("/api/v2/cashflows")]
     Task<IApiResponse<CashflowInfoViewModel[]>> GetCashflowsAsync([Query] int offset, [Query] int limit,
-        [Query(CollectionFormat.Multi)]string[] sort, [Query(CollectionFormat.Multi)]string[] filter);
+        [Query(CollectionFormat.Multi)] string[] sort, [Query(CollectionFormat.Multi)] string[] filter);
 
     [Get("/api/v2/cashflows/{cashflowId}")]
     Task<IApiResponse<CashflowInfoViewModel>> GetCashflowAsync(Guid cashflowId);
@@ -140,5 +140,7 @@ public interface ITransactions
     Task<IApiResponse<TransactionInfoViewModel>> GetTransactionAsync(Guid transactionId);
 
     [Get("/api/v2/transactions")]
-    Task<IApiResponse<IEnumerable<TransactionInfoViewModel>>> GetTransactionsAsync([Query] string queryParams);
+    Task<IApiResponse<IEnumerable<TransactionInfoViewModel>>> GetTransactionsAsync([Query] int offset,
+        [Query] int limit, [Query(CollectionFormat.Multi)] string[] sort,
+        [Query(CollectionFormat.Multi)] string[] filter);
 }

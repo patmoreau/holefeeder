@@ -200,4 +200,34 @@ public class UserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUser>(a
             var response = await Api.GetCashflowsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
             return response;
         });
+
+    internal void DeletesATransaction(IStepRunner runner) =>
+        runner.Execute<DeleteTransaction.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.DeleteTransactionAsync(request.Value.Id);
+        });
+
+    internal void ModifiesATransaction(IStepRunner runner) =>
+        runner.Execute<ModifyTransaction.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.ModifyTransactionAsync(request.Value);
+        });
+
+    internal void GetsATransaction(IStepRunner runner) =>
+        runner.Execute<Guid, IApiResponse<TransactionInfoViewModel>>(id =>
+        {
+            id.Should().BeValid();
+            return Api.GetTransactionAsync(id.Value);
+        });
+
+    internal void GetsTransactions(IStepRunner runner) =>
+        runner.Execute<GetTransactions.Request, IApiResponse<IEnumerable<TransactionInfoViewModel>>>(async request =>
+        {
+            request.Should().BeValid();
+            var query = request.Value;
+            var response = await Api.GetTransactionsAsync(query.Offset, query.Limit, query.Sort, query.Filter);
+            return response;
+        });
 }

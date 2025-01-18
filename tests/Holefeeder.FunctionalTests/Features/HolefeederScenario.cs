@@ -35,7 +35,7 @@ public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
         Cashflow = new CashflowSteps(DatabaseDriver);
         Category = new CategorySteps(DatabaseDriver);
         StoreItem = new StoreItemSteps(DatabaseDriver);
-        // Transaction = new TransactionStepDefinition(HttpClientDriver);
+        Transaction = new TransactionSteps(DatabaseDriver);
         // User = new UserStepDefinition(HttpClientDriver);
     }
 
@@ -50,7 +50,7 @@ public abstract partial class HolefeederScenario : BaseScenario, IAsyncLifetime
 
     internal StoreItemSteps StoreItem { get; }
 
-    // internal TransactionStepDefinition Transaction { get; }
+    internal TransactionSteps Transaction { get; }
 
     // internal UserStepDefinition User { get; }
 
