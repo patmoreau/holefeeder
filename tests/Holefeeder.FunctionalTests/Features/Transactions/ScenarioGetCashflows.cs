@@ -55,6 +55,8 @@ public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestO
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;
-            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Description);
+            accounts.Content.Should()
+                .BeEquivalentTo(expected.OrderByDescending(x => x.Description),
+                    options => options.WithStrictOrdering().ExcludingMissingMembers());
         });
 }

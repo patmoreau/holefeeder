@@ -6,7 +6,7 @@
     <PackageVersion Include="Ardalis.SmartEnum.EFCore" Version="8.2.0" />
     <PackageVersion Include="Ardalis.SmartEnum.SystemTextJson" Version="8.1.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Hangfire" Version="9.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.MySql" Version="9.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="9.0.0" />
@@ -19,7 +19,7 @@
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
     <PackageVersion Include="dbup-core" Version="6.0.4" />
-    <PackageVersion Include="dbup-mysql" Version="6.0.4" />
+    <PackageVersion Include="dbup-postgresql" Version="6.0.0-beta.44" />
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.125" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.125" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.125" />
@@ -42,7 +42,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.12.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.12" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
@@ -66,8 +66,7 @@
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.30" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="MudBlazor" Version="7.16.0" />
-    <PackageVersion Include="MySqlConnector" Version="2.4.0" />
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.2" />

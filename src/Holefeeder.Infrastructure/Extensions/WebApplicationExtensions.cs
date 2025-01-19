@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using DbUp;
-using DbUp.MySql;
+using DbUp.Postgresql;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
@@ -14,8 +14,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-
-using MySqlConnectionManager = Holefeeder.Infrastructure.SeedWork.MySqlConnectionManager;
 
 namespace Holefeeder.Infrastructure.Extensions;
 
@@ -38,7 +36,8 @@ public static class WebApplicationExtensions
         MigrateDb(connectionStringBuilder, holefeederLogger);
     }
 
-    public static void MigrateDb(this DatabaseFacade databaseFacade, BudgetingConnectionStringBuilder connectionStringBuilder)
+    public static void MigrateDb(this DatabaseFacade databaseFacade,
+        BudgetingConnectionStringBuilder connectionStringBuilder)
     {
         ArgumentNullException.ThrowIfNull(databaseFacade);
 
@@ -85,14 +84,14 @@ public static class WebApplicationExtensions
         {
             var builder = connectionStringBuilder.CreateBuilder();
 
-            var connectionManager = new MySqlConnectionManager(connectionStringBuilder);
+            var connectionManager = new NpgsqlConnectionManager(connectionStringBuilder);
 
             var upgradeEngine = DeployChanges.To
-                .MySqlDatabase(connectionManager)
+                .PostgresqlDatabase(connectionManager)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .JournalTo(new MySqlTableJournal(
+                .JournalTo(new PostgresqlTableJournal(
                     () => connectionManager,
-                    () => MySqlConnectionManager.Log, builder.Database, "schema_versions"))
+                    () => NpgsqlConnectionManager.Log, builder.Database, "schema_versions"))
                 .LogToConsole()
                 .WithTransactionPerScript()
                 .Build();

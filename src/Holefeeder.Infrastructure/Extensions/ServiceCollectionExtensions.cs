@@ -41,7 +41,7 @@ public static class ServiceCollectionExtensions
 
             var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
             var connectionString = connectionStringBuilder.CreateBuilder().ConnectionString;
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseNpgsql(connectionString);
 
             return optionsBuilder.Options;
         }

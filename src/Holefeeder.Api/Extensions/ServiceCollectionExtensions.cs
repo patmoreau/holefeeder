@@ -115,7 +115,7 @@ internal static class ServiceCollectionExtensions
         services
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags)
-            .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
+            .AddNpgSql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
                 name: "holefeeder-db", tags: DatabaseTags)
             .AddHangfire(options => options.MinimumAvailableServers = 1, name: "hangfire", tags: HangfireTags);
         services

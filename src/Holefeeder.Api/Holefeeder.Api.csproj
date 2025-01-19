@@ -20,7 +20,7 @@
 
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Hangfire" />
-        <PackageReference Include="AspNetCore.HealthChecks.MySql" />
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
         <PackageReference Include="AspNetCore.HealthChecks.UI" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" />

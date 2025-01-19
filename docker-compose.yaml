@@ -55,22 +55,21 @@ services:
     volumes:
       - seq-data:/data
 
-  mariadb:
-    image: mariadb:11.6.2
-    container_name: mariadb
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     environment:
-      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=holefeeder
-      - MYSQL_USER=${MARIADB_USER}
-      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+      - POSTGRES_DB=holefeeder
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
-      - 3306
+      - 5432
     volumes:
-      - mariadb-data:/var/lib/mysql
-      - .docker/scripts/mysql-initdb.sh:/docker-entrypoint-initdb.d/mysql-initdb.sh
+      - postgres-data:/var/lib/postgresql/data
+      - .docker/scripts/postgres-initdb.sh:/docker-entrypoint-initdb.d/postgres-initdb.sh
     labels:
       - 'traefik.enable=false'
 
@@ -81,7 +80,7 @@ services:
     security_opt:
       - no-new-privileges:true
     depends_on:
-      - mariadb
+      - postgres
     expose:
       - 8080
     labels:
@@ -96,13 +95,13 @@ services:
     container_name: api
     restart: unless-stopped
     depends_on:
-      - mariadb
+      - postgres
     expose:
       - 80
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
       - ASPNETCORE_URLS=http://+
-      - ConnectionStrings__BudgetingConnectionString=Server=mariadb;Port=3306;User Id=${MARIADB_USER};Password=${MARIADB_PASSWORD};Database=holefeeder;
+      - ConnectionStrings__BudgetingConnectionString=Host=postgres;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=holefeeder;
       - Serilog__WriteTo__1__Args__apiKey=${SEQ_API_KEY}
     labels:
       - 'traefik.enable=true'
@@ -140,6 +139,6 @@ networks:
     name: proxy
 
 volumes:
-  mariadb-data:
+  postgres-data:
   seq-data:
   traefik_certs:
