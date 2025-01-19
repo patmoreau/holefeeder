@@ -1,11 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
+        <Configurations>Debug;Release;Staging</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
+        <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+        <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +27,7 @@
         <PackageReference Include="NSubstitute" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" />
         <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.abstractions" />
         <PackageReference Include="xunit.analyzers" />
         <PackageReference Include="xunit.categories" />
         <PackageReference Include="xunit.runner.visualstudio" />

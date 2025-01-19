@@ -1,7 +1,7 @@
 ###################################
 # Restore stage
 ###################################
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS restore
 WORKDIR /source
 
 COPY *.sln .
@@ -12,6 +12,8 @@ COPY Directory.Build.targets .
 COPY Directory.Packages.props .
 COPY nuget.config .
 COPY src/Directory.Build.props src/
+COPY tests/.editorconfig tests/
+COPY tests/coverlet.runsettings tests/
 COPY tests/Directory.Build.props tests/
 COPY tests/Directory.Packages.props tests/
 
@@ -60,10 +62,12 @@ WORKDIR /source/tests/Holefeeder.UnitTests
 FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
 
+RUN dotnet dev-certs https --trust
+
 ###################################
 # Final stage
 ###################################
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 EXPOSE 443

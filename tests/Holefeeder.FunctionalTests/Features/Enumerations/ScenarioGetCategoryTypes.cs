@@ -1,26 +1,26 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
+
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Enumerations;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetCategoryTypes(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenAnonymousUser()
-    {
-        GivenUserIsUnauthorized();
+    public Task WhenGettingTheListOfCategoryTypes() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .When(TheUser.GetsTheListOfCategoryTypes)
+            .Then(TheListShouldContainTheExpectedValues)
+            .PlayAsync();
 
-        await WhenUserGetEnumeration();
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<CategoryType[]>();
-        AssertAll(() => { result.Should().NotBeNull().And.HaveCount(CategoryType.List.Count); });
-    }
-
-    private async Task WhenUserGetEnumeration() => await HttpClientDriver.SendRequestAsync(ApiResources.GetCategoryTypes);
+    private static void TheListShouldContainTheExpectedValues(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<CategoryType>>>(result =>
+        {
+            result.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveEquivalentContent(CategoryType.List);
+        });
 }

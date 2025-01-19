@@ -8,7 +8,7 @@ internal class UserIdentityBuilder : FakerBuilder<UserIdentity>
 {
     private static readonly User User = new UserBuilder().Build();
 
-    protected override Faker<UserIdentity> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<UserIdentity> Faker { get; } = CreateUninitializedFaker<UserIdentity>()
         .RuleFor(x => x.IdentityObjectId, faker => faker.Random.Hash())
         .RuleFor(x => x.UserId, _ => User.Id)
         .RuleFor(x => x.User, _ => User)

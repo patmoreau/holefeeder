@@ -69,13 +69,11 @@ internal static class WebApplicationExtensions
     }
 
 
-    public class HangFireAuthorizationFilter : IDashboardAuthorizationFilter
+    private class HangFireAuthorizationFilter : IDashboardAuthorizationFilter
     {
-        public bool Authorize([NotNull] DashboardContext context)
-        {
+        public bool Authorize([NotNull] DashboardContext context) =>
             // var httpCtx = context.GetHttpContext();
             // return httpCtx.User.Identity.IsAuthenticated; //is always false
-            return true;
-        }
+            true;
     }
 }

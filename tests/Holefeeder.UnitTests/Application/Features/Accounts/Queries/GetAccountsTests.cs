@@ -11,12 +11,11 @@ public class GetAccountsTests
 
     public GetAccountsTests() =>
         _faker = new Faker<Request>()
-            .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), Array.Empty<string>(),
-                Array.Empty<string>()))
+            .CustomInstantiator(faker => new Request(faker.Random.Number(), faker.Random.Int(1), [], []))
             .RuleFor(fake => fake.Offset, fake => fake.Random.Number())
             .RuleFor(fake => fake.Limit, fake => fake.Random.Int(1))
-            .RuleFor(fake => fake.Sort, Array.Empty<string>())
-            .RuleFor(fake => fake.Filter, Array.Empty<string>());
+            .RuleFor(fake => fake.Sort, [])
+            .RuleFor(fake => fake.Filter, []);
 
     [Fact]
     public async Task GivenRequest_WhenBindingFromHttpContext_ThenReturnRequest()
@@ -45,7 +44,7 @@ public class GetAccountsTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Offset);
@@ -60,7 +59,7 @@ public class GetAccountsTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = validator.TestValidate(request);
+        var result = validator.TestValidate(request);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Limit);

@@ -1,67 +1,73 @@
-using System.Net;
+using Bogus;
+
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
-    [Fact]
-    public async Task WhenNotFound()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetTransaction(Guid.NewGuid());
-
-        ShouldExpectStatusCode(HttpStatusCode.NotFound);
-    }
+    private readonly Faker _faker = new();
 
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        GivenUserIsAuthorized();
-
-        await WhenUserGetTransaction(Guid.Empty);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task GettingATransactionWithAnInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsATransaction)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenTransactionExists()
-    {
-        var account = await GivenAnActiveAccount()
-            .OfType(AccountType.Checking)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task GettingATransactionThatDoesNotExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(ARequestForATransactionThatDoesNotExist)
+            .When(TheUser.GetsATransaction)
+            .Then(ShouldNotBeFound)
+            .PlayAsync();
 
-        var category = await GivenACategory()
-            .OfType(CategoryType.Expense)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    [Fact]
+    public Task GettingATransactionThatExists() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.Exists)
+            .And(AValidRequest)
+            .When(TheUser.GetsATransaction)
+            .Then(TheResultShouldBeAsExpected)
+            .PlayAsync();
 
-        var transaction = await GivenATransaction()
-            .ForAccount(account)
-            .ForCategory(category)
-            .SavedInDbAsync(DatabaseDriver);
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => Guid.Empty);
 
-        GivenUserIsAuthorized();
+    private void ARequestForATransactionThatDoesNotExist(IStepRunner runner) =>
+        runner.Execute(() => _faker.Random.Guid());
 
-        await WhenUserGetTransaction(transaction.Id);
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel>();
-        AssertAll(() =>
+    private static void AValidRequest(IStepRunner runner) =>
+        runner.Execute<Transaction, Guid>(transaction =>
         {
+            transaction.Should().BeValid();
+            return transaction.Value.Id;
+        });
+
+    [AssertionMethod]
+    private static void TheResultShouldBeAsExpected(IStepRunner runner) =>
+        runner.Execute<IApiResponse<TransactionInfoViewModel>>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveContent();
+            var result = response.Value.Content;
+
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            var transaction = runner.GetContextData<Transaction>(TransactionContext.ExistingTransaction);
             result.Should()
                 .NotBeNull()
                 .And
@@ -86,7 +92,4 @@ public class ScenarioGetTransaction(ApiApplicationDriver applicationDriver, ITes
                     }
                 });
         });
-    }
-
-    private async Task WhenUserGetTransaction(Guid id) => await HttpClientDriver.SendRequestAsync(ApiResources.GetTransaction, id);
 }

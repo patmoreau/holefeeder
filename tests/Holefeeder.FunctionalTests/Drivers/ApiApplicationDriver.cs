@@ -1,12 +1,19 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.Json;
 
 using Bogus;
 
+using DrifterApps.Seeds.Application.Converters;
 using DrifterApps.Seeds.Testing;
 using DrifterApps.Seeds.Testing.Drivers;
+using DrifterApps.Seeds.Testing.Infrastructure.Authentication;
 
 using FluentAssertionsEquivalency;
 
+using Holefeeder.Application.Converters;
+using Holefeeder.FunctionalTests.Infrastructure;
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Tests.Common.Builders.Users;
 
@@ -17,13 +24,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+using Refit;
+
 namespace Holefeeder.FunctionalTests.Drivers;
 
+[SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
 {
     private readonly bool _useDatabaseDriver;
-    private readonly string _domain = new Faker().Internet.DomainName();
     private readonly BudgetingDatabaseDriver? _databaseDriver;
+    private readonly RefitSettings _refitSettings;
 
     internal BudgetingDatabaseDriver DatabaseDriver =>
         _databaseDriver ?? throw new InvalidOperationException("Database driver is not available");
@@ -34,6 +44,21 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
 
     protected ApiApplicationDriver(bool useDatabaseDriver)
     {
+        var jsonSettings = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters =
+            {
+                new StronglyTypedIdJsonConverterFactory(),
+                new MoneyJsonConverterFactory(),
+                new CategoryColorJsonConverterFactory()
+            }
+        };
+        _refitSettings = new()
+        {
+            ContentSerializer = new SystemTextJsonContentSerializer(jsonSettings)
+        };
+
         _useDatabaseDriver = useDatabaseDriver;
 
         Faker.DefaultStrictMode = true;
@@ -44,9 +69,6 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             _databaseDriver = new BudgetingDatabaseDriver();
         }
     }
-
-    public IHttpClientDriver CreateHttpClientDriver(ITestOutputHelper testOutputHelper) =>
-        HttpClientDriver.CreateDriver(CreateClient(), testOutputHelper);
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -59,7 +81,8 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             .AddJsonFile(configPath)
             .AddInMemoryCollection(new List<KeyValuePair<string, string?>>()
             {
-                new("Auth0:Domain", _domain)
+                new("Auth0:Domain", AuthorityDriver.AuthorityDomain),
+                new("Auth0:Audience", "default-audience")
             }).Build();
         builder.UseConfiguration(configuration);
         builder.ConfigureServices(collection =>
@@ -77,13 +100,18 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         });
         builder.ConfigureTestServices(services =>
         {
-            services.AddScoped<BudgetingDatabaseDriver>();
-            services.AddMockAuthentication(options =>
+            services.AddSingleton<IUser>(_ =>
             {
-                var authorizedUser = TestUsers[AuthorizedUser];
-                options.AdditionalUserClaims.Add(authorizedUser.IdentityObjectId,
-                    [new Claim("scope", authorizedUser.Scope, null, $"https://{_domain}/")]);
+                var userToken = new JwtTokenBuilder()
+                    .WithScopes("read:user write:user")
+                    .WithClaim(ClaimTypes.NameIdentifier, TestUsers[AuthorizedUser].IdentityObjectId)
+                    .Build();
+                var httpClient = CreateClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+                return RestService.For<IUser>(httpClient, _refitSettings);
             });
+
+            services.AddScoped<BudgetingDatabaseDriver>();
             if (_useDatabaseDriver)
             {
                 services.AddDatabaseDriver(DatabaseDriver);
@@ -97,7 +125,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         {
             if (_useDatabaseDriver)
             {
-                await DatabaseDriver.ResetCheckpointAsync().ConfigureAwait(false);
+                await DatabaseDriver.ResetCheckpointAsync();
             }
         }
         catch (InvalidOperationException e)
@@ -110,14 +138,14 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
     {
         if (_useDatabaseDriver)
         {
-            await DatabaseDriver.InitializeAsync().ConfigureAwait(false);
+            await DatabaseDriver.InitializeAsync();
 
             var user = UserBuilder.GivenAUser()
                 .WithId(TestUsers[AuthorizedUser].UserId)
                 .Build();
             await UserIdentityBuilder.GivenAUserIdentity(user)
                 .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
-                .SavedInDbAsync(DatabaseDriver).ConfigureAwait(false);
+                .SavedInDbAsync(DatabaseDriver);
         }
     }
 

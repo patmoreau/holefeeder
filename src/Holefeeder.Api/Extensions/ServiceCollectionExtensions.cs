@@ -5,8 +5,6 @@ using Holefeeder.Api.Swagger;
 using Holefeeder.Application.Authorization;
 using Holefeeder.Infrastructure.SeedWork;
 
-using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -107,8 +105,7 @@ internal static class ServiceCollectionExtensions
                 });
                 options.OperationFilter<QueryRequestOperationFilter>();
                 options.DocumentFilter<HideInDocsFilter>();
-            })
-            .AddFluentValidationRulesToSwagger();
+            });
 
         return services;
     }

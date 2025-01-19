@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
+        <Configurations>Debug;Release;Staging</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -11,6 +13,11 @@
         <SpaProxyLaunchCommand>pnpm start</SpaProxyLaunchCommand>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>98f4b97b-0a4e-434b-a0de-5f03d05693d0</UserSecretsId>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
+        <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+        <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +35,9 @@
         <Content Remove="ClientApp\dist\**" />
         <Content Update="appsettings.Development.json">
             <DependentUpon>appsettings.json</DependentUpon>
+        </Content>
+        <Content Update="appsettings.Staging.json">
+          <DependentUpon>appsettings.json</DependentUpon>
         </Content>
     </ItemGroup>
     <ItemGroup>

@@ -1,58 +1,48 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
-using Bogus;
-
+using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.Models;
-using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
-using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.Transactions;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper) : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetTransactions, -1);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task GettingTransactionsWithInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsTransactions)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenTransactionsExistsSortedByDescriptionDesc()
-    {
-        var faker = new Faker();
-        var count = faker.Random.Int(2, 10);
+    public Task GettingTransactionsSortedByDescriptionDesc() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.CollectionExists)
+            .And(ARequestSortedByDescriptionDesc)
+            .When(TheUser.GetsTransactions)
+            .Then(ShouldReceiveItemsInProperOrder)
+            .PlayAsync();
 
-        var account = await GivenAnActiveAccount()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => new GetTransactions.Request(-1, 10, [], []));
 
-        var category = await GivenACategory()
-            .OfType(CategoryType.Expense)
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    private static void ARequestSortedByDescriptionDesc(IStepRunner runner) => runner.Execute(() => new GetTransactions.Request(0, 10, ["-description"], []));
 
-        await GivenATransaction()
-            .ForAccount(account)
-            .ForCategory(category)
-            .CollectionSavedInDbAsync(DatabaseDriver, count);
-
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetTransactions, sorts: "-description");
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<TransactionInfoViewModel[]>();
-        result.Should().NotBeNull().And.HaveCount(count).And.BeInDescendingOrder(x => x.Description);
-    }
+    [AssertionMethod]
+    private static void ShouldReceiveItemsInProperOrder(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<TransactionInfoViewModel>>>(response =>
+        {
+            var expected = runner.GetContextData<IEnumerable<Transaction>>(TransactionContext.ExistingTransactions);
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful();
+            var accounts = response.Value;
+            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Description);
+        });
 }

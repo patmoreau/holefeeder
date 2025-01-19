@@ -6,7 +6,7 @@ namespace Holefeeder.Tests.Common.Builders.Users;
 
 internal class UserBuilder : FakerBuilder<User>
 {
-    protected override Faker<User> Faker { get; } = CreatePrivateFaker()
+    protected override Faker<User> Faker { get; } = CreatePrivateFaker<User>()
         .RuleFor(x => x.Id, faker => (UserId)faker.Random.Guid())
         .RuleFor(x => x.Inactive, false)
         .RuleFor(x => x.UserIdentities, new List<UserIdentity>());

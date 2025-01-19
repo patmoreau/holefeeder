@@ -1,6 +1,5 @@
 using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
-using DrifterApps.Seeds.Testing.Attributes;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;

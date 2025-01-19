@@ -53,10 +53,10 @@ public partial class GetSummary
                 new SummaryValue(Average(gains), Average(expenses)));
         }
 
-        private static decimal Period(IDictionary<(DateOnly From, DateOnly To), decimal> dto, DateOnly asOf) =>
+        private static decimal Period(Dictionary<(DateOnly From, DateOnly To), decimal> dto, DateOnly asOf) =>
             dto.FirstOrDefault(x => x.Key.From == asOf).Value;
 
-        private static decimal Average(IDictionary<(DateOnly From, DateOnly To), decimal> dto) =>
+        private static decimal Average(Dictionary<(DateOnly From, DateOnly To), decimal> dto) =>
             dto.Count > 0 ? Math.Round(dto.Sum(x => x.Value) / dto.Count, 2) : 0;
     }
 }

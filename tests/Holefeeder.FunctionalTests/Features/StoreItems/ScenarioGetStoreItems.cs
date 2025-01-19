@@ -1,55 +1,46 @@
-using System.Net;
+using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
 
-using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
+using Refit;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioGetStoreItems(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetStoreItems, -1);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task GettingStoreItemsWithInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.GetsItemsInTheStore)
+            .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenAccountsExists()
-    {
-        const string firstCode = nameof(firstCode);
-        const string secondCode = nameof(secondCode);
+    public Task GettingStoreItemsSortedByCodeDesc() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.CollectionExists)
+            .And(ARequestSortedByCodeDesc)
+            .When(TheUser.GetsItemsInTheStore)
+            .Then(ShouldReceiveItemsInProperOrder)
+            .PlayAsync();
 
-        await GivenAStoreItem()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .WithCode(firstCode)
-            .SavedInDbAsync(DatabaseDriver);
+    private static void AnInvalidRequest(IStepRunner runner) => runner.Execute(() => new GetStoreItems.Request(-1, 10, [], []));
 
-        await GivenAStoreItem()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .WithCode(secondCode)
-            .SavedInDbAsync(DatabaseDriver);
+    private static void ARequestSortedByCodeDesc(IStepRunner runner) => runner.Execute(() => new GetStoreItems.Request(0, 10, ["-code"], []));
 
-        GivenUserIsAuthorized();
-
-        await QueryEndpoint(ApiResources.GetStoreItems, sorts: "-code");
-
-        ShouldExpectStatusCode(HttpStatusCode.OK);
-        var result = HttpClientDriver.DeserializeContent<StoreItemViewModel[]>();
-        AssertAll(() =>
+    [AssertionMethod]
+    private static void ShouldReceiveItemsInProperOrder(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<StoreItemViewModel>>>(response =>
         {
-            result.Should().NotBeNull().And.HaveCount(2);
-            result![0].Code.Should().Be(secondCode);
-            result[1].Code.Should().Be(firstCode);
+            var expected = runner.GetContextData<IEnumerable<StoreItem>>(StoreItemContext.ExistingStoreItems);
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful();
+            var accounts = response.Value;
+            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Code);
         });
-    }
 }

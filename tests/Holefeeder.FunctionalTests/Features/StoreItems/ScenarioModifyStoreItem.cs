@@ -1,63 +1,42 @@
-using System.Net;
-using System.Text.Json;
+using DrifterApps.Seeds.FluentScenario;
 
+using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common;
 
-using static Holefeeder.Application.Features.StoreItems.Commands.ModifyStoreItem;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
-using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioModifyStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        var storeItem = GivenAModifyStoreItemRequest()
-            .WithId(StoreItemId.Empty)
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserModifyStoreItem(storeItem);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task WhenInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.ModifiesAnItemInTheStore)
+            .Then(ShouldExpectBadRequest)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenModifyStoreItem()
-    {
-        var storeItem = await GivenAStoreItem()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task WhenModifyStoreItem() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .And(AValidRequest)
+            .When(TheUser.ModifiesAnItemInTheStore)
+            .Then(StoreItem.ShouldBeModified)
+            .PlayAsync();
 
-        var request = GivenAModifyStoreItemRequest()
-            .WithId(storeItem.Id)
-            .Build();
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() => GivenAModifyStoreItemRequest().WithId(StoreItemId.Empty).Build());
 
-        GivenUserIsAuthorized();
-
-        await WhenUserModifyStoreItem(request);
-
-        ShouldExpectStatusCode(HttpStatusCode.NoContent);
-
-        await using var dbContext = DatabaseDriver.CreateDbContext();
-
-        var result = await dbContext.StoreItems.FindAsync(storeItem.Id);
-        result.Should().NotBeNull();
-        result!.Data.Should().BeEquivalentTo(request.Data);
-    }
-
-    private async Task WhenUserModifyStoreItem(Request request)
-    {
-        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.ModifyStoreItem, json);
-    }
+    private static void AValidRequest(IStepRunner runner) =>
+        runner.Execute<StoreItem, ModifyStoreItem.Request>(item =>
+        {
+            item.Should().BeValid();
+            var request = GivenAModifyStoreItemRequest().WithId(item.Value.Id).Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
 }

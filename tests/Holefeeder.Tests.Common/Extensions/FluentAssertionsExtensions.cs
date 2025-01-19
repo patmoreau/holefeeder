@@ -1,5 +1,3 @@
-using DrifterApps.Seeds.Domain;
-
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 
@@ -18,35 +16,22 @@ public static class FluentAssertionsExtensions
     }
 }
 
-internal class StronglyTypedIdEquivalencyStep : IEquivalencyStep
-{
-    public EquivalencyResult Handle(Comparands comparands, IEquivalencyValidationContext context,
-        IEquivalencyValidator nestedValidator)
-    {
-        if (comparands is not { Subject: Guid subject, Expectation: IStronglyTypedId expected })
-        {
-            return EquivalencyResult.ContinueWithNext; // Indicating that the comparison is not handled
-        }
-
-        subject.Should().Be(expected.Value);
-
-        return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
-    }
-}
-
 internal class MoneyEquivalencyStep : IEquivalencyStep
 {
     public EquivalencyResult Handle(Comparands comparands, IEquivalencyValidationContext context,
         IEquivalencyValidator nestedValidator)
     {
-        if (comparands is not { Subject: decimal subject, Expectation: Money expected })
+        switch (comparands)
         {
-            return EquivalencyResult.ContinueWithNext; // Indicating that the comparison is not handled
+            case {Subject: decimal subjectDecimal, Expectation: Money expectedMoney}:
+                subjectDecimal.Should().Be(expectedMoney.Value);
+                return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
+            case {Subject: Money subjectMoney, Expectation: decimal expectedDecimal}:
+                subjectMoney.Value.Should().Be(expectedDecimal);
+                return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
+            default:
+                return EquivalencyResult.ContinueWithNext; // Indicating that the comparison is not handled
         }
-
-        subject.Should().Be(expected.Value);
-
-        return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
     }
 }
 
@@ -55,13 +40,16 @@ internal class ColorEquivalencyStep : IEquivalencyStep
     public EquivalencyResult Handle(Comparands comparands, IEquivalencyValidationContext context,
         IEquivalencyValidator nestedValidator)
     {
-        if (comparands is not { Subject: string subject, Expectation: CategoryColor expected })
+        switch (comparands)
         {
-            return EquivalencyResult.ContinueWithNext; // Indicating that the comparison is not handled
+            case {Subject: string subjectString, Expectation: CategoryColor expectedCategoryColor}:
+                subjectString.Should().BeEquivalentTo(expectedCategoryColor.ToString());
+                return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
+            case {Subject: CategoryColor subjectCategoryColor, Expectation: string expectedString}:
+                subjectCategoryColor.ToString().Should().BeEquivalentTo(expectedString);
+                return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
+            default:
+                return EquivalencyResult.ContinueWithNext; // Indicating that the comparison is not handled
         }
-
-        subject.Should().Be(expected.ToString());
-
-        return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
     }
 }

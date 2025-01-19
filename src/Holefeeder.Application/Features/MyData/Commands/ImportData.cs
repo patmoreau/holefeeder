@@ -448,7 +448,7 @@ public class ImportData : ICarterModule
                         elementAccountId,
                         elementCategoryId,
                         elementCashflowId,
-                        element.CashflowDate.GetValueOrDefault(),
+                        element.CashflowDate,
                         request.UserId);
 
                     if (result.IsFailure)

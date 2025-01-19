@@ -1,11 +1,9 @@
 using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing.Attributes;
 
-using Holefeeder.Domain.Features.Transactions;
-
 namespace Holefeeder.UnitTests.Domain.Extensions;
 
-public static class ResultHelperTests
+internal static class ResultHelperTests
 {
     [AssertionMethod]
     internal static void ShouldHaveError<T>(this Result<T> result, ResultError error) =>

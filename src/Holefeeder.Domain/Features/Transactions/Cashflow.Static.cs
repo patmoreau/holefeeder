@@ -57,6 +57,7 @@ public partial record Cashflow
                     Frequency = frequency,
                     Recurrence = recurrence,
                     Description = description,
+                    Inactive = inactive
                 }),
             Result<Cashflow>.Failure);
     }

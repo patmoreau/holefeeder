@@ -1,70 +1,69 @@
 using System.Net;
-using System.Text.Json;
 
+using DrifterApps.Seeds.FluentScenario;
+
+using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.FunctionalTests.Infrastructure;
-using Holefeeder.Tests.Common;
 
-using static Holefeeder.Application.Features.StoreItems.Commands.CreateStoreItem;
+using Refit;
+
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
-using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 
 namespace Holefeeder.FunctionalTests.Features.StoreItems;
 
-[ComponentTest]
-[Collection("Api collection")]
 public class ScenarioCreateStoreItem(ApiApplicationDriver applicationDriver, ITestOutputHelper testOutputHelper)
     : HolefeederScenario(applicationDriver, testOutputHelper)
 {
     [Fact]
-    public async Task WhenInvalidRequest()
-    {
-        var storeItem = GivenACreateStoreItemRequest()
-            .WithCode(string.Empty)
-            .Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserCreateStoreItem(storeItem);
-
-        ShouldReceiveValidationProblemDetailsWithErrorMessage("One or more validation errors occurred.", HttpStatusCode.BadRequest);
-    }
+    public Task WhenInvalidRequest() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AnInvalidRequest)
+            .When(TheUser.CreatesAnItemInTheStore)
+            .Then(ShouldExpectBadRequest)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenCreateStoreItem()
-    {
-        var storeItem = GivenACreateStoreItemRequest().Build();
-
-        GivenUserIsAuthorized();
-
-        await WhenUserCreateStoreItem(storeItem);
-
-        ShouldExpectStatusCode(HttpStatusCode.Created);
-
-        ShouldGetTheRouteOfTheNewResourceInTheHeader();
-    }
+    public Task WhenCreateStoreItem() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AValidRequest)
+            .When(TheUser.CreatesAnItemInTheStore)
+            .Then(ShouldExpectStatusCodeCreated)
+            .And(StoreItem.ShouldBeCreated)
+            .PlayAsync();
 
     [Fact]
-    public async Task WhenCodeAlreadyExist()
-    {
-        var existingItem = await GivenAStoreItem()
-            .ForUser(TestUsers[AuthorizedUser].UserId)
-            .SavedInDbAsync(DatabaseDriver);
+    public Task WhenCodeAlreadyExist() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .And(ARequestWithExistingCode)
+            .When(TheUser.CreatesAnItemInTheStore)
+            .Then(ShouldExpectBadRequest)
+            .PlayAsync();
 
-        var storeItem = GivenACreateStoreItemRequest()
-            .WithCode(existingItem.Code)
-            .Build();
+    private static void AnInvalidRequest(IStepRunner runner) =>
+        runner.Execute(() => GivenACreateStoreItemRequest().WithCode(string.Empty).Build());
 
-        GivenUserIsAuthorized();
+    private static void AValidRequest(IStepRunner runner) =>
+        runner.Execute(() => GivenACreateStoreItemRequest().Build());
 
-        await WhenUserCreateStoreItem(storeItem);
+    private static void ARequestWithExistingCode(IStepRunner runner) =>
+        runner.Execute<StoreItem, CreateStoreItem.Request>(item =>
+        {
+            item.Should().BeValid();
+            var request = GivenACreateStoreItemRequest().WithCode(item.Value.Code).Build();
 
-        ShouldExpectStatusCode(HttpStatusCode.BadRequest);
-    }
+            runner.SetContextData(RequestContext.CurrentRequest, request);
 
-    private async Task WhenUserCreateStoreItem(Request request)
-    {
-        var json = JsonSerializer.Serialize(request, Globals.JsonSerializerOptions);
-        await HttpClientDriver.SendRequestWithBodyAsync(ApiResources.CreateStoreItem, json);
-    }
+            return request;
+        });
+
+    private static void ShouldExpectStatusCodeCreated(IStepRunner runner) =>
+        runner.Execute<IApiResponse>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject.Value
+                .Should().BeSuccessful()
+                .And.HaveStatusCode(HttpStatusCode.Created);
+        });
 }

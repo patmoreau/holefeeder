@@ -2,24 +2,27 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="6.0.2">
+    <PackageVersion Include="bunit" Version="1.38.5" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="coverlet.msbuild" Version="6.0.2">
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="0.1.8" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.84" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.2" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="0.1.21" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="0.1.14" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="0.1.14" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.125" />
+    <PackageVersion Include="FluentAssertions" Version="7.1.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="IdentityModel" Version="7.0.0" />
-    <PackageVersion Include="JunitXml.TestLogger" Version="4.1.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.12" />
+    <PackageVersion Include="JunitXml.TestLogger" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
@@ -29,15 +32,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Respawn" Version="6.2.1" />
-    <PackageVersion Include="WireMock.Net" Version="1.6.7" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="WireMock.Net" Version="1.6.11" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.17.0">
+    <PackageVersion Include="xunit.analyzers" Version="1.19.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="xunit.categories" Version="2.0.8" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>

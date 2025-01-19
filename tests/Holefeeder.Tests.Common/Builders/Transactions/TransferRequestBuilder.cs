@@ -10,7 +10,7 @@ namespace Holefeeder.Tests.Common.Builders.Transactions;
 
 internal class TransferRequestBuilder : FakerBuilder<Request>
 {
-    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker()
+    protected override Faker<Request> Faker { get; } = CreateUninitializedFaker<Request>()
         .RuleFor(x => x.Date, faker => faker.Date.RecentDateOnly())
         .RuleFor(x => x.Amount, MoneyBuilder.Create().Build())
         .RuleFor(x => x.Description, faker => faker.Lorem.Sentence())

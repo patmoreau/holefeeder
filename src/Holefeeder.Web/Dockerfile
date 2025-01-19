@@ -1,7 +1,7 @@
 ###################################
 # Node and pnpm install stage
 ###################################
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS pre-build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS pre-build
 WORKDIR /source
 
 # Download and import the Nodesource GPG key
@@ -70,7 +70,7 @@ RUN apt-get install google-chrome-stable -y
 ###################################
 # Final stage
 ###################################
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 EXPOSE 443

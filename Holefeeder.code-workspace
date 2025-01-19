@@ -46,5 +46,10 @@
             }
         ],
         "diffEditor.codeLens": true,
+        "mapDeviceTypeToFramework": {
+            "iPhone": "-f net8.0-ios",
+            "Mac": "-f net8.0-maccatalyst",
+            "ios-simulator": "-f net8.0-iossimulator"
+        }
     }
 }
