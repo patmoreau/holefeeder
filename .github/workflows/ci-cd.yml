@@ -383,7 +383,10 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml pull && docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
+          ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "
+            echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin &&
+            docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml pull &&
+            docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
 
   create_check:
     needs: [check_changes, tests]
