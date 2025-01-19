@@ -30,8 +30,14 @@ public class ScenarioGetCategories(ApiApplicationDriver applicationDriver, ITest
             response.Value.Should().BeSuccessful()
                 .And.HaveContent();
 
-            response.Value.Content.Should().HaveSameCount(categories)
-                .And.BeInDescendingOrder(x => x.Favorite)
-                .And.BeInAscendingOrder(x =>x.Name);
+            var expectedCategories = categories
+                .OrderByDescending(x => x.Favorite)
+                .ThenBy(x => x.Name)
+                .ToList();
+
+            response.Value.Content.Should()
+                .BeEquivalentTo(expectedCategories, options =>
+                    options.WithStrictOrdering()
+                        .ExcludingMissingMembers());
         });
 }
