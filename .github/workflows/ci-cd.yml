@@ -384,7 +384,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "
-            docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_TOKEN }} &&
+            echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin &&
             docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml pull &&
             docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
 
