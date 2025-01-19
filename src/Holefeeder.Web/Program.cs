@@ -58,7 +58,7 @@ else
 app.UseSerilogRequestLogging();
 app.UseHttpLogging();
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.MapCarter();
