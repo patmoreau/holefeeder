@@ -1,5 +1,7 @@
 using System.Net;
 
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
@@ -50,7 +52,7 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .ForAccount(account)
                 .ForCategory(category)
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
 

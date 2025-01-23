@@ -1,5 +1,7 @@
 using System.Net;
 
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 using DrifterApps.Seeds.Testing.Extensions;
@@ -33,7 +35,7 @@ internal sealed class StoreItemSteps(BudgetingDatabaseDriver budgetingDatabaseDr
         {
             var builder = GivenAStoreItem().ForUser(TestUsers[AuthorizedUser].UserId);
 
-            var items = await builder.CollectionSavedInDbAsync(budgetingDatabaseDriver);
+            var items = await builder.CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(StoreItemContext.ExistingStoreItems, items);
 

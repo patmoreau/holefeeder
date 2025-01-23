@@ -1,3 +1,5 @@
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.FunctionalTests.Drivers;
@@ -16,25 +18,25 @@ internal sealed class DataSteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
         {
             var accounts = await GivenAnActiveAccount()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
             runner.SetContextData(AccountContext.ExistingAccounts, accounts);
 
             var categories = await GivenACategory()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
             runner.SetContextData(CategoryContext.ExistingCategory, categories);
 
             var cashflows = await GivenAnActiveCashflow()
                 .ForAccount(accounts.ElementAt(0))
                 .ForCategory(categories.ElementAt(0))
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
             runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
 
             var transactions = await GivenATransaction()
                 .ForAccount(accounts.ElementAt(0))
                 .ForCategory(categories.ElementAt(0))
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
             runner.SetContextData(TransactionContext.ExistingTransactions, transactions);
         });
 }

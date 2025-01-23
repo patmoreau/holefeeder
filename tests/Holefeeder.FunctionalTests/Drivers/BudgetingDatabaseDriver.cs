@@ -22,10 +22,9 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     protected override RespawnerOptions Options { get; } = new()
     {
         DbAdapter = DbAdapter.Postgres,
-        // SchemasToInclude = [Schema],
-        TablesToInclude =
-            ["accounts", "cashflows", "categories", "store_items", "transactions"],
-        TablesToIgnore = ["schema_versions"],
+        SchemasToInclude = ["public", "hangfire"],
+        TablesToInclude = ["accounts", "cashflows", "categories", "store_items", "transactions"],
+        TablesToIgnore = ["schemaversions"],
         WithReseed = true
     };
 
@@ -48,20 +47,6 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     {
         await DatabaseServer.StartAsync();
 
-        await using (var connection = new NpgsqlConnection(DatabaseServer.ConnectionString))
-        {
-            await connection.OpenAsync();
-            await using (var command = new NpgsqlCommand($"CREATE SCHEMA IF NOT EXISTS {Schema}", connection))
-            {
-                await command.ExecuteNonQueryAsync();
-            }
-
-            // Set the default schema
-            await using (var setSchemaCommand = new NpgsqlCommand($"SET search_path TO {Schema}", connection))
-            {
-                await setSchemaCommand.ExecuteNonQueryAsync();
-            }
-        }
         await base.InitializeAsync();
     }
 

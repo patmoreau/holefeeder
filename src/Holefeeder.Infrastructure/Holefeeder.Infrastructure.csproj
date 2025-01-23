@@ -24,7 +24,7 @@
         <PackageReference Include="dbup-core" />
         <PackageReference Include="dbup-postgresql" />
         <PackageReference Include="Hangfire.AspNetCore" />
-        <PackageReference Include="Hangfire.InMemory" />
+        <PackageReference Include="Hangfire.PostgreSql" />
         <PackageReference Include="Humanizer.Core" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
@@ -43,8 +43,8 @@
         <EmbeddedResource Include="Scripts\004-CreateTransactionsTable.sql" />
         <EmbeddedResource Include="Scripts\005-CreateStoreItemsTable.sql" />
         <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql" />
-        <EmbeddedResource Include="Scripts\011-CreateUsersTable.sql" />
-        <EmbeddedResource Include="Scripts\013-FixTagsToLower.sql" />
+        <EmbeddedResource Include="Scripts\007-CreateUsersTable.sql" />
+        <EmbeddedResource Include="Scripts\008-FixTagsToLower.sql" />
     </ItemGroup>
 
 </Project>

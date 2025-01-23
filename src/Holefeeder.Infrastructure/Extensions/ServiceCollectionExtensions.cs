@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Hangfire;
+using Hangfire.PostgreSql;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.SeedWork;
@@ -31,8 +32,6 @@ public static class ServiceCollectionExtensions
         services.AddDbContextFactory<BudgetingContext>();
         services.AddDbContext<BudgetingContext>();
 
-        services.AddHangfireServices();
-
         return services;
 
         DbContextOptions<BudgetingContext> OptionsBuilderOptions(IServiceProvider provider)
@@ -47,14 +46,19 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    private static void AddHangfireServices(this IServiceCollection services)
+    public static void AddHangfireServices(this IServiceCollection services)
     {
         // Add Hangfire services.
-        services.AddHangfire(globalConfiguration => globalConfiguration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseInMemoryStorage());
+        services.AddHangfire((provider, globalConfiguration) =>
+            globalConfiguration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(options =>
+                {
+                    var builder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
+                    options.UseNpgsqlConnection(builder.CreateBuilder().ConnectionString);
+                }));
 
         // Add the processing server as IHostedService
         services.AddHangfireServer(options => { options.WorkerCount = 1; });

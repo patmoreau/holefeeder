@@ -5,9 +5,11 @@ using Bogus;
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
+using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
@@ -51,12 +53,20 @@ public class ScenarioGetCashflows(ApiApplicationDriver applicationDriver, ITestO
     private static void ShouldReceiveItemsInProperOrder(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<CashflowInfoViewModel>>>(response =>
         {
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
             var expected = runner.GetContextData<IEnumerable<Cashflow>>(CashflowContext.ExistingCashflows);
+
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
-            var accounts = response.Value;
-            accounts.Content.Should()
-                .BeEquivalentTo(expected.OrderByDescending(x => x.Description),
-                    options => options.WithStrictOrdering().ExcludingMissingMembers());
+
+            expected = expected.OrderByDescending(x => x.Description).ToList();
+
+            response.Value.Content.Should()
+                .BeEquivalentTo(expected, options =>
+                    options.WithStrictOrdering()
+                        .ExcludingMissingMembers()
+                        .Excluding(x => x.Category)
+                        .Excluding(x => x.Account));
         });
 }

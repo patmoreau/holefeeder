@@ -56,20 +56,23 @@ services:
       - seq-data:/data
 
   postgres:
-    image: postgres:latest
+    image: postgres:17.2
     container_name: postgres
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     environment:
-      - POSTGRES_DB=holefeeder
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_APP_USER=${POSTGRES_APP_USER}
+      - POSTGRES_APP_PASSWORD=${POSTGRES_APP_PASSWORD}
+      - POSTGRES_APP_DB=${POSTGRES_APP_DB}
     expose:
       - 5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - .docker/scripts/postgres-initdb.sh:/docker-entrypoint-initdb.d/postgres-initdb.sh
+      - .docker/scripts/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
     labels:
       - 'traefik.enable=false'
 
@@ -101,7 +104,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
       - ASPNETCORE_URLS=http://+
-      - ConnectionStrings__BudgetingConnectionString=Host=postgres;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=holefeeder;
+      - ConnectionStrings__BudgetingConnectionString=Host=postgres;Port=5432;Username=${POSTGRES_APP_USER};Password=${POSTGRES_APP_PASSWORD};Database=${POSTGRES_APP_DB};
       - Serilog__WriteTo__1__Args__apiKey=${SEQ_API_KEY}
     labels:
       - 'traefik.enable=true'

@@ -47,6 +47,7 @@ public static class WebApplicationExtensions
         MigrateDb(connectionStringBuilder, holefeederLogger);
     }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
     private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
         var completed = false;
@@ -60,9 +61,7 @@ public static class WebApplicationExtensions
                 PerformMigration(connectionStringBuilder);
                 completed = true;
             }
-#pragma warning disable CA1031
             catch (Exception e)
-#pragma warning restore CA1031
             {
                 logger.LogMigrationError(tryCount, e);
                 Thread.Sleep(10000);
@@ -71,8 +70,7 @@ public static class WebApplicationExtensions
 
         if (!completed)
         {
-            throw new DataException(
-                "Unable to perform database migration, no connection to server was found.");
+            throw new DataException("Unable to perform database migration, no connection to server was found.");
         }
 
         logger.LogMigrationSuccess();
@@ -84,14 +82,9 @@ public static class WebApplicationExtensions
         {
             var builder = connectionStringBuilder.CreateBuilder();
 
-            var connectionManager = new NpgsqlConnectionManager(connectionStringBuilder);
-
             var upgradeEngine = DeployChanges.To
-                .PostgresqlDatabase(connectionManager)
+                .PostgresqlDatabase(builder.ConnectionString)
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .JournalTo(new PostgresqlTableJournal(
-                    () => connectionManager,
-                    () => NpgsqlConnectionManager.Log, builder.Database, "schema_versions"))
                 .LogToConsole()
                 .WithTransactionPerScript()
                 .Build();

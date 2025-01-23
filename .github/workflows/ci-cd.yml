@@ -354,9 +354,12 @@ jobs:
           ENV=${{ env.ENVIRONMENT }}
           DOMAIN=drifterapps.app
           SEQ_API_KEY=${{ secrets.SEQ_APIKEY }}
-          MARIADB_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MARIADB_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          MARIADB_USER=${{ secrets.MYSQL_USER }}
+          POSTGRES_DB=${{ vars.POSTGRES_DB }}
+          POSTGRES_USER=${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_APP_DB=${{ vars.POSTGRES_APP_DB }}
+          POSTGRES_APP_USER=${{ vars.POSTGRES_APP_USER }}
+          POSTGRES_APP_PASSWORD=${{ secrets.POSTGRES_APP_PASSWORD }}
           " > $GITHUB_WORKSPACE/.env
 
       - name: Create Docker config

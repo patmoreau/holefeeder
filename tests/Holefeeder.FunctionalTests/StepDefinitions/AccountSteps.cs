@@ -1,3 +1,5 @@
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Accounts;
@@ -29,7 +31,7 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
         {
             var builder = GivenAnActiveAccount().ForUser(TestUsers[AuthorizedUser].UserId);
 
-            var accounts = await builder.CollectionSavedInDbAsync(budgetingDatabaseDriver);
+            var accounts = await builder.CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(AccountContext.ExistingAccounts, accounts);
 
