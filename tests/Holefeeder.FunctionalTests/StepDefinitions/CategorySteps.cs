@@ -1,3 +1,5 @@
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Categories;
@@ -24,7 +26,7 @@ internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDri
         {
             var categories = await GivenACategory()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(CategoryContext.ExistingCategories, categories);
         });

@@ -1,7 +1,7 @@
 services:
-  mysql-data-test:
-    image: mariadb:11.6.2
-    container_name: mysql-data-test
+  postgres-data-test:
+    image: postgres:17.2
+    container_name: postgres-data-test
 
   api-functional-tests:
     image: api-functional-tests
@@ -11,7 +11,7 @@ services:
       dockerfile: ./src/Holefeeder.Api/Dockerfile
       target: functionaltests
     depends_on:
-      - mysql-data-test
+      - postgres-data-test
     volumes:
       - ./tests-results:/TestResults
 
@@ -34,4 +34,3 @@ services:
       target: angulartests
     volumes:
       - ./tests-results/:/TestResults
-

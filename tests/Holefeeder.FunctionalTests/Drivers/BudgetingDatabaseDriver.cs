@@ -7,7 +7,7 @@ using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.EntityFrameworkCore;
 
-using MySqlConnector;
+using Npgsql;
 
 using Respawn;
 
@@ -21,11 +21,10 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
 
     protected override RespawnerOptions Options { get; } = new()
     {
-        DbAdapter = DbAdapter.MySql,
-        SchemasToInclude = [Schema],
-        TablesToInclude =
-            ["accounts", "cashflows", "categories", "store_items", "transactions"],
-        TablesToIgnore = ["schema_versions"],
+        DbAdapter = DbAdapter.Postgres,
+        SchemasToInclude = ["public", "hangfire"],
+        TablesToInclude = ["accounts", "cashflows", "categories", "store_items", "transactions"],
+        TablesToIgnore = ["schemaversions"],
         WithReseed = true
     };
 
@@ -34,7 +33,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         var connectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            DatabaseServer = MariaDatabaseServer.CreateServer(Schema, "mariadb:11.3.2");
+            DatabaseServer = PostgreDatabaseServer.CreateServer(Schema);
         }
         else
         {
@@ -42,7 +41,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         }
     }
 
-    private static MySqlConnection ConnectionFactory(string connectionString) => new(connectionString);
+    private static NpgsqlConnection ConnectionFactory(string connectionString) => new(connectionString);
 
     public override async Task InitializeAsync()
     {
@@ -61,7 +60,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
 
-        optionsBuilder.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
+        optionsBuilder.UseNpgsql(ConnectionString);
 
         return optionsBuilder.Options;
     }

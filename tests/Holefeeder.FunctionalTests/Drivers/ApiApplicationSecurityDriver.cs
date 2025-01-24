@@ -46,6 +46,7 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         base.ConfigureWebHost(builder);
+        builder.UseEnvironment("SECURITY_TESTS");
         builder.ConfigureTestServices(services =>
         {
             services.AddSingleton<IForbiddenUser>(_ =>

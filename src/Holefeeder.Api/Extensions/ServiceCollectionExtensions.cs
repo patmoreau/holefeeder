@@ -17,7 +17,7 @@ internal static class ServiceCollectionExtensions
 {
     internal const string AllowBlazorClientPolicy = nameof(AllowBlazorClientPolicy);
     private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
-    private static readonly string[] DatabaseTags = ["holefeeder", "api", "mariadb"];
+    private static readonly string[] DatabaseTags = ["holefeeder", "api", "postgres"];
     private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
 
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
@@ -115,13 +115,15 @@ internal static class ServiceCollectionExtensions
         services
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags)
-            .AddMySql(configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!,
+            .AddNpgSql(provider =>
+                {
+                    var builder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
+                    return builder.CreateBuilder().ConnectionString;
+                },
                 name: "holefeeder-db", tags: DatabaseTags)
             .AddHangfire(options => options.MinimumAvailableServers = 1, name: "hangfire", tags: HangfireTags);
         services
-#pragma warning disable S1075
             .AddHealthChecksUI(setup => { setup.AddHealthCheckEndpoint("hc-api", "http://127.0.0.1/healthz"); })
-#pragma warning restore S1075
             .AddInMemoryStorage();
 
         return services;

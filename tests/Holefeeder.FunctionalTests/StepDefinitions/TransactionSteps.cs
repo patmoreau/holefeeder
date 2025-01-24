@@ -1,6 +1,8 @@
 using System.Net;
 using System.Text.Json;
 
+using Bogus;
+
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 using DrifterApps.Seeds.Testing.Extensions;
@@ -54,7 +56,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
                 .ForAccount(account)
                 .ForCategory(category)
                 .ForUser(TestUsers[AuthorizedUser].UserId)
-                .CollectionSavedInDbAsync(budgetingDatabaseDriver);
+                .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(TransactionContext.ExistingTransactions, transactions);
 

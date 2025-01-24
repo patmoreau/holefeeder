@@ -74,6 +74,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        builder.UseEnvironment("FUNCTIONAL_TESTS");
         var configPath = Path.Combine(GetProjectPath(string.Empty, "Holefeeder.FunctionalTests"),
             "appsettings.tests.json");
 

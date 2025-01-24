@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS store_items
 (
-    id      BINARY(16)    NOT NULL,
-    code    NVARCHAR(100) NOT NULL,
+    id      UUID          NOT NULL,
+    code    VARCHAR(100)  NOT NULL,
     data    TEXT          NOT NULL,
-    user_id BINARY(16)    NOT NULL,
+    user_id UUID          NOT NULL,
     PRIMARY KEY (id)
 );
 

@@ -1,3 +1,3 @@
 UPDATE transactions
 SET description = ''
-WHERE description IS NULL
+WHERE description IS NULL;

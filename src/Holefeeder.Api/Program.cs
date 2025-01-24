@@ -42,8 +42,15 @@ builder.Services
             };
             return Task.CompletedTask;
         });
-    })
-    .AddHealthChecks(builder.Configuration)
+    });
+
+if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
+{
+    builder.Services.AddHangfireServices();
+    builder.Services.AddHealthChecks(builder.Configuration);
+}
+
+builder.Services
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddHangfireRequestScheduler(() =>
@@ -83,8 +90,7 @@ else
     });
 }
 
-app.UseHealthChecks()
-    .UseHangfire(builder.Configuration)
+app
     .UseRouting();
 
 app.UseCors(ServiceCollectionExtensions.AllowBlazorClientPolicy)
@@ -93,6 +99,11 @@ app.UseCors(ServiceCollectionExtensions.AllowBlazorClientPolicy)
 
 app.MapCarter();
 
-app.MigrateDb();
+if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
+{
+    app.UseHangfire(builder.Configuration);
+    app.UseHealthChecks();
+    app.MigrateDb();
+}
 
 await app.RunAsync();

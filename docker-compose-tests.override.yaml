@@ -1,17 +1,17 @@
 services:
-  mysql-data-test:
+  postgres-data-test:
     expose:
-      - 3306
+      - 5432
     environment:
-      - MYSQL_ROOT_PASSWORD=mypass
-      - MYSQL_DATABASE=budgeting_tests
+      - POSTGRES_DB=budgeting_tests
+      - POSTGRES_USER=budgeting_tests
+      - POSTGRES_PASSWORD=mypass
 
   api-functional-tests:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
-      ConnectionStrings__BudgetingConnectionString: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_tests;
-      LOCAL_CONNECTION_STRING: Server=mysql-data-test;Port=3306;User Id=root;Password=mypass;Database=budgeting_tests;
+      LOCAL_CONNECTION_STRING: Host=postgres-data-test;Port=5432;Username=budgeting_tests;Password=mypass;Database=budgeting_tests;
     entrypoint:
       - dotnet
       - test
