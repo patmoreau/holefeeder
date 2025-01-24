@@ -11,7 +11,7 @@ services:
       dockerfile: ./src/Holefeeder.Api/Dockerfile
       target: functionaltests
     depends_on:
-      - mysql-data-test
+      - postgres-data-test
     volumes:
       - ./tests-results:/TestResults
 
