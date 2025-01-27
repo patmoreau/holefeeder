@@ -1,4 +1,3 @@
-using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 

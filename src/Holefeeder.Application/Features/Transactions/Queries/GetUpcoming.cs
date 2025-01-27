@@ -4,7 +4,6 @@ using System.Reflection;
 
 using DrifterApps.Seeds.Application;
 
-using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Models;

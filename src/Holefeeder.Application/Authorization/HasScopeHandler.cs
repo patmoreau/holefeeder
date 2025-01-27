@@ -11,20 +11,16 @@ internal class HasScopeHandler(ILogger<HasScopeHandler> logger) : AuthorizationH
     {
         logger.LogUserClaims(context.User.Claims.Select(c => (c.Type, c.Value, c.Issuer)));
 
-        // If user does not have the scope claim, get out of here
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (!context.User.HasClaim(c => c.Type == "scope" && c.Issuer == requirement.Issuer))
         {
             logger.LogHasNoScopeForIssuer(requirement);
             return Task.CompletedTask;
         }
 
-        // Split the scopes string into an array
-        var scopes =
-            context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer)?.Value.Split(' ')
-                .ToArray() ?? [];
+        var scopes = context.User
+            .FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer)?.Value.Split(' ')
+            .ToArray() ?? [];
 
-        // Succeed if the scope array contains the required scope
         if (Array.Exists(scopes, s => s == requirement.Scope))
         {
             context.Succeed(requirement);

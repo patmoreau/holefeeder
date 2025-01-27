@@ -31,8 +31,11 @@ namespace Holefeeder.FunctionalTests.Drivers;
 [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
 {
-    private readonly bool _useDatabaseDriver;
+    [MemberNotNullWhen(true, nameof(_databaseDriver))]
+    private bool UseDatabaseDriver { get; }
+
     private readonly BudgetingDatabaseDriver? _databaseDriver;
+    protected AuthorityDriver AuthorityDriver { get; } = new();
     private readonly RefitSettings _refitSettings;
 
     internal BudgetingDatabaseDriver DatabaseDriver =>
@@ -59,12 +62,12 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             ContentSerializer = new SystemTextJsonContentSerializer(jsonSettings)
         };
 
-        _useDatabaseDriver = useDatabaseDriver;
+        UseDatabaseDriver = useDatabaseDriver;
 
         Faker.DefaultStrictMode = true;
         FluentAssertionsExtensions.RegisterGlobalEquivalencySteps();
 
-        if (_useDatabaseDriver)
+        if (UseDatabaseDriver)
         {
             _databaseDriver = new BudgetingDatabaseDriver();
         }
@@ -82,13 +85,12 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             .AddJsonFile(configPath)
             .AddInMemoryCollection(new List<KeyValuePair<string, string?>>()
             {
-                new("Auth0:Domain", AuthorityDriver.AuthorityDomain),
-                new("Auth0:Audience", "default-audience")
+                new("Authorization:Auth0:Domain", AuthorityDriver.Authority.Authority),
             }).Build();
         builder.UseConfiguration(configuration);
         builder.ConfigureServices(collection =>
         {
-            if (!_useDatabaseDriver)
+            if (!UseDatabaseDriver)
             {
                 return;
             }
@@ -96,7 +98,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             collection.RemoveAll<BudgetingConnectionStringBuilder>();
             collection.AddSingleton<BudgetingConnectionStringBuilder>(_ => new BudgetingConnectionStringBuilder
             {
-                ConnectionString = DatabaseDriver.ConnectionString
+                ConnectionString = _databaseDriver.ConnectionString
             });
         });
         builder.ConfigureTestServices(services =>
@@ -104,6 +106,8 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             services.AddSingleton<IUser>(_ =>
             {
                 var userToken = new JwtTokenBuilder()
+                    .IssuedBy(AuthorityDriver.Authority.Authority)
+                    .ForAudience("https://holefeeder-api.drifterapps.app")
                     .WithScopes("read:user write:user")
                     .WithClaim(ClaimTypes.NameIdentifier, TestUsers[AuthorizedUser].IdentityObjectId)
                     .Build();
@@ -113,9 +117,9 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             });
 
             services.AddScoped<BudgetingDatabaseDriver>();
-            if (_useDatabaseDriver)
+            if (UseDatabaseDriver)
             {
-                services.AddDatabaseDriver(DatabaseDriver);
+                services.AddDatabaseDriver(_databaseDriver);
             }
         });
     }
@@ -124,9 +128,9 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
     {
         try
         {
-            if (_useDatabaseDriver)
+            if (UseDatabaseDriver)
             {
-                await DatabaseDriver.ResetCheckpointAsync();
+                await _databaseDriver.ResetCheckpointAsync();
             }
         }
         catch (InvalidOperationException e)
@@ -137,9 +141,10 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
 
     public async Task InitializeAsync()
     {
-        if (_useDatabaseDriver)
+        await AuthorityDriver.InitializeAsync();
+        if (UseDatabaseDriver)
         {
-            await DatabaseDriver.InitializeAsync();
+            await _databaseDriver.InitializeAsync();
 
             var user = UserBuilder.GivenAUser()
                 .WithId(TestUsers[AuthorizedUser].UserId)
@@ -152,10 +157,12 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
 
     async Task IAsyncLifetime.DisposeAsync()
     {
-        if (_useDatabaseDriver)
+        if (UseDatabaseDriver)
         {
-            await DatabaseDriver.DisposeAsync();
+            await _databaseDriver.DisposeAsync();
         }
+
+        await AuthorityDriver.DisposeAsync();
     }
 
     private static string GetProjectPath(string projectRelativePath, string projectName)

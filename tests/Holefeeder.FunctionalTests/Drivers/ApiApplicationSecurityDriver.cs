@@ -53,7 +53,10 @@ public class ApiApplicationSecurityDriver() : ApiApplicationDriver(false)
             {
                 var httpClient = CreateClient();
                 httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", new JwtTokenBuilder().Build());
+                    new AuthenticationHeaderValue("Bearer", new JwtTokenBuilder()
+                        .IssuedBy(AuthorityDriver.Authority.Authority)
+                        .ForAudience("https://holefeeder-api.drifterapps.app")
+                        .Build());
                 return RestService.For<IForbiddenUser>(httpClient);
             });
             services.AddSingleton<IUnauthenticatedUser>(_ =>

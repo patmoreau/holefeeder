@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
 
 using Holefeeder.Api.Swagger;
 using Holefeeder.Application.Authorization;
@@ -22,36 +21,40 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        var auth0Options = new Auth0Options();
+        configuration.Bind("Authorization:Auth0", auth0Options);
+        services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
-                var domain = GetDomain();
-                var audience = GetAudience();
-                options.Authority = $"https://{domain}/";
-                options.Audience = audience;
+                options.MetadataAddress = $"{auth0Options.Issuer}.well-known/openid-configuration";
+                options.Audience = auth0Options.Audience;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    NameClaimType = ClaimTypes.NameIdentifier
+                    ValidIssuer = auth0Options.Issuer
                 };
             });
 
         services
             .AddAuthorization(options =>
             {
-                var domain = $"https://{GetDomain()}/";
-                options.AddPolicy(Policies.ReadUser,
-                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.ReadUser, domain)));
-                options.AddPolicy(Policies.WriteUser,
-                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.WriteUser, domain)));
+                options.AddPolicy(Configuration.Policies.ReadUser, policy =>
+                    policy
+                        .RequireAuthenticatedUser()
+                        .Requirements
+                        .Add(new HasScopeRequirement(Configuration.Scopes.ReadUser, auth0Options.Issuer)));
+                options.AddPolicy(Configuration.Policies.WriteUser, policy =>
+                    policy
+                        .RequireAuthenticatedUser()
+                        .Requirements
+                        .Add(new HasScopeRequirement(Configuration.Scopes.WriteUser, auth0Options.Issuer)));
             });
 
         return services;
-
-        string GetDomain() => configuration["Auth0:Domain"] ??
-                              throw new InvalidOperationException("Auth0 domain is missing");
-
-        string GetAudience() => configuration["Auth0:Audience"] ??
-                                throw new InvalidOperationException("Auth0 audience is missing");
     }
 
     public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment,
@@ -63,7 +66,7 @@ internal static class ServiceCollectionExtensions
             {
                 options.EnableAnnotations();
                 options.SwaggerDoc("v2",
-                    new OpenApiInfo { Title = environment.ApplicationName, Version = "v2" });
+                    new OpenApiInfo {Title = environment.ApplicationName, Version = "v2"});
                 options.CustomSchemaIds(type => type.ToString());
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -80,8 +83,8 @@ internal static class ServiceCollectionExtensions
                             {
                                 ["openid"] = "Sign In Permissions",
                                 ["profile"] = "Read profile Permission",
-                                [Policies.ReadUser] = "read:user",
-                                [Policies.WriteUser] = "write:user",
+                                [Configuration.Policies.ReadUser] = "read:user",
+                                [Configuration.Policies.WriteUser] = "write:user",
                             }
                         }
                     }

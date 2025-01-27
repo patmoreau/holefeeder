@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using DbUp;
-using DbUp.Postgresql;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
