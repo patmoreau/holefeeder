@@ -1,4 +1,3 @@
-using Holefeeder.Application.Authorization;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -62,12 +61,6 @@ public static partial class LoggerExtensions
         Level = LogLevel.Debug,
         Message = "User Claims: {Claims}")]
     public static partial void LogUserClaims(this ILogger logger, IEnumerable<(string Type, string Value, string Issuer)> claims);
-
-    [LoggerMessage(
-        EventId = 1010,
-        Level = LogLevel.Debug,
-        Message = "Has no scope from Issuer {@Requirement} : ")]
-    public static partial void LogHasNoScopeForIssuer(this ILogger logger, HasScopeRequirement requirement);
 
     [LoggerMessage(
         EventId = 9000,

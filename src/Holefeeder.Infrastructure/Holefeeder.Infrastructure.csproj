@@ -45,6 +45,7 @@
         <EmbeddedResource Include="Scripts\006-FixTransactionDescriptions.sql" />
         <EmbeddedResource Include="Scripts\007-CreateUsersTable.sql" />
         <EmbeddedResource Include="Scripts\008-FixTagsToLower.sql" />
+        <EmbeddedResource Include="Scripts\009-AddUsersForeignKeys.sql" />
     </ItemGroup>
 
 </Project>

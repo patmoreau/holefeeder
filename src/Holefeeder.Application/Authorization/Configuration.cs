@@ -7,9 +7,7 @@ public static class Configuration
 {
     public static class Schemes
     {
-        public const string Admin = nameof(Admin);
-        public const string ReadUser = nameof(ReadUser);
-        public const string WriteUser = nameof(WriteUser);
+        public const string Auth0 = nameof(Auth0);
     }
 
     public static class Scopes

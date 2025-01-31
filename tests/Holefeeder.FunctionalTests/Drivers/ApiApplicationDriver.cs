@@ -85,7 +85,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             .AddJsonFile(configPath)
             .AddInMemoryCollection(new List<KeyValuePair<string, string?>>()
             {
-                new("Authorization:Auth0:Domain", AuthorityDriver.Authority.Authority),
+                new("Authorization:Auth0:MetadataAddress", $"{AuthorityDriver.Authority}.well-known/openid-configuration"),
             }).Build();
         builder.UseConfiguration(configuration);
         builder.ConfigureServices(collection =>
@@ -106,7 +106,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             services.AddSingleton<IUser>(_ =>
             {
                 var userToken = new JwtTokenBuilder()
-                    .IssuedBy(AuthorityDriver.Authority.Authority)
+                    .IssuedBy($"{AuthorityDriver.Authority}")
                     .ForAudience("https://holefeeder-api.drifterapps.app")
                     .WithScopes("read:user write:user")
                     .WithClaim(ClaimTypes.NameIdentifier, TestUsers[AuthorizedUser].IdentityObjectId)
