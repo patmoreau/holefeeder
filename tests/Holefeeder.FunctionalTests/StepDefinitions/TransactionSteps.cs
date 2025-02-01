@@ -147,10 +147,10 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             var result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.FromAccountId);
             result.Should().NotBeNull().And.BeEquivalentTo(request, options =>
                 options.ExcludingMissingMembers());
-            result!.CategoryId.Should().Be(categories.First().Id);
+            result!.CategoryId.Should().Be(categories.First(x => x.Name == Transfer.CategoryFromName).Id);
 
             result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.ToAccountId);
             result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-            result!.CategoryId.Should().Be(categories.Last().Id);
+            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
         });
 }

@@ -19,6 +19,9 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class Transfer : ICarterModule
 {
+    public const string CategoryFromName = "Transfer Out";
+    public const string CategoryToName = "Transfer In";
+
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/transactions/transfer",
                 async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
@@ -77,23 +80,21 @@ public class Transfer : ICarterModule
             CancellationToken cancellationToken) =>
             async _ =>
             {
-                const string categoryFromName = "Transfer In";
-                const string categoryToName = "Transfer Out";
                 var categoryFrom = await context.Categories
-                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == categoryFromName,
+                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == CategoryFromName,
                         cancellationToken);
                 if (categoryFrom is null)
                 {
                     return Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
-                        TransactionErrors.CategoryNameNotFound(categoryFromName));
+                        TransactionErrors.CategoryNameNotFound(CategoryFromName));
                 }
 
                 var categoryTo = await context.Categories
-                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == categoryToName,
+                    .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == CategoryToName,
                         cancellationToken);
                 return categoryTo is null
                     ? Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
-                        TransactionErrors.CategoryNameNotFound(categoryToName))
+                        TransactionErrors.CategoryNameNotFound(CategoryToName))
                     : Result<(Category CategoryFrom, Category CategoryTo)>.Success((categoryFrom, categoryTo));
             };
 
