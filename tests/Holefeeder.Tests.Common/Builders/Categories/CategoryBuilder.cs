@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.Testing;
 
+using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Tests.Common.Extensions;
@@ -21,11 +22,11 @@ internal class CategoryBuilder : FakerBuilder<Category>
     public static CategoryBuilder GivenACategory() => new();
 
     public static CategoryBuilder GivenATransferInCategory() => new CategoryBuilder()
-        .WithName("Transfer In")
+        .WithName(Transfer.CategoryToName)
         .OfType(CategoryType.Gain);
 
     public static CategoryBuilder GivenATransferOutCategory() => new CategoryBuilder()
-        .WithName("Transfer Out")
+        .WithName(Transfer.CategoryFromName)
         .OfType(CategoryType.Expense);
 
     public CategoryBuilder WithId(Guid id)
