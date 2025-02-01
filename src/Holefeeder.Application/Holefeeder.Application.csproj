@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <NoWarn>1701;1702;S3925</NoWarn>
+        <NoWarn>1701;1702;S3925;NU1903</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">

@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 
-using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts;
 using Holefeeder.Application.Features.Categories;

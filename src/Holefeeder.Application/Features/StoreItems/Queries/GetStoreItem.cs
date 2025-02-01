@@ -1,6 +1,5 @@
 using DrifterApps.Seeds.FluentResult;
 
-using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;

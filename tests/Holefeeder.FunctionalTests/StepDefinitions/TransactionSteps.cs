@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 
 using Bogus;
 
@@ -12,7 +11,6 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
-using Holefeeder.Tests.Common;
 
 using Microsoft.EntityFrameworkCore;
 

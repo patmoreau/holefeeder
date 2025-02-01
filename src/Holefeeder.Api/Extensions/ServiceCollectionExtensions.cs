@@ -1,14 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
-using Holefeeder.Api.Swagger;
-using Holefeeder.Application.Authorization;
 using Holefeeder.Infrastructure.SeedWork;
+
+using IdentityModel;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+
+using static Holefeeder.Application.Authorization.Configuration;
 
 namespace Holefeeder.Api.Extensions;
 
@@ -22,89 +22,35 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+        services.AddAuthentication(options =>
             {
-                var domain = GetDomain();
-                var audience = GetAudience();
-                options.Authority = $"https://{domain}/";
-                options.Audience = audience;
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(Schemes.Auth0, options =>
+            {
+                configuration.Bind($"Authorization:{Schemes.Auth0}", options);
+
+                options.Events = new JwtBearerEvents
                 {
-                    NameClaimType = ClaimTypes.NameIdentifier
+                    OnTokenValidated = OnTokenValidated
                 };
             });
 
         services
             .AddAuthorization(options =>
             {
-                var domain = $"https://{GetDomain()}/";
-                options.AddPolicy(Policies.ReadUser,
-                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.ReadUser, domain)));
-                options.AddPolicy(Policies.WriteUser,
-                    policy => policy.Requirements.Add(new HasScopeRequirement(Policies.WriteUser, domain)));
-            });
-
-        return services;
-
-        string GetDomain() => configuration["Auth0:Domain"] ??
-                              throw new InvalidOperationException("Auth0 domain is missing");
-
-        string GetAudience() => configuration["Auth0:Audience"] ??
-                                throw new InvalidOperationException("Auth0 audience is missing");
-    }
-
-    public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment,
-        IConfiguration configuration)
-    {
-        services
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen(options =>
-            {
-                options.EnableAnnotations();
-                options.SwaggerDoc("v2",
-                    new OpenApiInfo { Title = environment.ApplicationName, Version = "v2" });
-                options.CustomSchemaIds(type => type.ToString());
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            TokenUrl = new Uri($"https://{configuration["Auth0:Domain"]}/oauth/token"),
-                            AuthorizationUrl =
-                                new Uri(
-                                    $"https://{configuration["Auth0:Domain"]}/authorize?audience={configuration["Auth0:Audience"]}"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                ["openid"] = "Sign In Permissions",
-                                ["profile"] = "Read profile Permission",
-                                [Policies.ReadUser] = "read:user",
-                                [Policies.WriteUser] = "write:user",
-                            }
-                        }
-                    }
-                });
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "oauth2"
-                            },
-                            Scheme = "oauth2",
-                            Name = "oauth2",
-                            In = ParameterLocation.Header,
-                        },
-                        new List<string>()
-                    }
-                });
-                options.OperationFilter<QueryRequestOperationFilter>();
-                options.DocumentFilter<HideInDocsFilter>();
+                options.AddPolicy(Policies.ReadUser, policy =>
+                    policy
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes(Schemes.Auth0)
+                        .RequireClaim(JwtClaimTypes.Scope, Scopes.ReadUser));
+                options.AddPolicy(Policies.WriteUser, policy =>
+                    policy
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes(Schemes.Auth0)
+                        .RequireClaim(JwtClaimTypes.Scope, Scopes.WriteUser));
             });
 
         return services;
@@ -144,5 +90,29 @@ internal static class ServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private static Task OnTokenValidated(TokenValidatedContext context)
+    {
+        if (context.Principal?.Identity is not ClaimsIdentity claimsIdentity)
+        {
+            return Task.CompletedTask;
+        }
+
+        var scopeClaim = claimsIdentity.FindFirst("scope");
+        if (scopeClaim == null)
+        {
+            return Task.CompletedTask;
+        }
+
+        var scopes = scopeClaim.Value.Split(' ');
+        foreach (var scope in scopes)
+        {
+            claimsIdentity.AddClaim(new Claim("scope", scope));
+        }
+
+        claimsIdentity.RemoveClaim(scopeClaim);
+
+        return Task.CompletedTask;
     }
 }

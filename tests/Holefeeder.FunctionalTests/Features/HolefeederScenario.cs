@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.RegularExpressions;
 
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.Testing.Attributes;

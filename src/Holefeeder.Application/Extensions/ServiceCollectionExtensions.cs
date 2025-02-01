@@ -4,11 +4,9 @@ using DrifterApps.Seeds.Application;
 using DrifterApps.Seeds.Application.Mediatr;
 using DrifterApps.Seeds.Domain;
 
-using Holefeeder.Application.Authorization;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.UserContext;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +31,6 @@ public static class ServiceCollectionExtensions
                 serviceConfiguration.RegisterServicesFromAssembly(typeof(Application).Assembly)
                     .RegisterServicesFromApplicationSeeds());
 
-        services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
         services.AddScoped<IUserContext, UserContext.UserContext>();
 

@@ -3,11 +3,9 @@ using Bogus;
 using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
-using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
-using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 
