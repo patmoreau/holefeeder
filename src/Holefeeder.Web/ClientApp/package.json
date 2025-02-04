@@ -70,7 +70,7 @@
     "@angular/language-service": "18.2.13",
     "@types/jasminewd2": "2.0.13",
     "@types/jest": "29.5.14",
-    "@types/node": "20.17.16",
+    "@types/node": "20.17.17",
     "@typescript-eslint/eslint-plugin": "8.23.0",
     "@typescript-eslint/parser": "8.23.0",
     "codelyzer": "6.0.2",
