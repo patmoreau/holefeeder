@@ -1,17 +1,24 @@
-# Use the specified base image
-FROM mcr.microsoft.com/devcontainers/dotnet:1-8.0
+# Use the official .NET SDK image as the base image
+FROM mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm
 
-# Install NVM, Node.js, and npm
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 20
+# Install OpenSSH Server and supervisor
+RUN apt-get update && apt-get install -y openssh-server supervisor
 
-RUN mkdir -p $NVM_DIR \
-    && apt-get update && apt-get install -y curl \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-    && . $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
+# Create the SSH directory and set permissions
+RUN mkdir -p /var/run/sshd
+RUN chmod 0755 /var/run/sshd
 
-ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+# Create a config directory in your project and copy the supervisord.conf file
+# Make sure you create a 'config' directory at the root of your project,
+# and inside it, create a 'supervisord.conf' file
+COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Disable password authentication
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+RUN sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
+# Expose the SSH port
+EXPOSE 22
+
+# Start supervisord, which in turn will start the SSH service
+CMD ["/usr/bin/supervisord"]
