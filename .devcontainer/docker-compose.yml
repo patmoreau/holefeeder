@@ -1,4 +1,30 @@
 services:
-  dotnet-container:
-    build: .
-    command: sleep infinity
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: holefeeder-devcontainer
+    volumes:
+      - ..:/workspaces/holefeeder:cached
+      - ${USER_PROFILE}/.ssh:/home/vscode/.ssh:ro
+      - ${USER_PROFILE}/.gitconfig:/home/vscode/.gitconfig:ro
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - '2225:22'
+
+  db:
+    image: postgres:17.2
+    restart: unless-stopped
+    container_name: holefeeder-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+
+volumes:
+  postgres-data:
