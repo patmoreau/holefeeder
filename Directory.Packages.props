@@ -55,12 +55,12 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.1" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.67.2" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.6.2" />
-    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.3.1" />
-    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.3.1" />
-    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.3.1" />
-    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.3.1" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.68.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.7.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.4.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.4.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.4.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.4.0" />
     <PackageVersion Include="Microsoft.JSInterop" Version="8.0.12" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.30" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.30" />
@@ -76,7 +76,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.4.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.0.1" />
     <PackageVersion Include="System.Text.Json" Version="9.0.1" />
   </ItemGroup>
