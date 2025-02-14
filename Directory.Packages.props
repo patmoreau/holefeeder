@@ -13,10 +13,10 @@
     <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.1.0" />
     <PackageVersion Include="Carter" Version="9.0.0" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="11.0.0" />
+    <PackageVersion Include="CommunityToolkit.Maui" Version="11.1.0" />
     <PackageVersion Include="Dapper" Version="2.1.44" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
-    <PackageVersion Include="Dapper.SqlBuilder" Version="2.0.78" />
+    <PackageVersion Include="Dapper.SqlBuilder" Version="2.1.66" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
     <PackageVersion Include="dbup-core" Version="6.0.4" />
     <PackageVersion Include="dbup-postgresql" Version="6.0.0-beta.44" />
@@ -69,7 +69,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.0.9" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.0.14" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
