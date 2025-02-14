@@ -2,7 +2,7 @@ using Bogus;
 
 using DrifterApps.Seeds.Testing;
 
-using Holefeeder.Ui.Common.Models;
+using Holefeeder.Ui.Shared.Models;
 
 namespace Holefeeder.UnitTests.Ui.Common.Builders;
 

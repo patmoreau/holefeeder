@@ -23,9 +23,9 @@
         <PackageReference Include="Dapper.Transaction" />
         <PackageReference Include="dbup-core" />
         <PackageReference Include="dbup-postgresql" />
+        <PackageReference Include="Hangfire" />
         <PackageReference Include="Hangfire.AspNetCore" />
         <PackageReference Include="Hangfire.PostgreSql" />
-        <PackageReference Include="Humanizer.Core" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />

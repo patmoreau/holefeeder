@@ -1,4 +1,6 @@
-﻿namespace Holefeeder.Ui;
+﻿using Holefeeder.Ui.Shared;
+
+namespace Holefeeder.Ui;
 
 public partial class MainPage : ContentPage
 {
@@ -9,7 +11,7 @@ public partial class MainPage : ContentPage
 
     public static void NavigateToPurchase()
     {
-        var mainComponent = Components.Main.Instance;
+        var mainComponent = Routes.Instance;
         mainComponent?.NavigateToPurchase();
     }
 }
