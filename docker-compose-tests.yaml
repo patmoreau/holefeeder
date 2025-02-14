@@ -1,6 +1,6 @@
 services:
   postgres-data-test:
-    image: postgres:17.2
+    image: postgres:17.3
     container_name: postgres-data-test
 
   api-functional-tests:
