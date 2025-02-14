@@ -40,7 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Holefeeder.Ui.Common\Holefeeder.Ui.Common.csproj" />
+        <ProjectReference Include="..\..\src\Holefeeder.Ui.Shared\Holefeeder.Ui.Shared.csproj" />
     </ItemGroup>
 
 </Project>

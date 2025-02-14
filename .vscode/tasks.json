@@ -89,6 +89,19 @@
                 "--build"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Clean Solution",
+            "type": "shell",
+            "command": "for d in bin obj; do find . -type d -name \"$d\" -print0 | xargs -0 rm -rf; done",
+            "group": "build",
+            "detail": "Deletes all 'bin' and 'obj' folders in the workspace.",
+            "problemMatcher": [],
+            "presentation": {
+                "panel": "dedicated",
+                "revealProblems": "never",
+                "clear": true
+            }
         }
     ]
 }

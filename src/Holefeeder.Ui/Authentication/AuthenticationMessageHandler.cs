@@ -1,6 +1,6 @@
 using Auth0.OidcClient;
 
-using Holefeeder.Ui.Common.Authentication;
+using Holefeeder.Ui.Shared.Authentication;
 
 namespace Holefeeder.Ui.Authentication;
 

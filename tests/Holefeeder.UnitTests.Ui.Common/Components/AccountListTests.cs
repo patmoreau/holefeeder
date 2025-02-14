@@ -3,9 +3,9 @@ using Bogus;
 using DrifterApps.Seeds.Testing;
 using DrifterApps.Seeds.Testing.Attributes;
 
-using Holefeeder.Ui.Common.Components;
-using Holefeeder.Ui.Common.Models;
-using Holefeeder.Ui.Common.Services;
+using Holefeeder.Ui.Shared.Components;
+using Holefeeder.Ui.Shared.Models;
+using Holefeeder.Ui.Shared.Services;
 using Holefeeder.UnitTests.Ui.Common.Builders;
 
 using Microsoft.AspNetCore.Components;
