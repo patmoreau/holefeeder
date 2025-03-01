@@ -65,15 +65,15 @@
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.40" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="MudBlazor" Version="8.3.0" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.0.18" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.0.20" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="7.3.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.6.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
