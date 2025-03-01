@@ -90,8 +90,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(chart.js@4.4.8)
       core-js:
-        specifier: 3.40.0
-        version: 3.40.0
+        specifier: 3.41.0
+        version: 3.41.0
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
@@ -3095,8 +3095,8 @@ packages:
   core-js-compat@3.38.1:
     resolution: {integrity: sha512-JRH6gfXxGmrzF3tZ57lFx97YARxCXPaMzPo6jELZhv88pBH5VXpQ+y0znKGlFnzuaihqhLbefxSJxWJMPtfDzw==}
 
-  core-js@3.40.0:
-    resolution: {integrity: sha512-7vsMc/Lty6AGnn7uFpYT56QesI5D2Y/UkgKounk87OP9Z2H9Z8kj6jzcSGAxFmUtDOS0ntK6lbQz+Nsa0Jj6mQ==}
+  core-js@3.41.0:
+    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
 
   core-util-is@1.0.2:
     resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
@@ -10602,7 +10602,7 @@ snapshots:
     dependencies:
       browserslist: 4.23.3
 
-  core-js@3.40.0: {}
+  core-js@3.41.0: {}
 
   core-util-is@1.0.2:
     optional: true
