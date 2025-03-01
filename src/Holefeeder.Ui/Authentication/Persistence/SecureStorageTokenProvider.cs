@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json;
 
-using Holefeeder.Ui.Common.Authentication;
+using Holefeeder.Ui.Shared.Authentication;
 
 namespace Holefeeder.Ui.Authentication.Persistence;
 

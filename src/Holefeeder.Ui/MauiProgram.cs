@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
 
 using Auth0.OidcClient;
 
@@ -6,13 +6,16 @@ using CommunityToolkit.Maui;
 
 using Holefeeder.Ui.Authentication;
 using Holefeeder.Ui.Authentication.Persistence;
-using Holefeeder.Ui.Common.Authentication;
-using Holefeeder.Ui.Common.Extensions;
+using Holefeeder.Ui.Services;
+using Holefeeder.Ui.Shared.Authentication;
+using Holefeeder.Ui.Shared.Extensions;
+using Holefeeder.Ui.Shared.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Logging;
 
 using MudBlazor.Services;
 
@@ -25,101 +28,115 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .ConfigureLifecycleEvents(events =>
-                {
-#if IOS || MACCATALYST
-                    events.AddiOS(ios => ios
-                        .OnActivated((app) => LogEvent(nameof(iOSLifecycle.OnActivated)))
-                        .OnResignActivation((app) => LogEvent(nameof(iOSLifecycle.OnResignActivation)))
-                        .DidEnterBackground((app) => LogEvent(nameof(iOSLifecycle.DidEnterBackground)))
-                        .WillTerminate((app) => LogEvent(nameof(iOSLifecycle.WillTerminate))));
-#endif
-                    static void LogEvent(string eventName, string? type = null)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Lifecycle event: {eventName}{(type == null ? string.Empty : $" ({type})")}");
-                    }
-                })
-
             .UseMauiCommunityToolkit()
             .ConfigureEssentials()
-            .BuildConfiguration()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            .AddConfiguration();
+
+        // Add device-specific services used by the Holefeeder.Ui.Shared project
+        builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
         builder.Services.AddMauiBlazorWebView();
 
-#if DEBUG || STAGING
+#if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
+        IdentityModelEventSource.ShowPII = true;
 #endif
+
         builder.Services.AddMudServices();
 
-        var auth0Config = builder.Configuration.GetSection("Auth0").Get<Auth0Config>() ??
-                          throw new InvalidOperationException("Auth0 configuration is missing");
-        var downStreamApiConfig = builder.Configuration.GetSection("DownstreamApi").Get<DownStreamApiConfig>() ??
-                                  throw new InvalidOperationException("DownstreamApi configuration is missing");
-        builder.Services.AddSingleton(auth0Config);
-        builder.Services.AddSingleton(downStreamApiConfig);
+        builder.Services.AddServices();
 
-        builder.Services.AddSingleton(new Auth0Client(new Auth0ClientOptions()
-        {
-            Domain = auth0Config.Domain,
-            ClientId = auth0Config.ClientId,
-            Scope = downStreamApiConfig.Scopes,
-            RedirectUri = "myapp://callback",
-            PostLogoutRedirectUri = "myapp://callback",
-        }));
-        builder.Services.AddAuthorizationCore();
-        builder.Services.AddScoped<AuthenticationMessageHandler>();
-        builder.Services.AddScoped<Auth0AuthenticationStateProvider>();
-        builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<Auth0AuthenticationStateProvider>());
-        builder.Services.AddScoped<IAuthNavigationManager>(serviceProvider => serviceProvider.GetRequiredService<Auth0AuthenticationStateProvider>());
-        builder.Services.AddScoped<ITokenProvider, SecureStorageTokenProvider>();
-        builder.Services.AddTokenService();
-        builder.Services.AddRefitClients(provider => provider.GetRequiredService<AuthenticationMessageHandler>());
+        // *** KEY CHANGE: Set the culture here ***
+        CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = GetCurrentCulture();
 
         return builder.Build();
     }
 
-    private static MauiAppBuilder BuildConfiguration(this MauiAppBuilder builder)
+    private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder)
     {
-        // Load environment-specific configuration
-        var environment = GetEnvironment();
-
-        // Get the executing assembly to access the embedded resources
-        var assembly = Assembly.GetExecutingAssembly();
-
-        using var streamBaseFile =
-            assembly.GetManifestResourceStream("Holefeeder.Ui.appsettings.json") ??
-            throw new InvalidOperationException("Could not find appsettings.json");
-        using var streamEnvFile =
-            assembly.GetManifestResourceStream($"Holefeeder.Ui.appsettings.{environment}.json") ??
-            throw new InvalidOperationException($"Could not find appsettings.{environment}.json");
-
         var configuration = new ConfigurationBuilder()
-            .AddJsonStream(streamBaseFile)
-            .AddJsonStream(streamEnvFile)
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Auth0:Domain"] = Configuration.Auth0.Domain,
+                ["Auth0:Audience"] = Configuration.Auth0.Audience,
+                ["Auth0:Authority"] = Configuration.Auth0.Authority,
+                ["Auth0:ClientId"] = Configuration.Auth0.ClientId,
+                ["DownstreamApi:BaseUrl"] = Configuration.DownstreamApi.BaseUrl,
+                ["DownstreamApi:Scopes"] = Configuration.DownstreamApi.Scopes,
+                ["Environment"] = Configuration.Environment
+            })
             .Build();
 
         builder.Configuration.AddConfiguration(configuration);
 
+        builder.Services.Configure<Auth0Options>(configuration.GetSection(Auth0Options.Section));
+        builder.Services.Configure<DownStreamApiOptions>(configuration.GetSection(DownStreamApiOptions.Section));
+
         return builder;
     }
 
-#pragma warning disable S3400 // Methods should not return constants
-    private static string GetEnvironment()
+    private static IServiceCollection AddServices(this IServiceCollection services)
     {
-#if DEBUG
-        const string env = "Development";
-#elif STAGING
-        const string env = "Staging";
-#else
-        const string env = "Production";
-#endif
-        return env;
+        services.AddSingleton(serviceProvider =>
+        {
+            var auth0Config = serviceProvider.GetRequiredService<IOptions<Auth0Options>>().Value;
+            var downStreamApiConfig = serviceProvider.GetRequiredService<IOptions<DownStreamApiOptions>>().Value;
+            return new Auth0ClientOptions
+            {
+                Domain = auth0Config.Domain,
+                ClientId = auth0Config.ClientId,
+                Scope = downStreamApiConfig.Scopes,
+                RedirectUri = "myapp://callback",
+                PostLogoutRedirectUri = "myapp://callback",
+            };
+        });
+        services.AddSingleton(serviceProvider =>
+        {
+            var auth0ClientOptions = serviceProvider.GetRequiredService<Auth0ClientOptions>();
+            return new Auth0Client(auth0ClientOptions);
+        });
+        services.AddAuthorizationCore();
+        services.AddSingleton<AuthenticationMessageHandler>();
+        services.AddSingleton<Auth0AuthenticationStateProvider>();
+        services.AddSingleton<AuthenticationStateProvider>(provider =>
+            provider.GetRequiredService<Auth0AuthenticationStateProvider>());
+        services.AddSingleton<IAuthNavigationManager>(provider =>
+            provider.GetRequiredService<Auth0AuthenticationStateProvider>());
+        services.AddSingleton<ITokenProvider, SecureStorageTokenProvider>();
+        services.AddTokenService();
+        services.AddSingleton<IFormFactor, FormFactor>();
+
+        services.AddRefitClients(builder => builder
+            .AddHttpMessageHandler(provider => provider.GetRequiredService<AuthenticationMessageHandler>())
+            .ConfigurePrimaryHttpMessageHandler(() => new NSUrlSessionHandler()));
+
+        return services;
     }
-#pragma warning restore S3400 // Methods should not return constants
+
+    private static CultureInfo GetCurrentCulture()
+    {
+        // Platform-specific code to get the device culture
+        if (DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            // iOS
+            var iosLocale = Foundation.NSLocale.CurrentLocale;
+            return new CultureInfo(iosLocale.Identifier);
+        }
+
+        if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+        {
+            // Mac Catalyst
+            var macLocale = Foundation.NSLocale.CurrentLocale; // Same as iOS!
+            return new CultureInfo(macLocale.Identifier);
+        }
+
+        // Default fallback
+        return CultureInfo.CurrentCulture;
+    }
 }

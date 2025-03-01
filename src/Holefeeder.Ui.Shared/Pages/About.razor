@@ -1,0 +1,16 @@
+@page "/about"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject IFormFactor FormFactor
+
+<MudText Typo="Typo.h3" GutterBottom="true">Holefeeder</MudText>
+
+<MudText Class="mb-8">Environment: @Environment</MudText>
+<MudText Class="mb-8">Factor: @Factor</MudText>
+<MudText Class="mb-8">Platform: @Platform</MudText>
+
+@code {
+    private string Environment => Configuration["Environment"]!;
+    private string Factor => FormFactor.GetFormFactor();
+    private string Platform => FormFactor.GetPlatform();
+}

@@ -4,13 +4,8 @@
         <TargetFramework>net9.0</TargetFramework>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-        <Configurations>Debug;Release;Staging</Configurations>
+        <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
-        <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
-        <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Holefeeder.Ui.Common\Holefeeder.Ui.Common.csproj" />
+        <ProjectReference Include="..\Holefeeder.Ui.Shared\Holefeeder.Ui.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

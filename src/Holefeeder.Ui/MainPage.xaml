@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Holefeeder.Ui"
-             xmlns:components="clr-namespace:Holefeeder.Ui.Components"
+             xmlns:shared="clr-namespace:Holefeeder.Ui.Shared;assembly=Holefeeder.Ui.Shared"
              x:Class="Holefeeder.Ui.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <BlazorWebView x:Name="BlazorWebView" HostPage="wwwroot/index.html">
+    <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
-            <RootComponent Selector="#app" ComponentType="{x:Type components:Main}" />
+            <RootComponent Selector="#app" ComponentType="{x:Type shared:Routes}" />
         </BlazorWebView.RootComponents>
     </BlazorWebView>
 

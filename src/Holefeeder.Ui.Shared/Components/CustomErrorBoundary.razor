@@ -1,0 +1,14 @@
+@inherits ErrorBoundary
+
+@if (CurrentException is not null)
+{
+    <div class="error-container">
+        <h2>Oops! Something went wrong.</h2>
+        <p>We encountered an unexpected error. Please try again later.</p>
+        <button @onclick="Recover">Try Again</button>
+    </div>
+}
+else
+{
+    @ChildContent
+}

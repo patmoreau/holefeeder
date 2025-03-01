@@ -13,7 +13,7 @@ COPY Directory.Packages.props .
 COPY nuget.config .
 COPY src/Directory.Build.props src/
 
-COPY src/Holefeeder.Ui.Common/*.csproj src/Holefeeder.Ui.Common/
+COPY src/Holefeeder.Ui.Shared/*.csproj src/Holefeeder.Ui.Shared/
 COPY src/Holefeeder.Ui.Web/*.csproj src/Holefeeder.Ui.Web/
 
 RUN dotnet restore src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
@@ -25,7 +25,7 @@ FROM restore AS build
 ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /source
-COPY src/Holefeeder.Ui.Common/. src/Holefeeder.Ui.Common/.
+COPY src/Holefeeder.Ui.Shared/. src/Holefeeder.Ui.Shared/.
 COPY src/Holefeeder.Ui.Web/. src/Holefeeder.Ui.Web/.
 WORKDIR /source/src/Holefeeder.Ui.Web
 

@@ -1,4 +1,4 @@
-using Holefeeder.Ui.Common.Authentication;
+using Holefeeder.Ui.Shared.Authentication;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
