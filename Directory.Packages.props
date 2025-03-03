@@ -19,7 +19,7 @@
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.1.66" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
     <PackageVersion Include="dbup-core" Version="6.0.4" />
-    <PackageVersion Include="dbup-postgresql" Version="6.0.0-beta.44" />
+    <PackageVersion Include="dbup-postgresql" Version="6.0.3" />
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.131" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.131" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.131" />
