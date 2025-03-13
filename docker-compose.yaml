@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   whoami:
-    image: traefik/whoami:v1.10
+    image: traefik/whoami:v1.11
     container_name: whoami
     restart: unless-stopped
     security_opt:
