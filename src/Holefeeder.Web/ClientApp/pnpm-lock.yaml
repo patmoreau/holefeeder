@@ -181,8 +181,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2(eslint@9.23.0(jiti@1.21.6))(typescript@5.4.5)
       eslint-plugin-prettier:
-        specifier: 5.2.3
-        version: 5.2.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.23.0(jiti@1.21.6)))(eslint@9.23.0(jiti@1.21.6))(prettier@3.5.3)
+        specifier: 5.2.4
+        version: 5.2.4(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.23.0(jiti@1.21.6)))(eslint@9.23.0(jiti@1.21.6))(prettier@3.5.3)
       eslint-plugin-react-hooks:
         specifier: 5.2.0
         version: 5.2.0(eslint@9.23.0(jiti@1.21.6))
@@ -1942,6 +1942,10 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
+  '@pkgr/core@0.2.0':
+    resolution: {integrity: sha512-vsJDAkYR6qCPu+ioGScGiMYR7LvZYIXh/dlQeviqoTWNCVfKTLYD/LkNWH4Mxsv2a5vpIRc77FN5DnmK1eBggQ==}
+    engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
@@ -3684,8 +3688,8 @@ packages:
     peerDependencies:
       eslint: '>=9.17.0'
 
-  eslint-plugin-prettier@5.2.3:
-    resolution: {integrity: sha512-qJ+y0FfCp/mQYQ/vWQ3s7eUlFEL4PyKfAJxsnYTJ4YT73nsJBWqmEpFryxV9OeUiqmsTsYJ5Y+KDNaeP31wrRw==}
+  eslint-plugin-prettier@5.2.4:
+    resolution: {integrity: sha512-SFtuYmnhwYCtuCDTKPoK+CEzCnEgKTU2qTLwoCxvrC0MFBTIXo1i6hDYOI4cwHaE5GZtlWmTN3YfucYi7KJwPw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       '@types/eslint': '>=8.0.0'
@@ -6666,6 +6670,10 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
+  synckit@0.10.2:
+    resolution: {integrity: sha512-cSGiaCPhFzeFIQY8KKEacv46LclENY4d60jgkwCrKomvRkIjtMyss1dPkHLp/62c1leuOjEedB1+lWcwqTJSvA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+
   synckit@0.9.1:
     resolution: {integrity: sha512-7gr8p9TQP6RAHusBOSLs46F4564ZrjV8xFmw5zCmgmhGUcw2hxsShhJ6CEiHQMgPDwAQ1fWHPM0ypc4RMAig4A==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -9393,6 +9401,8 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
+  '@pkgr/core@0.2.0': {}
+
   '@popperjs/core@2.11.8': {}
 
   '@rollup/rollup-android-arm-eabi@4.22.4':
@@ -11405,12 +11415,12 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-prettier@5.2.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.23.0(jiti@1.21.6)))(eslint@9.23.0(jiti@1.21.6))(prettier@3.5.3):
+  eslint-plugin-prettier@5.2.4(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.23.0(jiti@1.21.6)))(eslint@9.23.0(jiti@1.21.6))(prettier@3.5.3):
     dependencies:
       eslint: 9.23.0(jiti@1.21.6)
       prettier: 3.5.3
       prettier-linter-helpers: 1.0.0
-      synckit: 0.9.1
+      synckit: 0.10.2
     optionalDependencies:
       '@types/eslint': 8.56.10
       eslint-config-prettier: 9.1.0(eslint@9.23.0(jiti@1.21.6))
@@ -15034,6 +15044,11 @@ snapshots:
   symbol-observable@4.0.0: {}
 
   symbol-tree@3.2.4: {}
+
+  synckit@0.10.2:
+    dependencies:
+      '@pkgr/core': 0.2.0
+      tslib: 2.8.1
 
   synckit@0.9.1:
     dependencies:
