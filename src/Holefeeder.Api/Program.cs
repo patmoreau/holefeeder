@@ -62,7 +62,7 @@ builder.Services
         return options;
     });
 
-// builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
+builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new StronglyTypedIdJsonConverterFactory());
@@ -82,8 +82,9 @@ if (!app.Environment.IsDevelopment())
 else
 {
     IdentityModelEventSource.ShowPII = true;
+    var prefix = app.Configuration.GetValue<string>("Proxy:Prefix");
     app.MapOpenApi();
-    app.MapScalarApiReference(options =>
+    app.MapScalarApiReference(endpointPrefix: prefix ?? "/gateway", options =>
     {
         options.Servers = [];
         options.Authentication = new() {PreferredSecurityScheme = IdentityConstants.BearerScheme};

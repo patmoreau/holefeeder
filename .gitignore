@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # environment file
-.env
+.env*
+!.env.template
 
 # User-specific files
 *.rsuser
@@ -368,7 +369,6 @@ tags.json
 **/.DS_Store
 linter-report/
 .certs/
-.env
 src/Web/Holefeeder.Web/ClientApp/eslint-report.md
 **/.meteor/generated/*.json
 coverage/*

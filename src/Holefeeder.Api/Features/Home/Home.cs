@@ -10,8 +10,7 @@ namespace Holefeeder.Api.Features.Home;
 [SuppressMessage("Maintainability", "CA1515:Consider making public types internal")]
 public class Home : ICarterModule
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("/", async (HttpContext context, IHostEnvironment environment, IConfiguration configuration) =>
         {
             var proxyPrefix = configuration[Constants.ProxyPrefix];
@@ -31,7 +30,7 @@ public class Home : ICarterModule
                                                  <div class="container my-5">
                                                    <h1>{environment.ApplicationName}</h1>
                                                    <p>Environment: {environment.EnvironmentName}</p>
-                                                   <p><a href='{proxyPrefix}/swagger'>Swagger</a></p>
+                                                   <p><a href='{proxyPrefix}/scalar'>Scalar</a></p>
                                                    <p><a href='{proxyPrefix}/hangfire'>Hangfire Dashboard</a></p>
                                                    <p><a href='{proxyPrefix}/hc-ui'>Health Checks</a></p>
                                                  </div>
@@ -39,5 +38,4 @@ public class Home : ICarterModule
                                                </html>
                                                """);
         });
-    }
 }

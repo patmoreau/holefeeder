@@ -10,10 +10,7 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="9.0.0" />
-    <PackageVersion Include="Auth0.OidcClient.Core" Version="4.0.1" />
-    <PackageVersion Include="Auth0.OidcClient.MAUI" Version="1.1.0" />
     <PackageVersion Include="Carter" Version="9.0.0" />
-    <PackageVersion Include="CommunityToolkit.Maui" Version="11.1.0" />
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.1.66" />
@@ -34,10 +31,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.50" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.3" />
@@ -61,14 +54,11 @@
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.7.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.7.0" />
     <PackageVersion Include="Microsoft.JSInterop" Version="8.0.14" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.50" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.50" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageVersion Include="MudBlazor" Version="8.3.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.0.34" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.1.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
