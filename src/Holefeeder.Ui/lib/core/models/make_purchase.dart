@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 
 class MakePurchase {
   final DateTime date;
@@ -30,8 +31,8 @@ class MakePurchase {
 
   Map<String, dynamic> toJson() {
     return {
-      'date': date.toIso8601String(),
-      'amount': amount.toString(),
+      'date': DateFormat('yyyy-MM-dd').format(date),
+      'amount': double.parse(amount.toString()),
       'description': description,
       'accountId': accountId,
       'categoryId': categoryId,

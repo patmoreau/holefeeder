@@ -6,13 +6,14 @@ import 'package:holefeeder/core/constants/strings.dart';
 import 'package:holefeeder/core/enums/authentication_status_enum.dart';
 import 'package:holefeeder/core/providers/accounts_provider.dart';
 import 'package:holefeeder/core/providers/categories_provider.dart';
+import 'package:holefeeder/core/providers/tags_provider.dart';
 import 'package:holefeeder/core/providers/transactions_provider.dart';
 import 'package:holefeeder/core/utils/authentication_client.dart';
 import 'package:holefeeder/core/utils/rest_client.dart';
-import 'package:holefeeder/core/view_models/screens/categories_view_model.dart';
 import 'package:holefeeder/router.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 import 'holefeeder_app.dart';
 
@@ -53,18 +54,17 @@ Future<void> main() async {
                 restClient: Provider.of<RestClient>(context, listen: false),
               ),
         ),
+        Provider<TagsProvider>(
+          create:
+              (BuildContext context) => TagsProvider(
+                restClient: Provider.of<RestClient>(context, listen: false),
+              ),
+        ),
         Provider<TransactionsProvider>(
           create:
               (BuildContext context) => TransactionsProvider(
                 restClient: Provider.of<RestClient>(context, listen: false),
               ),
-        ),
-        ChangeNotifierProvider<CategoriesViewModel>(
-          create: (BuildContext context) {
-            return CategoriesViewModel(
-              Provider.of<CategoriesProvider>(context, listen: false),
-            );
-          },
         ),
       ],
       child: HolefeederApp(),
@@ -78,7 +78,9 @@ Future<void> main() async {
 }
 
 AuthenticationClient _createAuthenticationService() =>
-    kIsWeb ? WebAuthenticationProvider() : MobileAuthenticationProvider();
+    UniversalPlatform.isWeb
+        ? WebAuthenticationProvider()
+        : MobileAuthenticationProvider();
 
 Dio _createDio(BuildContext context) {
   final dio = Dio();

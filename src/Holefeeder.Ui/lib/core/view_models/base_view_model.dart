@@ -8,7 +8,10 @@ class BaseViewModel extends ChangeNotifier {
 
   late AuthenticationClient authenticationProvider;
 
-  BaseViewModel({required this.context}) {
-    authenticationProvider = Provider.of<AuthenticationClient>(context);
-  }
+  BaseViewModel({
+    required this.context,
+    AuthenticationClient? authenticationProvider,
+  }) : authenticationProvider =
+           authenticationProvider ??
+           Provider.of<AuthenticationClient>(context, listen: false);
 }

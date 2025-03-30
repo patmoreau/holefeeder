@@ -39,7 +39,7 @@ abstract class AuthenticationClient {
   void setError(String message) {
     debugPrint('AuthService error: $message');
     _errorMessage = message;
-    setStatus(AuthenticationStatus.unauthenticated);
+    setStatus(AuthenticationStatus.error);
   }
 
   @protected

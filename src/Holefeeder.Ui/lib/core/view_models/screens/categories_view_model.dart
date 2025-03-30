@@ -1,19 +1,23 @@
-import 'package:flutter/foundation.dart';
-import 'package:holefeeder/core/models/category.dart' as category;
+import 'package:holefeeder/core/models/category.dart';
 import 'package:holefeeder/core/providers/categories_provider.dart';
+import 'package:holefeeder/core/view_models/base_view_model.dart';
+import 'package:provider/provider.dart';
 
-class CategoriesViewModel extends ChangeNotifier {
-  final CategoriesProvider categoriesService;
-  late Future<List<category.Category>> _categoriesFuture;
+class CategoriesViewModel extends BaseViewModel {
+  late CategoriesProvider _categoriesProvider;
 
-  Future<List<category.Category>> get categoriesFuture => _categoriesFuture;
+  late Future<List<Category>> _categoriesFuture;
 
-  CategoriesViewModel(this.categoriesService);
+  Future<List<Category>> get categoriesFuture => _categoriesFuture;
 
-  Future<void> loadInitialCategories() => _categoriesFuture = categoriesService.getCategories();
+  CategoriesViewModel({required super.context}) {
+    _categoriesProvider = Provider.of<CategoriesProvider>(context);
+
+    _categoriesFuture = _categoriesProvider.getCategories();
+  }
 
   Future<void> refreshCategories() async {
-    _categoriesFuture = categoriesService.getCategories();
+    _categoriesFuture = _categoriesProvider.getCategories();
     notifyListeners();
     await _categoriesFuture;
   }

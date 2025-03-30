@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:holefeeder/core/utils/authentication_client.dart';
-import 'package:holefeeder/ui/screens/home_page.dart';
+import 'package:holefeeder/ui/screens/home_screen.dart';
 import 'package:holefeeder/ui/screens/login_screen.dart';
 import 'package:holefeeder/ui/screens/purchase_screen.dart';
 import 'package:provider/provider.dart';
@@ -34,20 +34,20 @@ final GoRouter router = GoRouter(
 
         return null;
       },
-      builder: (context, state) => HomePage(initialIndex: 0),
+      builder: (context, state) => HomeScreen(initialIndex: 0),
     ),
     GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
     GoRoute(
       path: '/dashboard',
-      builder: (context, state) => HomePage(initialIndex: 0),
+      builder: (context, state) => HomeScreen(initialIndex: 0),
     ),
     GoRoute(
       path: '/cashflow',
-      builder: (context, state) => HomePage(initialIndex: 1),
+      builder: (context, state) => HomeScreen(initialIndex: 1),
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => HomePage(initialIndex: 2),
+      builder: (context, state) => HomeScreen(initialIndex: 2),
     ),
     GoRoute(path: '/purchase', builder: (context, state) => PurchaseScreen()),
   ],

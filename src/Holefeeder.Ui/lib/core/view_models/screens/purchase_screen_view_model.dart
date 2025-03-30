@@ -4,70 +4,152 @@ import 'package:holefeeder/core/models/category.dart';
 import 'package:holefeeder/core/models/make_purchase.dart';
 import 'package:holefeeder/core/providers/accounts_provider.dart';
 import 'package:holefeeder/core/providers/categories_provider.dart';
+import 'package:holefeeder/core/providers/tags_provider.dart';
 import 'package:holefeeder/core/providers/transactions_provider.dart';
+import 'package:holefeeder/core/view_models/base_form_state.dart';
 import 'package:provider/provider.dart';
 
 import '../base_view_model.dart';
 
+class PurchaseFormState extends BaseFormState {
+  final Decimal amount;
+  final DateTime date;
+  final String note;
+  final Account? selectedAccount;
+  final Category? selectedCategory;
+  final List<String> tags;
+
+  PurchaseFormState({
+    Decimal? amount,
+    DateTime? date,
+    this.note = '',
+    this.selectedAccount,
+    this.selectedCategory,
+    this.tags = const [],
+    super.state = ViewFormState.initial,
+    super.errorMessage,
+  }) : date = date ?? DateTime.now(),
+       amount = amount ?? Decimal.zero;
+
+  PurchaseFormState copyWith({
+    Decimal? amount,
+    DateTime? date,
+    String? note,
+    Account? selectedAccount,
+    Category? selectedCategory,
+    List<String>? tags,
+    ViewFormState? state,
+    String? errorMessage,
+  }) {
+    return PurchaseFormState(
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      note: note ?? this.note,
+      selectedAccount: selectedAccount ?? this.selectedAccount,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      tags: tags ?? this.tags,
+      state: state ?? this.state,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
 class PurchaseViewModel extends BaseViewModel {
-  late AccountsProvider accountsProvider;
-  late CategoriesProvider categoriesProvider;
-  late TransactionsProvider transactionsProvider;
+  final AccountsProvider _accountsProvider;
+  final CategoriesProvider _categoriesProvider;
+  final TagsProvider _tagsProvider;
+  final TransactionsProvider _transactionsProvider;
 
-  late Future<List<Account>> _accountsFuture;
-  late Future<List<Category>> _categoriesFuture;
-  DateTime _date = DateTime.now();
-  double _amount = 0.0;
-  String _description = '';
-  String _accountId = '';
-  String _categoryId = '';
+  PurchaseFormState _formState = PurchaseFormState();
+  PurchaseFormState get formState => _formState;
+
+  List<Account> _accounts = [];
+  List<Account> get accounts => _accounts;
+  List<Category> _categories = [];
+  List<Category> get categories => _categories;
   List<String> _tags = [];
+  List<String> get tags => _tags;
 
-  Future<List<Account>> get accountsFuture => _accountsFuture;
-  Future<List<Category>> get categoriesFuture => _categoriesFuture;
-
-  double get amount => _amount;
-
-  PurchaseViewModel({required super.context}) {
-    accountsProvider = Provider.of<AccountsProvider>(context);
-    categoriesProvider = Provider.of<CategoriesProvider>(context);
-    transactionsProvider = Provider.of<TransactionsProvider>(context);
-
-    _categoriesFuture = categoriesProvider.getCategories();
+  PurchaseViewModel({
+    required super.context,
+    AccountsProvider? accountsProvider,
+    CategoriesProvider? categoriesProvider,
+    TagsProvider? tagsProvider,
+    TransactionsProvider? transactionsProvider,
+  }) : _accountsProvider =
+           accountsProvider ??
+           Provider.of<AccountsProvider>(context, listen: false),
+       _categoriesProvider =
+           categoriesProvider ??
+           Provider.of<CategoriesProvider>(context, listen: false),
+       _tagsProvider =
+           tagsProvider ?? Provider.of<TagsProvider>(context, listen: false),
+       _transactionsProvider =
+           transactionsProvider ??
+           Provider.of<TransactionsProvider>(context, listen: false) {
+    loadInitialData();
   }
 
-  Future<void> refreshCategories() async {
-    notifyListeners();
-    _categoriesFuture = categoriesProvider.getCategories();
-    notifyListeners();
-    await _categoriesFuture;
+  Future<void> loadInitialData() async {
+    _updateState((s) => s.copyWith(state: ViewFormState.loading));
+
+    try {
+      _accounts = await _accountsProvider.getAccounts();
+      _categories = await _categoriesProvider.getCategories();
+      _tags = (await _tagsProvider.getTags()).map((t) => t.tag).toList();
+
+      _updateState(
+        (s) => s.copyWith(
+          state: ViewFormState.data,
+          selectedAccount: _accounts.firstOrNull,
+          selectedCategory: _categories.firstOrNull,
+        ),
+      );
+    } catch (e) {
+      _updateState(
+        (s) => s.copyWith(
+          state: ViewFormState.error,
+          errorMessage: "Failed to load data: $e",
+        ),
+      );
+    }
   }
 
-  void updateAmount(double value) {
-    _amount = value;
-    notifyListeners();
+  // Simplified update methods
+  void updateAmount(Decimal value) =>
+      _updateState((s) => s.copyWith(amount: value));
+  void updateDate(DateTime value) =>
+      _updateState((s) => s.copyWith(date: value));
+  void updateNote(String value) => _updateState((s) => s.copyWith(note: value));
+  void setSelectedAccount(Account? account) =>
+      _updateState((s) => s.copyWith(selectedAccount: account));
+  void setSelectedCategory(Category? category) =>
+      _updateState((s) => s.copyWith(selectedCategory: category));
+  void updateTags(List<String> tags) =>
+      _updateState((s) => s.copyWith(tags: tags));
+
+  bool validate() {
+    if (_formState.amount <= Decimal.zero) return false;
+    if (_formState.selectedAccount == null) return false;
+    if (_formState.selectedCategory == null) return false;
+    return true;
   }
 
   Future<void> makePurchase() async {
-    if (_amount <= 0) {
-      throw Exception('Amount must be greater than 0');
-    }
-    if (_accountId.isEmpty) {
-      throw Exception('Account must be selected');
-    }
-    if (_categoryId.isEmpty) {
-      throw Exception('Category must be selected');
-    }
-
-    await transactionsProvider.makePurchase(
+    await _transactionsProvider.makePurchase(
       MakePurchase(
-        amount: Decimal.parse(_amount.toString()),
-        description: _description,
-        accountId: _accountId,
-        categoryId: _categoryId,
-        tags: _tags,
-        date: _date,
+        amount: _formState.amount,
+        description: _formState.note,
+        accountId: _formState.selectedAccount!.id,
+        categoryId: _formState.selectedCategory!.id,
+        tags: _formState.tags.toList(),
+        date: _formState.date,
       ),
     );
+  }
+
+  void _updateState(PurchaseFormState Function(PurchaseFormState) update) {
+    _formState = update(_formState);
+    notifyListeners();
   }
 }

@@ -373,3 +373,4 @@ src/Web/Holefeeder.Web/ClientApp/eslint-report.md
 **/.meteor/generated/*.json
 coverage/*
 **/.meteor/
+**/build/reports/problems/problems-report.html
