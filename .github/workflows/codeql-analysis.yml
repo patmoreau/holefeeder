@@ -84,21 +84,6 @@ jobs:
       - name: Build Api
         run: dotnet build src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
 
-      # - name: Install .NET MAUI Workloads
-      #   run: dotnet workload install maui-android
-
-      # - name: Restore Ui.Maui dependencies
-      #   run: dotnet restore src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj -p:RuntimeIdentifier=android
-
-      # - name: Build Ui.Maui
-      #   run: dotnet build src/Holefeeder.Ui.Maui/Holefeeder.Ui.Maui.csproj --no-restore -p:RuntimeIdentifier=android
-
-      - name: Restore Ui.Web dependencies
-        run: dotnet restore src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj
-
-      - name: Build Ui.Web
-        run: dotnet build src/Holefeeder.Ui.Web/Holefeeder.Ui.Web.csproj --no-restore
-
       - name: Restore Web dependencies
         run: dotnet restore src/Holefeeder.Web/Holefeeder.Web.csproj
 
@@ -124,8 +109,26 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
+  analyze_flutter:
+    name: Analyze Flutter
+    runs-on: ubuntu-latest
+    needs: check_changes
+    if: needs.check_changes.outputs.code_was_changed == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Analyze Dart/Flutter Code
+        run: flutter analyze
+
   create_check:
-    needs: [check_changes, analyze]
+    needs: [check_changes, analyze, analyze_flutter]
     uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
     if: always() && needs.check_changes.result == 'success'
     with:
