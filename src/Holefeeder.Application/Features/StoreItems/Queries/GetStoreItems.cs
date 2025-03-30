@@ -59,7 +59,7 @@ public class GetStoreItems : ICarterModule
             var queryParams = QueryParams.Create(request);
             if (queryParams.IsFailure)
             {
-                return Result<QueryResult<Response>>.Failure(queryParams.Error);
+                return queryParams.Error;
             }
             var total = await context.StoreItems.Where(e => e.UserId == userContext.Id)
                 .CountAsync(cancellationToken);
@@ -69,7 +69,7 @@ public class GetStoreItems : ICarterModule
                 .Select(e => new Response(e.Id, e.Code, e.Data))
                 .ToListAsync(cancellationToken);
 
-            return Result<QueryResult<Response>>.Success(new QueryResult<Response>(total, items));
+            return new QueryResult<Response>(total, items);
         }
     }
 }

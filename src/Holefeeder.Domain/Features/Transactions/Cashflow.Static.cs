@@ -22,17 +22,15 @@ public partial record Cashflow
             .Ensure(CategoryIdValidation(categoryId))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Cashflow>.Success(
-                new Cashflow(CashflowId.New, effectiveDate, intervalType, accountId, categoryId, userId)
-                {
-                    Amount = amount,
-                    IntervalType = intervalType,
-                    Frequency = frequency,
-                    Recurrence = recurrence,
-                    Description = description,
-                }),
-            Result<Cashflow>.Failure);
+        return result.OnSuccess(
+            () => new Cashflow(CashflowId.New, effectiveDate, intervalType, accountId, categoryId, userId)
+            {
+                Amount = amount,
+                IntervalType = intervalType,
+                Frequency = frequency,
+                Recurrence = recurrence,
+                Description = description,
+            }.ToResult());
     }
 
     public static Result<Cashflow> Import(CashflowId id, DateOnly effectiveDate, DateIntervalType intervalType,
@@ -48,18 +46,16 @@ public partial record Cashflow
             .Ensure(CategoryIdValidation(categoryId))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Cashflow>.Success(
-                new Cashflow(id, effectiveDate, intervalType, accountId, categoryId, userId)
-                {
-                    Amount = amount,
-                    IntervalType = intervalType,
-                    Frequency = frequency,
-                    Recurrence = recurrence,
-                    Description = description,
-                    Inactive = inactive
-                }),
-            Result<Cashflow>.Failure);
+        return result.OnSuccess(
+            () => new Cashflow(id, effectiveDate, intervalType, accountId, categoryId, userId)
+            {
+                Amount = amount,
+                IntervalType = intervalType,
+                Frequency = frequency,
+                Recurrence = recurrence,
+                Description = description,
+                Inactive = inactive
+            }.ToResult());
     }
 
     private bool IsUnpaid(DateOnly effectiveDate, DateOnly nextDate) =>

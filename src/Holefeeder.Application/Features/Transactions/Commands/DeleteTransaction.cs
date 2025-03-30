@@ -49,12 +49,12 @@ public class DeleteTransaction : ICarterModule
                     x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (transaction is null)
             {
-                return Result<Nothing>.Failure(TransactionErrors.NotFound(request.Id));
+                return TransactionErrors.NotFound(request.Id);
             }
 
             context.Remove(transaction);
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 }

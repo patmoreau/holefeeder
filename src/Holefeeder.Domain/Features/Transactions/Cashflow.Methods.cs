@@ -10,15 +10,15 @@ namespace Holefeeder.Domain.Features.Transactions;
 public partial record Cashflow
 {
     public Result<Cashflow> Cancel() => Inactive
-        ? Result<Cashflow>.Failure(CashflowErrors.AlreadyInactive(Id))
-        : Result<Cashflow>.Success(this with {Inactive = true});
+        ? CashflowErrors.AlreadyInactive(Id)
+        : this with {Inactive = true};
 
     public Result<Cashflow> SetTags(params string[] tags)
     {
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().Select(x => x.ToLowerInvariant())
             .ToList();
         _tags = newTags.ToImmutableList();
-        return Result<Cashflow>.Success(this);
+        return this;
     }
 
     public IEnumerable<DateOnly> GetUpcoming(DateOnly to)
@@ -58,20 +58,18 @@ public partial record Cashflow
             .Ensure(AccountIdValidation(newAccountId))
             .Ensure(CategoryIdValidation(newCategoryId));
 
-        return result.Switch(
-            () => Result<Cashflow>.Success(
-                this with
-                {
-                    EffectiveDate = newEffectiveDate,
-                    IntervalType = newIntervalType,
-                    Frequency = newFrequency,
-                    Recurrence = newRecurrence,
-                    Amount = newAmount,
-                    Description = newDescription,
-                    CategoryId = newCategoryId,
-                    AccountId = newAccountId,
-                    Inactive = newInactive
-                }),
-            Result<Cashflow>.Failure);
+        return result.OnSuccess(
+            () => (this with
+            {
+                EffectiveDate = newEffectiveDate,
+                IntervalType = newIntervalType,
+                Frequency = newFrequency,
+                Recurrence = newRecurrence,
+                Amount = newAmount,
+                Description = newDescription,
+                CategoryId = newCategoryId,
+                AccountId = newAccountId,
+                Inactive = newInactive
+            }).ToResult());
     }
 }

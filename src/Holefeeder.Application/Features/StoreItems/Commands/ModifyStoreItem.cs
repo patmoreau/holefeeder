@@ -52,12 +52,12 @@ public class ModifyStoreItem : ICarterModule
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (storeItem is null)
             {
-                return Result<Nothing>.Failure(StoreItemErrors.NotFound(StoreItemId.Create(request.Id)));
+                return StoreItemErrors.NotFound(StoreItemId.Create(request.Id));
             }
 
             context.Update(storeItem with { Data = request.Data });
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 }

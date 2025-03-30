@@ -59,7 +59,7 @@ public class GetCashflows : ICarterModule
             var queryParams = QueryParams.Create(request);
             if (queryParams.IsFailure)
             {
-                return Result<QueryResult<CashflowInfoViewModel>>.Failure(queryParams.Error);
+                return queryParams.Error;
             }
 
             var total = await context.Cashflows.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
@@ -71,7 +71,7 @@ public class GetCashflows : ICarterModule
                 .Select(e => CashflowMapper.MapToDto(e))
                 .ToListAsync(cancellationToken);
 
-            return Result<QueryResult<CashflowInfoViewModel>>.Success(new QueryResult<CashflowInfoViewModel>(total, items));
+            return new QueryResult<CashflowInfoViewModel>(total, items);
         }
     }
 }

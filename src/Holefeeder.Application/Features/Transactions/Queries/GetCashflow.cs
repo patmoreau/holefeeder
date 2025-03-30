@@ -49,8 +49,8 @@ public class GetCashflow : ICarterModule
                 .Include(x => x.Account).Include(x => x.Category)
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             return result is null
-                ? Result<CashflowInfoViewModel>.Failure(CashflowErrors.NotFound(request.Id))
-                : Result<CashflowInfoViewModel>.Success(CashflowMapper.MapToDto(result));
+                ? CashflowErrors.NotFound(request.Id)
+                : CashflowMapper.MapToDto(result);
         }
     }
 }

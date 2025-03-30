@@ -80,26 +80,26 @@ public class MakePurchase : ICarterModule
             if (!await context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                Result<TransactionId>.Failure(TransactionErrors.AccountNotFound(request.AccountId));
+                TransactionErrors.AccountNotFound(request.AccountId);
             }
 
             if (!await context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result<TransactionId>.Failure(TransactionErrors.CategoryNotFound(request.CategoryId));
+                return TransactionErrors.CategoryNotFound(request.CategoryId);
             }
 
             var cashflowId = await HandleCashflow(request, cancellationToken);
             if (cashflowId.IsFailure)
             {
-                return Result<TransactionId>.Failure(cashflowId.Error);
+                return cashflowId.Error;
             }
 
             var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
                 request.AccountId, request.CategoryId, userContext.Id);
             if (transaction.IsFailure)
             {
-                return Result<TransactionId>.Failure(transaction.Error);
+                return transaction.Error;
             }
 
             if (cashflowId.Value is not null && cashflowId.Value != CashflowId.Empty)
@@ -107,26 +107,26 @@ public class MakePurchase : ICarterModule
                 transaction = transaction.Value.ApplyCashflow(cashflowId.Value, request.Date);
                 if (transaction.IsFailure)
                 {
-                    return Result<TransactionId>.Failure(transaction.Error);
+                    return transaction.Error;
                 }
             }
 
             transaction = transaction.Value.SetTags(request.Tags);
             if (transaction.IsFailure)
             {
-                return Result<TransactionId>.Failure(transaction.Error);
+                return transaction.Error;
             }
 
             await context.Transactions.AddAsync(transaction.Value, cancellationToken);
 
-            return Result<TransactionId>.Success(transaction.Value.Id);
+            return transaction.Value.Id;
         }
 
         private async Task<Result<CashflowId?>> HandleCashflow(Request request, CancellationToken cancellationToken)
         {
             if (request.Cashflow is null)
             {
-                return Result<CashflowId?>.Success(CashflowId.Empty);
+                return CashflowId.Empty;
             }
 
             var cashflowRequest = request.Cashflow;
@@ -136,18 +136,18 @@ public class MakePurchase : ICarterModule
 
             if (result.IsFailure)
             {
-                return Result<CashflowId?>.Failure(result.Error);
+                return result.Error;
             }
 
             var cashflow = result.Value.SetTags(request.Tags);
             if (cashflow.IsFailure)
             {
-                return Result<CashflowId?>.Failure(cashflow.Error);
+                return cashflow.Error;
             }
 
             await context.Cashflows.AddAsync(cashflow.Value, cancellationToken);
 
-            return Result<CashflowId?>.Success(cashflow.Value.Id);
+            return cashflow.Value.Id;
         }
     }
 }

@@ -58,7 +58,7 @@ public class GetAccounts : ICarterModule
             var queryParams = QueryParams.Create(request);
             if (queryParams.IsFailure)
             {
-                return Result<QueryResult<AccountViewModel>>.Failure(queryParams.Error);
+                return queryParams.Error;
             }
 
             var total = await context.Accounts.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
@@ -69,7 +69,7 @@ public class GetAccounts : ICarterModule
                 .Select(e => AccountMapper.MapToAccountViewModel(e))
                 .ToListAsync(cancellationToken);
 
-            return Result<QueryResult<AccountViewModel>>.Success(new QueryResult<AccountViewModel>(total, items));
+            return new QueryResult<AccountViewModel>(total, items);
         }
     }
 }

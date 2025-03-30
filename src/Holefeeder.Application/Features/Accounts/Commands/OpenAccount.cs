@@ -57,7 +57,7 @@ public class OpenAccount : ICarterModule
             if (await context.Accounts.AnyAsync(x => x.Name == request.Name && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result<AccountId>.Failure(AccountErrors.NameAlreadyExists(request.Name));
+                return AccountErrors.NameAlreadyExists(request.Name);
             }
 
             var result = Account.Create(request.Type, request.Name, request.OpenBalance, request.OpenDate,
@@ -65,12 +65,12 @@ public class OpenAccount : ICarterModule
 
             if (result.IsFailure)
             {
-                return Result<AccountId>.Failure(result.Error);
+                return result.Error;
             }
 
             await context.Accounts.AddAsync(result.Value, cancellationToken);
 
-            return Result<AccountId>.Success(result.Value.Id);
+            return result.Value.Id;
         }
     }
 }

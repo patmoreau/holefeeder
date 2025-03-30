@@ -41,17 +41,17 @@ public class FavoriteAccount : ICarterModule
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
-                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
+                return AccountErrors.NotFound(request.Id);
             }
 
             var result = account.Modify(favorite: request.IsFavorite);
             if (result.IsFailure)
             {
-                return Result<Nothing>.Failure(result.Error);
+                return result.Error;
             }
             context.Update(result.Value);
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 

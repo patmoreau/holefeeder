@@ -12,11 +12,10 @@ public sealed partial record StoreItem
             .Ensure(CodeValidation(code))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<StoreItem>.Success(new StoreItem(StoreItemId.New, code, userId)
+        return result.OnSuccess(
+            () => new StoreItem(StoreItemId.New, code, userId)
             {
                 Data = data
-            }),
-            Result<StoreItem>.Failure);
+            }.ToResult());
     }
 }

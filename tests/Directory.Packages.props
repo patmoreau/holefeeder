@@ -10,10 +10,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="0.1.21" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="0.1.14" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="0.1.14" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.131" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.0" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.0" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.0" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.135" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
@@ -38,7 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="xunit.categories" Version="2.0.8" />
+    <PackageVersion Include="xunit.categories" Version="3.0.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

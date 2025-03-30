@@ -10,12 +10,12 @@ public sealed partial record Account
     {
         if (Inactive)
         {
-            return Result<Account>.Failure(AccountErrors.AccountClosed);
+            return AccountErrors.AccountClosed;
         }
 
         return Cashflows.Count > 0
-            ? Result<Account>.Failure(AccountErrors.ActiveCashflows)
-            : Result<Account>.Success(this with {Inactive = true});
+            ? AccountErrors.ActiveCashflows
+            : this with {Inactive = true};
     }
 
     public Result<Account> Modify(AccountType? type = null, string? name = null, Money? openBalance = null,
@@ -33,8 +33,8 @@ public sealed partial record Account
             .Ensure(NameValidation(newName))
             .Ensure(OpenDateValidation(newOpenDate));
 
-        return result.Switch(
-            () => Result<Account>.Success(this with
+        return result.OnSuccess(
+            () => (this with
             {
                 Type = newType,
                 Name = newName,
@@ -43,7 +43,6 @@ public sealed partial record Account
                 Description = newDescription,
                 Favorite = newFavorite,
                 Inactive = newInactive
-            }),
-            Result<Account>.Failure);
+            }).ToResult());
     }
 }

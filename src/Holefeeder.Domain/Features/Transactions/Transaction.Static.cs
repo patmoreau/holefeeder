@@ -19,15 +19,14 @@ public partial record Transaction
             .Ensure(CategoryIdValidation(categoryId))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Transaction>.Success(new Transaction(id, date, amount, accountId, categoryId, userId)
+        return result.OnSuccess(
+            () => new Transaction(id, date, amount, accountId, categoryId, userId)
             {
                 Amount = amount,
                 Description = description,
                 CashflowId = cashflowId,
                 CashflowDate = cashflowDate
-            }),
-            Result<Transaction>.Failure);
+            }.ToResult());
     }
 
     public static Result<Transaction> Create(DateOnly date, Money amount, string description, AccountId accountId,
@@ -39,13 +38,12 @@ public partial record Transaction
             .Ensure(CategoryIdValidation(categoryId))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Transaction>.Success(new Transaction(TransactionId.New, date, amount, accountId, categoryId, userId)
+        return result.OnSuccess(
+            () => new Transaction(TransactionId.New, date, amount, accountId, categoryId, userId)
             {
                 Amount = amount,
                 UserId = userId,
                 Description = description
-            }),
-            Result<Transaction>.Failure);
+            }.ToResult());
     }
 }

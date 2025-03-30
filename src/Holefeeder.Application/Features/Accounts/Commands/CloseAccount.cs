@@ -41,17 +41,17 @@ public class CloseAccount : ICarterModule
                 .SingleOrDefaultAsync(e => e.Id == request.Id && e.UserId == userContext.Id, cancellationToken);
             if (account is null)
             {
-                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
+                return AccountErrors.NotFound(request.Id);
             }
 
             var closedAccount = account.Close();
             if (closedAccount.IsFailure)
             {
-                return Result<Nothing>.Failure(closedAccount.Error);
+                return closedAccount.Error;
             }
             context.Update(closedAccount.Value);
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 

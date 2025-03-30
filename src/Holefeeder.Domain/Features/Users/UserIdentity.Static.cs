@@ -9,15 +9,14 @@ public sealed partial record UserIdentity
         var result = ResultAggregate.Create()
             .Ensure(UserIdValidation(user.Id));
 
-        return result.Switch(
-            () => Result<UserIdentity>.Success(new UserIdentity(identityObjectId)
+        return result.OnSuccess(
+            () => new UserIdentity(identityObjectId)
             {
                 IdentityObjectId = identityObjectId,
                 Inactive = false,
                 User = user,
                 UserId = user.Id
-            }),
-            Result<UserIdentity>.Failure);
+            }.ToResult());
     }
 
     internal static UserIdentity UnsafeCreate(string identityObjectId, bool inactive, User user) =>

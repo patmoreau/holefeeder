@@ -15,13 +15,12 @@ public sealed partial record Account
             .Ensure(OpenDateValidation(openDate))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Account>.Success(new Account(AccountId.New, type, name, openDate, userId)
+        return result.OnSuccess(
+            () => new Account(AccountId.New, type, name, openDate, userId)
             {
                 OpenBalance = openBalance,
                 Description = description
-            }),
-            Result<Account>.Failure);
+            }.ToResult());
     }
 
     public static Result<Account> Import(AccountId id, AccountType type, string name, Money openBalance,
@@ -33,14 +32,13 @@ public sealed partial record Account
             .Ensure(OpenDateValidation(openDate))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Account>.Success(new Account(id, type, name, openDate, userId)
+        return result.OnSuccess(
+            () => new Account(id, type, name, openDate, userId)
             {
                 OpenBalance = openBalance,
                 Description = description,
                 Favorite = favorite,
                 Inactive = inactive
-            }),
-            Result<Account>.Failure);
+            }.ToResult());
     }
 }

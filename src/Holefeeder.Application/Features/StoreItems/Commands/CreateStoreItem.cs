@@ -52,19 +52,19 @@ public class CreateStoreItem : ICarterModule
         {
             if (await context.StoreItems.AnyAsync(e => e.Code == request.Code, cancellationToken))
             {
-                return Result<StoreItemId>.Failure(StoreItemErrors.CodeAlreadyExists(request.Code));
+                return StoreItemErrors.CodeAlreadyExists(request.Code);
             }
 
             var result = StoreItem.Create(request.Code, request.Data, userContext.Id);
 
             if (result.IsFailure)
             {
-                return Result<StoreItemId>.Failure(result.Error);
+                return result.Error;
             }
 
             await context.StoreItems.AddAsync(result.Value, cancellationToken);
 
-            return Result<StoreItemId>.Success(result.Value.Id);
+            return result.Value.Id;
         }
     }
 }

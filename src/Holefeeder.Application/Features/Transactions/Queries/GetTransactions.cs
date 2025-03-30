@@ -59,7 +59,7 @@ public class GetTransactions : ICarterModule
             var queryParams = QueryParams.Create(request);
             if (queryParams.IsFailure)
             {
-                return Result<QueryResult<TransactionInfoViewModel>>.Failure(queryParams.Error);
+                return queryParams.Error;
             }
 
             var total = await context.Transactions.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
@@ -71,8 +71,7 @@ public class GetTransactions : ICarterModule
                 .Select(e => TransactionMapper.MapToDto(e))
                 .ToListAsync(cancellationToken);
 
-            return Result<QueryResult<TransactionInfoViewModel>>.Success(
-                new QueryResult<TransactionInfoViewModel>(total, items));
+            return new QueryResult<TransactionInfoViewModel>(total, items);
         }
     }
 }
