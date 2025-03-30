@@ -109,26 +109,8 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-  analyze_flutter:
-    name: Analyze Flutter
-    runs-on: ubuntu-latest
-    needs: check_changes
-    if: needs.check_changes.outputs.code_was_changed == 'true'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 'stable'
-
-      - name: Analyze Dart/Flutter Code
-        run: flutter analyze
-
   create_check:
-    needs: [check_changes, analyze, analyze_flutter]
+    needs: [check_changes, analyze]
     uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
     if: always() && needs.check_changes.result == 'success'
     with:
