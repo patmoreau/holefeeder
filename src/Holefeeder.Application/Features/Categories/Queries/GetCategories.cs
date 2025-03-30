@@ -52,8 +52,7 @@ public class GetCategories : ICarterModule
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return Result<QueryResult<CategoryViewModel>>.Success(
-                new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result)));
+            return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
         }
     }
 }

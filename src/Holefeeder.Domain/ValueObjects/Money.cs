@@ -9,8 +9,8 @@ public readonly struct Money : IEquatable<Money>, IPrimitiveType<decimal>
     public decimal ToDecimal() => Value;
 
     public static Result<Money> Create(decimal value) => decimal.IsNegative(value)
-        ? Result<Money>.Failure(MoneyValueErrors.NoNegativeValue)
-        : Result<Money>.Success(new Money { Value = value });
+        ? MoneyValueErrors.NoNegativeValue
+        : new Money { Value = value };
 
     public static implicit operator decimal(Money value) => value.Value;
 

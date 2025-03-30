@@ -50,17 +50,17 @@ public class CancelCashflow : ICarterModule
                     cancellationToken);
             if (exists is null)
             {
-                return Result<Nothing>.Failure(CashflowErrors.NotFound(request.Id));
+                return CashflowErrors.NotFound(request.Id);
             }
 
             var result = exists.Cancel();
             if (result.IsFailure)
             {
-                return Result<Nothing>.Failure(result.Error);
+                return result.Error;
             }
             context.Update(result.Value);
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 }

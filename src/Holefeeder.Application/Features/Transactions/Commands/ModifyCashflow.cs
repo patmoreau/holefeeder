@@ -68,8 +68,8 @@ public class ModifyCashflow : ICarterModule
                 x => x.Id == request.Id && x.UserId == userContext.Id,
                 cancellationToken);
             return cashflow is null
-                ? Result<Cashflow>.Failure(CashflowErrors.NotFound(request.Id))
-                : Result<Cashflow>.Success(cashflow);
+                ? CashflowErrors.NotFound(request.Id)
+                : cashflow;
         }
 
         private Func<Cashflow, Task<Result<Nothing>>> ModifyCashflow(Request request) =>
@@ -85,7 +85,7 @@ public class ModifyCashflow : ICarterModule
             cashflow =>
             {
                 context.Update(cashflow);
-                return Result<Nothing>.Success();
+                return Nothing.Value;
             };
     }
 }

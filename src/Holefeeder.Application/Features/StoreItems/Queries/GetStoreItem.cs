@@ -50,10 +50,10 @@ public class GetStoreItem : ICarterModule
 
             if (result is null)
             {
-                return Result<StoreItemViewModel>.Failure(StoreItemErrors.NotFound(request.Id));
+                return StoreItemErrors.NotFound(request.Id);
             }
 
-            return Result<StoreItemViewModel>.Success(StoreItemMapper.MapToDto(result));
+            return StoreItemMapper.MapToDto(result);
         }
     }
 }

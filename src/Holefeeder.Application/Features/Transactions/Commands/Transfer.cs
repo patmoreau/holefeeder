@@ -73,8 +73,8 @@ public class Transfer : ICarterModule
             await context.Accounts.AnyAsync(
                 x => x.Id == accountId && x.UserId == userContext.Id && !x.Inactive,
                 cancellationToken)
-                ? Result<Nothing>.Success()
-                : Result<Nothing>.Failure(TransactionErrors.AccountNotFound(accountId));
+                ? Nothing.Value
+                : TransactionErrors.AccountNotFound(accountId);
 
         private Func<Nothing, Task<Result<(Category TransferFrom, Category TransferTo)>>> FindCategoriesAsync(
             CancellationToken cancellationToken) =>
@@ -85,17 +85,15 @@ public class Transfer : ICarterModule
                         cancellationToken);
                 if (categoryFrom is null)
                 {
-                    return Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
-                        TransactionErrors.CategoryNameNotFound(CategoryFromName));
+                    return TransactionErrors.CategoryNameNotFound(CategoryFromName);
                 }
 
                 var categoryTo = await context.Categories
                     .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == CategoryToName,
                         cancellationToken);
                 return categoryTo is null
-                    ? Result<(Category CategoryFrom, Category CategoryTo)>.Failure(
-                        TransactionErrors.CategoryNameNotFound(CategoryToName))
-                    : Result<(Category CategoryFrom, Category CategoryTo)>.Success((categoryFrom, categoryTo));
+                    ? TransactionErrors.CategoryNameNotFound(CategoryToName)
+                    : (categoryFrom, categoryTo);
             };
 
         private Func<(Category TransferFrom, Category TransferTo),
@@ -106,21 +104,16 @@ public class Transfer : ICarterModule
                 var transactionFrom = await CreateTransactionAsync(request.FromAccountId, categories.TransferFrom, request, cancellationToken);
                 if (transactionFrom.IsFailure)
                 {
-                    return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
-                        transactionFrom
-                            .Error);
+                    return transactionFrom.Error;
                 }
 
                 var transactionTo = await CreateTransactionAsync(request.ToAccountId, categories.TransferTo, request, cancellationToken);
                 if (transactionTo.IsFailure)
                 {
-                    return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>.Failure(
-                        transactionTo
-                            .Error);
+                    return transactionTo.Error;
                 }
 
-                return Result<(TransactionId FromTransactionId, TransactionId ToTransactionId)>
-                    .Success((transactionFrom.Value.Id, transactionTo.Value.Id));
+                return (transactionFrom.Value.Id, transactionTo.Value.Id);
             };
 
         private async Task<Result<Transaction>> CreateTransactionAsync(AccountId accountId, Category category,
@@ -130,11 +123,11 @@ public class Transfer : ICarterModule
                 accountId, category.Id, userContext.Id);
             if (transaction.IsFailure)
             {
-                return Result<Transaction>.Failure(transaction.Error);
+                return transaction.Error;
             }
 
             await context.Transactions.AddAsync(transaction.Value, cancellationToken);
-            return Result<Transaction>.Success(transaction.Value);
+            return transaction.Value;
         }
     }
 }

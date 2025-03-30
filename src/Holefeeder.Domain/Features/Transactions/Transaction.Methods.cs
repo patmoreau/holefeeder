@@ -14,7 +14,7 @@ public partial record Transaction
             .ToList();
 
         _tags = newTags.ToImmutableArray();
-        return Result<Transaction>.Success(this);
+        return this;
     }
 
     public Result<Transaction> ApplyCashflow(CashflowId cashflowId, DateOnly cashflowDate)
@@ -22,13 +22,12 @@ public partial record Transaction
         var result = ResultAggregate.Create()
             .Ensure(CashflowValidation(cashflowId, cashflowDate));
 
-        return result.Switch(
-            () => Result<Transaction>.Success(this with
+        return result.OnSuccess(
+            () => (this with
             {
                 CashflowId = cashflowId,
                 CashflowDate = cashflowDate
-            }),
-            Result<Transaction>.Failure);
+            }).ToResult());
     }
 
     public Result<Transaction> Modify(DateOnly? date = null, Money? amount = null, string? description = null,
@@ -48,18 +47,16 @@ public partial record Transaction
             .Ensure(AccountIdValidation(newAccountId))
             .Ensure(CategoryIdValidation(newCategoryId));
 
-        return result.Switch(
-            () => Result<Transaction>.Success(
-                this with
-                {
-                    Date = newDate,
-                    Amount = newAmount,
-                    Description = newDescription,
-                    AccountId = newAccountId,
-                    CategoryId = newCategoryId,
-                    CashflowId = newCashflowId,
-                    CashflowDate = newCashflowDate
-                }),
-            Result<Transaction>.Failure);
+        return result.OnSuccess(
+            () => (this with
+            {
+                Date = newDate,
+                Amount = newAmount,
+                Description = newDescription,
+                AccountId = newAccountId,
+                CategoryId = newCategoryId,
+                CashflowId = newCashflowId,
+                CashflowDate = newCashflowDate
+            }).ToResult());
     }
 }

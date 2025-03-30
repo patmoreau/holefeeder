@@ -42,17 +42,17 @@ public class ModifyAccount : ICarterModule
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             if (exists is null)
             {
-                return Result<Nothing>.Failure(AccountErrors.NotFound(request.Id));
+                return AccountErrors.NotFound(request.Id);
             }
 
             var result = exists.Modify(name: request.Name, openBalance: request.OpenBalance, description: request.Description);
             if (result.IsFailure)
             {
-                return Result<Nothing>.Failure(result.Error);
+                return result.Error;
             }
             context.Update(result.Value);
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
     }
 

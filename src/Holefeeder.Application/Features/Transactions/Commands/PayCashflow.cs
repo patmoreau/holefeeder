@@ -69,8 +69,8 @@ public class PayCashflow : ICarterModule
                 x => x.Id == request.CashflowId && x.UserId == userContext.Id,
                 cancellationToken);
             return cashflow is null
-                ? Result<Cashflow>.Failure(CashflowErrors.NotFound(request.CashflowId))
-                : Result<Cashflow>.Success(cashflow);
+                ? CashflowErrors.NotFound(request.CashflowId)
+                : cashflow;
         }
 
         private Func<Cashflow, Task<Result<TransactionId>>> CreateCashflowTransactionAsync(Request request,
@@ -87,7 +87,7 @@ public class PayCashflow : ICarterModule
             {
                 await context.Transactions.AddAsync(transaction, cancellationToken);
 
-                return Result<TransactionId>.Success(transaction.Id);
+                return transaction.Id;
             };
     }
 }

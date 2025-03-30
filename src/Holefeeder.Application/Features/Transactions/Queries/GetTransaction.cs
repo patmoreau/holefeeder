@@ -52,8 +52,8 @@ public class GetTransaction : ICarterModule
                 .Include(x => x.Category)
                 .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id, cancellationToken);
             return transaction is null
-                ? Result<TransactionInfoViewModel>.Failure(TransactionErrors.NotFound(query.Id))
-                : Result<TransactionInfoViewModel>.Success(TransactionMapper.MapToDto(transaction));
+                ? TransactionErrors.NotFound(query.Id)
+                : TransactionMapper.MapToDto(transaction);
         }
     }
 }

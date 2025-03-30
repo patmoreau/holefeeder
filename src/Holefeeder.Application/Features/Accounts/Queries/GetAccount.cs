@@ -21,7 +21,7 @@ public class GetAccount : ICarterModule
                     var result = await mediator.Send(new Request(id), cancellationToken);
                     return result switch
                     {
-                        { IsFailure: true } => result.Error.ToProblem(),
+                        {IsFailure: true} => result.Error.ToProblem(),
                         _ => Results.Ok(result.Value)
                     };
                 })
@@ -51,10 +51,10 @@ public class GetAccount : ICarterModule
                     cancellationToken);
             if (account is null)
             {
-                return Result<AccountViewModel>.Failure(AccountErrors.NotFound(query.Id));
+                return AccountErrors.NotFound(query.Id);
             }
 
-            return Result<AccountViewModel>.Success(new AccountViewModel(
+            return new AccountViewModel(
                 account.Id,
                 account.Type,
                 account.Name,
@@ -66,7 +66,7 @@ public class GetAccount : ICarterModule
                 account.Description,
                 account.Favorite,
                 account.Inactive
-            ));
+            );
         }
     }
 }

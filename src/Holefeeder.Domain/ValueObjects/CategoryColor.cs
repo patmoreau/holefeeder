@@ -13,18 +13,18 @@ public readonly struct CategoryColor : IEquatable<CategoryColor>, IPrimitiveType
     public override string ToString() => ColorTranslator.ToHtml(Value);
 
     public static Result<CategoryColor> Create(Color value) =>
-        Result<CategoryColor>.Success(new CategoryColor { Value = value });
+        new CategoryColor { Value = value };
 
     public static Result<CategoryColor> Create(string htmlColor)
     {
         try
         {
             var color = ColorTranslator.FromHtml(htmlColor);
-            return Result<CategoryColor>.Success(new CategoryColor { Value = color });
+            return new CategoryColor { Value = color };
         }
         catch (Exception e)
         {
-            return Result<CategoryColor>.Failure(CategoryColorErrors.InvalidHtmlColor(e.Message));
+            return CategoryColorErrors.InvalidHtmlColor(e.Message);
         }
     }
 

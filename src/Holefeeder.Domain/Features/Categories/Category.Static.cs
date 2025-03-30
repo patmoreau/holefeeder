@@ -14,13 +14,12 @@ public sealed partial record Category
             .Ensure(NameValidation(name))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Category>.Success(new Category(CategoryId.New, type, name, color, budgetAmount, userId)
+        return result.OnSuccess(
+            () => new Category(CategoryId.New, type, name, color, budgetAmount, userId)
             {
                 Favorite = favorite,
                 System = system
-            }),
-            Result<Category>.Failure);
+            }.ToResult());
     }
 
     public static Result<Category> Import(CategoryId id, CategoryType type, string name, CategoryColor color,
@@ -31,12 +30,11 @@ public sealed partial record Category
             .Ensure(NameValidation(name))
             .Ensure(UserIdValidation(userId));
 
-        return result.Switch(
-            () => Result<Category>.Success(new Category(id, type, name, color, budgetAmount, userId)
+        return result.OnSuccess(
+            () => new Category(id, type, name, color, budgetAmount, userId)
             {
                 Favorite = favorite,
                 System = system
-            }),
-            Result<Category>.Failure);
+            }.ToResult());
     }
 }

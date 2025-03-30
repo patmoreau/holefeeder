@@ -19,12 +19,11 @@ public sealed partial record Category
         var result = ResultAggregate.Create()
             .Ensure(NameValidation(newName));
 
-        return result.Switch(
-            () => Result<Category>.Success(new Category(Id, newType, newName, newColor, newBudgetAmount, UserId)
+        return result.OnSuccess(
+            () => new Category(Id, newType, newName, newColor, newBudgetAmount, UserId)
             {
                 Favorite = newFavorite,
                 System = newSystem,
-            }),
-            Result<Category>.Failure);
+            }.ToResult());
     }
 }

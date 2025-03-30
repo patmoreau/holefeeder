@@ -89,8 +89,8 @@ public class ModifyTransaction : ICarterModule
             var transaction = await context.Transactions.SingleOrDefaultAsync(
                     x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
             return transaction is null
-                ? Result<Transaction>.Failure(TransactionErrors.NotFound(request.Id))
-                : Result<Transaction>.Success(transaction);
+                ? TransactionErrors.NotFound(request.Id)
+                : transaction;
         }
 
         private async Task<Result<Nothing>> CheckIfCategoryExist(Request request, CancellationToken cancellationToken)
@@ -98,10 +98,10 @@ public class ModifyTransaction : ICarterModule
             if (!await context.Categories.AnyAsync(x => x.Id == request.CategoryId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result<Nothing>.Failure(TransactionErrors.CategoryNotFound(request.CategoryId));
+                return TransactionErrors.CategoryNotFound(request.CategoryId);
             }
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
 
         private async Task<Result<Nothing>> CheckIfAccountExits(Request request, CancellationToken cancellationToken)
@@ -109,10 +109,10 @@ public class ModifyTransaction : ICarterModule
             if (!await context.Accounts.AnyAsync(x => x.Id == request.AccountId && x.UserId == userContext.Id,
                     cancellationToken))
             {
-                return Result<Nothing>.Failure(TransactionErrors.AccountNotFound(request.AccountId));
+                return TransactionErrors.AccountNotFound(request.AccountId);
             }
 
-            return Result<Nothing>.Success();
+            return Nothing.Value;
         }
 
         private static Func<Transaction, Result<Transaction>> SetTags(Request request) =>
@@ -122,7 +122,7 @@ public class ModifyTransaction : ICarterModule
             transaction =>
             {
                 context.Update(transaction);
-                return Result<Nothing>.Success();
+                return Nothing.Value;
             };
     }
 }
