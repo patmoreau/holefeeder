@@ -43,7 +43,7 @@
     "@popperjs/core": "2.11.8",
     "add": "2.0.6",
     "angular-auth-oidc-client": "18.0.2",
-    "bootstrap": "5.3.3",
+    "bootstrap": "5.3.4",
     "bootstrap-icons": "1.11.3",
     "chart.js": "4.4.8",
     "chartjs-plugin-datalabels": "2.2.0",
