@@ -78,8 +78,8 @@ importers:
         specifier: 18.0.2
         version: 18.0.2(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/router@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2))(rxjs@7.8.2)
       bootstrap:
-        specifier: 5.3.3
-        version: 5.3.3(@popperjs/core@2.11.8)
+        specifier: 5.3.4
+        version: 5.3.4(@popperjs/core@2.11.8)
       bootstrap-icons:
         specifier: 1.11.3
         version: 1.11.3
@@ -2808,8 +2808,8 @@ packages:
   bootstrap-icons@1.11.3:
     resolution: {integrity: sha512-+3lpHrCw/it2/7lBL15VR0HEumaBss0+f/Lb6ZvHISn1mlK83jjFpooTLsMWbIjJMDjDjOExMsTxnXSIT4k4ww==}
 
-  bootstrap@5.3.3:
-    resolution: {integrity: sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==}
+  bootstrap@5.3.4:
+    resolution: {integrity: sha512-q2oK3ZPDTa5I44FTyY3H76+SDTJREvOBxtX1HNLHcxMni50jMvUtOh+dgFdgpsAHtJ9bfNAWr6d6VezJHJ/7tg==}
     peerDependencies:
       '@popperjs/core': ^2.11.8
 
@@ -10317,7 +10317,7 @@ snapshots:
 
   bootstrap-icons@1.11.3: {}
 
-  bootstrap@5.3.3(@popperjs/core@2.11.8):
+  bootstrap@5.3.4(@popperjs/core@2.11.8):
     dependencies:
       '@popperjs/core': 2.11.8
 
