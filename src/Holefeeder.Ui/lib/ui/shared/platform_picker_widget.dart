@@ -35,7 +35,7 @@ class PlatformPicker<T> extends StatelessWidget {
         onPressed: () => _showCupertinoPicker(context),
         child: Text(
           value != null
-              ? displayStringFor(value!)
+              ? displayStringFor(value as T)
               : (placeholder ?? 'Select...'),
           style: const TextStyle(fontSize: 16),
         ),
@@ -65,7 +65,7 @@ class PlatformPicker<T> extends StatelessWidget {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
-        int selectedIndex = value != null ? items.indexOf(value!) : 0;
+        int selectedIndex = value != null ? items.indexOf(value as T) : 0;
 
         return Container(
           height: 216,

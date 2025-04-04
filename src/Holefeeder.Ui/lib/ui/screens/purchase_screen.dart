@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:holefeeder/ui/screens/purchase_form.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-import '../../core/view_models/screens/purchase_screen_view_model.dart';
+import '../../core/view_models/screens/purchase_view_model.dart';
 import '../shared/view_model_provider.dart';
 
 class PurchaseScreen extends StatelessWidget {

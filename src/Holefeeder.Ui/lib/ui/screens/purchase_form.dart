@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:holefeeder/core/view_models/base_form_state.dart';
-import 'package:holefeeder/core/view_models/screens/purchase_screen_view_model.dart';
+import 'package:holefeeder/core/view_models/screens/purchase_view_model.dart';
 import 'package:holefeeder/ui/services/notification_service.dart';
 import 'package:holefeeder/ui/shared/account_picker.dart';
 import 'package:holefeeder/ui/shared/amount_field.dart';

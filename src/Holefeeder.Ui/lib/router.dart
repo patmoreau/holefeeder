@@ -19,7 +19,7 @@ final GoRouter router = GoRouter(
         );
 
         final status = await authenticationClient.statusStream.first;
-        if (status == AuthenticationStatus.unauthenticated) {
+        if (status != AuthenticationStatus.authenticated) {
           return '/login';
         }
 

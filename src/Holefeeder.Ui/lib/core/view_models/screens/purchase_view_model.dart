@@ -115,7 +115,6 @@ class PurchaseViewModel extends BaseViewModel {
     }
   }
 
-  // Simplified update methods
   void updateAmount(Decimal value) =>
       _updateState((s) => s.copyWith(amount: value));
   void updateDate(DateTime value) =>
