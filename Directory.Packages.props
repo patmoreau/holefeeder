@@ -25,8 +25,8 @@
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire" Version="1.8.18" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
-    <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.10" />
-    <PackageVersion Include="MediatR" Version="12.4.1" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.12" />
+    <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.3" />
@@ -58,7 +58,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.1.4" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.1.6" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
