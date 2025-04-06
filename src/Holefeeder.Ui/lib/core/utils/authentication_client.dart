@@ -16,6 +16,9 @@ abstract class AuthenticationClient {
   Credentials? _credentials;
   String? _errorMessage;
 
+  AuthenticationStatus _currentStatus = AuthenticationStatus.unauthenticated;
+  AuthenticationStatus get currentStatus => _currentStatus;
+
   Stream<AuthenticationStatus> get statusStream => _statusController.stream;
 
   Credentials get credentials => _credentials!;
@@ -32,6 +35,7 @@ abstract class AuthenticationClient {
 
   @protected
   void setStatus(AuthenticationStatus status) {
+    _currentStatus = status;
     _statusController.add(status);
   }
 
@@ -49,7 +53,7 @@ abstract class AuthenticationClient {
     setStatus(AuthenticationStatus.unauthenticated);
   }
 
-  void init();
+  Future<void> init();
 
   Future<void> login();
 
@@ -58,11 +62,11 @@ abstract class AuthenticationClient {
   Future<void> logout();
 }
 
-class MobileAuthenticationProvider extends AuthenticationClient {
+class MobileAuthenticationClient extends AuthenticationClient {
   final Auth0 _auth0 = Auth0(auth0Domain, auth0ClientId);
 
   @override
-  void init() async {
+  Future<void> init() async {
     try {
       final isLoggedIn = await _auth0.credentialsManager.hasValidCredentials();
       if (isLoggedIn) {
@@ -120,15 +124,15 @@ class MobileAuthenticationProvider extends AuthenticationClient {
   }
 }
 
-class WebAuthenticationProvider extends AuthenticationClient {
+class WebAuthenticationClient extends AuthenticationClient {
   late Auth0Web _auth0;
 
   @override
-  void init() async {
+  Future<void> init() async {
     _auth0 = Auth0Web(auth0Domain, auth0ClientId);
     setStatus(AuthenticationStatus.unauthenticated);
     try {
-      _auth0
+      await _auth0
           .onLoad(
             audience: auth0Audience,
             scopes: auth0Scopes,

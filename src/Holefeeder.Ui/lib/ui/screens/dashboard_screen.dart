@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:holefeeder/ui/screens/purchase_screen.dart';
 import 'package:holefeeder/ui/shared/widgets.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -18,7 +19,7 @@ class DashboardScreen extends StatelessWidget {
       middle: const Text('Dashboard'),
       trailing: IconButton(
         onPressed: () {
-          GoRouter.of(context).push('/purchase');
+          context.push('/purchase');
         },
         icon: const Icon(CupertinoIcons.purchased),
       ),

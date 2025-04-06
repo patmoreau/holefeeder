@@ -29,7 +29,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final authenticationService = _createAuthenticationService();
-  authenticationService.init();
+  await authenticationService.init();
+
+  // Check authentication status before proceeding
+  final authStatus = await authenticationService.statusStream.first;
 
   runApp(
     MultiProvider(
@@ -71,16 +74,22 @@ Future<void> main() async {
     ),
   );
 
-  // Handle quick action after app initialization
+  // Handle navigation based on authentication status
   if (launchedFromQuickAction) {
-    router.go('/purchase');
+    if (authStatus == AuthenticationStatus.authenticated) {
+      router.go('/purchase');
+    } else {
+      router.go('/login', extra: '/purchase');
+    }
+  } else if (authStatus == AuthenticationStatus.unauthenticated) {
+    router.go('/login');
   }
 }
 
 AuthenticationClient _createAuthenticationService() =>
     UniversalPlatform.isWeb
-        ? WebAuthenticationProvider()
-        : MobileAuthenticationProvider();
+        ? WebAuthenticationClient()
+        : MobileAuthenticationClient();
 
 Dio _createDio(BuildContext context) {
   final dio = Dio();

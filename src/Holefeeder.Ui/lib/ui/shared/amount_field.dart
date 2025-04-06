@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-class AmountField extends StatelessWidget {
+class AmountField extends StatefulWidget {
   final Decimal initialValue;
   final ValueChanged<Decimal> onChanged;
 
@@ -15,26 +15,57 @@ class AmountField extends StatelessWidget {
   });
 
   @override
+  State<AmountField> createState() => _AmountFieldState();
+}
+
+class _AmountFieldState extends State<AmountField> {
+  late final FocusNode _focusNode;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _controller = TextEditingController(text: widget.initialValue.toString());
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        _controller.selection = TextSelection(
+            baseOffset: 0, extentOffset: _controller.text.length);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return UniversalPlatform.isApple
         ? CupertinoTextFormFieldRow(
-          prefix: Text('Amount'),
-          textAlign: TextAlign.right,
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [_decimalTextInputFormatter()],
-          initialValue: initialValue.toString(),
-          placeholder: 'Enter amount',
-          onChanged: (value) => _onDecimalChanged(value, onChanged),
-          validator: _decimalValidator(),
-        )
+            prefix: Text('Amount'),
+            textAlign: TextAlign.right,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [_decimalTextInputFormatter()],
+            controller: _controller,
+            placeholder: 'Enter amount',
+            focusNode: _focusNode,
+            onChanged: (value) => _onDecimalChanged(value, widget.onChanged),
+            validator: _decimalValidator(),
+          )
         : TextFormField(
-          decoration: InputDecoration(labelText: 'Amount'),
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [_decimalTextInputFormatter()],
-          initialValue: initialValue.toString(),
-          onChanged: (value) => _onDecimalChanged(value, onChanged),
-          validator: _decimalValidator(),
-        );
+            decoration: InputDecoration(labelText: 'Amount'),
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [_decimalTextInputFormatter()],
+            controller: _controller,
+            focusNode: _focusNode,
+            onChanged: (value) => _onDecimalChanged(value, widget.onChanged),
+            validator: _decimalValidator(),
+          );
   }
 }
 

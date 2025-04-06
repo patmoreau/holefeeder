@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:holefeeder/core/utils/authentication_client.dart';
 import 'package:holefeeder/core/view_models/base_form_state.dart';
+import 'package:provider/provider.dart';
 
 import '../../enums/authentication_status_enum.dart';
 import '../base_view_model.dart';
@@ -32,6 +34,7 @@ class ProfileFormState extends BaseFormState {
 }
 
 class ProfileViewModel extends BaseViewModel {
+  final AuthenticationClient _authenticationProvider;
   final _navigationController = StreamController<String>();
   Stream<String> get navigationStream => _navigationController.stream;
 
@@ -40,19 +43,20 @@ class ProfileViewModel extends BaseViewModel {
 
   late StreamSubscription<AuthenticationStatus> _statusSubscription;
 
-  ProfileViewModel({required super.context, super.authenticationProvider}) {
+  ProfileViewModel({required super.context, AuthenticationClient? authenticationProvider})
+      : _authenticationProvider = authenticationProvider ?? Provider.of<AuthenticationClient>(context, listen: false)  {
     loadInitialData();
   }
 
   String get screenTitle => 'Profile';
   String get logoutTitle => 'Logout';
-  String get fallbackPictureUrl => 'assets/images/default_profile.png';
+  String get fallbackPictureUrl => 'images/default_profile.png';
 
   Future<void> loadInitialData() async {
     _updateState((s) => s.copyWith(state: ViewFormState.loading));
 
     try {
-      _statusSubscription = authenticationProvider.statusStream.listen((
+      _statusSubscription = _authenticationProvider.statusStream.listen((
         status,
       ) {
         if (status == AuthenticationStatus.unauthenticated) {
@@ -64,10 +68,10 @@ class ProfileViewModel extends BaseViewModel {
             ),
           );
         } else if (status == AuthenticationStatus.authenticated) {
-          final user = authenticationProvider.credentials.user;
+          final user = _authenticationProvider.credentials.user;
           _updateState(
             (s) => s.copyWith(
-              state: ViewFormState.data,
+              state: ViewFormState.ready,
               name: user.name?.toString() ?? '',
               pictureUrl: user.pictureUrl?.toString() ?? '',
             ),
@@ -77,7 +81,7 @@ class ProfileViewModel extends BaseViewModel {
             (s) => s.copyWith(
               state: ViewFormState.error,
               errorMessage:
-                  "Failed to load profile: ${authenticationProvider.errorMessage}",
+                  "Failed to load profile: ${_authenticationProvider.errorMessage}",
             ),
           );
         }
@@ -101,13 +105,13 @@ class ProfileViewModel extends BaseViewModel {
 
   Future<void> logout() async {
     _updateState((s) => s.copyWith(state: ViewFormState.loading));
-    await authenticationProvider.logout();
+    await _authenticationProvider.logout();
     _updateState((s) => s.copyWith(state: ViewFormState.initial));
     _navigationController.add('/');
   }
 
   void fallbackToDefaultPicture() {
-    _updateState((s) => s.copyWith(state: ViewFormState.data, pictureUrl: ''));
+    _updateState((s) => s.copyWith(state: ViewFormState.ready, pictureUrl: ''));
     notifyListeners();
   }
 

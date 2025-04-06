@@ -1,0 +1,11 @@
+# l10n.yaml
+arb-dir: lib/l10n # Directory where your ARB files will live
+template-arb-file: app_en.arb # The default/template language file
+output-localization-file: app_localizations.dart # The base name for generated Dart files
+output-dir: lib/l10n/generated
+nullable-getter: false
+synthetic-package: false
+# Optional: Specify the output class name if you don't want the default (AppLocalizations)
+# output-class: MyAppLocalizations
+# Optional: Specify where the generated files go (defaults to same dir as l10n.yaml if not set,
+# but often put in lib/generated or similar)

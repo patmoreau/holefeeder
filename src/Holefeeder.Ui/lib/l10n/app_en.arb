@@ -1,0 +1,22 @@
+{
+  "@@locale": "en",
+  "holefeederTitle": "Hello World!",
+  "@holefeederTitle": {
+    "description": "A simple hello world message"
+  },
+  "welcomeMessage": "Welcome to our app",
+  "helloUser": "Hello {userName}",
+  "@helloUser": {
+    "description": "A welcome message with the user's name.",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Alice"
+      }
+    }
+  },
+  "appTitle": "Holefeeder",
+  "@appTitle": {
+    "description": "The application name"
+  }
+}

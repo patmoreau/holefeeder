@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:holefeeder/core/constants/strings.dart';
+import 'package:holefeeder/l10n/l10n.dart';
 import 'package:holefeeder/ui/screens/dashboard_screen.dart';
 import 'package:holefeeder/ui/screens/profile_screen.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -64,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Widget _buildForMaterial(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(holefeederTitle), foregroundColor: Colors.white),
+    appBar: AppBar(
+      title: Text(AppLocalizations.of(context).holefeederTitle),
+      foregroundColor: Colors.white,
+    ),
     body: IndexedStack(index: currentPageIndex, children: pages),
     floatingActionButton: FloatingActionButton(
       onPressed: () {

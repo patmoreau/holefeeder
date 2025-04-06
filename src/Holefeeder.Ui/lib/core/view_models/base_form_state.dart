@@ -1,4 +1,4 @@
-enum ViewFormState { initial, loading, data, error }
+enum ViewFormState { initial, loading, ready, error }
 
 class BaseFormState {
   final ViewFormState state;

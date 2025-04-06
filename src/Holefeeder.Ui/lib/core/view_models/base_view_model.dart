@@ -1,17 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
-
-import '../utils/authentication_client.dart';
 
 class BaseViewModel extends ChangeNotifier {
-  final BuildContext context;
+  final BuildContext _context;
 
-  late AuthenticationClient authenticationProvider;
+  BaseViewModel({required BuildContext context}) : _context = context;
 
-  BaseViewModel({
-    required this.context,
-    AuthenticationClient? authenticationProvider,
-  }) : authenticationProvider =
-           authenticationProvider ??
-           Provider.of<AuthenticationClient>(context, listen: false);
+  BuildContext get context => _context;
 }

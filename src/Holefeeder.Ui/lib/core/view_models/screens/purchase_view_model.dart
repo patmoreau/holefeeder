@@ -100,7 +100,7 @@ class PurchaseViewModel extends BaseViewModel {
 
       _updateState(
         (s) => s.copyWith(
-          state: ViewFormState.data,
+          state: ViewFormState.ready,
           selectedAccount: _accounts.firstOrNull,
           selectedCategory: _categories.firstOrNull,
         ),

@@ -15,9 +15,7 @@ Future<T?> showBaseDialog<T>({
   return Navigator.of(context, rootNavigator: useRootNavigator ?? true)
       .push<T>(
         PageRouteBuilder<T>(
-          pageBuilder:
-              (context, animation, secondaryAnimation) =>
-                  _DialogWrapper<T>(fixed: fixed, child: child),
+          pageBuilder: (context, animation, secondaryAnimation) => _DialogWrapper<T>(fixed: fixed, child: child),
           settings: RouteSettings(name: routeName),
           opaque: false,
           barrierDismissible: true,
