@@ -30,10 +30,7 @@ class DatePickerField extends StatelessWidget {
               context,
               _showCupertinoDatePicker(context),
             ),
-        child: Text(
-          DateFormat('yyyy-MM-dd').format(selectedDate),
-          style: const TextStyle(fontSize: 16),
-        ),
+        child: Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
       ),
     );
   }

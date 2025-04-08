@@ -5,6 +5,29 @@ namespace Holefeeder.UnitTests.Domain.Enumerations;
 [UnitTest, Category("Domain")]
 public class DateIntervalTypeTests
 {
+    [Theory]
+    [MemberData(nameof(FromValueTestCases))]
+    public void GivenDateIntervalType_WhenFromValue_ThenReturnDateIntervalType(string name, DateIntervalType expected)
+    {
+        var result = DateIntervalType.FromValue(name);
+        result.Should().Be(expected);
+    }
+
+    public static TheoryData<string, DateIntervalType> FromValueTestCases() =>
+        new()
+        {
+            {nameof(DateIntervalType.Daily), DateIntervalType.Daily},
+            {"daily", DateIntervalType.Daily},
+            {nameof(DateIntervalType.Weekly), DateIntervalType.Weekly},
+            {"weekly", DateIntervalType.Weekly},
+            {nameof(DateIntervalType.Monthly), DateIntervalType.Monthly},
+            {"monthly", DateIntervalType.Monthly},
+            {nameof(DateIntervalType.Yearly), DateIntervalType.Yearly},
+            {"yearly", DateIntervalType.Yearly},
+            {nameof(DateIntervalType.OneTime), DateIntervalType.OneTime},
+            {"onetime", DateIntervalType.OneTime}
+        };
+
     public static TheoryData<DateOnly, DateOnly, DateIntervalType, int, DateOnly> NextDateTestCases()
     {
         var testCases = new TheoryData<DateOnly, DateOnly, DateIntervalType, int, DateOnly>

@@ -6,7 +6,7 @@ class AccountsProvider extends BaseProvider {
 
   Future<List<Account>> getAccounts() async {
     try {
-      final result = await restClient.getAccounts(['-favorite', 'name']);
+      final result = await restClient.getAccounts(['-favorite', 'name'], ['inactive:eq:false']);
       if (result.response.statusCode == 200) {
         return result.data;
       }

@@ -14,6 +14,7 @@ abstract class RestClient {
   @GET('api/v2/accounts')
   Future<HttpResponse<List<Account>>> getAccounts(
     @Query('sort') List<String> sort,
+    @Query('filter') List<String> filter,
   );
 
   @GET('api/v2/accounts/{id}')

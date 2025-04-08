@@ -1,8 +1,8 @@
 export enum DateIntervalType {
-  weekly = 'Weekly',
-  monthly = 'Monthly',
-  yearly = 'Yearly',
-  oneTime = 'OneTime',
+  weekly = 'weekly',
+  monthly = 'monthly',
+  yearly = 'yearly',
+  oneTime = 'onetime',
 }
 
 export const DateIntervalTypeNames = new Map<string, string>([

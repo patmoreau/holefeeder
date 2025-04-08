@@ -18,9 +18,12 @@ class _RestClient implements RestClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<List<Account>>> getAccounts(List<String> sort) async {
+  Future<HttpResponse<List<Account>>> getAccounts(
+    List<String> sort,
+    List<String> filter,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'sort': sort};
+    final queryParameters = <String, dynamic>{r'sort': sort, r'filter': filter};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<List<Account>>>(

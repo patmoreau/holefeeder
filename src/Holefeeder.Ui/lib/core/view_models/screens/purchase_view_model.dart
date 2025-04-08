@@ -9,6 +9,7 @@ import 'package:holefeeder/core/providers/transactions_provider.dart';
 import 'package:holefeeder/core/view_models/base_form_state.dart';
 import 'package:provider/provider.dart';
 
+import '../../enums/date_interval_type_enum.dart';
 import '../base_view_model.dart';
 
 class PurchaseFormState extends BaseFormState {
@@ -18,6 +19,11 @@ class PurchaseFormState extends BaseFormState {
   final Account? selectedAccount;
   final Category? selectedCategory;
   final List<String> tags;
+  final bool isCashflow;
+  final DateTime effectiveDate;
+  final DateIntervalType intervalType;
+  final int frequency;
+  final int recurrence;
 
   PurchaseFormState({
     Decimal? amount,
@@ -26,10 +32,16 @@ class PurchaseFormState extends BaseFormState {
     this.selectedAccount,
     this.selectedCategory,
     this.tags = const [],
+    this.isCashflow = false,
+    DateTime? effectiveDate,
+    this.intervalType = DateIntervalType.monthly,
+    this.frequency = 1,
+    this.recurrence = 0,
     super.state = ViewFormState.initial,
     super.errorMessage,
   }) : date = date ?? DateTime.now(),
-       amount = amount ?? Decimal.zero;
+       amount = amount ?? Decimal.zero,
+       effectiveDate = effectiveDate ?? DateTime.now();
 
   PurchaseFormState copyWith({
     Decimal? amount,
@@ -38,6 +50,11 @@ class PurchaseFormState extends BaseFormState {
     Account? selectedAccount,
     Category? selectedCategory,
     List<String>? tags,
+    bool? isCashflow,
+    DateTime? effectiveDate,
+    DateIntervalType? intervalType,
+    int? frequency,
+    int? recurrence,
     ViewFormState? state,
     String? errorMessage,
   }) {
@@ -48,6 +65,11 @@ class PurchaseFormState extends BaseFormState {
       selectedAccount: selectedAccount ?? this.selectedAccount,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       tags: tags ?? this.tags,
+      isCashflow: isCashflow ?? this.isCashflow,
+      effectiveDate: effectiveDate ?? this.effectiveDate,
+      intervalType: intervalType ?? this.intervalType,
+      frequency: frequency ?? this.frequency,
+      recurrence: recurrence ?? this.recurrence,
       state: state ?? this.state,
       errorMessage: errorMessage ?? this.errorMessage,
     );
@@ -61,13 +83,17 @@ class PurchaseViewModel extends BaseViewModel {
   final TransactionsProvider _transactionsProvider;
 
   PurchaseFormState _formState = PurchaseFormState();
+
   PurchaseFormState get formState => _formState;
 
   List<Account> _accounts = [];
+
   List<Account> get accounts => _accounts;
   List<Category> _categories = [];
+
   List<Category> get categories => _categories;
   List<String> _tags = [];
+
   List<String> get tags => _tags;
 
   PurchaseViewModel({
@@ -76,17 +102,10 @@ class PurchaseViewModel extends BaseViewModel {
     CategoriesProvider? categoriesProvider,
     TagsProvider? tagsProvider,
     TransactionsProvider? transactionsProvider,
-  }) : _accountsProvider =
-           accountsProvider ??
-           Provider.of<AccountsProvider>(context, listen: false),
-       _categoriesProvider =
-           categoriesProvider ??
-           Provider.of<CategoriesProvider>(context, listen: false),
-       _tagsProvider =
-           tagsProvider ?? Provider.of<TagsProvider>(context, listen: false),
-       _transactionsProvider =
-           transactionsProvider ??
-           Provider.of<TransactionsProvider>(context, listen: false) {
+  }) : _accountsProvider = accountsProvider ?? Provider.of<AccountsProvider>(context, listen: false),
+       _categoriesProvider = categoriesProvider ?? Provider.of<CategoriesProvider>(context, listen: false),
+       _tagsProvider = tagsProvider ?? Provider.of<TagsProvider>(context, listen: false),
+       _transactionsProvider = transactionsProvider ?? Provider.of<TransactionsProvider>(context, listen: false) {
     loadInitialData();
   }
 
@@ -106,26 +125,35 @@ class PurchaseViewModel extends BaseViewModel {
         ),
       );
     } catch (e) {
-      _updateState(
-        (s) => s.copyWith(
-          state: ViewFormState.error,
-          errorMessage: "Failed to load data: $e",
-        ),
-      );
+      _updateState((s) => s.copyWith(state: ViewFormState.error, errorMessage: "Failed to load data: $e"));
     }
   }
 
-  void updateAmount(Decimal value) =>
-      _updateState((s) => s.copyWith(amount: value));
-  void updateDate(DateTime value) =>
-      _updateState((s) => s.copyWith(date: value));
+  void updateAmount(Decimal value) => _updateState((s) => s.copyWith(amount: value));
+
+  void updateDate(DateTime value) => _updateState((s) => s.copyWith(date: value));
+
   void updateNote(String value) => _updateState((s) => s.copyWith(note: value));
-  void setSelectedAccount(Account? account) =>
-      _updateState((s) => s.copyWith(selectedAccount: account));
-  void setSelectedCategory(Category? category) =>
-      _updateState((s) => s.copyWith(selectedCategory: category));
-  void updateTags(List<String> tags) =>
-      _updateState((s) => s.copyWith(tags: tags));
+
+  void setSelectedAccount(Account? account) => _updateState((s) => s.copyWith(selectedAccount: account));
+
+  void setSelectedCategory(Category? category) => _updateState((s) => s.copyWith(selectedCategory: category));
+
+  void updateTags(List<String> tags) => _updateState((s) => s.copyWith(tags: tags));
+
+  void updateIsCashflow(bool value) => _updateState((s) => s.copyWith(isCashflow: value));
+
+  void updateEffectiveDate(DateTime value) => _updateState((s) => s.copyWith(effectiveDate: value));
+
+  void updateIntervalType(DateIntervalType? value) {
+    if (value != null) {
+      _updateState((s) => s.copyWith(intervalType: value));
+    }
+  }
+
+  void updateFrequency(int value) => _updateState((s) => s.copyWith(frequency: value));
+
+  void updateRecurrence(int value) => _updateState((s) => s.copyWith(recurrence: value));
 
   bool validate() {
     if (_formState.amount <= Decimal.zero) return false;
@@ -143,6 +171,15 @@ class PurchaseViewModel extends BaseViewModel {
         categoryId: _formState.selectedCategory!.id,
         tags: _formState.tags.toList(),
         date: _formState.date,
+        cashflow:
+            _formState.isCashflow
+                ? CashflowRequest(
+                  effectiveDate: _formState.effectiveDate,
+                  intervalType: _formState.intervalType,
+                  frequency: _formState.frequency,
+                  recurrence: _formState.recurrence,
+                )
+                : null,
       ),
     );
   }
