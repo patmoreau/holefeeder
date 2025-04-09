@@ -47,7 +47,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.4" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.70.1" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.70.2" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.8.3" />
     <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.8.0" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.8.0" />
