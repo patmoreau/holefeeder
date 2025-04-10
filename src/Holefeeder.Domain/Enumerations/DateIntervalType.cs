@@ -5,14 +5,15 @@ using Ardalis.SmartEnum.SystemTextJson;
 
 namespace Holefeeder.Domain.Enumerations;
 
-[JsonConverter(typeof(SmartEnumNameConverter<DateIntervalType, int>))]
-public abstract class DateIntervalType : SmartEnum<DateIntervalType>
+[JsonConverter(typeof(SmartEnumValueConverter<DateIntervalType, string>))]
+[SmartEnumStringComparer(StringComparison.InvariantCultureIgnoreCase)]
+public abstract class DateIntervalType : SmartEnum<DateIntervalType, string>
 {
-    public static readonly DateIntervalType Daily = new DailyDateIntervalType(nameof(Daily), 0);
-    public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(nameof(Weekly), 1);
-    public static readonly DateIntervalType Monthly = new MonthlyDateIntervalType(nameof(Monthly), 2);
-    public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(nameof(Yearly), 3);
-    public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(nameof(OneTime), 4);
+    public static readonly DateIntervalType Daily = new DailyDateIntervalType(nameof(Daily), "daily");
+    public static readonly DateIntervalType Weekly = new WeeklyDateIntervalType(nameof(Weekly), "weekly");
+    public static readonly DateIntervalType Monthly = new MonthlyDateIntervalType(nameof(Monthly), "monthly");
+    public static readonly DateIntervalType Yearly = new YearlyDateIntervalType(nameof(Yearly), "yearly");
+    public static readonly DateIntervalType OneTime = new OneTimeDateIntervalType(nameof(OneTime), "onetime");
 
     public static (DateIntervalType IntervalType, int Frequency) GetIntervalTypeFromRange(DateOnly from, DateOnly to)
     {
@@ -31,7 +32,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
             : (Daily, (to.ToDateTime(TimeOnly.MinValue) - from.ToDateTime(TimeOnly.MinValue)).Days + 1);
     }
 
-    private DateIntervalType(string name, int id) : base(name, id)
+    private DateIntervalType(string name, string value) : base(name, value)
     {
     }
 
@@ -109,13 +110,13 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         return dates;
     }
 
-    private sealed class DailyDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    private sealed class DailyDateIntervalType(string name, string id) : DateIntervalType(name, id)
     {
         public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddDays(iteration);
     }
 
-    private sealed class WeeklyDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    private sealed class WeeklyDateIntervalType(string name, string id) : DateIntervalType(name, id)
     {
         public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             AddWeeks(effectiveDate, iteration);
@@ -139,7 +140,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
     }
 
-    private sealed class MonthlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    private sealed class MonthlyDateIntervalType(string name, string id) : DateIntervalType(name, id)
     {
         public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddMonths(iteration);
@@ -161,7 +162,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
     }
 
-    private sealed class YearlyDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    private sealed class YearlyDateIntervalType(string name, string id) : DateIntervalType(name, id)
     {
         public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) =>
             effectiveDate.AddYears(iteration);
@@ -183,7 +184,7 @@ public abstract class DateIntervalType : SmartEnum<DateIntervalType>
         }
     }
 
-    private sealed class OneTimeDateIntervalType(string name, int id) : DateIntervalType(name, id)
+    private sealed class OneTimeDateIntervalType(string name, string id) : DateIntervalType(name, id)
     {
         public override DateOnly AddIteration(DateOnly effectiveDate, int iteration) => effectiveDate;
 

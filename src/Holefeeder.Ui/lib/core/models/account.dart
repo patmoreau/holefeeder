@@ -32,7 +32,7 @@ class Account {
     return Account(
       id: json['id'] as String,
       name: json['name'] as String,
-      type: json['type'] as AccountType,
+      type: AccountTypeExtension.fromString(json['type'] as String),
       openBalance: Decimal.parse(json['openBalance'].toString()),
       openDate: DateTime.parse(json['openDate'] as String),
       transactionCount: json['transactionCount'] as int,
@@ -48,7 +48,7 @@ class Account {
     return {
       'id': id,
       'name': name,
-      'type': type,
+      'type': type.toStringValue(),
       'openBalance': openBalance.toString(),
       'openDate': openDate.toIso8601String(),
       'transactionCount': transactionCount,

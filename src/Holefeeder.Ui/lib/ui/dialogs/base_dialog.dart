@@ -1,63 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:universal_platform/universal_platform.dart';
 
-Future<T> showBaseDialog<T>({
+Future<T?> showBaseDialog<T>({
   required BuildContext context,
   required Widget child,
   Widget? fixed,
   VoidCallback? onDismiss,
+  bool? useRootNavigator,
+  String? routeName,
+  Map<String, String>? pathParameters,
+  Map<String, dynamic>? queryParameters,
 }) {
-  return Navigator.push(
-    context,
-    _FDialogRoute<T>(child: child, fixed: fixed),
-  ).then((_) {
-    if (onDismiss != null) onDismiss();
-    return null!;
-  });
+  return Navigator.of(context, rootNavigator: useRootNavigator ?? true)
+      .push<T>(
+        PageRouteBuilder<T>(
+          pageBuilder: (context, animation, secondaryAnimation) => _DialogWrapper<T>(fixed: fixed, child: child),
+          settings: RouteSettings(name: routeName),
+          opaque: false,
+          barrierDismissible: true,
+          barrierColor: Colors.transparent,
+        ),
+      )
+      .then((result) {
+        if (onDismiss != null) onDismiss();
+        return result;
+      });
 }
 
-class _FDialogRoute<T> extends PopupRoute<T> {
-  @override
-  final String barrierLabel = 'Barrier';
+class _DialogWrapper<T> extends StatelessWidget {
   final Widget child;
-  @required
-  Widget? fixed;
+  final Widget? fixed;
 
-  _FDialogRoute({required this.child, this.fixed}) : super();
-
-  @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
+  const _DialogWrapper({required this.child, this.fixed, super.key});
 
   @override
-  bool get barrierDismissible => true;
-
-  @override
-  Color get barrierColor => Color(0xff665b616e);
-
-  late AnimationController _animationController;
-
-  @override
-  AnimationController createAnimationController() {
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 200),
-      vsync: null!, //navigator!.overlay,
-    );
-  }
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation, _) {
+  Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        AnimatedBuilder(
-          animation: animation,
-          builder: (context, _) {
-            var curved = CurvedAnimation(
-              curve: Curves.decelerate,
-              parent: animation,
-            );
-            return Opacity(opacity: curved.value, child: child);
-          },
+        GestureDetector(
+          onTap: () => context.pop(),
+          child: Container(
+            color:
+                UniversalPlatform.isApple
+                    ? Colors.black.withAlpha(89) // 0.35 * 255 ≈ 89
+                    : Color(0xff665b616e),
+          ),
         ),
-        fixed ?? Container(),
+        child,
+        if (fixed != null) fixed!,
       ],
     );
   }
