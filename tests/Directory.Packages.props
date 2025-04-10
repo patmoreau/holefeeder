@@ -13,7 +13,7 @@
     <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.0" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.0" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.0" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.135" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.137" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
@@ -34,7 +34,7 @@
     <PackageVersion Include="WireMock.Net" Version="1.7.4" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.20.0">
+    <PackageVersion Include="xunit.analyzers" Version="1.21.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
