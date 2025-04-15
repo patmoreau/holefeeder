@@ -84,11 +84,11 @@ importers:
         specifier: 1.11.3
         version: 1.11.3
       chart.js:
-        specifier: 4.4.8
-        version: 4.4.8
+        specifier: 4.4.9
+        version: 4.4.9
       chartjs-plugin-datalabels:
         specifier: 2.2.0
-        version: 2.2.0(chart.js@4.4.8)
+        version: 2.2.0(chart.js@4.4.9)
       core-js:
         specifier: 3.41.0
         version: 3.41.0
@@ -100,7 +100,7 @@ importers:
         version: 3.0.2
       ng2-charts:
         specifier: 6.0.1
-        version: 6.0.1(@angular/cdk@18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(chart.js@4.4.8)(rxjs@7.8.2)
+        version: 6.0.1(@angular/cdk@18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(chart.js@4.4.9)(rxjs@7.8.2)
       ngx-toaster:
         specifier: 1.0.1
         version: 1.0.1(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/forms@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2))(rxjs@7.8.2)(typescript@5.4.5)
@@ -205,8 +205,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.17.30)(ts-node@10.9.2(@types/node@20.17.30)(typescript@5.4.5))
       jest-preset-angular:
-        specifier: 14.5.4
-        version: 14.5.4(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(typescript@5.4.5))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser-dynamic@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))))(@babel/core@7.26.10)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.10))(jest@29.7.0(@types/node@20.17.30)(ts-node@10.9.2(@types/node@20.17.30)(typescript@5.4.5)))(jsdom@20.0.3)(typescript@5.4.5)
+        specifier: 14.5.5
+        version: 14.5.5(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(typescript@5.4.5))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser-dynamic@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))))(@babel/core@7.26.10)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.10))(jest@29.7.0(@types/node@20.17.30)(ts-node@10.9.2(@types/node@20.17.30)(typescript@5.4.5)))(jsdom@20.0.3)(typescript@5.4.5)
       json-server:
         specifier: 0.17.4
         version: 0.17.4
@@ -238,8 +238,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       prettier-eslint:
-        specifier: 16.3.1
-        version: 16.3.1(typescript@5.4.5)
+        specifier: 16.3.2
+        version: 16.3.2(typescript@5.4.5)
       source-map-explorer:
         specifier: 2.5.3
         version: 2.5.3
@@ -2925,8 +2925,8 @@ packages:
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
 
-  chart.js@4.4.8:
-    resolution: {integrity: sha512-IkGZlVpXP+83QpMm4uxEiGqSI7jFizwVtF3+n5Pc3k7sMO+tkd0qxh2OzLhenM0K80xtmAONWGBn082EiBQSDA==}
+  chart.js@4.4.9:
+    resolution: {integrity: sha512-EyZ9wWKgpAU0fLJ43YAEIF8sr5F2W3LqbS40ZJyHIner2lY14ufqv2VMp69MAiZ2rpwxEUxEhIH/0U3xyRynxg==}
     engines: {pnpm: '>=8'}
 
   chartjs-plugin-datalabels@2.2.0:
@@ -4767,8 +4767,8 @@ packages:
       jest-resolve:
         optional: true
 
-  jest-preset-angular@14.5.4:
-    resolution: {integrity: sha512-vbil9qTrZljzVJNsDIxEhWVb4r6BQumXEgIHCAVkHJjpF1fYkIB4bczPAe58lBZH2gKeRHBSj8/IoGpGBI1qiQ==}
+  jest-preset-angular@14.5.5:
+    resolution: {integrity: sha512-PUykbixXEYSltKQE4450YuBiO8SMo2SwdGRHAdArRuV06Igq8gaLRVt9j8suj/4qtm2xRqoKnh5j52R0PfQxFw==}
     engines: {node: ^14.15.0 || >=16.10.0}
     peerDependencies:
       '@angular/compiler-cli': '>=15.0.0 <20.0.0'
@@ -5844,8 +5844,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-eslint@16.3.1:
-    resolution: {integrity: sha512-Hfb3dEeZynYtUkcr+FwFLZXWjd8WpaZjM48fSedbqTk0k35ykFxQeXkAvhHJW2UWHqGDX09T0vSYfYOW/73bKg==}
+  prettier-eslint@16.3.2:
+    resolution: {integrity: sha512-KwT/YWoJGbogsHLZ+Rji8ih6JaUqoA8Z4PAxomcVWhq3gYp5jXgSS/BzB3tm6lWS+Hd4VBF81jqMrdJhXKkhcg==}
     engines: {node: '>=16.10.0'}
     peerDependencies:
       prettier-plugin-svelte: ^3.0.0
@@ -10463,13 +10463,13 @@ snapshots:
 
   chardet@0.7.0: {}
 
-  chart.js@4.4.8:
+  chart.js@4.4.9:
     dependencies:
       '@kurkle/color': 0.3.2
 
-  chartjs-plugin-datalabels@2.2.0(chart.js@4.4.8):
+  chartjs-plugin-datalabels@2.2.0(chart.js@4.4.9):
     dependencies:
-      chart.js: 4.4.8
+      chart.js: 4.4.9
 
   chokidar@2.0.4:
     dependencies:
@@ -12673,7 +12673,7 @@ snapshots:
     optionalDependencies:
       jest-resolve: 29.7.0
 
-  jest-preset-angular@14.5.4(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(typescript@5.4.5))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser-dynamic@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))))(@babel/core@7.26.10)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.10))(jest@29.7.0(@types/node@20.17.30)(ts-node@10.9.2(@types/node@20.17.30)(typescript@5.4.5)))(jsdom@20.0.3)(typescript@5.4.5):
+  jest-preset-angular@14.5.5(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(typescript@5.4.5))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser-dynamic@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))))(@babel/core@7.26.10)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.10))(jest@29.7.0(@types/node@20.17.30)(ts-node@10.9.2(@types/node@20.17.30)(typescript@5.4.5)))(jsdom@20.0.3)(typescript@5.4.5):
     dependencies:
       '@angular/compiler-cli': 18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(typescript@5.4.5)
       '@angular/core': 18.2.13(rxjs@7.8.2)(zone.js@0.15.0)
@@ -13537,13 +13537,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ng2-charts@6.0.1(@angular/cdk@18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(chart.js@4.4.8)(rxjs@7.8.2):
+  ng2-charts@6.0.1(@angular/cdk@18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(chart.js@4.4.9)(rxjs@7.8.2):
     dependencies:
       '@angular/cdk': 18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
       '@angular/common': 18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
       '@angular/core': 18.2.13(rxjs@7.8.2)(zone.js@0.15.0)
       '@angular/platform-browser': 18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@18.2.13(rxjs@7.8.2)(zone.js@0.15.0))
-      chart.js: 4.4.8
+      chart.js: 4.4.9
       lodash-es: 4.17.21
       rxjs: 7.8.2
       tslib: 2.8.1
@@ -14022,7 +14022,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-eslint@16.3.1(typescript@5.4.5):
+  prettier-eslint@16.3.2(typescript@5.4.5):
     dependencies:
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.1)(typescript@5.4.5)
       common-tags: 1.8.2
