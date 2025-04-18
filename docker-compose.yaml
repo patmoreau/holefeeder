@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.3.5
+    image: traefik:v3.3.6
     container_name: reverse-proxy
     restart: unless-stopped
     command:
