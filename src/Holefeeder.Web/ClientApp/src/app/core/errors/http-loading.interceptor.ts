@@ -6,10 +6,11 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, retry, throwError } from 'rxjs';
+import { catchError, Observable, retry, throwError, timeout } from 'rxjs';
 
 const retryCount = 3;
 const retryWaitMilliSeconds = 5000;
+const defaultTimeout = 5000;
 
 @Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
@@ -18,6 +19,7 @@ export class HttpLoadingInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
+      timeout(defaultTimeout),
       retry({ count: retryCount, delay: retryWaitMilliSeconds }),
       catchError((err: HttpErrorResponse) => {
         let errorMessage = '';
