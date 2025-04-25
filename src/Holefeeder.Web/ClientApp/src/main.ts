@@ -79,11 +79,6 @@ bootstrapApplication(AppComponent, {
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true,
     }),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpLoadingInterceptor,
-      multi: true,
-    },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: HTTP_INTERCEPTORS,
