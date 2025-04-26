@@ -19,8 +19,6 @@ using Scalar.AspNetCore;
 
 using Serilog;
 
-using ServiceCollectionExtensions = Holefeeder.Api.Extensions.ServiceCollectionExtensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => configuration
@@ -94,7 +92,7 @@ else
 app
     .UseRouting();
 
-app.UseCors(ServiceCollectionExtensions.AllowBlazorClientPolicy)
+app.UseCors()
     .UseAuthentication()
     .UseAuthorization();
 
