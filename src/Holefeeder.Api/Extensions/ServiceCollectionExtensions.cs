@@ -15,7 +15,6 @@ namespace Holefeeder.Api.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
-    internal const string AllowBlazorClientPolicy = nameof(AllowBlazorClientPolicy);
     private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
     private static readonly string[] DatabaseTags = ["holefeeder", "api", "postgres"];
     private static readonly string[] HangfireTags = ["holefeeder", "api", "hangfire"];
@@ -80,7 +79,7 @@ internal static class ServiceCollectionExtensions
         var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
         services.AddCors(options =>
         {
-            options.AddPolicy(AllowBlazorClientPolicy, builder =>
+            options.AddDefaultPolicy(builder =>
             {
                 builder
                     .WithOrigins(allowedOrigins)
