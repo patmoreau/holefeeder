@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:2.29.2-alpine
     container_name: portainer
     expose:
       - 9000
