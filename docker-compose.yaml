@@ -18,6 +18,26 @@ services:
       - .docker/traefik/dynamic.${ENV}.yml:/etc/traefik/dynamic.yml:ro
       - traefik_certs:/letsencrypt
 
+  portainer:
+    image: portainer/portainer-ce:2.29.2-alpine
+    container_name: portainer
+    expose:
+      - 9000
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'traefik.http.routers.portainer-router.entrypoints=websecure'
+      - 'traefik.http.routers.portainer-router.rule=Host(`portainer.${DOMAIN}`)'
+      - 'traefik.http.routers.portainer-router.tls=true'
+      - 'traefik.http.routers.portainer-router.tls.certresolver=acme_certresolver'
+      - 'traefik.http.services.portainer-service.loadbalancer.server.port=9000'
+
   whoami:
     image: traefik/whoami:v1.11
     container_name: whoami
@@ -145,3 +165,4 @@ volumes:
   postgres-data:
   seq-data:
   traefik_certs:
+  portainer_data:
