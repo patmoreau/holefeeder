@@ -17,10 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddHttpLogging(options =>
-{
-    options.LoggingFields = HttpLoggingFields.All;
-});
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<AngularSettings>(builder.Configuration.GetSection(nameof(AngularSettings)))
     .AddSingleton(sp => sp.GetRequiredService<IOptions<AngularSettings>>().Value);
@@ -56,8 +52,6 @@ else
 }
 
 app.UseSerilogRequestLogging();
-app.UseHttpLogging();
-
 app.UseStaticFiles();
 app.UseRouting();
 
