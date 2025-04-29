@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { filterNullish } from '@app/shared/helpers';
 import { DateInterval, MessageType, Upcoming } from '@app/shared/models';
 import { format } from 'date-fns';
-import { filter, map, Observable, take } from 'rxjs';
+import { filter, map, Observable, take, debounceTime, shareReplay } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { UpcomingAdapter, upcomingType } from '../adapters';
 import { MessageService } from './message.service';
@@ -11,13 +11,16 @@ import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
 
 const apiRoute = 'cashflows/get-upcoming';
+const DEBOUNCE_TIME = 300; // ms
 
 interface UpcomingState {
   upcoming: Upcoming[];
+  lastUpdate: number;
 }
 
 const initialState: UpcomingState = {
   upcoming: [],
+  lastUpdate: 0
 };
 
 @Injectable({ providedIn: 'root' })
@@ -39,7 +42,8 @@ export class UpcomingService extends StateService<UpcomingState> {
           message =>
             message.type === MessageType.transaction ||
             message.type === MessageType.cashflow
-        )
+        ),
+        debounceTime(DEBOUNCE_TIME)
       )
       .subscribe(() => this.load());
 
@@ -61,9 +65,21 @@ export class UpcomingService extends StateService<UpcomingState> {
   }
 
   private load() {
+    // Prevent multiple loads within 1 second
+    const now = Date.now();
+    if (now - this.state.lastUpdate < 1000) {
+      return;
+    }
+
     this.settingsService.period$
-      .pipe(switchMap(period => this.getAll(period)))
-      .subscribe(items => this.setState({ upcoming: items }));
+      .pipe(
+        switchMap(period => this.getAll(period)),
+        take(1)
+      )
+      .subscribe(items => this.setState({
+        upcoming: items,
+        lastUpdate: now
+      }));
   }
 
   private getAll(period: DateInterval): Observable<Upcoming[]> {
@@ -73,6 +89,9 @@ export class UpcomingService extends StateService<UpcomingState> {
           .set('from', format(period.start, 'yyyy-MM-dd'))
           .set('to', format(period.end, 'yyyy-MM-dd')),
       })
-      .pipe(map(data => data.map(this.adapter.adapt)));
+      .pipe(
+        map(data => data.map(this.adapter.adapt)),
+        shareReplay(1)
+      );
   }
 }

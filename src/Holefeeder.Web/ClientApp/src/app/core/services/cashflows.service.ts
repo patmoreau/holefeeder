@@ -8,29 +8,38 @@ import {
   MessageType,
   ModifyCashflowCommand,
   PagingInfo,
+  ICategoryInfo,
+  IAccountInfo,
+  DateIntervalType,
 } from '@app/shared/models';
-import { filter, Observable, of, tap } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Observable, of, tap, BehaviorSubject, catchError, map, switchMap, throwError, shareReplay, filter, debounceTime } from 'rxjs';
 import { CashflowDetailAdapter } from '../adapters';
 import { StateService } from './state.service';
 
 const apiRoute = 'cashflows';
+const CACHE_TTL = 300000; // 5 minutes cache
+const DEBOUNCE_TIME = 300; // 300ms debounce
 
 interface CashflowState {
   cashflows: CashflowDetail[];
   selected: CashflowDetail | null;
+  lastUpdate: number;
 }
 
 const initialState: CashflowState = {
   cashflows: [],
   selected: null,
+  lastUpdate: 0
 };
 
 @Injectable({ providedIn: 'root' })
 export class CashflowsService extends StateService<CashflowState> {
+  private cashflowsCache: Map<string, Observable<PagingInfo<CashflowDetail>>> = new Map();
+
   inactiveCashflows$: Observable<CashflowDetail[]> = this.select(state =>
     state.cashflows.filter(x => x.inactive)
   );
+
   activeCashflows$: Observable<CashflowDetail[]> = this.select(state =>
     state.cashflows.filter(x => !x.inactive)
   );
@@ -43,12 +52,18 @@ export class CashflowsService extends StateService<CashflowState> {
   ) {
     super(initialState);
 
+    // Listen for cashflow changes and reload data
     this.messages.listen
-      .pipe(filter(message => message.type === MessageType.cashflow))
+      .pipe(
+        filter(message => message.type === MessageType.cashflow),
+        debounceTime(DEBOUNCE_TIME)
+      )
       .subscribe(() => {
+        this.clearCache();
         this.load();
       });
 
+    // Initial load
     this.load();
   }
 
@@ -57,6 +72,12 @@ export class CashflowsService extends StateService<CashflowState> {
     limit: number,
     sort: string[]
   ): Observable<PagingInfo<CashflowDetail>> {
+    const cacheKey = `${offset}-${limit}-${sort.join(',')}`;
+
+    if (this.cashflowsCache.has(cacheKey)) {
+      return this.cashflowsCache.get(cacheKey)!;
+    }
+
     let params = new HttpParams();
     if (offset) {
       params = params.set('offset', `${offset}`);
@@ -69,18 +90,64 @@ export class CashflowsService extends StateService<CashflowState> {
         params = params.append('sort', `${element}`);
       });
     }
-    return this.http
+
+    const request = this.http
       .get<object[]>(`${this.apiUrl}/${apiRoute}`, {
         observe: 'response',
         params: params,
       })
       .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
-        catchError(formatErrors)
+        catchError(error => {
+          this.messages.sendMessage({
+            type: MessageType.error,
+            action: MessageAction.error,
+            content: 'Failed to load cashflows. Please try again later.'
+          });
+          return throwError(() => error);
+        }),
+        shareReplay(1)
       );
+
+    this.cashflowsCache.set(cacheKey, request);
+
+    // Clear cache after TTL
+    setTimeout(() => {
+      this.cashflowsCache.delete(cacheKey);
+    }, CACHE_TTL);
+
+    return request;
   }
 
-  findById(id: number | string): Observable<CashflowDetail | undefined> {
+  findById(id: string): Observable<CashflowDetail | undefined> {
+    if (!this.state.lastUpdate || Date.now() - this.state.lastUpdate > CACHE_TTL) {
+      return this.http
+        .get<{
+          id: string;
+          effectiveDate: Date;
+          amount: number;
+          intervalType: DateIntervalType;
+          frequency: number;
+          recurrence: number;
+          description: string;
+          category: ICategoryInfo;
+          account: IAccountInfo;
+          inactive: boolean;
+          tags: string[];
+        }>(`${this.apiUrl}/${apiRoute}/${id}`)
+        .pipe(
+          map(data => this.adapter.adapt(data)),
+          catchError(error => {
+            this.messages.sendMessage({
+              type: MessageType.error,
+              action: MessageAction.error,
+              content: `Failed to load cashflow ${id}. Please try again later.`
+            });
+            return throwError(() => error);
+          })
+        );
+    }
+
     return this.select(state =>
       state.cashflows.find(cashflow => cashflow.id === id)
     );
@@ -90,13 +157,14 @@ export class CashflowsService extends StateService<CashflowState> {
     return this.http.post(`${this.apiUrl}/${apiRoute}/modify`, cashflow).pipe(
       switchMap(() => of(void 0)),
       catchError(formatErrors),
-      tap(() =>
+      tap(() => {
+        this.clearCache();
         this.messages.sendMessage({
           type: MessageType.cashflow,
           action: MessageAction.post,
           content: { id: cashflow.id },
-        })
-      )
+        });
+      })
     );
   }
 
@@ -104,19 +172,24 @@ export class CashflowsService extends StateService<CashflowState> {
     return this.http.post(`${this.apiUrl}/${apiRoute}/cancel`, { id: id }).pipe(
       switchMap(() => of(void 0)),
       catchError(formatErrors),
-      tap(() =>
+      tap(() => {
+        this.clearCache();
         this.messages.sendMessage({
           type: MessageType.cashflow,
           action: MessageAction.post,
           content: { id: id },
-        })
-      )
+        });
+      })
     );
   }
 
   private load() {
     this.getAll().subscribe(pagingInfo =>
-      this.setState({ cashflows: pagingInfo.items })
+      this.setState({
+        cashflows: pagingInfo.items,
+        selected: this.state.selected,
+        lastUpdate: Date.now()
+      })
     );
   }
 
@@ -130,7 +203,19 @@ export class CashflowsService extends StateService<CashflowState> {
       })
       .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
-        catchError(formatErrors)
+        catchError(error => {
+          this.messages.sendMessage({
+            type: MessageType.error,
+            action: MessageAction.error,
+            content: 'Failed to load cashflows. Please try again later.'
+          });
+          return throwError(() => error);
+        }),
+        shareReplay(1)
       );
+  }
+
+  private clearCache() {
+    this.cashflowsCache.clear();
   }
 }
