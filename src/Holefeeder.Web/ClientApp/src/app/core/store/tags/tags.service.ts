@@ -65,7 +65,7 @@ export class TagsService {
     this.fetch().subscribe();
   }
 
-  private adaptTags(tags: ReadonlyArray<any>): ReadonlyArray<Tag> {
+  private adaptTags(tags: ReadonlyArray<Tag>): ReadonlyArray<Tag> {
     return tags.map(t => new Tag(t.tag, t.count));
   }
 }

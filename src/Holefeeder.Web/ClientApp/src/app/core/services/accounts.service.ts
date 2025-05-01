@@ -10,7 +10,7 @@ import {
   PagingInfo,
   Upcoming,
 } from '@app/shared/models';
-import { catchError, filter, map, Observable, shareReplay, timer, switchMap, debounceTime } from 'rxjs';
+import { catchError, filter, map, Observable, shareReplay, timer, debounceTime } from 'rxjs';
 import { AccountAdapter, accountType } from '@app/core/adapters';
 import { formatErrors, mapToPagingInfo } from '../utils/api.utils';
 import { StateService } from './state.service';

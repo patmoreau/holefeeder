@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StateService } from './state.service';
-import { Observable, BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { Observable, distinctUntilChanged } from 'rxjs';
 import { LoggingLevel } from '@app/shared/models/logging-level.enum';
 
 interface ConfigState {

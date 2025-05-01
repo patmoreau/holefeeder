@@ -12,7 +12,7 @@ import {
   IAccountInfo,
   DateIntervalType,
 } from '@app/shared/models';
-import { Observable, of, tap, BehaviorSubject, catchError, map, switchMap, throwError, shareReplay, filter, debounceTime } from 'rxjs';
+import { Observable, of, tap, catchError, map, switchMap, throwError, shareReplay, filter, debounceTime } from 'rxjs';
 import { CashflowDetailAdapter } from '../adapters';
 import { StateService } from './state.service';
 
