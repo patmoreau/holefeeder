@@ -60,11 +60,8 @@ bootstrapApplication(AppComponent, {
           customParamsAuthRequest: {
             audience: 'https://holefeeder-api.drifterapps.app',
           },
-          secureRoutes: [
-            'https://holefeeder.localtest.me',
-            'http://localhost:3000',
-            '/gateway/api',
-          ],
+          // Update secureRoutes to use the environment's baseUrl
+          secureRoutes: [environment.baseUrl],
         },
       })
     ),

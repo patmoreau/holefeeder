@@ -8,9 +8,9 @@ import {
 import { Injectable } from '@angular/core';
 import { catchError, Observable, retry, throwError, timeout } from 'rxjs';
 
-const retryCount = 3;
-const retryWaitMilliSeconds = 5000;
-const defaultTimeout = 5000;
+const retryCount = 1;
+const retryWaitMilliSeconds = 1000;
+const defaultTimeout = 30000;
 
 @Injectable({ providedIn: 'root' })
 export class HttpLoadingInterceptor implements HttpInterceptor {
