@@ -44,7 +44,7 @@
     "add": "2.0.6",
     "angular-auth-oidc-client": "18.0.2",
     "bootstrap": "5.3.5",
-    "bootstrap-icons": "1.11.3",
+    "bootstrap-icons": "1.12.1",
     "chart.js": "4.4.9",
     "chartjs-plugin-datalabels": "2.2.0",
     "core-js": "3.42.0",
