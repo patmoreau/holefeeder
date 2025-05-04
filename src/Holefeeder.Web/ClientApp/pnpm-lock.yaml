@@ -181,8 +181,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2(eslint@9.26.0(jiti@1.21.6))(typescript@5.4.5)
       eslint-plugin-prettier:
-        specifier: 5.2.6
-        version: 5.2.6(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.26.0(jiti@1.21.6)))(eslint@9.26.0(jiti@1.21.6))(prettier@3.5.3)
+        specifier: 5.3.1
+        version: 5.3.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.26.0(jiti@1.21.6)))(eslint@9.26.0(jiti@1.21.6))(prettier@3.5.3)
       eslint-plugin-react-hooks:
         specifier: 5.2.0
         version: 5.2.0(eslint@9.26.0(jiti@1.21.6))
@@ -3704,8 +3704,8 @@ packages:
     peerDependencies:
       eslint: '>=9.17.0'
 
-  eslint-plugin-prettier@5.2.6:
-    resolution: {integrity: sha512-mUcf7QG2Tjk7H055Jk0lGBjbgDnfrvqjhXh9t2xLMSCjZVcw9Rb1V6sVNXO0th3jgeO7zllWPTNRil3JW94TnQ==}
+  eslint-plugin-prettier@5.3.1:
+    resolution: {integrity: sha512-vad9VWgEm9xaVXRNmb4aeOt0PWDc61IAdzghkbYQ2wavgax148iKoX1rNJcgkBGCipzLzOnHYVgL7xudM9yccQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       '@types/eslint': '>=8.0.0'
@@ -11553,7 +11553,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-prettier@5.2.6(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.26.0(jiti@1.21.6)))(eslint@9.26.0(jiti@1.21.6))(prettier@3.5.3):
+  eslint-plugin-prettier@5.3.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.26.0(jiti@1.21.6)))(eslint@9.26.0(jiti@1.21.6))(prettier@3.5.3):
     dependencies:
       eslint: 9.26.0(jiti@1.21.6)
       prettier: 3.5.3
