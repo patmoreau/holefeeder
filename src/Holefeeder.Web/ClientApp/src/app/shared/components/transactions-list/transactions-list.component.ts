@@ -22,7 +22,7 @@ import { LoggerService } from '@app/core/logger';
   styleUrls: ['./transactions-list.component.scss'],
   standalone: true,
   imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TransactionsListComponent implements OnInit {
   @Input() accountId: string | undefined;
@@ -38,7 +38,7 @@ export class TransactionsListComponent implements OnInit {
     private transactionsService: TransactionsService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(
@@ -48,11 +48,11 @@ export class TransactionsListComponent implements OnInit {
         this.currentPage = +(params.get('page') ?? 1);
         return this.accountId
           ? this.transactionsService.find(
-              this.accountId,
-              (this.currentPage - 1) * this.limit,
-              this.limit,
-              ['-date']
-            )
+            this.accountId,
+            (this.currentPage - 1) * this.limit,
+            this.limit,
+            ['-date']
+          )
           : of(new PagingInfo<TransactionDetail>(0, []));
       })
     );

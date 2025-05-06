@@ -29,18 +29,18 @@
 // @import "../node_modules/bootstrap/scss/_utilities";
 // @import "../node_modules/bootstrap/scss/_root";
 // @import "../node_modules/bootstrap/scss/_reboot";
-// //@import '~ngx-toastr/toastr-bs4-alert';
+// //@import 'ngx-toastr/toastr-bs4-alert';
 
- // Add additional custom code here
- body {
-   min-height: 75rem;
-   padding-top: 4.5rem;
- }
+// Add additional custom code here
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
 
- .invalid {
-   border: 1px solid red;
- }
+.invalid {
+  border: 1px solid red;
+}
 
- .form-control.ng-invalid {
-   border: 1px solid red;
- }
+.form-control.ng-invalid {
+  border: 1px solid red;
+}

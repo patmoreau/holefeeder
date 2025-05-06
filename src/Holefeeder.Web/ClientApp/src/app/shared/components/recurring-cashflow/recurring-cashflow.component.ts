@@ -9,12 +9,10 @@ import { DatePickerComponent } from '@app/shared/components';
 import { DateIntervalTypeNames } from '@app/shared/models';
 
 @Component({
-  selector:
-    '[formGroup] app-recurring-cashflow,[formGroupName] app-recurring-cashflow',
-  templateUrl: './recurring-cashflow.component.html',
-  styleUrls: ['./recurring-cashflow.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePickerComponent],
+    selector: '[formGroup] app-recurring-cashflow,[formGroupName] app-recurring-cashflow',
+    templateUrl: './recurring-cashflow.component.html',
+    styleUrls: ['./recurring-cashflow.component.scss'],
+    imports: [CommonModule, ReactiveFormsModule, DatePickerComponent]
 })
 export class RecurringCashflowComponent implements OnInit {
   form!: FormGroup;

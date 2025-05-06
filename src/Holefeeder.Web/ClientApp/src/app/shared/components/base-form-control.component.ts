@@ -11,7 +11,10 @@ import {
 import { Subject, tap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export abstract class BaseFormControlComponent<T>
   implements OnInit, ControlValueAccessor, OnDestroy
 {

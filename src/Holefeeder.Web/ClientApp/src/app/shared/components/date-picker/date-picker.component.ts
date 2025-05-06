@@ -26,6 +26,7 @@ import { dateFromUtc, dateToUtc } from '@app/shared/helpers';
   selector: 'app-date-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -39,9 +40,8 @@ import { dateFromUtc, dateToUtc } from '@app/shared/helpers';
     },
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter },
   ],
-  standalone: true,
   imports: [CommonModule, FormsModule, NgbDatepickerModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
   @Input()

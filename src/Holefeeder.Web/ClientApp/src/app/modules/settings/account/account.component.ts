@@ -9,11 +9,10 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+    selector: 'app-account',
+    templateUrl: './account.component.html',
+    styleUrls: ['./account.component.scss'],
+    imports: [CommonModule, ReactiveFormsModule]
 })
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;

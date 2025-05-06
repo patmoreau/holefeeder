@@ -11,7 +11,6 @@ import {
   DatePickerComponent,
   DecimalInputComponent,
 } from '@app/shared/components';
-import { AutofocusDirective } from '@app/shared/directives';
 import { AccountInfo } from '@app/shared/models';
 import { Observable } from 'rxjs';
 
@@ -24,9 +23,8 @@ import { Observable } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     DatePickerComponent,
-    AutofocusDirective,
-    DecimalInputComponent,
-  ],
+    DecimalInputComponent
+  ]
 })
 export class TransferComponent implements OnInit {
   form!: FormGroup;
@@ -36,7 +34,7 @@ export class TransferComponent implements OnInit {
   constructor(
     private rootFormGroup: FormGroupDirective,
     private accountsService: AccountsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.form = this.rootFormGroup.control;

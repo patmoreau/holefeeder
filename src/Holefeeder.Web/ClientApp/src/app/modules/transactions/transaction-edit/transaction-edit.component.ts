@@ -13,7 +13,6 @@ import {
   DecimalInputComponent,
   TagsInputComponent,
 } from '@app/shared/components';
-import { AutofocusDirective } from '@app/shared/directives';
 import { AccountInfo, Category } from '@app/shared/models';
 import { combineLatest, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -29,9 +28,8 @@ import { AppState, CategoriesFeature } from '@app/core/store';
     ReactiveFormsModule,
     DatePickerComponent,
     TagsInputComponent,
-    AutofocusDirective,
-    DecimalInputComponent,
-  ],
+    DecimalInputComponent
+  ]
 })
 export class TransactionEditComponent implements OnInit {
   form!: FormGroup;
@@ -45,7 +43,7 @@ export class TransactionEditComponent implements OnInit {
   constructor(
     private rootFormGroup: FormGroupDirective,
     private accountsService: AccountsService
-  ) {}
+  ) { }
 
   get amount(): FormControl {
     return this.form.get('amount') as FormControl;

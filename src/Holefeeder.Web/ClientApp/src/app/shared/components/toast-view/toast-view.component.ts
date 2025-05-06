@@ -11,12 +11,11 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-toast-view',
-  standalone: true,
-  imports: [CommonModule, NgbToastModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  templateUrl: './toast-view.component.html',
-  styleUrls: ['./toast-view.component.scss'],
+    selector: 'app-toast-view',
+    imports: [CommonModule, NgbToastModule],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    templateUrl: './toast-view.component.html',
+    styleUrls: ['./toast-view.component.scss']
 })
 export class ToastViewComponent implements OnInit {
   ToastType = ToastType;

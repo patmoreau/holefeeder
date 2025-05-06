@@ -7,11 +7,10 @@ import { Account } from '@app/shared/models';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-account-upcoming',
-  templateUrl: './account-upcoming.component.html',
-  styleUrls: ['./account-upcoming.component.scss'],
-  standalone: true,
-  imports: [CommonModule, UpcomingListComponent],
+    selector: 'app-account-upcoming',
+    templateUrl: './account-upcoming.component.html',
+    styleUrls: ['./account-upcoming.component.scss'],
+    imports: [CommonModule, UpcomingListComponent]
 })
 export class AccountUpcomingComponent implements OnInit {
   account$!: Observable<Account>;

@@ -14,11 +14,10 @@ import { AccountCommandsService } from '../services/account-commands.service';
 import { AccountEditComponent } from '@app/modules/accounts/account-edit/account-edit.component';
 
 @Component({
-  selector: 'app-open-account',
-  templateUrl: './open-account.component.html',
-  styleUrls: ['./open-account.component.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AccountEditComponent],
+    selector: 'app-open-account',
+    templateUrl: './open-account.component.html',
+    styleUrls: ['./open-account.component.scss'],
+    imports: [CommonModule, ReactiveFormsModule, AccountEditComponent]
 })
 export class OpenAccountComponent implements OnInit {
   form!: FormGroup;

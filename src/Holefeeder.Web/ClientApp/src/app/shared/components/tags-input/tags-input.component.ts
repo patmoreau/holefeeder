@@ -22,7 +22,7 @@ import {
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss'],
   standalone: true,
-  imports: [CommonModule, NgbTypeaheadModule],
+  imports: [CommonModule, NgbTypeaheadModule]
 })
 export class TagsInputComponent {
   @Input() tagsArray = new FormArray<FormControl<string | null>>([]);

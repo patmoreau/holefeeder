@@ -17,7 +17,6 @@ import { AppStore } from '@app/core/store';
 import { AuthActions } from '@app/core/store/auth/auth.actions';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import { LoggerService } from '@app/core/logger';
-import { DatePickerComponent } from '@app/shared/components';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -27,12 +26,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     RouterModule,
     NgbModule,
-    DatePickerComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './unauthorized.component.html',
-  styleUrls: ['./unauthorized.component.scss'],
+  styleUrls: ['./unauthorized.component.scss']
 })
 export class UnauthorizedComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
@@ -57,7 +55,7 @@ export class UnauthorizedComponent implements OnInit {
     private subService: SubscriberService,
     private store: Store<AppStore>,
     private logger: LoggerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isNavbarCollapsed = true;

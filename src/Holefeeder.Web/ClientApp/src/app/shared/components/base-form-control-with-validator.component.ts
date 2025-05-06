@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validator } from '@angular/forms';
 import { BaseFormControlComponent } from './base-form-control.component';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export abstract class BaseFormControlWithValidatorComponent<T>
   extends BaseFormControlComponent<T>
   implements Validator, OnInit

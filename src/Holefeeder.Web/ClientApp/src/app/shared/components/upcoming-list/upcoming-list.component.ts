@@ -13,11 +13,10 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-upcoming-list',
-  templateUrl: './upcoming-list.component.html',
-  styleUrls: ['./upcoming-list.component.scss'],
-  standalone: true,
-  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
+    selector: 'app-upcoming-list',
+    templateUrl: './upcoming-list.component.html',
+    styleUrls: ['./upcoming-list.component.scss'],
+    imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent]
 })
 export class UpcomingListComponent implements OnInit {
   @Input() accountId: string | undefined;

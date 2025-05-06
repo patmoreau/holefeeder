@@ -15,12 +15,11 @@ import { addDays, startOfToday } from 'date-fns';
 import { Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [CommonModule, RouterModule, NgbModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-header',
+    imports: [CommonModule, RouterModule, NgbModule],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;

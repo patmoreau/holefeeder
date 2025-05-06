@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-input-dialog',
-  template: ` <div>
+    selector: 'app-input-dialog',
+    template: ` <div>
     <div class="modal-header">
       <h4 class="modal-title">{{ title }}</h4>
     </div>
@@ -29,9 +29,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>
   </div>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ReactiveFormsModule]
 })
 export class InputDialogComponent {
   title!: string;
