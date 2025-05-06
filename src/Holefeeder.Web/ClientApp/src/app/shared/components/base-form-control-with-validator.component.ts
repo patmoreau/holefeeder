@@ -1,15 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validator } from '@angular/forms';
 import { BaseFormControlComponent } from './base-form-control.component';
 
-@Component({
-    template: '',
-    standalone: false
-})
+@Directive()
 export abstract class BaseFormControlWithValidatorComponent<T>
   extends BaseFormControlComponent<T>
-  implements Validator, OnInit
-{
+  implements Validator, OnInit {
   public override ngOnInit(): void {
     super.ngOnInit();
 
@@ -29,7 +25,7 @@ export abstract class BaseFormControlWithValidatorComponent<T>
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public onValidationChangeFn = () => {};
+  public onValidationChangeFn = () => { };
 
   public override onChange() {
     super.onChange();

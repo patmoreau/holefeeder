@@ -5,7 +5,6 @@ import {
   importProvidersFrom,
   isDevMode,
 } from '@angular/core';
-import '@angular/localize/init';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';

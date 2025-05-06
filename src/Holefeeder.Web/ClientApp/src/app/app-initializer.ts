@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { FactoryProvider, inject, provideAppInitializer } from '@angular/core';
+import { inject, provideAppInitializer } from '@angular/core';
 import { ConfigService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, timeout, retry } from 'rxjs';
