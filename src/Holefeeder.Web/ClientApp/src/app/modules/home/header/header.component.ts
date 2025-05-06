@@ -20,7 +20,7 @@ import { Observable, of } from 'rxjs';
   imports: [CommonModule, RouterModule, NgbModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   settings$: Observable<Settings> | undefined;
