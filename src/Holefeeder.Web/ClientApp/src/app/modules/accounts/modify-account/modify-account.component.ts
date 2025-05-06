@@ -29,7 +29,7 @@ const accountIdParamName = 'accountId';
     ReactiveFormsModule,
     LoaderComponent,
     AccountEditComponent,
-  ],
+  ]
 })
 export class ModifyAccountComponent implements OnInit {
   @ViewChild('confirm', { static: true })
@@ -49,7 +49,7 @@ export class ModifyAccountComponent implements OnInit {
     private commandsService: AccountCommandsService,
     private closeAdapter: CloseAccountAdapter,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

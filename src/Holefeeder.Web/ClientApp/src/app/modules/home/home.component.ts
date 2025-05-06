@@ -15,7 +15,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
     LoadingBarModule,
     ToastViewComponent,
     HeaderComponent,
-    FooterComponent,
-  ],
+    FooterComponent
+  ]
 })
-export class HomeComponent {}
+export class HomeComponent { }

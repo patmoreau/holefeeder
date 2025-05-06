@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { APP_INITIALIZER, FactoryProvider } from '@angular/core';
+import { inject, provideAppInitializer } from '@angular/core';
 import { ConfigService } from '@app/core/services';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, timeout, retry } from 'rxjs';
@@ -27,9 +27,7 @@ function loadConfigFactory(
     );
 }
 
-export const loadConfigProvider: FactoryProvider = {
-  provide: APP_INITIALIZER,
-  useFactory: loadConfigFactory,
-  deps: [HttpClient, ConfigService],
-  multi: true,
-};
+export const loadConfigProvider = provideAppInitializer(() => {
+  const initializerFn = loadConfigFactory(inject(HttpClient), inject(ConfigService));
+  return initializerFn();
+});

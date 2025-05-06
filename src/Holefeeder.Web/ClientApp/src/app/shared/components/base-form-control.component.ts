@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Directive, inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -11,10 +11,9 @@ import {
 import { Subject, tap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Component({ template: '' })
+@Directive()
 export abstract class BaseFormControlComponent<T>
-  implements OnInit, ControlValueAccessor, OnDestroy
-{
+  implements OnInit, ControlValueAccessor, OnDestroy {
   public control!: FormControl;
 
   public value!: T | null;
@@ -46,7 +45,7 @@ export abstract class BaseFormControlComponent<T>
   public onChanged = (value: T | null): T | null => value;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public onTouched = (): void => {};
+  public onTouched = (): void => { };
 
   public ngOnDestroy(): void {
     this.destroy.next();

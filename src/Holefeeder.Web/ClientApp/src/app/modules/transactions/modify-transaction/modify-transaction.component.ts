@@ -28,7 +28,7 @@ const transactionIdParamName = 'transactionId';
     ReactiveFormsModule,
     TransactionEditComponent,
     LoaderComponent,
-  ],
+  ]
 })
 export class ModifyTransactionComponent implements OnInit {
   form!: FormGroup;
@@ -44,7 +44,7 @@ export class ModifyTransactionComponent implements OnInit {
     private transactionsService: TransactionsService,
     private adapter: ModifyTransactionCommandAdapter,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

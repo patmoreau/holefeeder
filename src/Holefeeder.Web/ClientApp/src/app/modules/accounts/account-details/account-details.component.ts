@@ -12,7 +12,7 @@ import { Observable, of, switchMap, tap } from 'rxjs';
   templateUrl: './account-details.component.html',
   styleUrls: ['./account-details.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, LoaderComponent],
+  imports: [CommonModule, RouterModule, LoaderComponent]
 })
 export class AccountDetailsComponent implements OnInit {
   account$!: Observable<Account | undefined>;
@@ -23,7 +23,7 @@ export class AccountDetailsComponent implements OnInit {
     private upcomingService: UpcomingService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   private static amountClass(amount: number): string {
     if (amount < 0) {

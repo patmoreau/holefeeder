@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './transaction-list-item.component.html',
   styleUrls: ['./transaction-list-item.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
 export class TransactionListItemComponent {
   @Input() description!: string;

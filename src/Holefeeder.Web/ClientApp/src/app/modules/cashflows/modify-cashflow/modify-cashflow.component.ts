@@ -27,7 +27,6 @@ import {
   LoaderComponent,
   TagsInputComponent,
 } from '@app/shared/components';
-import { AutofocusDirective } from '@app/shared/directives';
 import { filterNullish, filterTrue } from '@app/shared/helpers';
 import {
   Account,
@@ -51,11 +50,10 @@ const cashflowIdParamName = 'cashflowId';
     CommonModule,
     ReactiveFormsModule,
     TagsInputComponent,
-    AutofocusDirective,
     DatePickerComponent,
     LoaderComponent,
-    DecimalInputComponent,
-  ],
+    DecimalInputComponent
+  ]
 })
 export class ModifyCashflowComponent implements OnInit {
   form!: FormGroup;
@@ -89,7 +87,7 @@ export class ModifyCashflowComponent implements OnInit {
     private cashflowsService: CashflowsService,
     private adapter: ModifyCashflowCommandAdapter,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   get amount(): FormControl {
     return this.form.get('amount') as FormControl;

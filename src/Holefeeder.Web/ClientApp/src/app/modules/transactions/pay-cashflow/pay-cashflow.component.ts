@@ -25,7 +25,7 @@ import { map, Observable, tap } from 'rxjs';
     ReactiveFormsModule,
     TransactionEditComponent,
     LoaderComponent,
-  ],
+  ]
 })
 export class PayCashflowComponent implements OnInit {
   form!: FormGroup;
@@ -40,7 +40,7 @@ export class PayCashflowComponent implements OnInit {
     private location: Location,
     private transactionsService: TransactionsService,
     private adapter: PayCashflowCommandAdapter
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

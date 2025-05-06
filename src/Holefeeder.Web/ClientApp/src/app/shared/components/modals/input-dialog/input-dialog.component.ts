@@ -31,14 +31,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule]
 })
 export class InputDialogComponent {
   title!: string;
   message!: string;
   input = new FormControl('', Validators.required);
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) { }
 
   set initialValue(value: string) {
     this.input.setValue(value);

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AutofocusDirective } from '@app/shared/directives';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -34,14 +33,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         {{ action }}
       </button>
     </div>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [AutofocusDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: []
 })
 export class DeleteDialogComponent {
   title!: string;
   prompt!: string;
   action!: string;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) { }
 }

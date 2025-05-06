@@ -42,7 +42,7 @@ const accountIdParamName = 'accountId';
     TransferComponent,
     RecurringCashflowComponent,
     LoaderComponent,
-  ],
+  ]
 })
 export class MakePurchaseComponent implements OnInit {
   public isNotRecurring = true;
@@ -62,7 +62,7 @@ export class MakePurchaseComponent implements OnInit {
     private transactionsService: TransactionsService,
     private adapterPurchase: MakePurchaseCommandAdapter,
     private adapterTransfer: TransferMoneyCommandAdapter
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.formPurchase = this.formBuilder.group({

@@ -5,6 +5,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule]
 })
-export class SettingsComponent {}
+export class SettingsComponent { }

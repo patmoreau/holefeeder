@@ -17,7 +17,7 @@ import { AutofocusDirective } from '../../directives';
       pattern="[0-9]*(.[0-9]{1,2})?" />
   `,
   standalone: true,
-  imports: [AutofocusDirective, ReactiveFormsModule],
+  imports: [AutofocusDirective, ReactiveFormsModule]
 })
 export class DecimalInputComponent {
   @Input() control = new FormControl();

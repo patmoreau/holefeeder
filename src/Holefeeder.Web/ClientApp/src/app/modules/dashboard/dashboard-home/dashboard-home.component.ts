@@ -10,7 +10,6 @@ import {
 import {
   LoaderComponent,
   TransactionListItemComponent,
-  TransactionsListComponent,
 } from '@app/shared/components';
 import { MessageAction, MessageType, Upcoming } from '@app/shared/models';
 import { ChartConfiguration, ChartData, ChartType, ChartTypeRegistry, Color, LegendItem } from 'chart.js';
@@ -34,7 +33,6 @@ import { StatisticsActions, StatisticsFeature } from '@app/core/store/statistics
     CommonModule,
     RouterModule,
     BaseChartDirective,
-    TransactionsListComponent,
     TransactionListItemComponent,
     LoaderComponent,
     FilterNonNullishPipe

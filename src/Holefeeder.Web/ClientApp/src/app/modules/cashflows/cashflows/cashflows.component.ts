@@ -6,6 +6,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './cashflows.component.html',
   styleUrls: ['./cashflows.component.scss'],
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule]
 })
-export class CashflowsComponent {}
+export class CashflowsComponent { }

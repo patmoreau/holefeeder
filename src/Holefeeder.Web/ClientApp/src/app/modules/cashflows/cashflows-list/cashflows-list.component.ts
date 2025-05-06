@@ -5,7 +5,6 @@ import { CashflowsService } from '@app/core/services';
 import {
   LoaderComponent,
   TransactionListItemComponent,
-  TransactionsListComponent,
 } from '@app/shared/components';
 import { CashflowDetail } from '@app/shared/models';
 import { Observable, Subject } from 'rxjs';
@@ -17,10 +16,9 @@ import { Observable, Subject } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    TransactionsListComponent,
     TransactionListItemComponent,
-    LoaderComponent,
-  ],
+    LoaderComponent
+  ]
 })
 export class CashflowsListComponent implements OnInit {
   cashflows$!: Observable<CashflowDetail[]>;
@@ -30,7 +28,7 @@ export class CashflowsListComponent implements OnInit {
   constructor(
     private cashflowsService: CashflowsService,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.cashflows$ = this.cashflowsService.activeCashflows$;

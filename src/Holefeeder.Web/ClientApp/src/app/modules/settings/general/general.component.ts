@@ -23,7 +23,7 @@ import { Observable, tap } from 'rxjs';
     ReactiveFormsModule,
     RouterModule,
     DatePickerComponent,
-  ],
+  ]
 })
 export class GeneralComponent implements OnInit {
   settings$: Observable<Settings> | undefined;

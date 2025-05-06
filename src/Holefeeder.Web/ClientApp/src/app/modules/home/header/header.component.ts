@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
     private subService: SubscriberService,
     private store: Store<AppStore>,
     private logger: LoggerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isNavbarCollapsed = true;

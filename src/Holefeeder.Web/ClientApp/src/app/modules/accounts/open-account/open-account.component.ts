@@ -18,7 +18,7 @@ import { AccountEditComponent } from '@app/modules/accounts/account-edit/account
   templateUrl: './open-account.component.html',
   styleUrls: ['./open-account.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AccountEditComponent],
+  imports: [CommonModule, ReactiveFormsModule, AccountEditComponent]
 })
 export class OpenAccountComponent implements OnInit {
   form!: FormGroup;
@@ -28,7 +28,7 @@ export class OpenAccountComponent implements OnInit {
     private formBuilder: FormBuilder,
     private location: Location,
     private commandsService: AccountCommandsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

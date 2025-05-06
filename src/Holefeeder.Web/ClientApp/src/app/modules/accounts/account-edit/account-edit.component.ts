@@ -22,14 +22,14 @@ import { AccountTypeNames } from '@app/shared/models';
     ReactiveFormsModule,
     DatePickerComponent,
     DecimalInputComponent,
-  ],
+  ]
 })
 export class AccountEditComponent implements OnInit {
   form!: FormGroup;
 
   accountTypesNames = AccountTypeNames;
 
-  constructor(private rootFormGroup: FormGroupDirective) {}
+  constructor(private rootFormGroup: FormGroupDirective) { }
 
   ngOnInit(): void {
     this.form = this.rootFormGroup.control;

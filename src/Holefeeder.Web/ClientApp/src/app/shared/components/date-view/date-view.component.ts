@@ -7,7 +7,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './date-view.component.html',
   styleUrls: ['./date-view.component.scss'],
   standalone: true,
-  imports: [CommonModule, NgbDatepickerModule],
+  imports: [CommonModule, NgbDatepickerModule]
 })
 export class DateViewComponent {
   @Input() date: Date | undefined;

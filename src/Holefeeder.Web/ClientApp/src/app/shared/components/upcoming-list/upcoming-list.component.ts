@@ -14,10 +14,10 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-upcoming-list',
+  standalone: true,
   templateUrl: './upcoming-list.component.html',
   styleUrls: ['./upcoming-list.component.scss'],
-  standalone: true,
-  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent],
+  imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent]
 })
 export class UpcomingListComponent implements OnInit {
   @Input() accountId: string | undefined;
@@ -30,7 +30,7 @@ export class UpcomingListComponent implements OnInit {
     private adapter: PayCashflowCommandAdapter,
     private messages: MessageService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.accountId) {
