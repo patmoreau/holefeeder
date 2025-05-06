@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-input-dialog',
-    template: ` <div>
+  selector: 'app-input-dialog',
+  template: ` <div>
     <div class="modal-header">
       <h4 class="modal-title">{{ title }}</h4>
     </div>
@@ -29,15 +29,16 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>
   </div>`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [ReactiveFormsModule]
 })
 export class InputDialogComponent {
   title!: string;
   message!: string;
   input = new FormControl('', Validators.required);
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) { }
 
   set initialValue(value: string) {
     this.input.setValue(value);

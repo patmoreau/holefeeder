@@ -16,15 +16,16 @@ import { Upcoming } from '@app/shared/models';
 import { map, Observable, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-pay-cashflow',
-    templateUrl: './pay-cashflow.component.html',
-    styleUrls: ['./pay-cashflow.component.scss'],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TransactionEditComponent,
-        LoaderComponent,
-    ]
+  selector: 'app-pay-cashflow',
+  templateUrl: './pay-cashflow.component.html',
+  styleUrls: ['./pay-cashflow.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TransactionEditComponent,
+    LoaderComponent,
+  ]
 })
 export class PayCashflowComponent implements OnInit {
   form!: FormGroup;
@@ -39,7 +40,7 @@ export class PayCashflowComponent implements OnInit {
     private location: Location,
     private transactionsService: TransactionsService,
     private adapter: PayCashflowCommandAdapter
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

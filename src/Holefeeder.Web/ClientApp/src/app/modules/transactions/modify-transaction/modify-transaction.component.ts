@@ -19,15 +19,16 @@ import { filter, Observable, switchMap, tap } from 'rxjs';
 const transactionIdParamName = 'transactionId';
 
 @Component({
-    selector: 'app-modify-transaction',
-    templateUrl: './modify-transaction.component.html',
-    styleUrls: ['./modify-transaction.component.scss'],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TransactionEditComponent,
-        LoaderComponent,
-    ]
+  selector: 'app-modify-transaction',
+  templateUrl: './modify-transaction.component.html',
+  styleUrls: ['./modify-transaction.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TransactionEditComponent,
+    LoaderComponent,
+  ]
 })
 export class ModifyTransactionComponent implements OnInit {
   form!: FormGroup;
@@ -43,7 +44,7 @@ export class ModifyTransactionComponent implements OnInit {
     private transactionsService: TransactionsService,
     private adapter: ModifyTransactionCommandAdapter,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

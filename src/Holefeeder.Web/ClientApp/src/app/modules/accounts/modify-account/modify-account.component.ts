@@ -20,15 +20,16 @@ import { Account } from '@app/shared/models';
 const accountIdParamName = 'accountId';
 
 @Component({
-    selector: 'app-modify-account',
-    templateUrl: './modify-account.component.html',
-    styleUrls: ['./modify-account.component.scss'],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        LoaderComponent,
-        AccountEditComponent,
-    ]
+  selector: 'app-modify-account',
+  templateUrl: './modify-account.component.html',
+  styleUrls: ['./modify-account.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoaderComponent,
+    AccountEditComponent,
+  ]
 })
 export class ModifyAccountComponent implements OnInit {
   @ViewChild('confirm', { static: true })
@@ -48,7 +49,7 @@ export class ModifyAccountComponent implements OnInit {
     private commandsService: AccountCommandsService,
     private closeAdapter: CloseAccountAdapter,
     private modalService: ModalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

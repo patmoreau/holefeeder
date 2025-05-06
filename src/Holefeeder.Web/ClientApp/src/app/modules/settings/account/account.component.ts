@@ -9,10 +9,11 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-account',
-    templateUrl: './account.component.html',
-    styleUrls: ['./account.component.scss'],
-    imports: [CommonModule, ReactiveFormsModule]
+  selector: 'app-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class AccountComponent implements OnInit {
   profileForm!: FormGroup;
@@ -20,7 +21,7 @@ export class AccountComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router
-  ) {}
+  ) { }
 
   get firstName() {
     return this.profileForm.get('firstName');
@@ -41,7 +42,7 @@ export class AccountComponent implements OnInit {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  saveProfile(formValues: unknown): void {}
+  saveProfile(formValues: unknown): void { }
 
   cancel() {
     this.router.navigate(['/accounts']);

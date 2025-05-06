@@ -14,15 +14,16 @@ import { DateIntervalTypeNames, Settings } from '@app/shared/models';
 import { Observable, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-general',
-    templateUrl: './general.component.html',
-    styleUrls: ['./general.component.scss'],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterModule,
-        DatePickerComponent,
-    ]
+  selector: 'app-general',
+  templateUrl: './general.component.html',
+  styleUrls: ['./general.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    DatePickerComponent,
+  ]
 })
 export class GeneralComponent implements OnInit {
   settings$: Observable<Settings> | undefined;

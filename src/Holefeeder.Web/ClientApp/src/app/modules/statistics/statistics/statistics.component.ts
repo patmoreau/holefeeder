@@ -24,18 +24,19 @@ import { FilterNonNullishPipe } from '@app/shared/pipes';
 
 // noinspection ES6ClassMemberInitializationOrder
 @Component({
-    selector: 'app-statistics',
-    templateUrl: './statistics.component.html',
-    styleUrls: ['./statistics.component.scss'],
-    imports: [
-        CommonModule,
-        RouterModule,
-        BaseChartDirective,
-        LoaderComponent,
-        FilterNonNullishPipe,
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    providers: [CurrencyPipe]
+  selector: 'app-statistics',
+  templateUrl: './statistics.component.html',
+  styleUrls: ['./statistics.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    BaseChartDirective,
+    LoaderComponent,
+    FilterNonNullishPipe,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [CurrencyPipe]
 })
 export class StatisticsComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
@@ -49,7 +50,7 @@ export class StatisticsComponent implements OnInit {
   constructor(
     private currencyPipe: CurrencyPipe,
     private statisticsService: StatisticsService
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.statistics$ = this.statisticsService.find();
 

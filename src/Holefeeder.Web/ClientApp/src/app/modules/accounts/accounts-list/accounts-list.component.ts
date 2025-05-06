@@ -12,9 +12,10 @@ import {
 import { Observable } from 'rxjs';
 
 @Component({
-    templateUrl: './accounts-list.component.html',
-    styleUrls: ['./accounts-list.component.scss'],
-    imports: [CommonModule, RouterModule, LoaderComponent]
+  templateUrl: './accounts-list.component.html',
+  styleUrls: ['./accounts-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule, LoaderComponent]
 })
 export class AccountsListComponent implements OnInit {
   accounts$!: Observable<Account[]>;

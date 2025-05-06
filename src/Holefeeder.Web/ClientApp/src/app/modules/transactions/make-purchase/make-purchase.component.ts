@@ -30,18 +30,19 @@ import { CategoriesFeature } from '@app/core/store/categories';
 const accountIdParamName = 'accountId';
 
 @Component({
-    selector: 'app-make-purchase',
-    templateUrl: './make-purchase.component.html',
-    styleUrls: ['./make-purchase.component.scss'],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        NgbCollapseModule,
-        TransactionEditComponent,
-        TransferComponent,
-        RecurringCashflowComponent,
-        LoaderComponent,
-    ]
+  selector: 'app-make-purchase',
+  templateUrl: './make-purchase.component.html',
+  styleUrls: ['./make-purchase.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgbCollapseModule,
+    TransactionEditComponent,
+    TransferComponent,
+    RecurringCashflowComponent,
+    LoaderComponent,
+  ]
 })
 export class MakePurchaseComponent implements OnInit {
   public isNotRecurring = true;
@@ -61,7 +62,7 @@ export class MakePurchaseComponent implements OnInit {
     private transactionsService: TransactionsService,
     private adapterPurchase: MakePurchaseCommandAdapter,
     private adapterTransfer: TransferMoneyCommandAdapter
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.formPurchase = this.formBuilder.group({
