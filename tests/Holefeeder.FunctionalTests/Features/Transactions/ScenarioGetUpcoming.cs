@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Application.Models;
+using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 
@@ -66,6 +67,19 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
             .Then(ShouldReceiveUpcomingCashflows)
             .PlayAsync();
 
+    [Fact]
+    public Task WhenUnpaidUpcomingYearlyCashflowForAccount() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Category.Exists)
+            .And(Account.Exists)
+            .And(Cashflow.AnActiveYearly)
+            .And(Account.Exists)
+            .And(Cashflow.AnActiveYearly)
+            .And(ARequestForUpcomingYearlyCashflowsForAccount)
+            .When(TheUser.GetsUpcomingCashflows)
+            .Then(ShouldReceiveUpcomingCashflowsForAccount)
+            .PlayAsync();
+
     private static void AnInvalidRequest(IStepRunner runner) =>
         runner.Execute(() => GivenAnInvalidUpcomingRequest().Build());
 
@@ -105,6 +119,16 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
             return request;
         });
 
+    private static void ARequestForUpcomingYearlyCashflowsForAccount(IStepRunner runner) =>
+        runner.Execute<Cashflow, Request>(cashflow =>
+        {
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            cashflow.Should().BeValid();
+            var request = BuildUpcomingRequest(cashflow.Value.EffectiveDate.AddDays(-1), cashflow.Value.EffectiveDate.AddDays(-1).AddYears(2), account.Id);
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
     private static void ShouldReceiveUpcomingCashflows(IStepRunner runner) =>
         runner.Execute<IApiResponse<IEnumerable<UpcomingViewModel>>>(response =>
         {
@@ -115,6 +139,17 @@ public class ScenarioGetUpcoming(ApiApplicationDriver applicationDriver, ITestOu
             result.Should().BeInAscendingOrder(x => x.Date);
         });
 
-    private static Request BuildUpcomingRequest(DateOnly from, DateOnly to) => GivenAnUpcomingRequest()
-        .From(from).To(to).Build();
+    private static void ShouldReceiveUpcomingCashflowsForAccount(IStepRunner runner) =>
+        runner.Execute<IApiResponse<IEnumerable<UpcomingViewModel>>>(response =>
+        {
+            response.Should().BeValid()
+                .And.Subject.Value.Should().BeSuccessful()
+                .And.HaveContent();
+            var result = response.Value.Content?.ToList() ?? [];
+            result.Should().BeInAscendingOrder(x => x.Date);
+            result.DistinctBy(x => x.Account.Id).Should().ContainSingle();
+        });
+
+    private static Request BuildUpcomingRequest(DateOnly from, DateOnly to, AccountId? accountId = null) => GivenAnUpcomingRequest()
+        .From(from).To(to).ForAccountId(accountId ?? AccountId.Empty).Build();
 }

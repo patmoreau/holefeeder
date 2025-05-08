@@ -8,6 +8,7 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.Accounts;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -34,17 +35,21 @@ public class GetUpcoming : ICarterModule
             .WithName(nameof(GetUpcoming))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(DateOnly From, DateOnly To) : IRequest<QueryResult<UpcomingViewModel>>
+    internal record Request(DateOnly From, DateOnly To, AccountId AccountId) : IRequest<QueryResult<UpcomingViewModel>>
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
             const string fromKey = "from";
             const string toKey = "to";
+            const string accountIdKey = "accountId";
 
             var hasFrom = DateOnly.TryParse(context.Request.Query[fromKey], CultureInfo.InvariantCulture, out var from);
             var hasTo = DateOnly.TryParse(context.Request.Query[toKey], CultureInfo.InvariantCulture, out var to);
+            var hasAccountId = AccountId.TryParse(context.Request.Query[accountIdKey], CultureInfo.InvariantCulture,
+                out var accountId);
 
-            Request result = new(hasFrom ? from : DateOnly.MinValue, hasTo ? to : DateOnly.MaxValue);
+            Request result = new(hasFrom ? from : DateOnly.MinValue, hasTo ? to : DateOnly.MaxValue,
+                hasAccountId ? accountId! : AccountId.Empty);
 
             return ValueTask.FromResult<Request?>(result);
         }
@@ -68,7 +73,8 @@ public class GetUpcoming : ICarterModule
         public async Task<QueryResult<UpcomingViewModel>> Handle(Request request, CancellationToken cancellationToken)
         {
             var cashflows = await context.Cashflows
-                .Where(c => c.UserId == userContext.Id)
+                .Where(c => c.UserId == userContext.Id &&
+                            (request.AccountId == AccountId.Empty || c.AccountId == request.AccountId))
                 .Include(c => c.Account)
                 .Include(c => c.Category)
                 .Include(c => c.Transactions)
@@ -82,7 +88,7 @@ public class GetUpcoming : ICarterModule
                         Date = d,
                         Amount = x.Amount,
                         Description = x.Description,
-                        Tags = x.Tags.ToImmutableArray(),
+                        Tags = [..x.Tags],
                         Category = new CategoryInfoViewModel(x.Category!.Id, x.Category.Name, x.Category.Type,
                             x.Category.Color),
                         Account = new AccountInfoViewModel(x.Account!.Id, x.Account.Name)

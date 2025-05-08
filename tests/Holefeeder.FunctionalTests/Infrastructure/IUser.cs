@@ -118,8 +118,8 @@ public interface ITransactions
     [Post("/api/v2/cashflows/cancel")]
     Task<IApiResponse> CancelCashflowAsync([Body] object request);
 
-    [Get("/api/v2/cashflows/get-upcoming?from={from}&to={until}")]
-    Task<IApiResponse<IEnumerable<UpcomingViewModel>>> GetUpcomingAsync(DateOnly from, DateOnly until);
+    [Get("/api/v2/cashflows/get-upcoming?from={from}&to={until}&accountId={accountId}")]
+    Task<IApiResponse<IEnumerable<UpcomingViewModel>>> GetUpcomingAsync(DateOnly from, DateOnly until, Guid accountId);
 
     [Post("/api/v2/transactions/make-purchase")]
     Task<IApiResponse> MakePurchaseAsync([Body] object request);
