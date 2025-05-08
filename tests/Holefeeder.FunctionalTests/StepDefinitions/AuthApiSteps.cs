@@ -100,7 +100,7 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
         runner.Execute(() =>
         {
             var request = GivenAnUpcomingRequest().Build();
-            return Api.GetUpcomingAsync(request.From, request.To);
+            return Api.GetUpcomingAsync(request.From, request.To, request.AccountId);
         });
 
     internal void MakingAPurchase(IStepRunner runner) =>

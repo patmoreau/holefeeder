@@ -231,7 +231,7 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
         runner.Execute<GetUpcoming.Request, IApiResponse<IEnumerable<UpcomingViewModel>>>(request =>
         {
             request.Should().BeValid();
-            return Api.GetUpcomingAsync(request.Value.From, request.Value.To);
+            return Api.GetUpcomingAsync(request.Value.From, request.Value.To, request.Value.AccountId);
         });
 
     internal void MakesAPurchase(IStepRunner runner) =>
