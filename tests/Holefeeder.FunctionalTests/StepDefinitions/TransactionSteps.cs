@@ -153,4 +153,33 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
             result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
         });
+
+    [AssertionMethod]
+    public void ShouldBeCreatedForBothAccountsWithTransferDescription(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the new transactions should be created from the transfer with description", async response =>
+        {
+            var request = runner.GetContextData<Transfer.Request>(RequestContext.CurrentRequest);
+            var categories = runner.GetContextData<IEnumerable<Category>>(CategoryContext.ExistingCategories).ToList();
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            response.Value.Headers.Location.Should().NotBeNull();
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var fromAccount = await dbContext.Accounts.FirstAsync(x => x.Id == request.FromAccountId);
+            var toAccount = await dbContext.Accounts.FirstAsync(x => x.Id == request.ToAccountId);
+
+            var result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.FromAccountId);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options =>
+                options.ExcludingMissingMembers().Excluding(x => x.Description));
+            result!.Description.Should().Be($"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'");
+            result!.CategoryId.Should().Be(categories.First(x => x.Name == Transfer.CategoryFromName).Id);
+
+            result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.ToAccountId);
+            result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers().Excluding(x => x.Description));
+            result!.Description.Should().Be($"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'");
+            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
+        });
 }

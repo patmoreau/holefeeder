@@ -29,6 +29,16 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
             .Then(Transaction.ShouldBeCreatedForBothAccounts)
             .PlayAsync();
 
+    [Fact]
+    public Task ValidRequestWithNoDescription() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Category.TransferCategoriesExists)
+            .And(Account.CollectionExists)
+            .And(AValidRequestWithNoDescription)
+            .When(TheUser.MakesATransfer)
+            .Then(Transaction.ShouldBeCreatedForBothAccountsWithTransferDescription)
+            .PlayAsync();
+
     private static void AnInvalidRequest(IStepRunner runner) =>
         runner.Execute(() => GivenAnInvalidTransfer().Build());
 
@@ -42,6 +52,22 @@ public sealed class ScenarioTransfer(ApiApplicationDriver applicationDriver, ITe
             var request = GivenATransfer()
                 .FromAccount(fromAccount)
                 .ToAccount(toAccount)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidRequestWithNoDescription(IStepRunner runner) =>
+        runner.Execute<IEnumerable<Account>, Request>(accounts =>
+        {
+            accounts.Should().BeValid()
+                .And.Subject.Value.Should().HaveCountGreaterThan(1);
+            var fromAccount = accounts.Value.First();
+            var toAccount = accounts.Value.Last();
+            var request = GivenATransfer()
+                .FromAccount(fromAccount)
+                .ToAccount(toAccount)
+                .WithNoDescription()
                 .Build();
             runner.SetContextData(RequestContext.CurrentRequest, request);
             return request;

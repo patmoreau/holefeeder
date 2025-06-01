@@ -119,7 +119,16 @@ public class Transfer : ICarterModule
         private async Task<Result<Transaction>> CreateTransactionAsync(AccountId accountId, Category category,
             Request request, CancellationToken cancellationToken)
         {
-            var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
+            var fromAccount = await context.Accounts
+                .FirstAsync(x => x.Id == request.FromAccountId && x.UserId == userContext.Id, cancellationToken);
+            var toAccount = await context.Accounts
+                .FirstAsync(x => x.Id == request.ToAccountId && x.UserId == userContext.Id, cancellationToken);
+            var description = request.Description.Trim();
+            if (string.IsNullOrEmpty(description))
+            {
+                description = $"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'";
+            }
+            var transaction = Transaction.Create(request.Date, request.Amount, description,
                 accountId, category.Id, userContext.Id);
             if (transaction.IsFailure)
             {
