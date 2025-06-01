@@ -41,7 +41,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.5" />
@@ -53,7 +53,7 @@
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.11.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.11.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.11.0" />
-    <PackageVersion Include="Microsoft.JSInterop" Version="8.0.16" />
+    <PackageVersion Include="Microsoft.JSInterop" Version="9.0.5" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
