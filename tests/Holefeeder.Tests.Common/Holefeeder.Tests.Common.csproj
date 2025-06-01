@@ -23,6 +23,7 @@
         <PackageReference Include="FluentAssertions.Analyzers" />
         <PackageReference Include="Nito.AsyncEx.Coordination" />
         <PackageReference Include="Respawn" />
+        <PackageReference Include="WireMock.Net" />
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.abstractions" />
         <PackageReference Include="xunit.analyzers">

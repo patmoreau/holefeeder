@@ -17,14 +17,14 @@
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
     <PackageVersion Include="dbup-core" Version="6.0.4" />
     <PackageVersion Include="dbup-postgresql" Version="6.0.3" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.137" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.137" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.137" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.0" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.137" />
-    <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageVersion Include="Hangfire" Version="1.8.18" />
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.140" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.140" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.140" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.5" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.140" />
+    <PackageVersion Include="FluentValidation" Version="12.0.0" />
+    <PackageVersion Include="Hangfire" Version="1.8.20" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.20" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.12" />
     <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
@@ -58,12 +58,12 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.2.7" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.4.7" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.2" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.2" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.5" />
