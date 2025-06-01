@@ -97,7 +97,7 @@ services:
       - 'traefik.enable=false'
 
   adminer:
-    image: adminer:4.17.1
+    image: adminer:5.3.0
     container_name: adminer
     restart: unless-stopped
     security_opt:
