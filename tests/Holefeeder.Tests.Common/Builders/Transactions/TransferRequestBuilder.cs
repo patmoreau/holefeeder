@@ -53,6 +53,12 @@ internal class TransferRequestBuilder : FakerBuilder<Request>
         return this;
     }
 
+    public TransferRequestBuilder WithNoDescription()
+    {
+        Faker.RuleFor(x => x.Description, string.Empty);
+        return this;
+    }
+
     public static TransferRequestBuilder GivenATransfer() => new();
 
     public static TransferRequestBuilder GivenAnInvalidTransfer()
