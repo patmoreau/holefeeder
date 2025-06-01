@@ -101,13 +101,24 @@ public class Transfer : ICarterModule
             CreateTransactionsAsync(Request request, CancellationToken cancellationToken) =>
             async categories =>
             {
-                var transactionFrom = await CreateTransactionAsync(request.FromAccountId, categories.TransferFrom, request, cancellationToken);
+                var fromAccount = await context.Accounts
+                    .FirstAsync(x => x.Id == request.FromAccountId && x.UserId == userContext.Id, cancellationToken);
+                var toAccount = await context.Accounts
+                    .FirstAsync(x => x.Id == request.ToAccountId && x.UserId == userContext.Id, cancellationToken);
+                var requestWithDescription = request with
+                {
+                    Description = string.IsNullOrWhiteSpace(request.Description)
+                        ? $"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'"
+                        : request.Description
+                };
+
+                var transactionFrom = await CreateTransactionAsync(request.FromAccountId, categories.TransferFrom, requestWithDescription, cancellationToken);
                 if (transactionFrom.IsFailure)
                 {
                     return transactionFrom.Error;
                 }
 
-                var transactionTo = await CreateTransactionAsync(request.ToAccountId, categories.TransferTo, request, cancellationToken);
+                var transactionTo = await CreateTransactionAsync(request.ToAccountId, categories.TransferTo, requestWithDescription, cancellationToken);
                 if (transactionTo.IsFailure)
                 {
                     return transactionTo.Error;
@@ -119,16 +130,7 @@ public class Transfer : ICarterModule
         private async Task<Result<Transaction>> CreateTransactionAsync(AccountId accountId, Category category,
             Request request, CancellationToken cancellationToken)
         {
-            var fromAccount = await context.Accounts
-                .FirstAsync(x => x.Id == request.FromAccountId && x.UserId == userContext.Id, cancellationToken);
-            var toAccount = await context.Accounts
-                .FirstAsync(x => x.Id == request.ToAccountId && x.UserId == userContext.Id, cancellationToken);
-            var description = request.Description.Trim();
-            if (string.IsNullOrEmpty(description))
-            {
-                description = $"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'";
-            }
-            var transaction = Transaction.Create(request.Date, request.Amount, description,
+            var transaction = Transaction.Create(request.Date, request.Amount, request.Description,
                 accountId, category.Id, userContext.Id);
             if (transaction.IsFailure)
             {
