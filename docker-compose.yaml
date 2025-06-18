@@ -53,7 +53,7 @@ services:
       - 'traefik.http.routers.whoami-router.tls.certresolver=acme_certresolver'
 
   seq:
-    image: datalust/seq:2025.1
+    image: datalust/seq:2025.2
     container_name: seq
     restart: unless-stopped
     security_opt:
