@@ -96,7 +96,7 @@
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.1.0",
     "ng2-charts-schematics": "0.1.7",
-    "prettier": "3.5.3",
+    "prettier": "3.6.0",
     "prettier-eslint": "16.4.2",
     "source-map-explorer": "2.5.3",
     "ts-node": "10.9.2",
