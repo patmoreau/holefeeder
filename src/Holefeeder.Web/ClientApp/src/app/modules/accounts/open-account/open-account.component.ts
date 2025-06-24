@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -18,7 +18,7 @@ import { AccountEditComponent } from '@app/modules/accounts/account-edit/account
   templateUrl: './open-account.component.html',
   styleUrls: ['./open-account.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AccountEditComponent]
+  imports: [ReactiveFormsModule, AccountEditComponent]
 })
 export class OpenAccountComponent implements OnInit {
   form!: FormGroup;

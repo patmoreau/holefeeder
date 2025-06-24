@@ -3,11 +3,15 @@
     <div class="d-flex align-items-center">
       <h4 class="mb-0 line-height-1 text-truncate">Cashflows</h4>
       <span>
-        <ng-container *ngIf="cashflows$ | async as cashflows; else loader">
-          <ng-container *ngIf="cashflows.length; else noItems">
+        @if (cashflows$ | async; as cashflows) {
+          @if (cashflows.length) {
             <strong class="ms-3 text-muted">{{ cashflows.length }} results</strong>
-          </ng-container>
-        </ng-container>
+          } @else {
+            No cashflows defined!
+          }
+        } @else {
+          <app-loader [small]="true"></app-loader>
+        }
       </span>
     </div>
     <div class="actions p-0 d-flex align-items-center">
@@ -19,12 +23,10 @@
   </div>
 </div>
 <div class="container">
-  <app-transaction-list-item (click)="click(cashflow.id)" *ngFor="let cashflow of cashflows$ | async"
+  @for (cashflow of cashflows$ | async; track cashflow) {
+    <app-transaction-list-item (click)="click(cashflow.id)"
                              [amount]="cashflow.amount" [date]="cashflow.effectiveDate" [description]="
         cashflow.description ? cashflow.description : cashflow.category.name
       " [tags]="cashflow.tags"></app-transaction-list-item>
+  }
 </div>
-<ng-template #noItems>No cashflows defined!</ng-template>
-<ng-template #loader>
-  <app-loader [small]="true"></app-loader>
-</ng-template>

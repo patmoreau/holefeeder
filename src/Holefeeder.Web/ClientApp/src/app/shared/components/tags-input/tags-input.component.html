@@ -13,11 +13,13 @@
     </div>
   </div>
   <div>
-    <span *ngFor="let tag of tagsArray.controls; index as i" class="text-lowercase">
-      <small class="badge rounded-pill bg-primary">{{ tag.value }}
-        <a (click)="removeTag(i)" (keydown)="removeTag(i)" class="btn btn-sm p-0" tabindex="0">
-          <em class="bi bi-x"></em>
-        </a></small>&nbsp;
-    </span>
+    @for (tag of tagsArray.controls; track tag; let i = $index) {
+      <span class="text-lowercase">
+        <small class="badge rounded-pill bg-primary">{{ tag.value }}
+          <a (click)="removeTag(i)" (keydown)="removeTag(i)" class="btn btn-sm p-0" tabindex="0">
+            <em class="bi bi-x"></em>
+          </a></small>&nbsp;
+        </span>
+      }
+    </div>
   </div>
-</div>

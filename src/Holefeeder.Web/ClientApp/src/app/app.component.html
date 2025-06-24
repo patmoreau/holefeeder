@@ -1,27 +1,35 @@
-<div class="w-100 position-absolute top-0" *ngIf="modalVersion">
-  <div class="alert alert-secondary m-2">
-    <button type="button" class="btn-close position-absolute top-0 end-0 m-1" aria-label="Close" (click)="closeVersion()"></button>
-    A new version of Holefeeder is available. <a href="" (click)="updateVersion()">Update now</a>
+@if (modalVersion) {
+  <div class="w-100 position-absolute top-0">
+    <div class="alert alert-secondary m-2">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-1" aria-label="Close" (click)="closeVersion()"></button>
+      A new version of Holefeeder is available. <a href="" (click)="updateVersion()">Update now</a>
+    </div>
   </div>
-</div>
+}
 
-<div class="w-100 position-absolute bottom-0" *ngIf="modalPwaPlatform === 'ANDROID' || modalPwaPlatform === 'IOS'">
-  <div class="alert alert-secondary m-2">
-    <button type="button" class="btn-close position-absolute top-0 end-0 m-1" aria-label="Close" (click)="closePwa()"></button>
-    <!-- Android -->
-    <div *ngIf="modalPwaPlatform === 'ANDROID'">
-      <button type="button" aria-label="AddToHomeScreen" (click)="addToHomeScreen()" (keydown)="addToHomeScreen()">
-        Add this WEB app to home screen
-      </button>
-    </div>
-    <!-- iOS with Safari -->
-    <div *ngIf="modalPwaPlatform === 'IOS'">
-      To install Holefeeder on your device, tap the "Menu" button
-      <img src="https://res.cloudinary.com/rodrigokamada/image/upload/v1641089482/Blog/angular-pwa/safari_action_button_38x50.png" class="ios-menu m-0"  alt="To install Holefeeder on your device, tap the 'Menu' button"/>
-      and then "Add to home screen" button
-      <i class="bi bi-plus-square"></i>
+@if (modalPwaPlatform === 'ANDROID' || modalPwaPlatform === 'IOS') {
+  <div class="w-100 position-absolute bottom-0">
+    <div class="alert alert-secondary m-2">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-1" aria-label="Close" (click)="closePwa()"></button>
+      <!-- Android -->
+      @if (modalPwaPlatform === 'ANDROID') {
+        <div>
+          <button type="button" aria-label="AddToHomeScreen" (click)="addToHomeScreen()" (keydown)="addToHomeScreen()">
+            Add this WEB app to home screen
+          </button>
+        </div>
+      }
+      <!-- iOS with Safari -->
+      @if (modalPwaPlatform === 'IOS') {
+        <div>
+          To install Holefeeder on your device, tap the "Menu" button
+          <img src="https://res.cloudinary.com/rodrigokamada/image/upload/v1641089482/Blog/angular-pwa/safari_action_button_38x50.png" class="ios-menu m-0"  alt="To install Holefeeder on your device, tap the 'Menu' button"/>
+          and then "Add to home screen" button
+          <i class="bi bi-plus-square"></i>
+        </div>
+      }
     </div>
   </div>
-</div>
+}
 
 <router-outlet></router-outlet>

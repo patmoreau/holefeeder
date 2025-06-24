@@ -1,8 +1,10 @@
-<ngb-toast (hidden)="remove(toast)" *ngFor="let toast of toasts$ | async" [autohide]="true" [class]="toast.className"
-           [delay]="toast.delay">
-  <ng-container *ngTemplateOutlet="{'info': info, 'warning': warning, 'danger': danger}[toast.type]"></ng-container>
-  {{ toast.message }}
-</ngb-toast>
+@for (toast of toasts$ | async; track toast) {
+  <ngb-toast (hidden)="remove(toast)" [autohide]="true" [class]="toast.className"
+    [delay]="toast.delay">
+    <ng-container *ngTemplateOutlet="{'info': info, 'warning': warning, 'danger': danger}[toast.type]"></ng-container>
+    {{ toast.message }}
+  </ngb-toast>
+}
 <ng-template #info>
   <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path

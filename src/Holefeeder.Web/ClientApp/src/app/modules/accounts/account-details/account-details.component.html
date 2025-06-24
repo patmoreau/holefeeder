@@ -1,4 +1,4 @@
-<ng-container *ngIf="account$ | async as account; else loader">
+@if (account$ | async; as account) {
   <div class="pt-3">
     <a class="text-large line-height-1" routerLink="/accounts">
       <em class="bi bi-box-arrow-left pb-1 pe-1"></em>Accounts
@@ -28,12 +28,11 @@
         <div class="d-flex p-3 justify-content-between border-bottom">
           <small class="text-muted align-items-center">Projection</small>
           <small class="align-items-center font-weight-bold">
-            <ng-container *ngIf="upcomingBalance$ | async as upcomingBalance; else noUpcoming">
+            @if (upcomingBalance$ | async; as upcomingBalance) {
               <span [className]="upcomingBalanceClass(account, upcomingBalance)">{{ upcomingBalance | currency }}</span>
-            </ng-container>
-            <ng-template #noUpcoming>
+            } @else {
               <span [className]="upcomingBalanceClass(account, account.balance)">{{ account.balance | currency }}</span>
-            </ng-template>
+            }
           </small>
         </div>
         <div class="d-flex p-3 justify-content-between">
@@ -52,7 +51,6 @@
     </li>
   </ul>
   <router-outlet></router-outlet>
-</ng-container>
-<ng-template #loader>
+} @else {
   <app-loader></app-loader>
-</ng-template>
+}

@@ -17,7 +17,9 @@
             </button>
           </div>
 
-          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
+          @if (!form.valid) {
+            <em class="form-text text-danger">{{ form.errors }}</em>
+          }
         </form>
       </div>
     </div>

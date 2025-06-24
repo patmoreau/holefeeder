@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { AppStore, TagsFeature } from '@app/core/store';
@@ -22,7 +22,7 @@ import {
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss'],
   standalone: true,
-  imports: [CommonModule, NgbTypeaheadModule]
+  imports: [NgbTypeaheadModule]
 })
 export class TagsInputComponent {
   @Input() tagsArray = new FormArray<FormControl<string | null>>([]);

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { SettingsService, SubscriberService } from '@app/core/services';
@@ -23,11 +23,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-header',
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     NgbModule,
     ReactiveFormsModule
-  ],
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './unauthorized.component.html',
   styleUrls: ['./unauthorized.component.scss']

@@ -1,20 +1,22 @@
-<ng-container *ngIf="(upcomingCashflows$ | async) as upcomingCashflows; else loader">
-  <ng-container *ngIf="upcomingCashflows.length; else noItems">
+@if ((upcomingCashflows$ | async); as upcomingCashflows) {
+  @if (upcomingCashflows.length) {
     <div class="container">
-      <app-transaction-list-item (action)="action($event, upcomingCashflow)"
-                                 *ngFor="let upcomingCashflow of upcomingCashflows" [allowSave]="true"
-                                 [amount]="upcomingCashflow.amount"
+      @for (upcomingCashflow of upcomingCashflows; track upcomingCashflow) {
+        <app-transaction-list-item (action)="action($event, upcomingCashflow)"
+          [allowSave]="true"
+          [amount]="upcomingCashflow.amount"
                                  [date]="upcomingCashflow.date" [description]="
       upcomingCashflow.description
           ? upcomingCashflow.description
           : upcomingCashflow.category.name
       " [tags]="upcomingCashflow.tags"></app-transaction-list-item>
+      }
     </div>
-  </ng-container>
-  <ng-template #noItems>Nothing to show!</ng-template>
-</ng-container>
-<ng-template #loader>
+  } @else {
+    Nothing to show!
+  }
+} @else {
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
-</ng-template>
+}

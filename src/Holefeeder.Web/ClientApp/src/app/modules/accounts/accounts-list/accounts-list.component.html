@@ -3,11 +3,15 @@
     <div class="d-flex align-items-center">
       <h4 class="mb-0 line-height-1 text-truncate">Accounts</h4>
       <span>
-        <ng-container *ngIf="accounts$ | async as accounts; else loader">
-          <ng-container *ngIf="accounts.length; else noItems">
+        @if (accounts$ | async; as accounts) {
+          @if (accounts.length) {
             <strong class="ms-3 text-muted">{{ accounts.length }} results</strong>
-          </ng-container>
-        </ng-container>
+          } @else {
+            <strong class="ms-3 text-muted">all good!</strong>
+          }
+        } @else {
+          <app-loader [small]="true"></app-loader>
+        }
       </span>
     </div>
     <div class="actions p-0 d-flex align-items-center">
@@ -21,47 +25,45 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="upcomingCashflows$ | async as upcomingCashflows; else loader">
+@if (upcomingCashflows$ | async; as upcomingCashflows) {
   <div class="container">
     <div class="card-deck row">
-      <div *ngFor="let account of accounts$ | async" class="col-12 col-md-6 col-lg-4 col-xl-4 pb-4">
-        <div (click)="click(account)" (keydown)="click(account)" class="card rounded bg-card" tabindex="0">
-          <div class="card-body">
-            <h5 class="card-title test-white-25">{{ account.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">
-              {{ accountTypeNames.get(account.type) }}
-            </h6>
-            <span class="card-text text-white-50"><small>{{ account.description }}</small></span>
-          </div>
-          <div class="card-footer">
-            <div class="row">
-              <div class="col-6 text-start">
-                <span [className]="amountClass(account)">{{
-                  account.balance | currency
-                  }}</span>
-              </div>
-              <div class="col-6 text-end">
-                <span class="text-muted">{{
-                  getUpcomingBalance(account, upcomingCashflows) | currency
-                  }}</span>
-              </div>
+      @for (account of accounts$ | async; track account) {
+        <div class="col-12 col-md-6 col-lg-4 col-xl-4 pb-4">
+          <div (click)="click(account)" (keydown)="click(account)" class="card rounded bg-card" tabindex="0">
+            <div class="card-body">
+              <h5 class="card-title test-white-25">{{ account.name }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                {{ accountTypeNames.get(account.type) }}
+              </h6>
+              <span class="card-text text-white-50"><small>{{ account.description }}</small></span>
             </div>
-            <div class="row mt-2">
-              <div class="col-12 text-end">
-                <small class="text-muted">
-                  {{ account.updated | date: 'yyyy-MM-dd' }}
-                </small>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-6 text-start">
+                  <span [className]="amountClass(account)">{{
+                    account.balance | currency
+                  }}</span>
+                </div>
+                <div class="col-6 text-end">
+                  <span class="text-muted">{{
+                    getUpcomingBalance(account, upcomingCashflows) | currency
+                  }}</span>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12 text-end">
+                  <small class="text-muted">
+                    {{ account.updated | date: 'yyyy-MM-dd' }}
+                  </small>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   </div>
-</ng-container>
-<ng-template #loader>
+} @else {
   <app-loader [small]="true"></app-loader>
-</ng-template>
-<ng-template #noItems>
-  <strong class="ms-3 text-muted">all good!</strong>
-</ng-template>
+}

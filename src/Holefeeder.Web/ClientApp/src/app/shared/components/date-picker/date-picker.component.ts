@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -40,7 +40,7 @@ import { dateFromUtc, dateToUtc } from '@app/shared/helpers';
     },
     { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter },
   ],
-  imports: [CommonModule, FormsModule, NgbDatepickerModule],
+  imports: [FormsModule, NgbDatepickerModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {

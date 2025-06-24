@@ -1,13 +1,12 @@
-<ng-container *ngIf="statistics$ | async as statistics; else loader">
+@if (statistics$ | async; as statistics) {
   <div class="pt-3">
     <canvas baseChart class="chart"
-            [data]="chartData$ | async | filterNonNullish"
-            [type]="pieChartType"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins">
+      [data]="chartData$ | async | filterNonNullish"
+      [type]="pieChartType"
+      [options]="pieChartOptions"
+      [plugins]="pieChartPlugins">
     </canvas>
   </div>
-</ng-container>
-<ng-template #loader>
+} @else {
   <app-loader></app-loader>
-</ng-template>
+}
