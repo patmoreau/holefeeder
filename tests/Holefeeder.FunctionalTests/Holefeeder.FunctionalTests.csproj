@@ -23,7 +23,6 @@
         <PackageReference Include="DrifterApps.Seeds.Testing" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="FluentAssertions.Analyzers" />
-        <PackageReference Include="IdentityModel" />
         <PackageReference Include="JunitXml.TestLogger" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -55,12 +54,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="StepDefinitions\AccountSteps.Assertions.cs">
-        <DependentUpon>AccountSteps.cs</DependentUpon>
-      </Compile>
-      <Compile Update="StepDefinitions\UserSteps.static.cs">
-        <DependentUpon>UserSteps.cs</DependentUpon>
-      </Compile>
+        <Compile Update="StepDefinitions\AccountSteps.Assertions.cs">
+            <DependentUpon>AccountSteps.cs</DependentUpon>
+        </Compile>
+        <Compile Update="StepDefinitions\UserSteps.static.cs">
+            <DependentUpon>UserSteps.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>
