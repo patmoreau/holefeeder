@@ -20,7 +20,7 @@
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.140" />
     <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.140" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.140" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.5" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.6" />
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.140" />
     <PackageVersion Include="FluentValidation" Version="12.0.0" />
     <PackageVersion Include="Hangfire" Version="1.8.20" />
@@ -58,7 +58,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.5.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.5.3" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
