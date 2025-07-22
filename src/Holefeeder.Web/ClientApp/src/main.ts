@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   enableProdMode,
   ErrorHandler,
@@ -10,9 +10,12 @@ import { RouterModule } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { loadConfigProvider } from '@app/app-initializer';
 import { AppComponent } from '@app/app.component';
-import { GlobalErrorHandler, HttpLoadingInterceptor } from '@app/core/errors';
-import { HttpRequestLoggerInterceptor } from '@app/core/interceptors/http-request-logger.interceptor';
-import { JsonDateOnlyInterceptor } from '@app/core/interceptors/json-dateonly-interceptor';
+import { GlobalErrorHandler } from '@app/core/errors';
+import {
+  jsonDateOnlyInterceptor,
+  httpRequestLoggerInterceptor,
+  httpLoadingInterceptor
+} from '@app/core/interceptors/functional-interceptors';
 import { appEffects, appStore } from '@app/core/store';
 import { ROUTES } from '@app/routes';
 import { environment } from '@env/environment';
@@ -21,7 +24,7 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import {
   AbstractSecurityStorage,
-  AuthInterceptor,
+  authInterceptor,
   AuthModule,
   DefaultLocalStorageService,
   LogLevel,
@@ -32,6 +35,36 @@ if (environment.production) {
   enableProdMode();
 }
 
+// Enhanced error handling for better debugging
+function setupGlobalErrorHandling() {
+  // Handle unhandled promise rejections
+  window.addEventListener('unhandledrejection', (event) => {
+    if (isDevMode()) {
+      console.group('🚨 Unhandled Promise Rejection');
+      console.error('Unhandled promise rejection:', event.reason);
+      console.error('Promise:', event.promise);
+      console.groupEnd();
+    }
+
+    // Prevent the error from appearing in console (optional)
+    // event.preventDefault();
+  });
+
+  // Handle global JavaScript errors
+  window.addEventListener('error', (event) => {
+    if (isDevMode()) {
+      console.group('🚨 Global JavaScript Error');
+      console.error('Global error caught:', event.error);
+      console.error('Message:', event.message);
+      console.error('Source:', event.filename, 'Line:', event.lineno, 'Column:', event.colno);
+      console.groupEnd();
+    }
+  });
+}
+
+// Set up error handling before bootstrapping
+setupGlobalErrorHandling();
+
 bootstrapApplication(AppComponent, {
   providers: [
     {
@@ -40,6 +73,14 @@ bootstrapApplication(AppComponent, {
     },
     loadConfigProvider,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor(),
+        jsonDateOnlyInterceptor,
+        httpRequestLoggerInterceptor,
+        httpLoadingInterceptor,
+      ])
+    ),
     importProvidersFrom(
       RouterModule.forRoot(ROUTES, {
         enableTracing: !environment.production && environment.enableTracing,
@@ -59,8 +100,8 @@ bootstrapApplication(AppComponent, {
           customParamsAuthRequest: {
             audience: 'https://holefeeder-api.drifterapps.app',
           },
-          // Update secureRoutes to use the environment's baseUrl
-          secureRoutes: [environment.baseUrl],
+          // Configure secureRoutes to match your API URLs
+          secureRoutes: [`${environment.baseUrl}/gateway/api/v2`],
         },
       })
     ),
@@ -75,22 +116,6 @@ bootstrapApplication(AppComponent, {
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true,
     }),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JsonDateOnlyInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpRequestLoggerInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpLoadingInterceptor,
-      multi: true,
-    },
     {
       provide: AbstractSecurityStorage,
       useClass: DefaultLocalStorageService,
@@ -100,4 +125,33 @@ bootstrapApplication(AppComponent, {
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-}).catch(err => console.error(err));
+})
+  .then(() => {
+    if (isDevMode()) {
+      console.log('✅ Application bootstrap successful');
+    }
+  })
+  .catch(err => {
+    console.error('❌ Application bootstrap failed:', err);
+
+    // In development, show more detailed error information
+    if (isDevMode()) {
+      console.group('📋 Bootstrap Error Details');
+      console.error('Error:', err);
+      console.error('Stack:', err.stack);
+      console.groupEnd();
+
+      // Optionally display error to user
+      document.body.innerHTML = `
+      <div style="padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px; margin: 20px; font-family: Arial, sans-serif;">
+        <h3>Application Failed to Start</h3>
+        <p><strong>Error:</strong> ${err.message}</p>
+        <details>
+          <summary>Technical Details (Click to expand)</summary>
+          <pre style="background: #f1f1f1; padding: 10px; margin: 10px 0; overflow: auto;">${err.stack}</pre>
+        </details>
+        <p>Please check the browser console for more information and contact support if the issue persists.</p>
+      </div>
+    `;
+    }
+  });

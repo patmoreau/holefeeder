@@ -30,7 +30,7 @@
               "base": "dist"
             },
             "index": "src/index.html",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
