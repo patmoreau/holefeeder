@@ -140,16 +140,44 @@ bootstrapApplication(AppComponent, {
       console.groupEnd();
 
       // Optionally display error to user
-      document.body.innerHTML = `
-      <div style="padding: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px; margin: 20px; font-family: Arial, sans-serif;">
-        <h3>Application Failed to Start</h3>
-        <p><strong>Error:</strong> ${err.message}</p>
-        <details>
-          <summary>Technical Details (Click to expand)</summary>
-          <pre style="background: #f1f1f1; padding: 10px; margin: 10px 0; overflow: auto;">${err.stack}</pre>
-        </details>
-        <p>Please check the browser console for more information and contact support if the issue persists.</p>
-      </div>
-    `;
+      const errorContainer = document.createElement('div');
+      errorContainer.style.padding = '20px';
+      errorContainer.style.background = '#f8d7da';
+      errorContainer.style.color = '#721c24';
+      errorContainer.style.border = '1px solid #f5c6cb';
+      errorContainer.style.borderRadius = '4px';
+      errorContainer.style.margin = '20px';
+      errorContainer.style.fontFamily = 'Arial, sans-serif';
+
+      const errorTitle = document.createElement('h3');
+      errorTitle.textContent = 'Application Failed to Start';
+      errorContainer.appendChild(errorTitle);
+
+      const errorMessage = document.createElement('p');
+      errorMessage.innerHTML = '<strong>Error:</strong> ';
+      const errorText = document.createTextNode(err.message);
+      errorMessage.appendChild(errorText);
+      errorContainer.appendChild(errorMessage);
+
+      const errorDetails = document.createElement('details');
+      const errorSummary = document.createElement('summary');
+      errorSummary.textContent = 'Technical Details (Click to expand)';
+      errorDetails.appendChild(errorSummary);
+
+      const errorStack = document.createElement('pre');
+      errorStack.style.background = '#f1f1f1';
+      errorStack.style.padding = '10px';
+      errorStack.style.margin = '10px 0';
+      errorStack.style.overflow = 'auto';
+      errorStack.textContent = err.stack;
+      errorDetails.appendChild(errorStack);
+      errorContainer.appendChild(errorDetails);
+
+      const errorFooter = document.createElement('p');
+      errorFooter.textContent = 'Please check the browser console for more information and contact support if the issue persists.';
+      errorContainer.appendChild(errorFooter);
+
+      document.body.textContent = ''; // Clear existing content
+      document.body.appendChild(errorContainer);
     }
   });
