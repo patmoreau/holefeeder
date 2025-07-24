@@ -194,7 +194,7 @@ export class SettingsService extends StateService<SettingsState> implements OnDe
       start = this.nextReccurence(count, settings);
 
       // Safety break to prevent infinite loop during debugging
-      if (count > 1000) {
+      if (count > MAX_LOOP_ITERATIONS) {
         this.logger.error('🔧 calculateNextDate: Breaking loop - too many iterations!');
         break;
       }
