@@ -13,8 +13,7 @@ import { AppComponent } from '@app/app.component';
 import { GlobalErrorHandler } from '@app/core/errors';
 import {
   jsonDateOnlyInterceptor,
-  httpRequestLoggerInterceptor,
-  httpLoadingInterceptor
+  httpRequestLoggerInterceptor
 } from '@app/core/interceptors/functional-interceptors';
 import { appEffects, appStore } from '@app/core/store';
 import { ROUTES } from '@app/routes';
@@ -78,7 +77,6 @@ bootstrapApplication(AppComponent, {
         authInterceptor(),
         jsonDateOnlyInterceptor,
         httpRequestLoggerInterceptor,
-        httpLoadingInterceptor,
       ])
     ),
     importProvidersFrom(

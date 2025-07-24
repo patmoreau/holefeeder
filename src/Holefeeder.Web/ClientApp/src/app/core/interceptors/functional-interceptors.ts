@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { dateToDateOnly, isDateOnlyString } from '@app/shared/helpers';
 import { LoggerService } from '@app/core/logger';
-import { catchError, retry, throwError, timeout, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 // JsonDateOnly Interceptor (functional)
 export const jsonDateOnlyInterceptor: HttpInterceptorFn = (req, next) => {
@@ -67,13 +67,15 @@ export const httpRequestLoggerInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const startTime = Date.now();
+  logger.info(`🚀 HTTP Request starting: ${req.method} ${req.url}`);
+
   return next(req).pipe(
     tap({
       next: (event) => {
         if (event instanceof HttpResponse) {
           const elapsed = Date.now() - startTime;
           logger.info(
-            `${req.method} ${req.url} completed in ${elapsed}ms`,
+            `📨 HTTP Response received: ${req.method} ${req.url} response received in ${elapsed}ms`,
             { status: event.status, elapsed }
           );
         }
@@ -81,33 +83,17 @@ export const httpRequestLoggerInterceptor: HttpInterceptorFn = (req, next) => {
       error: (error) => {
         const elapsed = Date.now() - startTime;
         logger.error(
-          `${req.method} ${req.url} failed in ${elapsed}ms`,
+          `❌ HTTP Request failed: ${req.method} ${req.url} failed in ${elapsed}ms`,
           { error, elapsed }
         );
-      }
-    })
-  );
-};
-
-// HttpLoading Interceptor (functional)
-export const httpLoadingInterceptor: HttpInterceptorFn = (req, next) => {
-  const retryCount = 1;
-  const retryWaitMilliSeconds = 1000;
-  const defaultTimeout = 30000;
-
-  return next(req).pipe(
-    timeout(defaultTimeout),
-    retry({ count: retryCount, delay: retryWaitMilliSeconds }),
-    catchError((err: any) => {
-      let errorMessage = '';
-      if (err.error instanceof ErrorEvent) {
-        // client-side error
-        errorMessage = `Error: ${err.message}`;
-      } else {
-        // server-side error
-        errorMessage = `Error Code: ${err.status}\nMessage: ${err.message}`;
-      }
-      return throwError(() => new Error(errorMessage));
+      },
+      complete: () => {
+        const elapsed = Date.now() - startTime;
+        logger.info(
+          `✅ HTTP Request completed: ${req.method} ${req.url} completed in ${elapsed}ms`,
+          { elapsed }
+        );
+      },
     })
   );
 };

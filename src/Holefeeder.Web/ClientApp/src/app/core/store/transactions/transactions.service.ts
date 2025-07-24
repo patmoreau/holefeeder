@@ -41,7 +41,7 @@ export class TransactionsService {
     private http: HttpClient,
     @Inject('BASE_API_URL') private apiUrl: string,
     private adapter: TransactionDetailAdapter
-  ) {}
+  ) { }
 
   fetch(
     accountId: string,
@@ -71,7 +71,10 @@ export class TransactionsService {
       })
       .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in fetch transactions:', error);
+          return formatErrors(error);
+        })
       );
   }
 }

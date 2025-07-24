@@ -24,7 +24,12 @@ export class StatisticsService {
   private getStatistics(): Observable<Statistics[]> {
     return this.http
       .get<Statistics[]>(`${this.apiUrl}/${apiRoute}`)
-      .pipe(catchError(formatErrors));
+      .pipe(
+        catchError(error => {
+          console.error('HTTP error in getStatistics:', error);
+          return formatErrors(error);
+        })
+      );
   }
 
   fetchSummary(from: Date, to: Date): Observable<Summary> {
@@ -34,6 +39,11 @@ export class StatisticsService {
           .set('from', format(from, 'yyyy-MM-dd'))
           .set('to', format(to, 'yyyy-MM-dd')),
       })
-      .pipe(catchError(formatErrors));
+      .pipe(
+        catchError(error => {
+          console.error('HTTP error in fetchSummary:', error);
+          return formatErrors(error);
+        })
+      );
   }
 }

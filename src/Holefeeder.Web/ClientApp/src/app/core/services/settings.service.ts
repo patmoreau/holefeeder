@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable, OnDestroy } from '@angular/core';
 import {
   DateInterval,
   DateIntervalType,
@@ -15,8 +15,8 @@ import {
   startOfDay,
   startOfToday,
 } from 'date-fns';
-import { Observable, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { map, takeUntil, catchError, tap, finalize, debounceTime } from 'rxjs/operators';
 import {
   SettingsStoreItemAdapter,
   StoreItemAdapter,
@@ -47,12 +47,13 @@ const initialState: SettingsState = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class SettingsService extends StateService<SettingsState> {
+export class SettingsService extends StateService<SettingsState> implements OnDestroy {
   settings$: Observable<Settings> = this.select(state => state.settings);
   period$: Observable<DateInterval> = this.select(state => state.period);
 
   private readonly store = inject(Store<AppState>);
   private readonly logger = inject(LoggerService);
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -61,29 +62,22 @@ export class SettingsService extends StateService<SettingsState> {
     private adapter: SettingsStoreItemAdapter
   ) {
     super(initialState);
+    this.initializeSubscriptions();
+  }
 
-    this.store
-      .select(AuthFeature.selectIsAuthenticated)
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    super.destroy();
+  }
+
+  private initializeSubscriptions(): void {
+    this.store.select(AuthFeature.selectIsAuthenticated)
       .pipe(
         filterTrue(),
-        switchMap(() => this.getStoreItem(storeItemCode)),
-        tapTrace(this.logger, 'SettingsService.getStoreItem')
+        takeUntil(this.destroy$)
       )
-      .subscribe(item => {
-        const settings = this.adapter.adapt(item);
-        const period = this.calculatePeriod(startOfToday(), settings);
-        this.resetState(period, settings, item);
-      });
-
-    this.store
-      .select(AuthFeature.selectIsAuthenticated)
-      .pipe(
-        filter(isAuthenticated => !isAuthenticated),
-        switchMap(() => of(initialState))
-      )
-      .subscribe(state => {
-        this.resetState(state.period, state.settings, state.storeItem);
-      });
+      .subscribe(() => this.loadSettings());
   }
 
   getNextDate(asOfDate: Date): Date {
@@ -127,25 +121,93 @@ export class SettingsService extends StateService<SettingsState> {
     );
   }
 
+  private loadSettings(): void {
+    this.getStoreItem(storeItemCode)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: (result) => {
+          const settings = this.adapter.adapt(result);
+          const period = this.calculatePeriod(startOfToday(), settings);
+          this.resetState(period, settings, result);
+        },
+        error: (error) => {
+          this.logger.error('Error loading settings, falling back to initial state', error);
+          // Fall back to initial state on any error (timeout, auth failure, etc.)
+          this.resetState(initialState.period, initialState.settings, initialState.storeItem);
+        },
+      });
+  }
+
+  private getStoreItem(code: string): Observable<StoreItem> {
+    return this.http
+      .get<ReadonlyArray<storeItemType>>(
+        `${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`
+      )
+      .pipe(
+        map((items: ReadonlyArray<storeItemType>) => {
+          if (items.length > 0) {
+            return this.storeItemAdapter.adapt(items[0]);
+          }
+          return new StoreItem(null, code, JSON.stringify(initialState.settings));
+        }),
+        catchError(error => {
+          this.logger.error('Error fetching store item', error);
+          // Return default StoreItem on error to keep the stream alive
+          return of(new StoreItem(null, code, JSON.stringify(initialState.settings)));
+        }),
+      );
+  }
+
+  private saveStoreItem(item: StoreItem): Observable<StoreItem> {
+    const command = item.id ? 'modify-store-item' : 'create-store-item';
+    return this.http
+      .post<storeItemType>(`${this.apiUrl}/${apiRoute}/${command}`, item)
+      .pipe(
+        map(data => {
+          if (data?.id === undefined) {
+            return item;
+          }
+          return this.storeItemAdapter.adapt(data);
+        }),
+        catchError(error => {
+          this.logger.error('Error saving store item', error);
+          // Re-throw the error so the caller can handle it
+          throw error;
+        })
+      );
+  }
+
   private calculateNextDate(asOfDate: Date, settings: Settings): Date {
-    if (settings.intervalType === DateIntervalType.oneTime) {
+    if (settings.intervalType.toLowerCase() === DateIntervalType.oneTime) {
       return startOfDay(settings.effectiveDate);
     }
 
     let start = startOfDay(settings.effectiveDate);
 
     let count = 0;
+
     while (compareAsc(start, asOfDate) === -1) {
-      start = this.nextReccurence(count, settings);
       count++;
+      start = this.nextReccurence(count, settings);
+
+      // Safety break to prevent infinite loop during debugging
+      if (count > 1000) {
+        this.logger.error('🔧 calculateNextDate: Breaking loop - too many iterations!');
+        break;
+      }
     }
+
     return startOfDay(start);
   }
 
   private calculatePeriod(asOfDate: Date, settings: Settings): DateInterval {
     let start = startOfDay(asOfDate);
     let end = this.calculateNextDate(start, settings);
-    switch (settings.intervalType) {
+    const intervalType = settings.intervalType.toLowerCase();
+
+    switch (intervalType) {
       case DateIntervalType.weekly:
         if (compareAsc(start, end) === 0) {
           end = addWeeks(end, settings.frequency);
@@ -173,7 +235,7 @@ export class SettingsService extends StateService<SettingsState> {
 
   private calculatePreviousDate(asOfDate: Date, settings: Settings): Date {
     if (
-      settings.intervalType === DateIntervalType.oneTime ||
+      settings.intervalType.toLowerCase() === DateIntervalType.oneTime ||
       compareAsc(asOfDate, settings.effectiveDate) !== 1
     ) {
       return startOfDay(settings.effectiveDate);
@@ -190,7 +252,10 @@ export class SettingsService extends StateService<SettingsState> {
   }
 
   private nextReccurence(amount: number, settings: Settings): Date {
-    switch (settings.intervalType) {
+    // Convert intervalType to lowercase to match enum values
+    const intervalType = settings.intervalType.toLowerCase();
+
+    switch (intervalType) {
       case DateIntervalType.weekly:
         return addWeeks(settings.effectiveDate, settings.frequency * amount);
       case DateIntervalType.monthly:
@@ -213,30 +278,5 @@ export class SettingsService extends StateService<SettingsState> {
       settings: settings,
       storeItem: storeItem,
     });
-  }
-
-  private getStoreItem(code: string): Observable<StoreItem> {
-    return this.http
-      .get<ReadonlyArray<storeItemType>>(
-        `${this.apiUrl}/${apiRoute}?filter=code:eq:${code}`
-      )
-      .pipe(
-        filter(items => items.length > 0),
-        map(items => this.storeItemAdapter.adapt(items[0]))
-      );
-  }
-
-  private saveStoreItem(item: StoreItem): Observable<StoreItem> {
-    const command = item.id ? 'modify-store-item' : 'create-store-item';
-    return this.http
-      .post<storeItemType>(`${this.apiUrl}/${apiRoute}/${command}`, item)
-      .pipe(
-        map(data => {
-          if (data?.id === undefined) {
-            return item;
-          }
-          return this.storeItemAdapter.adapt(data);
-        })
-      );
   }
 }

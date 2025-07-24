@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { filterNullish } from '@app/shared/helpers';
-import { DateInterval, MessageType, Upcoming } from '@app/shared/models';
+import { DateInterval, MessageType, MessageAction, Upcoming } from '@app/shared/models';
 import { format } from 'date-fns';
-import { filter, map, Observable, take, debounceTime, shareReplay } from 'rxjs';
+import { filter, map, Observable, take, debounceTime, shareReplay, takeUntil, Subject, catchError, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { UpcomingAdapter, upcomingType } from '../adapters';
 import { MessageService } from './message.service';
@@ -24,8 +24,9 @@ const initialState: UpcomingState = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class UpcomingService extends StateService<UpcomingState> {
+export class UpcomingService extends StateService<UpcomingState> implements OnDestroy {
   upcoming$: Observable<Upcoming[]> = this.select(state => state.upcoming);
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -35,7 +36,17 @@ export class UpcomingService extends StateService<UpcomingState> {
     private adapter: UpcomingAdapter
   ) {
     super(initialState);
+    this.initializeSubscriptions();
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    super.destroy();
+  }
+
+  private initializeSubscriptions(): void {
+    // Listen for messages that indicate data refresh is needed
     this.messages.listen
       .pipe(
         filter(
@@ -43,10 +54,12 @@ export class UpcomingService extends StateService<UpcomingState> {
             message.type === MessageType.transaction ||
             message.type === MessageType.cashflow
         ),
-        debounceTime(DEBOUNCE_TIME)
+        debounceTime(DEBOUNCE_TIME),
+        takeUntil(this.destroy$)
       )
       .subscribe(() => this.load());
 
+    // Initial load
     this.load();
   }
 
@@ -74,12 +87,19 @@ export class UpcomingService extends StateService<UpcomingState> {
     this.settingsService.period$
       .pipe(
         switchMap(period => this.getAll(period)),
-        take(1)
+        take(1),
+        takeUntil(this.destroy$)
       )
-      .subscribe(items => this.setState({
-        upcoming: items,
-        lastUpdate: now
-      }));
+      .subscribe({
+        next: items => this.setState({
+          upcoming: items,
+          lastUpdate: now
+        }),
+        error: error => {
+          console.error('Failed to load upcoming data:', error);
+          // Keep the previous state on error
+        }
+      });
   }
 
   private getAll(period: DateInterval): Observable<Upcoming[]> {
@@ -91,6 +111,15 @@ export class UpcomingService extends StateService<UpcomingState> {
       })
       .pipe(
         map(data => data.map(this.adapter.adapt)),
+        catchError(error => {
+          console.error('HTTP error in getAll upcoming:', error);
+          this.messages.sendMessage({
+            type: MessageType.error,
+            action: MessageAction.error,
+            content: 'Failed to load upcoming transactions. Please try again later.'
+          });
+          return throwError(() => error);
+        }),
         shareReplay(1)
       );
   }

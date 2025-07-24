@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
 import {
@@ -12,7 +12,7 @@ import {
   IAccountInfo,
   DateIntervalType,
 } from '@app/shared/models';
-import { Observable, of, tap, catchError, map, switchMap, throwError, shareReplay, filter, debounceTime } from 'rxjs';
+import { Observable, of, tap, catchError, map, switchMap, throwError, shareReplay, filter, debounceTime, takeUntil, Subject, timer } from 'rxjs';
 import { CashflowDetailAdapter } from '../adapters';
 import { StateService } from './state.service';
 
@@ -33,8 +33,9 @@ const initialState: CashflowState = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class CashflowsService extends StateService<CashflowState> {
+export class CashflowsService extends StateService<CashflowState> implements OnDestroy {
   private cashflowsCache: Map<string, Observable<PagingInfo<CashflowDetail>>> = new Map();
+  private readonly destroy$ = new Subject<void>();
 
   inactiveCashflows$: Observable<CashflowDetail[]> = this.select(state =>
     state.cashflows.filter(x => x.inactive)
@@ -51,12 +52,23 @@ export class CashflowsService extends StateService<CashflowState> {
     private messages: MessageService
   ) {
     super(initialState);
+    this.initializeSubscriptions();
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    super.destroy();
+    this.clearCache();
+  }
+
+  private initializeSubscriptions(): void {
     // Listen for cashflow changes and reload data
     this.messages.listen
       .pipe(
         filter(message => message.type === MessageType.cashflow),
-        debounceTime(DEBOUNCE_TIME)
+        debounceTime(DEBOUNCE_TIME),
+        takeUntil(this.destroy$)
       )
       .subscribe(() => {
         this.clearCache();
@@ -111,10 +123,12 @@ export class CashflowsService extends StateService<CashflowState> {
 
     this.cashflowsCache.set(cacheKey, request);
 
-    // Clear cache after TTL
-    setTimeout(() => {
-      this.cashflowsCache.delete(cacheKey);
-    }, CACHE_TTL);
+    // Clear cache after TTL using observable timer instead of setTimeout
+    timer(CACHE_TTL)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.clearCacheEntry(cacheKey);
+      });
 
     return request;
   }
@@ -184,13 +198,24 @@ export class CashflowsService extends StateService<CashflowState> {
   }
 
   private load() {
-    this.getAll().subscribe(pagingInfo =>
-      this.setState({
-        cashflows: pagingInfo.items,
-        selected: this.state.selected,
-        lastUpdate: Date.now()
-      })
-    );
+    this.getAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: pagingInfo =>
+          this.setState({
+            cashflows: pagingInfo.items,
+            selected: this.state.selected,
+            lastUpdate: Date.now()
+          }),
+        error: error => {
+          console.error('Failed to load cashflows in private load method:', error);
+          this.messages.sendMessage({
+            type: MessageType.error,
+            action: MessageAction.error,
+            content: 'Failed to load cashflows. Please try again later.'
+          });
+        }
+      });
   }
 
   private getAll(): Observable<PagingInfo<CashflowDetail>> {
@@ -204,6 +229,7 @@ export class CashflowsService extends StateService<CashflowState> {
       .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
         catchError(error => {
+          console.error('HTTP error in getAll cashflows:', error);
           this.messages.sendMessage({
             type: MessageType.error,
             action: MessageAction.error,
@@ -217,5 +243,11 @@ export class CashflowsService extends StateService<CashflowState> {
 
   private clearCache() {
     this.cashflowsCache.clear();
+  }
+
+  private clearCacheEntry(cacheKey: string) {
+    if (this.cashflowsCache.has(cacheKey)) {
+      this.cashflowsCache.delete(cacheKey);
+    }
   }
 }

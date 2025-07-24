@@ -18,7 +18,7 @@ export class AccountCommandsService {
     private http: HttpClient,
     @Inject('BASE_API_URL') private apiUrl: string,
     private messages: MessageService
-  ) {}
+  ) { }
 
   open(account: OpenAccountCommand): Observable<string> {
     return this.http
@@ -32,7 +32,10 @@ export class AccountCommandsService {
             content: id,
           })
         ),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in open account:', error);
+          return formatErrors(error);
+        })
       );
   }
 
@@ -48,7 +51,10 @@ export class AccountCommandsService {
           })
         ),
         switchMap(() => of(void 0)),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in modify account:', error);
+          return formatErrors(error);
+        })
       );
   }
 
@@ -64,7 +70,10 @@ export class AccountCommandsService {
           })
         ),
         switchMap(() => of(void 0)),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in close account:', error);
+          return formatErrors(error);
+        })
       );
   }
 }
