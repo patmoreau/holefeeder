@@ -21,12 +21,11 @@ export class LoadingService {
     this.requestCount--;
     if (this.requestCount <= 0) {
       this.requestCount = 0;
-      // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
-      setTimeout(() => {
-        if (this.loadingSub.value === true) {
-          this.loadingSub.next(false);
-        }
-      }, 0);
+      // Trigger change detection properly to avoid ExpressionChangedAfterItHasBeenCheckedError
+      if (this.loadingSub.value === true) {
+        this.loadingSub.next(false);
+        this.cdr.detectChanges();
+      }
     }
   }
 }
