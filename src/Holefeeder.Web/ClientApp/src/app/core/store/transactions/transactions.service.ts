@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import {
   CategoryType,
   PagingInfo,
@@ -37,11 +38,10 @@ interface TransactionDetailResponse {
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private adapter: TransactionDetailAdapter
-  ) { }
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private adapter = inject(TransactionDetailAdapter);
+
 
   fetch(
     accountId: string,

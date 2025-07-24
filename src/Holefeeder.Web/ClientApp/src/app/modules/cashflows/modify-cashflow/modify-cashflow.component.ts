@@ -56,6 +56,14 @@ const cashflowIdParamName = 'cashflowId';
   ]
 })
 export class ModifyCashflowComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private accountsService = inject(AccountsService);
+  private cashflowsService = inject(CashflowsService);
+  private adapter = inject(ModifyCashflowCommandAdapter);
+  private modalService = inject(ModalService);
+
   form!: FormGroup;
 
   cashflowId!: string;
@@ -78,16 +86,6 @@ export class ModifyCashflowComponent implements OnInit {
   intervalTypesNames = DateIntervalTypeNames;
 
   private readonly store = inject(Store<AppState>);
-
-  constructor(
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private accountsService: AccountsService,
-    private cashflowsService: CashflowsService,
-    private adapter: ModifyCashflowCommandAdapter,
-    private modalService: ModalService
-  ) { }
 
   get amount(): FormControl {
     return this.form.get('amount') as FormControl;

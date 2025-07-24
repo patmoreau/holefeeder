@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Inject, Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import {
   DateInterval,
   DateIntervalType,
@@ -16,21 +16,23 @@ import {
   startOfToday,
 } from 'date-fns';
 import { Observable, of, Subject } from 'rxjs';
-import { map, takeUntil, catchError, tap, finalize, debounceTime } from 'rxjs/operators';
+import { map, takeUntil, catchError } from 'rxjs/operators';
 import {
   SettingsStoreItemAdapter,
   StoreItemAdapter,
   storeItemType,
 } from '../adapters';
 import { StateService } from './state.service';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 
 import { AppState } from '@app/core/store';
 import { Store } from '@ngrx/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
-import { filterTrue, tapTrace } from '@app/shared/helpers';
+import { filterTrue } from '@app/shared/helpers';
 import { LoggerService } from '@app/core/logger';
 
 const apiRoute = 'store-items';
+const MAX_LOOP_ITERATIONS = 1000; // Safety limit to prevent infinite loops
 
 interface SettingsState {
   period: DateInterval;
@@ -48,6 +50,11 @@ const initialState: SettingsState = {
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService extends StateService<SettingsState> implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private storeItemAdapter = inject(StoreItemAdapter);
+  private adapter = inject(SettingsStoreItemAdapter);
+
   settings$: Observable<Settings> = this.select(state => state.settings);
   period$: Observable<DateInterval> = this.select(state => state.period);
 
@@ -55,12 +62,7 @@ export class SettingsService extends StateService<SettingsState> implements OnDe
   private readonly logger = inject(LoggerService);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private storeItemAdapter: StoreItemAdapter,
-    private adapter: SettingsStoreItemAdapter
-  ) {
+  constructor() {
     super(initialState);
     this.initializeSubscriptions();
   }

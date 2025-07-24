@@ -1,4 +1,4 @@
-import { Directive, Injectable } from '@angular/core';
+import { Directive, Injectable, inject } from '@angular/core';
 import {
   AbstractControl,
   NG_VALIDATORS,
@@ -29,7 +29,8 @@ export class DateValidator implements Validator {
   standalone: true,
 })
 export class DateValidatorDirective implements Validator {
-  constructor(private validator: DateValidator) {}
+  private validator = inject(DateValidator);
+
 
   validate(
     control: AbstractControl<unknown, unknown>

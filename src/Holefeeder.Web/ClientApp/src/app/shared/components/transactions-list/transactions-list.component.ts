@@ -25,6 +25,10 @@ import { LoggerService } from '@app/core/logger';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TransactionsListComponent implements OnInit {
+  private transactionsService = inject(TransactionsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   @Input() accountId: string | undefined;
 
   private logger = inject(LoggerService);
@@ -33,12 +37,6 @@ export class TransactionsListComponent implements OnInit {
 
   currentPage = 1;
   limit = 15;
-
-  constructor(
-    private transactionsService: TransactionsService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
 
   ngOnInit() {
     this.transactions$ = this.route.queryParamMap.pipe(

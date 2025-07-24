@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CashflowRequestAdapter } from '@app/core/adapters';
 import { dateToUtc } from '@app/shared/helpers';
 import {
@@ -9,9 +9,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class MakePurchaseCommandAdapter
-  implements Adapter<MakePurchaseCommand>
-{
-  constructor(private adapter: CashflowRequestAdapter) {}
+  implements Adapter<MakePurchaseCommand> {
+  private adapter = inject(CashflowRequestAdapter);
 
   adapt(item: {
     date: Date;

@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import {
   CashflowDetail,
   MessageAction,
@@ -34,6 +35,11 @@ const initialState: CashflowState = {
 
 @Injectable({ providedIn: 'root' })
 export class CashflowsService extends StateService<CashflowState> implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private adapter = inject(CashflowDetailAdapter);
+  private messages = inject(MessageService);
+
   private cashflowsCache: Map<string, Observable<PagingInfo<CashflowDetail>>> = new Map();
   private readonly destroy$ = new Subject<void>();
 
@@ -45,12 +51,7 @@ export class CashflowsService extends StateService<CashflowState> implements OnD
     state.cashflows.filter(x => !x.inactive)
   );
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private adapter: CashflowDetailAdapter,
-    private messages: MessageService
-  ) {
+  constructor() {
     super(initialState);
     this.initializeSubscriptions();
   }

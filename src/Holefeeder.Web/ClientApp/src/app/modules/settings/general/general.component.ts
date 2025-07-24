@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,17 +26,17 @@ import { Observable, tap } from 'rxjs';
   ]
 })
 export class GeneralComponent implements OnInit {
+  private settingsService = inject(SettingsService);
+  private settingsAdapter = inject(SettingsAdapter);
+  private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
+
   settings$: Observable<Settings> | undefined;
 
   settingsForm: FormGroup;
   intervalTypesNames = DateIntervalTypeNames;
 
-  constructor(
-    private settingsService: SettingsService,
-    private settingsAdapter: SettingsAdapter,
-    private formBuilder: FormBuilder,
-    private router: Router
-  ) {
+  constructor() {
     this.settingsForm = this.formBuilder.group({
       effectiveDate: ['', Validators.required],
       intervalType: ['', Validators.required],

@@ -1,10 +1,5 @@
 
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  forwardRef,
-  Input,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, forwardRef, Input, inject } from '@angular/core';
 import {
   AbstractControl,
   FormsModule,
@@ -44,6 +39,8 @@ import { dateFromUtc, dateToUtc } from '@app/shared/helpers';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DatePickerComponent extends BaseFormControlWithValidatorComponent<Date> {
+  private logger = inject(LoggerService);
+
   @Input()
   public label = 'Date';
 
@@ -56,7 +53,7 @@ export class DatePickerComponent extends BaseFormControlWithValidatorComponent<D
   @Input()
   public disabled = false;
 
-  constructor(private logger: LoggerService) {
+  constructor() {
     super();
     this.value = startOfToday();
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CashflowsService } from '@app/core/services';
 import {
@@ -21,14 +21,12 @@ import { Observable, Subject } from 'rxjs';
   ]
 })
 export class CashflowsListComponent implements OnInit {
+  private cashflowsService = inject(CashflowsService);
+  private router = inject(Router);
+
   cashflows$!: Observable<CashflowDetail[]>;
   showInactive = false;
   $showInactive = new Subject<boolean>();
-
-  constructor(
-    private cashflowsService: CashflowsService,
-    private router: Router
-  ) { }
 
   async ngOnInit(): Promise<void> {
     this.cashflows$ = this.cashflowsService.activeCashflows$;

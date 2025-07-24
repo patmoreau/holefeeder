@@ -1,5 +1,5 @@
 // utc-to-local.pipe.ts
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { dateFromUtc } from '@app/shared/helpers';
 import { DatePipe } from '@angular/common';
 
@@ -8,7 +8,8 @@ import { DatePipe } from '@angular/common';
   standalone: true,
 })
 export class UtcToLocalPipe implements PipeTransform {
-  constructor(private datePipe: DatePipe) {}
+  private datePipe = inject(DatePipe);
+
   transform(utcDate: Date | string | number): string | null {
     // Convert UTC date to local date
     const localDate = dateFromUtc(utcDate);

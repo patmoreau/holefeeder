@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PayCashflowCommandAdapter } from '@app/core/adapters';
 import {
@@ -20,17 +20,15 @@ import { Observable } from 'rxjs';
   imports: [CommonModule, NgbPaginationModule, TransactionListItemComponent]
 })
 export class UpcomingListComponent implements OnInit {
+  private upcomingService = inject(UpcomingService);
+  private transactionsService = inject(TransactionsService);
+  private adapter = inject(PayCashflowCommandAdapter);
+  private messages = inject(MessageService);
+  private router = inject(Router);
+
   @Input() accountId: string | undefined;
 
   upcomingCashflows$: Observable<Upcoming[]> | undefined;
-
-  constructor(
-    private upcomingService: UpcomingService,
-    private transactionsService: TransactionsService,
-    private adapter: PayCashflowCommandAdapter,
-    private messages: MessageService,
-    private router: Router
-  ) { }
 
   ngOnInit() {
     if (this.accountId) {

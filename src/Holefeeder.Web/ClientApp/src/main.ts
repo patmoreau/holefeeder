@@ -16,6 +16,7 @@ import {
   httpRequestLoggerInterceptor
 } from '@app/core/interceptors/functional-interceptors';
 import { appEffects, appStore } from '@app/core/store';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import { ROUTES } from '@app/routes';
 import { environment } from '@env/environment';
 import { provideEffects } from '@ngrx/effects';
@@ -67,7 +68,7 @@ setupGlobalErrorHandling();
 bootstrapApplication(AppComponent, {
   providers: [
     {
-      provide: 'BASE_API_URL',
+      provide: BASE_API_URL,
       useValue: `${environment.baseUrl}/gateway/api/v2`,
     },
     loadConfigProvider,

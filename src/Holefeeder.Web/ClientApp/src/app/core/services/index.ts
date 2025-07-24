@@ -1,7 +1,6 @@
 export * from './accounts.service';
 export * from './cashflows.service';
 export * from './config.service';
-export * from './debug.service';
 export * from './message.service';
 export * from './modal.service';
 export * from './safe-operations.service';

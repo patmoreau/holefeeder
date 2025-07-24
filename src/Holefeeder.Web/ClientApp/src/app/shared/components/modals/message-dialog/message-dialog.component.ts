@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -23,8 +23,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
 })
 export class MessageDialogComponent {
+  activeModal = inject(NgbActiveModal);
+
   title!: string;
   message!: string;
-
-  constructor(public activeModal: NgbActiveModal) {}
 }

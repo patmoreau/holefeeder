@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { filterNullish } from '@app/shared/helpers';
 import { DateInterval, MessageType, MessageAction, Upcoming } from '@app/shared/models';
 import { format } from 'date-fns';
 import { filter, map, Observable, take, debounceTime, shareReplay, takeUntil, Subject, catchError, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { UpcomingAdapter, upcomingType } from '../adapters';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
@@ -25,16 +26,16 @@ const initialState: UpcomingState = {
 
 @Injectable({ providedIn: 'root' })
 export class UpcomingService extends StateService<UpcomingState> implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private settingsService = inject(SettingsService);
+  private messages = inject(MessageService);
+  private adapter = inject(UpcomingAdapter);
+
   upcoming$: Observable<Upcoming[]> = this.select(state => state.upcoming);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private settingsService: SettingsService,
-    private messages: MessageService,
-    private adapter: UpcomingAdapter
-  ) {
+  constructor() {
     super(initialState);
     this.initializeSubscriptions();
   }

@@ -32,6 +32,9 @@ import { AppState, CategoriesFeature } from '@app/core/store';
   ]
 })
 export class TransactionEditComponent implements OnInit {
+  private rootFormGroup = inject(FormGroupDirective);
+  private accountsService = inject(AccountsService);
+
   form!: FormGroup;
 
   values$!: Observable<{
@@ -40,10 +43,6 @@ export class TransactionEditComponent implements OnInit {
   }>;
 
   private readonly store = inject(Store<AppState>);
-  constructor(
-    private rootFormGroup: FormGroupDirective,
-    private accountsService: AccountsService
-  ) { }
 
   get amount(): FormControl {
     return this.form.get('amount') as FormControl;

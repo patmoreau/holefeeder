@@ -1,21 +1,18 @@
-import { ErrorHandler, Injectable, isDevMode } from '@angular/core';
+import { ErrorHandler, Injectable, isDevMode, inject } from '@angular/core';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { MessageService } from '../services';
 import { LoggerService } from '@app/core/logger/logger.service';
-import { DebugService } from '../services/debug.service';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalErrorHandler implements ErrorHandler {
-  constructor(
-    private messages: MessageService,
-    private logger: LoggerService,
-    private debugService: DebugService
-  ) { }
+  private messages = inject(MessageService);
+  private logger = inject(LoggerService);
+
 
   handleError(error: Error) {
     // Log the error for debugging and tracking
     this.logger.error(error);
-    this.debugService.logError(error, {
+    this.logger.logError(error, {
       component: 'GlobalErrorHandler',
       action: 'handleError'
     });
@@ -25,7 +22,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       console.group('🚨 Global Error Handler');
       console.error('Error caught by GlobalErrorHandler:', error);
       console.error('Stack trace:', error.stack);
-      console.log('Use window.debugService.getErrorHistory() to see all errors');
+      console.log('Use window.loggerService.getErrorHistory() to see all errors');
       console.groupEnd();
     }
 

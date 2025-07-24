@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -27,14 +27,12 @@ import { Observable } from 'rxjs';
   ]
 })
 export class TransferComponent implements OnInit {
+  private rootFormGroup = inject(FormGroupDirective);
+  private accountsService = inject(AccountsService);
+
   form!: FormGroup;
 
   values$!: Observable<AccountInfo[]>;
-
-  constructor(
-    private rootFormGroup: FormGroupDirective,
-    private accountsService: AccountsService
-  ) { }
 
   ngOnInit() {
     this.form = this.rootFormGroup.control;

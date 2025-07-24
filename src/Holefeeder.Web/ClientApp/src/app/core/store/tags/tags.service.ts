@@ -1,9 +1,10 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { catchError, Observable, BehaviorSubject, throwError, shareReplay, map, takeUntil, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Tag } from '@app/shared/models/tag.model';
 import { MessageService } from '@app/core/services';
 import { MessageType, MessageAction } from '@app/shared/models';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import { Store } from '@ngrx/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import { filterTrue } from '@app/shared/helpers';
@@ -13,6 +14,11 @@ const CACHE_TTL = 300000; // 5 minute cache
 
 @Injectable({ providedIn: 'root' })
 export class TagsService implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private messages = inject(MessageService);
+  private store = inject(Store);
+
   private tagsSubject = new BehaviorSubject<ReadonlyArray<Tag>>([]);
   private cache$: Observable<ReadonlyArray<Tag>> | null = null;
   private lastFetch = 0;
@@ -20,12 +26,7 @@ export class TagsService implements OnDestroy {
 
   tags$ = this.tagsSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private messages: MessageService,
-    private store: Store
-  ) {
+  constructor() {
     this.initializeSubscriptions();
   }
 

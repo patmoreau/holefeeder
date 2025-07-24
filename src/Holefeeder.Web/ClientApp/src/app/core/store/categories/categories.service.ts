@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Category, CategoryType, MessageAction, MessageType } from '@app/shared/models';
 import { BehaviorSubject, catchError, map, Observable, shareReplay, throwError, takeUntil, Subject } from 'rxjs';
 import { MessageService } from '@app/core/services';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import { Store } from '@ngrx/store';
 import { AuthFeature } from '@app/core/store/auth/auth.feature';
 import { filterTrue } from '@app/shared/helpers';
@@ -21,6 +22,11 @@ type categoryType = {
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesService implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private messages = inject(MessageService);
+  private store = inject(Store);
+
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
   private cache$: Observable<ReadonlyArray<Category>> | null = null;
   private lastFetch = 0;
@@ -28,12 +34,7 @@ export class CategoriesService implements OnDestroy {
 
   categories$ = this.categoriesSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private messages: MessageService,
-    private store: Store
-  ) {
+  constructor() {
     this.initializeSubscriptions();
   }
 

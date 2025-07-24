@@ -25,6 +25,8 @@ import {
   imports: [NgbTypeaheadModule]
 })
 export class TagsInputComponent {
+  private fb = inject(FormBuilder);
+
   @Input() tagsArray = new FormArray<FormControl<string | null>>([]);
   @Input() isReadonly = false;
 
@@ -35,8 +37,6 @@ export class TagsInputComponent {
   click$ = new Subject<string>();
 
   private store = inject(Store<AppStore>);
-
-  constructor(private fb: FormBuilder) { }
 
   addTag(newTag: string) {
     if (this.isReadonly) {

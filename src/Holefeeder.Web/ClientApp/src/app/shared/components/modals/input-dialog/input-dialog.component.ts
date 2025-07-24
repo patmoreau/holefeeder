@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -34,11 +34,11 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [ReactiveFormsModule]
 })
 export class InputDialogComponent {
+  activeModal = inject(NgbActiveModal);
+
   title!: string;
   message!: string;
   input = new FormControl('', Validators.required);
-
-  constructor(public activeModal: NgbActiveModal) { }
 
   set initialValue(value: string) {
     this.input.setValue(value);

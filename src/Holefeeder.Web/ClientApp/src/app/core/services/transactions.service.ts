@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import {
   MakePurchaseCommand,
   MessageAction,
@@ -22,15 +23,13 @@ type idType = { id: string };
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private adapter = inject(TransactionDetailAdapter);
+  private messages = inject(MessageService);
+
   private cache: Map<string, Observable<PagingInfo<TransactionDetail>>> = new Map();
   private readonly destroy$ = new Subject<void>();
-
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private adapter: TransactionDetailAdapter,
-    private messages: MessageService
-  ) { }
 
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AccountsService, UpcomingService } from '@app/core/services';
 import { LoaderComponent } from '@app/shared/components';
@@ -15,15 +15,13 @@ import { Observable, of, switchMap, tap } from 'rxjs';
   imports: [CommonModule, RouterModule, LoaderComponent]
 })
 export class AccountDetailsComponent implements OnInit {
+  private accountsService = inject(AccountsService);
+  private upcomingService = inject(UpcomingService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   account$!: Observable<Account | undefined>;
   upcomingBalance$!: Observable<number>;
-
-  constructor(
-    private accountsService: AccountsService,
-    private upcomingService: UpcomingService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
 
   private static amountClass(amount: number): string {
     if (amount < 0) {

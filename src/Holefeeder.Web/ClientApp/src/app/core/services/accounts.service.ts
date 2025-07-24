@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { MessageService } from '@app/core/services';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import {
   Account,
   accountTypeMultiplier,
@@ -33,6 +34,11 @@ const initialState: AccountState = {
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService extends StateService<AccountState> implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private messages = inject(MessageService);
+  private adapter = inject(AccountAdapter);
+
   inactiveAccounts$: Observable<Account[]> = this.select(state =>
     state.accounts.filter(x => x.inactive)
   );
@@ -45,12 +51,7 @@ export class AccountsService extends StateService<AccountState> implements OnDes
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private messages: MessageService,
-    private adapter: AccountAdapter
-  ) {
+  constructor() {
     super(initialState);
     this.initializeSubscriptions();
   }

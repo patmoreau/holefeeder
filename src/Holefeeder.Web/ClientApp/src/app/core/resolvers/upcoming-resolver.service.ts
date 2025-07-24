@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { UpcomingService } from '@app/core/services';
 import { Upcoming } from '@app/shared/models';
@@ -12,12 +12,13 @@ export class UpcomingResolverService
   extends BaseResolverService
   implements Resolve<Upcoming>
 {
-  constructor(
-    private upcomingService: UpcomingService,
-    router: Router,
-    toasts: ToastsService,
-    barService: LoadingBarService
-  ) {
+  private upcomingService = inject(UpcomingService);
+
+  constructor() {
+    const router = inject(Router);
+    const toasts = inject(ToastsService);
+    const barService = inject(LoadingBarService);
+
     super(router, toasts, barService);
   }
 
