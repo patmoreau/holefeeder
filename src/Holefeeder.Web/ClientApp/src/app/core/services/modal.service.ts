@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@angular/core';
+import { Injectable, Type, inject } from '@angular/core';
 import {
   ConfirmDialogComponent,
   DeleteDialogComponent,
@@ -11,7 +11,8 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
-  constructor(private ngbModal: NgbModal) {}
+  private ngbModal = inject(NgbModal);
+
 
   confirm(
     prompt = 'Really?',

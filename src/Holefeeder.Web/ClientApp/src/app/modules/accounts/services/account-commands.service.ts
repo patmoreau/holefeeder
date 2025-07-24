@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { formatErrors } from '@app/core/utils/api.utils';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import { CloseAccountCommand } from '@app/modules/accounts/models/close-account-command.model';
 import { MessageAction, MessageType } from '@app/shared/models';
 import { Observable, of, tap } from 'rxjs';
@@ -14,11 +15,10 @@ const apiRoute = 'accounts';
 
 @Injectable({ providedIn: 'root' })
 export class AccountCommandsService {
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private messages: MessageService
-  ) {}
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private messages = inject(MessageService);
+
 
   open(account: OpenAccountCommand): Observable<string> {
     return this.http
@@ -32,7 +32,10 @@ export class AccountCommandsService {
             content: id,
           })
         ),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in open account:', error);
+          return formatErrors(error);
+        })
       );
   }
 
@@ -48,7 +51,10 @@ export class AccountCommandsService {
           })
         ),
         switchMap(() => of(void 0)),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in modify account:', error);
+          return formatErrors(error);
+        })
       );
   }
 
@@ -64,7 +70,10 @@ export class AccountCommandsService {
           })
         ),
         switchMap(() => of(void 0)),
-        catchError(formatErrors)
+        catchError(error => {
+          console.error('HTTP error in close account:', error);
+          return formatErrors(error);
+        })
       );
   }
 }

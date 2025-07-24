@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -28,19 +28,17 @@ import { map, Observable, tap } from 'rxjs';
   ]
 })
 export class PayCashflowComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private transactionsService = inject(TransactionsService);
+  private adapter = inject(PayCashflowCommandAdapter);
+
   form!: FormGroup;
 
   cashflow!: Upcoming;
 
   values$!: Observable<Upcoming>;
-
-  constructor(
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private transactionsService: TransactionsService,
-    private adapter: PayCashflowCommandAdapter
-  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

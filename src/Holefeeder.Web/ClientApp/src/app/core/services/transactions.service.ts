@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { MessageService } from '@app/core/services';
 import { formatErrors, mapToPagingInfo } from '@app/core/utils/api.utils';
+import { BASE_API_URL } from '@app/core/tokens/injection-tokens';
 import {
   MakePurchaseCommand,
   MessageAction,
@@ -12,7 +13,7 @@ import {
   TransactionDetail,
   TransferMoneyCommand,
 } from '@app/shared/models';
-import { Observable, of, tap, shareReplay, catchError, map, switchMap, throwError } from 'rxjs';
+import { Observable, of, tap, shareReplay, catchError, map, switchMap, throwError, timer, takeUntil, Subject } from 'rxjs';
 import { transactionDetailType, TransactionDetailAdapter } from '../adapters';
 
 const apiRoute = 'transactions';
@@ -21,15 +22,20 @@ const CACHE_TTL = 60000; // 1 minute cache
 type idType = { id: string };
 
 @Injectable({ providedIn: 'root' })
-export class TransactionsService {
-  private cache: Map<string, Observable<PagingInfo<TransactionDetail>>> = new Map();
+export class TransactionsService implements OnDestroy {
+  private http = inject(HttpClient);
+  private apiUrl = inject(BASE_API_URL);
+  private adapter = inject(TransactionDetailAdapter);
+  private messages = inject(MessageService);
 
-  constructor(
-    private http: HttpClient,
-    @Inject('BASE_API_URL') private apiUrl: string,
-    private adapter: TransactionDetailAdapter,
-    private messages: MessageService
-  ) { }
+  private cache: Map<string, Observable<PagingInfo<TransactionDetail>>> = new Map();
+  private readonly destroy$ = new Subject<void>();
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.clearCache();
+  }
 
   find(
     accountId: string,
@@ -67,6 +73,7 @@ export class TransactionsService {
       .pipe(
         map(resp => mapToPagingInfo(resp, this.adapter)),
         catchError(error => {
+          console.error('HTTP error in find transactions:', error);
           this.messages.sendMessage({
             type: MessageType.error,
             action: MessageAction.error,
@@ -79,10 +86,12 @@ export class TransactionsService {
 
     this.cache.set(cacheKey, request);
 
-    // Clear cache after TTL
-    setTimeout(() => {
-      this.cache.delete(cacheKey);
-    }, CACHE_TTL);
+    // Clear cache after TTL using observable timer instead of setTimeout
+    timer(CACHE_TTL)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.clearCacheEntry(cacheKey);
+      });
 
     return request;
   }
@@ -93,6 +102,7 @@ export class TransactionsService {
       .pipe(
         map(data => this.adapter.adapt(data)),
         catchError(error => {
+          console.error('HTTP error in findById transaction:', error);
           this.messages.sendMessage({
             type: MessageType.error,
             action: MessageAction.error,
@@ -108,14 +118,18 @@ export class TransactionsService {
       .post<idType>(`${this.apiUrl}/${apiRoute}/pay-cashflow`, transaction)
       .pipe(
         map(data => data.id),
-        catchError(formatErrors),
-        tap(id =>
+        catchError(error => {
+          console.error('HTTP error in payCashflow:', error);
+          return formatErrors(error);
+        }),
+        tap(id => {
+          this.clearCache();
           this.messages.sendMessage({
             type: MessageType.transaction,
             action: MessageAction.post,
             content: { id: id },
-          })
-        )
+          });
+        })
       );
   }
 
@@ -124,14 +138,18 @@ export class TransactionsService {
       .post<idType>(`${this.apiUrl}/${apiRoute}/make-purchase`, transaction)
       .pipe(
         map(data => data.id),
-        catchError(formatErrors),
-        tap(id =>
+        catchError(error => {
+          console.error('HTTP error in makePurchase:', error);
+          return formatErrors(error);
+        }),
+        tap(id => {
+          this.clearCache();
           this.messages.sendMessage({
             type: MessageType.transaction,
             action: MessageAction.post,
             content: { id: id },
-          })
-        )
+          });
+        })
       );
   }
 
@@ -140,7 +158,10 @@ export class TransactionsService {
       .post<idType>(`${this.apiUrl}/${apiRoute}/transfer`, transaction)
       .pipe(
         map(data => data.id),
-        catchError(formatErrors),
+        catchError(error => {
+          console.error('HTTP error in transfer:', error);
+          return formatErrors(error);
+        }),
         tap(id => {
           this.clearCache();
           this.messages.sendMessage({
@@ -155,7 +176,10 @@ export class TransactionsService {
   modify(transaction: ModifyTransactionCommand): Observable<void> {
     return this.http.post(`${this.apiUrl}/${apiRoute}/modify`, transaction).pipe(
       switchMap(() => of(void 0)),
-      catchError(formatErrors),
+      catchError(error => {
+        console.error('HTTP error in modify transaction:', error);
+        return formatErrors(error);
+      }),
       tap(() => {
         this.clearCache();
         this.messages.sendMessage({
@@ -170,7 +194,10 @@ export class TransactionsService {
   delete(id: string): Observable<void> {
     return this.http.delete(`${this.apiUrl}/${apiRoute}/${id}`).pipe(
       switchMap(() => of(void 0)),
-      catchError(formatErrors),
+      catchError(error => {
+        console.error('HTTP error in delete transaction:', error);
+        return formatErrors(error);
+      }),
       tap(() => {
         this.clearCache();
         this.messages.sendMessage({
@@ -184,5 +211,11 @@ export class TransactionsService {
 
   private clearCache() {
     this.cache.clear();
+  }
+
+  private clearCacheEntry(cacheKey: string) {
+    if (this.cache.has(cacheKey)) {
+      this.cache.delete(cacheKey);
+    }
   }
 }

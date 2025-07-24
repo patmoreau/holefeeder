@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   ControlContainer,
   FormGroup,
@@ -16,11 +16,11 @@ import { DateIntervalTypeNames } from '@app/shared/models';
   imports: [CommonModule, ReactiveFormsModule, DatePickerComponent]
 })
 export class RecurringCashflowComponent implements OnInit {
+  private controlContainer = inject(ControlContainer);
+
   form!: FormGroup;
 
   intervalTypesNames = DateIntervalTypeNames;
-
-  constructor(private controlContainer: ControlContainer) { }
 
   ngOnInit(): void {
     this.form = <FormGroup>this.controlContainer.control;

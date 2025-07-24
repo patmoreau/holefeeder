@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,15 +13,13 @@ import { Router } from '@angular/router';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [ReactiveFormsModule]
 })
 export class AccountComponent implements OnInit {
-  profileForm!: FormGroup;
+  private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router
-  ) { }
+  profileForm!: FormGroup;
 
   get firstName() {
     return this.profileForm.get('firstName');

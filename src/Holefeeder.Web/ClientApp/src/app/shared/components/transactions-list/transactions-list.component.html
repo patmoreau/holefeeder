@@ -1,21 +1,23 @@
-<ng-container *ngIf="(transactions$ | async) as transactions; else loader">
-  <ng-container *ngIf="transactions.items; else noItems">
+@if ((transactions$ | async); as transactions) {
+  @if (transactions.items) {
     <div class="container">
-      <app-transaction-list-item (click)="click(transaction)" *ngFor="let transaction of transactions.items"
+      @for (transaction of transactions.items; track transaction) {
+        <app-transaction-list-item (click)="click(transaction)"
                                  [amount]="transaction.amount" [date]="transaction.date" [description]="
           transaction.description
             ? transaction.description
             : transaction.category.name
         " [tags]="transaction.tags"></app-transaction-list-item>
+      }
     </div>
     <ngb-pagination (pageChange)="pageChanged($event)" [(page)]="currentPage" [boundaryLinks]="true" [collectionSize]="transactions.totalCount"
-                    [maxSize]="7" [pageSize]="limit" class="d-flex justify-content-center">
+      [maxSize]="7" [pageSize]="limit" class="d-flex justify-content-center">
     </ngb-pagination>
-  </ng-container>
-  <ng-template #noItems>Nothing to show!</ng-template>
-</ng-container>
-<ng-template #loader>
+  } @else {
+    Nothing to show!
+  }
+} @else {
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
-</ng-template>
+}

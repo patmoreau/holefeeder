@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -31,20 +31,18 @@ const transactionIdParamName = 'transactionId';
   ]
 })
 export class ModifyTransactionComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private transactionsService = inject(TransactionsService);
+  private adapter = inject(ModifyTransactionCommandAdapter);
+  private modalService = inject(ModalService);
+
   form!: FormGroup;
 
   transactionId!: string;
 
   values$!: Observable<TransactionDetail>;
-
-  constructor(
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private transactionsService: TransactionsService,
-    private adapter: ModifyTransactionCommandAdapter,
-    private modalService: ModalService
-  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

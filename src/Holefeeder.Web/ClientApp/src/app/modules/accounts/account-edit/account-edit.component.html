@@ -6,8 +6,10 @@
   <div class="form-group">
     <label for="name">Type</label>
     <select class="form-control" formControlName="type" id="interval" required title="Account type">
-      <option *ngFor="let interval of (accountTypesNames | keyvalue)" [ngValue]="interval.key">{{ interval.value }}
-      </option>
+      @for (interval of (accountTypesNames | keyvalue); track interval) {
+        <option [ngValue]="interval.key">{{ interval.value }}
+        </option>
+      }
     </select>
   </div>
   <div class="form-group">
@@ -23,6 +25,6 @@
   <div class="form-group">
     <label for="description">Description</label>
     <input class="form-control" formControlName="description" id="description" placeholder="description..."
-           type="text" />
+      type="text" />
   </div>
 </div>

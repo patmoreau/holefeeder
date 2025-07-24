@@ -4,22 +4,28 @@
       <h4 class="mb-0 line-height-1 text-truncate">Trend</h4>
     </div>
   </div>
-  <ng-container *ngIf="chartData$ | async; else loader">
+  @if (chartData$ | async) {
     <div class="pt-3">
       <canvas baseChart class="chart" [data]="chartData$ | async | filterNonNullish" [type]="chartType"
         [options]="chartOptions" [plugins]="chartPlugins">
       </canvas>
     </div>
-  </ng-container>
+  } @else {
+    <app-loader [small]="true"></app-loader>
+  }
   <div class="d-flex flex-wrap justify-content-between align-items-center">
     <div class="d-flex align-items-center">
       <h4 class="mb-0 line-height-1 text-truncate">Upcoming</h4>
       <span>
-        <ng-container *ngIf="upcoming$ | async as upcoming; else loader">
-          <ng-container *ngIf="upcoming.length; else noItems">
+        @if (upcoming$ | async; as upcoming) {
+          @if (upcoming.length) {
             <strong class="ms-3 text-muted">{{ upcoming.length }} cashflows</strong>
-          </ng-container>
-        </ng-container>
+          } @else {
+            <strong class="ms-3 text-muted">all good!</strong>
+          }
+        } @else {
+          <app-loader [small]="true"></app-loader>
+        }
       </span>
     </div>
     <div class="actions p-0 d-flex align-items-center">
@@ -30,14 +36,10 @@
   </div>
 </div>
 <div class="container">
-  <app-transaction-list-item (action)="action($event, upcoming)" *ngFor="let upcoming of (upcoming$ | async)"
-    [allowSave]="true" [amount]="upcoming.amount" [date]="upcoming.date"
-    [description]="upcoming.description ? upcoming.description : upcoming.category.name" [tags]="upcoming.tags">
-  </app-transaction-list-item>
+  @for (upcoming of (upcoming$ | async); track upcoming) {
+    <app-transaction-list-item (action)="action($event, upcoming)"
+      [allowSave]="true" [amount]="upcoming.amount" [date]="upcoming.date"
+      [description]="upcoming.description ? upcoming.description : upcoming.category.name" [tags]="upcoming.tags">
+    </app-transaction-list-item>
+  }
 </div>
-<ng-template #loader>
-  <app-loader [small]="true"></app-loader>
-</ng-template>
-<ng-template #noItems>
-  <strong class="ms-3 text-muted">all good!</strong>
-</ng-template>

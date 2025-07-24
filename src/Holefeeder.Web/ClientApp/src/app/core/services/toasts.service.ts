@@ -24,17 +24,17 @@ const initialState: ToastsState = {
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService extends StateService<ToastsState> {
+  private messages = inject(MessageService);
+  private adapter = inject(ToastItemAdapter);
+  private subscriptions = inject(SubscriberService);
+
   private logger = inject(LoggerService);
 
   toasts$: Observable<ToastItem[]> = this.select(state => state.toasts).pipe(
     tapTrace(this.logger)
   );
 
-  constructor(
-    private messages: MessageService,
-    private adapter: ToastItemAdapter,
-    private subscriptions: SubscriberService
-  ) {
+  constructor() {
     super(initialState);
 
     const subscription = this.messages.listen

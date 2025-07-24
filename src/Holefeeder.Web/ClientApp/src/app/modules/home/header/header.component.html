@@ -3,7 +3,7 @@
     <a aria-label="home" class="navbar-brand" href="#">
       <em class="bi bi-safe"></em>
     </a>
-    <ng-container *ngIf="logged$ | async; else loginNavBar">
+    @if (logged$ | async) {
       <button aria-controls="offcanvasNavbar" aria-label="navbar-toggler" class="navbar-toggler"
         data-bs-target="#offcanvasNavbar" data-bs-toggle="offcanvas" type="button">
         <span class="navbar-toggler-icon"></span>
@@ -37,7 +37,7 @@
           </ul>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <ng-container *ngIf="period$ | async as period">
+              @if (period$ | async; as period) {
                 <button (click)="open(datePicker, period)" data-bs-dismiss="offcanvas" class="btn btn-outline-secondary"
                   type="button">
                   <em class="bi bi-calendar-range"></em>&nbsp;{{
@@ -45,7 +45,7 @@
                   }}
                   - {{ period.end | date }}
                 </button>
-              </ng-container>
+              }
             </li>
             <li class="nav-item dropdown">
               <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
@@ -57,17 +57,17 @@
               <ul aria-labelledby="offcanvasNavbarDropdown" class="dropdown-menu dropdown-menu-end">
                 <li>
                   <a [routerLink]="['/settings']" data-bs-dismiss="offcanvas" class="dropdown-item"><em
-                      class="bi bi-gear" tabindex="1"></em>&nbsp;Settings</a>
+                  class="bi bi-gear" tabindex="1"></em>&nbsp;Settings</a>
                 </li>
                 <li>
                   <a (click)="reloadToHealthChecks()" data-bs-dismiss="offcanvas" (keydown.enter)="logout()"
                     class="dropdown-item" role="button" tabindex="2"><em class="bi bi-file-medical"></em>&nbsp;Health
-                    Checks</a>
+                  Checks</a>
                 </li>
                 <li>
                   <a (click)="reloadToGateway()" data-bs-dismiss="offcanvas" (keydown.enter)="logout()"
                     class="dropdown-item" role="button" tabindex="3"><em
-                      class="bi bi-hdd-network"></em>&nbsp;Backend</a>
+                  class="bi bi-hdd-network"></em>&nbsp;Backend</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider" />
@@ -83,14 +83,13 @@
           </ul>
         </div>
       </div>
-    </ng-container>
+    } @else {
+      <button (click)="login()" class="btn btn-outline-secondary" type="button">
+        <em class="bi bi-box-arrow-in-right"></em>&nbsp;Log in
+      </button>
+    }
   </div>
 </nav>
-<ng-template #loginNavBar>
-  <button (click)="login()" class="btn btn-outline-secondary" type="button">
-    <em class="bi bi-box-arrow-in-right"></em>&nbsp;Log in
-  </button>
-</ng-template>
 <ng-template #datePicker let-modal>
   <div class="modal-header">
     <h4 class="modal-title text-dark" id="modal-basic-title">

@@ -39,6 +39,13 @@ import { StatisticsActions, StatisticsFeature } from '@app/core/store/statistics
   ]
 })
 export class DashboardHomeComponent implements OnInit {
+  private upcomingService = inject(UpcomingService);
+  private transactionsService = inject(TransactionsService);
+  private adapter = inject(PayCashflowCommandAdapter);
+  private messages = inject(MessageService);
+  private router = inject(Router);
+  private currencyPipe = inject(CurrencyPipe);
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   upcoming$!: Observable<Upcoming[]>;
@@ -49,14 +56,6 @@ export class DashboardHomeComponent implements OnInit {
   > = of(undefined);
 
   private store = inject(Store<AppStore>);
-
-  constructor(
-    private upcomingService: UpcomingService,
-    private transactionsService: TransactionsService,
-    private adapter: PayCashflowCommandAdapter,
-    private messages: MessageService,
-    private router: Router,
-    private currencyPipe: CurrencyPipe) { }
 
   ngOnInit(): void {
     this.upcoming$ = this.upcomingService.upcoming$;

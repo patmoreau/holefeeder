@@ -1,5 +1,5 @@
-import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,17 +18,15 @@ import { AccountEditComponent } from '@app/modules/accounts/account-edit/account
   templateUrl: './open-account.component.html',
   styleUrls: ['./open-account.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AccountEditComponent]
+  imports: [ReactiveFormsModule, AccountEditComponent]
 })
 export class OpenAccountComponent implements OnInit {
-  form!: FormGroup;
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private commandsService = inject(AccountCommandsService);
 
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private commandsService: AccountCommandsService
-  ) { }
+  form!: FormGroup;
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

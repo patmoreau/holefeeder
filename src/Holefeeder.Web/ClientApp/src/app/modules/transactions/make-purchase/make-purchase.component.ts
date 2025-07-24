@@ -45,6 +45,14 @@ const accountIdParamName = 'accountId';
   ]
 })
 export class MakePurchaseComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private accountService = inject(AccountsService);
+  private transactionsService = inject(TransactionsService);
+  private adapterPurchase = inject(MakePurchaseCommandAdapter);
+  private adapterTransfer = inject(TransferMoneyCommandAdapter);
+
   public isNotRecurring = true;
 
   formPurchase!: FormGroup;
@@ -53,16 +61,6 @@ export class MakePurchaseComponent implements OnInit {
   values$!: Observable<[unknown, unknown]>;
 
   private readonly store: Store<AppState> = inject(Store<AppState>);
-
-  constructor(
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private accountService: AccountsService,
-    private transactionsService: TransactionsService,
-    private adapterPurchase: MakePurchaseCommandAdapter,
-    private adapterTransfer: TransferMoneyCommandAdapter
-  ) { }
 
   ngOnInit(): void {
     this.formPurchase = this.formBuilder.group({

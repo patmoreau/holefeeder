@@ -2,24 +2,30 @@
   <label for="dateSelect">{{label}}</label>
   <div class="input-group mb-2">
     <input #datePicker="ngbDatepicker" (blur)="onTouched()" (click)="datePicker.open()"
-           (ngModelChange)="onDateSelect($event)" [(ngModel)]="value" [autoClose]="true"
-           [class.invalid]="control.invalid && (control.dirty || control.touched)"
-           [class.valid]="control.valid && (control.dirty || control.touched)" [disabled]="disabled" [firstDayOfWeek]=7
-           [ngModelOptions]="{standalone: true}" [placeholder]="placeholder" [required]="required" class="form-control"
-           container="body" id="dateSelect" ngbDatepicker>
+      (ngModelChange)="onDateSelect($event)" [(ngModel)]="value" [autoClose]="true"
+      [class.invalid]="control.invalid && (control.dirty || control.touched)"
+      [class.valid]="control.valid && (control.dirty || control.touched)" [disabled]="disabled" [firstDayOfWeek]=7
+      [ngModelOptions]="{standalone: true}" [placeholder]="placeholder" [required]="required" class="form-control"
+      container="body" id="dateSelect" ngbDatepicker>
     <div class="input-group-append">
       <a (click)="datePicker.toggle()" (keydown)="datePicker.toggle()" class="btn btn-outline-secondary text-secondary"
-         tabindex="0">
+        tabindex="0">
         <em class="bi bi-calendar-event"></em>
       </a>
     </div>
   </div>
 </div>
-<div *ngIf="control.invalid && control.errors && (control.dirty || control.touched)">
-  <small *ngIf="control.hasError('required')" class="text-danger">
-    The date is required.
-  </small>
-  <small *ngIf="control.hasError('invalidDate')" class="text-danger">
-    The '{{control.errors['invalidDate']}}' date is not valid.
-  </small>
-</div>
+@if (control.invalid && control.errors && (control.dirty || control.touched)) {
+  <div>
+    @if (control.hasError('required')) {
+      <small class="text-danger">
+        The date is required.
+      </small>
+    }
+    @if (control.hasError('invalidDate')) {
+      <small class="text-danger">
+        The '{{control.errors['invalidDate']}}' date is not valid.
+      </small>
+    }
+  </div>
+}

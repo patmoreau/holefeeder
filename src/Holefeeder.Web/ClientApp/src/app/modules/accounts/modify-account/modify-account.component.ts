@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -32,6 +32,15 @@ const accountIdParamName = 'accountId';
   ]
 })
 export class ModifyAccountComponent implements OnInit {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private location = inject(Location);
+  private accountsService = inject(AccountsService);
+  private commandsService = inject(AccountCommandsService);
+  private closeAdapter = inject(CloseAccountAdapter);
+  private modalService = inject(ModalService);
+
   @ViewChild('confirm', { static: true })
   confirmModalElement!: ElementRef;
   form!: FormGroup;
@@ -39,17 +48,6 @@ export class ModifyAccountComponent implements OnInit {
   accountId!: string;
 
   values$!: Observable<Account>;
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private accountsService: AccountsService,
-    private commandsService: AccountCommandsService,
-    private closeAdapter: CloseAccountAdapter,
-    private modalService: ModalService
-  ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

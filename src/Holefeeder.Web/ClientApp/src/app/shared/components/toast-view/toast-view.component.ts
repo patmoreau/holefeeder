@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  HostBinding,
-  OnInit,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostBinding, OnInit, inject } from '@angular/core';
 import { ToastsService } from '@app/core/services';
 import { ToastItem, ToastType } from '@app/shared/models';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +14,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./toast-view.component.scss']
 })
 export class ToastViewComponent implements OnInit {
+  private toastsService = inject(ToastsService);
+
   ToastType = ToastType;
 
   toasts$!: Observable<ToastItem[]>;
@@ -28,8 +25,6 @@ export class ToastViewComponent implements OnInit {
 
   @HostBinding('style')
   hostStyle = 'z-index: 1200';
-
-  constructor(private toastsService: ToastsService) { }
 
   ngOnInit() {
     this.toasts$ = this.toastsService.toasts$;

@@ -1,18 +1,20 @@
-<ng-container *ngIf="settings$ | async; else loader">
+@if (settings$ | async) {
   <div class="container pt-3 mb-5">
     <form (ngSubmit)="onSubmit()" [formGroup]="settingsForm">
       <app-date-picker [required]="true" formControlName="effectiveDate" label="Date"></app-date-picker>
       <div class="form-group">
         <label for="interval">Interval type</label>
         <select [compareWith]="compareFn" class="form-control" formControlName="intervalType" id="interval" required>
-          <option *ngFor="let interval of intervalTypesNames | keyvalue" [ngValue]="interval.key">{{interval.value}}
-          </option>
+          @for (interval of intervalTypesNames | keyvalue; track interval) {
+            <option [ngValue]="interval.key">{{interval.value}}
+            </option>
+          }
         </select>
       </div>
       <div class="form-group">
         <label for="frequency">Frequency</label>
         <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"
-               inputmode="numeric">
+          inputmode="numeric">
       </div>
       <div class="d-flex justify-content-end mt-4">
         <button class="btn btn-primary me-2" routerLink="../" type="button">Cancel</button>
@@ -20,7 +22,6 @@
       </div>
     </form>
   </div>
-</ng-container>
-<ng-template #loader>
+} @else {
   Loading...
-</ng-template>
+}

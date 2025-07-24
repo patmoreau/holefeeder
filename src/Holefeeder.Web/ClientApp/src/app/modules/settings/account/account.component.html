@@ -12,16 +12,21 @@
         id="firstName"
         placeholder="First Name..."
         type="text" />
-      <div
-        *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)"
-        class="alert alert-danger">
-        <div *ngIf="firstName?.errors?.['required']">
-          First name is required.
+      @if (firstName?.invalid && (firstName?.dirty || firstName?.touched)) {
+        <div
+          class="alert alert-danger">
+          @if (firstName?.errors?.['required']) {
+            <div>
+              First name is required.
+            </div>
+          }
+          @if (firstName?.errors?.['pattern']) {
+            <div>
+              Must start with a letter.
+            </div>
+          }
         </div>
-        <div *ngIf="firstName?.errors?.['pattern']">
-          Must start with a letter.
-        </div>
-      </div>
+      }
     </div>
   </div>
   <div class="field">
@@ -33,11 +38,14 @@
         id="lastName"
         placeholder="Last Name..."
         type="text" />
-      <div
-        *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)"
-        class="alert alert-danger">
-        <div *ngIf="lastName?.errors?.['required']">Last name is required.</div>
-      </div>
+      @if (lastName?.invalid && (lastName?.dirty || lastName?.touched)) {
+        <div
+          class="alert alert-danger">
+          @if (lastName?.errors?.['required']) {
+            <div>Last name is required.</div>
+          }
+        </div>
+      }
     </div>
   </div>
 

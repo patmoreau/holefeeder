@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -38,9 +38,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   imports: []
 })
 export class DeleteDialogComponent {
+  activeModal = inject(NgbActiveModal);
+
   title!: string;
   prompt!: string;
   action!: string;
-
-  constructor(public activeModal: NgbActiveModal) { }
 }

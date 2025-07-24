@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { AppStore, TagsFeature } from '@app/core/store';
@@ -22,9 +22,11 @@ import {
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss'],
   standalone: true,
-  imports: [CommonModule, NgbTypeaheadModule]
+  imports: [NgbTypeaheadModule]
 })
 export class TagsInputComponent {
+  private fb = inject(FormBuilder);
+
   @Input() tagsArray = new FormArray<FormControl<string | null>>([]);
   @Input() isReadonly = false;
 
@@ -35,8 +37,6 @@ export class TagsInputComponent {
   click$ = new Subject<string>();
 
   private store = inject(Store<AppStore>);
-
-  constructor(private fb: FormBuilder) { }
 
   addTag(newTag: string) {
     if (this.isReadonly) {

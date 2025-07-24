@@ -7,6 +7,10 @@ export abstract class StateService<T> {
     this.state$ = new BehaviorSubject<T>(initialState);
   }
 
+  protected destroy(): void {
+    this.state$.complete();
+  }
+
   protected get state(): T {
     return this.state$.getValue();
   }

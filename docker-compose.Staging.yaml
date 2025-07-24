@@ -16,8 +16,6 @@ services:
         - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}'
     ports:
       - 5001:80
-    environment:
-      FeatureManagement__temp-new-azure-b2c-config: true
 
   web:
     build:

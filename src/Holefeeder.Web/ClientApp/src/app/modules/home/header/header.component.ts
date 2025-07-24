@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoggerService } from '@app/core/logger';
 import { SettingsService, SubscriberService } from '@app/core/services';
@@ -23,6 +23,14 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  oidcSecurityService = inject(OidcSecurityService);
+  private modalService = inject(NgbModal);
+  private settingsService = inject(SettingsService);
+  private router = inject(Router);
+  private subService = inject(SubscriberService);
+  private store = inject<Store<AppStore>>(Store);
+  private logger = inject(LoggerService);
+
   settings$: Observable<Settings> | undefined;
   period$: Observable<DateInterval> | undefined;
 
@@ -36,16 +44,6 @@ export class HeaderComponent implements OnInit {
   isNavbarCollapsed = false;
 
   loggedIn = false;
-
-  constructor(
-    public oidcSecurityService: OidcSecurityService,
-    private modalService: NgbModal,
-    private settingsService: SettingsService,
-    private router: Router,
-    private subService: SubscriberService,
-    private store: Store<AppStore>,
-    private logger: LoggerService
-  ) { }
 
   ngOnInit() {
     this.isNavbarCollapsed = true;

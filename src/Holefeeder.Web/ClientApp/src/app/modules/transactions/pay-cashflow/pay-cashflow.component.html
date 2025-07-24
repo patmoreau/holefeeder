@@ -1,4 +1,4 @@
-<ng-container *ngIf="values$ | async; else loader">
+@if (values$ | async) {
   <div class="pt-3 pb-4 mb-3">
     <div class="container">
       <h4 class="mb-0 line-height-1 text-truncate">
@@ -7,7 +7,6 @@
       <div class="container mb-5">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
           <app-transaction-edit></app-transaction-edit>
-
           <div class="d-flex justify-content-end mt-4">
             <button (click)="goBack()" class="btn btn-secondary me-2" type="button">
               Cancel
@@ -16,13 +15,13 @@
               Save
             </button>
           </div>
-
-          <em *ngIf="!form.valid" class="form-text text-danger">{{ form.errors }}</em>
+          @if (!form.valid) {
+            <em class="form-text text-danger">{{ form.errors }}</em>
+          }
         </form>
       </div>
     </div>
   </div>
-</ng-container>
-<ng-template #loader>
+} @else {
   <app-loader></app-loader>
-</ng-template>
+}

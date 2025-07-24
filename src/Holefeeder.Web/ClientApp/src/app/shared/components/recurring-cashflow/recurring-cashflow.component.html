@@ -2,14 +2,16 @@
   <div class="form-group">
     <label for="interval">Interval type</label>
     <select [compareWith]="compareFn" class="form-control" formControlName="intervalType" id="interval" required>
-      <option *ngFor="let interval of (intervalTypesNames | keyvalue)" [ngValue]="interval.key">
+      @for (interval of (intervalTypesNames | keyvalue); track interval) {
+        <option [ngValue]="interval.key">
         {{ interval.value }}</option>
+      }
     </select>
   </div>
   <div class="form-group">
     <label for="frequency">Frequency</label>
     <input class="form-control" formControlName="frequency" id="frequency" min="1" required type="number"
-           inputmode="numeric" />
+      inputmode="numeric" />
   </div>
   <app-date-picker [required]="true" formControlName="effectiveDate" label="Effective date"></app-date-picker>
 </div>

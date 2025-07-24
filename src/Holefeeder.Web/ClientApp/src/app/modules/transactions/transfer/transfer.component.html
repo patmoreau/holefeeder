@@ -1,5 +1,4 @@
-<ng-container *ngIf="values$ | async as values">
-
+@if (values$ | async; as values) {
   <div [formGroup]="form" class="container mt-2">
     <div class="form-group">
       <label for="amount">Amount</label>
@@ -14,21 +13,27 @@
     <div class="form-group">
       <label for="fromAccount">From</label>
       <select class="form-control" formControlName="fromAccount" id="fromAccount" required>
-        <option *ngFor="let account of values" [ngValue]="account.id">{{ account.name }}</option>
+        @for (account of values; track account) {
+          <option [ngValue]="account.id">{{ account.name }}</option>
+        }
       </select>
     </div>
     <div class="form-group">
       <label for="toAccount">To</label>
       <select class="form-control" formControlName="toAccount" id="toAccount" required>
-        <option *ngFor="let account of values" [ngValue]="account.id">{{ account.name }}</option>
+        @for (account of values; track account) {
+          <option [ngValue]="account.id">{{ account.name }}</option>
+        }
       </select>
-      <em *ngIf="form.get('toAccount')?.value === form.get('fromAccount')?.value" class="form-text text-danger">Accounts
+      @if (form.get('toAccount')?.value === form.get('fromAccount')?.value) {
+        <em class="form-text text-danger">Accounts
         must be different</em>
+      }
     </div>
     <div class="form-group">
       <label for="description">Note</label>
       <input [placeholder]="'transaction note...'" class="form-control" formControlName="description" id="description"
-             type="text" />
+        type="text" />
     </div>
   </div>
-</ng-container>
+}

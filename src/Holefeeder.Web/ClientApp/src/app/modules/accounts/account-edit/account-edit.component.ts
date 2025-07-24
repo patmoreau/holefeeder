@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -25,11 +25,11 @@ import { AccountTypeNames } from '@app/shared/models';
   ]
 })
 export class AccountEditComponent implements OnInit {
+  private rootFormGroup = inject(FormGroupDirective);
+
   form!: FormGroup;
 
   accountTypesNames = AccountTypeNames;
-
-  constructor(private rootFormGroup: FormGroupDirective) { }
 
   ngOnInit(): void {
     this.form = this.rootFormGroup.control;

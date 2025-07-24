@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -29,8 +29,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
 })
 export class ConfirmDialogComponent {
+  activeModal = inject(NgbActiveModal);
+
   title = 'Title placeholder';
   prompt = 'Prompt placeholder';
-
-  constructor(public activeModal: NgbActiveModal) {}
 }

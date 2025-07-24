@@ -1,10 +1,5 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { Statistics } from '@app/shared/models';
@@ -39,6 +34,9 @@ import { FilterNonNullishPipe } from '@app/shared/pipes';
   providers: [CurrencyPipe]
 })
 export class StatisticsComponent implements OnInit {
+  private currencyPipe = inject(CurrencyPipe);
+  private statisticsService = inject(StatisticsService);
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   public statistics$!: Observable<Statistics[]>;
@@ -47,10 +45,6 @@ export class StatisticsComponent implements OnInit {
     | ChartData<keyof ChartTypeRegistry, number[], string | string[] | unknown>
     | undefined
   > = of(undefined);
-  constructor(
-    private currencyPipe: CurrencyPipe,
-    private statisticsService: StatisticsService
-  ) { }
   ngOnInit(): void {
     this.statistics$ = this.statisticsService.find();
 
