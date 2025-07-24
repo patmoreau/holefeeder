@@ -180,7 +180,8 @@ export class SettingsService extends StateService<SettingsState> implements OnDe
   }
 
   private calculateNextDate(asOfDate: Date, settings: Settings): Date {
-    if (settings.intervalType.toLowerCase() === DateIntervalType.oneTime) {
+    const intervalTypeLower = settings.intervalType.toLowerCase();
+    if (intervalTypeLower === DateIntervalType.oneTime) {
       return startOfDay(settings.effectiveDate);
     }
 
