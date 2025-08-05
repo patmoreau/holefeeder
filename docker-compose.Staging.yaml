@@ -8,6 +8,10 @@ services:
     ports:
       - 5432:5432
 
+  seq:
+    environment:
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=true
+
   api:
     build:
       context: .
