@@ -32,7 +32,7 @@ public class PeriodCalculator : ICarterModule
                     CancellationToken cancellationToken) =>
                 {
                     var settings = await context.StoreItems
-                        .Where(e => e.UserId == userContext.Id && e.Code == "settings")
+                        .Where(e => e.UserId == userContext.Id && e.Code == StoreItem.CodeSettings)
                         .FirstOrDefaultAsync(cancellationToken);
 
                     if (settings is null)
