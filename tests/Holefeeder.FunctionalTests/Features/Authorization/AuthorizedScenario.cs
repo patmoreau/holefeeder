@@ -41,6 +41,10 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
         ScenarioForAuthorizedUser("get import data status", _user.GettingImportStatus);
 
     [Fact]
+    public Task AttemptToComputePeriod() =>
+        ScenarioForAuthorizedUser("compute period", _user.ComputePeriod);
+
+    [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
         ScenarioForAuthorizedUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 

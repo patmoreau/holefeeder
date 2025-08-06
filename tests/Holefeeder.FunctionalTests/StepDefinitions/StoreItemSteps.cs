@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 
 using Bogus;
 
@@ -8,6 +9,7 @@ using DrifterApps.Seeds.Testing.Extensions;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
 using Holefeeder.Domain.Features.StoreItem;
+using Holefeeder.Domain.ValueObjects;
 using Holefeeder.FunctionalTests.Drivers;
 
 using Refit;
@@ -23,6 +25,20 @@ internal sealed class StoreItemSteps(BudgetingDatabaseDriver budgetingDatabaseDr
         {
             var item = await GivenAStoreItem()
                 .ForUser(TestUsers[AuthorizedUser].UserId)
+                .SavedInDbAsync(budgetingDatabaseDriver);
+
+            runner.SetContextData(StoreItemContext.ExistingStoreItem, item);
+
+            return item;
+        });
+
+    public void HasUserSettings(IStepRunner runner, UserSettings userSettings) =>
+        runner.Execute("a store item exists for user settings", async () =>
+        {
+            var item = await GivenAStoreItem()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .WithCode(StoreItem.CodeSettings)
+                .WithData(JsonSerializer.Serialize(userSettings))
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
             runner.SetContextData(StoreItemContext.ExistingStoreItem, item);

@@ -33,6 +33,12 @@ internal class StoreItemBuilder : FakerBuilder<StoreItem>
         return this;
     }
 
+    public StoreItemBuilder WithData(string data)
+    {
+        Faker.RuleFor(x => x.Data, data);
+        return this;
+    }
+
     public StoreItemBuilder ForUser(UserId userId)
     {
         Faker.RuleFor(x => x.UserId, userId);

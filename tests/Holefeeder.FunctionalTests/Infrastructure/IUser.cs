@@ -7,6 +7,7 @@ using Holefeeder.Application.Models;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.ValueObjects;
 
 using Refit;
 
@@ -18,7 +19,7 @@ public interface IUnauthenticatedUser : IUser;
 
 public interface IForbiddenUser : IUser;
 
-public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IStatistics, IStoreItems, ITags, ITransactions;
+public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IStatistics, IStoreItems, ITags, ITransactions;
 
 public interface IAccounts
 {
@@ -70,6 +71,12 @@ public interface IMyData
 
     [Get("/api/v2/my-data/import-status/{importId}")]
     Task<IApiResponse<ImportDataStatusDto>> ImportDataStatusAsync(Guid importId);
+}
+
+public interface IPeriods
+{
+    [Get("/api/v2/periods?asOfDate={asOfDate}&iteration={iteration}")]
+    Task<IApiResponse<DateInterval>> ComputePeriod(DateOnly asOfDate, int? iteration = null);
 }
 
 public interface IStatistics
