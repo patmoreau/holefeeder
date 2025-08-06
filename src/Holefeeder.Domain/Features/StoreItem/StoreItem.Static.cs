@@ -6,6 +6,8 @@ namespace Holefeeder.Domain.Features.StoreItem;
 
 public sealed partial record StoreItem
 {
+    public const string CodeSettings = "settings";
+
     public static Result<StoreItem> Create(string code, string data, UserId userId)
     {
         var result = ResultAggregate.Create()

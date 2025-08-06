@@ -129,6 +129,9 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
             return null;
         });
 
+    internal void ComputesTheirPeriod(IStepRunner runner, DateOnly asOfDate, int? iteration = null) =>
+        runner.Execute(() => Api.ComputePeriod(asOfDate, iteration));
+
     internal void GetsTheirTags(IStepRunner runner) => runner.Execute(() => Api.GetTagsWithCountAsync());
 
     internal void GetSummaryStatisticsForRange(IStepRunner runner, DateOnly from, DateOnly until) =>

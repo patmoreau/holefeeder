@@ -15,6 +15,7 @@ public class CategoryColorJsonConverter : JsonConverter<CategoryColor>
         {
             throw new JsonException(result.Error.Description);
         }
+
         return result.Value;
     }
 

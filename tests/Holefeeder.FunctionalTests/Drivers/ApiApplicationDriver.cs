@@ -54,7 +54,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             {
                 new StronglyTypedIdJsonConverterFactory(),
                 new MoneyJsonConverterFactory(),
-                new CategoryColorJsonConverterFactory()
+                new CategoryColorJsonConverterFactory(),
             }
         };
         _refitSettings = new()
@@ -85,7 +85,8 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             .AddJsonFile(configPath)
             .AddInMemoryCollection(new List<KeyValuePair<string, string?>>()
             {
-                new("Authorization:Auth0:MetadataAddress", $"{AuthorityDriver.Authority}.well-known/openid-configuration"),
+                new("Authorization:Auth0:MetadataAddress",
+                    $"{AuthorityDriver.Authority}.well-known/openid-configuration"),
             }).Build();
         builder.UseConfiguration(configuration);
         builder.ConfigureServices(collection =>
