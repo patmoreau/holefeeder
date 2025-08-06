@@ -3,6 +3,7 @@ using System.Text.Json;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Converters;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
