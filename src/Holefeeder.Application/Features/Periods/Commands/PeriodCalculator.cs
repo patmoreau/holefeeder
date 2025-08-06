@@ -48,7 +48,7 @@ public class PeriodCalculator : ICarterModule
                     }
 
                     var startDate =
-                        userSettings.IntervalType.AddIteration(asOfDate, userSettings.Frequency * iteration ?? 0);
+                        userSettings.IntervalType.AddIteration(asOfDate, (iteration ?? 0) * userSettings.Frequency);
 
                     var interval = userSettings.IntervalType.Interval(userSettings.EffectiveDate, startDate,
                         userSettings.Frequency);
