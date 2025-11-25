@@ -13,7 +13,7 @@ using Holefeeder.Infrastructure.Extensions;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 using Scalar.AspNetCore;
 

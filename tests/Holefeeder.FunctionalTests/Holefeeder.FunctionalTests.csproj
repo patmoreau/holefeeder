@@ -1,12 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Configurations>Debug;Release;Staging</Configurations>
-        <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <UserSecretsId>66510254-e437-414e-986e-d59d04ff1d07</UserSecretsId>
     </PropertyGroup>
 
@@ -16,35 +10,38 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" />
-        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions" />
-        <PackageReference Include="DrifterApps.Seeds.FluentScenario" />
-        <PackageReference Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" />
-        <PackageReference Include="DrifterApps.Seeds.Testing" />
-        <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="FluentAssertions.Analyzers" />
-        <PackageReference Include="JunitXml.TestLogger" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="Nito.AsyncEx" />
-        <PackageReference Include="NSubstitute" />
+        <PackageReference Include="coverlet.collector"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentScenario"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentScenario.FluentAssertions"/>
+        <PackageReference Include="DrifterApps.Seeds.Testing"/>
+        <PackageReference Include="FluentAssertions"/>
+        <PackageReference Include="FluentAssertions.Analyzers"/>
+        <PackageReference Include="JunitXml.TestLogger"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="Nito.AsyncEx"/>
+        <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NSubstitute.Analyzers.CSharp">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Refit" />
-        <PackageReference Include="Respawn" />
-        <PackageReference Include="WireMock.Net" />
-        <PackageReference Include="xunit" />
-        <PackageReference Include="xunit.abstractions" />
-        <PackageReference Include="xunit.analyzers" />
-        <PackageReference Include="xunit.categories" />
-        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Refit"/>
+        <PackageReference Include="Respawn"/>
+        <PackageReference Include="WireMock.Net"/>
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.abstractions"/>
+        <PackageReference Include="xunit.analyzers"/>
+        <PackageReference Include="xunit.categories"/>
+        <PackageReference Include="xunit.runner.visualstudio">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Holefeeder.Api\Holefeeder.Api.csproj" />
-        <ProjectReference Include="..\Holefeeder.Tests.Common\Holefeeder.Tests.Common.csproj" />
+        <ProjectReference Include="..\..\src\Holefeeder.Api\Holefeeder.Api.csproj"/>
+        <ProjectReference Include="..\Holefeeder.Tests.Common\Holefeeder.Tests.Common.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

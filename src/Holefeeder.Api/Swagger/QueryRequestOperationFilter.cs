@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using DrifterApps.Seeds.Application;
 
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -17,7 +17,7 @@ internal class QueryRequestOperationFilter : IOperationFilter
         ArgumentNullException.ThrowIfNull(operation);
         ArgumentNullException.ThrowIfNull(context);
 
-        operation.Parameters ??= new List<OpenApiParameter>();
+        operation.Parameters ??= [];
 
         if (context.ApiDescription.ActionDescriptor is not { } descriptor ||
             !descriptor.EndpointMetadata.Any(metaData => metaData is nameof(IRequestQuery)))
@@ -32,7 +32,7 @@ internal class QueryRequestOperationFilter : IOperationFilter
                 Name = properties.Name.ToLowerInvariant(),
                 In = ParameterLocation.Query,
                 Required = false,
-                Schema = new OpenApiSchema { Type = properties.PropertyType.Name }
+                Schema = new OpenApiSchema { Type = JsonSchemaType.String }
             });
         }
     }

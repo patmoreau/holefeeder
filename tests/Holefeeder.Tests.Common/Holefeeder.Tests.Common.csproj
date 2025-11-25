@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
         <IsTestProject>false</IsTestProject>
-        <Configurations>Debug;Release;Staging</Configurations>
-        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
@@ -13,24 +10,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions" />
-        <PackageReference Include="DrifterApps.Seeds.Testing" />
-        <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="FluentAssertions.Analyzers" />
-        <PackageReference Include="Nito.AsyncEx.Coordination" />
-        <PackageReference Include="Respawn" />
-        <PackageReference Include="WireMock.Net" />
-        <PackageReference Include="xunit" />
-        <PackageReference Include="xunit.abstractions" />
+        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions"/>
+        <PackageReference Include="DrifterApps.Seeds.Testing"/>
+        <PackageReference Include="FluentAssertions"/>
+        <PackageReference Include="FluentAssertions.Analyzers"/>
+        <PackageReference Include="Nito.AsyncEx.Coordination"/>
+        <PackageReference Include="Respawn"/>
+        <PackageReference Include="WireMock.Net"/>
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.abstractions"/>
         <PackageReference Include="xunit.analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="xunit.categories" />
+        <PackageReference Include="xunit.categories"/>
     </ItemGroup>
 
 </Project>

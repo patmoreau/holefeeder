@@ -5,68 +5,64 @@
     <PackageVersion Include="Ardalis.SmartEnum.Dapper" Version="8.2.0" />
     <PackageVersion Include="Ardalis.SmartEnum.EFCore" Version="8.2.0" />
     <PackageVersion Include="Ardalis.SmartEnum.SystemTextJson" Version="8.1.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.Hangfire" Version="9.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="9.0.0" />
-    <PackageVersion Include="Carter" Version="9.0.0" />
+    <PackageVersion Include="Carter" Version="10.0.0" />
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="Dapper.FluentMap" Version="2.0.0" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.1.66" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.35" />
-    <PackageVersion Include="dbup-core" Version="6.0.4" />
-    <PackageVersion Include="dbup-postgresql" Version="6.0.3" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.140" />
-    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.140" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.140" />
+    <PackageVersion Include="dbup-core" Version="6.0.15" />
+    <PackageVersion Include="dbup-postgresql" Version="6.1.5" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.148" />
+    <PackageVersion Include="DrifterApps.Seeds.Application.Mediatr" Version="1.0.148" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.148" />
     <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.6" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.140" />
-    <PackageVersion Include="FluentValidation" Version="12.0.0" />
-    <PackageVersion Include="Hangfire" Version="1.8.20" />
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.20" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.148" />
+    <PackageVersion Include="FluentValidation" Version="12.1.0" />
+    <PackageVersion Include="Hangfire" Version="1.8.22" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.22" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.12" />
-    <PackageVersion Include="MediatR" Version="12.5.0" />
+    <PackageVersion Include="IdentityModel" Version="5.2.0" />
+    <PackageVersion Include="MediatR" Version="13.1.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.7" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.7" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.74.1" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.11.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="4.1.1" />
     <PackageVersion Include="Microsoft.IdentityModel.Abstractions" Version="8.13.0" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.13.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.13.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.13.0" />
     <PackageVersion Include="Microsoft.JSInterop" Version="9.0.7" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageVersion Include="Refit" Version="8.0.0" />
     <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.6.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.11.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
-    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.6" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.0" />
     <PackageVersion Include="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
 </Project>

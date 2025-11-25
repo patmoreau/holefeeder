@@ -1,20 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Configurations>Debug;Release;Staging</Configurations>
-        <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Staging' ">
         <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
         <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.SmartEnum" />
-        <PackageReference Include="Ardalis.SmartEnum.SystemTextJson" />
-        <PackageReference Include="DrifterApps.Seeds.Domain" />
-        <PackageReference Include="DrifterApps.Seeds.FluentResult" />
-        <PackageReference Include="MediatR.Contracts" />
+        <PackageReference Include="Ardalis.SmartEnum"/>
+        <PackageReference Include="Ardalis.SmartEnum.SystemTextJson"/>
+        <PackageReference Include="DrifterApps.Seeds.Domain"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
+        <PackageReference Include="MediatR.Contracts"/>
     </ItemGroup>
 
 </Project>
