@@ -3,8 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using Hangfire;
 using Hangfire.Dashboard;
 
-using HealthChecks.UI.Client;
-
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Holefeeder.Api.Extensions;
@@ -37,18 +35,7 @@ internal static class WebApplicationExtensions
             new HealthCheckOptions
             {
                 Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-        app.MapHealthChecksUI(config =>
-        {
-            config.UIPath = "/hc-ui";
-            config.ResourcesPath = "/hc-ui/resources";
-            config.ApiPath = "/hc-ui/hc-api";
-            config.WebhookPath = "/hc-ui/webhooks";
-            config.UseRelativeApiPath = true;
-            config.UseRelativeResourcesPath = true;
-            config.UseRelativeWebhookPath = true;
-        });
 
         return app;
     }

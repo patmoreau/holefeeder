@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Holefeeder.Api.Extensions;
 
@@ -13,24 +13,21 @@ internal static class OpenApiOptionsExtensions
         {
             Type = SecuritySchemeType.Http,
             Name = IdentityConstants.BearerScheme,
-            Scheme = "Bearer",
-            Reference = new()
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = IdentityConstants.BearerScheme
-            }
+            Scheme = "Bearer"
         };
-        options.AddDocumentTransformer((document, context, cancellationToken) =>
+
+        options.AddDocumentTransformer((document, _, _) =>
         {
-            document.Components ??= new();
-            document.Components.SecuritySchemes.Add(IdentityConstants.BearerScheme, scheme);
+            document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes!.Add(IdentityConstants.BearerScheme, scheme);
             return Task.CompletedTask;
         });
-        options.AddOperationTransformer((operation, context, cancellationToken) =>
+        options.AddOperationTransformer((operation, context, _) =>
         {
             if (context.Description.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>().Any())
             {
-                operation.Security = [new() { [scheme] = [] }];
+                var schemeReference = new OpenApiSecuritySchemeReference(IdentityConstants.BearerScheme);
+                operation.Security = [new() { [schemeReference] = [] }];
             }
             return Task.CompletedTask;
         });
