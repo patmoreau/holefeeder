@@ -58,8 +58,6 @@
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.0.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.0.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.0" />

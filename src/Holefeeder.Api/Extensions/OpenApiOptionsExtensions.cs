@@ -19,7 +19,8 @@ internal static class OpenApiOptionsExtensions
         options.AddDocumentTransformer((document, _, _) =>
         {
             document.Components ??= new OpenApiComponents();
-            document.Components.SecuritySchemes!.Add(IdentityConstants.BearerScheme, scheme);
+            document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+            document.Components.SecuritySchemes.Add(IdentityConstants.BearerScheme, scheme);
             return Task.CompletedTask;
         });
         options.AddOperationTransformer((operation, context, _) =>

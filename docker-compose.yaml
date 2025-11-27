@@ -4,7 +4,7 @@ services:
     container_name: reverse-proxy
     restart: unless-stopped
     command:
-      - '--configFile=/etc/traefik/traefik.yml'
+      - "--configFile=/etc/traefik/traefik.yml"
     security_opt:
       - no-new-privileges:true
     ports:
@@ -30,13 +30,13 @@ services:
     security_opt:
       - no-new-privileges:true
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.portainer-router.entrypoints=websecure'
-      - 'traefik.http.routers.portainer-router.rule=Host(`portainer.${DOMAIN}`)'
-      - 'traefik.http.routers.portainer-router.tls=true'
-      - 'traefik.http.routers.portainer-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.services.portainer-service.loadbalancer.server.port=9000'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.portainer-router.entrypoints=websecure"
+      - "traefik.http.routers.portainer-router.rule=Host(`portainer.${DOMAIN}`)"
+      - "traefik.http.routers.portainer-router.tls=true"
+      - "traefik.http.routers.portainer-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.services.portainer-service.loadbalancer.server.port=9000"
 
   whoami:
     image: traefik/whoami:v1.11
@@ -45,13 +45,13 @@ services:
     security_opt:
       - no-new-privileges:true
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.whoami-router.entrypoints=websecure'
-      - 'traefik.http.routers.whoami-router.rule=Host(`whoami.${DOMAIN}`)'
-      - 'traefik.http.routers.whoami-router.tls=true'
-      - 'traefik.http.routers.whoami-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.services.whoami-service.loadbalancer.server.port=80'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.whoami-router.entrypoints=websecure"
+      - "traefik.http.routers.whoami-router.rule=Host(`whoami.${DOMAIN}`)"
+      - "traefik.http.routers.whoami-router.tls=true"
+      - "traefik.http.routers.whoami-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.services.whoami-service.loadbalancer.server.port=80"
 
   seq:
     image: datalust/seq:2025.2
@@ -67,13 +67,13 @@ services:
       - 80
       - 5341
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.seq-router.entrypoints=websecure'
-      - 'traefik.http.routers.seq-router.rule=Host(`seq.${DOMAIN}`)'
-      - 'traefik.http.routers.seq-router.tls=true'
-      - 'traefik.http.routers.seq-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.services.seq-service.loadbalancer.server.port=80'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.seq-router.entrypoints=websecure"
+      - "traefik.http.routers.seq-router.rule=Host(`seq.${DOMAIN}`)"
+      - "traefik.http.routers.seq-router.tls=true"
+      - "traefik.http.routers.seq-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.services.seq-service.loadbalancer.server.port=80"
     volumes:
       - seq-data:/data
 
@@ -96,7 +96,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - .docker/scripts/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
     labels:
-      - 'traefik.enable=false'
+      - "traefik.enable=false"
 
   adminer:
     image: adminer:5.3.0
@@ -109,13 +109,13 @@ services:
     expose:
       - 8080
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.adminer-router.entrypoints=websecure'
-      - 'traefik.http.routers.adminer-router.rule=Host(`adminer.${DOMAIN}`)'
-      - 'traefik.http.routers.adminer-router.tls=true'
-      - 'traefik.http.routers.adminer-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.services.adminer-service.loadbalancer.server.port=8080'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.adminer-router.entrypoints=websecure"
+      - "traefik.http.routers.adminer-router.rule=Host(`adminer.${DOMAIN}`)"
+      - "traefik.http.routers.adminer-router.tls=true"
+      - "traefik.http.routers.adminer-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.services.adminer-service.loadbalancer.server.port=8080"
 
   api:
     container_name: api
@@ -130,14 +130,14 @@ services:
       - ConnectionStrings__BudgetingConnectionString=Host=postgres;Port=5432;Username=${POSTGRES_APP_USER};Password=${POSTGRES_APP_PASSWORD};Database=${POSTGRES_APP_DB};
       - Serilog__WriteTo__1__Args__apiKey=${SEQ_API_KEY}
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.api-router.entrypoints=websecure'
-      - 'traefik.http.routers.api-router.rule=(Host(`holefeeder.${DOMAIN}`) || Host(`holefeeder-admin.${DOMAIN}`)) && PathPrefix(`/gateway`)'
-      - 'traefik.http.routers.api-router.tls=true'
-      - 'traefik.http.routers.api-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.routers.api-router.middlewares=gateway-remover'
-      - 'traefik.http.middlewares.gateway-remover.stripprefix.prefixes=/gateway'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.api-router.entrypoints=websecure"
+      - "traefik.http.routers.api-router.rule=(Host(`holefeeder.${DOMAIN}`) || Host(`holefeeder-admin.${DOMAIN}`)) && PathPrefix(`/gateway`)"
+      - "traefik.http.routers.api-router.tls=true"
+      - "traefik.http.routers.api-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.routers.api-router.middlewares=gateway-remover"
+      - "traefik.http.middlewares.gateway-remover.stripprefix.prefixes=/gateway"
 
   web:
     container_name: web
@@ -153,13 +153,13 @@ services:
       - AngularSettings__RedirectUrl=https://holefeeder.${DOMAIN}
       - Serilog__WriteTo__1__Args__apiKey=${SEQ_API_KEY}
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'traefik.http.routers.web-router.entrypoints=websecure'
-      - 'traefik.http.routers.web-router.rule=(Host(`holefeeder.${DOMAIN}`) && !PathPrefix(`/gateway`)) || (Host(`holefeeder-admin.${DOMAIN}`) && PathPrefix(`/hc-ui`))'
-      - 'traefik.http.routers.web-router.tls=true'
-      - 'traefik.http.routers.web-router.tls.certresolver=acme_certresolver'
-      - 'traefik.http.services.web-service.loadbalancer.server.port=80'
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.web-router.entrypoints=websecure"
+      - "traefik.http.routers.web-router.rule=(Host(`holefeeder.${DOMAIN}`) && !PathPrefix(`/gateway`)) || (Host(`holefeeder-admin.${DOMAIN}`) && PathPrefix(`/hc-ui`))"
+      - "traefik.http.routers.web-router.tls=true"
+      - "traefik.http.routers.web-router.tls.certresolver=acme_certresolver"
+      - "traefik.http.services.web-service.loadbalancer.server.port=80"
 
 networks:
   default:

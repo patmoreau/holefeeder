@@ -5,6 +5,7 @@ using Carter;
 using DrifterApps.Seeds.Application.Converters;
 using DrifterApps.Seeds.Infrastructure;
 
+using Holefeeder.Api;
 using Holefeeder.Api.ErrorHandling;
 using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Converters;
@@ -71,6 +72,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
+// Configure for reverse proxy (Traefik, etc.)
+var proxyPrefix = app.Configuration.GetValue<string>(Constants.ProxyPrefix);
+if (!string.IsNullOrEmpty(proxyPrefix))
+{
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+            | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
+            | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+    });
+    app.UsePathBase(proxyPrefix);
+}
+
 app.UseSerilogRequestLogging();
 app.UseCustomErrors(app.Environment);
 
@@ -81,18 +95,17 @@ if (!app.Environment.IsDevelopment())
 else
 {
     IdentityModelEventSource.ShowPII = true;
-    var prefix = app.Configuration.GetValue<string>("Proxy:Prefix");
-    app.MapOpenApi();
-    app.MapScalarApiReference(endpointPrefix: prefix ?? "/gateway", options =>
-    {
-        options.OpenApiRoutePattern = "/openapi/v2/openapi.json";
-        options.Servers = [];
-        options.Authentication = new()
-        {
-            PreferredSecuritySchemes = [IdentityConstants.BearerScheme]
-        };
-    });
 }
+
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.Servers = [];
+    options.Authentication = new()
+    {
+        PreferredSecuritySchemes = [IdentityConstants.BearerScheme]
+    };
+});
 
 app
     .UseRouting();

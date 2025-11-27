@@ -10,23 +10,6 @@ namespace Holefeeder.Api.Extensions;
 [ExcludeFromCodeCoverage]
 internal static class WebApplicationExtensions
 {
-    internal static WebApplication UseSwagger(this WebApplication app, IHostEnvironment environment,
-        IConfiguration configuration)
-    {
-        app.UseSwagger()
-            .UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"{configuration[Constants.ProxyPrefix]}/swagger/v2/swagger.json",
-                    $"{environment.ApplicationName} {environment.EnvironmentName} v2");
-                c.OAuthAppName($"{environment.ApplicationName}");
-                c.OAuthClientId("YOUR_AUTH0_CLIENT_ID");
-                c.OAuthClientSecret("YOUR_AUTH0_CLIENT_SECRET");
-                c.OAuthUsePkce();
-            });
-
-        return app;
-    }
-
     internal static WebApplication UseHealthChecks(this WebApplication app)
     {
         app.UseHealthChecks("/ready");

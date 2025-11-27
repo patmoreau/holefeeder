@@ -13,7 +13,7 @@ public class Home : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("/", async (HttpContext context, IHostEnvironment environment, IConfiguration configuration) =>
         {
-            var proxyPrefix = configuration[Constants.ProxyPrefix];
+            var proxyPrefix = configuration.GetValue<string>(Constants.ProxyPrefix);
             context.Response.ContentType = "text/html; charset=utf-8";
             await context.Response.WriteAsync($"""
                                                <!DOCTYPE html>
