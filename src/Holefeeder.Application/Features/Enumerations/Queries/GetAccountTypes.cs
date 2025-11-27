@@ -10,22 +10,15 @@ public class GetAccountTypes : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/enumerations/get-account-types",
-                async (IMediator mediator) =>
+                async (CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request());
+                    var result = await Handle(cancellationToken);
                     return Results.Ok(result);
                 })
             .Produces<IEnumerable<AccountType>>()
             .WithTags(nameof(Enumerations))
             .WithName(nameof(GetAccountTypes));
 
-    internal record Request : IRequest<IReadOnlyCollection<AccountType>>;
-
-    internal class Validator : AbstractValidator<Request>;
-
-    internal class Handler : IRequestHandler<Request, IReadOnlyCollection<AccountType>>
-    {
-        public Task<IReadOnlyCollection<AccountType>> Handle(Request query, CancellationToken cancellationToken) =>
-            Task.FromResult(AccountType.List);
-    }
+    private static Task<IReadOnlyCollection<AccountType>> Handle(CancellationToken cancellationToken) =>
+        Task.FromResult(AccountType.List);
 }
