@@ -1,8 +1,8 @@
-using DrifterApps.Seeds.Application.Mediatr;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Filters;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
 
@@ -17,15 +17,17 @@ public class FavoriteAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/accounts/favorite-account",
-                async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
+                async (Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    var result = await Handle(request, userContext, context, cancellationToken);
                     return result switch
                     {
                         { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.NoContent()
                     };
                 })
+            .AddEndpointFilter<ValidationFilter<Request>>()
+            .AddEndpointFilter<UnitOfWorkFilter>()
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -33,29 +35,28 @@ public class FavoriteAccount : ICarterModule
             .WithName(nameof(FavoriteAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
+    private static async Task<Result<Nothing>> Handle(Request request, IUserContext userContext,
+        BudgetingContext context, CancellationToken cancellationToken)
     {
-        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
+        var account = await context.Accounts
+            .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
+        if (account is null)
         {
-            var account = await context.Accounts
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
-            if (account is null)
-            {
-                return AccountErrors.NotFound(request.Id);
-            }
-
-            var result = account.Modify(favorite: request.IsFavorite);
-            if (result.IsFailure)
-            {
-                return result.Error;
-            }
-            context.Update(result.Value);
-
-            return Nothing.Value;
+            return AccountErrors.NotFound(request.Id);
         }
+
+        var result = account.Modify(favorite: request.IsFavorite);
+        if (result.IsFailure)
+        {
+            return result.Error;
+        }
+
+        context.Update(result.Value);
+
+        return Nothing.Value;
     }
 
-    public record Request(AccountId Id, bool IsFavorite) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
+    public record Request(AccountId Id, bool IsFavorite);
 
     internal class Validator : AbstractValidator<Request>
     {

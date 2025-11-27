@@ -49,6 +49,7 @@ if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
 }
 
 builder.Services
+    .AddValidation()
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddHangfireRequestScheduler(() =>
@@ -84,6 +85,7 @@ else
     app.MapOpenApi();
     app.MapScalarApiReference(endpointPrefix: prefix ?? "/gateway", options =>
     {
+        options.OpenApiRoutePattern = "/openapi/v2/openapi.json";
         options.Servers = [];
         options.Authentication = new()
         {

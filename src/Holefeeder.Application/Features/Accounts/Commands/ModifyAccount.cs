@@ -1,8 +1,10 @@
-using DrifterApps.Seeds.Application.Mediatr;
+using System.ComponentModel.DataAnnotations;
+
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Filters;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.ValueObjects;
@@ -18,15 +20,17 @@ public class ModifyAccount : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/accounts/modify-account",
-                async (Request request, IMediator mediator, CancellationToken cancellationToken) =>
+                async (Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(request, cancellationToken);
+                    var result =  await Handle(request, userContext, context, cancellationToken);
                     return result switch
-                    {
-                        { IsFailure: true } => result.Error.ToProblem(),
-                        _ => Results.NoContent()
-                    };
+                        {
+                            { IsFailure: true } => result.Error.ToProblem(),
+                            _ => Results.NoContent()
+                        };
                 })
+            .AddEndpointFilter<ValidationFilter<Request>>()
+            .AddEndpointFilter<UnitOfWorkFilter>()
             .ProducesValidationProblem(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -34,29 +38,29 @@ public class ModifyAccount : ICarterModule
             .WithName(nameof(ModifyAccount))
             .RequireAuthorization(Policies.WriteUser);
 
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, Result<Nothing>>
+    private static async Task<Result<Nothing>> Handle(Request request, IUserContext userContext,
+        BudgetingContext context, CancellationToken cancellationToken)
     {
-        public async Task<Result<Nothing>> Handle(Request request, CancellationToken cancellationToken)
+        var exists = await context.Accounts
+            .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
+        if (exists is null)
         {
-            var exists = await context.Accounts
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
-            if (exists is null)
-            {
-                return AccountErrors.NotFound(request.Id);
-            }
-
-            var result = exists.Modify(name: request.Name, openBalance: request.OpenBalance, description: request.Description);
-            if (result.IsFailure)
-            {
-                return result.Error;
-            }
-            context.Update(result.Value);
-
-            return Nothing.Value;
+            return AccountErrors.NotFound(request.Id);
         }
+
+        var result = exists.Modify(name: request.Name, openBalance: request.OpenBalance,
+            description: request.Description);
+        if (result.IsFailure)
+        {
+            return result.Error;
+        }
+
+        context.Update(result.Value);
+
+        return Nothing.Value;
     }
 
-    internal record Request(AccountId Id, string Name, Money OpenBalance, string Description) : IRequest<Result<Nothing>>, IUnitOfWorkRequest;
+    internal record Request([Required]AccountId Id, [MinLength(1), MaxLength(255)]string Name, Money OpenBalance, string Description);
 
     internal class Validator : AbstractValidator<Request>
     {
