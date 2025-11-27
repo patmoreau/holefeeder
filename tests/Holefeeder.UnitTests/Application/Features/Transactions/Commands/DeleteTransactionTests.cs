@@ -10,7 +10,7 @@ public class DeleteTransactionTests
     public async Task GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = GivenAnInvalidDeleteTransactionRequest().Build();
+        var request = Guid.Empty;
 
         var validator = new Validator();
 
@@ -18,6 +18,6 @@ public class DeleteTransactionTests
         var result = await validator.TestValidateAsync(request);
 
         // assert
-        result.ShouldHaveValidationErrorFor(r => r.Id);
+        result.ShouldHaveValidationErrorFor(r => r);
     }
 }
