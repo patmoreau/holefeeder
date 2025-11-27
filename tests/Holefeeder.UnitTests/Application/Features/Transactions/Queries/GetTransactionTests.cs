@@ -8,14 +8,11 @@ namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 [UnitTest, Category("Application")]
 public class GetTransactionTests
 {
-    private readonly Faker<Request> _faker = new Faker<Request>()
-        .CustomInstantiator(faker => new Request((TransactionId)faker.RandomGuid()));
-
     [Fact]
     public void GivenValidator_WhenIdIsEmpty_ThenError()
     {
         // arrange
-        var request = _faker.RuleFor(x => x.Id, TransactionId.Empty).Generate();
+        var request = Guid.Empty;
 
         var validator = new Validator();
 
@@ -23,6 +20,6 @@ public class GetTransactionTests
         var result = validator.TestValidate(request);
 
         // assert
-        result.ShouldHaveValidationErrorFor(r => r.Id);
+        result.ShouldHaveValidationErrorFor(r => r);
     }
 }

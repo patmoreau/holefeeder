@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Filters;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Transactions;
@@ -16,16 +17,17 @@ namespace Holefeeder.Application.Features.Transactions.Queries;
 public class GetTransaction : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("api/v2/transactions/{id}",
-                async (TransactionId id, IMediator mediator, CancellationToken cancellationToken) =>
+        app.MapGet("api/v2/transactions/{id:guid}",
+                async (Guid id, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(id), cancellationToken);
+                    var result = await Handle(new Request(TransactionId.Create(id)), userContext, context, cancellationToken);
                     return result switch
                     {
                         { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.Ok(result.Value)
                     };
                 })
+            .AddEndpointFilter<ValidationFilter<Guid>>()
             .Produces<TransactionInfoViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -34,26 +36,21 @@ public class GetTransaction : ICarterModule
             .WithName(nameof(GetTransaction))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(TransactionId Id) : IRequest<Result<TransactionInfoViewModel>>;
-
-    internal class Validator : AbstractValidator<Request>
+    private static async Task<Result<TransactionInfoViewModel>> Handle(Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
-        public Validator() => RuleFor(x => x.Id).NotEqual(TransactionId.Empty);
+        var transaction = await context.Transactions
+            .Include(x => x.Account)
+            .Include(x => x.Category)
+            .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
+        return transaction is null
+            ? TransactionErrors.NotFound(request.Id)
+            : TransactionMapper.MapToDto(transaction);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, Result<TransactionInfoViewModel>>
+    public record Request(TransactionId Id);
+
+    internal class Validator : AbstractValidator<Guid>
     {
-        public async Task<Result<TransactionInfoViewModel>> Handle(Request query,
-            CancellationToken cancellationToken)
-        {
-            var transaction = await context.Transactions
-                .Include(x => x.Account)
-                .Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id, cancellationToken);
-            return transaction is null
-                ? TransactionErrors.NotFound(query.Id)
-                : TransactionMapper.MapToDto(transaction);
-        }
+        public Validator() => RuleFor(x => TransactionId.Create(x)).NotEqual(TransactionId.Empty);
     }
 }

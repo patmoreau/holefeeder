@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Application.Filters;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Transactions;
@@ -16,16 +17,17 @@ namespace Holefeeder.Application.Features.Transactions.Queries;
 public class GetCashflow : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("api/v2/cashflows/{id}",
-                async (CashflowId id, IMediator mediator, CancellationToken cancellationToken) =>
+        app.MapGet("api/v2/cashflows/{id:guid}",
+                async (Guid id, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(id), cancellationToken);
+                    var result = await Handle(new Request(CashflowId.Create(id)), userContext, context, cancellationToken);
                     return result switch
                     {
                         { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.Ok(result.Value)
                     };
                 })
+            .AddEndpointFilter<ValidationFilter<Guid>>()
             .Produces<CashflowInfoViewModel>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -33,24 +35,20 @@ public class GetCashflow : ICarterModule
             .WithName(nameof(GetCashflow))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(CashflowId Id) : IRequest<Result<CashflowInfoViewModel>>;
-
-    internal class Validator : AbstractValidator<Request>
+    private static async Task<Result<CashflowInfoViewModel>> Handle(Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
-        public Validator() => RuleFor(x => x.Id).NotEqual(CashflowId.Empty);
+        var result = await context.Cashflows
+            .Include(x => x.Account).Include(x => x.Category)
+            .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
+        return result is null
+            ? CashflowErrors.NotFound(request.Id)
+            : CashflowMapper.MapToDto(result);
     }
 
-    internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, Result<CashflowInfoViewModel>>
+    public record Request(CashflowId Id);
+
+    internal class Validator : AbstractValidator<Guid>
     {
-        public async Task<Result<CashflowInfoViewModel>> Handle(Request request, CancellationToken cancellationToken)
-        {
-            var result = await context.Cashflows
-                .Include(x => x.Account).Include(x => x.Category)
-                .SingleOrDefaultAsync(x => x.Id == request.Id && x.UserId == userContext.Id, cancellationToken);
-            return result is null
-                ? CashflowErrors.NotFound(request.Id)
-                : CashflowMapper.MapToDto(result);
-        }
+        public Validator() => RuleFor(x => CashflowId.Create(x)).NotEqual(CashflowId.Empty);
     }
 }

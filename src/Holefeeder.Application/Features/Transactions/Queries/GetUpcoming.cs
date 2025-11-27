@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Reflection;
 
@@ -6,6 +5,7 @@ using DrifterApps.Seeds.Application;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Features.Accounts.Queries;
+using Holefeeder.Application.Filters;
 using Holefeeder.Application.Models;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
@@ -21,12 +21,13 @@ public class GetUpcoming : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/cashflows/get-upcoming",
-                async (Request request, IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
+                async (Request request, IUserContext userContext, BudgetingContext context, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var (total, viewModels) = await mediator.Send(request, cancellationToken);
-                    ctx.Response.Headers.Append("X-Total-Count", $"{total}");
-                    return Results.Ok(viewModels);
+                    var result = await Handle(request, userContext, context, cancellationToken);
+                    ctx.Response.Headers.Append("X-Total-Count", $"{result.Total}");
+                    return Results.Ok(result.Items);
                 })
+            .AddEndpointFilter<ValidationFilter<Request>>()
             .Produces<IEnumerable<UpcomingViewModel>>()
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -35,7 +36,37 @@ public class GetUpcoming : ICarterModule
             .WithName(nameof(GetUpcoming))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(DateOnly From, DateOnly To, AccountId AccountId) : IRequest<QueryResult<UpcomingViewModel>>
+    private static async Task<QueryResult<UpcomingViewModel>> Handle(Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    {
+        var cashflows = await context.Cashflows
+            .Where(c => c.UserId == userContext.Id &&
+                        (request.AccountId == AccountId.Empty || c.AccountId == request.AccountId))
+            .Include(c => c.Account)
+            .Include(c => c.Category)
+            .Include(c => c.Transactions)
+            .ToListAsync(cancellationToken);
+
+        var results = cashflows
+            .SelectMany(x => x.GetUpcoming(request.To)
+                .Select(d => new UpcomingViewModel
+                {
+                    Id = x.Id,
+                    Date = d,
+                    Amount = x.Amount,
+                    Description = x.Description,
+                    Tags = [..x.Tags],
+                    Category = new CategoryInfoViewModel(x.Category!.Id, x.Category.Name, x.Category.Type,
+                        x.Category.Color),
+                    Account = new AccountInfoViewModel(x.Account!.Id, x.Account.Name)
+                }))
+            .Where(x => x.Date <= request.To)
+            .OrderBy(x => x.Date)
+            .ToList();
+
+        return new QueryResult<UpcomingViewModel>(results.Count, results);
+    }
+
+    internal record Request(DateOnly From, DateOnly To, AccountId AccountId)
     {
         public static ValueTask<Request?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
@@ -64,40 +95,6 @@ public class GetUpcoming : ICarterModule
                 .NotEmpty()
                 .GreaterThanOrEqualTo(command => command.From)
                 .WithMessage($"{nameof(Request.To)} must be greater or equal to {nameof(Request.To)}.");
-        }
-    }
-
-    internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, QueryResult<UpcomingViewModel>>
-    {
-        public async Task<QueryResult<UpcomingViewModel>> Handle(Request request, CancellationToken cancellationToken)
-        {
-            var cashflows = await context.Cashflows
-                .Where(c => c.UserId == userContext.Id &&
-                            (request.AccountId == AccountId.Empty || c.AccountId == request.AccountId))
-                .Include(c => c.Account)
-                .Include(c => c.Category)
-                .Include(c => c.Transactions)
-                .ToListAsync(cancellationToken);
-
-            var results = cashflows
-                .SelectMany(x => x.GetUpcoming(request.To)
-                    .Select(d => new UpcomingViewModel
-                    {
-                        Id = x.Id,
-                        Date = d,
-                        Amount = x.Amount,
-                        Description = x.Description,
-                        Tags = [..x.Tags],
-                        Category = new CategoryInfoViewModel(x.Category!.Id, x.Category.Name, x.Category.Type,
-                            x.Category.Color),
-                        Account = new AccountInfoViewModel(x.Account!.Id, x.Account.Name)
-                    }))
-                .Where(x => x.Date <= request.To)
-                .OrderBy(x => x.Date)
-                .ToList();
-
-            return new QueryResult<UpcomingViewModel>(results.Count, results);
         }
     }
 }
