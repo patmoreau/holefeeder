@@ -17,9 +17,9 @@ public class GetCategories : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapGet("api/v2/categories",
-                async (IMediator mediator, HttpContext ctx, CancellationToken cancellationToken) =>
+                async (IUserContext userContext, BudgetingContext context, HttpContext ctx, CancellationToken cancellationToken) =>
                 {
-                    var result = await mediator.Send(new Request(), cancellationToken);
+                    var result = await Handle(userContext, context, cancellationToken);
                     switch (result)
                     {
                         case { IsFailure: true }:
@@ -36,23 +36,14 @@ public class GetCategories : ICarterModule
             .WithName(nameof(GetCategories))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal class Validator : AbstractValidator<Request>;
-
-    internal record Request : IRequest<Result<QueryResult<CategoryViewModel>>>;
-
-    internal class Handler(IUserContext userContext, BudgetingContext context)
-        : IRequestHandler<Request, Result<QueryResult<CategoryViewModel>>>
+    private static async Task<Result<QueryResult<CategoryViewModel>>> Handle(IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
-        public async Task<Result<QueryResult<CategoryViewModel>>> Handle(Request request,
-            CancellationToken cancellationToken)
-        {
-            var result = await context.Categories
-                .Where(x => x.UserId == userContext.Id)
-                .OrderByDescending(x => x.Favorite)
-                .ThenBy(x => x.Name)
-                .ToListAsync(cancellationToken);
+        var result = await context.Categories
+            .Where(x => x.UserId == userContext.Id)
+            .OrderByDescending(x => x.Favorite)
+            .ThenBy(x => x.Name)
+            .ToListAsync(cancellationToken);
 
-            return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
-        }
+        return new QueryResult<CategoryViewModel>(result.Count, CategoryMapper.MapToDto(result));
     }
 }
