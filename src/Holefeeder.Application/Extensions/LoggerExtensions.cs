@@ -9,18 +9,6 @@ namespace Holefeeder.Application.Extensions;
 public static partial class LoggerExtensions
 {
     [LoggerMessage(
-        EventId = 1001,
-        Level = LogLevel.Information,
-        Message = "API Request: {Name} {Request}")]
-    public static partial void LogMediatrRequest(this ILogger logger, string name, IBaseRequest @request);
-
-    [LoggerMessage(
-        EventId = 1002,
-        Level = LogLevel.Information,
-        Message = "API Request: {Name} with result {Response}")]
-    public static partial void LogMediatrResponse(this ILogger logger, string name, object? @response);
-
-    [LoggerMessage(
         EventId = 1003,
         Level = LogLevel.Information,
         Message = "{Command} {Account}")]

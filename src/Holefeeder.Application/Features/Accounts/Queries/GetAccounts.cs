@@ -1,12 +1,12 @@
 using System.Reflection;
 
 using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.EndpointFilters;
 using DrifterApps.Seeds.Application.Extensions;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
-using Holefeeder.Application.Filters;
 using Holefeeder.Application.UserContext;
 
 using Microsoft.AspNetCore.Builder;

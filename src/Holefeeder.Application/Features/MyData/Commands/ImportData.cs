@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using DrifterApps.Seeds.Application;
+using DrifterApps.Seeds.Application.EndpointFilters;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
@@ -23,35 +24,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-using ValidationException = FluentValidation.ValidationException;
-
 namespace Holefeeder.Application.Features.MyData.Commands;
 
 public class ImportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/my-data/import-data",
-                [DisableRequestSizeLimit] (Request request, IUserContext userContext, IValidator<Request> validator,
-                    IRequestScheduler requestScheduler) =>
+                [DisableRequestSizeLimit](Request request, IUserContext userContext,
+                    IRequestScheduler requestScheduler, BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger) =>
                 {
-                    var validation = validator.Validate(request);
-                    if (!validation.IsValid)
-                    {
-                        throw new ValidationException(validation.Errors);
-                    }
+                    var requestId = Guid.NewGuid();
+                    var userId = userContext.Id;
 
-                    InternalRequest internalRequest = new()
-                    {
-                        RequestId = Guid.NewGuid(),
-                        UpdateExisting = request.UpdateExisting,
-                        Data = request.Data,
-                        UserId = userContext.Id
-                    };
-                    requestScheduler.SendNow(internalRequest, nameof(ImportData));
+                    requestScheduler.QueueHandler<Handler>(handler => handler.Handle(
+                        requestId,
+                        request,
+                        userId.Value,
+                        CancellationToken.None), nameof(ImportData));
 
-                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new { Id = internalRequest.RequestId },
-                        new { Id = internalRequest.RequestId });
+                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestId}, new {Id = requestId});
                 })
+            .AddEndpointFilter<ValidationFilter<Request>>()
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -61,36 +54,36 @@ public class ImportData : ICarterModule
             .RequireAuthorization(Policies.WriteUser);
 
     internal class Handler(BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger)
-        : IRequestHandler<InternalRequest, Unit>
     {
         private ImportDataStatusDto _importDataStatus = ImportDataStatusDto.Init();
 
-        public async Task<Unit> Handle(InternalRequest request, CancellationToken cancellationToken)
+        public async Task Handle(Guid requestId, Request request, Guid uId, CancellationToken cancellationToken)
         {
             try
             {
+                UserId userId = UserId.Create(uId);
                 await context.BeginWorkAsync(cancellationToken);
 
-                UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.InProgress });
-                ThrowImportExceptionOnFailure(await ImportAccountsAsync(request, cancellationToken));
-                ThrowImportExceptionOnFailure(await ImportCategoriesAsync(request, cancellationToken));
-                ThrowImportExceptionOnFailure(await ImportCashflowsAsync(request, cancellationToken));
-                ThrowImportExceptionOnFailure(await ImportTransactionsAsync(request, cancellationToken));
+                UpdateProgress(requestId, _importDataStatus with {Status = CommandStatus.InProgress});
+                ThrowImportExceptionOnFailure(await ImportAccountsAsync(requestId, request, userId, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportCategoriesAsync(requestId, request, userId, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportCashflowsAsync(requestId, request, userId, cancellationToken));
+                ThrowImportExceptionOnFailure(await ImportTransactionsAsync(requestId, request, userId, cancellationToken));
 
                 await context.CommitWorkAsync(cancellationToken);
 
-                UpdateProgress(request.RequestId, _importDataStatus with { Status = CommandStatus.Completed });
+                UpdateProgress(requestId, _importDataStatus with {Status = CommandStatus.Completed});
             }
 #pragma warning disable CA1031
             catch (Exception e)
             {
-                UpdateProgress(request.RequestId,
-                    _importDataStatus with { Status = CommandStatus.Error, Message = e.ToString() });
+                UpdateProgress(requestId,
+                    _importDataStatus with {Status = CommandStatus.Error, Message = e.ToString()});
                 await context.RollbackWorkAsync(cancellationToken);
             }
 #pragma warning restore CA1031
 
-            return Unit.Value;
+            return;
 
             void ThrowImportExceptionOnFailure(Result<Nothing> result)
             {
@@ -104,7 +97,7 @@ public class ImportData : ICarterModule
         private void UpdateProgress(Guid requestId, ImportDataStatusDto response) =>
             memoryCache.Set(requestId, response, TimeSpan.FromHours(1));
 
-        private async Task<Result<Nothing>> ImportAccountsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportAccountsAsync(Guid requestId, Request request, UserId userId, CancellationToken cancellationToken)
         {
             if (request.Data.Accounts.Length == 0)
             {
@@ -118,7 +111,7 @@ public class ImportData : ICarterModule
                 Status = CommandStatus.InProgress,
                 AccountsTotal = accounts.Length
             };
-            UpdateProgress(request.RequestId, _importDataStatus);
+            UpdateProgress(requestId, _importDataStatus);
 
             foreach (var element in accounts)
             {
@@ -130,7 +123,7 @@ public class ImportData : ICarterModule
                 }
 
                 var exists = await context.Accounts
-                    .SingleOrDefaultAsync(account => account.Id == elementId && account.UserId == request.UserId,
+                    .SingleOrDefaultAsync(account => account.Id == elementId && account.UserId == userId,
                         cancellationToken);
                 if (exists is not null)
                 {
@@ -169,7 +162,7 @@ public class ImportData : ICarterModule
                         element.Description,
                         element.Favorite,
                         element.Inactive,
-                        request.UserId
+                        userId
                     );
                     if (result.IsFailure)
                     {
@@ -184,14 +177,14 @@ public class ImportData : ICarterModule
                 {
                     AccountsProcessed = _importDataStatus.AccountsProcessed + 1
                 };
-                UpdateProgress(request.RequestId, _importDataStatus);
+                UpdateProgress(requestId, _importDataStatus);
             }
 
             await context.SaveChangesAsync(cancellationToken);
             return Nothing.Value;
         }
 
-        private async Task<Result<Nothing>> ImportCategoriesAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportCategoriesAsync(Guid requestId, Request request, UserId userId, CancellationToken cancellationToken)
         {
             if (request.Data.Categories.Length == 0)
             {
@@ -205,7 +198,7 @@ public class ImportData : ICarterModule
                 Status = CommandStatus.InProgress,
                 CategoriesTotal = categories.Length
             };
-            UpdateProgress(request.RequestId, _importDataStatus);
+            UpdateProgress(requestId, _importDataStatus);
 
             foreach (var element in categories)
             {
@@ -223,7 +216,7 @@ public class ImportData : ICarterModule
                 }
 
                 var exists = await context.Categories
-                    .SingleOrDefaultAsync(category => category.Id == elementId && category.UserId == request.UserId,
+                    .SingleOrDefaultAsync(category => category.Id == elementId && category.UserId == userId,
                         cancellationToken);
                 if (exists is not null)
                 {
@@ -260,7 +253,7 @@ public class ImportData : ICarterModule
                         element.Favorite,
                         element.System,
                         elementBudgetAmount.Value,
-                        request.UserId);
+                        userId);
 
                     if (result.IsFailure)
                     {
@@ -275,14 +268,14 @@ public class ImportData : ICarterModule
                 {
                     CategoriesProcessed = _importDataStatus.CategoriesProcessed + 1
                 };
-                UpdateProgress(request.RequestId, _importDataStatus);
+                UpdateProgress(requestId, _importDataStatus);
             }
 
             await context.SaveChangesAsync(cancellationToken);
             return Nothing.Value;
         }
 
-        private async Task<Result<Nothing>> ImportCashflowsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportCashflowsAsync(Guid requestId, Request request, UserId userId, CancellationToken cancellationToken)
         {
             if (request.Data.Cashflows.Length == 0)
             {
@@ -296,7 +289,7 @@ public class ImportData : ICarterModule
                 Status = CommandStatus.InProgress,
                 CashflowsTotal = cashflows.Length
             };
-            UpdateProgress(request.RequestId, _importDataStatus);
+            UpdateProgress(requestId, _importDataStatus);
 
             foreach (var element in cashflows)
             {
@@ -311,7 +304,7 @@ public class ImportData : ICarterModule
                 var elementAccountId = AccountId.Create(element.AccountId);
 
                 var exists = await context.Cashflows
-                    .SingleOrDefaultAsync(cashflow => cashflow.Id == elementId && cashflow.UserId == request.UserId,
+                    .SingleOrDefaultAsync(cashflow => cashflow.Id == elementId && cashflow.UserId == userId,
                         cancellationToken);
                 if (exists is not null)
                 {
@@ -354,7 +347,7 @@ public class ImportData : ICarterModule
                         elementCategoryId,
                         elementAccountId,
                         element.Inactive,
-                        request.UserId
+                        userId
                     );
                     if (result.IsFailure)
                     {
@@ -370,15 +363,14 @@ public class ImportData : ICarterModule
                 {
                     CashflowsProcessed = _importDataStatus.CashflowsProcessed + 1
                 };
-                UpdateProgress(request.RequestId, _importDataStatus);
+                UpdateProgress(requestId, _importDataStatus);
             }
 
             await context.SaveChangesAsync(cancellationToken);
             return Nothing.Value;
         }
 
-
-        private async Task<Result<Nothing>> ImportTransactionsAsync(InternalRequest request, CancellationToken cancellationToken)
+        private async Task<Result<Nothing>> ImportTransactionsAsync(Guid requestId, Request request, UserId userId, CancellationToken cancellationToken)
         {
             if (request.Data.Transactions.Length == 0)
             {
@@ -392,7 +384,7 @@ public class ImportData : ICarterModule
                 Status = CommandStatus.InProgress,
                 TransactionsTotal = transactions.Length
             };
-            UpdateProgress(request.RequestId, _importDataStatus);
+            UpdateProgress(requestId, _importDataStatus);
 
             foreach (var element in transactions)
             {
@@ -402,6 +394,7 @@ public class ImportData : ICarterModule
                 {
                     return elementAmount.Error;
                 }
+
                 var elementCategoryId = CategoryId.Create(element.CategoryId);
                 var elementAccountId = AccountId.Create(element.AccountId);
                 var elementCashflowId =
@@ -409,7 +402,7 @@ public class ImportData : ICarterModule
 
                 var exists = await context.Transactions
                     .SingleOrDefaultAsync(
-                        transaction => transaction.Id == elementId && transaction.UserId == request.UserId,
+                        transaction => transaction.Id == elementId && transaction.UserId == userId,
                         cancellationToken);
                 if (exists is not null)
                 {
@@ -428,6 +421,7 @@ public class ImportData : ICarterModule
                         {
                             return result.Error;
                         }
+
                         var transaction = result.Value.SetTags(element.Tags);
                         logger.LogTransaction("Modify", transaction.Value);
                         context.Update(transaction.Value);
@@ -437,7 +431,6 @@ public class ImportData : ICarterModule
                         logger.LogTransaction("Ignore", exists);
                     }
                 }
-
                 else
                 {
                     var result = Transaction.Import(elementId,
@@ -448,7 +441,7 @@ public class ImportData : ICarterModule
                         elementCategoryId,
                         elementCashflowId,
                         element.CashflowDate,
-                        request.UserId);
+                        userId);
 
                     if (result.IsFailure)
                     {
@@ -464,7 +457,7 @@ public class ImportData : ICarterModule
                 {
                     TransactionsProcessed = _importDataStatus.TransactionsProcessed + 1
                 };
-                UpdateProgress(request.RequestId, _importDataStatus);
+                UpdateProgress(requestId, _importDataStatus);
             }
 
             await context.SaveChangesAsync(cancellationToken);
@@ -485,7 +478,7 @@ public class ImportData : ICarterModule
                 .WithMessage("must contain at least 1 array of accounts|categories|cashflows|transactions");
     }
 
-    internal record Request : IRequest<Unit>
+    internal record Request
     {
         [Required] public bool UpdateExisting { get; init; }
 
@@ -498,12 +491,5 @@ public class ImportData : ICarterModule
             public MyDataCashflowDto[] Cashflows { get; init; } = [];
             public MyDataTransactionDto[] Transactions { get; init; } = [];
         }
-    }
-
-    internal record InternalRequest : Request
-    {
-        public Guid RequestId { get; init; }
-
-        public required UserId UserId { get; init; }
     }
 }

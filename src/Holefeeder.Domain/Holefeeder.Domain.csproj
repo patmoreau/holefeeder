@@ -10,7 +10,6 @@
         <PackageReference Include="Ardalis.SmartEnum.SystemTextJson"/>
         <PackageReference Include="DrifterApps.Seeds.Domain"/>
         <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
-        <PackageReference Include="MediatR.Contracts"/>
     </ItemGroup>
 
 </Project>

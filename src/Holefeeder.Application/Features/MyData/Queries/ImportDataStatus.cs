@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.Application.EndpointFilters;
+
 using Holefeeder.Application.Features.MyData.Exceptions;
 using Holefeeder.Application.Features.MyData.Models;
 
@@ -11,11 +13,12 @@ namespace Holefeeder.Application.Features.MyData.Queries;
 public class ImportDataStatus : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("api/v2/my-data/import-status/{id}", async (Guid id, IMediator mediator) =>
+        app.MapGet("api/v2/my-data/import-status/{id:guid}", async (Guid id, IMemoryCache memoryCache, CancellationToken cancellationToken) =>
             {
-                var requestResult = await mediator.Send(new Request(id));
+                var requestResult = await Handle(id, memoryCache, cancellationToken);
                 return Results.Ok(requestResult);
             })
+            .AddEndpointFilter<ValidationFilter<Guid>>()
             .Produces<ImportDataStatusDto>()
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -24,23 +27,18 @@ public class ImportDataStatus : ICarterModule
             .WithName(nameof(ImportDataStatus))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request(Guid RequestId) : IRequest<ImportDataStatusDto>;
-
-    internal class Validator : AbstractValidator<Request>
+    private static Task<ImportDataStatusDto> Handle(Guid id, IMemoryCache memoryCache, CancellationToken cancellationToken)
     {
-        public Validator() => RuleFor(x => x.RequestId).NotEmpty();
+        if (memoryCache.TryGetValue(id, out var status) && status is ImportDataStatusDto dto)
+        {
+            return Task.FromResult(dto);
+        }
+
+        throw new ImportIdNotFoundException(id);
     }
 
-    internal class Handler(IMemoryCache memoryCache) : IRequestHandler<Request, ImportDataStatusDto>
+    internal class Validator : AbstractValidator<Guid>
     {
-        public Task<ImportDataStatusDto> Handle(Request request, CancellationToken cancellationToken)
-        {
-            if (memoryCache.TryGetValue(request.RequestId, out var status) && status is ImportDataStatusDto dto)
-            {
-                return Task.FromResult(dto);
-            }
-
-            throw new ImportIdNotFoundException(request.RequestId);
-        }
+        public Validator() => RuleFor(x => x).NotEmpty();
     }
 }

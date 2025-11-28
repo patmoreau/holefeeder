@@ -1,8 +1,9 @@
 using System.Globalization;
 using System.Reflection;
 
+using DrifterApps.Seeds.Application.EndpointFilters;
+
 using Holefeeder.Application.Context;
-using Holefeeder.Application.Filters;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Categories;

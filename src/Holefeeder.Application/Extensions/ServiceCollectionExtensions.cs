@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 
 using DrifterApps.Seeds.Application;
-using DrifterApps.Seeds.Application.Mediatr;
 using DrifterApps.Seeds.Domain;
 
 using Holefeeder.Application.Context;
+using Holefeeder.Application.Features.MyData.Commands;
 using Holefeeder.Application.UserContext;
 
 using Microsoft.Extensions.Configuration;
@@ -26,13 +26,9 @@ public static class ServiceCollectionExtensions
 
         services.AddMemoryCache();
 
-        services
-            .AddMediatR(serviceConfiguration =>
-                serviceConfiguration.RegisterServicesFromAssembly(typeof(Application).Assembly)
-                    .RegisterServicesFromApplicationSeeds());
-
         services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
         services.AddScoped<IUserContext, UserContext.UserContext>();
+        services.AddScoped<ImportData.Handler>();
 
         return services;
     }

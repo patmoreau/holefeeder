@@ -1,9 +1,9 @@
+using DrifterApps.Seeds.Application.EndpointFilters;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.Features.Transactions.Queries;
-using Holefeeder.Application.Filters;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Domain.ValueObjects;

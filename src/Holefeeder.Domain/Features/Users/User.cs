@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Holefeeder.Domain.Features.Users;
 
 public sealed partial record User : IAggregateRoot

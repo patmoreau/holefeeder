@@ -17,9 +17,9 @@ namespace Holefeeder.Application.Features.MyData.Queries;
 public sealed class ExportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
-        app.MapGet("api/v2/my-data/export-data", async (IMediator mediator) =>
+        app.MapGet("api/v2/my-data/export-data", async (IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
             {
-                var requestResult = await mediator.Send(new Request());
+                var requestResult = await Handle(userContext, context, cancellationToken);
                 return Results.Ok(requestResult);
             })
             .Produces<ExportDataDto>()
@@ -30,40 +30,32 @@ public sealed class ExportData : ICarterModule
             .WithName(nameof(ExportData))
             .RequireAuthorization(Policies.ReadUser);
 
-    internal record Request : IRequest<ExportDataDto>;
-
-    internal class Handler(IUserContext userContext, BudgetingContext context) : IRequestHandler<Request, ExportDataDto>
+    private static async Task<ExportDataDto> Handle(IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
-        private readonly BudgetingContext _context = context;
-        private readonly IUserContext _userContext = userContext;
+        var accounts = (await context.Accounts
+                .Where(e => e.UserId == userContext.Id)
+                .ToListAsync(cancellationToken))
+            .Select(AccountMapper.MapToMyDataAccountDto);
+        var categories = (await context.Categories
+                .Where(e => e.UserId == userContext.Id)
+                .ToListAsync(cancellationToken))
+            .Select(CategoryMapper.MapToMyDataCategoryDto);
+        var cashflows = (await context.Cashflows
+                .Where(e => e.UserId == userContext.Id)
+                .Include(e => e.Account)
+                .Include(e => e.Category)
+                .ToListAsync(cancellationToken))
+            .Select(CashflowMapper.MapToMyDataCashflowDto);
+        var transactions = (await context.Transactions
+                .Where(e => e.UserId == userContext.Id)
+                .Include(e => e.Account)
+                .Include(e => e.Category)
+                .ToListAsync(cancellationToken))
+            .Select(TransactionMapper.MapToMyDataTransactionDto);
 
-        public async Task<ExportDataDto> Handle(Request request, CancellationToken cancellationToken)
-        {
-            var accounts = (await _context.Accounts
-                    .Where(e => e.UserId == _userContext.Id)
-                    .ToListAsync(cancellationToken))
-                .Select(AccountMapper.MapToMyDataAccountDto);
-            var categories = (await _context.Categories
-                    .Where(e => e.UserId == _userContext.Id)
-                    .ToListAsync(cancellationToken))
-                .Select(CategoryMapper.MapToMyDataCategoryDto);
-            var cashflows = (await _context.Cashflows
-                    .Where(e => e.UserId == _userContext.Id)
-                    .Include(e => e.Account)
-                    .Include(e => e.Category)
-                    .ToListAsync(cancellationToken))
-                .Select(CashflowMapper.MapToMyDataCashflowDto);
-            var transactions = (await _context.Transactions
-                    .Where(e => e.UserId == _userContext.Id)
-                    .Include(e => e.Account)
-                    .Include(e => e.Category)
-                    .ToListAsync(cancellationToken))
-                .Select(TransactionMapper.MapToMyDataTransactionDto);
-
-            return new ExportDataDto(accounts.ToImmutableArray(),
-                categories.ToImmutableArray(),
-                cashflows.ToImmutableArray(),
-                transactions.ToImmutableArray());
-        }
+        return new ExportDataDto(accounts.ToImmutableArray(),
+            categories.ToImmutableArray(),
+            cashflows.ToImmutableArray(),
+            transactions.ToImmutableArray());
     }
 }
