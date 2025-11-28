@@ -16,7 +16,6 @@
     <ItemGroup>
         <PackageReference Include="Carter"/>
         <PackageReference Include="DrifterApps.Seeds.Infrastructure"/>
-        <PackageReference Include="IdentityModel" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.Identity.Web"/>

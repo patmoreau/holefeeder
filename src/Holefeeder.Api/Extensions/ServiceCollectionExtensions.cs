@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
-using IdentityModel;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -40,12 +38,12 @@ internal static class ServiceCollectionExtensions
                     policy
                         .RequireAuthenticatedUser()
                         .AddAuthenticationSchemes(Schemes.Auth0)
-                        .RequireClaim(JwtClaimTypes.Scope, Scopes.ReadUser));
+                        .RequireClaim("scope", Scopes.ReadUser));
                 options.AddPolicy(Policies.WriteUser, policy =>
                     policy
                         .RequireAuthenticatedUser()
                         .AddAuthenticationSchemes(Schemes.Auth0)
-                        .RequireClaim(JwtClaimTypes.Scope, Scopes.WriteUser));
+                        .RequireClaim("scope", Scopes.WriteUser));
             });
 
         return services;
