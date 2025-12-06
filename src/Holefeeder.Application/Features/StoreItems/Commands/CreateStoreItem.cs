@@ -39,7 +39,7 @@ public class CreateStoreItem : ICarterModule
 
     private static async Task<Result<StoreItemId>> Handle(Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
-        if (await context.StoreItems.AnyAsync(e => e.Code == request.Code, cancellationToken))
+        if (await context.StoreItems.AnyAsync(e => e.Code == request.Code && e.UserId == userContext.Id, cancellationToken))
         {
             return StoreItemErrors.CodeAlreadyExists(request.Code);
         }
