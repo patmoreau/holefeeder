@@ -112,7 +112,8 @@ app
 
 app.UseCors()
     .UseAuthentication()
-    .UseAuthorization();
+    .UseAuthorization()
+    .UseUserContext();
 
 app.MapCarter();
 

@@ -1,4 +1,9 @@
+using DrifterApps.Seeds.FluentResult;
+
+using Holefeeder.Domain.Enumerations;
+
 namespace Holefeeder.Domain.ValueObjects;
+
 /// <summary>
 /// Represents a date interval with a start and end date.
 /// </summary>
@@ -29,5 +34,14 @@ public record DateInterval
 
         Start = start;
         End = end;
+    }
+
+    public static DateInterval Create(DateOnly asOfDate, int iteration, DateOnly effectiveDate, DateIntervalType intervalType, int frequency)
+    {
+        var startDate = intervalType.AddIteration(asOfDate, iteration * frequency);
+
+        var interval = intervalType.Interval(effectiveDate, startDate, frequency);
+
+        return new DateInterval(interval.from, interval.to);
     }
 }
