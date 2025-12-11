@@ -45,6 +45,10 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
         ScenarioForAuthorizedUser("compute period", _user.ComputePeriod);
 
     [Fact]
+    public Task AttemptToGetDashboardSummary() =>
+        ScenarioForAuthorizedUser("get dashboard summary", _user.GettingDashboardSummary);
+
+    [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
         ScenarioForAuthorizedUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 

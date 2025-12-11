@@ -76,4 +76,10 @@ internal class CategoryBuilder : FakerBuilder<Category>
         Faker.RuleFor(f => f.Favorite, false);
         return this;
     }
+
+    public CategoryBuilder IsSystem(bool isSystem)
+    {
+        Faker.RuleFor(f => f.System, isSystem);
+        return this;
+    }
 }

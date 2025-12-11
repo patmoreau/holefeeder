@@ -45,6 +45,10 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
         ScenarioForForbiddenUser("compute period", _user.ComputePeriod);
 
     [Fact]
+    public Task AttemptToGetDashboardSummary() =>
+        ScenarioForForbiddenUser("get dashboard summary", _user.GettingDashboardSummary);
+
+    [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
         ScenarioForForbiddenUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 

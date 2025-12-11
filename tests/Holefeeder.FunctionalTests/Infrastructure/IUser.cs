@@ -7,6 +7,7 @@ using Holefeeder.Application.Models;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.UseCases.Dashboard;
 using Holefeeder.Domain.ValueObjects;
 
 using Refit;
@@ -19,7 +20,7 @@ public interface IUnauthenticatedUser : IUser;
 
 public interface IForbiddenUser : IUser;
 
-public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IStatistics, IStoreItems, ITags, ITransactions;
+public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IDashboard, IStatistics, IStoreItems, ITags, ITransactions;
 
 public interface IAccounts
 {
@@ -77,6 +78,12 @@ public interface IPeriods
 {
     [Get("/api/v2/periods?asOfDate={asOfDate}&iteration={iteration}")]
     Task<IApiResponse<DateInterval>> ComputePeriod(DateOnly asOfDate, int? iteration = null);
+}
+
+public interface IDashboard
+{
+    [Get("/api/v2/dashboard/summary")]
+    Task<IApiResponse<SummaryResult>> GetDashboardSummary();
 }
 
 public interface IStatistics

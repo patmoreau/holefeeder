@@ -66,6 +66,9 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
     internal void ComputePeriod(IStepRunner runner) =>
         runner.Execute(() => Api.ComputePeriod(_faker.Date.SoonDateOnly(), _faker.Random.Int(min: 1, max: 10)));
 
+    internal void GettingDashboardSummary(IStepRunner runner) =>
+        runner.Execute(() => Api.GetDashboardSummary());
+
     internal void GettingStatisticsForAllCategories(IStepRunner runner) =>
         runner.Execute(() => Api.GetStatisticsForAllCategoriesAsync());
 

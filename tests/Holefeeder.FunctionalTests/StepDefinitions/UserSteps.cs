@@ -134,6 +134,8 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
 
     internal void GetsTheirTags(IStepRunner runner) => runner.Execute(() => Api.GetTagsWithCountAsync());
 
+    internal void GetDashboardSummary(IStepRunner runner) => runner.Execute(Api.GetDashboardSummary);
+
     internal void GetSummaryStatisticsForRange(IStepRunner runner, DateOnly from, DateOnly until) =>
         runner.Execute(() => Api.GetStatisticsSummaryAsync(from, until));
 

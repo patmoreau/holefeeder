@@ -57,6 +57,10 @@ public class UnauthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestO
     public Task AttemptToComputePeriod() => ScenarioForUnauthenticatedUser("compute period", _user.ComputePeriod);
 
     [Fact]
+    public Task AttemptToGetDashboardSummary() =>
+        ScenarioForUnauthenticatedUser("get dashboard summary", _user.GettingDashboardSummary);
+
+    [Fact]
     public Task AttemptToGetStatisticsForAllCategories() =>
         ScenarioForUnauthenticatedUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
 
