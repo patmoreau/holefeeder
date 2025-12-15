@@ -60,7 +60,7 @@ public class ScenarioGetSummary(ApiApplicationDriver applicationDriver, ITestOut
     private static void TheSummaryShouldMatchTheExpected(IStepRunner runner) =>
         runner.Execute<IApiResponse<SummaryResult>>(response =>
         {
-            var expectedSummary = new SummaryResult(1201.2m, 700.7m, 1799.1m, 3000.3m, 500.5m);
+            var expectedSummary = new SummaryResult(1201.2m, 700.7m, 140m, 1799.1m, 3000.3m, 500.5m);
 
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful()

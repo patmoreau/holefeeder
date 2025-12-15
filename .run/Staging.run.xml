@@ -1,12 +1,17 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Web Docker Compose" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Staging" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
-        <option name="envFilePath" value="" />
-        <option name="commandLineOptions" value="--build" />
-        <option name="services">
+        <option name="envFilePath" value="$PROJECT_DIR$/.env" />
+        <option name="envFilePaths">
           <list>
-            <option value="web" />
+            <option value="$PROJECT_DIR$/.env" />
+          </list>
+        </option>
+        <option name="commandLineOptions" value="--build" />
+        <option name="secondarySourceFiles">
+          <list>
+            <option value="docker-compose.Staging.yaml" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />

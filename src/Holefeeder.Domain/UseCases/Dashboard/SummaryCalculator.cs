@@ -19,16 +19,31 @@ public static class SummaryCalculator
 
         var currentGains = GetPeriodTotal(gains, dateInterval.Start);
         var currentExpenses = GetPeriodTotal(expenses, dateInterval.Start);
+        var netFlow = CalculateNetFlow(currentGains, currentExpenses);
 
         var averageExpenses = CalculateAverage(expenses);
+        var expenseVariation = CalculateExpenseVariation(averageExpenses, currentExpenses);
+        var variationPercentage = CalculateExpenseVariationPercentage(averageExpenses, expenseVariation);
 
         return new SummaryResult(
             CurrentExpenses: currentExpenses,
-            ExpenseVariation: currentExpenses - averageExpenses,
-            NetFlow: currentGains - currentExpenses,
+            ExpenseVariation: expenseVariation,
+            ExpenseVariationPercentage: variationPercentage,
+            NetFlow: netFlow,
             CurrentGains: currentGains,
             AverageExpenses: averageExpenses);
     }
+
+    private static decimal CalculateNetFlow(Money currentGains, Money currentExpenses) =>
+        currentGains - currentExpenses;
+
+    private static decimal CalculateExpenseVariation(Money averageExpenses, Money currentExpenses) =>
+        currentExpenses - averageExpenses;
+
+    private static decimal CalculateExpenseVariationPercentage(Money averageExpenses, decimal expenseVariation) =>
+        averageExpenses == Money.Zero
+            ? 0
+            : Math.Round((expenseVariation / averageExpenses) * 100, 2);
 
     private static IEnumerable<(CategoryType Type, (DateOnly From, DateOnly To) Period, Money Total)> GroupByTypeAndPeriod(
         IEnumerable<SummaryData> data,

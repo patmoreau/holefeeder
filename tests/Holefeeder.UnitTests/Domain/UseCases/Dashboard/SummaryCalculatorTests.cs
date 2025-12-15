@@ -5,6 +5,7 @@ using Holefeeder.Domain.ValueObjects;
 
 namespace Holefeeder.UnitTests.Domain.UseCases.Dashboard;
 
+[UnitTest]
 public class SummaryCalculatorTests
 {
     [Fact]
@@ -20,11 +21,14 @@ public class SummaryCalculatorTests
         var result = SummaryCalculator.Calculate(data, dateInterval, intervalType, frequency);
 
         // Assert
-        result.CurrentExpenses.Should().Be(0m);
-        result.ExpenseVariation.Should().Be(0m);
-        result.NetFlow.Should().Be(0m);
-        result.CurrentGains.Should().Be(0m);
-        result.AverageExpenses.Should().Be(0m);
+        result.Should().Be(new SummaryResult(
+            0m,
+            0m,
+            0m,
+            0m,
+            0m,
+            0m
+        ));
     }
 
     [Fact]
@@ -54,11 +58,14 @@ public class SummaryCalculatorTests
         var result = SummaryCalculator.Calculate(data, dateInterval, intervalType, frequency);
 
         // Assert
-        result.CurrentExpenses.Should().Be(600m);
-        result.ExpenseVariation.Should().Be(166.67m);
-        result.NetFlow.Should().Be(600m);
-        result.CurrentGains.Should().Be(1200m);
-        result.AverageExpenses.Should().Be(433.33m);
+        result.Should().Be(new SummaryResult(
+            600m,
+            166.67m,
+            38.46m,
+            600m,
+            1200m,
+            433.33m
+        ));
     }
 
     [Fact]
@@ -81,11 +88,14 @@ public class SummaryCalculatorTests
         var result = SummaryCalculator.Calculate(data, dateInterval, intervalType, frequency);
 
         // Assert
-        result.CurrentExpenses.Should().Be(400m);
-        result.ExpenseVariation.Should().Be(0m);
-        result.NetFlow.Should().Be(400m);
-        result.CurrentGains.Should().Be(800m);
-        result.AverageExpenses.Should().Be(400m);
+        result.Should().Be(new SummaryResult(
+            400m,
+            0m,
+            0m,
+            400m,
+            800m,
+            400m
+        ));
     }
 
     [Fact]
@@ -108,11 +118,14 @@ public class SummaryCalculatorTests
         var result = SummaryCalculator.Calculate(data, dateInterval, intervalType, frequency);
 
         // Assert
-        result.CurrentExpenses.Should().Be(550m);
-        result.ExpenseVariation.Should().Be(100m);
-        result.NetFlow.Should().Be(550m);
-        result.CurrentGains.Should().Be(1100m);
-        result.AverageExpenses.Should().Be(450m);
+        result.Should().Be(new SummaryResult(
+            550m,
+            100m,
+            22.22m,
+            550m,
+            1100m,
+            450m
+        ));
     }
 }
 
