@@ -4,6 +4,7 @@ import {
   ErrorHandler,
   importProvidersFrom,
   isDevMode,
+  provideZoneChangeDetection
 } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -67,7 +68,7 @@ setupGlobalErrorHandling();
 
 bootstrapApplication(AppComponent, {
   providers: [
-    {
+    provideZoneChangeDetection(),{
       provide: BASE_API_URL,
       useValue: `${environment.baseUrl}/gateway/api/v2`,
     },

@@ -65,7 +65,7 @@ export class StatisticsComponent implements OnInit {
     );
   }
 
-  footer = (tooltipItems: { parsed: { y: number } }[]) => {
+  footer = (tooltipItems: TooltipItem<keyof ChartTypeRegistry>[]) => {
     // const dataset = data.datasets[tooltipItem.datasetIndex];
     // const value = dataset.data[tooltipItem.index];
     // const total = dataset.data.reduce((acc: any, curr: any) => acc + curr, 0);
@@ -73,8 +73,11 @@ export class StatisticsComponent implements OnInit {
     // return `${dataset.label}: ${percentage}%`;
     let sum = 0;
 
-    tooltipItems.forEach(function (tooltipItem: { parsed: { y: number } }) {
-      sum += tooltipItem.parsed.y;
+    tooltipItems.forEach(function (tooltipItem: TooltipItem<keyof ChartTypeRegistry>) {
+      const yValue = tooltipItem.parsed.y;
+      if (yValue !== null) {
+        sum += yValue;
+      }
     });
     return 'Sum: ' + sum;
   };
