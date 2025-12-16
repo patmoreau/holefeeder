@@ -1,11 +1,13 @@
 using System.Text.Json.Serialization;
 
 using Ardalis.SmartEnum;
-using Ardalis.SmartEnum.SystemTextJson;
+
+using Holefeeder.Domain.Converters;
 
 namespace Holefeeder.Domain.Features.Categories;
 
-[JsonConverter(typeof(SmartEnumNameConverter<CategoryType, int>))]
+[JsonConverter(typeof(SmartEnumCamelCaseConverter<CategoryType, int>))]
+[SmartEnumStringComparer(StringComparison.InvariantCultureIgnoreCase)]
 public abstract class CategoryType : SmartEnum<CategoryType>
 {
     public static readonly CategoryType Expense = new ExpenseCategoryType(1, nameof(Expense));

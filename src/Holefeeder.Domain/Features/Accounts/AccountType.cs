@@ -2,11 +2,15 @@ using System.Text.Json.Serialization;
 
 using Ardalis.SmartEnum;
 using Ardalis.SmartEnum.SystemTextJson;
+
+using Holefeeder.Domain.Converters;
+
 // ReSharper disable UnusedMember.Global
 
 namespace Holefeeder.Domain.Features.Accounts;
 
-[JsonConverter(typeof(SmartEnumNameConverter<AccountType, int>))]
+[JsonConverter(typeof(SmartEnumCamelCaseConverter<AccountType, int>))]
+[SmartEnumStringComparer(StringComparison.InvariantCultureIgnoreCase)]
 public abstract class AccountType : SmartEnum<AccountType>
 {
     public static readonly AccountType Checking = new DebitAccountType(1, nameof(Checking));

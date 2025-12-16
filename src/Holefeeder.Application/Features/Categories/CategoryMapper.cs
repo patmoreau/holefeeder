@@ -17,7 +17,8 @@ internal static class CategoryMapper
             BudgetAmount = entity.BudgetAmount,
             Color = entity.Color,
             Favorite = entity.Favorite,
-            Name = entity.Name
+            Name = entity.Name,
+            Type = entity.Type
         };
 
         return dto;
