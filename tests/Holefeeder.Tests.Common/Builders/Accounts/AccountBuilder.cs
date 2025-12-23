@@ -63,7 +63,7 @@ internal class AccountBuilder : FakerBuilder<Account>
 
     public AccountBuilder WithCashflows(IReadOnlyCollection<Cashflow> cashflows)
     {
-        Faker.RuleFor(f => f.Cashflows, cashflows);
+        Faker.RuleFor(f => f.Cashflows, cashflows.ToArray());
         return this;
     }
 
@@ -75,7 +75,7 @@ internal class AccountBuilder : FakerBuilder<Account>
 
     public AccountBuilder WithTransactions(IReadOnlyCollection<Transaction> transactions)
     {
-        Faker.RuleFor(f => f.Transactions, transactions);
+        Faker.RuleFor(f => f.Transactions, transactions.ToArray());
         return this;
     }
     public AccountBuilder OfType(AccountType type)

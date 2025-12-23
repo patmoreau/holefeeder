@@ -47,27 +47,15 @@ public class GetAccount : ICarterModule
             return AccountErrors.NotFound(query.Id);
         }
 
+        var cashflows = await context.Cashflows
+            .Where(c => c.UserId == userContext.Id && account.Id == c.AccountId && !c.Inactive)
+            .Include(c => c.Category)
+            .Include(c => c.Transactions)
+            .ToListAsync(cancellationToken);
+
         var dateInterval = DateInterval.Create(DateOnly.FromDateTime(DateTime.Now), 0, userContext.Settings.EffectiveDate, userContext.Settings.IntervalType, userContext.Settings.Frequency);
 
-        var balance = account.CalculateBalance();
-        var lastTransactionDate = account.CalculateLastTransactionDate();
-        var upcomingVariation = account.CalculateUpcomingVariation(dateInterval.End);
-
-        return new AccountViewModel(
-            account.Id,
-            account.Type,
-            account.Name,
-            account.OpenBalance,
-            account.OpenDate,
-            account.Transactions.Count,
-            balance,
-            lastTransactionDate,
-            upcomingVariation,
-            balance + upcomingVariation,
-            account.Description,
-            account.Favorite,
-            account.Inactive
-        );
+        return AccountMapper.MapToAccountViewModel(account, dateInterval.End, cashflows);
     }
 
     public record Request(AccountId Id);

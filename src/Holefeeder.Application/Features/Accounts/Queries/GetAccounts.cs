@@ -59,17 +59,23 @@ public class GetAccounts : ICarterModule
             return queryParams.Error;
         }
 
+        var cashflows = await context.Cashflows
+            .Where(c => c.UserId == userContext.Id && !c.Inactive)
+            .Include(c => c.Category)
+            .Include(c => c.Transactions)
+            .ToListAsync(cancellationToken);
+
         var dateInterval = DateInterval.Create(DateOnly.FromDateTime(DateTime.Now), 0, userContext.Settings.EffectiveDate, userContext.Settings.IntervalType, userContext.Settings.Frequency);
 
         var total = await context.Accounts.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
-        var items = await context.Accounts
+        var accounts = await context.Accounts
             .Include(e => e.Cashflows.Where(c => !c.Inactive)).ThenInclude(x => x.Category)
             .Include(e => e.Transactions).ThenInclude(x => x.Category)
             .Where(e => e.UserId == userContext.Id)
             .Query(queryParams.Value)
-            .Select(e => AccountMapper.MapToAccountViewModel(e, dateInterval.End))
             .ToListAsync(cancellationToken);
 
+        var items = accounts.Select(e => AccountMapper.MapToAccountViewModel(e, dateInterval.End, cashflows.Where(c => c.AccountId == e.Id).ToList())).ToList();
         return new QueryResult<AccountViewModel>(total, items);
     }
 }

@@ -1,6 +1,7 @@
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Transactions;
 
 namespace Holefeeder.Application.Features.Accounts;
 
@@ -21,11 +22,11 @@ internal static class AccountMapper
 
     public static AccountInfoViewModel MapToAccountInfoViewModel(Account entity) => new(entity.Id, entity.Name);
 
-    public static AccountViewModel MapToAccountViewModel(Account entity, DateOnly toDate)
+    public static AccountViewModel MapToAccountViewModel(Account entity, DateOnly toDate, IReadOnlyCollection<Cashflow> cashflows)
     {
         var balance = entity.CalculateBalance();
         var lastTransactionDate = entity.CalculateLastTransactionDate();
-        var upcomingVariation = entity.CalculateUpcomingVariation(toDate);
+        var upcomingVariation = cashflows.Select(c => c.CalculateUpcomingVariation(toDate)).Sum();
 
         return new AccountViewModel(
             entity.Id,

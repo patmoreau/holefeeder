@@ -37,6 +37,15 @@ public partial record Cashflow
         return dates;
     }
 
+
+    public decimal CalculateUpcomingVariation(DateOnly targetDate) =>
+        GetUpcoming(targetDate).Count() * Amount * Category!.Type.Multiplier;
+
+    private bool IsUnpaid(DateOnly effectiveDate, DateOnly nextDate) =>
+        LastPaidDate is null
+            ? nextDate >= effectiveDate
+            : nextDate > LastPaidDate && nextDate > LastCashflowDate;
+
     public Result<Cashflow> Modify(DateOnly? effectiveDate = null, DateIntervalType? intervalType = null,
         int? frequency = null, int? recurrence = null, Money? amount = null, string? description = null,
         CategoryId? categoryId = null, AccountId? accountId = null, bool? inactive = null)
@@ -58,18 +67,17 @@ public partial record Cashflow
             .Ensure(AccountIdValidation(newAccountId))
             .Ensure(CategoryIdValidation(newCategoryId));
 
-        return result.OnSuccess(
-            () => (this with
-            {
-                EffectiveDate = newEffectiveDate,
-                IntervalType = newIntervalType,
-                Frequency = newFrequency,
-                Recurrence = newRecurrence,
-                Amount = newAmount,
-                Description = newDescription,
-                CategoryId = newCategoryId,
-                AccountId = newAccountId,
-                Inactive = newInactive
-            }).ToResult());
+        return result.OnSuccess(() => (this with
+        {
+            EffectiveDate = newEffectiveDate,
+            IntervalType = newIntervalType,
+            Frequency = newFrequency,
+            Recurrence = newRecurrence,
+            Amount = newAmount,
+            Description = newDescription,
+            CategoryId = newCategoryId,
+            AccountId = newAccountId,
+            Inactive = newInactive
+        }).ToResult());
     }
 }

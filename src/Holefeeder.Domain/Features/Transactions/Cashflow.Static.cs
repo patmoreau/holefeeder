@@ -58,8 +58,8 @@ public partial record Cashflow
             }.ToResult());
     }
 
-    private bool IsUnpaid(DateOnly effectiveDate, DateOnly nextDate) =>
-        LastPaidDate is null
-            ? nextDate >= effectiveDate
-            : nextDate > LastPaidDate && nextDate > LastCashflowDate;
+    public static decimal CalculateUpcomingVariation(DateOnly targetDate, IReadOnlyCollection<Cashflow> cashflows) =>
+        cashflows
+            .Select(c => c.GetUpcoming(targetDate).Count() * c.Amount * c.Category!.Type.Multiplier)
+            .Sum();
 }
