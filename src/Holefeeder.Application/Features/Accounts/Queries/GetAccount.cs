@@ -5,6 +5,7 @@ using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -37,14 +38,20 @@ public class GetAccount : ICarterModule
     private static async Task<Result<AccountViewModel>> Handle(Request query, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
     {
         var account = await context.Accounts
-            .Include(e => e.Transactions)
-            .ThenInclude(e => e.Category)
+            .Include(e => e.Cashflows.Where(c => !c.Inactive)).ThenInclude(x => x.Category)
+            .Include(e => e.Transactions).ThenInclude(e => e.Category)
             .SingleOrDefaultAsync(x => x.Id == query.Id && x.UserId == userContext.Id,
                 cancellationToken);
         if (account is null)
         {
             return AccountErrors.NotFound(query.Id);
         }
+
+        var dateInterval = DateInterval.Create(DateOnly.FromDateTime(DateTime.Now), 0, userContext.Settings.EffectiveDate, userContext.Settings.IntervalType, userContext.Settings.Frequency);
+
+        var balance = account.CalculateBalance();
+        var lastTransactionDate = account.CalculateLastTransactionDate();
+        var upcomingVariation = account.CalculateUpcomingVariation(dateInterval.End);
 
         return new AccountViewModel(
             account.Id,
@@ -53,8 +60,10 @@ public class GetAccount : ICarterModule
             account.OpenBalance,
             account.OpenDate,
             account.Transactions.Count,
-            account.CalculateBalance(),
-            account.CalculateLastTransactionDate(),
+            balance,
+            lastTransactionDate,
+            upcomingVariation,
+            balance + upcomingVariation,
             account.Description,
             account.Favorite,
             account.Inactive

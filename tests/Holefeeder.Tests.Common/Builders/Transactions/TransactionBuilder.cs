@@ -28,6 +28,12 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
 
     public static TransactionBuilder GivenATransaction() => new();
 
+    public TransactionBuilder WithId(TransactionId id)
+    {
+        Faker.RuleFor(f => f.Id, id);
+        return this;
+    }
+
     public TransactionBuilder WithNoId()
     {
         Faker.RuleFor(f => f.Id, _ => TransactionId.Empty);
@@ -58,11 +64,14 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         return this;
     }
 
-    public TransactionBuilder ForAccount(Account entity)
+    public TransactionBuilder ForAccount(Account entity, bool includeAccount = false)
     {
-        Faker
-            .RuleFor(f => f.AccountId, entity.Id)
+        Faker.RuleFor(f => f.AccountId, entity.Id)
             .RuleFor(f => f.UserId, entity.UserId);
+        if (includeAccount)
+        {
+            Faker.RuleFor(f => f.Account, entity);
+        }
         return this;
     }
 
@@ -74,10 +83,13 @@ internal class TransactionBuilder : FakerBuilder<Transaction>
         return this;
     }
 
-    public TransactionBuilder ForCategory(Category entity)
+    public TransactionBuilder ForCategory(Category entity, bool includeCategory = false)
     {
-        Faker
-            .RuleFor(f => f.CategoryId, entity.Id);
+        Faker.RuleFor(f => f.CategoryId, entity.Id);
+        if (includeCategory)
+        {
+            Faker.RuleFor(f => f.Category, entity);
+        }
         return this;
     }
 

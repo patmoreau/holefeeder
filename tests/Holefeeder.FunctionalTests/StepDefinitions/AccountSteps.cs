@@ -59,7 +59,7 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
             runner.SetContextData(AccountContext.ExistingAccount, account);
             runner.SetContextData(CategoryContext.ExistingCategory, category);
             runner.SetContextData(TransactionContext.ExistingTransaction, transaction);
-            return (Guid)account.Id;
+            return (Guid) account.Id;
         });
 
     public void ExistsWithGains(IStepRunner runner) =>
@@ -83,6 +83,6 @@ internal sealed partial class AccountSteps(BudgetingDatabaseDriver budgetingData
             runner.SetContextData(AccountContext.ExistingAccount, account);
             runner.SetContextData(CategoryContext.ExistingCategory, category);
             runner.SetContextData(TransactionContext.ExistingTransaction, transaction);
-            return (Guid)account.Id;
+            return (Guid) account.Id;
         });
 }

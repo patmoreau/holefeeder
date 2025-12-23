@@ -6,6 +6,17 @@ namespace Holefeeder.Domain.Features.Accounts;
 
 public sealed partial record Account
 {
+    public decimal CalculateBalance() =>
+        OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
+
+    public DateOnly CalculateLastTransactionDate() => Transactions.Count > 0 ? Transactions.Max(t => t.Date) : OpenDate;
+
+    public decimal CalculateUpcomingVariation(DateOnly targetDate) =>
+        Cashflows
+            .Where(c => !c.Inactive)
+            .Select(c => c.GetUpcoming(targetDate).Count() * c.Amount * c.Category!.Type.Multiplier)
+            .Sum();
+
     public Result<Account> Close()
     {
         if (Inactive)

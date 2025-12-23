@@ -74,9 +74,13 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
         return this;
     }
 
-    public CashflowBuilder ForCategory(Category entity)
+    public CashflowBuilder ForCategory(Category entity, bool includeCategory = false)
     {
         Faker.RuleFor(x => x.CategoryId, entity.Id);
+        if (includeCategory)
+        {
+            Faker.RuleFor(x => x.Category, entity);
+        }
         return this;
     }
 

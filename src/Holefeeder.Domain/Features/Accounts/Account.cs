@@ -35,11 +35,6 @@ public sealed partial record Account : IAggregateRoot
 
     public IReadOnlyCollection<Cashflow> Cashflows { get; init; } = new List<Cashflow>();
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
-
-    public decimal CalculateBalance() =>
-        OpenBalance + Transactions.Sum(t => t.Amount * t.Category!.Type.Multiplier * Type.Multiplier);
-
-    public DateOnly CalculateLastTransactionDate() => Transactions.Count > 0 ? Transactions.Max(t => t.Date) : OpenDate;
 }
 
 public sealed record AccountId : StronglyTypedId<AccountId>;

@@ -80,6 +80,8 @@ public class GetAccountScenario(ApiApplicationDriver applicationDriver, ITestOut
                     TransactionCount = 1,
                     Balance = decimal.Add(account.OpenBalance, transaction.Amount * category.Type.Multiplier),
                     Updated = transaction.Date,
+                    UpcomingVariation = 0m,
+                    ProjectedBalance = decimal.Add(account.OpenBalance, transaction.Amount * category.Type.Multiplier),
                     account.Description,
                     account.Favorite,
                     account.Inactive

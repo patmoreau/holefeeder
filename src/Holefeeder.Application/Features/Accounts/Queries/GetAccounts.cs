@@ -8,6 +8,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -58,12 +59,15 @@ public class GetAccounts : ICarterModule
             return queryParams.Error;
         }
 
+        var dateInterval = DateInterval.Create(DateOnly.FromDateTime(DateTime.Now), 0, userContext.Settings.EffectiveDate, userContext.Settings.IntervalType, userContext.Settings.Frequency);
+
         var total = await context.Accounts.CountAsync(e => e.UserId == userContext.Id, cancellationToken);
         var items = await context.Accounts
+            .Include(e => e.Cashflows.Where(c => !c.Inactive)).ThenInclude(x => x.Category)
             .Include(e => e.Transactions).ThenInclude(x => x.Category)
             .Where(e => e.UserId == userContext.Id)
             .Query(queryParams.Value)
-            .Select(e => AccountMapper.MapToAccountViewModel(e))
+            .Select(e => AccountMapper.MapToAccountViewModel(e, dateInterval.End))
             .ToListAsync(cancellationToken);
 
         return new QueryResult<AccountViewModel>(total, items);

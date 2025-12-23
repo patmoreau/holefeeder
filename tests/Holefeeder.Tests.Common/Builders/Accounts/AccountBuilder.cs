@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.Testing;
 
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Extensions;
@@ -60,12 +61,23 @@ internal class AccountBuilder : FakerBuilder<Account>
         return this;
     }
 
+    public AccountBuilder WithCashflows(IReadOnlyCollection<Cashflow> cashflows)
+    {
+        Faker.RuleFor(f => f.Cashflows, cashflows);
+        return this;
+    }
+
     public AccountBuilder WithActiveCashflows()
     {
         Faker.RuleFor(f => f.Cashflows, GivenAnActiveCashflow().BuildCollection());
         return this;
     }
 
+    public AccountBuilder WithTransactions(IReadOnlyCollection<Transaction> transactions)
+    {
+        Faker.RuleFor(f => f.Transactions, transactions);
+        return this;
+    }
     public AccountBuilder OfType(AccountType type)
     {
         Faker.RuleFor(f => f.Type, type);

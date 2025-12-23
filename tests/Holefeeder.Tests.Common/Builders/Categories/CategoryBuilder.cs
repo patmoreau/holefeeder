@@ -17,7 +17,7 @@ internal class CategoryBuilder : FakerBuilder<Category>
             .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
             .RuleFor(x => x.System, false)
             .RuleFor(x => x.BudgetAmount, _ => MoneyBuilder.Create().Build())
-            .RuleFor(x => x.UserId, faker => faker.RandomGuid());
+            .RuleFor(x => x.UserId, faker => (UserId)faker.RandomGuid());
 
     public static CategoryBuilder GivenACategory() => new();
 
@@ -29,7 +29,7 @@ internal class CategoryBuilder : FakerBuilder<Category>
         .WithName(Transfer.CategoryFromName)
         .OfType(CategoryType.Expense);
 
-    public CategoryBuilder WithId(Guid id)
+    public CategoryBuilder WithId(CategoryId id)
     {
         Faker.RuleFor(f => f.Id, id);
         return this;

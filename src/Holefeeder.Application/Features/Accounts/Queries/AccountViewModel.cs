@@ -11,6 +11,8 @@ public record AccountViewModel(
     int TransactionCount,
     decimal Balance,
     DateOnly? Updated,
+    decimal UpcomingVariation,
+    decimal ProjectedBalance,
     string Description,
     bool Favorite,
     bool Inactive

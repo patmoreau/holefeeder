@@ -1,10 +1,16 @@
 using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
+using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
+using Holefeeder.Tests.Common.Builders.Accounts;
+using Holefeeder.Tests.Common.Builders.Categories;
+using Holefeeder.Tests.Common.Builders.Transactions;
 using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
@@ -94,6 +100,55 @@ public class AccountTests
         // assert
         result.Should().BeSuccessful();
         result.Value.Favorite.Should().Be(favorite);
+    }
+
+    [Fact]
+    public void GivenCalculateBalance_WhenCalled_ThenReturnCorrectBalance()
+    {
+        var gainCategory = CategoryBuilder.GivenACategory().WithId(CategoryId.New).OfType(CategoryType.Gain).Build();
+        var expenseCategory = CategoryBuilder.GivenACategory().WithId(CategoryId.New).OfType(CategoryType.Expense).Build();
+        var gainTransactions = TransactionBuilder.GivenATransaction().WithId(TransactionId.New).OfAmount(123.45m).ForCategory(gainCategory, true).Build();
+        var expenseTransactions = TransactionBuilder.GivenATransaction().WithId(TransactionId.New).OfAmount(12.34m).ForCategory(expenseCategory, true).Build();
+
+        var account = AccountBuilder.GivenAnActiveAccount()
+            .WithId(AccountId.New)
+            .WithOpenBalance(200)
+            .WithTransactions([gainTransactions, expenseTransactions])
+            .Build();
+
+        var balance = account.CalculateBalance();
+
+        balance.Should().Be(311.11m);
+    }
+
+    [Fact]
+    public void GivenCalculateUpcomingVariation_WhenCalculated_ThenReturnCorrectProjection()
+    {
+        var gainCategory = CategoryBuilder.GivenACategory().OfType(CategoryType.Gain).Build();
+        var expenseCategory = CategoryBuilder.GivenACategory().OfType(CategoryType.Expense).Build();
+        var gainCashflow = CashflowBuilder
+            .GivenAnActiveCashflow()
+            .ForCategory(gainCategory, true)
+            .OnEffectiveDate(new DateOnly(2025, 12, 05))
+            .OfFrequency(DateIntervalType.Monthly)
+            .OfAmount(1.23m)
+            .Build();
+        var expenseCashflow = CashflowBuilder
+            .GivenAnActiveCashflow()
+            .ForCategory(expenseCategory, true)
+            .OnEffectiveDate(new DateOnly(2025, 12, 01))
+            .OfFrequency(DateIntervalType.Weekly, 2)
+            .OfAmount(12.34m)
+            .Build();
+
+        var account = AccountBuilder.GivenAnActiveAccount()
+            .WithOpenBalance(200)
+            .WithCashflows([gainCashflow, expenseCashflow])
+            .Build();
+
+        var balance = account.CalculateUpcomingVariation(new DateOnly(2025, 12, 31));
+
+        balance.Should().Be(-35.79m);
     }
 
     private sealed class Driver : IDriverOf<Result<Account>>
