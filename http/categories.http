@@ -1,0 +1,10 @@
+### GET get-categories
+GET {{holefeeder_gateway}}/api/v2/categories
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+<> 2025-12-23T093127.200.json
+<> 2025-12-23T084459.200.json
+<> 2025-12-23T084139.200.json
+<> 2025-12-23T084011.200.json
+
+###

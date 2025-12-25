@@ -1,0 +1,58 @@
+{
+    "UpdateExisting": true,
+    "Data": {
+        "accounts": [
+            {
+                "id": "4df2f056-1a19-4376-99d9-09360afd5c84",
+                "type": "CreditCard",
+                "name": "Costco CIBC Master Card",
+                "openBalance": 0.00,
+                "openDate": "2015-02-01",
+                "description": "",
+                "favorite": false,
+                "inactive": false
+            }
+        ],
+        "categories": [
+            {
+                "id": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
+                "type": "Expense",
+                "name": "Health",
+                "color": "#000000",
+                "budgetAmount": 0.00,
+                "favorite": false,
+                "system": false
+            }
+        ],
+        "cashflows": [
+            {
+                "id": "01f3d767-1b40-4674-833f-4149a1611758",
+                "effectiveDate": "2014-12-28",
+                "amount": 100.00,
+                "intervalType": "yearly",
+                "frequency": 1,
+                "recurrence": 0,
+                "description": "Bus Pass",
+                "tags": [
+                    "public transport"
+                ],
+                "categoryId": "256be0e5-07ae-4dc8-9c53-7da55f9732b2",
+                "accountId": "821ec1a6-7cb0-4e34-b485-41a3aef216c1",
+                "inactive": true
+            }
+        ],
+        "transactions": [
+            {
+                "id": "00091a77-60e2-4bcc-a123-918f210b815b",
+                "date": "2019-08-15",
+                "amount": 740.00,
+                "description": "",
+                "tags": [],
+                "categoryId": "9ee40a01-6e19-4b44-aa01-1189c950c1c9",
+                "accountId": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+                "cashflowId": null,
+                "cashflowDate": null
+            }
+        ]
+    }
+}

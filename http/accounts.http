@@ -1,0 +1,35 @@
+### GET get-accounts
+GET {{holefeeder_gateway}}/api/v2/accounts?sort=-favorite&sort=name&filter=inactive:eq:false
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+<> 2025-12-25T104224.200.json
+<> 2025-12-23T125057.200.json
+<> 2025-12-23T124758.500.json
+<> 2025-12-23T124656.500.json
+<> 2025-12-23T124606.200.json
+<> 2025-12-23T124518.200.json
+
+###
+
+### GET get-account
+GET {{holefeeder_gateway}}/api/v2/accounts/dfdf6e97-3031-4af5-a481-4d4105b38541
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+<> 2025-12-25T104250.200.json
+<> 2025-12-23T125057.200.json
+<> 2025-12-23T124758.500.json
+<> 2025-12-23T124656.500.json
+<> 2025-12-23T124606.200.json
+<> 2025-12-23T124518.200.json
+
+###
+
+### POST favorite-account
+POST {{holefeeder_gateway}}/api/v2/accounts/favorite-account
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "id": "821ec1a6-7cb0-4e34-b485-41a3aef216c1",
+    "isFavorite": false
+}

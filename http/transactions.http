@@ -1,0 +1,25 @@
+### GET get-transactions
+GET {{holefeeder_gateway}}/api/v2/transactions?limit=10000&sort=-date&filter=AccountId:eq:be217271-0e1a-4b5c-9ed0-4c75d021cd12
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+<> 2025-12-25T104224.200.json
+<> 2025-12-23T125057.200.json
+<> 2025-12-23T124758.500.json
+<> 2025-12-23T124656.500.json
+<> 2025-12-23T124606.200.json
+<> 2025-12-23T124518.200.json
+
+###
+
+### GET get-transaction
+GET {{holefeeder_gateway}}/api/v2/transactions/947c6e88-d04d-40a1-b38a-e40d93690aa9
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+<> 2025-12-25T104224.200.json
+<> 2025-12-23T125057.200.json
+<> 2025-12-23T124758.500.json
+<> 2025-12-23T124656.500.json
+<> 2025-12-23T124606.200.json
+<> 2025-12-23T124518.200.json
+
+###
