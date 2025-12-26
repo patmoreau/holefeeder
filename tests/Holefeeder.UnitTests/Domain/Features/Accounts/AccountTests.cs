@@ -105,22 +105,24 @@ public class AccountTests
     [Fact]
     public void GivenCalculateBalance_WhenCalled_ThenReturnCorrectBalance()
     {
-        var transactions = new List<Transaction>();
+        // arrange
         var gainCategory = CategoryBuilder.GivenACategory().WithId(CategoryId.New).OfType(CategoryType.Gain).Build();
         var expenseCategory = CategoryBuilder.GivenACategory().WithId(CategoryId.New).OfType(CategoryType.Expense).Build();
         var gainTransactions = TransactionBuilder.GivenATransaction().WithId(TransactionId.New).OfAmount(123.45m).ForCategory(gainCategory, true).Build();
         var expenseTransactions = TransactionBuilder.GivenATransaction().WithId(TransactionId.New).OfAmount(12.34m).ForCategory(expenseCategory, true).Build();
-        transactions.Add(gainTransactions);
-        transactions.Add(expenseTransactions);
+        var transactions = new List<Transaction> { gainTransactions, expenseTransactions };
 
         var account = AccountBuilder.GivenAnActiveAccount()
             .WithId(AccountId.New)
+            .OfType(AccountType.Checking)
             .WithOpenBalance(200)
             .WithTransactions(transactions)
             .Build();
 
+        // act
         var balance = account.CalculateBalance();
 
+        // assert
         balance.Should().Be(311.11m);
     }
 
