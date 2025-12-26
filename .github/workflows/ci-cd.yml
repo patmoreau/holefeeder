@@ -106,7 +106,7 @@ jobs:
         run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-${{ matrix.target }}-cache
           key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
@@ -134,7 +134,7 @@ jobs:
           mv /tmp/.buildx-${{ matrix.target }}-cache-new /tmp/.buildx-${{ matrix.target }}-cache
 
       - name: Save Docker cache for ${{ matrix.target }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-${{ matrix.target }}-cache
           key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
@@ -168,7 +168,7 @@ jobs:
           DOCKER_BUILDKIT=1" > .env
 
       - name: Restore Docker cache for api
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-api-cache
           key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
@@ -176,7 +176,7 @@ jobs:
             ${{ runner.os }}-api-
 
       - name: Restore Docker cache for web
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-web-cache
           key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
@@ -306,7 +306,7 @@ jobs:
         run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /tmp/.buildx-${{ matrix.target }}-cache
           key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
