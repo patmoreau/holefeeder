@@ -1,5 +1,5 @@
 # Use the official .NET SDK image as the base image
-FROM mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm
+FROM mcr.microsoft.com/devcontainers/dotnet:2-9.0-bookworm
 
 # Install OpenSSH Server and supervisor
 RUN apt-get update && apt-get install -y openssh-server supervisor
