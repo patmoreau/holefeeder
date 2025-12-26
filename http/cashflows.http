@@ -30,3 +30,12 @@ Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
 <> 2025-12-23T084011.200.json
 
 ###
+
+### POST cancel-cashflow
+GET {{holefeeder_gateway}}/api/v2/cashflows/cancel
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "id": "b00756ad-c711-4fbd-903a-08383d2b95be"
+}

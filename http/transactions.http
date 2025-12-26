@@ -23,3 +23,72 @@ Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
 <> 2025-12-23T124518.200.json
 
 ###
+
+### POST make-purchase
+POST {{holefeeder_gateway}}/api/v2/transactions/make-purchase
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "date": "2023-02-03",
+    "amount": 500,
+    "description": "Stéphanie",
+    "accountId": "d70b2c1d-d039-4b9d-a48e-e3a9208d3c52",
+    "categoryId": "96556555-3239-4c49-9d94-f68b9ff5c311",
+    "tags": [],
+    "cashflow": null
+}
+
+###
+
+### POST transfer
+POST {{holefeeder_gateway}}/api/v2/transactions/transfer
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "date": "2025-04-23",
+    "amount": 85.67,
+    "description": "",
+    "fromAccountId": "dfdf6e97-3031-4af5-a481-4d4105b38541",
+    "toAccountId": "123a0016-5287-4fb2-ab56-cf0c09fd48d5"
+}
+
+###
+
+### DELETE transaction
+POST {{holefeeder_gateway}}/api/v2/transactions/b8f00450-fa4e-4581-8041-41ed3185637d
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+
+###
+
+### POST pay-cashflow
+POST {{holefeeder_gateway}}/api/v2/transactions/pas-cashflow
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "date": "2025-05-12",
+    "amount": 689.50,
+    "cashflowId": "04e36b67-79ff-47c4-9b86-88cb1345b660",
+    "cashflowDate": "2025-05-12"
+}
+
+###
+
+### POST modify-transaction
+POST {{holefeeder_gateway}}/api/v2/transactions/modify
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "id": "cf4a18ca-b316-42a8-b568-d37bb9fe03c0",
+    "date": "2025-05-24",
+    "amount": 152.86,
+    "description": "Familiprix",
+    "tags": [
+        "personal care"
+    ],
+    "categoryId": "1c59ab89-b68e-44d2-9762-3ced3d4f1ad8",
+    "accountId": "be217271-0e1a-4b5c-9ed0-4c75d021cd12"
+}
