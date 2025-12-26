@@ -16,7 +16,7 @@ services:
       - '2225:22'
 
   db:
-    image: postgres:17.5
+    image: postgres:18.1
     restart: unless-stopped
     container_name: holefeeder-db
     volumes:
