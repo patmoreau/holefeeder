@@ -194,7 +194,7 @@ jobs:
           docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results-${{ matrix.target }}
           path: ./tests-results/**/*.trx
@@ -249,7 +249,7 @@ jobs:
 
       - name: Upload badge to artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Test Results Badge
           path: |
