@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload ESLint report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ESLint report
           path: src/Holefeeder.Web/ClientApp/eslint-report.txt
@@ -87,7 +87,7 @@ jobs:
 
       - name: Save report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dotnet-format-report
           path: ./linter-report/*
