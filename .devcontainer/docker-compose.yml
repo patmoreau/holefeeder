@@ -13,14 +13,14 @@ services:
     security_opt:
       - seccomp:unconfined
     ports:
-      - '2225:22'
+      - "2225:22"
 
   db:
-    image: postgres:17.5
+    image: postgres:18
     restart: unless-stopped
     container_name: holefeeder-db
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
