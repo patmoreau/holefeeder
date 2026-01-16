@@ -4,12 +4,20 @@ telemetry:
 replication:
   connections:
     - type: postgresql
-      uri: !env PS_DATABASE_URL
+      hostname: !env PS_DB_HOST
+      port: !env PS_DB_PORT
+      database: !env PS_DB_NAME
+      username: !env PS_DB_USER
+      password: !env PS_DB_PASSWORD
       sslmode: disable
 
 storage:
   type: postgresql
-  uri: !env PS_STORAGE_CONNECTION
+  hostname: !env PS_STORAGE_DB_HOST
+  port: !env PS_STORAGE_DB_PORT
+  database: !env PS_STORAGE_DB_NAME
+  username: !env PS_STORAGE_DB_USER
+  password: !env PS_STORAGE_DB_PASSWORD
   sslmode: disable
 
 port: 8080

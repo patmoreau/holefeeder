@@ -91,10 +91,23 @@ services:
     command: ["start", "-r", "unified"]
     environment:
       - POWERSYNC_CONFIG_PATH=/config/powersync.yaml
-      - PS_DATABASE_URL=postgresql://${POSTGRES_APP_USER}:${POSTGRES_APP_PASSWORD_ENCODED}@postgres:5432/${POSTGRES_APP_DB}
+      # Source Database Connection
+      - PS_DB_HOST=postgres
+      - PS_DB_PORT=5432
+      - PS_DB_NAME=${POSTGRES_APP_DB}
+      - PS_DB_USER=${POSTGRES_APP_USER}
+      - PS_DB_PASSWORD=${POSTGRES_APP_PASSWORD}
+
+      # Storage Database Connection
+      - PS_STORAGE_DB_HOST=postgres
+      - PS_STORAGE_DB_PORT=5432
+      - PS_STORAGE_DB_NAME=${POSTGRES_APP_DB}
+      - PS_STORAGE_DB_USER=${POSTGRES_APP_USER}
+      - PS_STORAGE_DB_PASSWORD=${POSTGRES_APP_PASSWORD}
+
+      # Auth & Admin
       - PS_JWT_JWKS_URI=https://dev-vx1jio3owhaqdmqa.ca.auth0.com/.well-known/jwks.json
       - PS_JWT_AUDIENCE=https://holefeeder-api.drifterapps.app
-      - PS_STORAGE_CONNECTION=postgresql://${POSTGRES_APP_USER}:${POSTGRES_APP_PASSWORD_ENCODED}@postgres:5432/${POSTGRES_APP_DB}
       - PS_POWERSYNC_ADMIN_TOKEN=${POWERSYNC_ADMIN_TOKEN}
     volumes:
       - ./.docker/powersync:/config
