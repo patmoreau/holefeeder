@@ -2,7 +2,7 @@ name: ci-cd
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
   pull_request:
 
@@ -57,7 +57,7 @@ jobs:
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4.2.0
         with:
-          versionSpec: '6.x'
+          versionSpec: "6.x"
 
       - name: Determine Version
         id: gitversion
@@ -82,12 +82,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api, web]
+        target: [ api, web ]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
-      DOCKERFILE_PATH: ''
+      DOCKERFILE_PATH: ""
 
     steps:
       - uses: actions/checkout@v6
@@ -141,13 +141,13 @@ jobs:
 
   tests:
     name: Tests
-    needs: [set-version, build]
+    needs: [ set-version, build ]
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        target: [api-unit-tests, api-functional-tests]
+        target: [ api-unit-tests, api-functional-tests ]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
@@ -201,11 +201,11 @@ jobs:
 
   tests-reporter:
     name: Tests reporter
-    needs: [tests]
+    needs: [ tests ]
     runs-on: ubuntu-latest
 
     env:
-      BADGE_COLOR: ''
+      BADGE_COLOR: ""
 
     steps:
       - uses: actions/checkout@v6
@@ -242,7 +242,7 @@ jobs:
         uses: emibcn/badge-action@v2.0.3
         with:
           label: Tests
-          status: '${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}'
+          status: "${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}"
           color: ${{ env.BADGE_COLOR }}
           path: holefeeder-tests-badge.svg
 
@@ -264,7 +264,7 @@ jobs:
           file_type: text
 
   tagging:
-    needs: [set-version, tests]
+    needs: [ set-version, tests ]
     uses: patmoreau/workflow-config/.github/workflows/tag-version.yml@main
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     with:
@@ -272,18 +272,18 @@ jobs:
 
   publish-docker-images:
     name: Publish Docker Images
-    needs: [set-version, tests, tagging]
+    needs: [ set-version, tests, tagging ]
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        target: [api, web]
+        target: [ api, web ]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
-      DOCKERFILE_PATH: ''
+      DOCKERFILE_PATH: ""
 
     steps:
       - uses: actions/checkout@v6
@@ -326,7 +326,7 @@ jobs:
 
   deploy:
     name: Deploy to DigitalOcean
-    needs: [set-version, tests, publish-docker-images]
+    needs: [ set-version, tests, publish-docker-images ]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
@@ -359,6 +359,7 @@ jobs:
           POSTGRES_APP_DB=${{ vars.POSTGRES_APP_DB }}
           POSTGRES_APP_USER=${{ vars.POSTGRES_APP_USER }}
           POSTGRES_APP_PASSWORD=${{ secrets.POSTGRES_APP_PASSWORD }}
+          POSTGRES_APP_PASSWORD_ENCODED=${{ secrets.POSTGRES_APP_PASSWORD_ENCODED }}
           POWERSYNC_ADMIN_TOKEN=${{ secrets.POWERSYNC_ADMIN_TOKEN }}
           " > $GITHUB_WORKSPACE/.env
 
@@ -392,10 +393,10 @@ jobs:
             docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
 
   create_check:
-    needs: [check_changes, tests]
+    needs: [ check_changes, tests ]
     uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
     if: always() && needs.check_changes.result == 'success'
     with:
       code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
-      check_name: 'build-completed'
+      check_name: "build-completed"
       check_result: ${{ needs.tests.result }}
