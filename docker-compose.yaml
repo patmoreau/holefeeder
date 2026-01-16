@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.4.4
+    image: traefik:v3.6.7
     container_name: reverse-proxy
     restart: unless-stopped
     command:
@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:2.31.3-alpine
+    image: portainer/portainer-ce:2.33.6-alpine
     container_name: portainer
     expose:
       - 9000
