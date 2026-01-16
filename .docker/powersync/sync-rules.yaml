@@ -1,0 +1,45 @@
+# sync-rules.yaml
+bucket_definitions:
+  # User's personal financial data
+  user_data:
+    # Which users get this bucket?
+    parameters:
+      SELECT user_id FROM user_identities WHERE identity_object_id = token_parameters.user_id
+
+    # What data goes in this bucket?
+    data:
+      # Sync all accounts - CONVERT MONEY TO CENTS
+      - SELECT id, type, name, favorite,
+        CAST(open_balance * 100 AS INTEGER) as open_balance,
+        open_date, description, inactive, user_id
+        FROM accounts
+        WHERE user_id = bucket.user_id
+
+      # Sync all categories - CONVERT MONEY TO CENTS
+      - SELECT id, type, name, color,
+        CAST(budget_amount * 100 AS INTEGER) as budget_amount,
+        favorite, system, user_id
+        FROM categories
+        WHERE user_id = bucket.user_id
+
+      # Sync all transactions - CONVERT MONEY TO CENTS
+      - SELECT id, date,
+        CAST(amount * 100 AS INTEGER) as amount,
+        description, account_id, category_id,
+        cashflow_id, cashflow_date, tags, user_id
+        FROM transactions
+        WHERE user_id = bucket.user_id
+
+      # Sync all cashflows - CONVERT MONEY TO CENTS
+      - SELECT id, effective_date,
+        CAST(amount * 100 AS INTEGER) as amount,
+        interval_type, frequency, recurrence,
+        description, account_id, category_id,
+        inactive, tags, user_id
+        FROM cashflows
+        WHERE user_id = bucket.user_id
+
+      # Sync store items (app settings/preferences)
+      - SELECT id, code, data, user_id
+        FROM store_items
+        WHERE user_id = bucket.user_id

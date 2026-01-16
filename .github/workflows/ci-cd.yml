@@ -359,6 +359,7 @@ jobs:
           POSTGRES_APP_DB=${{ vars.POSTGRES_APP_DB }}
           POSTGRES_APP_USER=${{ vars.POSTGRES_APP_USER }}
           POSTGRES_APP_PASSWORD=${{ secrets.POSTGRES_APP_PASSWORD }}
+          POWERSYNC_ADMIN_TOKEN=${{ secrets.POWERSYNC_ADMIN_TOKEN }}
           " > $GITHUB_WORKSPACE/.env
 
       - name: Create Docker config

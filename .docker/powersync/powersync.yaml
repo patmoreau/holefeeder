@@ -1,0 +1,27 @@
+telemetry:
+  disable_telemetry_sharing: false
+
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URL
+      sslmode: disable
+
+storage:
+  type: postgresql
+  uri: !env PS_STORAGE_CONNECTION
+  sslmode: disable
+
+port: 8080
+
+api:
+  tokens:
+    - !env PS_POWERSYNC_ADMIN_TOKEN
+
+sync_rules:
+  path: sync-rules.yaml
+
+client_auth:
+  jwks_uri: !env PS_JWT_JWKS_URI
+  audience:
+    - !env PS_JWT_AUDIENCE
