@@ -1,0 +1,25 @@
+### Sync powersync
+POST {{holefeeder_gateway}}/api/v2/sync/powersync
+Authorization: Bearer {{$auth.token("AUTH0_HOLEFEEDER")}}
+Content-Type: application/json
+
+{
+    "transaction_id": 1,
+    "operations":[
+        {
+            "op_id":1,
+            "op":"PUT",
+            "type":"transactions",
+            "id":"e7eea27a-2249-4a7a-94ba-735720490692",
+            "tx_id":1,
+            "data":{
+                "account_id":"b8c4d6e2-3f5a-4b9c-ad2e-4f6a8b0c3d5e",
+                "amount":1299,
+                "category_id":"f2a8b0c6-7d9e-4f3a-eb6c-8d0e2f4a7b9c",
+                "date":"2026-01-24",
+                "description":"Tedst",
+                "tags":"entertainment"
+            }
+        }
+    ]
+}

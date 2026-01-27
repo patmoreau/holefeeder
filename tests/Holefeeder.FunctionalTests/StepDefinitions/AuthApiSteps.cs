@@ -21,6 +21,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.ModifyCashflowRequest
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
@@ -134,4 +135,7 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
     internal void GettingTransactions(IStepRunner runner) =>
         runner.Execute(() => Api.GetTransactionsAsync(_faker.Random.Int(0, 5), _faker.Random.Int(1, 10),
             _faker.Random.WordsArray(3), _faker.Random.WordsArray(3)));
+
+    internal void Sync(IStepRunner runner) =>
+        runner.Execute(() => Api.SyncAsync(GivenASyncRequest().Build()));
 }

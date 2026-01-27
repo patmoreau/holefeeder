@@ -20,7 +20,7 @@ public interface IUnauthenticatedUser : IUser;
 
 public interface IForbiddenUser : IUser;
 
-public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IDashboard, IStatistics, IStoreItems, ITags, ITransactions;
+public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IDashboard, IStatistics, IStoreItems, ITags, ITransactions, IPowerSync;
 
 public interface IAccounts
 {
@@ -157,4 +157,10 @@ public interface ITransactions
     Task<IApiResponse<IEnumerable<TransactionInfoViewModel>>> GetTransactionsAsync([Query] int offset,
         [Query] int limit, [Query(CollectionFormat.Multi)] string[] sort,
         [Query(CollectionFormat.Multi)] string[] filter);
+}
+
+public interface IPowerSync
+{
+    [Post("/api/v2/sync/powersync")]
+    Task<IApiResponse> SyncAsync([Body] object request);
 }

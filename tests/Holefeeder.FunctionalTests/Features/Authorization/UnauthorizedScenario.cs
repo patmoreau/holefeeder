@@ -124,4 +124,7 @@ public class UnauthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestO
 
     [Fact]
     public Task AttemptToGetTransactions() => ScenarioForUnauthenticatedUser("get transactions", _user.GettingTransactions);
+
+    [Fact]
+    public Task AttemptToSync() => ScenarioForUnauthenticatedUser("syncs", _user.Sync);
 }

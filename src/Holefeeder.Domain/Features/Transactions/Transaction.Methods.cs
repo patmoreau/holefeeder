@@ -13,7 +13,7 @@ public partial record Transaction
         var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct().Select(x => x.ToLowerInvariant())
             .ToList();
 
-        _tags = newTags.ToImmutableArray();
+        _tags = [..newTags];
         return this;
     }
 

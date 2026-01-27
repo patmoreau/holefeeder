@@ -36,4 +36,9 @@ internal static class ContextConstants
     {
         internal const string CurrentRequest = $"{nameof(RequestContext)}_{nameof(CurrentRequest)}";
     }
+
+    internal static class PowerSyncContext
+    {
+        internal const string SyncData = $"{nameof(PowerSyncContext)}_{nameof(SyncData)}";
+    }
 }

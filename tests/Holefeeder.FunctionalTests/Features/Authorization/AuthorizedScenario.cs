@@ -110,4 +110,7 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
 
     [Fact]
     public Task AttemptToGetTransactions() => ScenarioForAuthorizedUser("get transactions", _user.GettingTransactions);
+
+    [Fact]
+    public Task AttemptToSync() => ScenarioForAuthorizedUser("get transactions", _user.GettingTransactions);
 }

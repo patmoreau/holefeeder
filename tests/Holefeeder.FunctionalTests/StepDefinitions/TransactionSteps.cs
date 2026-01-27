@@ -7,6 +7,7 @@ using DrifterApps.Seeds.FluentScenario.Attributes;
 using DrifterApps.Seeds.Testing.Extensions;
 
 using Holefeeder.Application.Features.Transactions.Commands;
+using Holefeeder.Application.UseCases;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -103,7 +104,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
 
             response.Value.Headers.Location.Should().NotBeNull();
 
-            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
+            var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
@@ -122,7 +123,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
 
             response.Value.Headers.Location.Should().NotBeNull();
 
-            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
+            var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
@@ -181,5 +182,43 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers().Excluding(x => x.Description));
             result!.Description.Should().Be($"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'");
             result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
+        });
+
+    [AssertionMethod]
+    internal void ShouldBeSynced(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the transaction should be synced", async response =>
+        {
+            var request = runner.GetContextData<PowerSync.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Transactions.FindAsync((TransactionId) request.Operations.First().Id);
+
+            if (request.Operations.First().Op == "DELETE")
+            {
+                result.Should().BeNull();
+                return;
+            }
+
+            var expected = runner.GetContextData<Transaction>(PowerSyncContext.SyncData);
+            result.Should().NotBeNull();
+            result.Id.Should().Be(expected.Id);
+            result.Date.Should().Be(expected.Date);
+            result.Amount.Should().Be(expected.Amount);
+            result.Description.Should().Be(expected.Description);
+            result.AccountId.Should().Be(expected.AccountId);
+            result.CategoryId.Should().Be(expected.CategoryId);
+            if (expected.CashflowId == null)
+                result.CashflowId.Should().BeNull();
+            else
+                result.CashflowId.Should().Be(expected.CashflowId);
+            if (expected.CashflowDate == null)
+                result.CashflowDate.Should().BeNull();
+            else
+                result.CashflowDate.Should().Be(expected.CashflowDate);
+            result.Tags.Should().Contain(expected.Tags);
         });
 }

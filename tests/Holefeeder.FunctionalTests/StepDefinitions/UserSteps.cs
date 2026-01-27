@@ -14,6 +14,7 @@ using Holefeeder.Application.Features.StoreItems.Queries;
 using Holefeeder.Application.Features.Transactions.Commands;
 using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.Models;
+using Holefeeder.Application.UseCases;
 using Holefeeder.FunctionalTests.Infrastructure;
 
 using Refit;
@@ -258,5 +259,12 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
         {
             request.Should().BeValid();
             return Api.TransferAsync(request.Value);
+        });
+
+    internal void SyncTheirData(IStepRunner runner) =>
+        runner.Execute<PowerSync.Request, IApiResponse>(request =>
+        {
+            request.Should().BeValid();
+            return Api.SyncAsync(request.Value);
         });
 }

@@ -10,17 +10,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.14" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.10" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.10" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.157" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.15" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.13" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.13" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.160" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="JunitXml.TestLogger" Version="7.1.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
+    <PackageVersion Include="JunitXml.TestLogger" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
@@ -30,10 +30,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Respawn" Version="7.0.0" />
-    <PackageVersion Include="WireMock.Net" Version="1.21.0" />
+    <PackageVersion Include="WireMock.Net" Version="1.25.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.26.0">
+    <PackageVersion Include="xunit.analyzers" Version="1.27.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>

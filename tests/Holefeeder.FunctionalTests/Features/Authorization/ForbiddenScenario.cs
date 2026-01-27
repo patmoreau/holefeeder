@@ -110,4 +110,7 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
 
     [Fact]
     public Task AttemptToGetTransactions() => ScenarioForForbiddenUser("get transactions", _user.GettingTransactions);
+
+    [Fact]
+    public Task AttemptToSync() => ScenarioForForbiddenUser("syncs", _user.Sync);
 }
