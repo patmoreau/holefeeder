@@ -62,7 +62,12 @@ WORKDIR /source/tests/Holefeeder.UnitTests
 FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
 
+# Create directory for HTTPS certificate
+RUN mkdir -p /https
+
+# Generate and export the development certificate
 RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p YourSecurePassword
+RUN dotnet dev-certs https --trust
 
 # Set environment variables for Kestrel to use the certificate
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="YourSecurePassword"
