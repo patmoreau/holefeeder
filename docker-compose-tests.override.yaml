@@ -13,8 +13,6 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:80
       DOTNET_RUNNING_IN_CONTAINER: true
       LOCAL_CONNECTION_STRING: Host=postgres-data-test;Port=5432;Username=budgeting_tests;Password=mypass;Database=budgeting_tests;
-      ASPNETCORE_Kestrel__Certificates__Default__Password: YourSecurePassword
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     entrypoint:
       - dotnet
       - test
