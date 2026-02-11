@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:2.33.6-alpine
+    image: portainer/portainer-ce:2.38.0-alpine
     container_name: portainer
     expose:
       - 9000
@@ -78,7 +78,7 @@ services:
       - seq-data:/data
 
   powersync:
-    image: journeyapps/powersync-service:1.18.2
+    image: journeyapps/powersync-service:1.19.0
     container_name: powersync
     restart: unless-stopped
     security_opt:
@@ -176,7 +176,7 @@ services:
     command: ["bash", "/migrator.sh"]
 
   adminer:
-    image: adminer:5.3.0
+    image: adminer:5.4.2
     container_name: adminer
     restart: unless-stopped
     security_opt:
