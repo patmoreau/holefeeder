@@ -104,6 +104,14 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         });
         builder.ConfigureTestServices(services =>
         {
+            services.ConfigureHttpClientDefaults(httpClientBuilder =>
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                });
+            });
             services.AddSingleton<IUser>(_ =>
             {
                 var userToken = new JwtTokenBuilder()
