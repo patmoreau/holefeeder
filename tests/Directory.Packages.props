@@ -14,7 +14,7 @@
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.13" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.13" />
     <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.160" />
-    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
+    <PackageVersion Include="FluentAssertions" Version="7.2.1" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
