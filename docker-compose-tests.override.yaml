@@ -9,7 +9,7 @@ services:
 
   api-functional-tests:
     environment:
-      ASPNETCORE_ENVIRONMENT: FUNCTIONAL_TESTS
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:80
       DOTNET_RUNNING_IN_CONTAINER: true
       LOCAL_CONNECTION_STRING: Host=postgres-data-test;Port=5432;Username=budgeting_tests;Password=mypass;Database=budgeting_tests;
@@ -44,3 +44,8 @@ services:
       - /TestResults
       - --collect
       - 'XPlat Code Coverage'
+
+  web-angular-tests:
+    entrypoint:
+      - pnpm
+      - test:ci
