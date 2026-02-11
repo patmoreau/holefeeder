@@ -20,4 +20,18 @@ public sealed partial record StoreItem
                 Data = data
             }.ToResult());
     }
+
+    public static Result<StoreItem> Import(StoreItemId id, string code, string data, UserId userId)
+    {
+        var result = ResultAggregate.Create()
+            .Ensure(IdValidation(id))
+            .Ensure(CodeValidation(code))
+            .Ensure(UserIdValidation(userId));
+
+        return result.OnSuccess(
+            () => new StoreItem(id, code, userId)
+            {
+                Data = data
+            }.ToResult());
+    }
 }

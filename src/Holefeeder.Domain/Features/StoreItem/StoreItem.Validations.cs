@@ -4,6 +4,10 @@ namespace Holefeeder.Domain.Features.StoreItem;
 
 public sealed partial record StoreItem
 {
+    private static Func<Result<Nothing>> IdValidation(StoreItemId value) =>
+        () => value != StoreItemId.Empty
+            ? Nothing.Value
+            : StoreItemErrors.IdRequired;
     private static Func<Result<Nothing>> CodeValidation(string code) =>
         () => !string.IsNullOrWhiteSpace(code)
             ? Nothing.Value

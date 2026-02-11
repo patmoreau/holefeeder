@@ -12,6 +12,7 @@ import {
   addWeeks,
   addYears,
   compareAsc,
+  format,
   startOfDay,
   startOfToday,
 } from 'date-fns';
@@ -112,7 +113,11 @@ export class SettingsService extends StateService<SettingsState> implements OnDe
       new StoreItem(
         currStoreItem.id,
         currStoreItem.code,
-        JSON.stringify(settings)
+        JSON.stringify({
+          effectiveDate: format(settings.effectiveDate, 'yyyy-MM-dd'),
+          intervalType: settings.intervalType,
+          frequency: settings.frequency,
+        })
       )
     ).pipe(
       map(storeItem => {
@@ -152,12 +157,20 @@ export class SettingsService extends StateService<SettingsState> implements OnDe
           if (items.length > 0) {
             return this.storeItemAdapter.adapt(items[0]);
           }
-          return new StoreItem(null, code, JSON.stringify(initialState.settings));
+          return new StoreItem(null, code, JSON.stringify({
+            effectiveDate: format(initialState.settings.effectiveDate, 'yyyy-MM-dd'),
+            intervalType: initialState.settings.intervalType,
+            frequency: initialState.settings.frequency,
+          }));
         }),
         catchError(error => {
           this.logger.error('Error fetching store item', error);
           // Return default StoreItem on error to keep the stream alive
-          return of(new StoreItem(null, code, JSON.stringify(initialState.settings)));
+          return of(new StoreItem(null, code, JSON.stringify({
+            effectiveDate: format(initialState.settings.effectiveDate, 'yyyy-MM-dd'),
+            intervalType: initialState.settings.intervalType,
+            frequency: initialState.settings.frequency,
+          })));
         }),
       );
   }

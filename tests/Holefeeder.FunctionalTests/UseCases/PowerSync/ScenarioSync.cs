@@ -4,11 +4,13 @@ using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
+using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Features;
 
 using static Holefeeder.Application.UseCases.PowerSync;
+using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
@@ -23,6 +25,33 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .Given(AnInvalidRequest)
             .When(TheUser.SyncTheirData)
             .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAStoreItemDelete() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .And(AValidStoreItemDeleteRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(StoreItem.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAStoreItemPatch() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .And(AValidStoreItemPatchRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(StoreItem.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAStoreItemPut() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(StoreItem.Exists)
+            .And(AValidStoreItemPutRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(StoreItem.ShouldBeSynced)
             .PlayAsync();
 
     [Fact]
@@ -64,6 +93,60 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
                 .WithNoTransactionId()
                 .Build();
 
+            return request;
+        });
+
+    private static void AValidStoreItemDeleteRequest(IStepRunner runner) =>
+        runner.Execute<StoreItem, Request>(storeItem =>
+        {
+            storeItem.Should().BeValid();
+            var request = GivenASyncRequest()
+                .WithType("store_items")
+                .WithOperation("DELETE")
+                .WithId(storeItem.Value.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidStoreItemPatchRequest(IStepRunner runner) =>
+        runner.Execute<StoreItem, Request>(storeItem =>
+        {
+            storeItem.Should().BeValid();
+            var modified = storeItem.Value.Modify(data: "Updated via sync");
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("store_items")
+                .WithOperation("PATCH")
+                .WithId(storeItem.Value.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"data", modified.Value.Data}
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidStoreItemPutRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var storeItem = GivenAStoreItem()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .Build();
+
+            runner.SetContextData(PowerSyncContext.SyncData, storeItem);
+            var request = GivenASyncRequest()
+                .WithType("store_items")
+                .WithOperation("PUT")
+                .WithId(storeItem.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"code", storeItem.Code},
+                    {"data", storeItem.Data},
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
             return request;
         });
 

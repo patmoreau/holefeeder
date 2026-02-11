@@ -12,7 +12,7 @@ public sealed partial record StoreItem : IAggregateRoot<StoreItemId>
     }
     public StoreItemId Id { get; }
 
-    public string Code { get; }
+    public string Code { get; private init; }
 
     public required string Data { get; init; }
 

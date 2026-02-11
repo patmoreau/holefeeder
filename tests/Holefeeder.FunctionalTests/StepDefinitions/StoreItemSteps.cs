@@ -8,6 +8,7 @@ using DrifterApps.Seeds.FluentScenario.Attributes;
 using DrifterApps.Seeds.Testing.Extensions;
 
 using Holefeeder.Application.Features.StoreItems.Commands;
+using Holefeeder.Application.UseCases;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.ValueObjects;
 using Holefeeder.FunctionalTests.Drivers;
@@ -92,5 +93,31 @@ internal sealed class StoreItemSteps(BudgetingDatabaseDriver budgetingDatabaseDr
             var result = await dbContext.StoreItems.FindAsync(request.Id);
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
+
+    [AssertionMethod]
+    internal void ShouldBeSynced(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the store items should be synced", async response =>
+        {
+            var request = runner.GetContextData<PowerSync.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.StoreItems.FindAsync((StoreItemId) request.Operations.First().Id);
+
+            if (request.Operations.First().Op == "DELETE")
+            {
+                result.Should().BeNull();
+                return;
+            }
+
+            var expected = runner.GetContextData<StoreItem>(PowerSyncContext.SyncData);
+            result.Should().NotBeNull();
+            result.Id.Should().Be(expected.Id);
+            result.Code.Should().Be(expected.Code);
+            result.Data.Should().Be(expected.Data);
         });
 }
