@@ -62,7 +62,12 @@ WORKDIR /source/tests/Holefeeder.UnitTests
 FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
 
-RUN dotnet dev-certs https --trust
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https
+# Export and trust the certificate for Linux container
+RUN mkdir -p /usr/local/share/ca-certificates/aspnet && \
+    dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM && \
+    update-ca-certificates
 
 ###################################
 # Final stage

@@ -24,13 +24,3 @@ services:
       target: unittests
     volumes:
       - ./tests-results/:/TestResults
-
-  web-angular-tests:
-    image: web-angular-tests
-    container_name: web-angular-tests
-    build:
-      context: .
-      dockerfile: ./src/Holefeeder.Web/Dockerfile
-      target: angulartests
-    volumes:
-      - ./tests-results/:/TestResults

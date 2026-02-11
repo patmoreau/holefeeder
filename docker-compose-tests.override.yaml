@@ -41,8 +41,3 @@ services:
       - /TestResults
       - --collect
       - 'XPlat Code Coverage'
-
-  web-angular-tests:
-    entrypoint:
-      - pnpm
-      - test:ci
