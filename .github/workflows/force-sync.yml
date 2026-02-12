@@ -22,5 +22,6 @@ jobs:
         run: |
           ssh ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "
             cd ~ &&
+            docker compose -f docker-compose.yaml -f docker-compose.Production.yaml restart powersync &&
             docker compose -f docker-compose.yaml -f docker-compose.Production.yaml exec -T postgres bash -c 'psql -U \"\$POSTGRES_APP_USER\" -d \"\$POSTGRES_APP_DB\" -c \"BEGIN; UPDATE accounts SET name = name; UPDATE categories SET name = name; UPDATE transactions SET description = description; UPDATE cashflows SET description = description; UPDATE store_items SET code = code; COMMIT;\"'
           "
