@@ -10,21 +10,21 @@ bucket_definitions:
     data:
       # Sync all accounts - CONVERT MONEY TO CENTS
       - SELECT id, type, name, favorite,
-        CAST(open_balance * 100 AS INTEGER) as open_balance,
+        CAST((open_balance * 100) + 0.5 AS INTEGER) as open_balance,
         open_date, description, inactive, user_id
         FROM accounts
         WHERE user_id = bucket.user_id
 
       # Sync all categories - CONVERT MONEY TO CENTS
       - SELECT id, type, name, color,
-        CAST(budget_amount * 100 AS INTEGER) as budget_amount,
+        CAST((budget_amount * 100) + 0.5 AS INTEGER) as budget_amount,
         favorite, system, user_id
         FROM categories
         WHERE user_id = bucket.user_id
 
       # Sync all transactions - CONVERT MONEY TO CENTS
       - SELECT id, date,
-        CAST(amount * 100 AS INTEGER) as amount,
+        CAST((amount * 100) + 0.5 AS INTEGER) as amount,
         description, account_id, category_id,
         cashflow_id, cashflow_date, tags, user_id
         FROM transactions
@@ -32,7 +32,7 @@ bucket_definitions:
 
       # Sync all cashflows - CONVERT MONEY TO CENTS
       - SELECT id, effective_date,
-        CAST(amount * 100 AS INTEGER) as amount,
+        CAST((amount * 100) + 0.5 AS INTEGER) as amount,
         interval_type, frequency, recurrence,
         description, account_id, category_id,
         inactive, tags, user_id
