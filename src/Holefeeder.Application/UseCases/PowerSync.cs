@@ -8,6 +8,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Application.UserContext;
+using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
@@ -60,6 +61,7 @@ public partial class PowerSync : ICarterModule
                 {
                     "store_items" => await ProcessStoreItemsOperation(op, userContext, context, cancellationToken),
                     "transactions" => await ProcessTransactionOperation(op, userContext, context, cancellationToken),
+                    "cashflows" => await ProcessCashflowOperation(op, userContext, context, cancellationToken),
                     _ => SyncErrors.TypeInvalid(op.Type)
                 };
 
@@ -197,6 +199,81 @@ public partial class PowerSync : ICarterModule
         return Nothing.Value;
     }
 
+    private static async Task<Result<Nothing>> ProcessCashflowOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    {
+        var cashflowId = CashflowId.Create(op.Id);
+        var exists = await context.Cashflows.SingleOrDefaultAsync(x => x.Id == cashflowId && x.UserId == userContext.Id, cancellationToken);
+
+        if (op.Op == "DELETE")
+        {
+            if (exists is null)
+            {
+                return CashflowErrors.NotFound(cashflowId);
+            }
+
+            context.Remove(exists);
+            return Nothing.Value;
+        }
+
+        if (exists is null && op.Op == "PATCH")
+        {
+            return CashflowErrors.NotFound(cashflowId);
+        }
+
+        var effectiveDate = op.Data.ContainsKey("effective_date") ? ExtractDate(op.Data, "effective_date") : (DateOnly?) null;
+        var intervalType = op.Data.ContainsKey("interval_type") ? ExtractDateIntervalType(op.Data, "interval_type") : null;
+        var frequency = op.Data.ContainsKey("frequency") ? ExtractInt(op.Data, "frequency") : (int?) null;
+        var recurrence = op.Data.ContainsKey("recurrence") ? ExtractInt(op.Data, "recurrence") : (int?) null;
+        var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
+        var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
+        var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
+        var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
+        var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+        var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
+
+        if (exists is not null)
+        {
+            var result = exists.Modify(
+                effectiveDate,
+                intervalType,
+                frequency,
+                recurrence,
+                amount,
+                description,
+                categoryId,
+                accountId,
+                inactive);
+
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
+            var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+            context.Update(cashflow.Value);
+        }
+        else
+        {
+            var result = Cashflow.Import(
+                cashflowId,
+                effectiveDate ?? default,
+                intervalType ?? DateIntervalType.Monthly,
+                frequency ?? 1,
+                recurrence ?? 0,
+                amount ?? default,
+                description ?? string.Empty,
+                categoryId ?? CategoryId.Empty,
+                accountId ?? AccountId.Empty,
+                inactive ?? false,
+                userContext.Id);
+
+            var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+            context.Cashflows.Add(cashflow);
+        }
+
+        return Nothing.Value;
+    }
+
     private static JsonElement GetJsonElement(IReadOnlyDictionary<string, object> data, string key)
     {
         if (!data.TryGetValue(key, out var value))
@@ -222,6 +299,17 @@ public partial class PowerSync : ICarterModule
             JsonValueKind.String => DateOnly.ParseExact(json.GetString()!, "yyyy-MM-dd", CultureInfo.InvariantCulture),
             _ => throw new InvalidOperationException($"Expected string for '{key}', got {json.ValueKind}")
         };
+    }
+
+    private static int ExtractInt(IReadOnlyDictionary<string, object> data, string key)
+    {
+        var json = GetJsonElement(data, key);
+        if (json.TryGetInt64(out var number))
+        {
+            return (int)number;
+        }
+
+        throw new InvalidOperationException($"Expected number for '{key}', got {json.ValueKind}");
     }
 
     private static DateOnly? ExtractNullableDate(IReadOnlyDictionary<string, object> data, string key)
@@ -264,6 +352,16 @@ public partial class PowerSync : ICarterModule
             JsonValueKind.Null or JsonValueKind.Undefined => null,
             JsonValueKind.String => json.Value.GetString(),
             _ => json.Value.ToString()
+        };
+    }
+
+    private static DateIntervalType ExtractDateIntervalType(IReadOnlyDictionary<string, object> data, string key)
+    {
+        var json = GetJsonElement(data, key);
+        return json.ValueKind switch
+        {
+            JsonValueKind.String => DateIntervalType.FromName(json.GetString()),
+            _ => throw new InvalidOperationException($"Expected DateIntervalType for '{key}', got {json.ValueKind}")
         };
     }
 

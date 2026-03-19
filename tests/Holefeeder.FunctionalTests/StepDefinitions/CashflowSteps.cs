@@ -6,6 +6,7 @@ using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 
 using Holefeeder.Application.Features.Transactions.Commands;
+using Holefeeder.Application.UseCases;
 using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
@@ -125,5 +126,38 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
             var result = await dbContext.Cashflows.FindAsync(request.Id);
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+        });
+
+    [AssertionMethod]
+    internal void ShouldBeSynced(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the cashflow should be synced", async response =>
+        {
+            var request = runner.GetContextData<PowerSync.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Cashflows.FindAsync((CashflowId) request.Operations.First().Id);
+
+            if (request.Operations.First().Op == "DELETE")
+            {
+                result.Should().BeNull();
+                return;
+            }
+
+            var expected = runner.GetContextData<Cashflow>(PowerSyncContext.SyncData);
+            result.Should().NotBeNull();
+            result.Id.Should().Be(expected.Id);
+            result.EffectiveDate.Should().Be(expected.EffectiveDate);
+            result.IntervalType.Should().Be(expected.IntervalType);
+            result.Frequency.Should().Be(expected.Frequency);
+            result.Recurrence.Should().Be(expected.Recurrence);
+            result.Amount.Should().Be(expected.Amount);
+            result.Description.Should().Be(expected.Description);
+            result.AccountId.Should().Be(expected.AccountId);
+            result.CategoryId.Should().Be(expected.CategoryId);
+            result.Tags.Should().Contain(expected.Tags);
         });
 }

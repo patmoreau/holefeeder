@@ -13,6 +13,7 @@ using static Holefeeder.Application.UseCases.PowerSync;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 
 namespace Holefeeder.FunctionalTests.UseCases.PowerSync;
 
@@ -84,6 +85,38 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .And(AValidTransactionPutRequest)
             .When(TheUser.SyncTheirData)
             .Then(Transaction.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACashflowDelete() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Cashflow.Exists)
+            .And(AValidCashflowDeleteRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Cashflow.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACashflowPatch() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Cashflow.Exists)
+            .And(AValidCashflowPatchRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Cashflow.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACashflowPut() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(AValidCashflowPutRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Cashflow.ShouldBeSynced)
             .PlayAsync();
 
     private static void AnInvalidRequest(IStepRunner runner) =>
@@ -211,6 +244,77 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
                     {"account_id", transaction.AccountId},
                     {"category_id", transaction.CategoryId},
                     {"tags", string.Join(",", transaction.Tags)},
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCashflowDeleteRequest(IStepRunner runner) =>
+        runner.Execute<Cashflow, Request>(cashflow =>
+        {
+            cashflow.Should().BeValid();
+            var request = GivenASyncRequest()
+                .WithType("cashflows")
+                .WithOperation("DELETE")
+                .WithId(cashflow.Value.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCashflowPatchRequest(IStepRunner runner) =>
+        runner.Execute<Cashflow, Request>(cashflow =>
+        {
+            cashflow.Should().BeValid();
+            var modified = cashflow.Value.Modify(amount: cashflow.Value.Amount * 2m, description: "Updated via sync");
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("cashflows")
+                .WithOperation("PATCH")
+                .WithId(cashflow.Value.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"amount", (int) (modified.Value.Amount * 100m)}, // Amount is in cents
+                    {"description", modified.Value.Description}
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCashflowPutRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var account = runner.GetContextData<Account>(AccountContext.ExistingAccount);
+            account.Should().NotBeNull();
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            account.Should().NotBeNull();
+            category.Should().NotBeNull();
+
+            var cashflow = GivenAnActiveCashflow()
+                .ForAccount(account)
+                .ForCategory(category)
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .Build();
+
+            runner.SetContextData(PowerSyncContext.SyncData, cashflow);
+            var request = GivenASyncRequest()
+                .WithType("cashflows")
+                .WithOperation("PUT")
+                .WithId(cashflow.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"effective_date", cashflow.EffectiveDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)},
+                    {"interval_type", cashflow.IntervalType.Name},
+                    {"frequency", cashflow.Frequency},
+                    {"recurrence", cashflow.Recurrence},
+                    {"amount", (int) (cashflow.Amount * 100m)}, // Amount is in cents
+                    {"description", cashflow.Description},
+                    {"account_id", cashflow.AccountId},
+                    {"category_id", cashflow.CategoryId},
+                    {"inactive", cashflow.Inactive ? 1 : 0},
+                    {"tags", string.Join(",", cashflow.Tags)},
                 })
                 .Build();
             runner.SetContextData(RequestContext.CurrentRequest, request);
