@@ -1,5 +1,11 @@
+# yaml-language-server: $schema=https://unpkg.com/@powersync/service-schema@latest/json-schema/powersync-config.json
+
 telemetry:
   disable_telemetry_sharing: false
+
+system:
+  logging:
+    level: warn
 
 replication:
   connections:
@@ -26,7 +32,7 @@ api:
   tokens:
     - !env PS_POWERSYNC_ADMIN_TOKEN
 
-sync_rules:
+sync_config:
   path: sync-rules.yaml
 
 client_auth:
