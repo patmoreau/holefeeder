@@ -13,6 +13,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
 using Holefeeder.Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,7 @@ public partial class PowerSync : ICarterModule
         app.MapPost("api/v2/sync/powersync",
                 async (Request request, IUserContext userContext, BudgetingContext context, ILogger<PowerSync> logger, CancellationToken cancellationToken) =>
                 {
-                    var result = await Handle(request, userContext, context, cancellationToken);
+                    var result = await Handle(request, userContext, context, logger, cancellationToken);
                     LogPowersyncCompletedWithResultResult(logger, result);
                     return result switch
                     {
@@ -46,7 +47,7 @@ public partial class PowerSync : ICarterModule
             .WithName(nameof(PowerSync))
             .RequireAuthorization(Policies.WriteUser);
 
-    private static async Task<Result<Nothing>> Handle(Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    private static async Task<Result<Nothing>> Handle(Request request, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
     {
         if (request.Operations.Count == 0)
             return Nothing.Value;
@@ -55,13 +56,15 @@ public partial class PowerSync : ICarterModule
 
         try
         {
+            LogStartingOperationsOperationsForPowerSyncForUserUserid(logger, request.Operations.Count, userContext.Id);
+
             foreach (var op in request.Operations)
             {
                 Result<Nothing> result = op.Type switch
                 {
-                    "store_items" => await ProcessStoreItemsOperation(op, userContext, context, cancellationToken),
-                    "transactions" => await ProcessTransactionOperation(op, userContext, context, cancellationToken),
-                    "cashflows" => await ProcessCashflowOperation(op, userContext, context, cancellationToken),
+                    "store_items" => await ProcessStoreItemsOperation(op, userContext, context, logger, cancellationToken),
+                    "transactions" => await ProcessTransactionOperation(op, userContext, context, logger, cancellationToken),
+                    "cashflows" => await ProcessCashflowOperation(op, userContext, context, logger, cancellationToken),
                     _ => SyncErrors.TypeInvalid(op.Type)
                 };
 
@@ -82,196 +85,220 @@ public partial class PowerSync : ICarterModule
         }
     }
 
-    private static async Task<Result<Nothing>> ProcessStoreItemsOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    private static async Task<Result<Nothing>> ProcessStoreItemsOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
     {
-        var storeItemId = StoreItemId.Create(op.Id);
-        var exists = await context.StoreItems.SingleOrDefaultAsync(x => x.Id == storeItemId && x.UserId == userContext.Id, cancellationToken);
-
-        if (op.Op == "DELETE")
+        try
         {
-            if (exists is null)
+            var storeItemId = StoreItemId.Create(op.Id);
+            var exists = await context.StoreItems.SingleOrDefaultAsync(x => x.Id == storeItemId && x.UserId == userContext.Id, cancellationToken);
+
+            if (op.Op == "DELETE")
+            {
+                if (exists is null)
+                {
+                    return StoreItemErrors.NotFound(storeItemId);
+                }
+
+                context.Remove(exists);
+                return Nothing.Value;
+            }
+
+            if (exists is null && op.Op == "PATCH")
             {
                 return StoreItemErrors.NotFound(storeItemId);
             }
 
-            context.Remove(exists);
+            var code = op.Data.ContainsKey("code") ? ExtractString(op.Data, "code") : null;
+            var data = op.Data.ContainsKey("data") ? ExtractString(op.Data, "data") : null;
+
+            if (exists is not null)
+            {
+                var result = exists.Modify(code, data);
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.Update(result.Value);
+            }
+            else
+            {
+                var result = StoreItem.Import(storeItemId, code ?? string.Empty, data ?? string.Empty, userContext.Id);
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.StoreItems.Add(result.Value);
+            }
+
             return Nothing.Value;
         }
-
-        if (exists is null && op.Op == "PATCH")
+        catch (Exception)
         {
-            return StoreItemErrors.NotFound(storeItemId);
+            LogErrorProcessingStoreItemOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
+            throw;
         }
-
-        var code = op.Data.ContainsKey("code") ? ExtractString(op.Data, "code") : null;
-        var data = op.Data.ContainsKey("data") ? ExtractString(op.Data, "data") : null;
-
-        if (exists is not null)
-        {
-            var result = exists.Modify(code, data);
-            if (result.IsFailure)
-            {
-                return result.Error;
-            }
-
-            context.Update(result.Value);
-        }
-        else
-        {
-            var result = StoreItem.Import(storeItemId, code ?? string.Empty, data ?? string.Empty, userContext.Id);
-            if (result.IsFailure)
-            {
-                return result.Error;
-            }
-
-            context.StoreItems.Add(result.Value);
-        }
-
-        return Nothing.Value;
     }
 
-    private static async Task<Result<Nothing>> ProcessTransactionOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    private static async Task<Result<Nothing>> ProcessTransactionOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
     {
-        var transactionId = TransactionId.Create(op.Id);
-        var exists = await context.Transactions.SingleOrDefaultAsync(x => x.Id == transactionId && x.UserId == userContext.Id, cancellationToken);
-
-        if (op.Op == "DELETE")
+        try
         {
-            if (exists is null)
+            var transactionId = TransactionId.Create(op.Id);
+            var exists = await context.Transactions.SingleOrDefaultAsync(x => x.Id == transactionId && x.UserId == userContext.Id, cancellationToken);
+
+            if (op.Op == "DELETE")
+            {
+                if (exists is null)
+                {
+                    return TransactionErrors.NotFound(transactionId);
+                }
+
+                context.Remove(exists);
+                return Nothing.Value;
+            }
+
+            if (exists is null && op.Op == "PATCH")
             {
                 return TransactionErrors.NotFound(transactionId);
             }
 
-            context.Remove(exists);
-            return Nothing.Value;
-        }
+            var date = op.Data.ContainsKey("date") ? ExtractDate(op.Data, "date") : (DateOnly?) null;
+            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
+            var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
+            var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
+            var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
+            var cashflowId = op.Data.ContainsKey("cashflow_id") ? ExtractCashflowId(op.Data, "cashflow_id") : null;
+            var cashflowDate = op.Data.ContainsKey("cashflow_date") ? ExtractNullableDate(op.Data, "cashflow_date") : null;
+            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
 
-        if (exists is null && op.Op == "PATCH")
-        {
-            return TransactionErrors.NotFound(transactionId);
-        }
-
-        var date = op.Data.ContainsKey("date") ? ExtractDate(op.Data, "date") : (DateOnly?) null;
-        var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
-        var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
-        var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
-        var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
-        var cashflowId = op.Data.ContainsKey("cashflow_id") ? ExtractCashflowId(op.Data, "cashflow_id") : null;
-        var cashflowDate = op.Data.ContainsKey("cashflow_date") ? ExtractNullableDate(op.Data, "cashflow_date") : null;
-        var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
-
-        if (exists is not null)
-        {
-            var result = exists.Modify(
-                date,
-                amount,
-                description,
-                accountId,
-                categoryId,
-                cashflowId,
-                cashflowDate);
-
-            if (result.IsFailure)
+            if (exists is not null)
             {
-                return result.Error;
+                var result = exists.Modify(
+                    date,
+                    amount,
+                    description,
+                    accountId,
+                    categoryId,
+                    cashflowId,
+                    cashflowDate);
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                context.Update(transaction.Value);
+            }
+            else
+            {
+                var result = Transaction.Import(
+                    transactionId,
+                    date ?? default,
+                    amount ?? default,
+                    description ?? string.Empty,
+                    accountId ?? AccountId.Empty,
+                    categoryId ?? CategoryId.Empty,
+                    cashflowId,
+                    cashflowDate,
+                    userContext.Id);
+
+                var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                context.Transactions.Add(transaction);
             }
 
-            var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
-            context.Update(transaction.Value);
+            return Nothing.Value;
         }
-        else
+        catch (Exception)
         {
-            var result = Transaction.Import(
-                transactionId,
-                date ?? default,
-                amount ?? default,
-                description ?? string.Empty,
-                accountId ?? AccountId.Empty,
-                categoryId ?? CategoryId.Empty,
-                cashflowId,
-                cashflowDate,
-                userContext.Id);
-
-            var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
-            context.Transactions.Add(transaction);
+            LogErrorProcessingTransactionOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
+            throw;
         }
-
-        return Nothing.Value;
     }
 
-    private static async Task<Result<Nothing>> ProcessCashflowOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken)
+    private static async Task<Result<Nothing>> ProcessCashflowOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
     {
-        var cashflowId = CashflowId.Create(op.Id);
-        var exists = await context.Cashflows.SingleOrDefaultAsync(x => x.Id == cashflowId && x.UserId == userContext.Id, cancellationToken);
-
-        if (op.Op == "DELETE")
+        try
         {
-            if (exists is null)
+            var cashflowId = CashflowId.Create(op.Id);
+            var exists = await context.Cashflows.SingleOrDefaultAsync(x => x.Id == cashflowId && x.UserId == userContext.Id, cancellationToken);
+
+            if (op.Op == "DELETE")
+            {
+                if (exists is null)
+                {
+                    return CashflowErrors.NotFound(cashflowId);
+                }
+
+                context.Remove(exists);
+                return Nothing.Value;
+            }
+
+            if (exists is null && op.Op == "PATCH")
             {
                 return CashflowErrors.NotFound(cashflowId);
             }
 
-            context.Remove(exists);
-            return Nothing.Value;
-        }
+            var effectiveDate = op.Data.ContainsKey("effective_date") ? ExtractDate(op.Data, "effective_date") : (DateOnly?) null;
+            var intervalType = op.Data.ContainsKey("interval_type") ? ExtractDateIntervalType(op.Data, "interval_type") : null;
+            var frequency = op.Data.ContainsKey("frequency") ? ExtractInt(op.Data, "frequency") : (int?) null;
+            var recurrence = op.Data.ContainsKey("recurrence") ? ExtractInt(op.Data, "recurrence") : (int?) null;
+            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
+            var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
+            var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
+            var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
 
-        if (exists is null && op.Op == "PATCH")
-        {
-            return CashflowErrors.NotFound(cashflowId);
-        }
-
-        var effectiveDate = op.Data.ContainsKey("effective_date") ? ExtractDate(op.Data, "effective_date") : (DateOnly?) null;
-        var intervalType = op.Data.ContainsKey("interval_type") ? ExtractDateIntervalType(op.Data, "interval_type") : null;
-        var frequency = op.Data.ContainsKey("frequency") ? ExtractInt(op.Data, "frequency") : (int?) null;
-        var recurrence = op.Data.ContainsKey("recurrence") ? ExtractInt(op.Data, "recurrence") : (int?) null;
-        var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
-        var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
-        var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
-        var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
-        var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
-        var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
-
-        if (exists is not null)
-        {
-            var result = exists.Modify(
-                effectiveDate,
-                intervalType,
-                frequency,
-                recurrence,
-                amount,
-                description,
-                categoryId,
-                accountId,
-                inactive);
-
-            if (result.IsFailure)
+            if (exists is not null)
             {
-                return result.Error;
+                var result = exists.Modify(
+                    effectiveDate,
+                    intervalType,
+                    frequency,
+                    recurrence,
+                    amount,
+                    description,
+                    categoryId,
+                    accountId,
+                    inactive);
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                context.Update(cashflow.Value);
+            }
+            else
+            {
+                var result = Cashflow.Import(
+                    cashflowId,
+                    effectiveDate ?? default,
+                    intervalType ?? DateIntervalType.Monthly,
+                    frequency ?? 1,
+                    recurrence ?? 0,
+                    amount ?? default,
+                    description ?? string.Empty,
+                    categoryId ?? CategoryId.Empty,
+                    accountId ?? AccountId.Empty,
+                    inactive ?? false,
+                    userContext.Id);
+
+                var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                context.Cashflows.Add(cashflow);
             }
 
-            var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
-            context.Update(cashflow.Value);
+            return Nothing.Value;
         }
-        else
+        catch (Exception)
         {
-            var result = Cashflow.Import(
-                cashflowId,
-                effectiveDate ?? default,
-                intervalType ?? DateIntervalType.Monthly,
-                frequency ?? 1,
-                recurrence ?? 0,
-                amount ?? default,
-                description ?? string.Empty,
-                categoryId ?? CategoryId.Empty,
-                accountId ?? AccountId.Empty,
-                inactive ?? false,
-                userContext.Id);
-
-            var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
-            context.Cashflows.Add(cashflow);
+            LogErrorProcessingCashflowOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
+            throw;
         }
-
-        return Nothing.Value;
     }
 
     private static JsonElement GetJsonElement(IReadOnlyDictionary<string, object> data, string key)
@@ -286,10 +313,7 @@ public partial class PowerSync : ICarterModule
             : throw new InvalidOperationException($"Field '{key}' is not a JsonElement (got {value?.GetType().Name ?? "null"})");
     }
 
-    private static JsonElement? TryGetJsonElement(IReadOnlyDictionary<string, object> data, string key)
-    {
-        return data.TryGetValue(key, out var value) && value is JsonElement json ? json : null;
-    }
+    private static JsonElement? TryGetJsonElement(IReadOnlyDictionary<string, object> data, string key) => data.TryGetValue(key, out var value) && value is JsonElement json ? json : null;
 
     private static DateOnly ExtractDate(IReadOnlyDictionary<string, object> data, string key)
     {
@@ -306,7 +330,7 @@ public partial class PowerSync : ICarterModule
         var json = GetJsonElement(data, key);
         if (json.TryGetInt64(out var number))
         {
-            return (int)number;
+            return (int) number;
         }
 
         throw new InvalidOperationException($"Expected number for '{key}', got {json.ValueKind}");
@@ -360,7 +384,7 @@ public partial class PowerSync : ICarterModule
         var json = GetJsonElement(data, key);
         return json.ValueKind switch
         {
-            JsonValueKind.String => DateIntervalType.FromName(json.GetString()),
+            JsonValueKind.String => DateIntervalType.FromName(json.GetString(), true),
             _ => throw new InvalidOperationException($"Expected DateIntervalType for '{key}', got {json.ValueKind}")
         };
     }
@@ -466,6 +490,18 @@ public partial class PowerSync : ICarterModule
         }
     }
 
-    [LoggerMessage(LogLevel.Information, "PowerSync completed with result: {Result}")]
-    static partial void LogPowersyncCompletedWithResultResult(ILogger<PowerSync> logger, Result<Nothing> Result);
+    [LoggerMessage(LogLevel.Information, "PowerSync completed with result: {result}")]
+    static partial void LogPowersyncCompletedWithResultResult(ILogger<PowerSync> logger, Result<Nothing> result);
+
+    [LoggerMessage(LogLevel.Information, "Starting {operations} operations for power sync for user {userId}")]
+    static partial void LogStartingOperationsOperationsForPowerSyncForUserUserid(ILogger logger, int operations, UserId userId);
+
+    [LoggerMessage(LogLevel.Error, "Error processing store item operation with id {id} for user {userId}")]
+    static partial void LogErrorProcessingStoreItemOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
+
+    [LoggerMessage(LogLevel.Error, "Error processing transaction operation with id {id} for user {userId}")]
+    static partial void LogErrorProcessingTransactionOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
+
+    [LoggerMessage(LogLevel.Error, "Error processing cashflow operation with id {id} for user {userId}")]
+    static partial void LogErrorProcessingCashflowOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
 }
