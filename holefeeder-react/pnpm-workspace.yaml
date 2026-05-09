@@ -1,3 +1,7 @@
+allowBuilds:
+  better-sqlite3: true
+  browser-tabs-lock: true
+  unrs-resolver: true
 ignoredBuiltDependencies:
   - react-native-mmkv
   - react-native-nitro-modules
