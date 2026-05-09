@@ -28,15 +28,16 @@ E2E tests use Maestro: `pnpm test:e2e:ios` runs `.maestro/` suite tagged `regres
 The app relies on feature-based modules to isolate domain logic and UI alongside shared cross-cutting layers:
 
 ```
-src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/)
-  core/         ← Entities, value objects, repository interfaces, use cases
-  persistence/  ← PowerSync implementations of repository interfaces
+src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, user-registration/)
+  core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
+  persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
   auth/         ← Auth state and logic
   core/         ← Shared domain primitives (Money, Id) and result patterns
   hooks/        ← Cross-cutting React hooks
+  language/     ← Language selection state and provider
   persistence/  ← App-wide PowerSync db schema and utilities
   presentation/ ← Shared global UI components
   repositories/ ← Shared repository providers and contexts
@@ -96,18 +97,18 @@ const useAccounts = (): AsyncResult<Account[]> => {
 };
 ```
 
-For multiple concurrent watches, use `useMultipleWatches` from `src/presentation/hooks/use-multiple-watches.ts`.
+For multiple concurrent watches, use `useMultipleWatches` from `src/shared/presentation/core/use-multiple-watches.ts`.
 
 ## Form Pattern
 
 Use `createFormDataContext<FormData, ErrorEnum>(displayName, saveFn)` from
-`src/features/shared/core/use-form-context.tsx` to get a typed context factory with built-in: dirty tracking,
+`src/shared/presentation/core/use-form-context.tsx` to get a typed context factory with built-in: dirty tracking,
 field-level + general errors, validation, save, and an `ErrorSheet` component.
 
 ## Provider Nesting (root `_layout.tsx`)
 
-`Auth0Provider` → `AppProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
-Route protection uses `<Stack.Protected guard={!!user}>` — no manual redirects.
+`LanguageProvider` → `ThemeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
+Route protection uses `<Stack.Protected guard={!!user}>` inside `HolefeederContent` — no manual redirects.
 
 ## Config / Environments
 
