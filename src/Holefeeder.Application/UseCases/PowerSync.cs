@@ -62,6 +62,7 @@ public partial class PowerSync : ICarterModule
             {
                 Result<Nothing> result = op.Type switch
                 {
+                    "accounts" => await ProcessAccountOperation(op, userContext, context, logger, cancellationToken),
                     "store_items" => await ProcessStoreItemsOperation(op, userContext, context, logger, cancellationToken),
                     "transactions" => await ProcessTransactionOperation(op, userContext, context, logger, cancellationToken),
                     "cashflows" => await ProcessCashflowOperation(op, userContext, context, logger, cancellationToken),
@@ -81,6 +82,77 @@ public partial class PowerSync : ICarterModule
         catch
         {
             await context.RollbackWorkAsync(cancellationToken);
+            throw;
+        }
+    }
+
+    private static async Task<Result<Nothing>> ProcessAccountOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var accountId = AccountId.Create(op.Id);
+            var exists = await context.Accounts.SingleOrDefaultAsync(x => x.Id == accountId && x.UserId == userContext.Id, cancellationToken);
+
+            if (op.Op == "DELETE")
+            {
+                if (exists is null)
+                {
+                    return AccountErrors.NotFound(accountId);
+                }
+
+                context.Remove(exists);
+                return Nothing.Value;
+            }
+
+            if (exists is null && op.Op == "PATCH")
+            {
+                return AccountErrors.NotFound(accountId);
+            }
+
+            var type = op.Data.ContainsKey("type") ? ExtractAccountType(op.Data, "type") : null;
+            var name = op.Data.ContainsKey("name") ? ExtractString(op.Data, "name") : null;
+            var openBalance = op.Data.ContainsKey("open_balance") ? ExtractMoney(op.Data, "open_balance") : (Money?) null;
+            var openDate = op.Data.ContainsKey("open_date") ? ExtractDate(op.Data, "open_date") : (DateOnly?) null;
+            var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
+            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?) null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+
+            if (exists is not null)
+            {
+                var result = exists.Modify(type, name, openBalance, openDate, description, favorite, inactive);
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.Update(result.Value);
+            }
+            else
+            {
+                var result = Account.Import(
+                    accountId,
+                    type ?? AccountType.Checking,
+                    name ?? string.Empty,
+                    openBalance ?? default,
+                    openDate ?? default,
+                    description ?? string.Empty,
+                    favorite ?? false,
+                    inactive ?? false,
+                    userContext.Id);
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.Accounts.Add(result.Value);
+            }
+
+            return Nothing.Value;
+        }
+        catch (Exception)
+        {
+            LogErrorProcessingAccountOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
             throw;
         }
     }
@@ -379,6 +451,16 @@ public partial class PowerSync : ICarterModule
         };
     }
 
+    private static AccountType ExtractAccountType(IReadOnlyDictionary<string, object> data, string key)
+    {
+        var json = GetJsonElement(data, key);
+        return json.ValueKind switch
+        {
+            JsonValueKind.String => AccountType.FromName(json.GetString()!, true),
+            _ => throw new InvalidOperationException($"Expected AccountType for '{key}', got {json.ValueKind}")
+        };
+    }
+
     private static DateIntervalType ExtractDateIntervalType(IReadOnlyDictionary<string, object> data, string key)
     {
         var json = GetJsonElement(data, key);
@@ -495,6 +577,9 @@ public partial class PowerSync : ICarterModule
 
     [LoggerMessage(LogLevel.Information, "Starting {operations} operations for power sync for user {userId}")]
     static partial void LogStartingOperationsOperationsForPowerSyncForUserUserid(ILogger logger, int operations, UserId userId);
+
+    [LoggerMessage(LogLevel.Error, "Error processing account operation with id {id} for user {userId}")]
+    static partial void LogErrorProcessingAccountOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
 
     [LoggerMessage(LogLevel.Error, "Error processing store item operation with id {id} for user {userId}")]
     static partial void LogErrorProcessingStoreItemOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);

@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentScenario;
 using DrifterApps.Seeds.FluentScenario.Attributes;
 using DrifterApps.Seeds.Testing.Extensions;
 
+using Holefeeder.Application.UseCases;
 using Holefeeder.Domain.Features.Accounts;
 
 using Refit;
@@ -79,5 +80,36 @@ internal sealed partial class AccountSteps
             var result = await dbContext.Accounts.FindAsync(id);
             result.Should().NotBeNull();
             result!.Name.Should().Be(name);
+        });
+
+    [AssertionMethod]
+    internal void ShouldBeSynced(IStepRunner runner) =>
+        runner.Execute<IApiResponse>("the account should be synced", async response =>
+        {
+            var request = runner.GetContextData<PowerSync.Request>(RequestContext.CurrentRequest);
+
+            response.Should().BeValid()
+                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
+
+            var result = await dbContext.Accounts.FindAsync((AccountId) request.Operations.First().Id);
+
+            if (request.Operations.First().Op == "DELETE")
+            {
+                result.Should().BeNull();
+                return;
+            }
+
+            var expected = runner.GetContextData<Account>(PowerSyncContext.SyncData);
+            result.Should().NotBeNull();
+            result!.Id.Should().Be(expected.Id);
+            result.Type.Should().Be(expected.Type);
+            result.Name.Should().Be(expected.Name);
+            result.OpenBalance.Should().Be(expected.OpenBalance);
+            result.OpenDate.Should().Be(expected.OpenDate);
+            result.Description.Should().Be(expected.Description);
+            result.Favorite.Should().Be(expected.Favorite);
+            result.Inactive.Should().Be(expected.Inactive);
         });
 }

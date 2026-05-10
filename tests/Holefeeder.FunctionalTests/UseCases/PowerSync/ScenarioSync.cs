@@ -10,6 +10,7 @@ using Holefeeder.FunctionalTests.Drivers;
 using Holefeeder.FunctionalTests.Features;
 
 using static Holefeeder.Application.UseCases.PowerSync;
+using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
@@ -26,6 +27,32 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .Given(AnInvalidRequest)
             .When(TheUser.SyncTheirData)
             .Then(ShouldReceiveAValidationError)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAnAccountDelete() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(AValidAccountDeleteRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Account.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAnAccountPatch() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(AValidAccountPatchRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Account.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingAnAccountPut() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AValidAccountPutRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Account.ShouldBeSynced)
             .PlayAsync();
 
     [Fact]
@@ -118,6 +145,66 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .When(TheUser.SyncTheirData)
             .Then(Cashflow.ShouldBeSynced)
             .PlayAsync();
+
+    private static void AValidAccountDeleteRequest(IStepRunner runner) =>
+        runner.Execute<Account, Request>(account =>
+        {
+            account.Should().BeValid();
+            var request = GivenASyncRequest()
+                .WithType("accounts")
+                .WithOperation("DELETE")
+                .WithId(account.Value.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidAccountPatchRequest(IStepRunner runner) =>
+        runner.Execute<Account, Request>(account =>
+        {
+            account.Should().BeValid();
+            var modified = account.Value.Modify(name: "Updated via sync", description: "Patched description");
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("accounts")
+                .WithOperation("PATCH")
+                .WithId(account.Value.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"name", modified.Value.Name},
+                    {"description", modified.Value.Description}
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidAccountPutRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var account = GivenAnActiveAccount()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .Build();
+
+            runner.SetContextData(PowerSyncContext.SyncData, account);
+            var request = GivenASyncRequest()
+                .WithType("accounts")
+                .WithOperation("PUT")
+                .WithId(account.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"type", account.Type.Name},
+                    {"name", account.Name},
+                    {"open_balance", (int) (account.OpenBalance * 100m)},
+                    {"open_date", account.OpenDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)},
+                    {"description", account.Description},
+                    {"favorite", account.Favorite ? 1 : 0},
+                    {"inactive", account.Inactive ? 1 : 0},
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
 
     private static void AnInvalidRequest(IStepRunner runner) =>
         runner.Execute(() =>
