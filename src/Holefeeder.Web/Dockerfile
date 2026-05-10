@@ -24,10 +24,6 @@ RUN apt-get update && \
 # Install pnpm
 RUN npm install -g pnpm
 
-# Allow lifecycle/build scripts in CI/container builds
-ENV CI=true
-RUN pnpm config set ignore-scripts false && pnpm config set allow-untrusted-scripts true
-
 ###################################
 # Restore stage
 ###################################
