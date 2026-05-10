@@ -45,7 +45,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: src/Holefeeder.Web/ClientApp
-        run: pnpm install
+        run: pnpm install --dangerously-allow-all-builds
 
       - name: Lint code with ESLint
         id: lint
