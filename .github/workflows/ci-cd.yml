@@ -55,13 +55,13 @@ jobs:
           global-json-file: ./global.json
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v4.2.0
+        uses: gittools/actions/gitversion/setup@v4.5.0
         with:
           versionSpec: "6.x"
 
       - name: Determine Version
         id: gitversion
-        uses: gittools/actions/gitversion/execute@v4.2.0
+        uses: gittools/actions/gitversion/execute@v4.5.0
         with:
           configFilePath: GitVersion.yml
 
@@ -239,7 +239,7 @@ jobs:
           esac
 
       - name: Create badge
-        uses: emibcn/badge-action@v2.0.3
+        uses: emibcn/badge-action@v2.0.4
         with:
           label: Tests
           status: "${{ steps.test-results.outputs.passed }} passed, ${{ steps.test-results.outputs.failed }} failed, ${{ steps.test-results.outputs.skipped }} skipped: ${{ steps.test-results.outputs.conclusion }}"
@@ -375,7 +375,7 @@ jobs:
           }' > $GITHUB_WORKSPACE/.docker/config.json
 
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.1
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
 
