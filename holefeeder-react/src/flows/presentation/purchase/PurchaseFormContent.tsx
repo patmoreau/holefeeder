@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Account } from '@/flows/core/accounts/account';
+import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { Tag } from '@/flows/core/flows/tag';
 import { BasicSection } from '@/flows/presentation/purchase/BasicSection';

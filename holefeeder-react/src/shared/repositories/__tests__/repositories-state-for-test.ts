@@ -1,5 +1,5 @@
+import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
 import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';
-import { AccountsRepositoryInMemory } from '@/flows/core/accounts/__tests__/accounts-repository-for-test';
 import { CategoriesRepositoryInMemory } from '@/flows/core/categories/__tests__/categories-repository-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { SettingsRepositoryInMemory } from '@/settings/core/__tests__/settings-repository-for-test';

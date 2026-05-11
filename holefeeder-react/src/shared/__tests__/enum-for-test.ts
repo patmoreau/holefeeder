@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { AccountType, AccountTypes } from '@/flows/core/accounts/account-type';
+import { AccountType, AccountTypes } from '@/accounts/core/account-type';
 import { CategoryType, CategoryTypes } from '@/flows/core/categories/category-type';
 import { DateIntervalType, DateIntervalTypes } from '@/shared/core/date-interval-type';
 

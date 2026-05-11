@@ -1,4 +1,4 @@
-import { AccountVariation } from '@/flows/core/accounts/account-variation';
+import { AccountVariation } from '@/accounts/core/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';

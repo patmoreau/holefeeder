@@ -1,4 +1,4 @@
-import { AccountType } from '@/flows/core/accounts/account-type';
+import { AccountType } from '@/accounts/core/account-type';
 import { DateOnly } from '@/shared/core/date-only';
 import { Id } from '@/shared/core/id';
 import { Variation } from '@/shared/core/variation';

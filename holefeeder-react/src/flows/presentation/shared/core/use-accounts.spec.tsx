@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { anAccount } from '@/flows/core/accounts/__tests__/account-for-test';
-import { AccountsRepositoryInMemory } from '@/flows/core/accounts/__tests__/accounts-repository-for-test';
-import { AccountsRepository } from '@/flows/core/accounts/accounts-repository';
+import { anAccount } from '@/accounts/core/__tests__/account-for-test';
+import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
+import { AccountsRepository } from '@/accounts/core/accounts-repository';
 import { useAccounts } from '@/flows/presentation/shared/core/use-accounts';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 

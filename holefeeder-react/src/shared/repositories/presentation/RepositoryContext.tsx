@@ -1,7 +1,7 @@
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import React, { createContext, ReactNode, useMemo } from 'react';
+import { AccountsRepositoryInPowersync } from '@/accounts/persistence/accounts-repository-in-powersync';
 import { DashboardRepositoryInPowersync } from '@/dashboard/persistence/dashboard-repository-in-powersync';
-import { AccountsRepositoryInPowersync } from '@/flows/persistence/accounts-repository-in-powersync';
 import { CategoriesRepositoryInPowersync } from '@/flows/persistence/categories-repository-in-powersync';
 import { FlowsRepositoryInPowersync } from '@/flows/persistence/flows-repository-in-powersync';
 import { SettingRepositoryInPowersync } from '@/settings/persistence/setting-repository-in-powersync';

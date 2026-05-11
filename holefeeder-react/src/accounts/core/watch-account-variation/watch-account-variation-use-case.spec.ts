@@ -1,13 +1,13 @@
 import { waitFor } from '@testing-library/react-native';
-import { anAccount } from '@/flows/core/accounts/__tests__/account-for-test';
-import { anAccountVariation } from '@/flows/core/accounts/__tests__/account-variation-for-test';
-import { AccountsRepositoryInMemory } from '@/flows/core/accounts/__tests__/accounts-repository-for-test';
-import { AccountDetail } from '@/flows/core/accounts/account-detail';
-import { AccountTypes } from '@/flows/core/accounts/account-type';
+import { anAccount } from '@/accounts/core/__tests__/account-for-test';
+import { anAccountVariation } from '@/accounts/core/__tests__/account-variation-for-test';
+import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
+import { AccountDetail } from '@/accounts/core/account-detail';
+import { AccountTypes } from '@/accounts/core/account-type';
 import {
   WatchAccountVariationErrors,
   WatchAccountVariationUseCase,
-} from '@/flows/core/accounts/watch-account-variation/watch-account-variation-use-case';
+} from '@/accounts/core/watch-account-variation/watch-account-variation-use-case';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';

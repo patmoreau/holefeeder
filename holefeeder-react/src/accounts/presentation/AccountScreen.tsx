@@ -55,10 +55,19 @@ export const AccountScreen = () => {
 
   if (!account) return <LoadingIndicator />;
 
+  const onEditPress = () =>
+    router.push({
+      pathname: '/(app)/EditAccount',
+      params: { id: accountId as string },
+    });
+
   return (
     <>
       <Stack.Toolbar placement="left">
         <Stack.Toolbar.Button icon={AppIcons.back} onPress={() => goBack()} />
+      </Stack.Toolbar>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button icon={AppIcons.edit} onPress={onEditPress} />
       </Stack.Toolbar>
       <CardHeaderFlashList
         headerBackgroundColor={theme.colors.primary}

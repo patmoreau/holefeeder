@@ -1,4 +1,4 @@
-import { AccountType } from '@/flows/core/accounts/account-type';
+import { AccountType } from '@/accounts/core/account-type';
 import { Id } from '@/shared/core/id';
 
 export type AccountSummary = {

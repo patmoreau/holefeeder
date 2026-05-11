@@ -1,4 +1,26 @@
 export const en = {
+  accountEdit: {
+    title: 'Edit Account',
+    name: 'Name',
+    type: 'Type',
+    openBalance: 'Opening Balance',
+    openDate: 'Opening Date',
+    description: 'Note...',
+    favorite: 'Favorite',
+    inactive: 'Inactive',
+    accountTypes: {
+      checking: 'Checking',
+      creditCard: 'Credit Card',
+      creditLine: 'Credit Line',
+      investment: 'Investment',
+      loan: 'Loan',
+      mortgage: 'Mortgage',
+      savings: 'Savings',
+    },
+    errors: {
+      nameRequired: 'Account name is required',
+    },
+  },
   accountCard: {
     currentBalance: 'Current Balance',
     projected: 'Projected',

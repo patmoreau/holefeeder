@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Account } from '@/flows/core/accounts/account';
-import { WatchAccountsUseCase } from '@/flows/core/accounts/watch-accounts/watch-accounts-use-case';
+import type { Account } from '@/accounts/core/account';
+import { WatchAccountsUseCase } from '@/accounts/core/watch-accounts/watch-accounts-use-case';
 import { type AsyncResult, Result } from '@/shared/core/result';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 

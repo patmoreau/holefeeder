@@ -1,6 +1,28 @@
 import { TranslationStructure } from '@/i18n/translations';
 
 export const fr: TranslationStructure = {
+  accountEdit: {
+    title: 'Modifier le compte',
+    name: 'Nom',
+    type: 'Type',
+    openBalance: "Solde d'ouverture",
+    openDate: "Date d'ouverture",
+    description: 'Note...',
+    favorite: 'Favori',
+    inactive: 'Inactif',
+    accountTypes: {
+      checking: 'Chèques',
+      creditCard: 'Carte de crédit',
+      creditLine: 'Marge de crédit',
+      investment: 'Investissement',
+      loan: 'Prêt',
+      mortgage: 'Hypothèque',
+      savings: 'Épargne',
+    },
+    errors: {
+      nameRequired: 'Le nom du compte est requis',
+    },
+  },
   accountCard: {
     currentBalance: 'Solde actuel',
     projected: 'Projeté',
@@ -202,6 +224,7 @@ export const fr: TranslationStructure = {
     parameters: 'Paramètres',
     syncSection: {
       title: 'Synchronisation',
+      navigation: 'Statistiques',
       connected: 'Connecté',
       lastSync: 'Dernière synchronisation',
       never: 'Jamais',

@@ -1,4 +1,4 @@
-import { AccountSummary } from '@/flows/core/accounts/account-summary';
+import { AccountSummary } from '@/accounts/core/account-summary';
 import { type AsyncResult, Result } from '@/shared/core/result';
 import { AccountsRepository } from '../accounts-repository';
 

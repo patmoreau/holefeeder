@@ -1,7 +1,10 @@
+import { createLogger } from '@powersync/common';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { goBack } from '@/shared/presentation/navigation';
 import { showAlert } from '@/shared/presentation/show-alert';
+
+const logger = createLogger('useFormActions');
 
 export type FormContext = {
   saveForm: () => Promise<boolean>;
@@ -23,6 +26,7 @@ export const useFormActions = ({ saveForm, isDirty, errors }: FormContext): Form
   const { showDiscardAlert, showFormErrorAlert } = showAlert(t);
 
   const handleSave = useCallback(async () => {
+    logger.warn(`handleSave called. isDirty: ${isDirty}, errors: ${JSON.stringify(errors)}`);
     if (isDirty) {
       const success = await saveForm();
       if (!success) {

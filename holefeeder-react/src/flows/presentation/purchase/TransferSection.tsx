@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Account } from '@/flows/core/accounts/account';
+import { Account } from '@/accounts/core/account';
 import { PurchaseFormError, usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';

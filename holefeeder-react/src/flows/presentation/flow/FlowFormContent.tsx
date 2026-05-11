@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Account } from '@/flows/core/accounts/account';
+import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { Tag } from '@/flows/core/flows/tag';

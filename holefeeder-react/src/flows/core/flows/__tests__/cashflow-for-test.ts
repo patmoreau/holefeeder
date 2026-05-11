@@ -1,5 +1,5 @@
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { AccountForTest } from '@/flows/core/accounts/__tests__/account-for-test';
+import { AccountForTest } from '@/accounts/core/__tests__/account-for-test';
 import { CategoryForTest } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { Cashflow } from '@/flows/core/flows/cashflow';

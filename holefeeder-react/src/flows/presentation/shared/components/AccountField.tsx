@@ -1,5 +1,5 @@
 import React from 'react';
-import { Account } from '@/flows/core/accounts/account';
+import { Account } from '@/accounts/core/account';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppPicker } from '@/shared/presentation/components/AppPicker';
 import { AppIcons } from '@/shared/presentation/icons';

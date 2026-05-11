@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { AccountDetail } from '@/flows/core/accounts/account-detail';
-import { AccountType } from '@/flows/core/accounts/account-type';
+import { AccountDetail } from '@/accounts/core/account-detail';
+import { AccountType } from '@/accounts/core/account-type';
 import { tk } from '@/i18n/translations';
 import { Variation } from '@/shared/core/variation';
 import { today } from '@/shared/core/with-date';

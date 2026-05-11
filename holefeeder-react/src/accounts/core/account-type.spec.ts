@@ -1,4 +1,4 @@
-import { AccountType, AccountTypeErrors, AccountTypes } from '@/flows/core/accounts/account-type';
+import { AccountType, AccountTypeErrors, AccountTypes } from '@/accounts/core/account-type';
 
 describe('AccountType', () => {
   describe('create', () => {

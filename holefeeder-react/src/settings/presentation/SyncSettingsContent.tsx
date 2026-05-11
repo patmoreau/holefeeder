@@ -96,8 +96,9 @@ export function SyncSettingsContent() {
             onPress={async () => {
               if (!(await Sharing.isAvailableAsync())) return;
               // op-sqlite stores DBs in NSLibraryDirectory on iOS
-              const file = new File(Paths.document, 'holefeeder.db');
+              const file = new File(Paths.cache.parentDirectory, 'holefeeder.db');
               const tempFile = new File(Paths.cache, 'holefeeder_temp.db');
+              if (tempFile.exists) tempFile.delete();
               file.copy(tempFile);
               await Sharing.shareAsync(tempFile.uri, {
                 mimeType: 'application/x-sqlite3',

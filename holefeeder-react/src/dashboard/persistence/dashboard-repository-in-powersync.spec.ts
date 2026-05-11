@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
-import { anAccount } from '@/flows/core/accounts/__tests__/account-for-test';
+import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';

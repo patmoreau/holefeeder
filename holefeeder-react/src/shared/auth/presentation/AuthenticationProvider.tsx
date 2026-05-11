@@ -3,6 +3,7 @@ import { Auth0Provider, useAuth0 } from 'react-native-auth0';
 import { AuthenticationState } from '@/shared/auth/core/autentication-state';
 import { AuthConfig } from '@/shared/auth/core/auth-config';
 import { TokenInfo } from '@/shared/auth/core/token-info';
+import { DatabaseFactory } from '@/shared/persistence/db';
 
 export const AuthenticationContext = createContext<AuthenticationState | undefined>(undefined);
 
@@ -23,6 +24,7 @@ const InternalAuthenticationProvider = ({ children, config }: { children: React.
   }, [authorize, config.audience, config.redirectUri, config.scope]);
 
   const logout = useCallback(async () => {
+    await DatabaseFactory.instance()?.disconnectAndClear();
     await clearSession({ returnToUrl: config.logoutRedirectUri }, {});
   }, [clearSession, config.logoutRedirectUri]);
 

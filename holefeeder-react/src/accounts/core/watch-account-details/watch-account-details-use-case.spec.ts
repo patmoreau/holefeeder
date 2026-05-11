@@ -1,8 +1,8 @@
 import { waitFor } from '@testing-library/react-native';
-import { anAccount } from '@/flows/core/accounts/__tests__/account-for-test';
-import { AccountsRepositoryInMemory } from '@/flows/core/accounts/__tests__/accounts-repository-for-test';
-import { AccountSummary } from '@/flows/core/accounts/account-summary';
-import { AccountTypes } from '@/flows/core/accounts/account-type';
+import { anAccount } from '@/accounts/core/__tests__/account-for-test';
+import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
+import { AccountSummary } from '@/accounts/core/account-summary';
+import { AccountTypes } from '@/accounts/core/account-type';
 import { type AsyncResult } from '@/shared/core/result';
 import { Variation } from '@/shared/core/variation';
 import { WatchAccountDetailsUseCase } from './watch-account-details-use-case';

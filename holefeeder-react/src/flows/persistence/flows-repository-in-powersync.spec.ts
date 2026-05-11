@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react-native';
-import { anAccount } from '@/flows/core/accounts/__tests__/account-for-test';
-import { AccountVariation } from '@/flows/core/accounts/account-variation';
+import { anAccount } from '@/accounts/core/__tests__/account-for-test';
+import { AccountVariation } from '@/accounts/core/account-variation';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';

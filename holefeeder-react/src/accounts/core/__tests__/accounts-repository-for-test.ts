@@ -1,5 +1,7 @@
-import { Account } from '@/flows/core/accounts/account';
-import { AccountsRepository } from '@/flows/core/accounts/accounts-repository';
+import { Account } from '@/accounts/core/account';
+import { AccountsRepository } from '@/accounts/core/accounts-repository';
+import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
+import { Id } from '@/shared/core/id';
 import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type AccountsRepositoryInMemory = AccountsRepository & {
@@ -21,8 +23,14 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
     } else {
       onDataChange(Result.success(itemsInMemory));
     }
-    // Return unsubscribe function
     return () => {};
+  };
+
+  const update = async (command: UpdateAccountCommand): Promise<Result<Id>> => {
+    const index = itemsInMemory.findIndex((a) => a.id === command.id);
+    if (index === -1) return Result.failure(['account-not-found']);
+    itemsInMemory[index] = Account.valid({ ...command });
+    return Result.success(command.id);
   };
 
   const add = (...items: Account[]) => itemsInMemory.push(...items);
@@ -31,5 +39,5 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
 
   const isFailing = (errors: string[]) => (errorsInMemory = errors);
 
-  return { watch: watch, add: add, isLoading: isLoading, isFailing: isFailing };
+  return { watch, update, add, isLoading, isFailing };
 };

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { AccountDetail } from '@/flows/core/accounts/account-detail';
+import { AccountDetail } from '@/accounts/core/account-detail';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';

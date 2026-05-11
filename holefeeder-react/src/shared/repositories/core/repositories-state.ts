@@ -1,5 +1,5 @@
+import { AccountsRepository } from '@/accounts/core/accounts-repository';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
-import { AccountsRepository } from '@/flows/core/accounts/accounts-repository';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
 import { SettingRepository } from '@/settings/core/setting-repository';
