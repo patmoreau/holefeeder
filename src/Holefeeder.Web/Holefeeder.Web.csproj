@@ -37,7 +37,7 @@
     <ItemGroup>
         <PackageReference Include="Carter"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
-        <PackageReference Include="Microsoft.AspNetCore.SpaProxy"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="Microsoft.Identity.Web"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Enrichers.Environment"/>
