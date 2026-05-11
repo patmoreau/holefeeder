@@ -1,48 +1,46 @@
 # yaml-language-server: $schema=https://unpkg.com/@powersync/service-sync-rules@latest/schema/sync_rules.json
 # sync-rules.yaml
-config:
-  edition: 3
-
-# Resolve internal user_id from the JWT identity
-with:
-  current_user: 'SELECT user_id FROM user_identities WHERE identity_object_id = auth.user_id()'
-
-streams:
+bucket_definitions:
   # User's personal financial data
   user_data:
-    queries:
+    # Which users get this bucket?
+    parameters:
+      SELECT user_id FROM user_identities WHERE identity_object_id = token_parameters.user_id
+
+    # What data goes in this bucket?
+    data:
       # Sync all accounts - CONVERT MONEY TO CENTS
-      - SELECT a.id, a.type, a.name, a.favorite,
-        CAST((a.open_balance * 100) + 0.5 AS INTEGER) as open_balance,
-        a.open_date, a.description, a.inactive, a.user_id
-        FROM accounts a
-        JOIN current_user u ON a.user_id = u.user_id
+      - SELECT id, type, name, favorite,
+          CAST((open_balance * 100) + 0.5 AS INTEGER) as open_balance,
+          open_date, description, inactive, user_id
+        FROM accounts
+        WHERE user_id = bucket.user_id
 
       # Sync all categories - CONVERT MONEY TO CENTS
-      - SELECT c.id, c.type, c.name, c.color,
-        CAST((c.budget_amount * 100) + 0.5 AS INTEGER) as budget_amount,
-        c.favorite, c.system, c.user_id
-        FROM categories c
-        JOIN current_user u ON c.user_id = u.user_id
+      - SELECT id, type, name, color,
+          CAST((budget_amount * 100) + 0.5 AS INTEGER) as budget_amount,
+          favorite, system, user_id
+        FROM categories
+        WHERE user_id = bucket.user_id
 
       # Sync all transactions - CONVERT MONEY TO CENTS
-      - SELECT t.id, t.date,
-        CAST((t.amount * 100) + 0.5 AS INTEGER) as amount,
-        t.description, t.account_id, t.category_id,
-        t.cashflow_id, t.cashflow_date, t.tags, t.user_id
-        FROM transactions t
-        JOIN current_user u ON t.user_id = u.user_id
+      - SELECT id, date,
+          CAST((amount * 100) + 0.5 AS INTEGER) as amount,
+          description, account_id, category_id,
+          cashflow_id, cashflow_date, tags, user_id
+        FROM transactions
+        WHERE user_id = bucket.user_id
 
       # Sync all cashflows - CONVERT MONEY TO CENTS
-      - SELECT f.id, f.effective_date,
-        CAST((f.amount * 100) + 0.5 AS INTEGER) as amount,
-        f.interval_type, f.frequency, f.recurrence,
-        f.description, f.account_id, f.category_id,
-        f.inactive, f.tags, f.user_id
-        FROM cashflows f
-        JOIN current_user u ON f.user_id = u.user_id
+      - SELECT id, effective_date,
+          CAST((amount * 100) + 0.5 AS INTEGER) as amount,
+          interval_type, frequency, recurrence,
+          description, account_id, category_id,
+          inactive, tags, user_id
+        FROM cashflows
+        WHERE user_id = bucket.user_id
 
       # Sync store items (app settings/preferences)
-      - SELECT s.id, s.code, s.data, s.user_id
-        FROM store_items s
-        JOIN current_user u ON s.user_id = u.user_id
+      - SELECT id, code, data, user_id
+        FROM store_items
+        WHERE user_id = bucket.user_id
