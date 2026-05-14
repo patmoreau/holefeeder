@@ -1,12 +1,13 @@
 using System.Net;
 
 using DrifterApps.Seeds.FluentScenario;
+using DrifterApps.Seeds.Testing.Attributes;
 
 using Refit;
 
 namespace Holefeeder.FunctionalTests.Features;
 
-[ComponentTest, Category("Authorization")]
+[ComponentTest]
 [Collection(FunctionalSecurityTestMarker.Name)]
 public abstract class SecurityScenario(ITestOutputHelper testOutputHelper) : BaseScenario(testOutputHelper)
 {

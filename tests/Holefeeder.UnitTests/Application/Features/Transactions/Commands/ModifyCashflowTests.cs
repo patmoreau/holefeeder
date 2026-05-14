@@ -6,7 +6,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.ModifyCashflo
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class ModifyCashflowTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
@@ -25,7 +25,7 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Id);
@@ -40,7 +40,7 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.EffectiveDate);
@@ -55,7 +55,7 @@ public class ModifyCashflowTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

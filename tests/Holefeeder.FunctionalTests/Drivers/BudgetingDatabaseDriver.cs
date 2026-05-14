@@ -43,7 +43,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
 
     private static NpgsqlConnection ConnectionFactory(string connectionString) => new(connectionString);
 
-    public override async Task InitializeAsync()
+    public override async ValueTask InitializeAsync()
     {
         await DatabaseServer.StartAsync();
 

@@ -2,7 +2,7 @@ using Holefeeder.Domain.Enumerations;
 
 namespace Holefeeder.UnitTests.Domain.Enumerations;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class DateIntervalTypeTests
 {
     [Theory]

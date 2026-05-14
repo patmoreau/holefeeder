@@ -2,7 +2,7 @@ using Holefeeder.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Extensions;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class DateHelperTests
 {
     private sealed class ParsePersistentData : TheoryData<string, DateOnly>

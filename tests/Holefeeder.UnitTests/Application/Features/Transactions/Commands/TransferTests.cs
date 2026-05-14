@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilde
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class TransferTests
 {
     [Fact]
@@ -15,7 +15,7 @@ public class TransferTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Date);
@@ -32,7 +32,7 @@ public class TransferTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.FromAccountId);
@@ -49,7 +49,7 @@ public class TransferTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.ToAccountId);
@@ -64,7 +64,7 @@ public class TransferTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

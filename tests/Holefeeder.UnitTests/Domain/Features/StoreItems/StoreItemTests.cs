@@ -7,7 +7,7 @@ using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.StoreItems;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class StoreItemTests
 {
     private readonly Driver _driver = new();

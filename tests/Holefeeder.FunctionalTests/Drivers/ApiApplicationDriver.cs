@@ -140,7 +140,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         }
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await AuthorityDriver.InitializeAsync();
         if (UseDatabaseDriver)
@@ -156,7 +156,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         }
     }
 
-    async Task IAsyncLifetime.DisposeAsync()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (UseDatabaseDriver)
         {
@@ -164,6 +164,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         }
 
         await AuthorityDriver.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 
     private static string GetProjectPath(string projectRelativePath, string projectName)

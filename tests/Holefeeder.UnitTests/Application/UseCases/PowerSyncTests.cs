@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 
 namespace Holefeeder.UnitTests.Application.UseCases;
 
-[UnitTest, Category("PowerSync")]
+[UnitTest]
 public class PowerSyncTests
 {
     [Fact]

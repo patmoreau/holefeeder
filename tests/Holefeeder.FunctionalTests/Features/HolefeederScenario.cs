@@ -80,7 +80,14 @@ public abstract class HolefeederScenario : BaseScenario, IAsyncLifetime
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NotFound));
 
-    public Task InitializeAsync() => _apiApplicationDriver.ResetStateAsync();
+    public async ValueTask InitializeAsync()
+    {
+        await _apiApplicationDriver.ResetStateAsync();
+    }
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
+    }
 }

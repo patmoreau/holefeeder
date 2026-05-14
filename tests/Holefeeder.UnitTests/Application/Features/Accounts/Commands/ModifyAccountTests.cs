@@ -4,7 +4,7 @@ using static Holefeeder.Application.Features.Accounts.Commands.ModifyAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class ModifyAccountTests
 {
     [Fact]

@@ -2,7 +2,7 @@ using static Holefeeder.Application.Features.StoreItems.Queries.GetStoreItem;
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Queries;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class GetStoreItemTests
 {
     [Fact]

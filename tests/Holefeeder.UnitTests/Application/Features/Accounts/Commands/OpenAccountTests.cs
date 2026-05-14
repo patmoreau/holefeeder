@@ -4,7 +4,7 @@ using static Holefeeder.Application.Features.Accounts.Commands.OpenAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class OpenAccountTests
 {
     [Fact]
@@ -18,7 +18,7 @@ public class OpenAccountTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Type);
@@ -38,7 +38,7 @@ public class OpenAccountTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Name);
@@ -55,7 +55,7 @@ public class OpenAccountTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.OpenDate);
@@ -71,7 +71,7 @@ public class OpenAccountTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

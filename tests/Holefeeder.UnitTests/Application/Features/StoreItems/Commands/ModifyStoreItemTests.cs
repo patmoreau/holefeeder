@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestB
 
 namespace Holefeeder.UnitTests.Application.Features.StoreItems.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class ModifyStoreItemTests
 {
     [Fact]

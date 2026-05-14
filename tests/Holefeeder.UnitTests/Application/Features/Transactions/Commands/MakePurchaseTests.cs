@@ -7,7 +7,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.MakePurchase;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class MakePurchaseTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
@@ -29,7 +29,7 @@ public class MakePurchaseTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.AccountId);
@@ -44,7 +44,7 @@ public class MakePurchaseTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.CategoryId);
@@ -59,7 +59,7 @@ public class MakePurchaseTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Date);
@@ -74,7 +74,7 @@ public class MakePurchaseTests
         Validator validator = new();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

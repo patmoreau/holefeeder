@@ -6,7 +6,7 @@ using static Holefeeder.Application.Features.Transactions.Commands.PayCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class PayCashflowTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()
@@ -24,7 +24,7 @@ public class PayCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.Date);
@@ -39,7 +39,7 @@ public class PayCashflowTests
         var validator = new Validator();
 
         // act
-        var result = await validator.TestValidateAsync(request);
+        var result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.CashflowId);
@@ -54,7 +54,7 @@ public class PayCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldHaveValidationErrorFor(r => r.CashflowDate);
@@ -69,7 +69,7 @@ public class PayCashflowTests
         var validator = new Validator();
 
         // act
-        TestValidationResult<Request>? result = await validator.TestValidateAsync(request);
+        TestValidationResult<Request>? result = await validator.TestValidateAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
         // assert
         result.ShouldNotHaveAnyValidationErrors();

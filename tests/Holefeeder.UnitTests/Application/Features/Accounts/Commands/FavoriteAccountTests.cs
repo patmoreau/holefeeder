@@ -3,7 +3,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBui
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Commands;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class FavoriteAccountTests
 {
     [Fact]

@@ -4,7 +4,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetCashflows;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class GetCashflowsTests
 {
     private readonly Faker<Request> _faker = new Faker<Request>()

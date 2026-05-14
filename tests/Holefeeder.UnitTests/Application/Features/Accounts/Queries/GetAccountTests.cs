@@ -2,7 +2,7 @@ using static Holefeeder.Application.Features.Accounts.Queries.GetAccount;
 
 namespace Holefeeder.UnitTests.Application.Features.Accounts.Queries;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class GetAccountTests
 {
     [Fact]

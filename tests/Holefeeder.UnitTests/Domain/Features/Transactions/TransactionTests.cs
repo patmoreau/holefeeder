@@ -12,7 +12,7 @@ using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class TransactionTests
 {
     private readonly Driver _driver = new();

@@ -12,14 +12,12 @@ using Holefeeder.Domain.ValueObjects;
 using Holefeeder.Tests.Common.Builders;
 using Holefeeder.UnitTests.Domain.Extensions;
 
-using Xunit.Abstractions;
-
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.UnitTests.Domain.Features.Transactions;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
 public class CashflowTests(ITestOutputHelper testOutputHelper)
 {

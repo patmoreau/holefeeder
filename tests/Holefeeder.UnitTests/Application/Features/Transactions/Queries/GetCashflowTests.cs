@@ -2,7 +2,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetCashflow;
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class GetCashflowTests
 {
     [Fact]

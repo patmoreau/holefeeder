@@ -5,7 +5,7 @@ using static Holefeeder.Application.Features.Transactions.Queries.GetTransaction
 
 namespace Holefeeder.UnitTests.Application.Features.Transactions.Queries;
 
-[UnitTest, Category("Application")]
+[UnitTest]
 public class GetTransactionTests
 {
     [Fact]

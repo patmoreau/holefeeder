@@ -9,7 +9,7 @@ using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Categories;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class CategoryTests
 {
     private readonly Driver _driver = new();
@@ -87,7 +87,7 @@ public class CategoryTests
     {
         public NameValidationData()
         {
-            Add(null);
+            Add(null!);
             Add(string.Empty);
             Add("       ");
             Add(new Faker().Random.Words().ClampLength(256));

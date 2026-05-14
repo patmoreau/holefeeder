@@ -1,7 +1,6 @@
 using DrifterApps.Seeds.FluentResult;
 using DrifterApps.Seeds.Testing;
 
-using Holefeeder.Domain.Enumerations;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Transactions;
@@ -15,7 +14,7 @@ using Holefeeder.UnitTests.Domain.Extensions;
 
 namespace Holefeeder.UnitTests.Domain.Features.Accounts;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class AccountTests
 {
     private readonly Driver _driver = new();
@@ -212,7 +211,7 @@ public class AccountTests
     {
         public NameValidationData()
         {
-            Add(null);
+            Add(null!);
             Add(string.Empty);
             Add("       ");
             Add(new Faker().Random.Words().ClampLength(256));

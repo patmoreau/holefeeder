@@ -5,7 +5,7 @@ using Holefeeder.Domain.Features.Users;
 
 namespace Holefeeder.UnitTests.Domain.Features.Users;
 
-[UnitTest, Category("Domain")]
+[UnitTest]
 public class UserTests
 {
     private readonly Driver _driver = new();
