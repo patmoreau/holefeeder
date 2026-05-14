@@ -18,12 +18,11 @@ services:
       - --no-restore
       - --configuration
       - Release
-      - --logger
-      - trx;verbosity=normal
+      - --report-xunit-trx
+      - --report-xunit-trx-filename
+      - test-results.functional.xml
       - --results-directory
       - /TestResults
-      - --collect
-      - 'XPlat Code Coverage'
 
   api-unit-tests:
     environment:
@@ -35,9 +34,8 @@ services:
       - --no-restore
       - --configuration
       - Release
-      - --logger
-      - trx;verbosity=normal
+      - --report-xunit-trx
+      - --report-xunit-trx-filename
+      - test-results.unit.xml
       - --results-directory
       - /TestResults
-      - --collect
-      - 'XPlat Code Coverage'
