@@ -223,7 +223,7 @@ jobs:
         if: always()
         with:
           name: .Net Tests
-          path: ./tests-results/**/test-results.*.xml
+          path: ./tests-results/test-results.*.xml
           reporter: dotnet-trx
 
       - name: Set badge color
