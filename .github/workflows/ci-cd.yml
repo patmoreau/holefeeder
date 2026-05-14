@@ -224,7 +224,7 @@ jobs:
         with:
           name: .Net Tests
           path: ./tests-results/**/test-results.*.xml
-          reporter: xunit
+          reporter: dotnet-trx
 
       - name: Set badge color
         shell: bash
