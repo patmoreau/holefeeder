@@ -114,7 +114,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.target }}-
 
       - name: Build ${{ matrix.target }} container
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           load: true
           context: .
@@ -314,7 +314,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.target }}-
 
       - name: Publish ${{ matrix.target }} container
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ${{ env.DOCKERFILE_PATH }}
