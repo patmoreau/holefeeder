@@ -9,13 +9,11 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "holefeeder-flutter/**"
       - "holefeeder-react/**"
       - ".github/workflows/cicd.yml"
   pull_request:
     branches: ["main"]
     paths:
-      - "holefeeder-flutter/**"
       - "holefeeder-react/**"
       - ".github/workflows/cicd.yml"
 
@@ -23,7 +21,6 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      flutter: ${{ steps.filter.outputs.flutter }}
       react: ${{ steps.filter.outputs.react }}
     steps:
       - uses: actions/checkout@v4
@@ -31,39 +28,8 @@ jobs:
         id: filter
         with:
           filters: |
-            flutter:
-              - 'holefeeder-flutter/**'
             react:
               - 'holefeeder-react/**'
-
-  flutter-build:
-    needs: changes
-    if: ${{ needs.changes.outputs.flutter == 'true' }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.x"
-          channel: "stable"
-
-      - name: Install dependencies
-        run: flutter pub get
-        working-directory: ./holefeeder-flutter
-
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: flutter format --output=none --set-exit-if-changed .
-
-      - name: Analyze project source
-        run: flutter analyze
-        working-directory: ./holefeeder-flutter
-
-      - name: Run tests
-        run: flutter test
-        working-directory: ./holefeeder-flutter
 
   react-native-lint:
     needs: changes
