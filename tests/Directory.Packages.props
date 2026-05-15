@@ -2,14 +2,6 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="10.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
-    <PackageVersion Include="coverlet.msbuild" Version="10.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
     <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.20" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.19" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.19" />
@@ -39,5 +31,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="xunit.v3.mtp-v2" Version="3.2.2" />
+    <PackageVersion Include="xunit.v3.runner.console" Version="3.2.2" />
   </ItemGroup>
 </Project>

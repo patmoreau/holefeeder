@@ -55,12 +55,14 @@ RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 ###################################
 FROM build AS unittests
 WORKDIR /source/tests/Holefeeder.UnitTests
+RUN dotnet build -c Release --no-restore
 
 ###################################
 # Functional tests stage
 ###################################
 FROM build AS functionaltests
 WORKDIR /source/tests/Holefeeder.FunctionalTests
+RUN dotnet build -c Release --no-restore
 
 RUN dotnet dev-certs https --clean
 RUN dotnet dev-certs https

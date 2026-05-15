@@ -11,14 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.msbuild">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions"/>
         <PackageReference Include="DrifterApps.Seeds.Testing"/>
         <PackageReference Include="FluentAssertions"/>
@@ -36,6 +28,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="xunit.v3.mtp-v2" />
+        <PackageReference Include="xunit.v3.runner.console">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

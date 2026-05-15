@@ -23,6 +23,9 @@ services:
       - test-results.functional.xml
       - --results-directory
       - /TestResults
+      - --coverage
+      - --coverage-output-format
+      - cobertura
 
   api-unit-tests:
     environment:
@@ -39,3 +42,6 @@ services:
       - test-results.unit.xml
       - --results-directory
       - /TestResults
+      - --coverage
+      - --coverage-output-format
+      - cobertura
