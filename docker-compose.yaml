@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.7.0
+    image: traefik:v3.7.1
     container_name: reverse-proxy
     restart: unless-stopped
     command:
@@ -19,7 +19,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:2.41.0-alpine
+    image: portainer/portainer-ce:2.41.1-alpine
     container_name: portainer
     expose:
       - 9000
@@ -78,7 +78,7 @@ services:
       - seq-data:/data
 
   powersync:
-    image: journeyapps/powersync-service:1.20.5
+    image: journeyapps/powersync-service:1.21.0
     container_name: powersync
     restart: unless-stopped
     security_opt:
