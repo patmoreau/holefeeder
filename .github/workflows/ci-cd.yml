@@ -199,7 +199,7 @@ jobs:
         with:
           name: test-results-${{ matrix.target }}
           path: ./tests-results/*.xml
-          retention-days: 1 # Keep for 1 day
+          retention-days: 1
 
   tests-reporter:
     name: Tests reporter
