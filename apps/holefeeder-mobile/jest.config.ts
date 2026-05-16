@@ -23,6 +23,7 @@ const config: Config = {
   coverageDirectory: 'coverage/unit',
   moduleNameMapper: {
     '^@holefeeder/shared/core$': '<rootDir>/../../packages/shared/src/core/index.ts',
+    '^@holefeeder/shared/testkit$': '<rootDir>/../../packages/shared/src/testkit/index.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
   },

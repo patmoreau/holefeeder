@@ -16,8 +16,8 @@ type BuildLangObject<T, Path extends string = ''> = {
       : BuildLangObject<T[K], Path extends '' ? K & string : `${Path}.${K & string}`>;
 };
 
-function createLangObject<T extends Record<string, any>>(obj: T, prefix = ''): any {
-  const result: any = {};
+function createLangObject<T extends Record<string, unknown>>(obj: T, prefix = ''): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
   const pluralSuffixRegex = /_(one|other|zero|few|many)$/;
 
   for (const key in obj) {
@@ -30,7 +30,7 @@ function createLangObject<T extends Record<string, any>>(obj: T, prefix = ''): a
     if (typeof obj[key] === 'string') {
       result[key] = path;
     } else {
-      result[key] = createLangObject(obj[key], path);
+      result[key] = createLangObject(obj[key] as Record<string, unknown>, path);
     }
   }
 

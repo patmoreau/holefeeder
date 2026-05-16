@@ -1,6 +1,6 @@
 import { DateOnly, DateOnlyErrors, Id, IdErrors, Variation, VariationErrors } from '@holefeeder/shared/core';
 import { AccountErrors } from '@/accounts/core/account';
-import { AccountTypeErrors } from '@/accounts/core/account-type';
+import { AccountType, AccountTypeErrors } from '@/accounts/core/account-type';
 import { anUpdateAccountCommand } from '@/accounts/core/update/__tests__/update-account-command-for-test';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 
@@ -31,7 +31,7 @@ describe('UpdateAccountCommand', () => {
   });
 
   it('returns failure if type is invalid', () => {
-    const result = UpdateAccountCommand.create(anUpdateAccountCommand({ type: 'bad-type' as any }));
+    const result = UpdateAccountCommand.create(anUpdateAccountCommand({ type: 'bad-type' as unknown as AccountType }));
     expect(result).toBeFailureWithErrors([AccountTypeErrors.invalid]);
   });
 

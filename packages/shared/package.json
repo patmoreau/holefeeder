@@ -6,6 +6,10 @@
     "./core": {
       "import": "./dist/core/index.js",
       "types": "./dist/core/index.d.ts"
+    },
+    "./testkit": {
+      "import": "./dist/testkit/index.js",
+      "types": "./dist/testkit/index.d.ts"
     }
   },
   "scripts": {

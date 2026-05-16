@@ -25,7 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     icon: `./assets/${iosIconFile}`,
-    bundleIdentifier: 'com.drifterapps.holefeeder-react',
+    bundleIdentifier: 'com.drifterapps.holefeeder',
     infoPlist: {
       ...config.ios?.infoPlist,
       NSAppTransportSecurity: {
@@ -49,7 +49,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     predictiveBackGestureEnabled: false,
-    package: 'com.drifterapps.holefeeder_react',
+    package: 'com.drifterapps.holefeeder',
   },
   web: {
     output: 'static',

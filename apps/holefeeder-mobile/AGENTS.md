@@ -10,7 +10,7 @@ react-native-auth0) · i18next · pnpm · TypeScript strict · **@holefeeder/cor
 
 ## Key Commands
 
-Run from **repo root** using `pnpm --filter holefeeder-react <cmd>`, or directly from this directory:
+Run from **repo root** using `pnpm --filter holefeeder-mobile <cmd>`, or directly from this directory:
 
 ```bash
 pnpm start                  # dev server (APP_ENV=development)

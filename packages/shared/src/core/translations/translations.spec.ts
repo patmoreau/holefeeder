@@ -1,5 +1,5 @@
 import { en } from './locales/en-CA/translations';
-import { tk, TranslationStructure } from './translations';
+import { type TranslationStructure, tk } from './translations';
 
 describe('translations', () => {
   describe('createLangObject', () => {
@@ -29,7 +29,7 @@ describe('translations', () => {
     it('should handle all keys from the source translation object', () => {
       const pluralSuffixRegex = /_(one|other|zero|few|many)$/;
 
-      const checkAllKeys = (source: any, generated: any, path = ''): void => {
+      const checkAllKeys = (source: Record<string, unknown>, generated: Record<string, unknown>, path = ''): void => {
         for (const key in source) {
           if (pluralSuffixRegex.test(key)) {
             continue;
@@ -41,19 +41,19 @@ describe('translations', () => {
             expect(generated[key]).toBe(currentPath);
           } else if (typeof source[key] === 'object' && source[key] !== null) {
             expect(typeof generated[key]).toBe('object');
-            checkAllKeys(source[key], generated[key], currentPath);
+            checkAllKeys(source[key] as Record<string, unknown>, generated[key] as Record<string, unknown>, currentPath);
           }
         }
       };
 
-      checkAllKeys(en, tk);
+      checkAllKeys(en as Record<string, unknown>, tk as Record<string, unknown>);
     });
 
     it('should not have any undefined values for string properties', () => {
-      const checkNoUndefined = (obj: any): void => {
+      const checkNoUndefined = (obj: Record<string, unknown>): void => {
         for (const key in obj) {
           if (typeof obj[key] === 'object' && obj[key] !== null) {
-            checkNoUndefined(obj[key]);
+            checkNoUndefined(obj[key] as Record<string, unknown>);
           } else {
             expect(obj[key]).toBeDefined();
             expect(typeof obj[key]).toBe('string');
@@ -61,23 +61,23 @@ describe('translations', () => {
         }
       };
 
-      checkNoUndefined(tk);
+      checkNoUndefined(tk as Record<string, unknown>);
     });
 
     it('should create paths that match the dot notation format', () => {
       const pathRegex = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/;
 
-      const checkPathFormat = (obj: any): void => {
+      const checkPathFormat = (obj: Record<string, unknown>): void => {
         for (const key in obj) {
           if (typeof obj[key] === 'string') {
             expect(obj[key]).toMatch(pathRegex);
           } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-            checkPathFormat(obj[key]);
+            checkPathFormat(obj[key] as Record<string, unknown>);
           }
         }
       };
 
-      checkPathFormat(tk);
+      checkPathFormat(tk as Record<string, unknown>);
     });
   });
 
@@ -136,7 +136,7 @@ describe('translations', () => {
             message: 'test',
           },
         },
-      } as any;
+      } as unknown as TranslationStructure;
 
       expect(testStructure).toBeDefined();
     });
@@ -163,19 +163,19 @@ describe('translations', () => {
       const paths = new Set<string>();
       const pluralSuffixRegex = /_(one|other|zero|few|many)$/;
 
-      const collectPaths = (obj: any): void => {
+      const collectPaths = (obj: Record<string, unknown>): void => {
         for (const key in obj) {
           if (typeof obj[key] === 'string') {
-            paths.add(obj[key]);
+            paths.add(obj[key] as string);
           } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-            collectPaths(obj[key]);
+            collectPaths(obj[key] as Record<string, unknown>);
           }
         }
       };
 
-      collectPaths(tk);
+      collectPaths(tk as Record<string, unknown>);
 
-      const countStrings = (obj: any): number => {
+      const countStrings = (obj: Record<string, unknown>): number => {
         let count = 0;
         for (const key in obj) {
           if (pluralSuffixRegex.test(key)) {
@@ -185,13 +185,13 @@ describe('translations', () => {
           if (typeof obj[key] === 'string') {
             count++;
           } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-            count += countStrings(obj[key]);
+            count += countStrings(obj[key] as Record<string, unknown>);
           }
         }
         return count;
       };
 
-      const totalStrings = countStrings(en);
+      const totalStrings = countStrings(en as Record<string, unknown>);
 
       expect(paths.size).toBe(totalStrings);
     });

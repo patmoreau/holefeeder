@@ -1,5 +1,5 @@
 {
-  "name": "holefeeder-react",
+  "name": "holefeeder-mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "packageManager": "pnpm@11.0.9",

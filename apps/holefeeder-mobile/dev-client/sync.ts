@@ -1,17 +1,17 @@
 import { EventEmitter } from 'events';
-import { Schema } from '@powersync/common';
+import { AbstractPowerSyncDatabase, Schema } from '@powersync/common';
 import { PowerSyncDatabase } from '@powersync/node';
 import Database from 'better-sqlite3';
 
 // Define the connector interface based on PowerSync requirements
-interface PowerSyncBackendConnector {
+type PowerSyncBackendConnector = {
   fetchCredentials(): Promise<{
     endpoint: string;
     token: string;
     expiresAt?: number;
   } | null>;
-  uploadData(database: any): Promise<void>;
-}
+  uploadData(database: AbstractPowerSyncDatabase): Promise<void>;
+};
 
 interface SyncConfig {
   powerSyncUrl: string;
@@ -48,7 +48,7 @@ class SimpleConnector implements PowerSyncBackendConnector {
     };
   }
 
-  async uploadData(database: any): Promise<void> {
+  async uploadData(database: AbstractPowerSyncDatabase): Promise<void> {
     // For read-only sync, we don't need to upload changes
     // If you need to sync changes back, implement this method
     const batch = await database.getCrudBatch();
@@ -102,7 +102,7 @@ class PowerSyncToSQLiteSync extends EventEmitter {
   private async syncTable(tableName: string): Promise<number> {
     try {
       // Get all rows from PowerSync table
-      const rows = await this.powerSyncDb.getAll<Record<string, any>>(`SELECT * FROM ${tableName}`);
+      const rows = await this.powerSyncDb.getAll<Record<string, unknown>>(`SELECT * FROM ${tableName}`);
 
       if (rows.length === 0) {
         return 0;
@@ -119,9 +119,9 @@ class PowerSyncToSQLiteSync extends EventEmitter {
       // Begin transaction for batch insert
       const insertStmt = this.sqliteDb.prepare(`REPLACE INTO ${tableName} (${columnNames}) VALUES (${placeholders})`);
 
-      const insertMany = this.sqliteDb.transaction((rows: any[]) => {
+      const insertMany = this.sqliteDb.transaction((rows: unknown[]) => {
         for (const row of rows) {
-          const values = columns.map((col) => row[col]);
+          const values = columns.map((col) => (row as Record<string, unknown>)[col]);
           insertStmt.run(values);
         }
       });
@@ -219,10 +219,7 @@ class PowerSyncToSQLiteSync extends EventEmitter {
 
 // Example usage
 async function main() {
-  // Import schema (adjust path as needed)
-  // @ts-ignore
-  // eslint-disable-next-line import/no-unresolved,import-x/no-unresolved
-  const { AppSchema } = await import('./app-schema.js');
+  const { AppSchema } = await import('../src/shared/persistence/app-schema.js');
 
   // Validate required environment variables
   if (!process.env.POWERSYNC_URL) {
@@ -232,7 +229,7 @@ async function main() {
   const sync = new PowerSyncToSQLiteSync({
     powerSyncUrl: process.env.POWERSYNC_URL,
     powerSyncToken: process.env.POWERSYNC_TOKEN,
-    schema: AppSchema as any,
+    schema: AppSchema as unknown as Schema,
     sqliteDbPath: process.env.SQLITE_DB_PATH || '/data/local.db',
     localDbPath: process.env.POWERSYNC_CACHE_PATH || '/data/powersync-cache.db',
     tables: (process.env.SYNC_TABLES || 'accounts,cashflows,categories,store_items,transactions').split(','),

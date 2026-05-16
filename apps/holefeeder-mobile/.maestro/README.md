@@ -108,7 +108,7 @@ Run tests using the configured flows:
 
 ```bash
 # Navigate to project root
-cd /path/to/holefeeder-react
+cd /path/to/holefeeder-mobile
 
 # Run E2E tests using npm script (recommended)
 pnpm test:e2e:ios

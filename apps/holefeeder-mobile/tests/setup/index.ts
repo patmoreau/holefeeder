@@ -1,5 +1,4 @@
-import './globals';
-import './result-matcher';
+import '@holefeeder/shared/testkit';
 
 // If you have one-off test helpers or expect extensions, import them here too:
 // import '@testing-library/jest-native/extend-expect';

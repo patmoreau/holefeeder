@@ -28,8 +28,8 @@ pnpm typecheck                 # turbo: typecheck all packages
 # Per-workspace
 pnpm --filter @holefeeder/core build
 pnpm --filter @holefeeder/core test
-pnpm --filter holefeeder-react test
-pnpm --filter holefeeder-react ios
+pnpm --filter holefeeder-mobile test
+pnpm --filter holefeeder-mobile ios
 ```
 
 ## `packages/core` — @holefeeder/core

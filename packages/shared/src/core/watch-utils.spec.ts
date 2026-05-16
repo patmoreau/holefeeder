@@ -1,4 +1,4 @@
-import { Result } from './result';
+import { AsyncResult, Result } from './result';
 import { combineWatchers } from './watch-utils';
 
 jest.useFakeTimers();
@@ -24,7 +24,7 @@ describe('combineWatchers', () => {
   });
 
   it('should wait for all sources to emit', () => {
-    let cb1: any;
+    let cb1: ((result: AsyncResult<unknown>) => void) | undefined;
     const watcher1 = jest.fn((cb) => {
       cb1 = cb;
       return jest.fn();
@@ -41,7 +41,7 @@ describe('combineWatchers', () => {
 
     expect(spy).toHaveBeenCalledWith(expect.objectContaining({ isLoading: true }));
 
-    cb1(Result.success('B'));
+    cb1!(Result.success('B'));
 
     expect(spy).toHaveBeenLastCalledWith(expect.objectContaining({ isFailure: false, isLoading: false, value: 'B-2' }));
     unsub();

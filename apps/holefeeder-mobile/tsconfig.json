@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@holefeeder/shared/core": ["../../packages/shared/src/core/index.ts"],
+      "@holefeeder/shared/testkit": ["../../packages/shared/src/testkit/index.ts"],
       "@/*": ["./src/*"],
       "@/accounts/*": ["./src/accounts/*"],
       "@/app/*": ["./src/app/*"],

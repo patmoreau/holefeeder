@@ -1,10 +1,13 @@
-import { type AsyncResult, Result } from './result';
+import { type AsyncResult, type Success, Result } from './result';
 
 type Watcher<T> = (onDataChange: (result: AsyncResult<T>) => void) => () => void;
 
-export const combineWatchers = <T extends any[], R>(watchers: { [K in keyof T]: Watcher<T[K]> }, selector: (...args: T) => R): Watcher<R> => {
+export const combineWatchers = <T extends unknown[], R>(
+  watchers: { [K in keyof T]: Watcher<T[K]> },
+  selector: (...args: T) => R
+): Watcher<R> => {
   return (onDataChange: (result: AsyncResult<R>) => void) => {
-    const values: AsyncResult<any>[] = new Array(watchers.length).fill(Result.loading());
+    const values = new Array(watchers.length).fill(Result.loading());
     const hasEmitted = new Array(watchers.length).fill(false);
     const unsubscribes: (() => void)[] = [];
 
@@ -35,11 +38,12 @@ export const combineWatchers = <T extends any[], R>(watchers: { [K in keyof T]: 
       }
 
       try {
-        const successValues = values.map((res) => (res as any).value);
+        const successValues = values.map((res) => (res as Success<unknown>).value);
         const result = selector(...(successValues as T));
         onDataChange(Result.success(result));
-      } catch (e: any) {
-        onDataChange(Result.failure([e.message || 'Error in selector']));
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'combine-watchers-errors';
+        onDataChange(Result.failure([message]));
       }
     };
 

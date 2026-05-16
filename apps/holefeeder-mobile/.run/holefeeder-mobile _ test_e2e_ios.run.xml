@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ios" type="js.build_tools.npm">
+  <configuration default="false" name="holefeeder-mobile &gt; test:e2e:ios" type="js.build_tools.npm" nameIsGenerated="true">
     <package-json value="$PROJECT_DIR$/apps/holefeeder-mobile/package.json" />
     <command value="run" />
     <scripts>
-      <script value="ios" />
+      <script value="test:e2e:ios" />
     </scripts>
     <node-interpreter value="project" />
     <envs />

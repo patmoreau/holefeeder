@@ -1,4 +1,4 @@
-import { type AsyncResult, Result, Success } from '@holefeeder/shared/core';
+import { type AsyncResult, type Result, type Success } from '../core/result';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -15,7 +15,7 @@ declare global {
   var expectSuccess: <T>(result: Result<T> | AsyncResult<T>) => asserts result is Success<T>;
 }
 
-global.expectSuccess = expectSuccess;
+globalThis.expectSuccess = expectSuccess;
 
 function expectSuccess<T>(result: Result<T> | AsyncResult<T>): asserts result is Success<T> {
   if (result.isFailure) {
