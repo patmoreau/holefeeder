@@ -16,7 +16,7 @@ export const TestSection = () => {
           label={t(tk.testSection.goTo)}
           variant={'link'}
           onPress={() => {
-            // @ts-ignore
+            // @ts-expect-error -- route not in typed manifest
             router.push({ pathname: '/+not-found' });
           }}
         />
@@ -26,7 +26,7 @@ export const TestSection = () => {
           label={t(tk.testSection.component)}
           variant={'link'}
           onPress={() => {
-            // @ts-ignore
+            // @ts-expect-error -- route not in typed manifest
             router.push({ pathname: '/test' });
           }}
         />

@@ -14,12 +14,12 @@ describe('calculateSummary', () => {
       {
         type: expense,
         date: DateOnly.valid('2023-01-02'),
-        total: (Money.create(100) as any).value,
+        total: Money.valid(100),
       },
       {
         type: gain,
         date: DateOnly.valid('2023-01-03'),
-        total: (Money.create(200) as any).value,
+        total: Money.valid(200),
       },
     ];
 

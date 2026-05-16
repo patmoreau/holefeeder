@@ -48,7 +48,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      const dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE id = ?', [result.value]);
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [result.value]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].date).toBe(purchase.date);
@@ -76,7 +76,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      let dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE id = ?', [result.value]);
+      let dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [result.value]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].date).toBe(purchase.date);
@@ -89,7 +89,7 @@ describe('FlowsRepository', () => {
       expect(dbResult[0].cashflow_date).toBe(purchase.cashflow?.effectiveDate);
 
       const cashflowId = dbResult[0].cashflow_id;
-      dbResult = await db.getAll<any>('SELECT * FROM cashflows WHERE id = ?', [cashflowId]);
+      dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflowId]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].effective_date).toBe(purchase.cashflow?.effectiveDate);
@@ -116,7 +116,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      const dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE id = ?', [result.value]);
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [result.value]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].date).toBe(command.date);
@@ -163,7 +163,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      const dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE id = ?', [result.value]);
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [result.value]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].amount).toBe(Money.toCents(cashflow.amount));
@@ -186,7 +186,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      const dbResult = await db.getAll<any>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].inactive).toBe(1);
@@ -211,7 +211,7 @@ describe('FlowsRepository', () => {
 
       if (result.isFailure || result.isLoading) return;
 
-      let dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE account_id = ?', [transfer.sourceAccountId]);
+      let dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE account_id = ?', [transfer.sourceAccountId]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].date).toBe('2026-01-23');
@@ -219,7 +219,7 @@ describe('FlowsRepository', () => {
       expect(dbResult[0].description).toBe('Groceries');
       expect(dbResult[0].category_id).toBe(transferOut.id);
 
-      dbResult = await db.getAll<any>('SELECT * FROM transactions WHERE account_id = ?', [transfer.targetAccountId]);
+      dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE account_id = ?', [transfer.targetAccountId]);
 
       expect(dbResult).toHaveLength(1);
       expect(dbResult[0].date).toBe('2026-01-23');

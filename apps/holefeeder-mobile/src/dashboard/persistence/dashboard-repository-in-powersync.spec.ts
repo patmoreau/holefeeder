@@ -99,7 +99,7 @@ describe('DashboardRepositoryInPowersync', () => {
 
       const repo = DashboardRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       }, settings);
@@ -152,7 +152,7 @@ describe('DashboardRepositoryInPowersync', () => {
     it('returns empty list when no transactions exist', async () => {
       const repo = DashboardRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       }, settings);
@@ -172,7 +172,7 @@ describe('DashboardRepositoryInPowersync', () => {
       // Close the database to trigger an error
       await db.close();
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       }, settings);

@@ -22,7 +22,7 @@ describe('StoreItemsRepositoryInPowersync', () => {
       const storeItem = await aStoreItem().store(db);
       const repo = StoreItemsRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watchForCode(storeItem.code, (data) => {
         result = data;
       });
@@ -39,7 +39,7 @@ describe('StoreItemsRepositoryInPowersync', () => {
     it('returns not found when no store items exist', async () => {
       const repo = StoreItemsRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watchForCode(aWord(), (data) => {
         result = data;
       });
@@ -59,7 +59,7 @@ describe('StoreItemsRepositoryInPowersync', () => {
       // Close the database to trigger an error
       await db.close();
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watchForCode(aWord(), (data) => {
         result = data;
       });

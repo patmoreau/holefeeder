@@ -9,7 +9,7 @@ type WatchHook<T, TDefault extends T | null | undefined = undefined> = {
   defaultValue?: TDefault;
 };
 
-type WatchHooks = Record<string, WatchHook<any, any>>;
+type WatchHooks = Record<string, WatchHook<unknown, unknown>>;
 
 type WatchHookValue<H> =
   H extends WatchHook<infer R, infer D> ? (D extends NonNullable<D> ? R : D extends null ? R | null : R | undefined) : never;
@@ -22,24 +22,24 @@ type MultiWatchResult<T extends WatchHooks> = {
     setShowError: (show: boolean) => void;
     error: ErrorKey;
   };
-  results: { [K in keyof T]: AsyncResult<any> };
+  results: { [K in keyof T]: AsyncResult<unknown> };
 };
 
 export const withDefault = <T>(hook: () => AsyncResult<T>, defaultValue: T): WatchHook<T, T> => {
   const wrapped = () => hook();
-  (wrapped as any).defaultValue = defaultValue;
+  (wrapped as WatchHook<T, T>).defaultValue = defaultValue;
   return wrapped as WatchHook<T, T>;
 };
 
 export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchResult<T> => {
   const [showError, setShowError] = useState(false);
   const registeredKeysRef = useRef<Set<string>>(new Set());
-  const prevResultsRef = useRef<Record<string, AsyncResult<any>>>({});
+  const prevResultsRef = useRef<Record<string, AsyncResult<unknown>>>({});
 
-  const results = Object.entries(hooks).reduce((acc, [key, hook]) => {
+  const results = Object.entries(hooks).reduce<Record<string, AsyncResult<unknown>>>((acc, [key, hook]) => {
     acc[key] = hook();
     return acc;
-  }, {} as any);
+  }, {});
 
   useEffect(() => {
     // Log new watch registrations
@@ -51,7 +51,7 @@ export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchRe
     });
 
     // Log when watch data is received or updated (result reference changes on each PowerSync update)
-    Object.entries(results).forEach(([key, result]: [string, any]) => {
+    Object.entries(results).forEach(([key, result]) => {
       if (result.isSuccess && result !== prevResultsRef.current[key]) {
         logger.debug(`Watch data received: "${key}"`);
       }
@@ -60,9 +60,9 @@ export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchRe
     prevResultsRef.current = { ...results };
   });
 
-  const isLoading = Object.values(results).some((r: any) => r.isLoading);
+  const isLoading = Object.values(results).some((r) => r.isLoading);
 
-  const errors = Object.values(results).flatMap((r: any) => (r.isFailure ? r.errors : []));
+  const errors = Object.values(results).flatMap((r) => (r.isFailure ? r.errors : []));
   if (errors.length > 0) logger.error(errors);
 
   const hasErrors = errors.length > 0;
@@ -73,12 +73,12 @@ export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchRe
     }
   }, [hasErrors]);
 
-  const data = Object.entries(results).reduce((acc, [key, result]: [string, any]) => {
+  const data = Object.entries(results).reduce<Record<string, unknown>>((acc, [key, result]) => {
     const hook = hooks[key];
     const hasDefault = 'defaultValue' in hook;
-    acc[key] = result.isSuccess ? result.value : hasDefault ? (hook as any).defaultValue : undefined;
+    acc[key] = result.isSuccess ? result.value : hasDefault ? hook.defaultValue : undefined;
     return acc;
-  }, {} as any);
+  }, {});
 
   return {
     data,

@@ -70,7 +70,7 @@ describe('AccountsRepositoryInPowersync', () => {
 
       await db.close();
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       });

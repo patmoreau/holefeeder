@@ -8,7 +8,7 @@ import { Theme } from '@/types/theme/theme';
 
 export type PickerOption = {
   id: string | number;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type PickerProps<T extends PickerOption> = {

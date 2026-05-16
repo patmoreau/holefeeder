@@ -11,7 +11,7 @@ type FormErrorAlertProps = {
   errors: Record<string, string>;
 };
 
-export const showAlert = (t: (key: string, options?: any) => string) => {
+export const showAlert = (t: (key: string, options?: Record<string, unknown>) => string) => {
   const showDeleteAlert = (item: string, { onConfirm, onCancel }: AlertCallbacks) => {
     Alert.alert(t(tk.alert.delete.title, { item }), t(tk.alert.delete.message, { item }), [
       {

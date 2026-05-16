@@ -1,4 +1,5 @@
 import { buildUrl } from '@holefeeder/shared/core';
+import { type CrudEntry } from '@powersync/common';
 import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
 import { FetchForTest } from '@/shared/api/__tests__/fetch-for-test';
 import { aFetchRequest } from '@/shared/api/__tests__/fetch-request-for-test';
@@ -36,7 +37,7 @@ describe('sync-api', () => {
     it('should upload data with transaction ID', async () => {
       fetchForTest.simulate({ request: request, response: aFetchResponse({ status: 204, ok: true, body: undefined }) });
       const transactionId = 123;
-      const operations: any[] = [{ op: 'PUT', table: 'test', data: {} }];
+      const operations = [{ op: 'PUT', table: 'test', data: {} }] as unknown as CrudEntry[];
 
       const result = await sync.upload({ transactionId, operations });
 
@@ -46,7 +47,7 @@ describe('sync-api', () => {
     it('should upload data without transaction ID', async () => {
       fetchForTest.simulate({ request: request, response: aFetchResponse({ status: 204, ok: true, body: undefined }) });
       const transactionId = undefined;
-      const operations: any[] = [{ op: 'PUT', table: 'test', data: {} }];
+      const operations = [{ op: 'PUT', table: 'test', data: {} }] as unknown as CrudEntry[];
 
       const result = await sync.upload({ transactionId, operations });
 
@@ -56,7 +57,7 @@ describe('sync-api', () => {
     it('handles bad requests', async () => {
       fetchForTest.simulate({ request: request, response: aFetchResponse({ status: 400, ok: false, statusText: 'Bad request' }) });
       const transactionId = undefined;
-      const operations: any[] = [{ op: 'PUT', table: 'test', data: {} }];
+      const operations = [{ op: 'PUT', table: 'test', data: {} }] as unknown as CrudEntry[];
 
       const result = await sync.upload({ transactionId, operations });
 
@@ -65,7 +66,7 @@ describe('sync-api', () => {
 
     it('should handle API errors', async () => {
       fetchForTest.simulate({ request: request, response: new Error('HTTP 500: Internal Server Error') });
-      const operations: any[] = [];
+      const operations = [] as unknown as CrudEntry[];
 
       const result = await sync.upload({ operations });
 

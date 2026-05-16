@@ -89,7 +89,7 @@ describe('useLocaleFormatter', () => {
       const originalNumberFormat = Intl.NumberFormat;
       Intl.NumberFormat = jest.fn().mockImplementation(() => {
         throw new Error('Invalid currency');
-      }) as any;
+      }) as unknown as typeof Intl.NumberFormat;
 
       const formatted = result.current.formatCurrency(1234.56, { currency: 'INVALID' });
 
@@ -184,7 +184,7 @@ describe('useLocaleFormatter', () => {
       const originalDateTimeFormat = Intl.DateTimeFormat;
       Intl.DateTimeFormat = jest.fn().mockImplementation(() => {
         throw new Error('Invalid format');
-      }) as any;
+      }) as unknown as typeof Intl.DateTimeFormat;
 
       const formatted = result.current.formatDate(date, anchor);
 

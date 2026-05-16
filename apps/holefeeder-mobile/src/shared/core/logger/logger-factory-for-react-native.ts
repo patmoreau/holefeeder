@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { consoleTransport, type defLvlType, logger as RNLogger, type LoggerInstance } from 'react-native-logs';
 import ExpoOSLogger from '@/modules/expo-os-logger';
 
-const nativeTransport = (props: any) => {
+const nativeTransport = (props: { msg: string; level: { text: string }; extension?: string }) => {
   ExpoOSLogger.log(props.msg, props.level.text, props.extension ?? '');
 };
 

@@ -33,7 +33,7 @@ export const darkTheme: Theme = {
   colors,
   styles: {
     // New base styles using design tokens with dark theme colors
-    ...createBaseStyles({ colors, typography: lightTheme.typography } as any),
+    ...createBaseStyles({ colors, typography: lightTheme.typography } as unknown as Theme),
     // Legacy support
     ...lightTheme.styles,
   },

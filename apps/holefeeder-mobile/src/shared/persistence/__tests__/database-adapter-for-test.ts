@@ -1,7 +1,7 @@
-import { BaseObserver, type DBAdapter, type QueryResult } from '@powersync/common';
+import { BaseObserver, type DBAdapter, type DBAdapterListener, type LockContext, type QueryResult, type Transaction } from '@powersync/common';
 import sqliteDatabase from 'better-sqlite3';
 
-export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapter {
+export class DatabaseAdapterForTest extends BaseObserver<DBAdapterListener> implements DBAdapter {
   name = 'database-adapter-for-test';
   private db: sqliteDatabase.Database;
 
@@ -11,7 +11,7 @@ export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapt
 
     this.db.function('powersync_rs_version', () => '0.4.10');
     this.db.function('powersync_connection_name', () => 'test-connection');
-    this.db.function('powersync_replace_schema', { varargs: true }, (..._args: any[]) => null);
+    this.db.function('powersync_replace_schema', { varargs: true }, (..._args: unknown[]) => null);
     this.db.function('powersync_offline_sync_status', () =>
       JSON.stringify({
         connected: false,
@@ -22,27 +22,27 @@ export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapt
       })
     );
 
-    this.db.function('powersync_diff', { varargs: true }, (..._args: any[]) => null);
-    this.db.function('powersync_validate_checkpoint', { varargs: true }, (..._args: any[]) => 1);
-    this.db.function('powersync_clear', { varargs: true }, (..._args: any[]) => null);
+    this.db.function('powersync_diff', { varargs: true }, (..._args: unknown[]) => null);
+    this.db.function('powersync_validate_checkpoint', { varargs: true }, (..._args: unknown[]) => 1);
+    this.db.function('powersync_clear', { varargs: true }, (..._args: unknown[]) => null);
   }
 
   get dbConnection() {
     return this.db;
   }
 
-  async getAll<T>(sql: string, parameters: any[] = []): Promise<T[]> {
+  async getAll<T>(sql: string, parameters: unknown[] = []): Promise<T[]> {
     const stmt = this.db.prepare(sql);
     return stmt.all(...parameters) as T[];
   }
 
-  async getOptional<T>(sql: string, parameters: any[] = []): Promise<T | null> {
+  async getOptional<T>(sql: string, parameters: unknown[] = []): Promise<T | null> {
     const stmt = this.db.prepare(sql);
     const result = stmt.get(...parameters);
     return (result as T) || null;
   }
 
-  async get<T>(sql: string, parameters: any[] = []): Promise<T> {
+  async get<T>(sql: string, parameters: unknown[] = []): Promise<T> {
     const result = await this.getOptional<T>(sql, parameters);
     if (result === null) {
       throw new Error('Query returned no results');
@@ -50,7 +50,7 @@ export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapt
     return result;
   }
 
-  async execute(query: string, params: any[] = []): Promise<QueryResult> {
+  async execute(query: string, params: unknown[] = []): Promise<QueryResult> {
     const stmt = this.db.prepare(query);
 
     if (stmt.reader) {
@@ -77,13 +77,13 @@ export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapt
     }
   }
 
-  async executeRaw(query: string, params: any[] = []): Promise<any[][]> {
+  async executeRaw(query: string, params: unknown[] = []): Promise<unknown[][]> {
     const stmt = this.db.prepare(query);
-    const rows = stmt.all(...params) as any[];
+    const rows = stmt.all(...params) as Record<string, unknown>[];
     return rows.map((row) => Object.values(row));
   }
 
-  async executeBatch(query: string, params: any[][] = []): Promise<QueryResult> {
+  async executeBatch(query: string, params: unknown[][] = []): Promise<QueryResult> {
     const stmt = this.db.prepare(query);
     let totalChanges = 0;
 
@@ -102,20 +102,20 @@ export class DatabaseAdapterForTest extends BaseObserver<any> implements DBAdapt
     };
   }
 
-  async readLock<T>(fn: (tx: any) => Promise<T>): Promise<T> {
+  async readLock<T>(fn: (tx: LockContext) => Promise<T>): Promise<T> {
     return fn(this);
   }
 
-  async readTransaction<T>(fn: (tx: any) => Promise<T>): Promise<T> {
-    return fn(this as any);
-  }
-
-  async writeLock<T>(fn: (tx: any) => Promise<T>): Promise<T> {
+  async readTransaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T> {
     return fn(this);
   }
 
-  async writeTransaction<T>(fn: (tx: any) => Promise<T>): Promise<T> {
-    return fn(this as any);
+  async writeLock<T>(fn: (tx: LockContext) => Promise<T>): Promise<T> {
+    return fn(this);
+  }
+
+  async writeTransaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T> {
+    return fn(this);
   }
 
   async refreshSchema(): Promise<void> {}

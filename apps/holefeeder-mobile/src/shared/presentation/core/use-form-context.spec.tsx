@@ -8,14 +8,14 @@ import { RepositoriesState } from '@/shared/repositories/core/repositories-state
 import { RepositoryContext } from '@/shared/repositories/presentation/RepositoryContext';
 
 // Mock repositories
-const mockRepositories: RepositoriesState = {
-  accountRepository: {} as any,
-  categoryRepository: {} as any,
-  dashboardRepository: {} as any,
-  flowRepository: {} as any,
-  settingRepository: {} as any,
-  storeItemRepository: {} as any,
-};
+const mockRepositories = {
+  accountRepository: {},
+  categoryRepository: {},
+  dashboardRepository: {},
+  flowRepository: {},
+  settingRepository: {},
+  storeItemRepository: {},
+} as unknown as RepositoriesState;
 
 type TestFormData = {
   id: string;

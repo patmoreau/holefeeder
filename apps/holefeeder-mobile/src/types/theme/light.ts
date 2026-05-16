@@ -74,7 +74,7 @@ export const lightTheme: Theme = {
   typography: typography,
   styles: {
     // New base styles using design tokens
-    ...createBaseStyles({ colors, typography: typography } as any),
+    ...createBaseStyles({ colors, typography: typography } as unknown as Theme),
   },
 };
 
