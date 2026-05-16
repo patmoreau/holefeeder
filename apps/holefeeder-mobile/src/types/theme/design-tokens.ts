@@ -43,6 +43,7 @@ export const fontSize = Platform.select({
     xl: 20,
     '2xl': 28,
     '3xl': 34,
+    '4xl': 40,
   },
   android: {
     xs: 11,
@@ -53,6 +54,7 @@ export const fontSize = Platform.select({
     xl: 22,
     '2xl': 30,
     '3xl': 36,
+    '4xl': 40,
   },
   default: {
     xs: 11,
@@ -63,6 +65,7 @@ export const fontSize = Platform.select({
     xl: 22,
     '2xl': 30,
     '3xl': 36,
+    '4xl': 40,
   },
 });
 

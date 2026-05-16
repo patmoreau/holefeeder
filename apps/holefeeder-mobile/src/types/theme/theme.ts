@@ -45,8 +45,10 @@ export interface Theme {
     positiveBackground: string;
     negative: string;
     negativeBackground: string;
+    amountNeutral: string;
   };
   typography: {
+    display: TextStyle;
     largeTitle: TextStyle;
     title: TextStyle;
     subtitle: TextStyle;

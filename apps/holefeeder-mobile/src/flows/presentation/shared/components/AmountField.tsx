@@ -19,7 +19,7 @@ const createStyles = (theme: Theme) => ({
     width: '100%' as const,
   },
   input: {
-    color: theme.colors.secondary,
+    color: theme.colors.amountNeutral,
     fontSize: 48,
     fontWeight: fontWeight.semiBold,
     paddingVertical: spacing.lg,

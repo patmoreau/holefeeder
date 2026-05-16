@@ -1,16 +1,20 @@
 import { Text, type TextProps } from 'react-native';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { fontWeight } from '@/types/theme/design-tokens';
+import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 export type ThemedTextProps = TextProps & {
-  variant?: 'default' | 'defaultSemiBold' | 'errorField' | 'footnote' | 'largeTitle' | 'link' | 'subtitle' | 'title';
+  variant?: 'default' | 'defaultSemiBold' | 'display' | 'errorField' | 'footnote' | 'largeTitle' | 'link' | 'subtitle' | 'title';
   adjustsFontSizeToFit?: boolean;
 };
 
 const createStyles = (theme: Theme) => ({
   default: {
     ...theme.typography.body,
+    color: theme.colors.text,
+  },
+  display: {
+    ...theme.typography.display,
     color: theme.colors.text,
   },
   largeTitle: {
@@ -40,6 +44,9 @@ const createStyles = (theme: Theme) => ({
   errorField: {
     ...theme.typography.errorField,
     color: theme.colors.error,
+    marginTop: spacing.xs,
+    marginLeft: 36 + spacing.sm,
+    marginBottom: spacing.sm,
   },
 });
 
@@ -51,6 +58,7 @@ export const AppText = ({ style, variant = 'default', adjustsFontSizeToFit, ...p
       style={[
         variant === 'default' && styles.default,
         variant === 'defaultSemiBold' && styles.defaultSemiBold,
+        variant === 'display' && styles.display,
         variant === 'errorField' && styles.errorField,
         variant === 'footnote' && styles.footnote,
         variant === 'largeTitle' && styles.largeTitle,

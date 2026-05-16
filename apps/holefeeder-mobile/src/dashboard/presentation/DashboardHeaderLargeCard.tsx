@@ -9,8 +9,7 @@ import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { useTheme } from '@/shared/theme/core/use-theme';
-import { fontWeight, spacing } from '@/types/theme/design-tokens';
+import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 const createStyles = (theme: Theme) => ({
@@ -33,6 +32,25 @@ const createStyles = (theme: Theme) => ({
     opacity: 0.5,
     marginBottom: spacing.xs,
   },
+  pill: {
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  positivePill: {
+    backgroundColor: theme.colors.positiveBackground,
+  },
+  negativePill: {
+    backgroundColor: theme.colors.negativeBackground,
+  },
+  positiveText: {
+    color: theme.colors.positive,
+    fontWeight: fontWeight.semiBold,
+  },
+  negativeText: {
+    color: theme.colors.negative,
+    fontWeight: fontWeight.semiBold,
+  },
 });
 
 export const DashboardHeaderLargeCard = ({
@@ -44,12 +62,11 @@ export const DashboardHeaderLargeCard = ({
 }) => {
   const { t } = useTranslation();
   const { formatCurrency } = useLocaleFormatter();
-  const { theme } = useTheme();
   const styles = useStyles(createStyles);
 
   const netFlow = summary.netFlow;
   const netFlowText = netFlow.isOver ? `+ ${formatCurrency(netFlow.amount)}` : `- ${formatCurrency(Math.abs(netFlow.amount))}`;
-  const netFlowColor = netFlow.isOver ? theme.colors.primaryText : theme.colors.secondaryText;
+  const netFlowPositive = netFlow.isOver;
 
   const upcomingVariation = upcomingFlows.reduce((acc, flow) => {
     return acc + (Money.toCents(flow.amount) / 100) * CategoryType.multiplier[flow.categoryType];
@@ -61,14 +78,13 @@ export const DashboardHeaderLargeCard = ({
   const projectedNetFlowAmount = Math.abs(projectedNetFlowTotal);
 
   const projectedNetFlowText = projectedIsOver ? `+ ${formatCurrency(projectedNetFlowAmount)}` : `- ${formatCurrency(projectedNetFlowAmount)}`;
-  const projectedNetFlowColor = projectedIsOver ? theme.colors.primaryText : theme.colors.negative;
 
   return (
     <>
       <AppText variant={'subtitle'} style={styles.textColor}>
         {t(tk.dashboard.largeHeader.spendingTitle)}
       </AppText>
-      <AppText variant={'largeTitle'} style={styles.largeTitle}>
+      <AppText variant={'display'} style={styles.largeTitle}>
         {formatCurrency(summary.currentSpending)}
       </AppText>
       <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
@@ -78,13 +94,17 @@ export const DashboardHeaderLargeCard = ({
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.dashboard.largeHeader.netFlow)}
           </AppText>
-          <AppText style={[{ color: netFlowColor }]}>{netFlowText}</AppText>
+          <View style={[styles.pill, netFlowPositive ? styles.positivePill : styles.negativePill]}>
+            <AppText style={netFlowPositive ? styles.positiveText : styles.negativeText}>{netFlowText}</AppText>
+          </View>
         </View>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.accountCard.projected)}
           </AppText>
-          <AppText style={[{ color: projectedNetFlowColor }]}>{projectedNetFlowText}</AppText>
+          <View style={[styles.pill, projectedIsOver ? styles.positivePill : styles.negativePill]}>
+            <AppText style={projectedIsOver ? styles.positiveText : styles.negativeText}>{projectedNetFlowText}</AppText>
+          </View>
         </View>
       </View>
     </>

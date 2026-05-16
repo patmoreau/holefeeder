@@ -8,8 +8,8 @@ const colors = {
   background: '#000000',
   secondaryBackground: '#1C1C1E',
   text: '#F2F2F7',
-  primaryText: '#000000',
-  secondaryText: '#2b2b2d',
+  primaryText: '#F2F2F7',
+  secondaryText: '#8E8E93',
   destructive: '#FF453A',
   error: '#FF453A',
   tint: '#9D6DE6',
@@ -26,15 +26,15 @@ const colors = {
   positiveBackground: '#1E3A2E',
   negative: '#FF6F42',
   negativeBackground: '#3A1E1E',
+  amountNeutral: '#F2F2F7',
 };
 
 export const darkTheme: Theme = {
   ...lightTheme,
   colors,
   styles: {
-    // New base styles using design tokens with dark theme colors
-    ...createBaseStyles({ colors, typography: lightTheme.typography } as unknown as Theme),
-    // Legacy support
+    // Light styles as fallback, then dark overrides win
     ...lightTheme.styles,
+    ...createBaseStyles({ colors, typography: lightTheme.typography } as unknown as Theme),
   },
 };

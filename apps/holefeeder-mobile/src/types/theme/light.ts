@@ -1,5 +1,5 @@
 import { createBaseStyles } from '@/types/theme/base-styles';
-import { fontSize, fontWeight, lineHeight, spacing } from '@/types/theme/design-tokens';
+import { fontSize, fontWeight, lineHeight } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 // Typography using design tokens
@@ -7,10 +7,12 @@ const typography = {
   largeTitle: {
     fontSize: fontSize!['3xl'],
     fontWeight: fontWeight.bold,
+    lineHeight: fontSize!['3xl'] * lineHeight.tight,
   },
   title: {
     fontSize: fontSize!.xl,
     fontWeight: fontWeight.semiBold,
+    lineHeight: fontSize!.xl * lineHeight.normal,
   },
   subtitle: {
     fontSize: fontSize!.md,
@@ -36,9 +38,11 @@ const typography = {
   },
   errorField: {
     fontSize: fontSize!.sm,
-    marginTop: spacing.xs,
-    marginLeft: 36 + spacing.sm,
-    marginBottom: spacing.sm,
+  },
+  display: {
+    fontSize: fontSize!['4xl'] ?? fontSize!['3xl'] * 1.33,
+    fontWeight: fontWeight.bold,
+    lineHeight: (fontSize!['4xl'] ?? fontSize!['3xl'] * 1.33) * lineHeight.tight,
   },
 } as const;
 
@@ -65,8 +69,9 @@ const colors = {
   settings: '#F2F2F7',
   positive: '#2E7D32',
   positiveBackground: '#E6F7ED',
-  negative: '#B82E15',
+  negative: '#D32F2F',
   negativeBackground: '#FFF2F2',
+  amountNeutral: '#1C1C1E',
 } as const;
 
 export const lightTheme: Theme = {
