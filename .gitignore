@@ -1,6 +1,7 @@
 # environment file
 **/.env*
 !**/.env.template
+!**/.env.example
 
 # IntelliJ related
 *.iml
@@ -12,4 +13,9 @@
 **/.DS_Store
 
 coverage/
-holefeeder-react/.debug.sqlite
+node_modules/
+dist/
+.turbo/
+
+# Legacy (pre-monorepo)
+.debug.sqlite

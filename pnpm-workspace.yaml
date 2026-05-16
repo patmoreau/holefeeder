@@ -1,0 +1,19 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+allowBuilds:
+  better-sqlite3: true
+  browser-tabs-lock: true
+  esbuild: true
+  unrs-resolver: true
+
+ignoredBuiltDependencies:
+  - react-native-mmkv
+  - react-native-nitro-modules
+
+onlyBuiltDependencies:
+  - better-sqlite3
+  - browser-tabs-lock
+  - esbuild
+  - unrs-resolver

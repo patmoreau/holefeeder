@@ -1,0 +1,16 @@
+{
+  "name": "holefeeder-ui",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.0.9",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "5.9.3"
+  }
+}

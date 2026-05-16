@@ -1,86 +1,69 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: CI/CD
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "holefeeder-react/**"
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
       - ".github/workflows/cicd.yml"
   pull_request:
     branches: ["main"]
     paths:
-      - "holefeeder-react/**"
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
       - ".github/workflows/cicd.yml"
 
 jobs:
-  changes:
+  lint:
     runs-on: ubuntu-latest
-    outputs:
-      react: ${{ steps.filter.outputs.react }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            react:
-              - 'holefeeder-react/**'
-
-  react-native-lint:
-    needs: changes
-    if: ${{ needs.changes.outputs.react == 'true' }}
-    runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 10.x
+          version: 11.x
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "pnpm"
-          cache-dependency-path: "./holefeeder-react/pnpm-lock.yaml"
+          cache-dependency-path: "./pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ./holefeeder-react
 
-      - name: Run ESLint
-        run: pnpm lint
-        working-directory: ./holefeeder-react
+      - name: Run lint
+        run: pnpm turbo run lint
 
-  react-native-test:
-    needs: changes
-    if: ${{ needs.changes.outputs.react == 'true' }}
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 10.x
+          version: 11.x
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "pnpm"
-          cache-dependency-path: "./holefeeder-react/pnpm-lock.yaml"
+          cache-dependency-path: "./pnpm-lock.yaml"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ./holefeeder-react
+
+      - name: Build packages
+        run: pnpm turbo run build --filter="./packages/*"
 
       - name: Run tests
-        run: pnpm test
-        working-directory: ./holefeeder-react
+        run: pnpm turbo run test
