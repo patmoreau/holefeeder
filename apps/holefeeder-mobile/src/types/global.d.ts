@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 // types/global.d.ts
 declare global {
   namespace NodeJS {

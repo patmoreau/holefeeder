@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc --build",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
