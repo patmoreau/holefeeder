@@ -1,4 +1,4 @@
-import { Money, Result } from '@holefeeder/core';
+import { Money, Result } from '@holefeeder/shared/core';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { PayUseCase } from '@/flows/core/flows/pay/pay-use-case';
 import { PayUpcomingFormData } from '@/flows/presentation/pay-upcoming/core/pay-upcoming-form-data';

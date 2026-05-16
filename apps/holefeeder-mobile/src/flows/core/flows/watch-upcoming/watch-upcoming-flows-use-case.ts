@@ -1,4 +1,4 @@
-import { AsyncResult, DateInterval, Result, today } from '@holefeeder/core';
+import { AsyncResult, DateInterval, Result, today } from '@holefeeder/shared/core';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { Settings } from '@/settings/core/settings';

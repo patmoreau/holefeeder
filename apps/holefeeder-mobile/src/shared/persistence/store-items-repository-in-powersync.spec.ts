@@ -1,4 +1,4 @@
-import { type AsyncResult, StoreItemsRepositoryErrors } from '@holefeeder/core';
+import { type AsyncResult, StoreItemsRepositoryErrors } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { aStoreItem, toStoreItem } from '@/shared/__tests__/store-item-for-test';
 import { aWord } from '@/shared/__tests__/string-for-test';

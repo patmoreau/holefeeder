@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountsRepository } from '../accounts-repository';
 

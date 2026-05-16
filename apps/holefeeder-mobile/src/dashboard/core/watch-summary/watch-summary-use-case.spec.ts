@@ -1,4 +1,4 @@
-import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/core';
+import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';

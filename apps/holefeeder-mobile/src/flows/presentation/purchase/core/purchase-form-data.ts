@@ -1,4 +1,4 @@
-import { DateIntervalType, DateOnly } from '@holefeeder/core';
+import { DateIntervalType, DateOnly } from '@holefeeder/shared/core';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { Tag } from '@/flows/core/flows/tag';

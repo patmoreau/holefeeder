@@ -1,4 +1,4 @@
-import { DateIntervalTypeErrors, DateOnlyErrors } from '@holefeeder/core';
+import { DateIntervalTypeErrors, DateOnlyErrors } from '@holefeeder/shared/core';
 import { aSaveSettingsForm } from '@/settings/core/save-settings/__tests__/save-settings-form-for-test';
 import { SaveSettingsCommand, SaveSettingsCommandErrors } from '@/settings/core/save-settings/save-settings-command';
 

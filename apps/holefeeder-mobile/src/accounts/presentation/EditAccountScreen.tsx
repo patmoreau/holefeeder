@@ -1,4 +1,4 @@
-import { DateOnly, Id } from '@holefeeder/core';
+import { DateOnly, Id } from '@holefeeder/shared/core';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';

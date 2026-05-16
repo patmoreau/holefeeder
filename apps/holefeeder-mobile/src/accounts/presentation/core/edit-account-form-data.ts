@@ -1,4 +1,4 @@
-import { DateOnly, Id } from '@holefeeder/core';
+import { DateOnly, Id } from '@holefeeder/shared/core';
 import { AccountType } from '@/accounts/core/account-type';
 
 export type EditAccountFormData = {

@@ -1,4 +1,4 @@
-import { Logger } from '@holefeeder/core';
+import { Logger } from '@holefeeder/shared/core';
 import * as SystemUI from 'expo-system-ui';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { Appearance } from 'react-native';

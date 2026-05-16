@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import type { Category } from '@/flows/core/categories/category';
 import { WatchCategoriesUseCase } from '@/flows/core/categories/watch-categories/watch-categories-use-case';

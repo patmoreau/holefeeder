@@ -1,4 +1,4 @@
-import { AuthenticationState, TokenInfo } from '@holefeeder/core';
+import { AuthenticationState, TokenInfo } from '@holefeeder/shared/core';
 import React, { createContext, useCallback, useMemo } from 'react';
 import { Auth0Provider, useAuth0 } from 'react-native-auth0';
 import { AuthConfig } from '@/shared/auth/core/auth-config';

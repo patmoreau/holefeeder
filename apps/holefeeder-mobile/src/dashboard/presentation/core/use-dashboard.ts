@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { DashboardComputedSummary, WatchSummaryUseCase } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { DefaultSettings } from '@/settings/core/settings';

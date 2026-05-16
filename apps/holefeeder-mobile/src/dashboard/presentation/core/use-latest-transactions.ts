@@ -1,4 +1,4 @@
-import type { AsyncResult } from '@holefeeder/core';
+import type { AsyncResult } from '@holefeeder/shared/core';
 import { useCallback } from 'react';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { usePagedWatch, type UsePagedWatchResult, WatchCountFn, WatchPageFn } from '@/shared/presentation/core/use-paged-watch';

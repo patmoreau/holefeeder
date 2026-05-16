@@ -1,4 +1,4 @@
-import { AsyncResult, Result } from '@holefeeder/core';
+import { AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { DataMetrics } from '@/settings/core/data-metrics';
 import { SyncInfo } from '@/settings/core/sync-info';

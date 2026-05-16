@@ -1,4 +1,4 @@
-import { AuthenticationState, Logger } from '@holefeeder/core';
+import { AuthenticationState, Logger } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase, type PowerSyncBackendConnector } from '@powersync/common';
 import { HolefeederConfig } from '@/config/holefeeder-config';
 import { syncApi } from '@/shared/api/sync-api';

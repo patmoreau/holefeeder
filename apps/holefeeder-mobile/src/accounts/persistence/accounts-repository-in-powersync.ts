@@ -1,4 +1,4 @@
-import { type AsyncResult, Id, Result, Variation } from '@holefeeder/core';
+import { type AsyncResult, Id, Result, Variation } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Account } from '@/accounts/core/account';
 import { AccountsRepository, AccountsRepositoryErrors } from '@/accounts/core/accounts-repository';

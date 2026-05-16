@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { SaveSettingsCommand } from '@/settings/core/save-settings/save-settings-command';
 import { SaveSettingsUseCase } from '@/settings/core/save-settings/save-settings-use-case';
 import { SettingsFormData } from '@/settings/core/settings-form-data';

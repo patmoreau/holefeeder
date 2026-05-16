@@ -1,4 +1,4 @@
-import { DateOnly } from '@holefeeder/core';
+import { DateOnly } from '@holefeeder/shared/core';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppDatePicker } from '@/shared/presentation/components/AppDatePicker';
 import { AppIcons } from '@/shared/presentation/icons';

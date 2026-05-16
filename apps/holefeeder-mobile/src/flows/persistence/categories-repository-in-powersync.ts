@@ -1,4 +1,4 @@
-import { type AsyncResult, Money } from '@holefeeder/core';
+import { type AsyncResult, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';

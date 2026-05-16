@@ -1,4 +1,4 @@
-import { LanguageType } from '@holefeeder/core';
+import { LanguageType } from '@holefeeder/shared/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';

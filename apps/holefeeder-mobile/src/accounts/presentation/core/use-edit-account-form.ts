@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 import { UpdateAccountUseCase } from '@/accounts/core/update/update-account-use-case';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';

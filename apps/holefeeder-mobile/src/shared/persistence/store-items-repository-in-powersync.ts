@@ -1,4 +1,4 @@
-import { type AsyncResult, Logger, Result, StoreItem, StoreItemsRepository, StoreItemsRepositoryErrors } from '@holefeeder/core';
+import { type AsyncResult, Logger, Result, StoreItem, StoreItemsRepository, StoreItemsRepositoryErrors } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { watchSingle } from '@/shared/persistence/watch-query';
 

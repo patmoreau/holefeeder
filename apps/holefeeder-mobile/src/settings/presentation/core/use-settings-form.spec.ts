@@ -1,4 +1,4 @@
-import { DateOnly } from '@holefeeder/core';
+import { DateOnly } from '@holefeeder/shared/core';
 import { describe, expect, it } from '@jest/globals';
 import { SettingsFormData } from '../../core/settings-form-data';
 import { SettingsFormError, validateSettingsForm } from './use-settings-form';

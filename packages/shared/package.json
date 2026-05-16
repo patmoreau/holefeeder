@@ -1,14 +1,11 @@
 {
-  "name": "@holefeeder/core",
+  "name": "@holefeeder/shared",
   "version": "0.1.0",
   "private": true,
-  "source": "./src/index.ts",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "./core": {
+      "import": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
     }
   },
   "scripts": {

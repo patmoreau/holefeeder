@@ -1,4 +1,4 @@
-import { Logger } from '@holefeeder/core';
+import { Logger } from '@holefeeder/shared/core';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/shared/auth/core/use-auth';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';

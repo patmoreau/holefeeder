@@ -1,4 +1,4 @@
-import { DateOnly, Id, Money } from '@holefeeder/core';
+import { DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { TagList } from './tag-list';
 

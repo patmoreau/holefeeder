@@ -1,4 +1,4 @@
-import { type AsyncResult, combineWatchers, DateInterval, Id, Variation } from '@holefeeder/core';
+import { type AsyncResult, combineWatchers, DateInterval, Id, Variation } from '@holefeeder/shared/core';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountType } from '@/accounts/core/account-type';
 import { AccountVariation } from '@/accounts/core/account-variation';

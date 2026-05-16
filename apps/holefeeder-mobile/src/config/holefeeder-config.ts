@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { ApiConfig } from '@/shared/api/api-config';
 import { AuthConfig } from '@/shared/auth/core/auth-config';
 import { LoggerConfig } from '@/shared/core/logger/logger-config';

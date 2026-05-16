@@ -1,4 +1,4 @@
-import { Money, Result } from '@holefeeder/core';
+import { Money, Result } from '@holefeeder/shared/core';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';
 import { ModifyFlowUseCase } from '@/flows/core/flows/modify/modify-flow-use-case';
 import { FlowFormData } from '@/flows/presentation/flow/core/flow-form-data';

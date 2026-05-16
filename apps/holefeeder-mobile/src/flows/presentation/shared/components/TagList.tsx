@@ -1,4 +1,4 @@
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';

@@ -1,6 +1,6 @@
 import 'react-native-reanimated';
 import '@azure/core-asynciterator-polyfill';
-import { Id, Logger } from '@holefeeder/core';
+import { Id, Logger } from '@holefeeder/shared/core';
 import { PowerSyncDatabase } from '@powersync/react-native';
 import * as Crypto from 'expo-crypto';
 import { useEffect, useState } from 'react';

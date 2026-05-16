@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
 

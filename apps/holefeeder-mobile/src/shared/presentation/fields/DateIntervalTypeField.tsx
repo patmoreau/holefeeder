@@ -1,4 +1,4 @@
-import { DateIntervalType, DateIntervalTypes } from '@holefeeder/core';
+import { DateIntervalType, DateIntervalTypes } from '@holefeeder/shared/core';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';

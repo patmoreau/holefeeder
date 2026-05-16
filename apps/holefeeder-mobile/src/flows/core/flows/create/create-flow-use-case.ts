@@ -1,4 +1,4 @@
-import { Id, Result } from '@holefeeder/core';
+import { Id, Result } from '@holefeeder/shared/core';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
 import { CreateFlowCommand } from './create-flow-command';
 

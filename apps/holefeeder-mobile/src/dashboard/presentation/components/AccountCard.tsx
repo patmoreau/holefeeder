@@ -1,4 +1,4 @@
-import { Id, today, Variation } from '@holefeeder/core';
+import { Id, today, Variation } from '@holefeeder/shared/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';

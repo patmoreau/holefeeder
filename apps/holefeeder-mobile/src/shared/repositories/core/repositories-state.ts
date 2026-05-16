@@ -1,4 +1,4 @@
-import { StoreItemsRepository } from '@holefeeder/core';
+import { StoreItemsRepository } from '@holefeeder/shared/core';
 import { AccountsRepository } from '@/accounts/core/accounts-repository';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';

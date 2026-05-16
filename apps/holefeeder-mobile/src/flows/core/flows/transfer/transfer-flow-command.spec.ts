@@ -1,4 +1,4 @@
-import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/core';
+import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
 import { aString } from '@/shared/__tests__/string-for-test';
 

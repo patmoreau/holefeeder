@@ -1,4 +1,4 @@
-import { DateIntervalTypeErrors, DateIntervalTypes, DateOnlyErrors } from '@holefeeder/core';
+import { DateIntervalTypeErrors, DateIntervalTypes, DateOnlyErrors } from '@holefeeder/shared/core';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { Settings, SettingsErrors } from '@/settings/core/settings';
 

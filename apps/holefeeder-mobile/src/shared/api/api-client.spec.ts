@@ -1,4 +1,4 @@
-import { buildUrl } from '@holefeeder/core';
+import { buildUrl } from '@holefeeder/shared/core';
 import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
 import { FetchForTest } from '@/shared/api/__tests__/fetch-for-test';
 import { aFetchRequest } from '@/shared/api/__tests__/fetch-request-for-test';

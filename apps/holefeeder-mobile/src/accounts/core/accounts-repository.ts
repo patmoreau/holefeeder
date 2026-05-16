@@ -1,4 +1,4 @@
-import { type AsyncResult, Id, Result } from '@holefeeder/core';
+import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { Account } from '@/accounts/core/account';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 

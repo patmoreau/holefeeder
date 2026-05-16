@@ -1,4 +1,4 @@
-import { DateOnly, withDate } from '@holefeeder/core';
+import { DateOnly, withDate } from '@holefeeder/shared/core';
 import { act, renderHook } from '@testing-library/react-native';
 import * as ExpoLocalization from 'expo-localization';
 import { AppState, AppStateStatus } from 'react-native';

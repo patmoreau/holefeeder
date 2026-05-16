@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { DateOnly } from '@holefeeder/core';
+import { DateOnly } from '@holefeeder/shared/core';
 
 export const aPastDate = () => DateOnly.valid(faker.date.past().toISOString().split('T')[0]);
 

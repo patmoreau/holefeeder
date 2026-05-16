@@ -1,4 +1,4 @@
-import { Id, today } from '@holefeeder/core';
+import { Id, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
 import { Pressable, View, type ViewProps } from 'react-native';

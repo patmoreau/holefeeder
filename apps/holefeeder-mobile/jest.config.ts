@@ -22,7 +22,7 @@ const config: Config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/__tests__/', '\\.test\\.', '\\.spec\\.', '\\.integration\\.'],
   coverageDirectory: 'coverage/unit',
   moduleNameMapper: {
-    '^@holefeeder/core$': '<rootDir>/../../packages/core/src/index.ts',
+    '^@holefeeder/shared/core$': '<rootDir>/../../packages/shared/src/core/index.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
   },

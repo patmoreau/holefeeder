@@ -1,4 +1,4 @@
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';

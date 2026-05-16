@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { Platform } from 'react-native';
 import { EnvVariable } from '@/shared/core/env/env-variable';
 

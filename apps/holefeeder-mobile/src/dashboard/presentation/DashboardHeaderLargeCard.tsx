@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/core';
+import { Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';

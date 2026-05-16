@@ -1,4 +1,4 @@
-import { type AuthenticationState, buildUrl, Result } from '@holefeeder/core';
+import { type AuthenticationState, buildUrl, Result } from '@holefeeder/shared/core';
 
 export type ApiConfig = {
   url: string;

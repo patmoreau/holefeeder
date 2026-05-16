@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/core';
+import { Money } from '@holefeeder/shared/core';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useNavigation } from 'expo-router';
 import React from 'react';

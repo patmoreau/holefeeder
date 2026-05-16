@@ -1,4 +1,4 @@
-import { type AsyncResult, Logger } from '@holefeeder/core';
+import { type AsyncResult, Logger } from '@holefeeder/shared/core';
 import { useEffect, useRef, useState } from 'react';
 import { ErrorKey } from '@/shared/core/error-key';
 

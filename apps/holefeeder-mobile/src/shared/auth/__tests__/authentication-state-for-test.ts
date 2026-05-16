@@ -1,4 +1,4 @@
-import { AuthenticationState } from '@holefeeder/core';
+import { AuthenticationState } from '@holefeeder/shared/core';
 import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';
 import { aUser } from '@/shared/auth/__tests__/user-for-test';
 

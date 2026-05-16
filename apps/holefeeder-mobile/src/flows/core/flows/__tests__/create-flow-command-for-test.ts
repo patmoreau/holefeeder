@@ -1,4 +1,4 @@
-import { DateIntervalType, DateIntervalTypes, DateOnly } from '@holefeeder/core';
+import { DateIntervalType, DateIntervalTypes, DateOnly } from '@holefeeder/shared/core';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { TagList } from '@/flows/core/flows/tag-list';
 import { aRecentDate } from '@/shared/__tests__/date-for-test';

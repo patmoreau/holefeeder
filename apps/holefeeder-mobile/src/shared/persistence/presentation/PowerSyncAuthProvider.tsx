@@ -1,4 +1,4 @@
-import { Logger } from '@holefeeder/core';
+import { Logger } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { PowerSyncContext } from '@powersync/react-native';
 import { ReactNode, useEffect } from 'react';

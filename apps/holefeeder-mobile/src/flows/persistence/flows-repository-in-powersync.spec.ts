@@ -1,4 +1,4 @@
-import { type AsyncResult, DateOnly, Id, Money } from '@holefeeder/core';
+import { type AsyncResult, DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountVariation } from '@/accounts/core/account-variation';

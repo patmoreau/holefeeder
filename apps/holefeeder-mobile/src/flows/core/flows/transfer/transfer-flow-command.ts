@@ -1,4 +1,4 @@
-import { DateOnly, Id, Money, Result } from '@holefeeder/core';
+import { DateOnly, Id, Money, Result } from '@holefeeder/shared/core';
 
 export type TransferFlowCommand = {
   date: DateOnly;

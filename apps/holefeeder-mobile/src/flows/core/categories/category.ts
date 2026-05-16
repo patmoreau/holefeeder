@@ -1,4 +1,4 @@
-import { Id, Money, Result, Validate, Validator } from '@holefeeder/core';
+import { Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { CategoryType } from '@/flows/core/categories/category-type';
 
 export type Category = {

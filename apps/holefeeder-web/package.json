@@ -15,7 +15,7 @@
     "@auth0/auth0-react": "^2.2.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@holefeeder/core": "workspace:*",
+    "@holefeeder/shared": "workspace:*",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "@tanstack/react-query": "^5.74.0",

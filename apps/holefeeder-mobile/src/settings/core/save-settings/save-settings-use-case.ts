@@ -1,4 +1,4 @@
-import { Id, Result, StoreItem, StoreItemsRepository } from '@holefeeder/core';
+import { Id, Result, StoreItem, StoreItemsRepository } from '@holefeeder/shared/core';
 import { SaveSettingsCommand } from '@/settings/core/save-settings/save-settings-command';
 import { Settings, SETTINGS_CODE } from '@/settings/core/settings';
 

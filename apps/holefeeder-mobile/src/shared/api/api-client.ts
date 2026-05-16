@@ -1,4 +1,4 @@
-import { AuthenticationState, buildUrl, Logger, Result } from '@holefeeder/core';
+import { AuthenticationState, buildUrl, Logger, Result } from '@holefeeder/shared/core';
 import { ApiConfig } from '@/shared/api/api-config';
 
 const logger = Logger.create('api-client');

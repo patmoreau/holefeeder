@@ -1,4 +1,4 @@
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { FlowFormData } from '@/flows/presentation/flow/core/flow-form-data';

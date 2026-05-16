@@ -1,4 +1,4 @@
-import { Money, Result } from '@holefeeder/core';
+import { Money, Result } from '@holefeeder/shared/core';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { CreateFlowUseCase } from '@/flows/core/flows/create/create-flow-use-case';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';

@@ -1,4 +1,4 @@
-import { today, Variation } from '@holefeeder/core';
+import { today, Variation } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';

@@ -1,4 +1,4 @@
-import { DateOnlyErrors, IdErrors, VariationErrors } from '@holefeeder/core';
+import { DateOnlyErrors, IdErrors, VariationErrors } from '@holefeeder/shared/core';
 import { anAccount, toAccount } from '@/accounts/core/__tests__/account-for-test';
 import { Account, AccountErrors } from '@/accounts/core/account';
 

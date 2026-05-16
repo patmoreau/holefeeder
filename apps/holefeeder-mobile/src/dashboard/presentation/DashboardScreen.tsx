@@ -1,4 +1,4 @@
-import { Id, Logger } from '@holefeeder/core';
+import { Id, Logger } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';

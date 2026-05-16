@@ -1,4 +1,4 @@
-import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/core';
+import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { aPastDate, aRecentDate } from '@/shared/__tests__/date-for-test';
 import { anAmount } from '@/shared/__tests__/number-for-test';

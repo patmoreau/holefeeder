@@ -1,4 +1,4 @@
-import { today } from '@holefeeder/core';
+import { today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

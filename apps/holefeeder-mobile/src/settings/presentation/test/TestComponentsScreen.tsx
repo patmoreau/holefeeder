@@ -1,4 +1,4 @@
-import { today } from '@holefeeder/core';
+import { today } from '@holefeeder/shared/core';
 import { Stack, useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { View } from 'react-native';

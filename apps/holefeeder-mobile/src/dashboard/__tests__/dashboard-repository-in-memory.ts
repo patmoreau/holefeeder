@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
 import { SummaryData } from '@/dashboard/core/summary-data';
 

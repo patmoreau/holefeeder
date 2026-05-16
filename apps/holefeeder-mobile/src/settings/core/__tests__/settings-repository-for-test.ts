@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { DataMetrics } from '@/settings/core/data-metrics';
 import { SettingRepository } from '@/settings/core/setting-repository';
 

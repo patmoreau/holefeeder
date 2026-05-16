@@ -1,4 +1,4 @@
-import type { AsyncResult } from '@holefeeder/core';
+import type { AsyncResult } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { DefaultSettings, Settings, SETTINGS_CODE } from '@/settings/core/settings';

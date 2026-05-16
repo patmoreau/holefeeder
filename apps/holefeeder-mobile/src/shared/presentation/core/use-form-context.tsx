@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { ErrorKey } from '@/shared/core/error-key';
 import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';

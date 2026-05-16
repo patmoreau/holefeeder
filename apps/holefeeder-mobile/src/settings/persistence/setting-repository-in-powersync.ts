@@ -1,4 +1,4 @@
-import { AsyncResult, Result } from '@holefeeder/core';
+import { AsyncResult, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { DataMetrics, DEFAULT_DATA_METRICS } from '@/settings/core/data-metrics';
 import { SettingRepository } from '@/settings/core/setting-repository';

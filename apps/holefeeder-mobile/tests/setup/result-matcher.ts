@@ -1,4 +1,4 @@
-import { type AsyncResult, Result, Success } from '@holefeeder/core';
+import { type AsyncResult, Result, Success } from '@holefeeder/shared/core';
 
 declare global {
   namespace jest {

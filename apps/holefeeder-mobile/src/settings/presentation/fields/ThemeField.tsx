@@ -1,4 +1,4 @@
-import { Logger } from '@holefeeder/core';
+import { Logger } from '@holefeeder/shared/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';

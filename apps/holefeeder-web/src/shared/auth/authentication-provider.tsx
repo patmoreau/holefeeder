@@ -1,6 +1,6 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { createContext, useContext, type ReactNode } from 'react';
-import { type AuthenticationState, type TokenInfo } from '@holefeeder/core';
+import { type AuthenticationState, type TokenInfo } from '@holefeeder/shared/core';
 
 const AuthContext = createContext<AuthenticationState | null>(null);
 

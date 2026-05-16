@@ -1,4 +1,4 @@
-import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/core';
+import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
 import { aPurchaseForm } from '@/flows/core/flows/__tests__/purchase-form-for-test';
 import { CreateFlowCommand, CreateFlowErrors } from '@/flows/core/flows/create/create-flow-command';
 

@@ -1,4 +1,4 @@
-import type { AsyncResult } from '@holefeeder/core';
+import type { AsyncResult } from '@holefeeder/shared/core';
 import { FlowsRepository } from '../flows-repository';
 import { Tag } from '../tag';
 

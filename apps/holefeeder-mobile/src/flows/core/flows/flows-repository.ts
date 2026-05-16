@@ -1,4 +1,4 @@
-import { type AsyncResult, Id, Result } from '@holefeeder/core';
+import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { AccountVariation } from '@/accounts/core/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';

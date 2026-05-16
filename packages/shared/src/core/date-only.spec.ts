@@ -68,15 +68,15 @@ describe('DateOnly', () => {
     });
 
     it('should fail for null', () => {
-      expect(DateOnly.create(null as any)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
+      expect(DateOnly.create(null as unknown as DateOnly)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
     });
 
     it('should fail for undefined', () => {
-      expect(DateOnly.create(undefined as any)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
+      expect(DateOnly.create(undefined as unknown as DateOnly)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
     });
 
     it('should fail for number', () => {
-      expect(DateOnly.create(20260124 as any)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
+      expect(DateOnly.create(20260124 as unknown as DateOnly)).toBeFailureWithErrors([DateOnlyErrors.invalid]);
     });
 
     it('should fail for date with time', () => {

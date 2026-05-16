@@ -1,4 +1,4 @@
-import type { AsyncResult } from '@holefeeder/core';
+import type { AsyncResult } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { CategoriesRepositoryInMemory } from '@/flows/core/categories/__tests__/categories-repository-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';

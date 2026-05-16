@@ -4,7 +4,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@holefeeder/core": ["../../packages/core/src/index.ts"],
+      "@holefeeder/shared/core": ["../../packages/shared/src/core/index.ts"],
       "@/*": ["./src/*"],
       "@/accounts/*": ["./src/accounts/*"],
       "@/app/*": ["./src/app/*"],

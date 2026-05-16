@@ -18,7 +18,7 @@
     "npx:fix": "npx expo install --fix"
   },
   "dependencies": {
-    "@holefeeder/core": "workspace:*",
+    "@holefeeder/shared": "workspace:*",
     "@auth0/auth0-spa-js": "2.19.2",
     "@azure/core-asynciterator-polyfill": "1.0.2",
     "@expo/html-elements": "55.0.3",

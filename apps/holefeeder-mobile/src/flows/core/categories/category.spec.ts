@@ -1,4 +1,4 @@
-import { IdErrors, MoneyErrors } from '@holefeeder/core';
+import { IdErrors, MoneyErrors } from '@holefeeder/shared/core';
 import { aCategory, toCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { Category, CategoryErrors } from './category';
 

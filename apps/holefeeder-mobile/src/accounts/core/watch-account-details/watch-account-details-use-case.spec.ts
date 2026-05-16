@@ -1,4 +1,4 @@
-import { type AsyncResult, Variation } from '@holefeeder/core';
+import { type AsyncResult, Variation } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';

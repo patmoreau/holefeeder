@@ -1,4 +1,4 @@
-import { Id, IdErrors } from '@holefeeder/core';
+import { Id, IdErrors } from '@holefeeder/shared/core';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 

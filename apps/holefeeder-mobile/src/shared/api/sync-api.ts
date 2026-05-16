@@ -1,4 +1,4 @@
-import { AuthenticationState, Result } from '@holefeeder/core';
+import { AuthenticationState, Result } from '@holefeeder/shared/core';
 import { CrudEntry } from '@powersync/common';
 import { ApiClient } from '@/shared/api/api-client';
 import { ApiConfig } from '@/shared/api/api-config';

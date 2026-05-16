@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/core';
+import { Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Category } from '@/flows/core/categories/category';
 import { aCategoryType } from '@/shared/__tests__/enum-for-test';

@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@holefeeder/core': resolve(__dirname, '../../packages/core/src/index.ts'),
+      '@holefeeder/shared/core': resolve(__dirname, '../../packages/shared/src/core/index.ts'),
     },
   },
 });

@@ -1,4 +1,4 @@
-import { DateIntervalType, DateIntervalTypes } from '@holefeeder/core';
+import { DateIntervalType, DateIntervalTypes } from '@holefeeder/shared/core';
 import { aRecentDate } from '@/shared/__tests__/date-for-test';
 import { anAmount } from '@/shared/__tests__/number-for-test';
 import { anId, aString, aWord } from '@/shared/__tests__/string-for-test';

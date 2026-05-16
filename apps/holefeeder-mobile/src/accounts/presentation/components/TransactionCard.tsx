@@ -1,4 +1,4 @@
-import { Id, today } from '@holefeeder/core';
+import { Id, today } from '@holefeeder/shared/core';
 import React, { useRef } from 'react';
 import { Pressable, View, type ViewProps } from 'react-native';
 import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';

@@ -1,4 +1,4 @@
-import { DateOnly, withDate } from '@holefeeder/core';
+import { DateOnly, withDate } from '@holefeeder/shared/core';
 import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { getLocales } from 'expo-localization';
 import { useEffect, useMemo, useRef, useState } from 'react';

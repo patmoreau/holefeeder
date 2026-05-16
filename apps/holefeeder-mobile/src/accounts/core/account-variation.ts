@@ -1,4 +1,4 @@
-import { DateOnly, Id, Money } from '@holefeeder/core';
+import { DateOnly, Id, Money } from '@holefeeder/shared/core';
 
 export type AccountVariation = {
   accountId: Id;

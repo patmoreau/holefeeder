@@ -1,4 +1,4 @@
-import { type AsyncResult, DateIntervalTypes, Money } from '@holefeeder/core';
+import { type AsyncResult, DateIntervalTypes, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
 import { SummaryData } from '@/dashboard/core/summary-data';

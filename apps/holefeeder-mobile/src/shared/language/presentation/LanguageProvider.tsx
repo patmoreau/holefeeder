@@ -1,4 +1,4 @@
-import { LanguageType, Logger } from '@holefeeder/core';
+import { LanguageType, Logger } from '@holefeeder/shared/core';
 import React, { createContext, useEffect, useState } from 'react';
 import { getI18nInstance, initI18n } from '@/i18n';
 import { LanguageState } from '@/shared/language/core/language-state';

@@ -1,4 +1,4 @@
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';

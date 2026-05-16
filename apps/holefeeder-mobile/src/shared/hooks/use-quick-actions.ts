@@ -1,4 +1,4 @@
-import { Logger } from '@holefeeder/core';
+import { Logger } from '@holefeeder/shared/core';
 import * as QuickActions from 'expo-quick-actions';
 import { useQuickActionCallback } from 'expo-quick-actions/hooks';
 import type { RouterAction } from 'expo-quick-actions/router';

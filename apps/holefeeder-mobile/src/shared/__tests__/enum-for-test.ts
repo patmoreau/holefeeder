@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { DateIntervalType, DateIntervalTypes } from '@holefeeder/core';
+import { DateIntervalType, DateIntervalTypes } from '@holefeeder/shared/core';
 import { AccountType, AccountTypes } from '@/accounts/core/account-type';
 import { CategoryType, CategoryTypes } from '@/flows/core/categories/category-type';
 

@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
 

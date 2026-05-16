@@ -1,4 +1,4 @@
-import { type AsyncResult, Logger, Result } from '@holefeeder/core';
+import { type AsyncResult, Logger, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase, QueryParam } from '@powersync/common';
 
 const logger = Logger.create('watch-query');

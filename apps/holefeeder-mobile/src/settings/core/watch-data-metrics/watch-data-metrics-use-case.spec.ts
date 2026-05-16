@@ -1,4 +1,4 @@
-import type { AsyncResult } from '@holefeeder/core';
+import type { AsyncResult } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { SettingsRepositoryInMemory } from '@/settings/core/__tests__/settings-repository-for-test';
 import { DataMetrics } from '@/settings/core/data-metrics';

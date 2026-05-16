@@ -1,4 +1,4 @@
-import { type AsyncResult, Id, Result } from '@holefeeder/core';
+import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { Account } from '@/accounts/core/account';
 import { WatchAccountsUseCase } from '@/accounts/core/watch-accounts/watch-accounts-use-case';

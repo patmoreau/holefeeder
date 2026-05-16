@@ -1,4 +1,4 @@
-import { DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/core';
+import { DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/shared/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';

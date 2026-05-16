@@ -1,4 +1,4 @@
-import { type AsyncResult, DateInterval, Id, Result, today } from '@holefeeder/core';
+import { type AsyncResult, DateInterval, Id, Result, today } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { WatchAccountVariationUseCase } from '@/accounts/core/watch-account-variation/watch-account-variation-use-case';

@@ -1,4 +1,4 @@
-import { Result } from '@holefeeder/core';
+import { Result } from '@holefeeder/shared/core';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Button, Text } from 'react-native';

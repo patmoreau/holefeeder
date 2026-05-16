@@ -1,2 +1,2 @@
-export type { TranslationStructure } from '@holefeeder/core';
-export { tk } from '@holefeeder/core';
+export type { TranslationStructure } from '@holefeeder/shared/core';
+export { tk } from '@holefeeder/shared/core';

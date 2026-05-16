@@ -1,1 +1,1 @@
-export { en } from '@holefeeder/core';
+export { en } from '@holefeeder/shared/core';

@@ -8,7 +8,7 @@ const config: Config = {
   transform: {
     '^.+\\.ts$': ['ts-jest', { tsconfig: { module: 'CommonJS', types: ['node', 'jest'] } }],
   },
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup/result-matcher.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/core/__tests__/setup/result-matcher.ts'],
 };
 
 export default config;

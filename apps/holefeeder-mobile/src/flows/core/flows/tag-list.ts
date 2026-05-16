@@ -1,4 +1,4 @@
-import { Result, Validate, Validator } from '@holefeeder/core';
+import { Result, Validate, Validator } from '@holefeeder/shared/core';
 
 export type TagList = string[] & { readonly __brand: 'TagList' };
 

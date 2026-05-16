@@ -1,4 +1,4 @@
-import { DateOnly, withDate } from '@holefeeder/core';
+import { DateOnly, withDate } from '@holefeeder/shared/core';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleProp, Text, ViewStyle } from 'react-native';
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';

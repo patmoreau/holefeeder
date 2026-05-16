@@ -1,4 +1,4 @@
-import { Logger, today } from '@holefeeder/core';
+import { Logger, today } from '@holefeeder/shared/core';
 import React from 'react';
 import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { PurchaseFormProvider, validatePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';

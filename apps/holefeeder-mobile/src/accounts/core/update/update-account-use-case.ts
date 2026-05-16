@@ -1,4 +1,4 @@
-import { Id, Result } from '@holefeeder/core';
+import { Id, Result } from '@holefeeder/shared/core';
 import { AccountsRepository } from '@/accounts/core/accounts-repository';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 

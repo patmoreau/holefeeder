@@ -1,4 +1,4 @@
-import { DateOnly } from '@holefeeder/core';
+import { DateOnly } from '@holefeeder/shared/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aTransaction, toTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';

@@ -1,4 +1,4 @@
-import { Variation } from '@holefeeder/core';
+import { Variation } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Account } from '@/accounts/core/account';
 import { aPastDate } from '@/shared/__tests__/date-for-test';

@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/core';
+import { Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { AccountForTest } from '@/accounts/core/__tests__/account-for-test';
 import { CategoryForTest } from '@/flows/core/categories/__tests__/category-for-test';

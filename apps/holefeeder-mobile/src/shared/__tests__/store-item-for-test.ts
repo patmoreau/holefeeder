@@ -1,4 +1,4 @@
-import { StoreItem } from '@holefeeder/core';
+import { StoreItem } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { anId, aWord } from '@/shared/__tests__/string-for-test';
 

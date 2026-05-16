@@ -1,4 +1,4 @@
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 import { type ViewProps } from 'react-native';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountCard, type CardLayout } from '@/dashboard/presentation/components/AccountCard';
