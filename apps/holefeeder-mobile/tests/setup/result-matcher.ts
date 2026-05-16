@@ -1,10 +1,11 @@
 import { type AsyncResult, Result, Success } from '@holefeeder/shared/core';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
-      toBeSuccessWithValue(expected: any): R;
-      toBeFailureWithErrors(expected: any): R;
+      toBeSuccessWithValue(expected: unknown): R;
+      toBeFailureWithErrors(expected: unknown): R;
       toBeLoading(): R;
     }
   }
@@ -23,7 +24,7 @@ function expectSuccess<T>(result: Result<T> | AsyncResult<T>): asserts result is
 }
 
 expect.extend({
-  toBeSuccessWithValue(received: Result<any> | AsyncResult<any>, expected: any) {
+  toBeSuccessWithValue(received: Result<unknown> | AsyncResult<unknown>, expected: unknown) {
     if (received.isFailure === undefined) {
       return {
         pass: false,
@@ -57,7 +58,7 @@ expect.extend({
     };
   },
 
-  toBeFailureWithErrors(received: Result<any> | AsyncResult<any>, expected: any) {
+  toBeFailureWithErrors(received: Result<unknown> | AsyncResult<unknown>, expected: unknown) {
     if (!received.isFailure) {
       return {
         pass: false,
@@ -73,7 +74,7 @@ expect.extend({
     };
   },
 
-  toBeLoading(received: AsyncResult<any>, expected: any) {
+  toBeLoading(received: AsyncResult<unknown>) {
     if (!received.isLoading) {
       return {
         pass: false,
