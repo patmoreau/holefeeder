@@ -1,5 +1,5 @@
+import { type AsyncResult, Result } from '@holefeeder/core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type WatchPageFn<T> = (onData: (items: T[]) => void, limit: number, offset: number) => () => void;
 export type WatchCountFn = (onCount: (count: number) => void) => () => void;

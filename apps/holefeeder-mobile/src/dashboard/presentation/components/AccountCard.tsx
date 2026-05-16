@@ -1,3 +1,4 @@
+import { Id, today, Variation } from '@holefeeder/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';
@@ -5,9 +6,6 @@ import Animated, { SharedTransition } from 'react-native-reanimated';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountType } from '@/accounts/core/account-type';
 import { tk } from '@/i18n/translations';
-import { Id } from '@/shared/core/id';
-import { Variation } from '@/shared/core/variation';
-import { today } from '@/shared/core/with-date';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';

@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Money } from '@/shared/core/money';
-import { Variation } from '@/shared/core/variation';
+import { Money, Variation } from '@holefeeder/core';
 
 export const anAmount = () => Money.valid(faker.number.float({ min: 1, max: 10000, fractionDigits: 2 }));
 

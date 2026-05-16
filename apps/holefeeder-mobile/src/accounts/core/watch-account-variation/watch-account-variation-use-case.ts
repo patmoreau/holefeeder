@@ -1,14 +1,10 @@
+import { type AsyncResult, combineWatchers, DateInterval, Id, Variation } from '@holefeeder/core';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountType } from '@/accounts/core/account-type';
 import { AccountVariation } from '@/accounts/core/account-variation';
 import { CategoryType, CategoryTypes } from '@/flows/core/categories/category-type';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
-import { DateInterval } from '@/shared/core/date-interval';
-import { Id } from '@/shared/core/id';
-import { type AsyncResult } from '@/shared/core/result';
-import { Variation } from '@/shared/core/variation';
-import { combineWatchers } from '@/shared/core/watch-utils';
 import { Account } from '../account';
 import { AccountsRepository } from '../accounts-repository';
 

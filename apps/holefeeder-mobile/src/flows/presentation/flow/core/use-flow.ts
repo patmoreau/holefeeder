@@ -1,8 +1,7 @@
+import { type AsyncResult, Id, Result } from '@holefeeder/core';
 import { useEffect, useMemo, useState } from 'react';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { WatchFlowUseCase } from '@/flows/core/flows/watch-flow/watch-flow-use-case';
-import { Id } from '@/shared/core/id';
-import { type AsyncResult, Result } from '@/shared/core/result';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
 export const useFlow = (flowId: Id): AsyncResult<Transaction> => {

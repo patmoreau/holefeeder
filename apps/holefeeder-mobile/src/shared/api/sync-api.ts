@@ -1,8 +1,7 @@
+import { AuthenticationState, Result } from '@holefeeder/core';
 import { CrudEntry } from '@powersync/common';
 import { ApiClient } from '@/shared/api/api-client';
 import { ApiConfig } from '@/shared/api/api-config';
-import { AuthenticationState } from '@/shared/auth/core/autentication-state';
-import { Result } from '@/shared/core/result';
 
 type SyncUploadApi = {
   transaction_id?: number;

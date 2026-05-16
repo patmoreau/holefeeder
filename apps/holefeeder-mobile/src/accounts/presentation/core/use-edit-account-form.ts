@@ -1,7 +1,7 @@
+import { Result } from '@holefeeder/core';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 import { UpdateAccountUseCase } from '@/accounts/core/update/update-account-use-case';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';
-import { Result } from '@/shared/core/result';
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 

@@ -1,5 +1,4 @@
-import { DateIntervalType } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
+import { DateIntervalType, DateOnly } from '@holefeeder/core';
 
 export type SettingsFormData = {
   effectiveDate: DateOnly;

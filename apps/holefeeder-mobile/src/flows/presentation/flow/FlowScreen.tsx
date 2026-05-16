@@ -1,3 +1,4 @@
+import { Id } from '@holefeeder/core';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { FlowFormData } from '@/flows/presentation/flow/core/flow-form-data';
@@ -7,7 +8,6 @@ import { FlowForm } from '@/flows/presentation/flow/FlowForm';
 import { useAccounts } from '@/flows/presentation/shared/core/use-accounts';
 import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { useTags } from '@/flows/presentation/shared/core/use-tags';
-import { Id } from '@/shared/core/id';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
 import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';

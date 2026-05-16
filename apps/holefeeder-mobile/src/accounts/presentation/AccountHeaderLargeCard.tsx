@@ -1,10 +1,9 @@
+import { today, Variation } from '@holefeeder/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountType } from '@/accounts/core/account-type';
 import { tk } from '@/i18n/translations';
-import { Variation } from '@/shared/core/variation';
-import { today } from '@/shared/core/with-date';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';

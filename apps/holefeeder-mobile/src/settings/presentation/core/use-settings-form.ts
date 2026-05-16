@@ -1,7 +1,7 @@
+import { Result } from '@holefeeder/core';
 import { SaveSettingsCommand } from '@/settings/core/save-settings/save-settings-command';
 import { SaveSettingsUseCase } from '@/settings/core/save-settings/save-settings-use-case';
 import { SettingsFormData } from '@/settings/core/settings-form-data';
-import { Result } from '@/shared/core/result';
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 

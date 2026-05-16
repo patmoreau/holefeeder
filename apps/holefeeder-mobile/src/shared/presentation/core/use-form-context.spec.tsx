@@ -1,8 +1,8 @@
+import { Result } from '@holefeeder/core';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { Button, Text } from 'react-native';
 import { ErrorKey } from '@/shared/core/error-key';
-import { Result } from '@/shared/core/result';
 import { createFormDataContext } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 import { RepositoryContext } from '@/shared/repositories/presentation/RepositoryContext';

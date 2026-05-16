@@ -1,7 +1,6 @@
 import { DatePicker, DatePickerProps } from '@expo/ui/swift-ui';
+import { DateOnly, today, withDate } from '@holefeeder/core';
 import { StyleProp, ViewStyle } from 'react-native';
-import { DateOnly } from '@/shared/core/date-only';
-import { today, withDate } from '@/shared/core/with-date';
 import { AppHost } from '@/shared/presentation/components/AppHost.ios';
 
 export type AppDatePickerProps = {

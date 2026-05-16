@@ -1,5 +1,5 @@
+import { Result } from '@holefeeder/core';
 import { EnvVariable } from '@/shared/core/env/env-variable';
-import { Result } from '@/shared/core/result';
 
 export type ApiConfig = {
   url: string;

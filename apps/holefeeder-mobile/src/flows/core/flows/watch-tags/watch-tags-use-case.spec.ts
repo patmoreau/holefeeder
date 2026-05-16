@@ -1,8 +1,8 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { Tag } from '@/flows/core/flows/tag';
-import { type AsyncResult } from '@/shared/core/result';
 import { WatchTagsUseCase } from './watch-tags-use-case';
 
 describe('WatchTagsUseCase', () => {

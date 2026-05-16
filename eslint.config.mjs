@@ -3,8 +3,6 @@ import * as tsParser from '@typescript-eslint/parser';
 import { defineConfig } from 'eslint/config';
 import { importX } from 'eslint-plugin-import-x';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import reactPlugin from 'eslint-plugin-react';
-import * as reactHooksPlugin from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
   {
@@ -19,23 +17,6 @@ export default defineConfig([
     rules: {
       ...tsPlugin.configs.recommended.rules,
       '@typescript-eslint/no-redeclare': 'off',
-    },
-  },
-
-  // React
-  {
-    files: ['**/*.tsx'],
-    plugins: {
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-    },
-    rules: {
-      ...reactPlugin.configs.recommended.rules,
-      ...reactHooksPlugin.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-    },
-    settings: {
-      react: { version: 'detect' },
     },
   },
 

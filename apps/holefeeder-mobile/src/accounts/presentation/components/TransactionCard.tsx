@@ -1,10 +1,9 @@
+import { Id, today } from '@holefeeder/core';
 import React, { useRef } from 'react';
 import { Pressable, View, type ViewProps } from 'react-native';
 import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { Transaction } from '@/flows/core/flows/transaction';
-import { Id } from '@/shared/core/id';
-import { today } from '@/shared/core/with-date';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppChip } from '@/shared/presentation/components/AppChip';
 import { AppText } from '@/shared/presentation/components/AppText';

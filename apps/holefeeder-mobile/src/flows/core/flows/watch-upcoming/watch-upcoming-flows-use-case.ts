@@ -1,9 +1,7 @@
+import { AsyncResult, DateInterval, Result, today } from '@holefeeder/core';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { Settings } from '@/settings/core/settings';
-import { DateInterval } from '@/shared/core/date-interval';
-import { AsyncResult, Result } from '@/shared/core/result';
-import { today } from '@/shared/core/with-date';
 import { FlowsRepository } from '../flows-repository';
 
 export const WatchUpcomingFlowsUseCase = (settings: Settings, repository: FlowsRepository) => {

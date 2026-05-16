@@ -1,8 +1,6 @@
+import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/core';
 import { aFlowForm } from '@/flows/core/flows/__tests__/flow-form-for-test';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';
-import { DateOnly, DateOnlyErrors } from '@/shared/core/date-only';
-import { Id, IdErrors } from '@/shared/core/id';
-import { Money, MoneyErrors } from '@/shared/core/money';
 
 describe('ModifyFlowCommand', () => {
   it('succeeds with valid data', () => {

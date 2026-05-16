@@ -1,4 +1,4 @@
-import { User } from '@/shared/auth/core/user';
+import { User } from '@holefeeder/core';
 
 const defaultUser = (): User => ({ sub: 'auth0|123456', email: 'test@example.com', name: 'Test User' });
 

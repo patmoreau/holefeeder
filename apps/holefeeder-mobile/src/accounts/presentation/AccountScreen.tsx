@@ -1,3 +1,4 @@
+import { Id } from '@holefeeder/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';
@@ -6,7 +7,6 @@ import { TransactionCard } from '@/accounts/presentation/components/TransactionC
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { useTransactions } from '@/accounts/presentation/core/use-transactions';
 import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
-import { Id } from '@/shared/core/id';
 import { AppView } from '@/shared/presentation/AppView';
 import { CardHeaderFlashList } from '@/shared/presentation/CardHeaderFlashList';
 import { AppCardDivider } from '@/shared/presentation/components/AppCardDivider';

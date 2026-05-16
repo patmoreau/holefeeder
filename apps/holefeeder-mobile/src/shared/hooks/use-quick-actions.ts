@@ -1,3 +1,4 @@
+import { Logger } from '@holefeeder/core';
 import * as QuickActions from 'expo-quick-actions';
 import { useQuickActionCallback } from 'expo-quick-actions/hooks';
 import type { RouterAction } from 'expo-quick-actions/router';
@@ -6,7 +7,6 @@ import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 import { tk } from '@/i18n/translations';
-import { Logger } from '@/shared/core/logger/logger';
 
 const log = Logger.create('use-quick-actions');
 

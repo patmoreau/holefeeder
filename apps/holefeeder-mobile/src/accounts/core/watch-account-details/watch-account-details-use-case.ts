@@ -1,5 +1,5 @@
+import { type AsyncResult, Result } from '@holefeeder/core';
 import { AccountSummary } from '@/accounts/core/account-summary';
-import { type AsyncResult, Result } from '@/shared/core/result';
 import { AccountsRepository } from '../accounts-repository';
 
 export const WatchAccountDetailsUseCase = (accountsRepository: AccountsRepository) => {

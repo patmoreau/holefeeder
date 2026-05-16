@@ -1,3 +1,4 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
@@ -6,7 +7,6 @@ import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test'
 import { DataMetrics } from '@/settings/core/data-metrics';
 import { SettingRepositoryInPowersync } from '@/settings/persistence/setting-repository-in-powersync';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
-import { type AsyncResult } from '@/shared/core/result';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 
 describe('SettingRepositoryInPowersync', () => {

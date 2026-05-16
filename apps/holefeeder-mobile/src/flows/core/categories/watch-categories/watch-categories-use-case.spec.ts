@@ -1,8 +1,8 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { CategoriesRepositoryInMemory } from '@/flows/core/categories/__tests__/categories-repository-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { Category } from '@/flows/core/categories/category';
-import { type AsyncResult } from '@/shared/core/result';
 import { WatchCategoriesUseCase } from './watch-categories-use-case';
 
 describe('WatchCategoriesUseCase', () => {

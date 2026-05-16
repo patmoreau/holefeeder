@@ -1,10 +1,8 @@
+import { DateOnly, DateOnlyErrors, Id, IdErrors, Variation, VariationErrors } from '@holefeeder/core';
 import { AccountErrors } from '@/accounts/core/account';
 import { AccountTypeErrors } from '@/accounts/core/account-type';
 import { anUpdateAccountCommand } from '@/accounts/core/update/__tests__/update-account-command-for-test';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
-import { DateOnly, DateOnlyErrors } from '@/shared/core/date-only';
-import { Id, IdErrors } from '@/shared/core/id';
-import { Variation, VariationErrors } from '@/shared/core/variation';
 
 describe('UpdateAccountCommand', () => {
   it('succeeds with valid data', () => {

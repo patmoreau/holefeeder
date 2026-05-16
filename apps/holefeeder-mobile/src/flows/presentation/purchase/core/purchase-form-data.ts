@@ -1,8 +1,7 @@
+import { DateIntervalType, DateOnly } from '@holefeeder/core';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { Tag } from '@/flows/core/flows/tag';
-import { DateIntervalType } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
 
 export const PurchaseType = {
   expense: 'expense',

@@ -1,7 +1,7 @@
+import { LoggerFactory } from '@holefeeder/core';
 import { Platform } from 'react-native';
 import { consoleTransport, type defLvlType, logger as RNLogger, type LoggerInstance } from 'react-native-logs';
 import ExpoOSLogger from '@/modules/expo-os-logger';
-import { LoggerFactory } from '@/shared/core/logger/logger';
 
 const nativeTransport = (props: any) => {
   ExpoOSLogger.log(props.msg, props.level.text, props.extension ?? '');

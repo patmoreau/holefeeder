@@ -1,10 +1,8 @@
+import { type AsyncResult, Id, Result, Variation } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Account } from '@/accounts/core/account';
 import { AccountsRepository, AccountsRepositoryErrors } from '@/accounts/core/accounts-repository';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
-import { Id } from '@/shared/core/id';
-import { type AsyncResult, Result } from '@/shared/core/result';
-import { Variation } from '@/shared/core/variation';
 import { watchQuery } from '@/shared/persistence/watch-query';
 
 type AccountRow = {

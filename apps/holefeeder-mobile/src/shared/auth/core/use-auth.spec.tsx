@@ -1,9 +1,9 @@
+import { AuthenticationState } from '@holefeeder/core';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
 import { AuthenticationContextForTest } from '@/shared/auth/__tests__/AuthenticationContextForTest';
 import { aUser } from '@/shared/auth/__tests__/user-for-test';
-import { AuthenticationState } from '@/shared/auth/core/autentication-state';
 import { useAuth } from '@/shared/auth/core/use-auth';
 
 describe('useAuth', () => {

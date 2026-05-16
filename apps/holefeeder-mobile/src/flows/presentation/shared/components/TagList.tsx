@@ -1,3 +1,4 @@
+import { Id } from '@holefeeder/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -5,7 +6,6 @@ import { Tag } from '@/flows/core/flows/tag';
 import { FilterField } from '@/flows/presentation/shared/components/FilterField';
 import { useTagList } from '@/flows/presentation/shared/core/use-tag-list';
 import { tk } from '@/i18n/translations';
-import { Id } from '@/shared/core/id';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppChip } from '@/shared/presentation/components/AppChip';
 import { AppText } from '@/shared/presentation/components/AppText';

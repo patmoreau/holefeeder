@@ -1,8 +1,7 @@
+import { AuthenticationState, TokenInfo } from '@holefeeder/core';
 import React, { createContext, useCallback, useMemo } from 'react';
 import { Auth0Provider, useAuth0 } from 'react-native-auth0';
-import { AuthenticationState } from '@/shared/auth/core/autentication-state';
 import { AuthConfig } from '@/shared/auth/core/auth-config';
-import { TokenInfo } from '@/shared/auth/core/token-info';
 import { DatabaseFactory } from '@/shared/persistence/db';
 
 export const AuthenticationContext = createContext<AuthenticationState | undefined>(undefined);

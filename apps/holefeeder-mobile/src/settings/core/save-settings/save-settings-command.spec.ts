@@ -1,7 +1,6 @@
+import { DateIntervalTypeErrors, DateOnlyErrors } from '@holefeeder/core';
 import { aSaveSettingsForm } from '@/settings/core/save-settings/__tests__/save-settings-form-for-test';
 import { SaveSettingsCommand, SaveSettingsCommandErrors } from '@/settings/core/save-settings/save-settings-command';
-import { DateIntervalTypeErrors } from '@/shared/core/date-interval-type';
-import { DateOnlyErrors } from '@/shared/core/date-only';
 
 describe('SaveSettingsCommand', () => {
   it('succeeds with valid data', () => {

@@ -1,6 +1,4 @@
-import { type AsyncResult, Result } from '@/shared/core/result';
-import { StoreItem } from '@/shared/core/store-item';
-import { StoreItemsRepository, StoreItemsRepositoryErrors } from '@/shared/core/store-items-repository';
+import { type AsyncResult, Result, StoreItem, StoreItemsRepository, StoreItemsRepositoryErrors } from '@holefeeder/core';
 
 export type StoreItemsRepositoryInMemory = StoreItemsRepository & {
   add: (...items: StoreItem[]) => void;

@@ -1,6 +1,6 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
-import { type AsyncResult } from '@/shared/core/result';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { CategoriesRepositoryInPowersync } from './categories-repository-in-powersync';
 
@@ -20,7 +20,7 @@ describe('CategoriesRepositoryInPowersync', () => {
       const category = await aCategory().store(db);
       const repo = CategoriesRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       });
@@ -47,7 +47,7 @@ describe('CategoriesRepositoryInPowersync', () => {
     it('returns not found when no categories exist', async () => {
       const repo = CategoriesRepositoryInPowersync(db);
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       });
@@ -67,7 +67,7 @@ describe('CategoriesRepositoryInPowersync', () => {
       // Close the database to trigger an error
       await db.close();
 
-      let result: AsyncResult<any> | undefined;
+      let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
         result = data;
       });

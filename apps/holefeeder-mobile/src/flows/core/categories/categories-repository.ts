@@ -1,4 +1,4 @@
-import { type AsyncResult } from '@/shared/core/result';
+import type { AsyncResult } from '@holefeeder/core';
 import { Category } from './category';
 
 export type CategoriesRepository = {

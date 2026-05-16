@@ -1,7 +1,7 @@
+import { DateIntervalType, DateIntervalTypes } from '@holefeeder/core';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { DateIntervalType, DateIntervalTypes } from '@/shared/core/date-interval-type';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
 import { AppIcons } from '@/shared/presentation/icons';

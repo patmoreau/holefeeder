@@ -1,8 +1,6 @@
+import { DateOnlyErrors, IdErrors, VariationErrors } from '@holefeeder/core';
 import { anAccount, toAccount } from '@/accounts/core/__tests__/account-for-test';
 import { Account, AccountErrors } from '@/accounts/core/account';
-import { DateOnlyErrors } from '@/shared/core/date-only';
-import { IdErrors } from '@/shared/core/id';
-import { VariationErrors } from '@/shared/core/variation';
 
 describe('Account', () => {
   const validAccount = anAccount();

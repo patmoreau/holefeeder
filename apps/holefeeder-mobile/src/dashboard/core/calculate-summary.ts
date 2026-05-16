@@ -1,7 +1,5 @@
+import { DateIntervalType, DateOnly, Money } from '@holefeeder/core';
 import { CategoryType, CategoryTypes } from '@/flows/core/categories/category-type';
-import { DateIntervalType } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Money } from '@/shared/core/money';
 import { SummaryData } from './summary-data';
 
 export type SummaryResult = {

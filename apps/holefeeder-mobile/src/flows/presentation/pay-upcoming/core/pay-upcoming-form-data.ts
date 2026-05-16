@@ -1,5 +1,4 @@
-import { DateOnly } from '@/shared/core/date-only';
-import { Id } from '@/shared/core/id';
+import { DateOnly, Id } from '@holefeeder/core';
 
 export type PayUpcomingFormData = {
   cashflowId: Id;

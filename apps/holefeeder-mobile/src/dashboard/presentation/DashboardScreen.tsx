@@ -1,3 +1,4 @@
+import { Id, Logger } from '@holefeeder/core';
 import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
@@ -11,8 +12,6 @@ import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
 import { useUpcomingFlows } from '@/dashboard/presentation/core/use-upcoming-flows';
 import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHeaderLargeCard';
 import { DashboardHeaderSmallCard } from '@/dashboard/presentation/DashboardHeaderSmallCard';
-import { Id } from '@/shared/core/id';
-import { Logger } from '@/shared/core/logger/logger';
 import { AppView } from '@/shared/presentation/AppView';
 import { CardHeaderScrollView } from '@/shared/presentation/CardHeaderScrollView';
 import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';

@@ -1,6 +1,6 @@
+import { Id, IdErrors } from '@holefeeder/core';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
-import { Id, IdErrors } from '@/shared/core/id';
 
 describe('UpcomingFlow', () => {
   describe('create', () => {

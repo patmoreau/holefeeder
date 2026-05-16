@@ -1,6 +1,4 @@
-import { Id } from '@/shared/core/id';
-import { Result } from '@/shared/core/result';
-import { Validate, Validator } from '@/shared/core/validate';
+import { Id, Result, Validate, Validator } from '@holefeeder/core';
 
 export type Tag = {
   tag: string;

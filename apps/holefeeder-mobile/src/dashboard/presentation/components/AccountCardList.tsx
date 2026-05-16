@@ -1,7 +1,7 @@
+import { Id } from '@holefeeder/core';
 import { type ViewProps } from 'react-native';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountCard, type CardLayout } from '@/dashboard/presentation/components/AccountCard';
-import { Id } from '@/shared/core/id';
 import { AppCardList } from '@/shared/presentation/components/AppCardList';
 
 export type AccountCardListProps = ViewProps & {

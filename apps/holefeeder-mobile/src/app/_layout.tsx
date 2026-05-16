@@ -1,11 +1,11 @@
 import 'react-native-reanimated';
 import '@azure/core-asynciterator-polyfill';
-import * as Crypto from 'expo-crypto';
+import { Id, Logger } from '@holefeeder/core';
 import { PowerSyncDatabase } from '@powersync/react-native';
+import * as Crypto from 'expo-crypto';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
-import { Id, Logger } from '@holefeeder/core';
 import HolefeederContent from '@/app/HolefeederContent';
 import { HolefeederConfig } from '@/config/holefeeder-config';
 import { AuthenticationProvider } from '@/shared/auth/presentation/AuthenticationProvider';

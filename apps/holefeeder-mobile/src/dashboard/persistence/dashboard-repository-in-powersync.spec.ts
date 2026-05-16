@@ -1,13 +1,10 @@
+import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
-import { DateIntervalTypes } from '@/shared/core/date-interval-type';
-import { Money } from '@/shared/core/money';
-import { type AsyncResult } from '@/shared/core/result';
-import { today, withDate } from '@/shared/core/with-date';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { DashboardRepositoryInPowersync } from './dashboard-repository-in-powersync';
 

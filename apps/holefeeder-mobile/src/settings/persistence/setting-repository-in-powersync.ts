@@ -1,7 +1,7 @@
+import { AsyncResult, Result } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { DataMetrics, DEFAULT_DATA_METRICS } from '@/settings/core/data-metrics';
 import { SettingRepository } from '@/settings/core/setting-repository';
-import { AsyncResult, Result } from '@/shared/core/result';
 import { watchSingle } from '@/shared/persistence/watch-query';
 
 type DataMetricsRow = {

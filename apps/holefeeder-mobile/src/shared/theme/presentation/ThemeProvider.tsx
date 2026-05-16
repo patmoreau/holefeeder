@@ -1,7 +1,7 @@
+import { Logger } from '@holefeeder/core';
 import * as SystemUI from 'expo-system-ui';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { Appearance } from 'react-native';
-import { Logger } from '@/shared/core/logger/logger';
 import { AppStorage } from '@/shared/persistence/app-storage';
 import { ThemeState } from '@/shared/theme/core/theme-state';
 import { darkTheme, lightTheme, ThemeMode } from '@/types/theme';

@@ -1,9 +1,9 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { Account } from '@/accounts/core/account';
 import { AccountsRepositoryErrors } from '@/accounts/core/accounts-repository';
 import { anUpdateAccountCommand } from '@/accounts/core/update/__tests__/update-account-command-for-test';
-import { type AsyncResult } from '@/shared/core/result';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { AccountsRepositoryInPowersync } from './accounts-repository-in-powersync';
 

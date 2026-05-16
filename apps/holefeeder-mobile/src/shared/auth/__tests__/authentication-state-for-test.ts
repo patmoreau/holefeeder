@@ -1,6 +1,6 @@
+import { AuthenticationState } from '@holefeeder/core';
 import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';
 import { aUser } from '@/shared/auth/__tests__/user-for-test';
-import { AuthenticationState } from '@/shared/auth/core/autentication-state';
 
 const defaultAuthenticationState = (): AuthenticationState => ({
   user: aUser(),

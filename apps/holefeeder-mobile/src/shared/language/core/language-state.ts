@@ -1,4 +1,4 @@
-import { LanguageType } from '@/shared/language/core/language-type';
+import { LanguageType } from '@holefeeder/core';
 
 export type LanguageState = {
   language: LanguageType;

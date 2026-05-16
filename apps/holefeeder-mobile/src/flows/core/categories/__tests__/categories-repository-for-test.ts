@@ -1,6 +1,6 @@
+import { type AsyncResult, Result } from '@holefeeder/core';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
-import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type CategoriesRepositoryInMemory = CategoriesRepository & {
   add: (...items: Category[]) => void;

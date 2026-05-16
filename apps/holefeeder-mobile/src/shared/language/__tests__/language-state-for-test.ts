@@ -1,5 +1,5 @@
+import { LanguageType } from '@holefeeder/core';
 import { LanguageState } from '@/shared/language/core/language-state';
-import { LanguageType } from '@/shared/language/core/language-type';
 
 const defaultState = (): LanguageState => ({
   language: LanguageType.en,

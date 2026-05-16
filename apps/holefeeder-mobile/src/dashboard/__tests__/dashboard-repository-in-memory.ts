@@ -1,6 +1,6 @@
+import { type AsyncResult, Result } from '@holefeeder/core';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
 import { SummaryData } from '@/dashboard/core/summary-data';
-import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type DashboardRepositoryInMemory = DashboardRepository & {
   add: (...items: SummaryData[]) => void;

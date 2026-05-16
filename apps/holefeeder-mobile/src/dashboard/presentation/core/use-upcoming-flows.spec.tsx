@@ -1,3 +1,4 @@
+import { DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
@@ -10,10 +11,6 @@ import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test'
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { SETTINGS_CODE } from '@/settings/core/settings';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
-import { DateIntervalTypes } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Money } from '@/shared/core/money';
-import { Variation } from '@/shared/core/variation';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { PowerSyncProviderForTest } from '@/shared/persistence/__tests__/PowerSyncProviderForTest';
 

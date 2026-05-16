@@ -1,3 +1,4 @@
+import { Money } from '@holefeeder/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
@@ -5,7 +6,6 @@ import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardH
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
-import { Money } from '@/shared/core/money';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';

@@ -1,5 +1,5 @@
+import { Id } from '@holefeeder/core';
 import { AccountType } from '@/accounts/core/account-type';
-import { Id } from '@/shared/core/id';
 
 export type AccountSummary = {
   id: Id;

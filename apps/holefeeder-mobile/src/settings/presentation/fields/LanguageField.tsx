@@ -1,7 +1,7 @@
+import { LanguageType } from '@holefeeder/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { LanguageType } from '@/shared/language/core/language-type';
 import { useLanguage } from '@/shared/language/core/use-language';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';

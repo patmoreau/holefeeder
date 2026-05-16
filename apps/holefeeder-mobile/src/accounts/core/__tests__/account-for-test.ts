@@ -1,10 +1,10 @@
+import { Variation } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Account } from '@/accounts/core/account';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
 import { anAccountType } from '@/shared/__tests__/enum-for-test';
 import { aVariation } from '@/shared/__tests__/number-for-test';
 import { anId, aString } from '@/shared/__tests__/string-for-test';
-import { Variation } from '@/shared/core/variation';
 
 export type AccountForTest = Account & {
   times: (count: number) => AccountForTest[];

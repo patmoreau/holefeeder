@@ -1,6 +1,6 @@
+import { Result } from '@holefeeder/core';
 import { Platform } from 'react-native';
 import { EnvVariable } from '@/shared/core/env/env-variable';
-import { Result } from '@/shared/core/result';
 
 export type AuthConfig = {
   domain: string;

@@ -1,8 +1,8 @@
+import { Money } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Category } from '@/flows/core/categories/category';
 import { aCategoryType } from '@/shared/__tests__/enum-for-test';
 import { aColor, anId, aString } from '@/shared/__tests__/string-for-test';
-import { Money } from '@/shared/core/money';
 
 export type CategoryForTest = Category & {
   times: (count: number) => CategoryForTest[];

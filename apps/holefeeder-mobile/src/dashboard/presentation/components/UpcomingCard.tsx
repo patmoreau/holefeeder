@@ -1,3 +1,4 @@
+import { today } from '@holefeeder/core';
 import { router } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +8,6 @@ import { SharedValue } from 'react-native-reanimated';
 import { useUpcomingFlow } from '@/dashboard/presentation/core/use-pay-form';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
-import { today } from '@/shared/core/with-date';
 import { AppSwipeableRow } from '@/shared/presentation/AppSwipeableRow';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppChip } from '@/shared/presentation/components/AppChip';

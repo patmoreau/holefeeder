@@ -1,7 +1,4 @@
-import { DateIntervalType } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Result } from '@/shared/core/result';
-import { Validate, Validator } from '@/shared/core/validate';
+import { DateIntervalType, DateOnly, Result, Validate, Validator } from '@holefeeder/core';
 
 export type SaveSettingsCommand = {
   effectiveDate: DateOnly;

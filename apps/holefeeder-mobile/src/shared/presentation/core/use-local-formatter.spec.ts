@@ -1,8 +1,7 @@
+import { DateOnly, withDate } from '@holefeeder/core';
 import { act, renderHook } from '@testing-library/react-native';
 import * as ExpoLocalization from 'expo-localization';
 import { AppState, AppStateStatus } from 'react-native';
-import { DateOnly } from '@/shared/core/date-only';
-import { withDate } from '@/shared/core/with-date';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 
 jest.mock('expo-localization');

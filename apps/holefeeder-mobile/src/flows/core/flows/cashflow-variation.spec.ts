@@ -1,9 +1,7 @@
+import { DateIntervalTypes, DateOnly, Money } from '@holefeeder/core';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { CashflowVariation, CashflowVariationErrors } from '@/flows/core/flows/cashflow-variation';
-import { DateIntervalTypes } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Money } from '@/shared/core/money';
 
 describe('Cashflow Variation', () => {
   describe('forVariations', () => {

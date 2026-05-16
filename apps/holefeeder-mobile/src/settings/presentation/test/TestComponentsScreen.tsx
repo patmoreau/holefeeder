@@ -1,7 +1,7 @@
+import { today } from '@holefeeder/core';
 import { Stack, useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { today } from '@/shared/core/with-date';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppForm } from '@/shared/presentation/AppForm';
 import { AppScreen } from '@/shared/presentation/AppScreen';

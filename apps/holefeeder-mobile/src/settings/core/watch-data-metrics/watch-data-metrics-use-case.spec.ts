@@ -1,8 +1,8 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { SettingsRepositoryInMemory } from '@/settings/core/__tests__/settings-repository-for-test';
 import { DataMetrics } from '@/settings/core/data-metrics';
 import { WatchDataMetricsUseCase } from '@/settings/core/watch-data-metrics/watch-data-metrics-use-case';
-import { type AsyncResult } from '@/shared/core/result';
 
 describe('WatchDataMetricsUseCase', () => {
   let settingsRepo: SettingsRepositoryInMemory;

@@ -1,10 +1,6 @@
+import { DateOnly, Id, Result, Validate, Validator, Variation } from '@holefeeder/core';
 import { AccountErrors } from '@/accounts/core/account';
 import { AccountType } from '@/accounts/core/account-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Id } from '@/shared/core/id';
-import { Result } from '@/shared/core/result';
-import { Validate, Validator } from '@/shared/core/validate';
-import { Variation } from '@/shared/core/variation';
 
 export type UpdateAccountCommand = {
   id: Id;

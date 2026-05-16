@@ -1,7 +1,6 @@
+import { type AsyncResult, Logger } from '@holefeeder/core';
 import { useEffect, useRef, useState } from 'react';
 import { ErrorKey } from '@/shared/core/error-key';
-import { Logger } from '@/shared/core/logger/logger';
-import { type AsyncResult } from '@/shared/core/result';
 
 const logger = Logger.create('use-multiple-watches');
 

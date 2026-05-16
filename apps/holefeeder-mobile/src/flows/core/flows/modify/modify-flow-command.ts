@@ -1,8 +1,5 @@
+import { DateOnly, Id, Money, Result } from '@holefeeder/core';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { DateOnly } from '@/shared/core/date-only';
-import { Id } from '@/shared/core/id';
-import { Money } from '@/shared/core/money';
-import { Result } from '@/shared/core/result';
 
 export type ModifyFlowCommand = {
   id: Id;

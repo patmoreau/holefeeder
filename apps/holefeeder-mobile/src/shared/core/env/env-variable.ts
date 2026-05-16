@@ -1,5 +1,5 @@
+import { Result } from '@holefeeder/core';
 import { default as Constants } from 'expo-constants';
-import { Result } from '@/shared/core/result';
 
 const extra: Record<string, string | undefined> = Constants.expoConfig?.extra ?? {};
 

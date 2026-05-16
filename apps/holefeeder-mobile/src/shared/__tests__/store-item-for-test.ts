@@ -1,6 +1,6 @@
+import { StoreItem } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { anId, aWord } from '@/shared/__tests__/string-for-test';
-import { StoreItem } from '@/shared/core/store-item';
 
 export type StoreItemForTest = StoreItem & {
   times: (count: number) => StoreItemForTest[];

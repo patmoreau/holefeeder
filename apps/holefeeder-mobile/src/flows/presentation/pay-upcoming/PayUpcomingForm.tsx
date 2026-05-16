@@ -1,3 +1,4 @@
+import { Money } from '@holefeeder/core';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useNavigation } from 'expo-router';
 import React from 'react';
@@ -6,7 +7,6 @@ import { View } from 'react-native';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
 import { tk } from '@/i18n/translations';
-import { Money } from '@/shared/core/money';
 import { AppForm } from '@/shared/presentation/AppForm';
 import { AppButton } from '@/shared/presentation/components/AppButton';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';

@@ -1,6 +1,5 @@
+import { IdErrors, MoneyErrors } from '@holefeeder/core';
 import { aCategory, toCategory } from '@/flows/core/categories/__tests__/category-for-test';
-import { IdErrors } from '@/shared/core/id';
-import { MoneyErrors } from '@/shared/core/money';
 import { Category, CategoryErrors } from './category';
 
 describe('Category', () => {

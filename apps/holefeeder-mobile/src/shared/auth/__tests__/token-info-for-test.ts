@@ -1,6 +1,6 @@
+import { TokenInfo } from '@holefeeder/core';
 import { aTimestamp } from '@/shared/__tests__/date-for-test';
 import { aToken } from '@/shared/__tests__/string-for-test';
-import { TokenInfo } from '@/shared/auth/core/token-info';
 
 const defaultTokenInfo = (): TokenInfo => ({
   token: aToken(),

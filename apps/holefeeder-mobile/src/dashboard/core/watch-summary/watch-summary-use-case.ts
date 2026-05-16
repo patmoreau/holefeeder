@@ -1,7 +1,5 @@
+import { type AsyncResult, DateInterval, Result, today } from '@holefeeder/core';
 import { Settings } from '@/settings/core/settings';
-import { type AsyncResult, Result } from '@/shared/core/result';
-import { today } from '@/shared/core/with-date';
-import { DateInterval } from '../../../shared/core/date-interval';
 import { calculateSummary, SummaryResult } from '../calculate-summary';
 import { DashboardRepository } from '../dashboard-repository';
 import { SummaryData } from '../summary-data';

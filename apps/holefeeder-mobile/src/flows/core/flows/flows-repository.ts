@@ -1,3 +1,4 @@
+import { type AsyncResult, Id, Result } from '@holefeeder/core';
 import { AccountVariation } from '@/accounts/core/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
@@ -6,8 +7,6 @@ import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { Tag } from '@/flows/core/flows/tag';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
-import { Id } from '@/shared/core/id';
-import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type FlowsRepository = {
   create(command: CreateFlowCommand): Promise<Result<Id>>;

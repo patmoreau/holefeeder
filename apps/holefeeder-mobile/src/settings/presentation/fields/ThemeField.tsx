@@ -1,7 +1,7 @@
+import { Logger } from '@holefeeder/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { Logger } from '@/shared/core/logger/logger';
 import { AppField } from '@/shared/presentation/AppField';
 import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
 import { AppIcons } from '@/shared/presentation/icons';

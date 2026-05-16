@@ -1,6 +1,6 @@
+import { type AsyncResult, Result } from '@holefeeder/core';
 import { DataMetrics } from '@/settings/core/data-metrics';
 import { SettingRepository } from '@/settings/core/setting-repository';
-import { type AsyncResult, Result } from '@/shared/core/result';
 
 export type SettingsRepositoryInMemory = SettingRepository & {
   add: (...items: DataMetrics[]) => void;

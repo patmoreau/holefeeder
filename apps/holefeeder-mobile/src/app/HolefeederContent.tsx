@@ -1,6 +1,6 @@
+import { Logger } from '@holefeeder/core';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/shared/auth/core/use-auth';
-import { Logger } from '@/shared/core/logger/logger';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
 import { useTheme } from '@/shared/theme/core/use-theme';

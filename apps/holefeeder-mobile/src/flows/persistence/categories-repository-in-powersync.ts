@@ -1,8 +1,7 @@
+import { type AsyncResult, Money } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
-import { Money } from '@/shared/core/money';
-import { type AsyncResult } from '@/shared/core/result';
 import { watchQuery } from '@/shared/persistence/watch-query';
 
 type CategoryRow = {

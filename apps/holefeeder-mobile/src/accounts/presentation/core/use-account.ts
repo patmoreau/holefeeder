@@ -1,8 +1,7 @@
+import { type AsyncResult, Id, Result } from '@holefeeder/core';
 import { useEffect, useMemo, useState } from 'react';
 import { Account } from '@/accounts/core/account';
 import { WatchAccountsUseCase } from '@/accounts/core/watch-accounts/watch-accounts-use-case';
-import { Id } from '@/shared/core/id';
-import { type AsyncResult, Result } from '@/shared/core/result';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
 export const useAccount = (id: Id): AsyncResult<Account> => {

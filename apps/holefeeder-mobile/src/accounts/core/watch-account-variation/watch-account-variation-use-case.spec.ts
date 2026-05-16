@@ -1,3 +1,4 @@
+import { type AsyncResult, DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { anAccountVariation } from '@/accounts/core/__tests__/account-variation-for-test';
@@ -12,11 +13,6 @@ import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aDateInterval } from '@/shared/__tests__/date-interval-for-test';
-import { DateIntervalTypes } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Money } from '@/shared/core/money';
-import { type AsyncResult } from '@/shared/core/result';
-import { Variation } from '@/shared/core/variation';
 
 describe('WatchAccountVariationUseCase', () => {
   const account = anAccount({ openBalance: Variation.valid(10), type: AccountTypes.checking });

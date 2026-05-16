@@ -1,8 +1,7 @@
+import { AuthenticationState, Logger } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase, type PowerSyncBackendConnector } from '@powersync/common';
 import { HolefeederConfig } from '@/config/holefeeder-config';
 import { syncApi } from '@/shared/api/sync-api';
-import { AuthenticationState } from '@/shared/auth/core/autentication-state';
-import { Logger } from '@/shared/core/logger/logger';
 
 const logger = Logger.create('powersync-connector');
 

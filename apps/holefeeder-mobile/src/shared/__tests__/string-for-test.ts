@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Id } from '@/shared/core/id';
+import { Id } from '@holefeeder/core';
 
 export const aColor = () => faker.color.rgb();
 

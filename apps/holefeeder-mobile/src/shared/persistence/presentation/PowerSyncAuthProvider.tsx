@@ -1,9 +1,9 @@
+import { Logger } from '@holefeeder/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { PowerSyncContext } from '@powersync/react-native';
 import { ReactNode, useEffect } from 'react';
 import { HolefeederConfig } from '@/config/holefeeder-config';
 import { useAuth } from '@/shared/auth/core/use-auth';
-import { Logger } from '@/shared/core/logger/logger';
 import { PowerSyncConnector } from '@/shared/persistence/powersync-connector';
 
 const logger = Logger.create('PowerSyncAuthProvider');

@@ -1,8 +1,7 @@
+import { Money, Result } from '@holefeeder/core';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';
 import { ModifyFlowUseCase } from '@/flows/core/flows/modify/modify-flow-use-case';
 import { FlowFormData } from '@/flows/presentation/flow/core/flow-form-data';
-import { Money } from '@/shared/core/money';
-import { Result } from '@/shared/core/result';
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 

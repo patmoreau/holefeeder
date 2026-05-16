@@ -1,9 +1,9 @@
+import { Id } from '@holefeeder/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { Tag } from '@/flows/core/flows/tag';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { Id } from '@/shared/core/id';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { PowerSyncProviderForTest } from '@/shared/persistence/__tests__/PowerSyncProviderForTest';
 import { useTags } from './use-tags';

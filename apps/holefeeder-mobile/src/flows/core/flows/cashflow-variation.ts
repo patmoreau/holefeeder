@@ -1,10 +1,5 @@
+import { DateIntervalType, DateOnly, Id, Money, Result, Variation } from '@holefeeder/core';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { DateIntervalType } from '@/shared/core/date-interval-type';
-import { DateOnly } from '@/shared/core/date-only';
-import { Id } from '@/shared/core/id';
-import { Money } from '@/shared/core/money';
-import { Result } from '@/shared/core/result';
-import { Variation } from '@/shared/core/variation';
 import { CategoryType } from '../categories/category-type';
 
 export type CashflowVariation = {

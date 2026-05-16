@@ -1,8 +1,7 @@
+import { type AsyncResult, StoreItemsRepositoryErrors } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { aStoreItem, toStoreItem } from '@/shared/__tests__/store-item-for-test';
 import { aWord } from '@/shared/__tests__/string-for-test';
-import { type AsyncResult } from '@/shared/core/result';
-import { StoreItemsRepositoryErrors } from '@/shared/core/store-items-repository';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { StoreItemsRepositoryInPowersync } from '@/shared/persistence/store-items-repository-in-powersync';
 import { WatchQueryErrors } from '@/shared/persistence/watch-query';

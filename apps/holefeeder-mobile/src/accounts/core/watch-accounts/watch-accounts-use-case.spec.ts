@@ -1,8 +1,8 @@
+import type { AsyncResult } from '@holefeeder/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
 import { Account } from '@/accounts/core/account';
-import { type AsyncResult } from '@/shared/core/result';
 import { WatchAccountsUseCase } from './watch-accounts-use-case';
 
 describe('WatchAccountsUseCase', () => {

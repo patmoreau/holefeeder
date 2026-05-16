@@ -1,9 +1,9 @@
+import { DateOnly } from '@holefeeder/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aTransaction, toTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { anId } from '@/shared/__tests__/string-for-test';
-import { DateOnly } from '@/shared/core/date-only';
 import { usePagedWatch, WatchCountFn, WatchPageFn } from './use-paged-watch';
 
 const PAGE_SIZE = 3;
