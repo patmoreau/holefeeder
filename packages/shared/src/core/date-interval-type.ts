@@ -1,7 +1,7 @@
+import { DateOnly } from './date-only';
 import { Result } from './result';
 import { Validate, Validator } from './validate';
 import { withDate } from './with-date';
-import { DateOnly } from './date-only';
 
 export const DateIntervalTypes = {
   daily: 'daily',

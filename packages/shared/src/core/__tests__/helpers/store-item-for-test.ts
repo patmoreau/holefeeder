@@ -1,5 +1,5 @@
-import { anId, aWord } from './string-for-test';
 import { StoreItem } from '../../store-item';
+import { anId, aWord } from './string-for-test';
 
 const defaultStoreItem = (): StoreItem => ({
   id: anId(),

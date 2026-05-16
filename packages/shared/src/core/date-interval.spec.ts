@@ -1,6 +1,6 @@
+import { DateInterval, DateIntervalErrors } from './date-interval';
 import { DateIntervalTypes } from './date-interval-type';
 import { DateOnly } from './date-only';
-import { DateInterval, DateIntervalErrors } from './date-interval';
 
 describe('DateInterval', () => {
   describe('create', () => {

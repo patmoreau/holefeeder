@@ -15,5 +15,8 @@ export default defineConfig([
         },
       },
     },
+    rules: {
+      '@typescript-eslint/no-redeclare': 'off',
+    },
   },
 ]);

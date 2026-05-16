@@ -1,17 +1,5 @@
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import {
-  Alert,
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Card, CardContent, CircularProgress, Chip, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { useAccounts } from '../api/use-accounts';
 
 export const AccountsPage = () => {
@@ -46,16 +34,9 @@ export const AccountsPage = () => {
                 <ListItemIcon>
                   <AccountBalanceIcon color={account.inactive ? 'disabled' : 'primary'} />
                 </ListItemIcon>
-                <ListItemText
-                  primary={account.name}
-                  secondary={account.description || account.type}
-                />
-                {account.favorite && (
-                  <Chip label="Favorite" size="small" color="secondary" sx={{ mr: 1 }} />
-                )}
-                {account.inactive && (
-                  <Chip label="Inactive" size="small" variant="outlined" />
-                )}
+                <ListItemText primary={account.name} secondary={account.description || account.type} />
+                {account.favorite && <Chip label="Favorite" size="small" color="secondary" sx={{ mr: 1 }} />}
+                {account.inactive && <Chip label="Inactive" size="small" variant="outlined" />}
               </ListItem>
             ))}
             {accounts?.length === 0 && (

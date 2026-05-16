@@ -286,7 +286,7 @@ describe('Result', () => {
       const result = Result.success([]);
 
       expect(result.isFailure).toBe(false);
-      expect((result as Success<any[]>).value).toEqual([]);
+      expect((result as Success<unknown[]>).value).toEqual([]);
     });
 
     it('should handle combine with all failures', () => {
