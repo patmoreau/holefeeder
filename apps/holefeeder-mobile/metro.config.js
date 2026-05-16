@@ -6,8 +6,8 @@ const { getDefaultConfig } = require('expo/metro-config');
 const config = getDefaultConfig(__dirname);
 
 // Monorepo: preserve auto-detected watch folders (monorepo root node_modules
-// and workspace packages) then add packages/core for hot-reload.
-config.watchFolders = [...(config.watchFolders ?? []), path.resolve(__dirname, '../../packages/core')];
+// and workspace packages) then add packages/shared for hot-reload.
+config.watchFolders = [...(config.watchFolders ?? []), path.resolve(__dirname, '../../packages/shared')];
 
 /** @type {import('metro-config').GetTransformOptions} */
 const getTransformOptions = async (_entryPoints, _options, _getDependenciesOf) => ({
