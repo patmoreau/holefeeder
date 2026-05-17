@@ -32,7 +32,12 @@ export const PurchaseFormContent = ({ accounts, categories, tags }: PurchaseForm
         selectedPurchaseType={formData.purchaseType}
         onSelectPurchaseType={(type) => updateFormField('purchaseType', type)}
       />
-      <AmountField ref={amountFieldRef} amount={formData.amount} onAmountChange={(amount) => updateFormField('amount', amount)} />
+      <AmountField
+        ref={amountFieldRef}
+        amount={formData.amount}
+        onAmountChange={(amount) => updateFormField('amount', amount)}
+        purchaseType={formData.purchaseType}
+      />
       {formData.purchaseType !== PurchaseType.transfer && (
         <>
           <BasicSection accounts={accounts} categories={categories} tags={tags} />

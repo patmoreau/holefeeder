@@ -15,7 +15,7 @@ export default function AccountsScreen() {
   return (
     <ParallaxScrollView
       style={styles.content}
-      headerBackgroundColor={theme.colors.accounts}
+      headerBackgroundColor={theme.colors.primary}
       headerImage={<IconSymbol size={310} color="#808080" name={AppIcons.accounts} style={styles.headerImage} />}
     >
       <ScreenTitle title={'Explore'} />

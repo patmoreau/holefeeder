@@ -1,10 +1,21 @@
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useFocusEffect } from '@react-navigation/native';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent, RefreshControl, type ViewProps } from 'react-native';
-import Animated, { Extrapolation, interpolate, useAnimatedRef, useAnimatedStyle, useScrollOffset } from 'react-native-reanimated';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollOffset,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { scheduleOnRN } from 'react-native-worklets';
 import { AppView } from '@/shared/presentation/AppView';
+import { useHeaderIconColor } from '@/shared/presentation/core/header-icon-color-context';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { spacing } from '@/types/theme';
@@ -85,6 +96,28 @@ export const CardHeaderScrollView = ({
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollOffset(scrollRef);
+
+  const { setOverPrimary } = useHeaderIconColor();
+  const scrollThreshold = useSharedValue(HEADER_SCROLL_DISTANCE);
+
+  useEffect(() => {
+    scrollThreshold.value = HEADER_SCROLL_DISTANCE;
+  }, [HEADER_SCROLL_DISTANCE, scrollThreshold]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setOverPrimary(scrollOffset.value <= scrollThreshold.value);
+    }, [setOverPrimary, scrollOffset, scrollThreshold])
+  );
+
+  useAnimatedReaction(
+    () => scrollOffset.value > scrollThreshold.value,
+    (isScrolledPast, prev) => {
+      if (prev !== null && isScrolledPast !== prev) {
+        scheduleOnRN(setOverPrimary, !isScrolledPast);
+      }
+    }
+  );
 
   const handleScrollEnd = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!onEndReached) return;

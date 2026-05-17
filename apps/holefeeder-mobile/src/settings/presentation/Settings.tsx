@@ -35,7 +35,7 @@ const SettingsScreen = () => {
   return (
     <ParallaxScrollView
       style={styles.content}
-      headerBackgroundColor={theme.colors.settings}
+      headerBackgroundColor={theme.colors.primary}
       headerImage={<IconSymbol size={310} color="#808080" name={AppIcons.settings} style={styles.headerImage} />}
     >
       <ScreenTitle title={t(tk.settings.title)} />

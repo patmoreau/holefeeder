@@ -1,13 +1,17 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
+import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
+const AMOUNT_FONT_SIZE = 48;
+
 type Props = {
   amount: number;
   onAmountChange: (amount: number) => void;
+  purchaseType: PurchaseType;
 };
 
 export type AmountFieldRef = {
@@ -18,21 +22,32 @@ const createStyles = (theme: Theme) => ({
   container: {
     width: '100%' as const,
   },
+  row: {
+    flexDirection: 'row' as const,
+    alignItems: 'baseline' as const,
+    justifyContent: 'center' as const,
+  },
+  symbol: {
+    fontSize: AMOUNT_FONT_SIZE,
+    fontWeight: fontWeight.semiBold,
+  },
   input: {
-    color: theme.colors.amountNeutral,
-    fontSize: 48,
+    fontSize: AMOUNT_FONT_SIZE,
     fontWeight: fontWeight.semiBold,
     paddingVertical: spacing.lg,
-    textAlign: 'center' as const,
+    flexShrink: 1 as const,
   },
+  expenseColor: { color: theme.colors.negative },
+  incomeColor: { color: theme.colors.positive },
+  neutralColor: { color: theme.colors.text },
 });
 
-export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmountChange }, ref) => {
-  const { formatCurrency } = useLocaleFormatter();
+export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmountChange, purchaseType }, ref) => {
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const inputRef = useRef<TextInput>(null);
 
-  const [displayAmount, setDisplayAmount] = useState<string>(formatCurrency(amount));
+  const [displayAmount, setDisplayAmount] = useState<string>(amount.toFixed(2));
   const [enteringFocus, setEnteringFocus] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selection, setSelection] = useState<{ start: number; end?: number } | undefined>(undefined);
@@ -53,29 +68,46 @@ export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmount
   }, [enteringFocus, displayAmount.length]);
 
   useEffect(() => {
-    const formatted = formatCurrency(amount, { isEditing: isEditing });
+    const formatted = amount.toFixed(2);
     if (formatted !== displayAmount) {
       setDisplayAmount(formatted);
     }
-  }, [amount, isEditing, displayAmount, formatCurrency]);
+  }, [amount, displayAmount]);
+
+  const currencySymbol = useMemo(() => {
+    try {
+      return (
+        new Intl.NumberFormat(currentLocale, {
+          style: 'currency',
+          currency: currencyCode,
+          currencyDisplay: 'narrowSymbol',
+        })
+          .formatToParts(0)
+          .find((p) => p.type === 'currency')?.value ?? '$'
+      );
+    } catch {
+      return '$';
+    }
+  }, [currentLocale, currencyCode]);
+
+  const amountColorStyle = isEditing
+    ? styles.neutralColor
+    : purchaseType === PurchaseType.expense
+      ? styles.expenseColor
+      : purchaseType === PurchaseType.gain
+        ? styles.incomeColor
+        : styles.neutralColor;
 
   const handleChangeText = (text: string) => {
     const digits = text.replace(/\D/g, '');
-
-    const amount = digits ? parseInt(digits, 10) / 100 : 0;
-
+    const newAmount = digits ? parseInt(digits, 10) / 100 : 0;
     setSelection(undefined);
-
-    setDisplayAmount(formatCurrency(amount, { isEditing: isEditing }));
-
-    onAmountChange(amount);
+    setDisplayAmount(newAmount.toFixed(2));
+    onAmountChange(newAmount);
   };
 
   const handleFocus = () => {
     setIsEditing(true);
-    const newDisplayAmount = formatCurrency(amount, { isEditing: isEditing });
-    setDisplayAmount(newDisplayAmount);
-
     requestAnimationFrame(() => {
       setEnteringFocus(true);
     });
@@ -86,17 +118,20 @@ export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmount
   };
 
   return (
-    <View style={[styles.container]}>
-      <TextInput
-        ref={inputRef}
-        style={styles.input}
-        value={displayAmount}
-        onChangeText={handleChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        selection={selection}
-        keyboardType="numeric"
-      />
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <Text style={[styles.symbol, amountColorStyle]}>{currencySymbol}</Text>
+        <TextInput
+          ref={inputRef}
+          style={[styles.input, amountColorStyle]}
+          value={displayAmount}
+          onChangeText={handleChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          selection={selection}
+          keyboardType="decimal-pad"
+        />
+      </View>
     </View>
   );
 });

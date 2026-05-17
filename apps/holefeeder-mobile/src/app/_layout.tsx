@@ -15,6 +15,7 @@ import { AppStorageInMmkv } from '@/shared/persistence/app-storage-in-mmkv';
 import { DatabaseFactory } from '@/shared/persistence/db';
 import { PowersyncConnectorNoop } from '@/shared/persistence/powersync-connector-noop';
 import { PowerSyncAuthProvider } from '@/shared/persistence/presentation/PowerSyncAuthProvider';
+import { HeaderIconColorProvider } from '@/shared/presentation/core/header-icon-color-context';
 import { RepositoryProvider } from '@/shared/repositories/presentation/RepositoryContext';
 import { ThemeProvider } from '@/shared/theme/presentation/ThemeProvider';
 
@@ -73,13 +74,15 @@ const RootLayout = () => {
     <ErrorBoundary onError={errorHandler}>
       <LanguageProvider storage={appStorage}>
         <ThemeProvider storage={appStorage}>
-          <AuthenticationProvider config={config.value.authConfig}>
-            <PowerSyncAuthProvider database={database} config={config.value}>
-              <RepositoryProvider database={database}>
-                <HolefeederContent />
-              </RepositoryProvider>
-            </PowerSyncAuthProvider>
-          </AuthenticationProvider>
+          <HeaderIconColorProvider>
+            <AuthenticationProvider config={config.value.authConfig}>
+              <PowerSyncAuthProvider database={database} config={config.value}>
+                <RepositoryProvider database={database}>
+                  <HolefeederContent />
+                </RepositoryProvider>
+              </PowerSyncAuthProvider>
+            </AuthenticationProvider>
+          </HeaderIconColorProvider>
         </ThemeProvider>
       </LanguageProvider>
     </ErrorBoundary>
