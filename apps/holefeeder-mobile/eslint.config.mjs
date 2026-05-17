@@ -17,6 +17,8 @@ export default defineConfig([
     },
     rules: {
       '@typescript-eslint/no-redeclare': 'off',
+      'import/no-unresolved': 'off',
+      'import-x/no-unresolved': 'off',
     },
   },
 ]);
