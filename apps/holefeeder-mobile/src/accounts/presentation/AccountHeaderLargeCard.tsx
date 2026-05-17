@@ -7,7 +7,7 @@ import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { fontSize, fontWeight, spacing } from '@/types/theme/design-tokens';
+import { borderRadius, fontSize, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 const createStyles = (theme: Theme) => ({
@@ -31,11 +31,24 @@ const createStyles = (theme: Theme) => ({
     opacity: 0.5,
     marginBottom: spacing.xs,
   },
-  positiveAmount: {
-    color: theme.colors.primaryText,
+  pill: {
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
-  negativeAmount: {
-    color: theme.colors.secondaryText,
+  positivePill: {
+    backgroundColor: theme.colors.positiveBackground,
+  },
+  negativePill: {
+    backgroundColor: theme.colors.negativeBackground,
+  },
+  positiveText: {
+    color: theme.colors.positive,
+    fontWeight: fontWeight.semiBold,
+  },
+  negativeText: {
+    color: theme.colors.negative,
+    fontWeight: fontWeight.semiBold,
   },
 });
 
@@ -60,19 +73,23 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.accountCard.updated)}
           </AppText>
-          <AppText style={styles.textColor} adjustsFontSizeToFit>
-            {formatDate(account.lastTransactionDate!, today())}
-          </AppText>
+          <View style={[styles.pill, styles.positivePill]}>
+            <AppText style={styles.positiveText} adjustsFontSizeToFit>
+              {formatDate(account.lastTransactionDate!, today())}
+            </AppText>
+          </View>
         </View>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.accountCard.projected)}
           </AppText>
-          <AppText style={[isPositive ? styles.positiveAmount : styles.negativeAmount]} adjustsFontSizeToFit>
-            {formatCurrency(account.projectedBalance)}
-          </AppText>
+          <View style={[styles.pill, isPositive ? styles.positivePill : styles.negativePill]}>
+            <AppText style={isPositive ? styles.positiveText : styles.negativeText} adjustsFontSizeToFit>
+              {formatCurrency(account.projectedBalance)}
+            </AppText>
+          </View>
           {account.upcomingVariation !== 0 && (
-            <AppText variant={'footnote'} style={[isPositive ? styles.positiveAmount : styles.negativeAmount, { opacity: 0.7 }]}>
+            <AppText variant={'footnote'} style={[isPositive ? styles.positiveText : styles.negativeText, { opacity: 0.7 }]}>
               {account.upcomingVariation >= 0 ? '+' : ''}
               {formatCurrency(account.upcomingVariation)}
             </AppText>
