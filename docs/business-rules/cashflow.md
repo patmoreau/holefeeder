@@ -41,8 +41,8 @@ Given a target end date, the cashflow computes which scheduled dates are still u
 
 ## Create
 
-A cashflow is created alongside a Make Purchase request (see [Transaction Rules — Make Purchase](transaction.md#make-purchase)). It inherits the transaction's account, category, amount, description, and
-tags.
+A cashflow is created alongside a Make Purchase request (see [Transaction Rules — Make Purchase](transaction.md#make-purchase)). It inherits the transaction's account, category, amount, description,
+and tags.
 
 **Errors:**
 
