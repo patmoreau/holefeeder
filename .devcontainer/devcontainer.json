@@ -27,7 +27,7 @@
             "installOhMyZsh": true,
             "upgradePackages": true
         },
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:3": {}
     },
     "postCreateCommand": "/workspaces/holefeeder/.devcontainer/setup.sh",
     "customizations": {
