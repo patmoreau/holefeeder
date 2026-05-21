@@ -1,10 +1,16 @@
-# Transactions
+---
+path: docs/business-rules/transaction.md
+domain: transaction
+last-reviewed: 2026-05
+---
+
+# Transaction Rules
 
 ## Concepts
 
 A transaction is a record of a financial movement on an account for a specific date and amount. Every transaction must reference an account, a category, and a user-declared date.
 
-A transaction may optionally be linked to a cashflow, recording which scheduled occurrence it covers. See [Cashflows](cashflows.md) for cashflow rules.
+A transaction may optionally be linked to a cashflow, recording which scheduled occurrence it covers. See [Cashflow Rules](cashflow.md) for cashflow rules.
 
 ---
 
@@ -17,7 +23,7 @@ Records a one-off purchase or expense on an account.
 - Date, account, and category are provided
 - Account and category exist and belong to the current user
 - A transaction is created; tags are normalized (lowercase, deduplicated, blanks removed)
-- A recurring cashflow schedule can optionally be created at the same time and linked to the transaction (see [Cashflows](cashflows.md))
+- A recurring cashflow schedule can optionally be created at the same time and linked to the transaction (see [Cashflow Rules](cashflow.md))
 
 **Errors:**
 

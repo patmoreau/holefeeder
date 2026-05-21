@@ -1,4 +1,10 @@
-# Accounts
+---
+path: docs/business-rules/account.md
+domain: account
+last-reviewed: 2026-05
+---
+
+# Account Rules
 
 ## Concepts
 

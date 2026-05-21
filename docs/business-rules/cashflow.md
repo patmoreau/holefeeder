@@ -1,9 +1,15 @@
-# Cashflows
+---
+path: docs/business-rules/cashflow.md
+domain: cashflow
+last-reviewed: 2026-05
+---
+
+# Cashflow Rules
 
 ## Concepts
 
 A cashflow is a recurring payment schedule that projects expected transactions at defined intervals. It is either active or inactive (cancelled). When a scheduled payment is made, it is recorded as a
-transaction linked back to the cashflow (see [Transactions](transactions.md)).
+transaction linked back to the cashflow (see [Transaction Rules](transaction.md)).
 
 ---
 
@@ -35,7 +41,7 @@ Given a target end date, the cashflow computes which scheduled dates are still u
 
 ## Create
 
-A cashflow is created alongside a Make Purchase request (see [Transactions — Make Purchase](transactions.md#make-purchase)). It inherits the transaction's account, category, amount, description, and
+A cashflow is created alongside a Make Purchase request (see [Transaction Rules — Make Purchase](transaction.md#make-purchase)). It inherits the transaction's account, category, amount, description, and
 tags.
 
 **Errors:**

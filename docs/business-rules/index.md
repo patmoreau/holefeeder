@@ -2,13 +2,13 @@
 
 ## Domains
 
-| Domain      | File                               | Key Invariants                                                                     |
-|-------------|------------------------------------|------------------------------------------------------------------------------------|
-| Accounts    | [accounts.md](accounts.md)         | Balance is always computed; closed accounts cannot be reopened or closed again     |
-| Cashflows   | [cashflows.md](cashflows.md)       | Only active cashflows generate upcoming dates; cancelled cashflows cannot be reactivated |
-| Categories  | [categories.md](categories.md)     | Managed via import; system categories required for transfers                       |
-| Store Items | [store-items.md](store-items.md)   | Code is immutable after creation; codes are unique per user                        |
-| Transactions | [transactions.md](transactions.md) | Transfers always create exactly two transactions; atomically or not at all        |
+| Domain       | File                             | Key Invariants                                                                          |
+|--------------|----------------------------------|-----------------------------------------------------------------------------------------|
+| Account      | [account.md](account.md)         | Balance is always computed; closed accounts cannot be reopened or closed again          |
+| Cashflow     | [cashflow.md](cashflow.md)       | Only active cashflows generate upcoming dates; cancelled cashflows cannot be reactivated |
+| Category     | [category.md](category.md)       | Managed via import; system categories required for transfers                            |
+| Store Item   | [store-item.md](store-item.md)   | Code is immutable after creation; codes are unique per user                             |
+| Transaction  | [transaction.md](transaction.md) | Transfers always create exactly two transactions; atomically or not at all              |
 
 ---
 
@@ -54,10 +54,10 @@ Transactions are **hard deleted** — they are permanently removed when deleted.
 
 ## Status
 
-| File            | Last reviewed | Matches code? |
-|-----------------|---------------|---------------|
-| accounts.md     | 2026-05       | ✅             |
-| cashflows.md    | 2026-05       | ✅             |
-| categories.md   | 2026-05       | ✅             |
-| store-items.md  | 2026-05       | ✅             |
-| transactions.md | 2026-05       | ✅             |
+| File           | Last reviewed | Matches code? |
+|----------------|---------------|---------------|
+| account.md     | 2026-05       | ✅             |
+| cashflow.md    | 2026-05       | ✅             |
+| category.md    | 2026-05       | ✅             |
+| store-item.md  | 2026-05       | ✅             |
+| transaction.md | 2026-05       | ✅             |

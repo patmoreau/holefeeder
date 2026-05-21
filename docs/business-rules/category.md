@@ -1,4 +1,10 @@
-# Categories
+---
+path: docs/business-rules/category.md
+domain: category
+last-reviewed: 2026-05
+---
+
+# Category Rules
 
 ## Concepts
 
@@ -29,7 +35,7 @@ Some categories are flagged as system categories. These are created automaticall
 | Transfer Out | Applied to the source account in a transfer      |
 | Transfer In  | Applied to the destination account in a transfer |
 
-The Transfer feature will fail if these categories do not exist for the user (see [Transactions — Transfer](transactions.md#transfer)).
+The Transfer feature will fail if these categories do not exist for the user (see [Transaction Rules — Transfer](transaction.md#transfer)).
 
 ---
 

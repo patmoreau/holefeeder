@@ -1,4 +1,10 @@
-# Store Items
+---
+path: docs/business-rules/store-item.md
+domain: store-item
+last-reviewed: 2026-05
+---
+
+# Store Item Rules
 
 ## Concepts
 
