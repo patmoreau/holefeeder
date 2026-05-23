@@ -11,7 +11,7 @@ const AMOUNT_FONT_SIZE = 48;
 type Props = {
   amount: number;
   onAmountChange: (amount: number) => void;
-  purchaseType: PurchaseType;
+  purchaseType?: PurchaseType;
 };
 
 export type AmountFieldRef = {

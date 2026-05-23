@@ -6,6 +6,7 @@ allowBuilds:
   better-sqlite3: true
   browser-tabs-lock: true
   esbuild: true
+  msgpackr-extract: true
   unrs-resolver: true
 
 ignoredBuiltDependencies:
@@ -16,4 +17,11 @@ onlyBuiltDependencies:
   - better-sqlite3
   - browser-tabs-lock
   - esbuild
+  - msgpackr-extract
   - unrs-resolver
+
+overrides:
+  expo-constants: ~56.0.15
+
+patchedDependencies:
+  '@expo/dom-webview@55.0.6': patches/@expo__dom-webview@55.0.6.patch

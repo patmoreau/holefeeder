@@ -26,7 +26,6 @@ export const TestSection = () => {
           label={t(tk.testSection.component)}
           variant={'link'}
           onPress={() => {
-            // @ts-expect-error -- route not in typed manifest
             router.push({ pathname: '/test' });
           }}
         />

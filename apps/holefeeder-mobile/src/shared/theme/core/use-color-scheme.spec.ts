@@ -3,6 +3,10 @@ import { useColorScheme as useRNColorScheme } from 'react-native';
 import { useColorScheme } from '@/shared/theme/core/use-color-scheme.web';
 
 jest.mock('react-native', () => ({
+  Platform: {
+    OS: 'ios',
+    select: jest.fn((specifics: Record<string, unknown>) => specifics.ios ?? specifics.default),
+  },
   useColorScheme: jest.fn(),
 }));
 

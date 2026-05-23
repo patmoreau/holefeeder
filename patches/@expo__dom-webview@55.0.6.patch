@@ -1,8 +1,8 @@
 diff --git a/ios/DomWebView.swift b/ios/DomWebView.swift
-index 7a38d9f98bf8c37853b777dbf945a13d46560e30..fe35a7a2035d786505b283f5350b324dcf346716 100644
+index 27ed0444fca82b170b21a9d5f7562f2fb4885178..e7cc671fa364c7a10be2783df619422ff1520516 100644
 --- a/ios/DomWebView.swift
 +++ b/ios/DomWebView.swift
-@@ -68,9 +68,10 @@ internal final class DomWebView: ExpoView, UIScrollViewDelegate, WKUIDelegate, W
+@@ -69,9 +69,10 @@ internal final class DomWebView: ExpoView, UIScrollViewDelegate, WKUIDelegate, W
      }
  
      if let source,

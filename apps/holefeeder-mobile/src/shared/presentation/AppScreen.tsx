@@ -1,4 +1,4 @@
-import { useHeaderHeight } from '@react-navigation/elements';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { ViewProps } from 'react-native';
 import { AppView } from '@/shared/presentation/AppView';
 

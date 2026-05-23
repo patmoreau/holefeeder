@@ -1,5 +1,5 @@
-import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashListProps } from '@shopify/flash-list';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { RefreshControl, View } from 'react-native';

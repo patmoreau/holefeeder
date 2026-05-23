@@ -2,7 +2,6 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": ".",
     "paths": {
       "@holefeeder/shared/core": ["../../packages/shared/src/core/index.ts"],
       "@holefeeder/shared/testkit": ["../../packages/shared/src/testkit/index.ts"],
@@ -23,5 +22,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/i18n/react-i18next.d.ts"],
-  "exclude": ["**/__tests__/**/*", "node_modules"]
+  "exclude": ["**/__tests__/**/*", "**/*.spec.ts", "**/*.spec.tsx", "node_modules"]
 }

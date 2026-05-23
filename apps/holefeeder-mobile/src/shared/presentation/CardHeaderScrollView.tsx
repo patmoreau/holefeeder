@@ -1,5 +1,4 @@
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useFocusEffect } from '@react-navigation/native';
+import { useHeaderHeight, useFocusEffect } from 'expo-router/react-navigation';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent, RefreshControl, type ViewProps } from 'react-native';

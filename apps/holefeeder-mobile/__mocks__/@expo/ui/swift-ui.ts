@@ -16,8 +16,19 @@ export const HStack = ({ children }: { children: unknown }) =>
 export const Text = ({ children }: { children: unknown }) =>
   React.createElement(RNText, { testID: typeof children === 'string' ? children : 'text' }, children);
 
-export const TextField = ({ children, placeholder }: { children: unknown; placeholder: unknown }) =>
-  React.createElement(TextInput, { placeholder }, children);
+export const useNativeState = <T>(initialValue: T): { value: T } => ({ value: initialValue });
+
+export const TextField = ({
+  children,
+  placeholder,
+  text,
+  onTextChange,
+}: {
+  children?: unknown;
+  placeholder?: unknown;
+  text?: { value: unknown };
+  onTextChange?: (value: string) => void;
+}) => React.createElement(TextInput, { placeholder, value: text?.value, onChangeText: onTextChange }, children);
 
 export const Button = ({ children, variant, role, onPress }: { children: unknown; variant?: string; role?: string; onPress?: () => void }) =>
   React.createElement(

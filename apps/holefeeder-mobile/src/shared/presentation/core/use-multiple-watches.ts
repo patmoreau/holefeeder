@@ -81,13 +81,13 @@ export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchRe
   }, {});
 
   return {
-    data,
+    data: data as { [K in keyof T]: WatchHookValue<T[K]> },
     isLoading: isLoading,
     errors: {
       showError,
       setShowError,
       error: ErrorKey.saveFailed,
     },
-    results,
+    results: results as { [K in keyof T]: AsyncResult<unknown> },
   };
 };

@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import { useFocusEffect } from 'expo-router/react-navigation';
 import type { ReactElement } from 'react';
 import { useCallback, useState } from 'react';
 import { Text, View, type ViewProps } from 'react-native';
