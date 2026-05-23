@@ -1,7 +1,0 @@
-appId: ${MAESTRO_APP_ID}
----
-- tapOn: Settings
-- tapOn: Logout
-- assertVisible: “Holefeeder” Wants to Use “auth0.com” to Sign In
-- tapOn: Continue
-- assertVisible: Login

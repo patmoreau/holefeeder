@@ -1,6 +1,0 @@
-appId: ${MAESTRO_APP_ID}
----
-- tapOn: Date Picker
-- tapOn: "17"
-- tapOn:
-    point: 77%, 30%

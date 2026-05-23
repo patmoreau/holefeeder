@@ -1,7 +1,11 @@
 # Holefeeder UI — Agent Guide
 
 > [!IMPORTANT]
-> **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, you **must** update this `AGENTS.md` file and any per-app `AGENTS.md` to reflect the changes. Keep these instructions accurate so they remain a reliable single source of truth!
+> **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, complete the following steps:
+>
+> 1. Update this root `AGENTS.md` to reflect the changes.
+> 2. Update the relevant per-app `AGENTS.md` files to reflect the changes.
+> 3. Ensure these instructions are updated to reflect all structural or architectural changes in the codebase, with specific examples where applicable.
 
 ## Monorepo Structure
 
