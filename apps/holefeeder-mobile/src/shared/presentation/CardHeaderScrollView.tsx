@@ -104,19 +104,22 @@ export const CardHeaderScrollView = ({
     scrollThreshold.value = HEADER_SCROLL_DISTANCE;
   }, [HEADER_SCROLL_DISTANCE, scrollThreshold]);
 
-  useFocusEffect(
-    useCallback(() => {
-      setOverPrimary(scrollOffset.value <= scrollThreshold.value);
-    }, [setOverPrimary, scrollOffset, scrollThreshold])
-  );
+  const [isScrolledPast, setIsScrolledPast] = useState(false);
 
   useAnimatedReaction(
     () => scrollOffset.value > scrollThreshold.value,
-    (isScrolledPast, prev) => {
-      if (prev !== null && isScrolledPast !== prev) {
-        scheduleOnRN(setOverPrimary, !isScrolledPast);
+    (current, prev) => {
+      if (prev !== null && current !== prev) {
+        scheduleOnRN(setIsScrolledPast, current);
+        scheduleOnRN(setOverPrimary, !current);
       }
     }
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      setOverPrimary(!isScrolledPast);
+    }, [setOverPrimary, isScrolledPast])
   );
 
   const handleScrollEnd = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
