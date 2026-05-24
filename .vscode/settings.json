@@ -33,6 +33,11 @@
     "*.dart": "$(capture).*.dart",
   },
   "prettier.enable": false,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "typescript.preferences.excludeLibrarySymbolsInNavTo": true,
+  "search.exclude": {
+    "**/node_modules": true
+  },
   "eslint.useFlatConfig": true,
   "eslint.validate": [
     "javascript",
