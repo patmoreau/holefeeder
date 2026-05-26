@@ -1,19 +1,22 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { Host, Icon } from '@expo/ui/jetpack-compose';
 import type { SymbolWeight } from 'expo-symbols';
-import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
-import { AppIcons, AppIconsMapping } from '@/shared/presentation/icons';
+import { OpaqueColorValue } from 'react-native';
+import { AppIcons, AppIconsMaterialMapping } from '@/shared/presentation/icons';
 
 export const IconSymbol = ({
   name,
   size = 24,
   color,
-  style,
 }: {
   name: AppIcons;
   size?: number;
   color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
+  style?: never;
   weight?: SymbolWeight;
 }) => {
-  return <MaterialIcons color={color} size={size} name={AppIconsMapping[name]} style={style} />;
+  return (
+    <Host matchContents>
+      <Icon source={AppIconsMaterialMapping[name]} size={size} tint={color as string} />
+    </Host>
+  );
 };

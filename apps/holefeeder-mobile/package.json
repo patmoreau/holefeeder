@@ -21,6 +21,7 @@
     "@auth0/auth0-spa-js": "2.19.2",
     "@azure/core-asynciterator-polyfill": "1.0.2",
     "@expo/html-elements": "56.0.1",
+    "@expo/material-symbols": "^0.1.1",
     "@expo/ui": "56.0.13",
     "@expo/vector-icons": "15.1.1",
     "@holefeeder/shared": "workspace:*",

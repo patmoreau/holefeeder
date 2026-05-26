@@ -1,6 +1,5 @@
 import { Button, Text } from '@expo/ui/swift-ui';
 import { buttonStyle, controlSize, fixedSize, font, foregroundStyle, padding, tint } from '@expo/ui/swift-ui/modifiers';
-import React from 'react';
 import { AppChipProps } from '@/shared/presentation/components/AppChip';
 import { AppHost } from '@/shared/presentation/components/AppHost.ios';
 import { useTheme } from '@/shared/theme/core/use-theme';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pressable, PressableProps, StyleProp, View, ViewStyle } from 'react-native';
 import { AppButtonVariant } from '@/shared/presentation/components/AppButtonVariant';
 import { AppText } from '@/shared/presentation/components/AppText';

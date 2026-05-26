@@ -1,37 +1,15 @@
-import { TextInput, TextInputProps } from 'react-native';
-import { useStyles } from '@/shared/theme/core/use-styles';
-import { Theme } from '@/types/theme/theme';
+import { TextInput, TextInputProps, useNativeState } from '@expo/ui';
+import { AppHost } from '@/shared/presentation/components/AppHost.ios';
 
-export type AppTextInputProps = {
-  placeholder: string;
-  value: string;
-  onChangeText: (value: string) => void;
-  onSubmitEditing?: () => void;
-  returnKeyType?: TextInputProps['returnKeyType'];
+export type AppTextInputProps = Omit<TextInputProps, 'value'> & {
+  value?: string;
 };
 
-const createStyles = (theme: Theme) => ({
-  input: {
-    ...theme.typography.body,
-    color: theme.colors.text,
-    placeholderTextColor: theme.colors.secondaryText,
-    flex: 1,
-    minHeight: 40,
-    width: '100%' as const,
-  },
-});
-
-export const AppTextInput = ({ placeholder, value, onChangeText, onSubmitEditing, returnKeyType }: AppTextInputProps) => {
-  const styles = useStyles(createStyles);
-
+export const AppTextInput = ({ value = '', ...props }: AppTextInputProps) => {
+  const textState = useNativeState(value);
   return (
-    <TextInput
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      style={styles.input}
-      onSubmitEditing={onSubmitEditing}
-      returnKeyType={returnKeyType}
-    />
+    <AppHost style={{ flex: 1, width: '100%' }}>
+      <TextInput autoCorrect={false} value={textState} {...props} />
+    </AppHost>
   );
 };

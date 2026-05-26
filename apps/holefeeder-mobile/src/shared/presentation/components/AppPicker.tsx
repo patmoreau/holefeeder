@@ -1,5 +1,4 @@
 import { Picker } from '@react-native-picker/picker';
-import React from 'react';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
 import { useStyles } from '@/shared/theme/core/use-styles';

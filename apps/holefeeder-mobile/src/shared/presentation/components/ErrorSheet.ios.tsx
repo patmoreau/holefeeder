@@ -1,6 +1,5 @@
 import { BottomSheet, Button, HStack, Image, Text, VStack } from '@expo/ui/swift-ui';
 import { buttonStyle, font, foregroundStyle, frame, padding } from '@expo/ui/swift-ui/modifiers';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWindowDimensions } from 'react-native';
 import { tk } from '@/i18n/translations';
