@@ -1,8 +1,8 @@
 import React from 'react';
-import { SyncSettingsContent } from '@/settings/presentation/SyncSettingsContent';
+import { SyncSettingsContent } from '@/settings/presentation/sync/SyncSettingsContent';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 
-const SyncSettingsScreen = () => {
+const SyncSettingsSheet = () => {
   return (
     <AppScreen>
       <SyncSettingsContent />
@@ -10,4 +10,4 @@ const SyncSettingsScreen = () => {
   );
 };
 
-export default SyncSettingsScreen;
+export default SyncSettingsSheet;

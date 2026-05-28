@@ -5,7 +5,9 @@ import { BudgetSettingsForm } from '@/settings/presentation/BudgetSettingsForm';
 import { SettingsFormProvider, validateSettingsForm } from '@/settings/presentation/core/use-settings-form';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';
+import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
+import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useSettings } from '@/shared/presentation/core/use-settings';
@@ -29,8 +31,8 @@ const BudgetSettingsScreen = () => {
   if (isLoading || !data) {
     return (
       <AppView style={styles.container}>
-        <LoadingIndicator />
-        <ErrorSheet {...errors} />
+        <AppLoadingIndicator />
+        <AppErrorSheet {...errors} />
       </AppView>
     );
   }
@@ -48,7 +50,7 @@ const BudgetSettingsScreen = () => {
       <SettingsFormProvider initialValue={initialData} validate={validateSettingsForm} validateOnChange>
         <BudgetSettingsForm />
       </SettingsFormProvider>
-      <ErrorSheet {...errors} />
+      <AppErrorSheet {...errors} />
     </AppScreen>
   );
 };

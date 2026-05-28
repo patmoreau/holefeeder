@@ -1,78 +1,57 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { useNativeState } from '@expo/ui';
+import { useEffectEvent, useMemo } from 'react';
 import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
+import { AppRow } from '@/shared/presentation/components/app/AppRow';
+import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppTextInput } from '@/shared/presentation/components/app/AppTextInput';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
-import { useStyles } from '@/shared/theme/core/use-styles';
-import { fontWeight, spacing } from '@/types/theme/design-tokens';
-import { Theme } from '@/types/theme/theme';
+import { useTheme } from '@/shared/theme/core/use-theme';
+import { fontWeight } from '@/types/theme';
 
 const AMOUNT_FONT_SIZE = 48;
 
-type Props = {
+type PhoneFieldProps = {
   amount: number;
   onAmountChange: (amount: number) => void;
   purchaseType?: PurchaseType;
 };
 
-export type AmountFieldRef = {
-  focus: () => void;
+const formatAmount = (input: string, currentLocale: string): { displayAmount: string; amount: number } => {
+  'worklet';
+  const digits = input.replace(/\D/g, '');
+  const amount = digits ? parseInt(digits, 10) / 100 : 0;
+  try {
+    return {
+      displayAmount: new Intl.NumberFormat(currentLocale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(amount),
+      amount: amount,
+    };
+  } catch {
+    return {
+      displayAmount: amount.toFixed(2),
+      amount: amount,
+    };
+  }
 };
 
-const createStyles = (theme: Theme) => ({
-  container: {
-    width: '100%' as const,
-  },
-  row: {
-    flexDirection: 'row' as const,
-    alignItems: 'baseline' as const,
-    justifyContent: 'center' as const,
-  },
-  symbol: {
-    fontSize: AMOUNT_FONT_SIZE,
-    fontWeight: fontWeight.semiBold,
-  },
-  input: {
-    fontSize: AMOUNT_FONT_SIZE,
-    fontWeight: fontWeight.semiBold,
-    paddingVertical: spacing.lg,
-    flexShrink: 1 as const,
-  },
-  expenseColor: { color: theme.colors.negative },
-  incomeColor: { color: theme.colors.positive },
-  neutralColor: { color: theme.colors.text },
-});
-
-export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmountChange, purchaseType }, ref) => {
+export const PhoneField = ({ amount, onAmountChange, purchaseType }: PhoneFieldProps) => {
+  const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
-  const styles = useStyles(createStyles);
-  const inputRef = useRef<TextInput>(null);
 
-  const [displayAmount, setDisplayAmount] = useState<string>(amount.toFixed(2));
-  const [enteringFocus, setEnteringFocus] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [selection, setSelection] = useState<{ start: number; end?: number } | undefined>(undefined);
+  const textAmount = useNativeState(amount.toFixed(2));
+  const selection = useNativeState({ start: 0, end: 0 });
 
-  useImperativeHandle(ref, () => ({
-    focus: () => {
-      inputRef.current?.focus();
-    },
-  }));
-
-  useEffect(() => {
-    if (enteringFocus) {
-      requestAnimationFrame(() => {
-        setSelection({ start: 0, end: displayAmount.length });
-        setEnteringFocus(false);
-      });
+  const handleChangeText = useEffectEvent((value: string) => {
+    'worklet';
+    const { displayAmount: formatted, amount: newAmount } = formatAmount(value, currentLocale);
+    if (formatted !== value) {
+      textAmount.value = formatted;
+      selection.value = { start: formatted.length, end: formatted.length };
+      onAmountChange(newAmount);
     }
-  }, [enteringFocus, displayAmount.length]);
-
-  useEffect(() => {
-    const formatted = amount.toFixed(2);
-    if (formatted !== displayAmount) {
-      setDisplayAmount(formatted);
-    }
-  }, [amount, displayAmount]);
+  });
 
   const currencySymbol = useMemo(() => {
     try {
@@ -90,50 +69,37 @@ export const AmountField = forwardRef<AmountFieldRef, Props>(({ amount, onAmount
     }
   }, [currentLocale, currencyCode]);
 
-  const amountColorStyle = isEditing
-    ? styles.neutralColor
-    : purchaseType === PurchaseType.expense
-      ? styles.expenseColor
+  const amountColor = useMemo(() => {
+    return purchaseType === PurchaseType.expense
+      ? theme.colors.negative
       : purchaseType === PurchaseType.gain
-        ? styles.incomeColor
-        : styles.neutralColor;
-
-  const handleChangeText = (text: string) => {
-    const digits = text.replace(/\D/g, '');
-    const newAmount = digits ? parseInt(digits, 10) / 100 : 0;
-    setSelection(undefined);
-    setDisplayAmount(newAmount.toFixed(2));
-    onAmountChange(newAmount);
-  };
-
-  const handleFocus = () => {
-    setIsEditing(true);
-    requestAnimationFrame(() => {
-      setEnteringFocus(true);
-    });
-  };
-
-  const handleBlur = () => {
-    setIsEditing(false);
-  };
+        ? theme.colors.positive
+        : theme.colors.text;
+  }, [purchaseType, theme.colors.negative, theme.colors.positive, theme.colors.text]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Text style={[styles.symbol, amountColorStyle]}>{currencySymbol}</Text>
-        <TextInput
-          ref={inputRef}
-          style={[styles.input, amountColorStyle]}
-          value={displayAmount}
-          onChangeText={handleChangeText}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          selection={selection}
-          keyboardType="decimal-pad"
-        />
-      </View>
-    </View>
+    <AppRow alignment={'center'}>
+      <AppText
+        textStyle={{
+          fontSize: AMOUNT_FONT_SIZE,
+          fontWeight: fontWeight.semiBold,
+          color: amountColor,
+        }}
+      >
+        {currencySymbol}
+      </AppText>
+      <AppTextInput
+        value={textAmount}
+        selection={selection}
+        keyboardType="decimal-pad"
+        onChangeText={handleChangeText}
+        selectTextOnFocus={true}
+        textStyle={{
+          fontSize: AMOUNT_FONT_SIZE,
+          fontWeight: fontWeight.semiBold,
+          color: amountColor,
+        }}
+      />
+    </AppRow>
   );
-});
-
-AmountField.displayName = 'AmountField';
+};

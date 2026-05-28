@@ -1,9 +1,9 @@
+import { Icon } from '@expo/ui';
 import { Stack } from 'expo-router';
-import React from 'react';
 import { BudgetSettingsFormContent } from '@/settings/presentation/BudgetSettingsFormContent';
 import { useSettingsForm } from '@/settings/presentation/core/use-settings-form';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
-import { AppIcons } from '@/shared/presentation/icons';
 
 export const BudgetSettingsForm = () => {
   const { saveForm, isDirty, errors } = useSettingsForm();
@@ -12,12 +12,11 @@ export const BudgetSettingsForm = () => {
   return (
     <>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button icon={AppIcons.save} onPress={handleSave} />
+        <Stack.Toolbar.Button icon={Icon.select(AppIconMap.save)} onPress={handleSave} />
       </Stack.Toolbar>
       <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button icon={AppIcons.back} onPress={handleCancel} />
+        <Stack.Toolbar.Button icon={Icon.select(AppIconMap.back)} onPress={handleCancel} />
       </Stack.Toolbar>
-
       <BudgetSettingsFormContent />
     </>
   );

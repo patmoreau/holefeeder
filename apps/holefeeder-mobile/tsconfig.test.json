@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "src/i18n/react-i18next.d.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

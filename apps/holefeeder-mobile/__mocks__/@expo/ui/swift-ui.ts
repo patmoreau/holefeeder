@@ -40,3 +40,11 @@ export const Button = ({ children, variant, role, onPress }: { children: unknown
 
 export const Image = ({ systemName, onPress }: { systemName: string; onPress: unknown }) =>
   React.createElement(View, { testID: `image-${systemName}`, onPress });
+
+export const Group = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'group' }, children);
+
+export const ScrollView = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'scroll-view' }, children);
+
+export const Picker = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'picker' }, children);
+
+export const DatePicker = ({ testID }: { testID?: string }) => React.createElement(View, { testID: testID ?? 'date-picker' });
