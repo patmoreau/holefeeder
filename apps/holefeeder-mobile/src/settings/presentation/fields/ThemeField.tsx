@@ -2,9 +2,9 @@ import { Logger } from '@holefeeder/shared/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { ThemeMode } from '@/types/theme/theme';
 
@@ -42,7 +42,7 @@ export const ThemeField = () => {
   }, [themeMode, options]);
 
   return (
-    <AppField label={t(tk.displaySection.theme)} icon={AppIcons.theme}>
+    <AppField label={t(tk.displaySection.theme)} icon={AppIconMap.theme}>
       <AppPicker
         options={options}
         selectedOption={selectedOption}

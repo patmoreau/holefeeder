@@ -1,13 +1,9 @@
-import { Stack, useNavigation } from 'expo-router';
-import { useState } from 'react';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
-import { ExpoFieldGroup } from '@/shared/presentation/components/expo/ExpoFieldGroup';
-import { ExpoFieldSection } from '@/shared/presentation/components/expo/ExpoFieldSection';
-import { ExpoHost } from '@/shared/presentation/components/expo/ExpoHost';
-import { AppIcon } from '@/shared/presentation/core/app-icons';
-import { AppIcons } from '@/shared/presentation/icons';
+import { Icon, List, ListItem, Row, Text } from '@expo/ui';
+import { Button, Section, SwipeActions } from '@expo/ui/swift-ui';
+import { Dispatch, SetStateAction } from 'react';
+import { AppBottomSheet } from '@/shared/presentation/components/app/AppBottomSheet';
+import { AppFieldGroup } from '@/shared/presentation/components/app/AppFieldGroup';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
 import { TestComponentsButtonSection } from './TestComponentsButtonSection';
 import { TestComponentsChipSection } from './TestComponentsChipSection';
 import { TestComponentsIconSymbolSection } from './TestComponentsIconSymbolSection';
@@ -16,17 +12,11 @@ import { TestComponentsPickerSection } from './TestComponentsPickerSection';
 import { TestComponentsSwitchSection } from './TestComponentsSwitchSection';
 import { TestComponentsTextSection } from './TestComponentsTextSection';
 
-const TestComponentsScreen = () => {
-  const [showError, setShowError] = useState(false);
-  const navigation = useNavigation();
+const TestComponentsScreen = ({ show, setShow }: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> }) => {
   return (
-    <>
-      <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button icon={AppIcons.back} onPress={() => navigation.goBack()} />
-      </Stack.Toolbar>
-
-      <ExpoHost style={{ flex: 1 }}>
-        <ExpoFieldGroup>
+    <AppHost matchContents>
+      <AppBottomSheet isPresented={show} onDismiss={() => setShow(false)} snapPoints={['half']}>
+        <AppFieldGroup>
           <TestComponentsButtonSection />
           <TestComponentsChipSection />
           <TestComponentsPickerSection />
@@ -34,15 +24,34 @@ const TestComponentsScreen = () => {
           <TestComponentsTextSection />
           <TestComponentsIconSymbolSection />
           <TestComponentsLoadingIndicatorSection />
-          <ExpoFieldSection title={'ErrorSheet'}>
-            <AppField icon={AppIcon.warning} label={'Show error sheet'}>
-              <AppSwitch value={showError} onChange={setShowError} />
-            </AppField>
-          </ExpoFieldSection>
-        </ExpoFieldGroup>
-        <AppErrorSheet showError={showError} setShowError={setShowError} error={'noInternetConnection'} />
-      </ExpoHost>
-    </>
+          <List>
+            <ListItem onPress={() => {}}>
+              <ListItem.Leading>
+                <Icon name="star.fill" size={20} color="#FFD60A" />
+              </ListItem.Leading>
+              <Row spacing={0}>
+                <Text textStyle={{ color: 'gray' }}>{`#42: `}</Text>
+                <Text>Composite headline</Text>
+              </Row>
+              <ListItem.Supporting>Richer slot content</ListItem.Supporting>
+            </ListItem>
+            <Section>
+              <SwipeActions>
+                <Text>Message from Expo</Text>
+
+                <SwipeActions.Actions edge="leading" allowsFullSwipe={false}>
+                  <Button label="Pin" systemImage="pin" onPress={() => {}} />
+                </SwipeActions.Actions>
+
+                <SwipeActions.Actions edge="trailing">
+                  <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
+                </SwipeActions.Actions>
+              </SwipeActions>
+            </Section>
+          </List>
+        </AppFieldGroup>
+      </AppBottomSheet>
+    </AppHost>
   );
 };
 

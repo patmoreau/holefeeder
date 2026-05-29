@@ -1,24 +1,28 @@
 import { useState } from 'react';
+import { AppIconMap, UniversalIcon } from '@/shared/presentation/components/app/app-icon-map';
 import { AppField } from '@/shared/presentation/components/app/AppField';
-import { ExpoFieldSection } from '@/shared/presentation/components/expo/ExpoFieldSection';
-import { ExpoPicker } from '@/shared/presentation/components/expo/ExpoPicker';
-import { AppIcon, AppIconsMappings } from '@/shared/presentation/core/app-icons';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
 
-const iconEntries = Object.entries(AppIcon) as [string, AppIconsMappings][];
+type IconOption = PickerOption & { icon: UniversalIcon };
+
+const iconOptions: IconOption[] = (Object.entries(AppIconMap).filter(([key]) => key !== 'select') as [string, UniversalIcon][]).map(
+  ([key, icon]) => ({ id: key, icon })
+);
 
 export const TestComponentsIconSymbolSection = () => {
-  const [selectedKey, setSelectedKey] = useState(iconEntries[0][0]);
-  const selectedIcon = AppIcon[selectedKey];
+  const [selectedOption, setSelectedOption] = useState<IconOption>(iconOptions[0]);
 
   return (
-    <ExpoFieldSection title={'IconSymbol'}>
-      <AppField icon={selectedIcon}>
-        <ExpoPicker selectedValue={selectedKey} onValueChange={setSelectedKey}>
-          {iconEntries.map(([key]) => (
-            <ExpoPicker.Item key={key} label={key} value={key} />
-          ))}
-        </ExpoPicker>
+    <AppFieldSection title={'IconSymbol'}>
+      <AppField icon={selectedOption.icon} label={'Select an icon'}>
+        <AppPicker
+          options={iconOptions}
+          onOptionLabel={(option) => option.id}
+          selectedOption={selectedOption}
+          onSelectOption={setSelectedOption}
+        />
       </AppField>
-    </ExpoFieldSection>
+    </AppFieldSection>
   );
 };

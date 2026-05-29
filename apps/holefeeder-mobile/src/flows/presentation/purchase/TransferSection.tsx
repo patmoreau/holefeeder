@@ -1,12 +1,11 @@
 import * as Haptics from 'expo-haptics';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { PurchaseFormError, usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { tk } from '@/i18n/translations';
-import { AppSection } from '@/shared/presentation/AppSection';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
 import { DateField } from '@/shared/presentation/fields/DateField';
 
 const tkErrors: Record<PurchaseFormError, string> = {
@@ -43,7 +42,7 @@ export const TransferSection = ({ accounts }: Props) => {
   const updateDescription = (value: string) => updateFormField('description', value);
 
   return (
-    <AppSection>
+    <AppFieldSection>
       <DateField
         label={t(tk.purchase.transferSection.date)}
         selectedDate={formData.date}
@@ -63,6 +62,6 @@ export const TransferSection = ({ accounts }: Props) => {
         error={fieldError(errors.targetAccount)}
       />
       <DescriptionField description={formData.description} onDescriptionChange={updateDescription} />
-    </AppSection>
+    </AppFieldSection>
   );
 };

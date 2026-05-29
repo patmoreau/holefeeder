@@ -1,8 +1,7 @@
-import { pickerStyle } from '@expo/ui/swift-ui/modifiers';
-import { StyleProp, ViewStyle } from 'react-native';
-import { ExpoModifierConfig } from '@/shared/presentation/components/app/expo/expo-modifiers';
+import { Picker } from '@expo/ui/swift-ui';
+import { pickerStyle, tag, padding } from '@expo/ui/swift-ui/modifiers';
+import { AppText } from '@/shared/presentation/components/app/AppText';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
-import { ExpoPicker } from './expo/ExpoPicker';
 
 export type PickerOption = {
   id: string;
@@ -10,41 +9,31 @@ export type PickerOption = {
 };
 
 export type PickerProps<T extends PickerOption> = {
-  variant?: 'menu' | 'segmented';
   options: T[];
   selectedOption: T;
   onSelectOption: (option: T) => void;
   onOptionLabel: (option: T) => string;
-  style?: StyleProp<ViewStyle>;
 };
 
-export const AppPicker = <T extends PickerOption>({
-  variant = 'menu',
-  options,
-  onOptionLabel,
-  selectedOption,
-  onSelectOption,
-}: PickerProps<T>) => {
+export const AppSegmentedMenu = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption }: PickerProps<T>) => {
   if (!options) {
     return <LoadingIndicator size="small" />;
   }
 
-  const modifiers: ExpoModifierConfig[] = [];
-  if (variant === 'segmented') {
-    modifiers.push(pickerStyle(variant));
-  }
   return (
-    <ExpoPicker
-      selectedValue={selectedOption.id}
-      onValueChange={(id: string) => {
+    <Picker
+      modifiers={[pickerStyle('segmented'), padding({ horizontal: 12 })]}
+      selection={selectedOption.id}
+      onSelectionChange={(id: string) => {
         const selected = options.find((option) => option.id === id);
         if (selected) onSelectOption(selected);
       }}
-      modifiers={modifiers}
     >
       {options.map((option) => (
-        <ExpoPicker.Item key={option.id} label={onOptionLabel(option)} value={option.id} />
+        <AppText key={option.id} modifiers={[tag(option.id)]}>
+          {onOptionLabel(option)}
+        </AppText>
       ))}
-    </ExpoPicker>
+    </Picker>
   );
 };

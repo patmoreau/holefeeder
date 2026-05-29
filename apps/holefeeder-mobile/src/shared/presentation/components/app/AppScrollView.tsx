@@ -1,7 +1,7 @@
-import { ExpoRow, ExpoRowProps } from './expo/ExpoRow';
+import { ExpoScrollView, ExpoScrollViewProps } from '@/shared/presentation/components/app/expo/ExpoScrollView';
 
-export type AppRowProps = ExpoRowProps & {};
+export type AppScrollViewProps = ExpoScrollViewProps & {};
 
-export const AppRow = (props: AppRowProps) => {
-  return <ExpoRow {...props} />;
+export const AppScrollView = (props: AppScrollViewProps) => {
+  return <ExpoScrollView {...props} />;
 };

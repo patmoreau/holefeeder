@@ -1,7 +1,7 @@
-import { Switch, SwitchProps } from '@expo/ui';
+import { ScrollView, ScrollViewProps } from '@expo/ui';
 
-export type ExpoSwitchProps = SwitchProps & {};
+export type ExpoScrollViewProps = ScrollViewProps & {};
 
-export const ExpoSwitch = ({ value, onValueChange, ...props }: ExpoSwitchProps) => {
-  return <Switch value={value} onValueChange={onValueChange} {...props} />;
+export const ExpoScrollView = (props: ExpoScrollViewProps) => {
+  return <ScrollView {...props} />;
 };

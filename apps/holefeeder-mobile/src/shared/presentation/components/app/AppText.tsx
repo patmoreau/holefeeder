@@ -1,8 +1,8 @@
 import { UniversalTextStyle } from '@expo/ui';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { fontWeight, spacing } from '@/types/theme/design-tokens';
+import { fontWeight } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
-import { ExpoText, ExpoTextProps } from '../expo/ExpoText';
+import { ExpoText, ExpoTextProps } from './expo/ExpoText';
 
 export type ThemedTextProps = ExpoTextProps & {
   variant?: 'default' | 'defaultSemiBold' | 'display' | 'errorField' | 'footnote' | 'largeTitle' | 'link' | 'subtitle' | 'title';
@@ -47,12 +47,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.error,
   },
 });
-
-const errorFieldWrapperStyle = {
-  marginTop: spacing.xs,
-  marginLeft: 36 + spacing.sm,
-  marginBottom: spacing.sm,
-};
 
 export const AppText = ({ textStyle, variant = 'default', adjustsFontSizeToFit, ...props }: ThemedTextProps) => {
   const styles = useStyles(createStyles);

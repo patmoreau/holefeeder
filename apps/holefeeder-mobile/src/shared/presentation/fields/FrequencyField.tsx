@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
+import { AppIconMap } from '../components/app/app-icon-map';
 
 type FrequencyOption = PickerOption & {
   value: number;
@@ -21,7 +21,7 @@ export function FrequencyField({ selectedFrequency, onSelectFrequency, error }: 
   const options = useMemo<FrequencyOption[]>(() => {
     const types = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     return types.map((type) => ({
-      id: type,
+      id: type.toString(),
       value: type,
     }));
   }, []);
@@ -29,7 +29,7 @@ export function FrequencyField({ selectedFrequency, onSelectFrequency, error }: 
   const selectedOption = options.find((opt) => opt.value === selectedFrequency) ?? options[0];
 
   return (
-    <AppField label={t(tk.purchase.cashflowSection.frequency)} icon={AppIcons.frequency} error={error}>
+    <AppField label={t(tk.purchase.cashflowSection.frequency)} icon={AppIconMap.frequency} error={error}>
       <AppPicker
         options={options}
         selectedOption={selectedOption}

@@ -1,7 +1,7 @@
 import { Result } from '@holefeeder/shared/core';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { ErrorKey } from '@/shared/core/error-key';
-import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';
+import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
@@ -133,7 +133,7 @@ export function createFormDataContext<T, E extends string>(displayName: string, 
     return (
       <FormContext.Provider value={contextValue}>
         {children}
-        <ErrorSheet
+        <AppErrorSheet
           showError={showErrorSheet}
           setShowError={setShowErrorSheet}
           error={generalError || ErrorKey.saveFailed}

@@ -1,10 +1,10 @@
 import { DateIntervalType, DateIntervalTypes } from '@holefeeder/shared/core';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
+import { AppIconMap } from '../components/app/app-icon-map';
 
 const tkTypes: Record<DateIntervalType, string> = {
   [DateIntervalTypes.daily]: tk.dateIntervalTypePicker.daily,
@@ -37,7 +37,7 @@ export function DateIntervalTypeField({ selectedDateIntervalType, onSelectDateIn
   const selectedOption = options.find((opt) => opt.value === selectedDateIntervalType) ?? options[0];
 
   return (
-    <AppField label={t(tk.purchase.cashflowSection.intervalType)} icon={AppIcons.calendar} error={error}>
+    <AppField label={t(tk.purchase.cashflowSection.intervalType)} icon={AppIconMap.calendar} error={error}>
       <AppPicker
         options={options}
         selectedOption={selectedOption}

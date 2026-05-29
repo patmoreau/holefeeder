@@ -11,9 +11,7 @@ export const withDate = (date: Date | DateOnly) => {
     addWeeks: (amount: number) => withDate(addWeeks(current, amount)),
     addMonths: (amount: number) => withDate(addMonths(current, amount)),
     addYears: (amount: number) => withDate(addYears(current, amount)),
-
     toDateOnly: (): DateOnly => DateOnly.valid(format(current, 'yyyy-MM-dd')),
-
     toDate: (): Date => current,
   };
 };

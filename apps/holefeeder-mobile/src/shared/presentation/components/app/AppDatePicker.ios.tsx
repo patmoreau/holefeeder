@@ -1,5 +1,5 @@
 import { DateOnly, today, withDate } from '@holefeeder/shared/core';
-import { ExpoDateTimePicker, ExpoDateTimePickerProps } from '../expo/ExpoDateTime.ios';
+import { ExpoDateTimePicker, ExpoDateTimePickerProps } from './expo/ExpoDateTime.ios';
 
 export type AppDatePickerProps = ExpoDateTimePickerProps & {
   selectedDate: DateOnly | null;

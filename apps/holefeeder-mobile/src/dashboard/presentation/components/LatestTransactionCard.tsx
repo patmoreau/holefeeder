@@ -1,11 +1,13 @@
-import { Id, today } from '@holefeeder/shared/core';
+import { Id, LocalFormatter, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, View, type ViewProps } from 'react-native';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { Transaction } from '@/flows/core/flows/transaction';
+import { AppChip } from '@/shared/presentation/components/app/AppChip';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
 import { AppCard } from '@/shared/presentation/components/AppCard';
-import { AppChip } from '@/shared/presentation/components/AppChip';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
@@ -40,7 +42,8 @@ const createStyles = (theme: Theme) => ({
 });
 
 export const LatestTransactionCard = ({ transaction, ...props }: LatestTransactionCardProps) => {
-  const { formatCurrency, formatDate } = useLocaleFormatter();
+  const { t } = useTranslation();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const pressableRef = useRef<View>(null);
 
@@ -62,16 +65,18 @@ export const LatestTransactionCard = ({ transaction, ...props }: LatestTransacti
           {transaction.tags.length > 0 && (
             <View style={styles.tags}>
               {transaction.tags.map((tag) => (
-                <AppChip key={tag} selected={true} label={tag} />
+                <AppHost key={tag} matchContents>
+                  <AppChip key={tag} selected={true} label={tag} />
+                </AppHost>
               ))}
             </View>
           )}
         </View>
         <View style={styles.cardAmount}>
           <AppText variant={'default'} style={amountStyle}>
-            {formatCurrency(transaction.amount)}
+            {LocalFormatter.currency(transaction.amount, currentLocale, currencyCode)}
           </AppText>
-          <AppText variant={'footnote'}>{formatDate(transaction.date, today())}</AppText>
+          <AppText variant={'footnote'}>{LocalFormatter.date(transaction.date, today(), currentLocale, t)}</AppText>
         </View>
       </AppCard>
     </Pressable>

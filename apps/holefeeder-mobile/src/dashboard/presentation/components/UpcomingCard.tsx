@@ -1,4 +1,4 @@
-import { today } from '@holefeeder/shared/core';
+import { LocalFormatter, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +9,9 @@ import { useUpcomingFlow } from '@/dashboard/presentation/core/use-pay-form';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { AppSwipeableRow } from '@/shared/presentation/AppSwipeableRow';
+import { AppChip } from '@/shared/presentation/components/app/AppChip';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
 import { AppCard } from '@/shared/presentation/components/AppCard';
-import { AppChip } from '@/shared/presentation/components/AppChip';
 import { AppLeftAction } from '@/shared/presentation/components/AppLeftAction';
 import { AppRightAction } from '@/shared/presentation/components/AppRightAction';
 import { AppText } from '@/shared/presentation/components/AppText';
@@ -53,7 +54,7 @@ const createStyles = (theme: Theme) => ({
 
 export const UpcomingCard = ({ upcomingFlow, style, ...props }: UpcomingCardProps) => {
   const { t } = useTranslation();
-  const { formatCurrency, formatDate } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const repositories = useRepositories();
   const upcomingFlowUseCase = useUpcomingFlow(repositories);
@@ -119,14 +120,16 @@ export const UpcomingCard = ({ upcomingFlow, style, ...props }: UpcomingCardProp
             {upcomingFlow.tags.length > 0 && (
               <View style={styles.tags}>
                 {upcomingFlow.tags.map((tag) => (
-                  <AppChip key={tag} selected={true} label={tag} />
+                  <AppHost key={tag} matchContents>
+                    <AppChip key={tag} selected={true} label={tag} />
+                  </AppHost>
                 ))}
               </View>
             )}
           </View>
           <View style={styles.cardAmount}>
-            <AppText variant={'default'}>{formatCurrency(upcomingFlow.amount)}</AppText>
-            <AppText variant={'footnote'}>{formatDate(upcomingFlow.date, today())}</AppText>
+            <AppText variant={'default'}>{LocalFormatter.currency(upcomingFlow.amount, currentLocale, currencyCode)}</AppText>
+            <AppText variant={'footnote'}>{LocalFormatter.date(upcomingFlow.date, today(), currentLocale, t)}</AppText>
           </View>
         </AppCard>
       </Pressable>

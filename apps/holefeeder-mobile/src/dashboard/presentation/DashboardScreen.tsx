@@ -14,7 +14,7 @@ import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHead
 import { DashboardHeaderSmallCard } from '@/dashboard/presentation/DashboardHeaderSmallCard';
 import { AppView } from '@/shared/presentation/AppView';
 import { CardHeaderScrollView } from '@/shared/presentation/CardHeaderScrollView';
-import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';
+import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -53,7 +53,7 @@ const DashboardScreen = () => {
     logger.error('Error fetching data', errors.error);
     return (
       <AppView style={styles.container}>
-        <ErrorSheet {...errors} />
+        <AppErrorSheet {...errors} />
       </AppView>
     );
   }

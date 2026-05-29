@@ -1,3 +1,4 @@
+import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
@@ -29,13 +30,13 @@ export const DashboardHeaderSmallCard = ({
   upcomingFlows?: UpcomingFlow[];
 }) => {
   const { t } = useTranslation();
-  const { formatCurrency } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
   return (
     <View style={styles.container}>
       <AppText style={styles.text}>{t(tk.dashboard.smallHeader.spendingTitle)}</AppText>
-      <AppText style={styles.text}>{formatCurrency(summary.currentSpending)}</AppText>
+      <AppText style={styles.text}>{LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}</AppText>
       <DashboardHeaderExpenseTrend summary={summary} variant="percentage" />
     </View>
   );

@@ -1,7 +1,7 @@
 import { DateOnly } from '@holefeeder/shared/core';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppDatePicker } from '@/shared/presentation/components/AppDatePicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppDatePicker } from '@/shared/presentation/components/app/AppDatePicker';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppIconMap } from '../components/app/app-icon-map';
 
 type Props = {
   label: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export function DateField({ label, selectedDate, onDateSelected, error }: Props) {
   return (
-    <AppField label={label} icon={AppIcons.calendar} error={error}>
+    <AppField label={label} icon={AppIconMap.calendar} error={error}>
       <AppDatePicker selectedDate={selectedDate} onDateSelected={onDateSelected} />
     </AppField>
   );

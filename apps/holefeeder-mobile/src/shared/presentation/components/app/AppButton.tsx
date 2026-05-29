@@ -2,18 +2,18 @@ import { Icon } from '@expo/ui';
 import { buttonStyle, ModifierConfig, tint } from '@expo/ui/swift-ui/modifiers';
 import React from 'react';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
+import { UniversalIcon } from '@/shared/presentation/components/app/app-icon-map';
+import { ExpoButton } from '@/shared/presentation/components/app/expo/ExpoButton';
+import { ExpoIcon } from '@/shared/presentation/components/app/expo/ExpoIcon';
+import { ExpoRow } from '@/shared/presentation/components/app/expo/ExpoRow';
+import { ExpoText } from '@/shared/presentation/components/app/expo/ExpoText';
 import { AppButtonVariant } from '@/shared/presentation/components/AppButtonVariant';
-import { ExpoButton } from '@/shared/presentation/components/expo/ExpoButton';
-import { ExpoIcon } from '@/shared/presentation/components/expo/ExpoIcon';
-import { ExpoRow } from '@/shared/presentation/components/expo/ExpoRow';
-import { ExpoText } from '@/shared/presentation/components/expo/ExpoText';
-import { AppIconsMappings } from '@/shared/presentation/core/app-icons';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { Theme } from '@/types/theme/theme';
 
 export type ButtonProps = {
   label?: string;
-  icon?: AppIconsMappings;
+  icon?: UniversalIcon;
   iconPosition?: 'left' | 'right';
   variant?: AppButtonVariant;
   onPress?: () => void;

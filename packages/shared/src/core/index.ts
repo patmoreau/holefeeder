@@ -2,6 +2,7 @@ export * from './result';
 export * from './validate';
 export * from './id';
 export * from './money';
+export * from './local-formatter';
 export * from './variation';
 export * from './date-only';
 export * from './date-interval-type';

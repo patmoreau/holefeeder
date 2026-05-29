@@ -1,7 +1,7 @@
-import { ExpoColumn, ExpoColumnProps } from './expo/ExpoColumn';
+import { ExpoCollapsible, ExpoCollapsibleProps } from '@/shared/presentation/components/app/expo/ExpoCollapsible';
 
-export type AppColumnProps = ExpoColumnProps & {};
+export type AppCollapsibleProps = ExpoCollapsibleProps & {};
 
-export const AppColumn = (props: AppColumnProps) => {
-  return <ExpoColumn {...props} />;
+export const AppCollapsible = (props: AppCollapsibleProps) => {
+  return <ExpoCollapsible {...props} />;
 };

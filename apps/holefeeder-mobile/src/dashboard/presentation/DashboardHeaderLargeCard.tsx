@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/shared/core';
+import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
@@ -61,11 +61,13 @@ export const DashboardHeaderLargeCard = ({
   upcomingFlows?: UpcomingFlow[];
 }) => {
   const { t } = useTranslation();
-  const { formatCurrency } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
   const netFlow = summary.netFlow;
-  const netFlowText = netFlow.isOver ? `+ ${formatCurrency(netFlow.amount)}` : `- ${formatCurrency(Math.abs(netFlow.amount))}`;
+  const netFlowText = netFlow.isOver
+    ? `+ ${LocalFormatter.currency(netFlow.amount, currentLocale, currencyCode)}`
+    : `- ${LocalFormatter.currency(Math.abs(netFlow.amount), currentLocale, currencyCode)}`;
   const netFlowPositive = netFlow.isOver;
 
   const upcomingVariation = upcomingFlows.reduce((acc, flow) => {
@@ -77,7 +79,9 @@ export const DashboardHeaderLargeCard = ({
   const projectedIsOver = projectedNetFlowTotal >= 0;
   const projectedNetFlowAmount = Math.abs(projectedNetFlowTotal);
 
-  const projectedNetFlowText = projectedIsOver ? `+ ${formatCurrency(projectedNetFlowAmount)}` : `- ${formatCurrency(projectedNetFlowAmount)}`;
+  const projectedNetFlowText = projectedIsOver
+    ? `+ ${LocalFormatter.currency(projectedNetFlowAmount, currentLocale, currencyCode)}`
+    : `- ${LocalFormatter.currency(projectedNetFlowAmount, currentLocale, currencyCode)}`;
 
   return (
     <>
@@ -85,7 +89,7 @@ export const DashboardHeaderLargeCard = ({
         {t(tk.dashboard.largeHeader.spendingTitle)}
       </AppText>
       <AppText variant={'display'} style={styles.largeTitle}>
-        {formatCurrency(summary.currentSpending)}
+        {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
       </AppText>
       <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
       <View style={styles.divider} />

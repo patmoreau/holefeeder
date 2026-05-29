@@ -1,17 +1,17 @@
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppView } from '@/shared/presentation/AppView';
-import { AppButton } from '@/shared/presentation/components/AppButton';
-import { AppText } from '@/shared/presentation/components/AppText';
+import { AppButton } from '@/shared/presentation/components/app/AppButton';
+import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
+import { AppText } from '@/shared/presentation/components/app/AppText';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { GlobalStyles } from '@/types/theme/global-styles';
 import { Theme } from '@/types/theme/theme';
 
 const createStyles = (theme: Theme) => ({
   heading: {
-    ...theme.typography.title,
-    color: theme.colors.text,
+    color: theme.colors.primary,
     ...GlobalStyles.textCenter,
     ...GlobalStyles.py16,
   },
@@ -20,23 +20,9 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.secondaryText,
     ...GlobalStyles.textCenter,
   },
-  button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  buttonText: {
-    ...theme.typography.body,
-    color: theme.colors.link,
-    textDecorationLine: 'underline' as const,
-  },
-  centered: {
-    ...theme.styles.containers.center,
-    backgroundColor: theme.colors.background,
-  },
 });
 
-export default function NotFoundScreen() {
+export const NotFoundScreen = () => {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
 
@@ -52,10 +38,14 @@ export default function NotFoundScreen() {
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
-      <AppView style={styles.centered}>
-        <AppText variant="title">{t(tk.notFound.description)}</AppText>
-        <AppButton label={t(tk.notFound.goBack)} variant="primary" onPress={() => router.push({ pathname: '/' })} />
-      </AppView>
+      <AppHost style={{ flex: 1 }}>
+        <AppColumn spacing={12} alignment={'center'}>
+          <AppText variant="title" textStyle={styles.heading}>
+            {t(tk.notFound.description)}
+          </AppText>
+          <AppButton label={t(tk.notFound.goBack)} variant="primary" onPress={() => router.push({ pathname: '/' })} />
+        </AppColumn>
+      </AppHost>
     </>
   );
-}
+};

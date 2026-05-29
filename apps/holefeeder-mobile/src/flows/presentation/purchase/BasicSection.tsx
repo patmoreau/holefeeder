@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
@@ -11,7 +10,7 @@ import { CategoryField } from '@/flows/presentation/shared/components/CategoryFi
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
-import { AppSection } from '@/shared/presentation/AppSection';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
 import { DateField } from '@/shared/presentation/fields/DateField';
 
 type Props = {
@@ -35,7 +34,7 @@ export function BasicSection({ accounts, categories, tags }: Props) {
   const variant = formData.purchaseType === PurchaseType.expense ? CategoryTypes.expense : CategoryTypes.gain;
 
   return (
-    <AppSection>
+    <AppFieldSection>
       <DateField
         label={t(tk.purchase.basicSection.date)}
         selectedDate={formData.date}
@@ -50,6 +49,6 @@ export function BasicSection({ accounts, categories, tags }: Props) {
       <CategoryField categories={categories} selectedCategory={formData.category} onSelectCategory={updateCategory} variant={variant} />
       <TagList tags={tags} selected={selectedTags} onChange={updateTags} categoryId={formData.category.id} />
       <DescriptionField description={formData.description} onDescriptionChange={updateDescription} />
-    </AppSection>
+    </AppFieldSection>
   );
 }

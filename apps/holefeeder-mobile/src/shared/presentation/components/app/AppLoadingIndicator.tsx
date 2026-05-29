@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 import { tk } from '@/i18n/translations';
 import { useTheme } from '@/shared/theme/core/use-theme';
-import { ExpoRNHost } from '../expo/ExpoRNHost';
 
 type AppLoadingIndicatorProps = Omit<ActivityIndicatorProps, 'size' | 'color'> & {
   size?: 'small' | 'large';
@@ -23,14 +22,12 @@ export const AppLoadingIndicator = ({
   const variantColor = variant === 'primary' ? theme.colors.primary : theme.colors.secondary;
 
   return (
-    <ExpoRNHost>
-      <ActivityIndicator
-        accessibilityLabel={t(tk.common.loading)}
-        accessibilityRole={accessibilityRole}
-        size={size}
-        color={variantColor}
-        {...props}
-      />
-    </ExpoRNHost>
+    <ActivityIndicator
+      accessibilityLabel={t(tk.common.loading)}
+      accessibilityRole={accessibilityRole}
+      size={size}
+      color={variantColor}
+      {...props}
+    />
   );
 };

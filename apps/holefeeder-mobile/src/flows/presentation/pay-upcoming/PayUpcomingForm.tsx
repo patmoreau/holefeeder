@@ -1,14 +1,15 @@
 import { Money } from '@holefeeder/shared/core';
 import { useNavigation } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
 import { tk } from '@/i18n/translations';
-import { AppForm } from '@/shared/presentation/AppForm';
-import { AppButton } from '@/shared/presentation/components/AppButton';
+import { AppButton } from '@/shared/presentation/components/app/AppButton';
+import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
+import { AppForm } from '@/shared/presentation/components/app/AppForm';
+import { AppRow } from '@/shared/presentation/components/app/AppRow';
+import { AppSpacer } from '@/shared/presentation/components/app/AppSpacer';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 export const PayUpcomingForm = ({ description }: { description: string }) => {
@@ -22,9 +23,10 @@ export const PayUpcomingForm = ({ description }: { description: string }) => {
 
   return (
     <AppForm style={{ flex: 1, paddingTop: headerHeight }} contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={{ flexGrow: 1, flexDirection: 'column', gap: 8 }}>
+      <AppColumn spacing={8}>
         <PayUpcomingFormContent />
-        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+        <AppRow spacing={8}>
+          <AppSpacer />
           <AppButton
             variant="secondary"
             label={t(tk.payUpcoming.clear)}
@@ -35,8 +37,9 @@ export const PayUpcomingForm = ({ description }: { description: string }) => {
             }}
           />
           <AppButton variant="primary" label={t(tk.payUpcoming.pay)} onPress={handleSave} />
-        </View>
-      </View>
+          <AppSpacer />
+        </AppRow>
+      </AppColumn>
     </AppForm>
   );
 };

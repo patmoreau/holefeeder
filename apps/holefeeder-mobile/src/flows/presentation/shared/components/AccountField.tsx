@@ -1,8 +1,7 @@
-import React from 'react';
 import { Account } from '@/accounts/core/account';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
 
 type Props = {
   label: string;
@@ -14,7 +13,7 @@ type Props = {
 
 export function AccountField({ label, accounts, selectedAccount, onSelectAccount, error }: Props) {
   return (
-    <AppField label={label} icon={AppIcons.account} error={error}>
+    <AppField label={label} icon={AppIconMap.account} error={error}>
       <AppPicker
         options={accounts}
         selectedOption={selectedAccount}

@@ -10,8 +10,9 @@ import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { useTags } from '@/flows/presentation/shared/core/use-tags';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
+import { AppHost } from '@/shared/presentation/components/app/AppHost';
+import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
@@ -42,8 +43,10 @@ const FlowScreen = () => {
   if (isLoading || !data) {
     return (
       <AppView style={styles.container}>
-        <LoadingIndicator />
-        <ErrorSheet {...errors} />
+        <AppHost matchContents>
+          <AppLoadingIndicator />
+          <AppErrorSheet {...errors} />
+        </AppHost>
       </AppView>
     );
   }
@@ -53,7 +56,7 @@ const FlowScreen = () => {
   if (!flow) {
     return (
       <AppView style={styles.container}>
-        <ErrorSheet {...errors} />
+        <AppErrorSheet {...errors} />
       </AppView>
     );
   }
@@ -74,7 +77,7 @@ const FlowScreen = () => {
       <FlowFormProvider initialValue={initialData} validate={validateFormForm} validateOnChange>
         <FlowForm accounts={accounts!} categories={categories!} tags={tags!} />
       </FlowFormProvider>
-      <ErrorSheet {...errors} />
+      <AppErrorSheet {...errors} />
     </AppScreen>
   );
 };

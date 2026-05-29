@@ -1,9 +1,8 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppSwitch } from '@/shared/presentation/components/AppSwitch';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
 
 type Props = {
   hasCashflow: boolean;
@@ -15,7 +14,7 @@ export const HasCashflowField = ({ hasCashflow, onHasCashflowChange, error }: Pr
   const { t } = useTranslation();
 
   return (
-    <AppField label={t(tk.purchase.cashflowSection.cashflow)} icon={AppIcons.cashflow} error={error}>
+    <AppField label={t(tk.purchase.cashflowSection.cashflow)} icon={AppIconMap.cashflow} error={error}>
       <AppSwitch value={hasCashflow} onChange={onHasCashflowChange} />
     </AppField>
   );

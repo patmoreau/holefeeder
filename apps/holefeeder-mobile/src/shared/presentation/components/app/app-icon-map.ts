@@ -27,12 +27,12 @@ import Warning from '@expo/material-symbols/warning.xml';
 import type { SymbolViewProps } from 'expo-symbols';
 import { ImageSourcePropType } from 'react-native';
 
-export type AppIconsMappings = {
+export type UniversalIcon = {
   ios: Extract<SymbolViewProps['name'], string>;
   android: ImageSourcePropType;
 };
 
-export const AppIcon: Record<string, AppIconsMappings> = {
+const universalIconMapping = {
   account: { ios: 'creditcard', android: CreditCard },
   accounts: { ios: 'wallet.bifold.fill', android: Wallet },
   add: { ios: 'plus', android: Add },
@@ -70,4 +70,8 @@ export const AppIcon: Record<string, AppIconsMappings> = {
   trendDown: { ios: 'chart.line.downtrend.xyaxis', android: TrendingDown },
   upload: { ios: 'square.and.arrow.up', android: Upload },
   warning: { ios: 'exclamationmark.triangle', android: Warning },
-};
+} satisfies Record<string, UniversalIcon>;
+
+export type AppIconName = keyof typeof universalIconMapping;
+
+export const AppIconMap = universalIconMapping;

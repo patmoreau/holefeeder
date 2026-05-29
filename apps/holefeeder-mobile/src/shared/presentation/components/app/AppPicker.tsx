@@ -1,6 +1,5 @@
 import { StyleProp, ViewStyle } from 'react-native';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
-import { ExpoPicker } from '../expo/ExpoPicker';
+import { ExpoPicker } from './expo/ExpoPicker';
 
 export type PickerOption = {
   id: string;
@@ -8,7 +7,6 @@ export type PickerOption = {
 };
 
 export type PickerProps<T extends PickerOption> = {
-  variant?: 'menu' | 'segmented';
   options: T[];
   selectedOption: T;
   onSelectOption: (option: T) => void;
@@ -16,17 +14,7 @@ export type PickerProps<T extends PickerOption> = {
   style?: StyleProp<ViewStyle>;
 };
 
-export const AppPicker = <T extends PickerOption>({
-  variant = 'menu',
-  options,
-  onOptionLabel,
-  selectedOption,
-  onSelectOption,
-}: PickerProps<T>) => {
-  if (!options) {
-    return <LoadingIndicator size="small" />;
-  }
-
+export const AppPicker = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption }: PickerProps<T>) => {
   return (
     <ExpoPicker
       selectedValue={selectedOption.id}

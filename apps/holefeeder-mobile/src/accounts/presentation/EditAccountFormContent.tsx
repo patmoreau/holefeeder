@@ -5,14 +5,14 @@ import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-accoun
 import { AmountField } from '@/flows/presentation/shared/components/AmountField';
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppForm } from '@/shared/presentation/AppForm';
-import { AppSection } from '@/shared/presentation/AppSection';
-import { AppPicker } from '@/shared/presentation/components/AppPicker';
-import { AppSwitch } from '@/shared/presentation/components/AppSwitch';
-import { AppTextInput } from '@/shared/presentation/components/AppTextInput';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
+import { AppForm } from '@/shared/presentation/components/app/AppForm';
+import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
+import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
+import { AppTextInput } from '@/shared/presentation/components/app/AppTextInput';
 import { DateField } from '@/shared/presentation/fields/DateField';
-import { AppIcons } from '@/shared/presentation/icons';
 
 const accountTypeOptions = Object.values(AccountTypes).map((type) => ({ id: type, label: type }));
 
@@ -24,15 +24,15 @@ export const EditAccountFormContent = () => {
 
   return (
     <AppForm>
-      <AppSection>
+      <AppFieldSection>
         <AppField
-          icon={AppIcons.account}
+          icon={AppIconMap.account}
           label={t(tk.accountEdit.name)}
           error={errors.name ? t(tk.accountEdit.errors.nameRequired) : undefined}
         >
           <AppTextInput placeholder={t(tk.accountEdit.name)} value={formData.name} onChangeText={(value) => updateFormField('name', value)} />
         </AppField>
-        <AppField icon={AppIcons.category} label={t(tk.accountEdit.type)}>
+        <AppField icon={AppIconMap.category} label={t(tk.accountEdit.type)}>
           <AppPicker
             options={accountTypeOptions}
             selectedOption={selectedTypeOption}
@@ -40,26 +40,26 @@ export const EditAccountFormContent = () => {
             onOptionLabel={(option) => t(tk.accountEdit.accountTypes[option.id])}
           />
         </AppField>
-      </AppSection>
-      <AppSection>
+      </AppFieldSection>
+      <AppFieldSection>
         <AmountField amount={formData.openBalance} onAmountChange={(value) => updateFormField('openBalance', value)} />
         <DateField
           label={t(tk.accountEdit.openDate)}
           selectedDate={formData.openDate}
           onDateSelected={(date) => updateFormField('openDate', date)}
         />
-      </AppSection>
-      <AppSection>
+      </AppFieldSection>
+      <AppFieldSection>
         <DescriptionField description={formData.description} onDescriptionChange={(value) => updateFormField('description', value)} />
-      </AppSection>
-      <AppSection>
-        <AppField icon={AppIcons.add} label={t(tk.accountEdit.favorite)}>
+      </AppFieldSection>
+      <AppFieldSection>
+        <AppField icon={AppIconMap.add} label={t(tk.accountEdit.favorite)}>
           <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
         </AppField>
-        <AppField icon={AppIcons.close} label={t(tk.accountEdit.inactive)}>
+        <AppField icon={AppIconMap.close} label={t(tk.accountEdit.inactive)}>
           <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
         </AppField>
-      </AppSection>
+      </AppFieldSection>
     </AppForm>
   );
 };

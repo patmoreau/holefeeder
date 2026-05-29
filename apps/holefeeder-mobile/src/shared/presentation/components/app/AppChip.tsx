@@ -1,10 +1,9 @@
-import * as AndroidModifiers from '@expo/ui/jetpack-compose/modifiers';
 import * as IosModifiers from '@expo/ui/swift-ui/modifiers';
 import { Platform } from 'react-native';
 import { useTheme } from '@/shared/theme/core/use-theme';
-import { ExpoModifierConfig } from '../expo/expo-modifiers';
-import { ExpoButton } from '../expo/ExpoButton';
-import { ExpoText } from '../expo/ExpoText';
+import { ExpoModifierConfig } from './expo/expo-modifiers';
+import { ExpoButton } from './expo/ExpoButton';
+import { ExpoText } from './expo/ExpoText';
 
 export type AppChipProps = {
   label: string;

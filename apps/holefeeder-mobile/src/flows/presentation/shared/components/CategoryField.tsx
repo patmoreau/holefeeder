@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { tk } from '@/i18n/translations';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
 
 type Props = {
   categories: Category[];
@@ -27,7 +27,7 @@ export function CategoryField({ categories, selectedCategory, onSelectCategory, 
   }, [isSelectedCategoryInFiltered, filteredCategories, onSelectCategory]);
 
   return (
-    <AppField label={t(tk.purchase.basicSection.category)} icon={AppIcons.category} error={error}>
+    <AppField label={t(tk.purchase.basicSection.category)} icon={AppIconMap.category} error={error}>
       <AppPicker
         options={filteredCategories}
         selectedOption={isSelectedCategoryInFiltered ? selectedCategory : filteredCategories[0]}

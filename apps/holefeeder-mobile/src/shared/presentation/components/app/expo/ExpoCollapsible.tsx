@@ -1,7 +1,7 @@
-import { Host, UniversalHostProps } from '@expo/ui';
+import { Collapsible, CollapsibleProps } from '@expo/ui';
 
-export type ExpoHostProps = UniversalHostProps & {};
+export type ExpoCollapsibleProps = CollapsibleProps & {};
 
-export const ExpoHost = (props: ExpoHostProps) => {
-  return <Host {...props} />;
+export const ExpoCollapsible = (props: ExpoCollapsibleProps) => {
+  return <Collapsible {...props} />;
 };

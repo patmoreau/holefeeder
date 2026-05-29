@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./apps/holefeeder-mobile" },
+    { "path": "./apps/holefeeder-web" }
+  ]
+}

@@ -1,4 +1,4 @@
-import { today, Variation } from '@holefeeder/shared/core';
+import { LocalFormatter, today, Variation } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
@@ -54,7 +54,7 @@ const createStyles = (theme: Theme) => ({
 
 export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) => {
   const { t } = useTranslation();
-  const { formatCurrency, formatDate } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
   const isPositive = Variation.multiply(account.balance, AccountType.multiplier[account.type]) >= 0;
@@ -65,7 +65,7 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
         {account.name}
       </AppText>
       <AppText variant={'largeTitle'} style={styles.largeTitle}>
-        {formatCurrency(account.balance)}
+        {LocalFormatter.currency(account.balance, currentLocale, currencyCode)}
       </AppText>
       <View style={styles.divider} />
       <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
@@ -75,7 +75,7 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
           </AppText>
           <View style={[styles.pill, styles.positivePill]}>
             <AppText style={styles.positiveText} adjustsFontSizeToFit>
-              {formatDate(account.lastTransactionDate!, today())}
+              {LocalFormatter.date(account.lastTransactionDate!, today(), currentLocale, t)}
             </AppText>
           </View>
         </View>
@@ -85,13 +85,13 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
           </AppText>
           <View style={[styles.pill, isPositive ? styles.positivePill : styles.negativePill]}>
             <AppText style={isPositive ? styles.positiveText : styles.negativeText} adjustsFontSizeToFit>
-              {formatCurrency(account.projectedBalance)}
+              {LocalFormatter.currency(account.projectedBalance, currentLocale, currencyCode)}
             </AppText>
           </View>
           {account.upcomingVariation !== 0 && (
             <AppText variant={'footnote'} style={[isPositive ? styles.positiveText : styles.negativeText, { opacity: 0.7 }]}>
               {account.upcomingVariation >= 0 ? '+' : ''}
-              {formatCurrency(account.upcomingVariation)}
+              {LocalFormatter.currency(account.upcomingVariation, currentLocale, currencyCode)}
             </AppText>
           )}
         </View>

@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { AbstractPowerSyncDatabase, Schema } from '@powersync/common';
 import { PowerSyncDatabase } from '@powersync/node';
+// eslint-disable-next-line import-x/no-named-as-default
 import Database from 'better-sqlite3';
 
 // Define the connector interface based on PowerSync requirements

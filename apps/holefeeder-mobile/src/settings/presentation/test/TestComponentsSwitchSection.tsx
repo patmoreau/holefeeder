@@ -1,19 +1,19 @@
 import { useState } from 'react';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
 import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
-import { ExpoFieldSection } from '@/shared/presentation/components/expo/ExpoFieldSection';
-import { AppIcon } from '@/shared/presentation/core/app-icons';
 
 export const TestComponentsSwitchSection = () => {
   const [switchValue, setSwitchValue] = useState(false);
   return (
-    <ExpoFieldSection title={'AppSwitch'}>
-      <AppField icon={AppIcon.back} label="Switch">
+    <AppFieldSection title={'AppSwitch'}>
+      <AppField icon={AppIconMap.back} label="Switch">
         <AppSwitch value={switchValue} onChange={setSwitchValue} />
       </AppField>
-      <AppField icon={AppIcon.back} label="Disabled Switch">
+      <AppField icon={AppIconMap.back} label="Disabled Switch">
         <AppSwitch value={switchValue} onChange={setSwitchValue} readonly />
       </AppField>
-    </ExpoFieldSection>
+    </AppFieldSection>
   );
 };

@@ -1,3 +1,4 @@
+import { LocalFormatter } from '@holefeeder/shared/core';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AppText } from '@/shared/presentation/components/AppText';
@@ -18,13 +19,13 @@ const createStyles = (theme: Theme) => ({
 });
 
 export const AccountHeaderSmallCard = ({ account }: { account: AccountDetail }) => {
-  const { formatCurrency } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
   return (
     <View style={styles.container}>
       <AppText style={styles.text}>{account.name}</AppText>
-      <AppText style={styles.text}>{formatCurrency(account.balance)}</AppText>
+      <AppText style={styles.text}>{LocalFormatter.currency(account.balance, currentLocale, currencyCode)}</AppText>
     </View>
   );
 };

@@ -1,5 +1,4 @@
 import { Logger, today } from '@holefeeder/shared/core';
-import React from 'react';
 import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { PurchaseFormProvider, validatePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseForm } from '@/flows/presentation/purchase/PurchaseForm';
@@ -8,7 +7,7 @@ import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { useTags } from '@/flows/presentation/shared/core/use-tags';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { ErrorSheet } from '@/shared/presentation/components/ErrorSheet';
+import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
@@ -39,7 +38,7 @@ const PurchaseScreen = () => {
     return (
       <AppView style={styles.container}>
         <LoadingIndicator />
-        <ErrorSheet {...errors} />
+        <AppErrorSheet {...errors} />
       </AppView>
     );
   }
@@ -66,7 +65,7 @@ const PurchaseScreen = () => {
       <PurchaseFormProvider initialValue={initialData} validate={validatePurchaseForm} validateOnChange>
         <PurchaseForm accounts={accounts!} categories={categories!} tags={tags!} />
       </PurchaseFormProvider>
-      <ErrorSheet {...errors} />
+      <AppErrorSheet {...errors} />
     </AppScreen>
   );
 };

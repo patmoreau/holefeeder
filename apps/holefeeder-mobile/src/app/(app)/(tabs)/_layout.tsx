@@ -1,8 +1,11 @@
+import { Icon } from '@expo/ui';
+import { router, Stack } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { AppIcons } from '@/shared/presentation/icons';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
@@ -12,20 +15,25 @@ const TabsLayout = () => {
   const { theme } = useTheme();
 
   return (
-    <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Icon sf={AppIcons.dashboard} />
-        <NativeTabs.Trigger.Label>{t(tk.tabs.dashboard)}</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="accounts">
-        <NativeTabs.Trigger.Icon sf={AppIcons.accounts} />
-        <NativeTabs.Trigger.Label>{t(tk.tabs.accounts)}</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="settings">
-        <NativeTabs.Trigger.Icon sf={AppIcons.settings} />
-        <NativeTabs.Trigger.Label>{t(tk.tabs.settings)}</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button icon={Icon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')} />
+      </Stack.Toolbar>
+      <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
+        <NativeTabs.Trigger name="index">
+          <NativeTabs.Trigger.Icon sf={AppIcons.dashboard} />
+          <NativeTabs.Trigger.Label>{t(tk.tabs.dashboard)}</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="accounts">
+          <NativeTabs.Trigger.Icon sf={AppIcons.accounts} />
+          <NativeTabs.Trigger.Label>{t(tk.tabs.accounts)}</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="settings">
+          <NativeTabs.Trigger.Icon sf={AppIcons.settings} />
+          <NativeTabs.Trigger.Label>{t(tk.tabs.settings)}</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+      </NativeTabs>
+    </>
   );
 };
 

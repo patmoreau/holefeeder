@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
-import { AppField } from '@/shared/presentation/AppField';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/AppPicker';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
 
 const tkTypes: Record<LanguageType, string> = {
   [LanguageType.en]: tk.displaySection.english,
@@ -35,7 +35,7 @@ export const LanguageField = () => {
   }, [language, options]);
 
   return (
-    <AppField label={t(tk.displaySection.language)} icon={AppIcons.language}>
+    <AppField label={t(tk.displaySection.language)} icon={AppIconMap.language}>
       <AppPicker
         options={options}
         selectedOption={selectedOption}

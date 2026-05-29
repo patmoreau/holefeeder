@@ -5,6 +5,7 @@ import { tk } from '@/i18n/translations';
 import { DEFAULT_SYNC_INFO } from '@/settings/core/sync-info';
 import { useSyncInfo } from '@/settings/presentation/core/use-sync-info';
 import { AppView } from '@/shared/presentation/AppView';
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { AppButton } from '@/shared/presentation/components/app/AppButton';
 import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
 import { AppField } from '@/shared/presentation/components/app/AppField';
@@ -14,7 +15,6 @@ import { AppHost } from '@/shared/presentation/components/app/AppHost';
 import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
 import { AppText } from '@/shared/presentation/components/app/AppText';
 import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { spacing, Theme } from '@/types/theme';
@@ -100,7 +100,7 @@ export function SyncSettingsContent() {
                 const file = new File(Paths.cache.parentDirectory, 'holefeeder.db');
                 const tempFile = new File(Paths.cache, 'holefeeder_temp.db');
                 if (tempFile.exists) tempFile.delete();
-                file.copy(tempFile);
+                await file.copy(tempFile);
                 await Sharing.shareAsync(tempFile.uri, {
                   mimeType: 'application/x-sqlite3',
                   UTI: 'public.database',

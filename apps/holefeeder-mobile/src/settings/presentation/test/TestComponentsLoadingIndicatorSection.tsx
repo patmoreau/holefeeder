@@ -1,17 +1,17 @@
+import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
 import { AppField } from '@/shared/presentation/components/app/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
 import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
-import { ExpoFieldSection } from '@/shared/presentation/components/expo/ExpoFieldSection';
-import { AppIcon } from '@/shared/presentation/core/app-icons';
 
 export const TestComponentsLoadingIndicatorSection = () => {
   return (
-    <ExpoFieldSection title={'LoadingIndicator'}>
-      <AppField icon={AppIcon.tag} label={'Large'}>
+    <AppFieldSection title={'LoadingIndicator'}>
+      <AppField icon={AppIconMap.tag} label={'Large'}>
         <AppLoadingIndicator variant={'primary'} size={'large'} />
       </AppField>
-      <AppField icon={AppIcon.tag} label={'Small'}>
+      <AppField icon={AppIconMap.tag} label={'Small'}>
         <AppLoadingIndicator variant={'secondary'} size={'small'} />
       </AppField>
-    </ExpoFieldSection>
+    </AppFieldSection>
   );
 };

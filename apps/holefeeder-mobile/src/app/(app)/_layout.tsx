@@ -1,26 +1,7 @@
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable } from 'react-native';
 import { tk } from '@/i18n/translations';
-import { IconSymbol } from '@/shared/presentation/components/IconSymbol';
-import { useHeaderIconColor } from '@/shared/presentation/core/header-icon-color-context';
-import { AppIcons } from '@/shared/presentation/icons';
 import { useTheme } from '@/shared/theme/core/use-theme';
-import { spacing } from '@/types/theme/design-tokens';
-
-const PurchaseHeaderButton = () => {
-  const { theme } = useTheme();
-  const { isOverPrimary } = useHeaderIconColor();
-  const iconColor = isOverPrimary ? theme.colors.primaryText : theme.colors.tint;
-
-  return (
-    <Pressable onPress={() => router.push('/(app)/Purchase')} style={{ paddingHorizontal: spacing.sm }}>
-      <IconSymbol name={AppIcons.purchase} size={24} color={iconColor} />
-    </Pressable>
-  );
-};
-
-const renderPurchaseHeaderButton = () => <PurchaseHeaderButton />;
 
 const AppLayout = () => {
   const { t } = useTranslation();
@@ -33,7 +14,6 @@ const AppLayout = () => {
         options={{
           headerTitle: '',
           headerTransparent: true,
-          headerRight: renderPurchaseHeaderButton,
         }}
       />
       <Stack.Screen
@@ -57,7 +37,7 @@ const AppLayout = () => {
         options={{
           presentation: 'modal',
           title: t(tk.budgetSection.title),
-          headerTransparent: true,
+          // headerTransparent: true,
           headerTintColor: theme.colors.tint,
         }}
       />

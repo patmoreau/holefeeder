@@ -1,4 +1,4 @@
-import { Id, today, Variation } from '@holefeeder/shared/core';
+import { Id, LocalFormatter, today, Variation } from '@holefeeder/shared/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';
@@ -78,7 +78,7 @@ export const transition = SharedTransition.duration(500).springify().damping(20)
 
 export const AccountCard = ({ account, width = 300, style, onPress, ...props }: AccountCardProps) => {
   const { t } = useTranslation();
-  const { formatCurrency, formatDate } = useLocaleFormatter();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const pressableRef = useRef<View>(null);
   const variationResult = useAccountVariation(account.id);
@@ -116,14 +116,14 @@ export const AccountCard = ({ account, width = 300, style, onPress, ...props }: 
                   <View style={styles.balanceSection}>
                     <AppText variant={'title'} adjustsFontSizeToFit>
                       {balanceSign}
-                      {formatCurrency(detail.balance)}
+                      {LocalFormatter.currency(detail.balance, currentLocale, currencyCode)}
                     </AppText>
                   </View>
 
                   <View style={styles.projectedSection}>
                     <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}>
                       <AppText variant={'footnote'}>{t(tk.accountCard.updated)}</AppText>
-                      <AppText variant={'default'}>{formatDate(detail.lastTransactionDate!, today())}</AppText>
+                      <AppText variant={'default'}>{LocalFormatter.date(detail.lastTransactionDate!, today(), currentLocale, t)}</AppText>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-end' }}>
                       <AppText variant={'footnote'}>{t(tk.accountCard.projected)}</AppText>
@@ -138,7 +138,7 @@ export const AccountCard = ({ account, width = 300, style, onPress, ...props }: 
                         adjustsFontSizeToFit
                       >
                         {projectedSign}
-                        {formatCurrency(detail.projectedBalance)}
+                        {LocalFormatter.currency(detail.projectedBalance, currentLocale, currencyCode)}
                       </AppText>
                     </View>
                   </View>
