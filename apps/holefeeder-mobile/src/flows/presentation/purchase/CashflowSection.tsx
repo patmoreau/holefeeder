@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { HasCashflowField } from '@/flows/presentation/purchase/components/fields/HasCashflowField';
 import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { tk } from '@/i18n/translations';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { DateField } from '@/shared/presentation/fields/DateField';
-import { DateIntervalTypeField } from '@/shared/presentation/fields/DateIntervalTypeField';
-import { FrequencyField } from '@/shared/presentation/fields/FrequencyField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DateIntervalTypeField } from '@/shared/presentation/components/fields/DateIntervalTypeField';
+import { FrequencyField } from '@/shared/presentation/components/fields/FrequencyField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 
 export const CashflowSection = () => {
   const { t } = useTranslation();

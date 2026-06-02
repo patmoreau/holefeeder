@@ -4,17 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { DEFAULT_SYNC_INFO } from '@/settings/core/sync-info';
 import { useSyncInfo } from '@/settings/presentation/core/use-sync-info';
-import { AppView } from '@/shared/presentation/AppView';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppButton } from '@/shared/presentation/components/app/AppButton';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldGroup } from '@/shared/presentation/components/app/AppFieldGroup';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
-import { AppText } from '@/shared/presentation/components/app/AppText';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { spacing, Theme } from '@/types/theme';
@@ -45,30 +44,30 @@ export function SyncSettingsContent() {
 
   if (isLoading || !data) {
     return (
-      <AppView style={styles.container}>
-        <LoadingIndicator />
+      <AppNative style={styles.container}>
+        <AppLoadingIndicator />
         <AppErrorSheet {...errors} />
-      </AppView>
+      </AppNative>
     );
   }
 
   const { syncInfo } = data;
 
   return (
-    <AppHost style={{ flex: 1 }}>
+    <AppNative style={{ flex: 1 }}>
       <AppFieldGroup>
         <AppFieldSection title={t(tk.settings.syncSection.title)} style={styles.section}>
           <AppField label={t(tk.settings.syncSection.connected)} icon={AppIconMap.connected}>
-            <AppSwitch value={syncInfo.connected} readonly={true} />
+            <AppSwitch value={syncInfo.connected} disabled />
           </AppField>
           <AppField label={t(tk.settings.syncSection.lastSync)} icon={AppIconMap.sync}>
             <AppText>{syncInfo.lastSyncedAt ? syncInfo.lastSyncedAt.toLocaleString() : t(tk.settings.syncSection.never)}</AppText>
           </AppField>
           <AppField label={t(tk.settings.syncSection.downloading)} icon={AppIconMap.download}>
-            <AppSwitch value={syncInfo.dataFlowStatus.downloading} readonly={true} />
+            <AppSwitch value={syncInfo.dataFlowStatus.downloading} disabled />
           </AppField>
           <AppField label={t(tk.settings.syncSection.uploading)} icon={AppIconMap.upload}>
-            <AppSwitch value={syncInfo.dataFlowStatus.uploading} readonly={true} />
+            <AppSwitch value={syncInfo.dataFlowStatus.uploading} disabled />
           </AppField>
           <AppField label={t(tk.settings.syncSection.outstanding)} icon={AppIconMap.uploadOutstanding}>
             <AppText>{syncInfo.dataMetrics.outstandingTransactions.toString()}</AppText>
@@ -110,6 +109,6 @@ export function SyncSettingsContent() {
           </AppField>
         </AppFieldSection>
       </AppFieldGroup>
-    </AppHost>
+    </AppNative>
   );
 }

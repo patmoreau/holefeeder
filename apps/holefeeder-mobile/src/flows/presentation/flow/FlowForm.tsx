@@ -5,7 +5,7 @@ import { Category } from '@/flows/core/categories/category';
 import { Tag } from '@/flows/core/flows/tag';
 import { useFlowForm } from '@/flows/presentation/flow/core/use-flow-form';
 import { FlowFormContent } from '@/flows/presentation/flow/FlowFormContent';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 interface FlowFormProps {

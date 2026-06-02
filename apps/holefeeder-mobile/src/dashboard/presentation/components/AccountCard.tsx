@@ -8,7 +8,7 @@ import { AccountType } from '@/accounts/core/account-type';
 import { tk } from '@/i18n/translations';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -102,7 +102,7 @@ export const AccountCard = ({ account, width = 300, style, onPress, ...props }: 
 
           {variationResult.isLoading && (
             <View style={styles.balanceSection}>
-              <LoadingIndicator size="small" withBackground={false} />
+              <AppLoadingIndicator size="small" withBackground={false} />
             </View>
           )}
 

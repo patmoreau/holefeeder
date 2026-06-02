@@ -5,8 +5,8 @@ import { PurchaseFormError, usePurchaseForm } from '@/flows/presentation/purchas
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { tk } from '@/i18n/translations';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { DateField } from '@/shared/presentation/fields/DateField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 
 const tkErrors: Record<PurchaseFormError, string> = {
   [PurchaseFormError.accountRequired]: tk.purchase.errors.accountRequired,

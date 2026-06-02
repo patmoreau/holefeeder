@@ -5,7 +5,7 @@ import { Category } from '@/flows/core/categories/category';
 import { Tag } from '@/flows/core/flows/tag';
 import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseFormContent } from '@/flows/presentation/purchase/PurchaseFormContent';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 interface PurchaseFormProps {

@@ -5,10 +5,10 @@ import { Pressable, View, type ViewProps } from 'react-native';
 import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
 import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { Transaction } from '@/flows/core/flows/transaction';
-import { AppChip } from '@/shared/presentation/components/app/AppChip';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
+import { AppChip } from '@/shared/presentation/components/native/AppChip';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme';
@@ -67,9 +67,9 @@ export const TransactionCard = ({ transaction, onPress, ...props }: TransactionC
           {transaction.tags.length > 0 && (
             <View style={styles.tags}>
               {transaction.tags.map((tag) => (
-                <AppHost key={tag} matchContents>
+                <AppNative key={tag} matchContents>
                   <AppChip key={tag} selected={true} label={tag} />
-                </AppHost>
+                </AppNative>
               ))}
             </View>
           )}

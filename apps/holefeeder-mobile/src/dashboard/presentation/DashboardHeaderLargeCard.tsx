@@ -1,14 +1,19 @@
+import { Divider } from '@expo/ui/swift-ui';
 import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
-import { AppText } from '@/shared/presentation/components/AppText';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
+import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
+import { useTheme } from '@/shared/theme/core/use-theme';
 import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
@@ -32,17 +37,6 @@ const createStyles = (theme: Theme) => ({
     opacity: 0.5,
     marginBottom: spacing.xs,
   },
-  pill: {
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  positivePill: {
-    backgroundColor: theme.colors.positiveBackground,
-  },
-  negativePill: {
-    backgroundColor: theme.colors.negativeBackground,
-  },
   positiveText: {
     color: theme.colors.positive,
     fontWeight: fontWeight.semiBold,
@@ -61,6 +55,7 @@ export const DashboardHeaderLargeCard = ({
   upcomingFlows?: UpcomingFlow[];
 }) => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
@@ -84,33 +79,61 @@ export const DashboardHeaderLargeCard = ({
     : `- ${LocalFormatter.currency(projectedNetFlowAmount, currentLocale, currencyCode)}`;
 
   return (
-    <>
-      <AppText variant={'subtitle'} style={styles.textColor}>
-        {t(tk.dashboard.largeHeader.spendingTitle)}
-      </AppText>
-      <AppText variant={'display'} style={styles.largeTitle}>
-        {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
-      </AppText>
-      <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
-      <View style={styles.divider} />
-      <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <AppText variant={'subtitle'} style={styles.subtitle}>
-            {t(tk.dashboard.largeHeader.netFlow)}
+    <AppNative style={{ flex: 1 }}>
+      <AppColumn spacing={8} alignment={'start'} style={{ paddingBottom: spacing.lg }}>
+        <AppRow>
+          <AppText variant={'subtitle'} textStyle={styles.textColor}>
+            {t(tk.dashboard.largeHeader.spendingTitle)}
           </AppText>
-          <View style={[styles.pill, netFlowPositive ? styles.positivePill : styles.negativePill]}>
-            <AppText style={netFlowPositive ? styles.positiveText : styles.negativeText}>{netFlowText}</AppText>
-          </View>
-        </View>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <AppText variant={'subtitle'} style={styles.subtitle}>
-            {t(tk.accountCard.projected)}
+          <AppSpacer />
+        </AppRow>
+        <AppRow>
+          <AppText variant={'display'} textStyle={styles.largeTitle}>
+            {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
           </AppText>
-          <View style={[styles.pill, projectedIsOver ? styles.positivePill : styles.negativePill]}>
-            <AppText style={projectedIsOver ? styles.positiveText : styles.negativeText}>{projectedNetFlowText}</AppText>
-          </View>
-        </View>
-      </View>
-    </>
+        </AppRow>
+        <AppRow>
+          <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
+          <AppSpacer />
+        </AppRow>
+        <Divider />
+        <AppRow>
+          <AppSpacer />
+          <AppColumn alignment={'center'} spacing={4}>
+            <AppText variant={'subtitle'} style={styles.subtitle}>
+              {t(tk.dashboard.largeHeader.netFlow)}
+            </AppText>
+            <AppColumn
+              style={{
+                paddingHorizontal: spacing.sm,
+                paddingVertical: spacing.xs,
+                borderRadius: borderRadius.full,
+                backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground,
+              }}
+            >
+              <AppText textStyle={netFlowPositive ? styles.positiveText : styles.negativeText}>{netFlowText}</AppText>
+            </AppColumn>
+          </AppColumn>
+          <AppSpacer />
+          <AppColumn alignment={'center'} spacing={4}>
+            <AppText variant={'subtitle'} style={styles.subtitle}>
+              {t(tk.accountCard.projected)}
+            </AppText>
+            <AppColumn
+              style={{
+                paddingHorizontal: spacing.sm,
+                paddingVertical: spacing.xs,
+                borderRadius: borderRadius.full,
+                backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground,
+              }}
+            >
+              <AppText textStyle={projectedIsOver ? styles.positiveText : styles.negativeText}>{projectedNetFlowText}</AppText>
+            </AppColumn>
+          </AppColumn>
+          <AppSpacer />
+        </AppRow>
+        <AppSpacer />
+      </AppColumn>
+    </AppNative>
   );
 };

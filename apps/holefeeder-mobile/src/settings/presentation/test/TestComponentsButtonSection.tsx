@@ -1,8 +1,8 @@
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppButton } from '@/shared/presentation/components/app/AppButton';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 export const TestComponentsButtonSection = () => {
   return (

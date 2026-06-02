@@ -10,9 +10,9 @@ import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { useTags } from '@/flows/presentation/shared/core/use-tags';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
+import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
@@ -43,10 +43,10 @@ const FlowScreen = () => {
   if (isLoading || !data) {
     return (
       <AppView style={styles.container}>
-        <AppHost matchContents>
+        <AppNative matchContents>
           <AppLoadingIndicator />
           <AppErrorSheet {...errors} />
-        </AppHost>
+        </AppNative>
       </AppView>
     );
   }

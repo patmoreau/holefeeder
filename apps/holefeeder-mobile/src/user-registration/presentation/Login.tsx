@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useAuth } from '@/shared/auth/core/use-auth';
 import { AuthButton } from '@/shared/presentation/AuthButton';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppIcon } from '@/shared/presentation/components/app/AppIcon';
-import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
 const LoginScreen = () => {
@@ -19,14 +19,14 @@ const LoginScreen = () => {
 
   if (isLoading) {
     return (
-      <AppHost style={{ flex: 1 }}>
+      <AppNative style={{ flex: 1 }}>
         <AppLoadingIndicator size="large" />
-      </AppHost>
+      </AppNative>
     );
   }
 
   return (
-    <AppHost style={{ flex: 1 }}>
+    <AppNative style={{ flex: 1 }}>
       <AppColumn spacing={8} alignment={'center'}>
         <AppText variant={'title'} textStyle={{ color: theme.colors.secondaryText }}>
           {t(tk.auth.loginTitle)}
@@ -37,7 +37,7 @@ const LoginScreen = () => {
         <AuthButton />
         <AppIcon name={AppIconMap.warning} style={{ paddingTop: 16 }} color={theme.colors.primary} />
       </AppColumn>
-    </AppHost>
+    </AppNative>
   );
 };
 

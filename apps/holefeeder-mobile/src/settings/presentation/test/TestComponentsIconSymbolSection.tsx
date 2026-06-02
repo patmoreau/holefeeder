@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { AppIconMap, UniversalIcon } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/native/AppPicker';
+import { AppIconMap, UniversalIcon } from '@/shared/presentation/core/app-icon-map';
 
 type IconOption = PickerOption & { icon: UniversalIcon };
 

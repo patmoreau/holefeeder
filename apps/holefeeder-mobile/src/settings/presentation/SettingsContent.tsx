@@ -5,7 +5,7 @@ import { ProfileSection } from '@/settings/presentation/ProfileSection';
 import { SyncSection } from '@/settings/presentation/SyncSection';
 import TestComponentsScreen from '@/settings/presentation/test/TestComponentsScreen';
 import { TestSection } from '@/settings/presentation/TestSection';
-import { AppForm } from '@/shared/presentation/components/app/AppForm';
+import { AppForm } from '@/shared/presentation/components/native/AppForm';
 
 export const SettingsContent = () => {
   const [show, setShow] = useState(false);

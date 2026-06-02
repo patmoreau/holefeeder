@@ -4,13 +4,13 @@ import { Tag } from '@/flows/core/flows/tag';
 import { FilterField } from '@/flows/presentation/shared/components/FilterField';
 import { useTagList } from '@/flows/presentation/shared/core/use-tag-list';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppChip } from '@/shared/presentation/components/app/AppChip';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppRow } from '@/shared/presentation/components/app/AppRow';
-import { AppScrollView } from '@/shared/presentation/components/app/AppScrollView';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppChip } from '@/shared/presentation/components/native/AppChip';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppScrollView } from '@/shared/presentation/components/native/AppScrollView';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 export type TagListProps = {
   tags: Tag[];

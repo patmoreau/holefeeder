@@ -1,11 +1,10 @@
 import { useLocalSearchParams } from 'expo-router';
-import React from 'react';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { PayUpcomingFormData } from '@/flows/presentation/pay-upcoming/core/pay-upcoming-form-data';
 import { PayUpcomingFormProvider, validatePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingForm } from '@/flows/presentation/pay-upcoming/PayUpcomingForm';
 import { AppModal } from '@/shared/presentation/AppModal';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 
 const PayUpcomingScreen = () => {
   const { data: upcomingFlowParam } = useLocalSearchParams<{ data: string }>();
@@ -14,7 +13,7 @@ const PayUpcomingScreen = () => {
   if (upcomingFlowResult.isFailure) {
     return (
       <AppModal>
-        <LoadingIndicator />
+        <AppLoadingIndicator />
       </AppModal>
     );
   }

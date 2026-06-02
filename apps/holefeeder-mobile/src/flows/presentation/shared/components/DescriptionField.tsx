@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppTextInput } from '@/shared/presentation/components/app/AppTextInput';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 type Props = {
   description: string;

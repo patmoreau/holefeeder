@@ -5,8 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppIcons } from '@/shared/presentation/icons';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
 const TabsLayout = () => {
@@ -21,15 +20,15 @@ const TabsLayout = () => {
       </Stack.Toolbar>
       <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
         <NativeTabs.Trigger name="index">
-          <NativeTabs.Trigger.Icon sf={AppIcons.dashboard} />
+          <NativeTabs.Trigger.Icon sf={AppIconMap.dashboard.ios} />
           <NativeTabs.Trigger.Label>{t(tk.tabs.dashboard)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="accounts">
-          <NativeTabs.Trigger.Icon sf={AppIcons.accounts} />
+          <NativeTabs.Trigger.Icon sf={AppIconMap.accounts.ios} />
           <NativeTabs.Trigger.Label>{t(tk.tabs.accounts)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
-          <NativeTabs.Trigger.Icon sf={AppIcons.settings} />
+          <NativeTabs.Trigger.Icon sf={AppIconMap.settings.ios} />
           <NativeTabs.Trigger.Label>{t(tk.tabs.settings)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>

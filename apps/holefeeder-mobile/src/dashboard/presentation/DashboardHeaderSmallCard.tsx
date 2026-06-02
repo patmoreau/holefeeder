@@ -5,7 +5,8 @@ import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-s
 import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
-import { AppText } from '@/shared/presentation/components/AppText';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { spacing } from '@/types/theme/design-tokens';
@@ -34,10 +35,10 @@ export const DashboardHeaderSmallCard = ({
   const styles = useStyles(createStyles);
 
   return (
-    <View style={styles.container}>
-      <AppText style={styles.text}>{t(tk.dashboard.smallHeader.spendingTitle)}</AppText>
-      <AppText style={styles.text}>{LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}</AppText>
+    <AppRow style={{ backgroundColor: 'blue', padding: spacing.lg, paddingBottom: spacing.sm }}>
+      <AppText textStyle={styles.text}>{t(tk.dashboard.smallHeader.spendingTitle)}</AppText>
+      <AppText textStyle={styles.text}>{LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}</AppText>
       <DashboardHeaderExpenseTrend summary={summary} variant="percentage" />
-    </View>
+    </AppRow>
   );
 };

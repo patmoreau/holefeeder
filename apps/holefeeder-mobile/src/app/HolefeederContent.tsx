@@ -2,7 +2,7 @@ import { Logger } from '@holefeeder/shared/core';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/shared/auth/core/use-auth';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 
 const logger = Logger.create('HolefeederContent');
 
@@ -13,7 +13,7 @@ export const HolefeederContent = () => {
   useQuickActions();
 
   if (isLoading) {
-    return <LoadingIndicator size="large" />;
+    return <AppLoadingIndicator size="large" />;
   }
 
   return (

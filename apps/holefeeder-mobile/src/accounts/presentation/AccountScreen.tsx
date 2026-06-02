@@ -9,12 +9,12 @@ import { useTransactions } from '@/accounts/presentation/core/use-transactions';
 import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
 import { AppView } from '@/shared/presentation/AppView';
 import { CardHeaderFlashList } from '@/shared/presentation/CardHeaderFlashList';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
 import { AppCardDivider } from '@/shared/presentation/components/AppCardDivider';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { goBack } from '@/shared/presentation/core/navigation';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
-import { goBack } from '@/shared/presentation/navigation';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { Theme } from '@/types/theme/theme';
@@ -53,7 +53,7 @@ export const AccountScreen = () => {
 
   const { account } = data;
 
-  if (!account) return <LoadingIndicator />;
+  if (!account) return <AppLoadingIndicator />;
 
   const onEditPress = () =>
     router.push({
@@ -77,7 +77,7 @@ export const AccountScreen = () => {
         renderItem={(item) => <TransactionCard transaction={item.item} onPress={onFlowPress} />}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={AppCardDivider}
-        ListFooterComponent={transactionsResult.loading ? <LoadingIndicator size={'small'} /> : null}
+        ListFooterComponent={transactionsResult.loading ? <AppLoadingIndicator size={'small'} /> : null}
       />
     </>
   );

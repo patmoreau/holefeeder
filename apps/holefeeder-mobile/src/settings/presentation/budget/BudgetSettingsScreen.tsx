@@ -5,8 +5,8 @@ import { BudgetSettingsForm } from '@/settings/presentation/budget/BudgetSetting
 import { SettingsFormProvider, validateSettingsForm } from '@/settings/presentation/core/use-settings-form';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
-import { AppLoadingIndicator } from '@/shared/presentation/components/app/AppLoadingIndicator';
+import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';

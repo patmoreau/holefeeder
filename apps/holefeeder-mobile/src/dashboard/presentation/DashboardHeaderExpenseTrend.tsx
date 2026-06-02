@@ -2,23 +2,14 @@ import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppIcon } from '@/shared/presentation/components/app/AppIcon';
-import { AppRow } from '@/shared/presentation/components/app/AppRow';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
-import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
-import { borderRadius, spacing } from '@/types/theme/design-tokens';
-
-const createStyles = () => ({
-  container: {
-    gap: spacing.xs,
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-  },
-});
+import { borderRadius } from '@/types/theme/design-tokens';
 
 export const DashboardHeaderExpenseTrend = ({
   summary,
@@ -30,7 +21,6 @@ export const DashboardHeaderExpenseTrend = ({
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const { theme } = useTheme();
-  const styles = useStyles(createStyles);
 
   const variation = summary.variation;
   const variationText =
@@ -42,20 +32,17 @@ export const DashboardHeaderExpenseTrend = ({
   const variationIcon = variation.isOver ? AppIconMap.trendUp : AppIconMap.trendDown;
 
   return (
-    <AppHost
-      matchContents
-      style={[
-        styles.container,
-        {
-          backgroundColor: variationBackgroundColor + '80',
-          borderColor: variationBackgroundColor + '90',
-        },
-      ]}
+    <AppColumn
+      style={{
+        borderRadius: borderRadius.xl,
+        backgroundColor: variationBackgroundColor + '80',
+        borderColor: variationBackgroundColor + '90',
+      }}
     >
       <AppRow spacing={8} style={{ padding: 8 }} alignment={'center'}>
         <AppIcon name={variationIcon} color={variationColor} size={14} />
         <AppText textStyle={{ color: variationColor }}>{variationText}</AppText>
       </AppRow>
-    </AppHost>
+    </AppColumn>
   );
 };

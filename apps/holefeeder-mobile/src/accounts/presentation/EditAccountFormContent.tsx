@@ -5,14 +5,14 @@ import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-accoun
 import { AmountField } from '@/flows/presentation/shared/components/AmountField';
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppForm } from '@/shared/presentation/components/app/AppForm';
-import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
-import { AppSwitch } from '@/shared/presentation/components/app/AppSwitch';
-import { AppTextInput } from '@/shared/presentation/components/app/AppTextInput';
-import { DateField } from '@/shared/presentation/fields/DateField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppForm } from '@/shared/presentation/components/native/AppForm';
+import { AppPicker } from '@/shared/presentation/components/native/AppPicker';
+import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
+import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 const accountTypeOptions = Object.values(AccountTypes).map((type) => ({ id: type, label: type }));
 

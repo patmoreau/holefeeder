@@ -1,7 +1,7 @@
 import { Result } from '@holefeeder/shared/core';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { ErrorKey } from '@/shared/core/error-key';
-import { AppErrorSheet } from '@/shared/presentation/components/app/AppErrorSheet';
+import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 

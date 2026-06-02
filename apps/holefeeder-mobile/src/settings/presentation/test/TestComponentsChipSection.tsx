@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppChip } from '@/shared/presentation/components/app/AppChip';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
+import { AppChip } from '@/shared/presentation/components/native/AppChip';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 export const TestComponentsChipSection = () => {
   const [chipSelection, setChipSelection] = useState(false);

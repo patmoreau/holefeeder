@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppPicker } from '@/shared/presentation/components/native/AppPicker';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 type Props = {
   categories: Category[];

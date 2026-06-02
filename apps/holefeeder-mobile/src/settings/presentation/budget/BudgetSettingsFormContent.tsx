@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useSettingsForm } from '@/settings/presentation/core/use-settings-form';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppForm } from '@/shared/presentation/components/app/AppForm';
-import { DateField } from '@/shared/presentation/fields/DateField';
-import { DateIntervalTypeField } from '@/shared/presentation/fields/DateIntervalTypeField';
-import { FrequencyField } from '@/shared/presentation/fields/FrequencyField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DateIntervalTypeField } from '@/shared/presentation/components/fields/DateIntervalTypeField';
+import { FrequencyField } from '@/shared/presentation/components/fields/FrequencyField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppForm } from '@/shared/presentation/components/native/AppForm';
 
 export const BudgetSettingsFormContent = () => {
   const { t } = useTranslation();

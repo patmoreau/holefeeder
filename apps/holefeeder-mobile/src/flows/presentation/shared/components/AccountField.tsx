@@ -1,7 +1,7 @@
 import { Account } from '@/accounts/core/account';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppPicker } from '@/shared/presentation/components/app/AppPicker';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppPicker } from '@/shared/presentation/components/native/AppPicker';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 type Props = {
   label: string;

@@ -10,8 +10,8 @@ import { CategoryField } from '@/flows/presentation/shared/components/CategoryFi
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { DateField } from '@/shared/presentation/fields/DateField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 
 type Props = {
   accounts: Account[];

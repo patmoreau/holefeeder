@@ -1,10 +1,10 @@
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppButton } from '@/shared/presentation/components/app/AppButton';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { GlobalStyles } from '@/types/theme/global-styles';
 import { Theme } from '@/types/theme/theme';
@@ -38,14 +38,14 @@ export const NotFoundScreen = () => {
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
-      <AppHost style={{ flex: 1 }}>
+      <AppNative style={{ flex: 1 }}>
         <AppColumn spacing={12} alignment={'center'}>
           <AppText variant="title" textStyle={styles.heading}>
             {t(tk.notFound.description)}
           </AppText>
           <AppButton label={t(tk.notFound.goBack)} variant="primary" onPress={() => router.push({ pathname: '/' })} />
         </AppColumn>
-      </AppHost>
+      </AppNative>
     </>
   );
 };

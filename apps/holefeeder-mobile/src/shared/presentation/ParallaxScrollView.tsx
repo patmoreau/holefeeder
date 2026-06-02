@@ -1,12 +1,8 @@
 import { Stack } from 'expo-router';
-import { useFocusEffect } from 'expo-router/react-navigation';
 import type { ReactElement } from 'react';
-import { useCallback, useState } from 'react';
 import { Text, View, type ViewProps } from 'react-native';
-import Animated, { interpolate, useAnimatedReaction, useAnimatedRef, useAnimatedStyle, useScrollOffset } from 'react-native-reanimated';
-import { scheduleOnRN } from 'react-native-worklets';
+import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollOffset } from 'react-native-reanimated';
 import { AppView } from '@/shared/presentation/AppView';
-import { useHeaderIconColor } from '@/shared/presentation/core/header-icon-color-context';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
@@ -39,27 +35,6 @@ export const ParallaxScrollView = ({ headerImage, headerBackgroundColor, ...othe
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollOffset(scrollRef);
-
-  const { setOverPrimary } = useHeaderIconColor();
-  const SCROLL_THRESHOLD = HEADER_HEIGHT;
-
-  const [isScrolledPast, setIsScrolledPast] = useState(false);
-
-  useAnimatedReaction(
-    () => scrollOffset.value > SCROLL_THRESHOLD,
-    (current, prev) => {
-      if (prev !== null && current !== prev) {
-        scheduleOnRN(setIsScrolledPast, current);
-        scheduleOnRN(setOverPrimary, !current);
-      }
-    }
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      setOverPrimary(!isScrolledPast);
-    }, [setOverPrimary, isScrolledPast])
-  );
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {

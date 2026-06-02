@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/native/AppPicker';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 const tkTypes: Record<LanguageType, string> = {
   [LanguageType.en]: tk.displaySection.english,

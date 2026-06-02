@@ -7,7 +7,7 @@ import { EditAccountFormProvider, validateEditAccountForm } from '@/accounts/pre
 import { EditAccountForm } from '@/accounts/presentation/EditAccountForm';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
-import { LoadingIndicator } from '@/shared/presentation/components/LoadingIndicator';
+import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
@@ -27,7 +27,7 @@ export const EditAccountScreen = () => {
   if (!accountResult.isSuccess) {
     return (
       <AppView style={styles.container}>
-        <LoadingIndicator />
+        <AppLoadingIndicator />
       </AppView>
     );
   }

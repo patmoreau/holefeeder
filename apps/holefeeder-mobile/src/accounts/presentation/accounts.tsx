@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppCollapsible } from '@/shared/presentation/components/app/AppCollapsible';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { AppIcon } from '@/shared/presentation/components/app/AppIcon';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppCollapsible } from '@/shared/presentation/components/native/AppCollapsible';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { ParallaxScrollView } from '@/shared/presentation/ParallaxScrollView';
 import { ScreenTitle } from '@/shared/presentation/ScreenTitle';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -21,19 +21,19 @@ export default function AccountsScreen() {
       style={styles.content}
       headerBackgroundColor={theme.colors.primary}
       headerImage={
-        <AppHost>
+        <AppNative>
           <AppIcon size={310} color="#808080" name={AppIconMap.accounts} />
-        </AppHost>
+        </AppNative>
       }
     >
       <ScreenTitle title={'Explore'} />
-      <AppHost style={{ flex: 1 }}>
+      <AppNative style={{ flex: 1 }}>
         <AppColumn spacing={8} style={{ padding: 16 }}>
           <AppCollapsible label="Section a" isOpen={openSection === 'a'} onOpenChange={(open) => setOpenSection(open ? 'a' : null)}>
             <AppText>Coucou</AppText>
           </AppCollapsible>
         </AppColumn>
-      </AppHost>
+      </AppNative>
     </ParallaxScrollView>
   );
 }

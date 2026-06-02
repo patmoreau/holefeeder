@@ -1,11 +1,11 @@
 import { today } from '@holefeeder/shared/core';
 import { useState } from 'react';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppDatePicker } from '@/shared/presentation/components/app/AppDatePicker';
-import { AppField } from '@/shared/presentation/components/app/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppPicker, PickerOption } from '@/shared/presentation/components/app/AppPicker';
-import { AppSegmentedMenu } from '@/shared/presentation/components/app/AppSegmentedMenu';
+import { AppDatePicker } from '@/shared/presentation/components/native/AppDatePicker';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppPicker, PickerOption } from '@/shared/presentation/components/native/AppPicker';
+import { AppSegmentedMenu } from '@/shared/presentation/components/native/AppSegmentedMenu';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 type PickerType<T> = PickerOption & { value: T };
 const pickerOptions: PickerType<string>[] = [
@@ -31,14 +31,12 @@ export const TestComponentsPickerSection = () => {
           onSelectOption={setPickerValue}
         />
       </AppField>
-      <AppField icon={AppIconMap.category} label="Segmented" variant={'large'}>
-        <AppSegmentedMenu
-          options={pickerOptions}
-          onOptionLabel={(option) => option.value}
-          selectedOption={pickerValue}
-          onSelectOption={setPickerValue}
-        />
-      </AppField>
+      <AppSegmentedMenu
+        options={pickerOptions}
+        onOptionLabel={(option) => option.value}
+        selectedOption={pickerValue}
+        onSelectOption={setPickerValue}
+      />
     </AppFieldSection>
   );
 };

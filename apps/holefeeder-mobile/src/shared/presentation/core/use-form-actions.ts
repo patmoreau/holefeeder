@@ -1,8 +1,8 @@
 import { createLogger } from '@powersync/common';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { goBack } from '@/shared/presentation/navigation';
-import { showAlert } from '@/shared/presentation/show-alert';
+import { goBack } from '@/shared/presentation/core/navigation';
+import { showAlert } from '@/shared/presentation/core/show-alert';
 
 const logger = createLogger('useFormActions');
 

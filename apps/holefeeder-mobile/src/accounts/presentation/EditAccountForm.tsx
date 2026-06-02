@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import React from 'react';
 import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
 import { EditAccountFormContent } from '@/accounts/presentation/EditAccountFormContent';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 export const EditAccountForm = () => {

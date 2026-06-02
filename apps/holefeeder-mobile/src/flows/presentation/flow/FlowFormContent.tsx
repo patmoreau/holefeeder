@@ -12,11 +12,11 @@ import { CategoryField } from '@/flows/presentation/shared/components/CategoryFi
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppFieldGroup } from '@/shared/presentation/components/app/AppFieldGroup';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
-import { DateField } from '@/shared/presentation/fields/DateField';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 
 type FlowFormProps = {
   accounts: Account[];
@@ -39,7 +39,7 @@ export const FlowFormContent = ({ accounts, categories, tags }: FlowFormProps) =
   const variant = formData.flowType === FlowType.expense ? CategoryTypes.expense : CategoryTypes.gain;
 
   return (
-    <AppHost style={{ flex: 1 }}>
+    <AppNative style={{ flex: 1 }}>
       <AppColumn spacing={8}>
         <FlowTypeSection selectedFlowType={formData.flowType} onSelectFlowType={(type) => updateFormField('flowType', type)} />
         <AmountField
@@ -67,6 +67,6 @@ export const FlowFormContent = ({ accounts, categories, tags }: FlowFormProps) =
           </AppFieldSection>
         </AppFieldGroup>
       </AppColumn>
-    </AppHost>
+    </AppNative>
   );
 };

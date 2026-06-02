@@ -2,7 +2,7 @@ import { Icon } from '@expo/ui';
 import { Stack } from 'expo-router';
 import { BudgetSettingsFormContent } from '@/settings/presentation/budget/BudgetSettingsFormContent';
 import { useSettingsForm } from '@/settings/presentation/core/use-settings-form';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 export const BudgetSettingsForm = () => {

@@ -1,9 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
+import * as navigation from '@/shared/presentation/core/navigation';
 import { FormContext, useFormActions } from '@/shared/presentation/core/use-form-actions';
-import * as navigation from '@/shared/presentation/navigation';
 
 // Mock dependencies
-jest.mock('@/shared/presentation/navigation', () => ({
+jest.mock('@/shared/presentation/core/navigation', () => ({
   goBack: jest.fn(),
 }));
 
@@ -16,7 +16,7 @@ jest.mock('react-i18next', () => ({
 const mockShowDiscardAlert = jest.fn();
 const mockShowFormErrorAlert = jest.fn();
 
-jest.mock('@/shared/presentation/show-alert', () => ({
+jest.mock('@/shared/presentation/core/show-alert', () => ({
   showAlert: jest.fn(() => ({
     showDiscardAlert: mockShowDiscardAlert,
     showFormErrorAlert: mockShowFormErrorAlert,

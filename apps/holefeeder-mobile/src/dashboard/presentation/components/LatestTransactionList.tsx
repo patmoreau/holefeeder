@@ -4,8 +4,8 @@ import { type ViewProps } from 'react-native';
 import { LatestTransactionCard } from '@/dashboard/presentation/components/LatestTransactionCard';
 import { useLatestTransactions } from '@/dashboard/presentation/core/use-latest-transactions';
 import { tk } from '@/i18n/translations';
-import { AppCardDivider } from '@/shared/presentation/components/AppCardDivider';
-import { AppCardList } from '@/shared/presentation/components/AppCardList';
+import { AppListForEach } from '@/shared/presentation/components/native/AppListForEach';
+import { ExpoFieldSection } from '@/shared/presentation/components/native/expo/ExpoFieldSection';
 
 export type LatestTransactionListProps = ViewProps & {};
 
@@ -20,14 +20,12 @@ export const LatestTransactionList = ({ style }: LatestTransactionListProps) => 
   }
 
   return (
-    <AppCardList
-      scrollable="vertical"
-      style={style}
-      header={t(tk.recentTransactions.title)}
-      data={transactions}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <LatestTransactionCard transaction={item} />}
-      ItemSeparatorComponent={() => <AppCardDivider />}
-    />
+    <ExpoFieldSection title={t(tk.recentTransactions.title)}>
+      <AppListForEach>
+        {transactions.map((transaction) => (
+          <LatestTransactionCard key={transaction.id + transaction.date} transaction={transaction} />
+        ))}
+      </AppListForEach>
+    </ExpoFieldSection>
   );
 };

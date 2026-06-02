@@ -8,9 +8,9 @@ import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase
 import { PurchaseTransferSection } from '@/flows/presentation/purchase/PurchaseTransferSection';
 import { TransferSection } from '@/flows/presentation/purchase/TransferSection';
 import { AmountField } from '@/flows/presentation/shared/components/AmountField';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppFieldGroup } from '@/shared/presentation/components/app/AppFieldGroup';
-import { AppHost } from '@/shared/presentation/components/app/AppHost';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 
 type PurchaseFormProps = {
   accounts: Account[];
@@ -22,8 +22,8 @@ export const PurchaseFormContent = ({ accounts, categories, tags }: PurchaseForm
   const { formData, updateFormField } = usePurchaseForm();
 
   return (
-    <AppHost style={{ flex: 1 }}>
-      <AppColumn spacing={8}>
+    <AppNative style={{ flex: 1 }}>
+      <AppColumn>
         <PurchaseTransferSection
           selectedPurchaseType={formData.purchaseType}
           onSelectPurchaseType={(type) => updateFormField('purchaseType', type)}
@@ -44,6 +44,6 @@ export const PurchaseFormContent = ({ accounts, categories, tags }: PurchaseForm
           {formData.purchaseType === PurchaseType.transfer && <TransferSection accounts={accounts} />}
         </AppFieldGroup>
       </AppColumn>
-    </AppHost>
+    </AppNative>
   );
 };

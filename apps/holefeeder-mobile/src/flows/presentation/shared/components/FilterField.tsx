@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { AppIconMap } from '@/shared/presentation/components/app/app-icon-map';
-import { AppButton } from '@/shared/presentation/components/app/AppButton';
-import { AppRow } from '@/shared/presentation/components/app/AppRow';
-import { AppTextInput } from '@/shared/presentation/components/app/AppTextInput';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
 type FilterFieldProps = {

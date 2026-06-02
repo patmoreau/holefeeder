@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
 import { tk } from '@/i18n/translations';
-import { AppButton } from '@/shared/presentation/components/app/AppButton';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppForm } from '@/shared/presentation/components/app/AppForm';
-import { AppRow } from '@/shared/presentation/components/app/AppRow';
-import { AppSpacer } from '@/shared/presentation/components/app/AppSpacer';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppForm } from '@/shared/presentation/components/native/AppForm';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 export const PayUpcomingForm = ({ description }: { description: string }) => {

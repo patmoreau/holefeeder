@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlowType } from '@/flows/presentation/flow/core/flow-form-data';
 import { tk } from '@/i18n/translations';
-import { AppSegmentedMenu, PickerOption } from '@/shared/presentation/components/app/AppSegmentedMenu';
+import { AppSegmentedMenu, PickerOption } from '@/shared/presentation/components/native/AppSegmentedMenu';
 
 const tkTypes: Record<FlowType, string> = {
   [FlowType.expense]: tk.purchase.transactionTypeSection.expense,

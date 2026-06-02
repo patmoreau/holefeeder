@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useProfile } from '@/settings/presentation/core/use-profile';
 import { AuthButton } from '@/shared/presentation/AuthButton';
-import { AppColumn } from '@/shared/presentation/components/app/AppColumn';
-import { AppFieldSection } from '@/shared/presentation/components/app/AppFieldSection';
-import { AppReact } from '@/shared/presentation/components/app/AppReact';
-import { AppRow } from '@/shared/presentation/components/app/AppRow';
-import { AppSpacer } from '@/shared/presentation/components/app/AppSpacer';
-import { AppText } from '@/shared/presentation/components/app/AppText';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppReact } from '@/shared/presentation/components/native/AppReact';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
+import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
