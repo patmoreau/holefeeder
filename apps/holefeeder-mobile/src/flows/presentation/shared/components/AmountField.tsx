@@ -23,7 +23,7 @@ const formatAmount = (input: string, currentLocale: string, currencyCode: string
   const amount = digits ? parseInt(digits, 10) / 100 : 0;
   try {
     return {
-      displayAmount: LocalFormatter.currency(amount, currentLocale, currencyCode),
+      displayAmount: LocalFormatter.currency(amount, currentLocale, currencyCode, { style: 'decimal' }),
       amount: amount,
     };
   } catch {
@@ -38,7 +38,11 @@ export const AmountField = ({ amount, onAmountChange, purchaseType, autoFocus }:
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
 
-  const textAmount = useNativeState(LocalFormatter.currency(amount, currentLocale, currencyCode));
+  const textAmount = useNativeState(
+    LocalFormatter.currency(amount, currentLocale, currencyCode, {
+      style: 'decimal',
+    })
+  );
   const selection = useNativeState({ start: 0, end: 0 });
 
   const handleChangeText = useEffectEvent((value: string) => {

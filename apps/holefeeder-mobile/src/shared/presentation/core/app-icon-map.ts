@@ -60,7 +60,7 @@ const universalIconMapping = {
     ios: 'square.and.arrow.up.trianglebadge.exclamationmark',
     android: FileUploadOff,
   },
-  save: { ios: 'plus.circle.fill', android: AddCircle },
+  save: { ios: 'checkmark', android: AddCircle },
   settings: { ios: 'gearshape.fill', android: Settings },
   share: { ios: 'square.and.arrow.up', android: Upload },
   storeItem: { ios: 'shippingbox', android: Storefront },

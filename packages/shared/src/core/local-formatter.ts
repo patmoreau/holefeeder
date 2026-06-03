@@ -7,12 +7,23 @@ type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
 const percentage = (val: number): string => `${val.toFixed(2)}%`;
 
-const currency = (amount: number, locale: string, currencyCode: string): string => {
+const currency = (
+  amount: number,
+  locale: string,
+  currencyCode: string,
+  options?: {
+    currencyDisplay?: Intl.NumberFormatOptions['currencyDisplay'];
+    style?: Intl.NumberFormatOptions['style'];
+  }
+): string => {
   const safeCurrencyCode = currencyCode || 'CAD';
   try {
     return new Intl.NumberFormat(locale, {
-      style: 'currency',
       currency: safeCurrencyCode,
+      style: options?.style ?? 'currency',
+      currencyDisplay: options?.currencyDisplay ?? 'narrowSymbol',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   } catch {
     return `${amount} ${safeCurrencyCode}`;

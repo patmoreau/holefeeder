@@ -19,7 +19,7 @@ describe('LocalFormatter', () => {
     it('should fallback to CAD when currencyCode is empty', () => {
       const formatted = LocalFormatter.currency(1234.56, 'en-US', '');
 
-      expect(formatted).toBe('CA$1,234.56');
+      expect(formatted).toBe('$1,234.56');
     });
 
     it('should fallback to string format on error', () => {
