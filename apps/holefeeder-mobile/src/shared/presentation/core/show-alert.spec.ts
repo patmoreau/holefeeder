@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { showAlert } from 'src/shared/presentation/core/show-alert'; // Adjust the import path
+import { showAlert } from '@/shared/presentation/core/show-alert'; // Adjust the import path
 
 const mockAlert = jest.spyOn(Alert, 'alert');
 
