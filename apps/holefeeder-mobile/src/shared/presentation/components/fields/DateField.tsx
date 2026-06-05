@@ -5,7 +5,7 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 type Props = {
   label: string;
-  selectedDate: DateOnly | null;
+  selectedDate?: DateOnly;
   onDateSelected: (date: DateOnly) => void;
   error?: string;
 };

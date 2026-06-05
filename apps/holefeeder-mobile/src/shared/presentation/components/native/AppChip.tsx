@@ -1,7 +1,7 @@
 import * as IosModifiers from '@expo/ui/swift-ui/modifiers';
 import { Platform } from 'react-native';
+import { ExpoModifierConfig } from '@/shared/presentation/components/native/expo/expo-modifier-config';
 import { useTheme } from '@/shared/theme/core/use-theme';
-import { ExpoModifierConfig } from './expo/expo-modifiers';
 import { ExpoButton } from './expo/ExpoButton';
 import { ExpoText } from './expo/ExpoText';
 
