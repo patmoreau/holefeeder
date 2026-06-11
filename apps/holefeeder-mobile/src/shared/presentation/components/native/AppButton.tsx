@@ -3,7 +3,7 @@ import { buttonStyle, ModifierConfig, tint } from '@expo/ui/swift-ui/modifiers';
 import React from 'react';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 import { AppButtonVariant } from '@/shared/presentation/components/AppButtonVariant';
-import { AppNative, AppHostProps } from '@/shared/presentation/components/native/AppNative';
+import { AppHostProps } from '@/shared/presentation/components/native/AppNative';
 import { ExpoButton } from '@/shared/presentation/components/native/expo/ExpoButton';
 import { ExpoIcon } from '@/shared/presentation/components/native/expo/ExpoIcon';
 import { ExpoRow } from '@/shared/presentation/components/native/expo/ExpoRow';

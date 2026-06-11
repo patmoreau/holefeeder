@@ -1,5 +1,5 @@
 import { List } from '@expo/ui/swift-ui';
-import { listStyle, padding } from '@expo/ui/swift-ui/modifiers';
+import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { Id, Logger } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';

@@ -21,7 +21,7 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
-  expo-constants: ~56.0.15
+  expo-constants: ~56.0.18
 
 patchedDependencies:
   '@expo/dom-webview@55.0.6': patches/@expo__dom-webview@55.0.6.patch

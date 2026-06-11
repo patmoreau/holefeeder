@@ -9,7 +9,6 @@ import { AppChip } from '@/shared/presentation/components/native/AppChip';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
-import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';

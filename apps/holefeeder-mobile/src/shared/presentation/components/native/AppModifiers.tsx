@@ -1,6 +1,5 @@
 import { background, border, cornerRadius, frame } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
-import { borderRadius } from '@/types/theme';
 
 type NamedColor =
   | 'primary'

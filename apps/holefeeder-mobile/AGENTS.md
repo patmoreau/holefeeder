@@ -5,8 +5,14 @@
 
 ## Tech Stack
 
-React Native (Expo SDK 55) · expo-router (file-based routing) · PowerSync + op-sqlite (offline-first sync) · Auth0 (
-react-native-auth0) · i18next · pnpm · TypeScript strict · **@holefeeder/core** (shared domain library)
+- React Native (Expo SDK 56)
+- expo-router (file-based routing)
+- PowerSync + op-sqlite (offline-first sync)
+- Auth0 (react-native-auth0)
+- i18next
+- pnpm
+- TypeScript strict
+- **@holefeeder/core** (shared domain library)
 
 ## Key Commands
 

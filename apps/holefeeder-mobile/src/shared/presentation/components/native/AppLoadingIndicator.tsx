@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 import { tk } from '@/i18n/translations';
-import { AppNative, AppHostProps } from '@/shared/presentation/components/native/AppNative';
+import { AppHostProps } from '@/shared/presentation/components/native/AppNative';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
 type AppLoadingIndicatorProps = Omit<ActivityIndicatorProps, 'size' | 'color'> & {

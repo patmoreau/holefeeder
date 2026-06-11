@@ -90,3 +90,66 @@ Turbo enforces `dependsOn: ["^build"]` so `packages/core` is always built before
 ## Git
 
 - Do not commit
+
+## Code
+
+### Typescript
+
+- Use type for everything by default. Only use interface when you specifically need one of its unique features.
+
+### Naming files
+
+- PascalCase for React components. ex: `AppButton.tsx`
+- kebab-case for any other file. ex: `date-interval.ts`
+- PascalCasefor functions that contains constructors (curried functions). ex: `WatchAccountsUseCase(accountsRepository: AccountsRepository)`
+
+### Test extensions
+
+- Use .spec.ts{x}.
+
+### Enums
+
+- Plural for enum name
+- Define using as const and typeof pattern
+
+```typescript
+export const DateIntervalTypes = {
+  daily: 'daily',
+  weekly: 'weekly',
+  monthly: 'monthly',
+  yearly: 'yearly',
+  oneTime: 'oneTime',
+} as const;
+
+export type DateIntervalType = (typeof DateIntervalTypes)[keyof typeof DateIntervalTypes];
+```
+
+### Errors
+
+- Create an enum to define errors
+- Name error using pattern {error}{fieldName}
+- Use kebab-case for value
+
+```typescript
+export const AccountErrors = {
+  invalidName: 'invalid-name',
+  requiredOpenBalance: 'required-open-balance',
+};
+```
+
+### Exporting constant
+
+- Export named constants: This allows better navigation with the IDE. The left side provides access to usage and the right side to implementation. It's also easier for the IDE to rename one of these constants.
+
+```typescript
+✅ export const WatchAccountsUseCase = {
+  watch: watch,
+};
+```
+instead of:
+
+```typescript
+❌ export const WatchAccountsUseCase = {
+  watch,
+};
+```

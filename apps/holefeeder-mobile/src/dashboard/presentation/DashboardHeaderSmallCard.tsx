@@ -1,6 +1,5 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';

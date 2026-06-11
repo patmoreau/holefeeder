@@ -1,18 +1,9 @@
-import { ScrollView, VStack, ZStack, List, Section } from '@expo/ui/swift-ui';
-import {
-  frame,
-  opacity,
-  padding,
-  background,
-  listSectionMargins,
-  useScrollGeometryChange,
-  onGeometryChange,
-} from '@expo/ui/swift-ui/modifiers';
+import { ZStack, List, Section } from '@expo/ui/swift-ui';
+import { frame, opacity, padding, background, listSectionMargins, onGeometryChange } from '@expo/ui/swift-ui/modifiers';
 import { Logger } from '@holefeeder/shared/core';
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, Fragment, ReactNode, useContext, useState } from 'react';
 import { onScrollOffsetChange } from '@/modules/app-modifiers';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
-import { ExpoRNHost } from '@/shared/presentation/components/native/expo/ExpoRNHost';
 
 const logger = Logger.create('AppAnimatedScrollView');
 
@@ -31,9 +22,9 @@ export const AppAnimatedScrollContext = createContext<AppAnimatedScrollContextVa
 export const useAppAnimatedScrollItem = () => useContext(AppAnimatedScrollContext);
 
 type Props = {
-  largeCard: React.ReactNode;
-  smallCard: React.ReactNode;
-  children: React.ReactNode;
+  largeCard: ReactNode;
+  smallCard: ReactNode;
+  children: ReactNode;
 };
 
 export function AppAnimatedScrollView({ largeCard, smallCard, children }: Props) {
@@ -44,15 +35,11 @@ export function AppAnimatedScrollView({ largeCard, smallCard, children }: Props)
   const bigOpacity = 1 - progress;
   const smallOpacity = progress;
   const headerHeight = BIG_HEIGHT - progress * (BIG_HEIGHT - SMALL_HEIGHT);
-  const geometryModifier = useScrollGeometryChange((g) => {
-    'worklet';
-    logger.debug('geometryModifier', { g });
-    // progress.value = g.contentOffsetX / g.containerWidth;
-  });
+
   return (
     <AppAnimatedScrollContext.Provider
       value={{
-        wrapItem: (child, key) => <React.Fragment key={key}>{child}</React.Fragment>,
+        wrapItem: (child, key) => <Fragment key={key}>{child}</Fragment>,
       }}
     >
       <AppNative style={{ flex: 1 }}>
