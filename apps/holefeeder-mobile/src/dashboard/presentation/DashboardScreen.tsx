@@ -16,7 +16,7 @@ import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHead
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
-import { ExpoRNHost } from '@/shared/presentation/components/native/expo/ExpoRNHost';
+import { AppReact } from '@/shared/presentation/components/native/AppReact';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -114,9 +114,9 @@ const DashboardScreen = () => {
         <AppNative style={{ flex: 1 }}>
           <List modifiers={[listStyle('inset')]}>
             <AppColumn style={{ paddingTop: fullHeight - 125 }}>
-              <ExpoRNHost matchContents>
+              <AppReact matchContents>
                 <AccountCardList accounts={accounts} onPress={onAccountPress} />
-              </ExpoRNHost>
+              </AppReact>
             </AppColumn>
             <LatestTransactionList />
             <UpcomingCardList upcomingFlows={upcomingFlows} />
