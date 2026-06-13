@@ -1,4 +1,4 @@
-import { DateIntervalType, DateOnly, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
+import { DateIntervalType, DateOnly, Id, Inactive, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { CategoryType } from '@/flows/core/categories/category-type';
 import { TagList } from './tag-list';
 
@@ -13,7 +13,7 @@ export type Cashflow = {
   accountId: Id;
   categoryId: Id;
   categoryType: CategoryType;
-  inactive: boolean;
+  inactive: Inactive;
   tags: TagList;
 };
 
@@ -23,7 +23,6 @@ export const CashflowErrors = {
 };
 
 const isPositiveNumber = Validator.number({ min: 1 });
-const isValidBoolean = Validator.boolean();
 
 const create = (value: Record<string, unknown>): Result<Cashflow> =>
   Result.combine<Cashflow>({
@@ -37,7 +36,7 @@ const create = (value: Record<string, unknown>): Result<Cashflow> =>
     accountId: Id.create(value.accountId),
     categoryId: Id.create(value.categoryId),
     categoryType: CategoryType.create(value.categoryType),
-    inactive: Validate.validate(isValidBoolean, value.inactive, [CashflowErrors.invalid]),
+    inactive: Inactive.create(value.inactive),
     tags: TagList.create(value.tags),
   });
 
@@ -52,7 +51,7 @@ const valid = (value: Record<string, unknown>): Cashflow => ({
   accountId: Id.valid(value.accountId),
   categoryId: Id.valid(value.categoryId),
   categoryType: CategoryType.valid(value.categoryType),
-  inactive: value.inactive as boolean,
+  inactive: value.inactive as Inactive,
   tags: TagList.valid(value.tags),
 });
 

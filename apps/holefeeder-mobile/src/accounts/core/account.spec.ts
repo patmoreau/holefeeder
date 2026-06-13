@@ -1,4 +1,4 @@
-import { DateOnlyErrors, IdErrors, VariationErrors } from '@holefeeder/shared/core';
+import { DateOnlyErrors, FavoriteErrors, IdErrors, InactiveErrors, VariationErrors } from '@holefeeder/shared/core';
 import { anAccount, toAccount } from '@/accounts/core/__tests__/account-for-test';
 import { Account, AccountErrors } from '@/accounts/core/account';
 
@@ -38,12 +38,12 @@ describe('Account', () => {
 
   it('rejects invalid favorite (wrong type)', () => {
     const result = Account.create({ ...validAccount, favorite: 'yes' });
-    expect(result).toBeFailureWithErrors([AccountErrors.invalidFavorite]);
+    expect(result).toBeFailureWithErrors([FavoriteErrors.invalid]);
   });
 
   it('rejects invalid inactive (wrong type)', () => {
     const result = Account.create({ ...validAccount, inactive: 'no' });
-    expect(result).toBeFailureWithErrors([AccountErrors.invalidInactive]);
+    expect(result).toBeFailureWithErrors([InactiveErrors.invalid]);
   });
 
   it('rejects invalid id', () => {

@@ -1,4 +1,4 @@
-import { DateOnly, Id, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
+import { DateOnly, Favorite, Id, Inactive, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
 import { AccountType } from '@/accounts/core/account-type';
 
 export type Account = {
@@ -8,8 +8,8 @@ export type Account = {
   openBalance: Variation;
   openDate: string;
   description: string;
-  favorite: boolean;
-  inactive: boolean;
+  favorite: Favorite;
+  inactive: Inactive;
 };
 
 export const AccountErrors = {
@@ -17,13 +17,10 @@ export const AccountErrors = {
   invalidOpenBalance: 'invalid-open-balance',
   invalidOpenDate: 'invalid-open-date',
   invalidDescription: 'invalid-description',
-  invalidFavorite: 'invalid-favorite',
-  invalidInactive: 'invalid-inactive',
 };
 
 const isValidName = Validator.string({ minLength: 1 });
 const isValidDescription = Validator.string();
-const isValidBoolean = Validator.boolean();
 
 const create = (value: Record<string, unknown>): Result<Account> =>
   Result.combine<Account>({
@@ -33,8 +30,8 @@ const create = (value: Record<string, unknown>): Result<Account> =>
     openBalance: Variation.create(value.openBalance),
     openDate: DateOnly.create(value.openDate),
     description: Validate.validate(isValidDescription, value.description, [AccountErrors.invalidDescription]),
-    favorite: Validate.validate(isValidBoolean, value.favorite, [AccountErrors.invalidFavorite]),
-    inactive: Validate.validate(isValidBoolean, value.inactive, [AccountErrors.invalidInactive]),
+    favorite: Favorite.create(value.favorite),
+    inactive: Inactive.create(value.inactive),
   });
 
 const valid = (value: Record<string, unknown>): Account => ({
@@ -44,8 +41,8 @@ const valid = (value: Record<string, unknown>): Account => ({
   openBalance: Variation.valid(value.openBalance),
   openDate: DateOnly.valid(value.openDate),
   description: value.description as string,
-  favorite: value.favorite as boolean,
-  inactive: value.inactive as boolean,
+  favorite: value.favorite as Favorite,
+  inactive: value.inactive as Inactive,
 });
 
 export const Account = {

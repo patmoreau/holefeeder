@@ -1,6 +1,5 @@
 import {
   ArrayValidatorErrors,
-  BooleanValidatorErrors,
   EnumValidatorErrors,
   NumberValidatorErrors,
   PatternValidatorErrors,
@@ -35,22 +34,6 @@ describe('Validate.validate', () => {
 });
 
 describe('Validator', () => {
-  describe('booleanValidator', () => {
-    const validator = Validator.boolean();
-
-    it('returns success for boolean true', () => {
-      expect(validator(true)).toBeSuccessWithValue(true);
-    });
-
-    it('returns success for boolean false', () => {
-      expect(validator(false)).toBeSuccessWithValue(false);
-    });
-
-    it('returns failure for invalid type', () => {
-      expect(validator('true')).toBeFailureWithErrors([BooleanValidatorErrors.type]);
-    });
-  });
-
   describe('enumValidator', () => {
     const TestEnums = {
       A: 'A',

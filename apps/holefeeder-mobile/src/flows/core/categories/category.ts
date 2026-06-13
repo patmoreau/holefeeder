@@ -1,5 +1,6 @@
-import { Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
+import { Favorite, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { CategoryType } from '@/flows/core/categories/category-type';
+import { System } from '@/shared/core/system';
 
 export type Category = {
   id: Id;
@@ -7,21 +8,18 @@ export type Category = {
   type: CategoryType;
   color: string;
   budgetAmount: Money;
-  favorite: boolean;
-  system: boolean;
+  favorite: Favorite;
+  system: System;
 };
 
 export const CategoryErrors = {
   invalidName: 'invalid-name',
   invalidColor: 'invalid-color',
   invalidBudgetAmount: 'invalid-budget-amount',
-  invalidFavorite: 'invalid-favorite',
-  invalidSystem: 'invalid-system',
 };
 
 const isValidName = Validator.string({ minLength: 1 });
 const isValidColor = Validator.string({ minLength: 1 });
-const isValidBoolean = Validator.boolean();
 
 const create = (value: Record<string, unknown>): Result<Category> =>
   Result.combine<Category>({
@@ -30,8 +28,8 @@ const create = (value: Record<string, unknown>): Result<Category> =>
     name: Validate.validate(isValidName, value.name, [CategoryErrors.invalidName]),
     color: Validate.validate(isValidColor, value.color, [CategoryErrors.invalidColor]),
     budgetAmount: Money.create(value.budgetAmount),
-    favorite: Validate.validate(isValidBoolean, value.favorite, [CategoryErrors.invalidFavorite]),
-    system: Validate.validate(isValidBoolean, value.system, [CategoryErrors.invalidSystem]),
+    favorite: Favorite.create(value.favorite),
+    system: System.create(value.system),
   });
 
 const valid = (value: Record<string, unknown>): Category => ({
@@ -40,8 +38,8 @@ const valid = (value: Record<string, unknown>): Category => ({
   name: value.name as string,
   color: value.color as string,
   budgetAmount: Money.valid(value.budgetAmount),
-  favorite: value.favorite as boolean,
-  system: value.system as boolean,
+  favorite: value.favorite as Favorite,
+  system: value.system as System,
 });
 
 export const Category = {

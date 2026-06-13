@@ -9,15 +9,6 @@ const validate = <T>(validator: Validator<T>, value: unknown, errors?: string[])
 
 export const Validate = { validate: validate } as const;
 
-export const BooleanValidatorErrors = {
-  type: 'boolean-type',
-};
-
-const booleanValidator = (): Validator<boolean> => (value) => {
-  if (typeof value !== 'boolean') return Result.failure([BooleanValidatorErrors.type]);
-  return Result.success(value as boolean);
-};
-
 type EnumOptions<T> = {
   values: Record<string, T>;
   errors?: string;
@@ -138,7 +129,6 @@ const arrayValidator =
   };
 
 export const Validator = {
-  boolean: booleanValidator,
   enum: enumValidator,
   number: numberValidator,
   pattern: patternValidator,

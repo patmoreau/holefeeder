@@ -1,5 +1,6 @@
-import { IdErrors, MoneyErrors } from '@holefeeder/shared/core';
+import { FavoriteErrors, IdErrors, MoneyErrors } from '@holefeeder/shared/core';
 import { aCategory, toCategory } from '@/flows/core/categories/__tests__/category-for-test';
+import { SystemErrors } from '@/shared/core/system';
 import { Category, CategoryErrors } from './category';
 
 describe('Category', () => {
@@ -33,12 +34,12 @@ describe('Category', () => {
 
   it('rejects invalid favorite (wrong type)', () => {
     const result = Category.create({ ...validCategory, favorite: 'yes' });
-    expect(result).toBeFailureWithErrors([CategoryErrors.invalidFavorite]);
+    expect(result).toBeFailureWithErrors([FavoriteErrors.invalid]);
   });
 
   it('rejects invalid system (wrong type)', () => {
     const result = Category.create({ ...validCategory, system: 'no' });
-    expect(result).toBeFailureWithErrors([CategoryErrors.invalidSystem]);
+    expect(result).toBeFailureWithErrors([SystemErrors.invalid]);
   });
 
   it('rejects invalid id', () => {
