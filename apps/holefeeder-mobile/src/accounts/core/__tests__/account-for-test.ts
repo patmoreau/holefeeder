@@ -1,4 +1,4 @@
-import { Variation } from '@holefeeder/shared/core';
+import { Favorite, Inactive, Variation } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Account } from '@/accounts/core/account';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
@@ -16,11 +16,11 @@ const defaultAccount = (): Account => ({
   id: anId(),
   type: anAccountType(),
   name: aString(),
-  favorite: false,
+  favorite: false as Favorite,
   openBalance: aVariation(),
   openDate: aPastDate(),
   description: aString(),
-  inactive: false,
+  inactive: false as Inactive,
 });
 
 const times = (count: number, overrides?: Partial<Account>): AccountForTest[] => Array.from({ length: count }, () => anAccount(overrides));

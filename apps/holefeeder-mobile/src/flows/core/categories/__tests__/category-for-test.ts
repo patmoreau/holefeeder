@@ -1,6 +1,7 @@
-import { Money } from '@holefeeder/shared/core';
+import { Favorite, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Category } from '@/flows/core/categories/category';
+import { System } from '@/shared/core/system';
 import { aCategoryType } from '@/shared/__tests__/enum-for-test';
 import { aColor, anId, aString } from '@/shared/__tests__/string-for-test';
 
@@ -16,8 +17,8 @@ const defaultCategory = (): Category => ({
   name: aString(),
   color: aColor(),
   budgetAmount: Money.ZERO,
-  favorite: false,
-  system: false,
+  favorite: false as Favorite,
+  system: false as System,
 });
 
 const times = (count: number, overrides?: Partial<Category>): CategoryForTest[] => Array.from({ length: count }, () => aCategory(overrides));

@@ -1,3 +1,4 @@
+import { Favorite, Inactive } from '@holefeeder/shared/core';
 import { AccountTypes } from '@/accounts/core/account-type';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
@@ -11,8 +12,8 @@ const defaultCommand = (): UpdateAccountCommand => ({
   openBalance: aVariation(),
   openDate: aPastDate(),
   description: aString(),
-  favorite: false,
-  inactive: false,
+  favorite: false as Favorite,
+  inactive: false as Inactive,
 });
 
 export const anUpdateAccountCommand = (overrides?: Partial<UpdateAccountCommand>): UpdateAccountCommand => ({

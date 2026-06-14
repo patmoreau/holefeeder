@@ -1,4 +1,4 @@
-import { Money } from '@holefeeder/shared/core';
+import { Inactive, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { AccountForTest } from '@/accounts/core/__tests__/account-for-test';
 import { CategoryForTest } from '@/flows/core/categories/__tests__/category-for-test';
@@ -27,7 +27,7 @@ const defaultCashflow = (): Cashflow => ({
   accountId: anId(),
   categoryId: anId(),
   categoryType: aCategoryType(),
-  inactive: false,
+  inactive: false as Inactive,
   tags: aTagList(),
 });
 

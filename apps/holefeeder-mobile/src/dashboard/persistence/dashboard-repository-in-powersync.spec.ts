@@ -1,4 +1,5 @@
 import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/shared/core';
+import { System } from '@/shared/core/system';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
@@ -33,8 +34,8 @@ describe('DashboardRepositoryInPowersync', () => {
       const checkingAccount = await anAccount({ type: 'checking' }).store(db);
       const purchaseCategory = await aCategory({ name: 'purchase', type: 'expense' }).store(db);
       const foodCategory = await aCategory({ name: 'food and drink', type: 'expense' }).store(db);
-      const transferOutCategory = await aCategory({ name: 'transfer out', type: 'expense', system: true }).store(db);
-      const transferInCategory = await aCategory({ name: 'transfer in', type: 'gain', system: true }).store(db);
+      const transferOutCategory = await aCategory({ name: 'transfer out', type: 'expense', system: true as System }).store(db);
+      const transferInCategory = await aCategory({ name: 'transfer in', type: 'gain', system: true as System }).store(db);
       const incomeCategory = await aCategory({ name: 'income', type: 'gain' }).store(db);
       await aTransaction({
         date: asOfDate,
