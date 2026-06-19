@@ -25,6 +25,8 @@ export const en = {
     currentBalance: 'Current Balance',
     projected: 'Projected',
     updated: 'Updated',
+    edit: 'Edit',
+    purchase: 'Purchase',
   },
   alert: {
     delete: {

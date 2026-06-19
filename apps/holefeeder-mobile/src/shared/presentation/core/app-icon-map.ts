@@ -15,6 +15,7 @@ import Key from '@expo/material-symbols/key.xml';
 import Label from '@expo/material-symbols/label.xml';
 import Language from '@expo/material-symbols/language.xml';
 import LockClock from '@expo/material-symbols/lock_clock.xml';
+import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
 import Settings from '@expo/material-symbols/settings.xml';
 import ShoppingCart from '@expo/material-symbols/shopping_cart.xml';
@@ -56,6 +57,7 @@ const universalIconMapping = {
   frequency: { ios: 'clock.badge.exclamationmark', android: FileUploadOff },
   language: { ios: 'globe', android: Language },
   purchase: { ios: 'cart', android: ShoppingCart },
+  menu: { ios: 'ellipsis', android: MoreVertical },
   uploadOutstanding: {
     ios: 'square.and.arrow.up.trianglebadge.exclamationmark',
     android: FileUploadOff,

@@ -27,6 +27,8 @@ export const fr: TranslationStructure = {
     currentBalance: 'Solde actuel',
     projected: 'Projeté',
     updated: 'Mis à jour',
+    edit: 'Éditer',
+    purchase: 'Acheter',
   },
   alert: {
     delete: {

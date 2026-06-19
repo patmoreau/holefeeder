@@ -1,6 +1,7 @@
 import { Icon } from '@expo/ui';
-import { Id } from '@holefeeder/shared/core';
+import { Id, tk } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { t } from 'i18next';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';
 import { AccountHeaderSmallCard } from '@/accounts/presentation/AccountHeaderSmallCard';
 import { TransactionCard } from '@/accounts/presentation/components/TransactionCard';
@@ -67,7 +68,14 @@ export const AccountScreen = () => {
         <Stack.Toolbar.Button icon={Icon.select(AppIconMap.back)} onPress={() => goBack()} />
       </Stack.Toolbar>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button icon={Icon.select(AppIconMap.edit)} onPress={onEditPress} />
+        <Stack.Toolbar.Menu icon={Icon.select(AppIconMap.menu)}>
+          <Stack.Toolbar.MenuAction icon={Icon.select(AppIconMap.edit)} onPress={onEditPress}>
+            {t(tk.accountCard.edit)}
+          </Stack.Toolbar.MenuAction>
+          <Stack.Toolbar.MenuAction icon={Icon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')}>
+            {t(tk.accountCard.purchase)}
+          </Stack.Toolbar.MenuAction>
+        </Stack.Toolbar.Menu>
       </Stack.Toolbar>
       <CardHeaderFlashList
         headerBackgroundColor={theme.colors.primary}
