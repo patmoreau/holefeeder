@@ -1,5 +1,6 @@
 import Add from '@expo/material-symbols/add.xml';
 import AddCircle from '@expo/material-symbols/add_circle.xml';
+import Analytics from '@expo/material-symbols/analytics.xml';
 import CalendarToday from '@expo/material-symbols/calendar_today.xml';
 import ChevronLeft from '@expo/material-symbols/chevron_left.xml';
 import ChevronRight from '@expo/material-symbols/chevron_right.xml';
@@ -55,6 +56,7 @@ const universalIconMapping = {
   expand: { ios: 'chevron.right', android: ChevronRight },
   expiresAt: { ios: 'arrow.trianglehead.2.clockwise', android: LockClock },
   frequency: { ios: 'clock.badge.exclamationmark', android: FileUploadOff },
+  insights: { ios: 'chart.bar.fill', android: Analytics },
   language: { ios: 'globe', android: Language },
   purchase: { ios: 'cart', android: ShoppingCart },
   menu: { ios: 'ellipsis', android: MoreVertical },

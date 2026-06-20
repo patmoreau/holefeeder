@@ -137,6 +137,9 @@ export const en = {
     retry: 'Retry',
     dismiss: 'Dismiss',
   },
+  insights: {
+    title: 'Insights',
+  },
   home: {
     title: 'Welcome Home!',
     step1Title: 'Step 1: Try it',
@@ -247,6 +250,7 @@ export const en = {
   tabs: {
     dashboard: 'Dashboard',
     accounts: 'Accounts',
+    insights: 'Insights',
     settings: 'Settings',
     test: 'Test',
   },

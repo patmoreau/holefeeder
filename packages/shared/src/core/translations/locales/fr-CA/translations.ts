@@ -139,6 +139,9 @@ export const fr: TranslationStructure = {
     retry: 'Réessayer',
     dismiss: 'Fermer',
   },
+  insights: {
+    title: 'Aperçus',
+  },
   home: {
     title: 'Bienvenue !',
     step1Title: 'Étape 1 : Essayez',
@@ -250,6 +253,7 @@ export const fr: TranslationStructure = {
   tabs: {
     dashboard: 'Tableau de bord',
     accounts: 'Comptes',
+    insights: 'Aperçus',
     settings: 'Configuration',
     test: 'Examen',
   },
