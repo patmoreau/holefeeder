@@ -139,6 +139,12 @@ export const en = {
   },
   insights: {
     title: 'Insights',
+    categoryBreakdown: {
+      title: 'Spending by Category',
+      empty: 'No expenses this period',
+      overBudget: 'Over budget',
+      noBudget: 'No budget set',
+    },
   },
   home: {
     title: 'Welcome Home!',

@@ -141,6 +141,12 @@ export const fr: TranslationStructure = {
   },
   insights: {
     title: 'Aperçus',
+    categoryBreakdown: {
+      title: 'Dépenses par catégorie',
+      empty: 'Aucune dépense cette période',
+      overBudget: 'Budget dépassé',
+      noBudget: 'Aucun budget défini',
+    },
   },
   home: {
     title: 'Bienvenue !',

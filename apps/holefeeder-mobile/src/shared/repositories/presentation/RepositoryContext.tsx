@@ -7,6 +7,7 @@ import { FlowsRepositoryInPowersync } from '@/flows/persistence/flows-repository
 import { SettingRepositoryInPowersync } from '@/settings/persistence/setting-repository-in-powersync';
 import { StoreItemsRepositoryInPowersync } from '@/shared/persistence/store-items-repository-in-powersync';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
+import { InsightsRepositoryInPowersync } from '@/statistics/persistence/insights-repository-in-powersync';
 
 export const RepositoryContext = createContext<RepositoriesState | undefined>(undefined);
 
@@ -17,6 +18,7 @@ export const RepositoryProvider = ({ children, database }: { children: ReactNode
       categoryRepository: CategoriesRepositoryInPowersync(database),
       dashboardRepository: DashboardRepositoryInPowersync(database),
       flowRepository: FlowsRepositoryInPowersync(database),
+      insightsRepository: InsightsRepositoryInPowersync(database),
       settingRepository: SettingRepositoryInPowersync(database),
       storeItemRepository: StoreItemsRepositoryInPowersync(database),
     }),
