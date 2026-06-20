@@ -141,6 +141,7 @@ export const fr: TranslationStructure = {
   },
   insights: {
     title: 'Aperçus',
+    period: '{{period}}',
     categoryBreakdown: {
       title: 'Dépenses par catégorie',
       empty: 'Aucune dépense cette période',

@@ -139,6 +139,7 @@ export const en = {
   },
   insights: {
     title: 'Insights',
+    period: '{{period}}',
     categoryBreakdown: {
       title: 'Spending by Category',
       empty: 'No expenses this period',
