@@ -145,6 +145,10 @@ export const en = {
       overBudget: 'Over budget',
       noBudget: 'No budget set',
     },
+    tagBreakdown: {
+      title: 'Spending by Tag',
+      empty: 'No tagged expenses this period',
+    },
   },
   home: {
     title: 'Welcome Home!',

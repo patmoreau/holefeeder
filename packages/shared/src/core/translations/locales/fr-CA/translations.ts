@@ -147,6 +147,10 @@ export const fr: TranslationStructure = {
       overBudget: 'Budget dépassé',
       noBudget: 'Aucun budget défini',
     },
+    tagBreakdown: {
+      title: 'Dépenses par étiquette',
+      empty: 'Aucune dépense étiquetée cette période',
+    },
   },
   home: {
     title: 'Bienvenue !',

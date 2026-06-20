@@ -7,6 +7,7 @@ import { ParallaxScrollView } from '@/shared/presentation/ParallaxScrollView';
 import { ScreenTitle } from '@/shared/presentation/ScreenTitle';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { CategorySpendingList } from './CategorySpendingList';
+import { TagSpendingList } from './TagSpendingList';
 
 export default function InsightsScreen() {
   const { theme } = useTheme();
@@ -23,6 +24,7 @@ export default function InsightsScreen() {
     >
       <ScreenTitle title={t(tk.insights.title)} />
       <CategorySpendingList />
+      <TagSpendingList />
     </ParallaxScrollView>
   );
 }
