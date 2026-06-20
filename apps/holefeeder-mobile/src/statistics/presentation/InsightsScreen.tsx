@@ -23,10 +23,12 @@ export default function InsightsScreen() {
         </AppNative>
       }
     >
-      <ScreenTitle title={t(tk.insights.title)} />
-      <InsightsPeriodHeader />
-      <CategorySpendingList />
-      <TagSpendingList />
+      <AppNative style={{ flex: 1 }}>
+        <ScreenTitle title={t(tk.insights.title)} />
+        <InsightsPeriodHeader />
+        <CategorySpendingList />
+        <TagSpendingList />
+      </AppNative>
     </ParallaxScrollView>
   );
 }
