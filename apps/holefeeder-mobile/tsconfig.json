@@ -26,5 +26,5 @@
   },
   "references": [{ "path": "../../packages/shared" }],
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/i18n/react-i18next.d.ts"],
-  "exclude": ["**/__tests__/**/*", "**/*.spec.ts", "**/*.spec.tsx", "node_modules"]
+  "exclude": ["node_modules"]
 }

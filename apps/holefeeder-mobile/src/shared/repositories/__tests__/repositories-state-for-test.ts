@@ -5,12 +5,14 @@ import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repo
 import { SettingsRepositoryInMemory } from '@/settings/core/__tests__/settings-repository-for-test';
 import { StoreItemsRepositoryInMemory } from '@/shared/__tests__/store-items-repository-for-test';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
+import { InsightsRepositoryInMemory } from '@/statistics/__tests__/insights-repository-in-memory';
 
 const defaultRepositoriesState: RepositoriesState = {
   accountRepository: AccountsRepositoryInMemory(),
   categoryRepository: CategoriesRepositoryInMemory(),
   dashboardRepository: DashboardRepositoryInMemory(),
   flowRepository: FlowsRepositoryInMemory(),
+  insightsRepository: InsightsRepositoryInMemory(),
   settingRepository: SettingsRepositoryInMemory(),
   storeItemRepository: StoreItemsRepositoryInMemory(),
 };

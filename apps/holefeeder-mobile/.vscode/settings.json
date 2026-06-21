@@ -4,6 +4,7 @@
     "*.ts": "$(capture).spec.ts, $(capture).spec.tsx",
     "*.tsx": "${capture}.ts, $(capture).spec.tsx, ${capture}.ios.tsx"
   },
+  "typescript.tsconfig.fallback": "tsconfig.test.json",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {

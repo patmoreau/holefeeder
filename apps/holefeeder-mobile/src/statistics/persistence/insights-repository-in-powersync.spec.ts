@@ -3,6 +3,7 @@ import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
+import { TagList } from '@/flows/core/flows/tag-list';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
@@ -129,9 +130,24 @@ describe('InsightsRepositoryInPowersync', () => {
       const foodCategory = await aCategory({ name: 'Food', type: 'expense' }).store(db);
       const transportCategory = await aCategory({ name: 'Transport', type: 'expense' }).store(db);
 
-      await aTransaction({ categoryId: foodCategory.id, amount: Money.valid(100), date: periodStart, tags: ['groceries', 'weekly'] }).store(db);
-      await aTransaction({ categoryId: transportCategory.id, amount: Money.valid(30), date: periodStart, tags: ['groceries'] }).store(db);
-      await aTransaction({ categoryId: foodCategory.id, amount: Money.valid(999), date: outsidePeriod, tags: ['groceries'] }).store(db);
+      await aTransaction({
+        categoryId: foodCategory.id,
+        amount: Money.valid(100),
+        date: periodStart,
+        tags: TagList.valid(['groceries', 'weekly']),
+      }).store(db);
+      await aTransaction({
+        categoryId: transportCategory.id,
+        amount: Money.valid(30),
+        date: periodStart,
+        tags: TagList.valid(['groceries']),
+      }).store(db);
+      await aTransaction({
+        categoryId: foodCategory.id,
+        amount: Money.valid(999),
+        date: outsidePeriod,
+        tags: TagList.valid(['groceries']),
+      }).store(db);
 
       const repo = InsightsRepositoryInPowersync(db);
       let result: AsyncResult<TagSpending[]> | undefined;
@@ -154,9 +170,24 @@ describe('InsightsRepositoryInPowersync', () => {
       const gainCategory = await aCategory({ name: 'Salary', type: 'gain' }).store(db);
       const systemCategory = await aCategory({ name: 'Transfer', type: 'expense', system: true as System }).store(db);
 
-      await aTransaction({ categoryId: expenseCategory.id, amount: Money.valid(100), date: periodStart, tags: ['food'] }).store(db);
-      await aTransaction({ categoryId: gainCategory.id, amount: Money.valid(200), date: periodStart, tags: ['food'] }).store(db);
-      await aTransaction({ categoryId: systemCategory.id, amount: Money.valid(300), date: periodStart, tags: ['food'] }).store(db);
+      await aTransaction({
+        categoryId: expenseCategory.id,
+        amount: Money.valid(100),
+        date: periodStart,
+        tags: TagList.valid(['food']),
+      }).store(db);
+      await aTransaction({
+        categoryId: gainCategory.id,
+        amount: Money.valid(200),
+        date: periodStart,
+        tags: TagList.valid(['food']),
+      }).store(db);
+      await aTransaction({
+        categoryId: systemCategory.id,
+        amount: Money.valid(300),
+        date: periodStart,
+        tags: TagList.valid(['food']),
+      }).store(db);
 
       const repo = InsightsRepositoryInPowersync(db);
       let result: AsyncResult<TagSpending[]> | undefined;
@@ -173,7 +204,7 @@ describe('InsightsRepositoryInPowersync', () => {
 
     it('returns empty list when no tagged transactions exist in period', async () => {
       const foodCategory = await aCategory({ name: 'Food', type: 'expense' }).store(db);
-      await aTransaction({ categoryId: foodCategory.id, amount: Money.valid(50), date: periodStart, tags: [] }).store(db);
+      await aTransaction({ categoryId: foodCategory.id, amount: Money.valid(50), date: periodStart, tags: TagList.valid([]) }).store(db);
 
       const repo = InsightsRepositoryInPowersync(db);
       let result: AsyncResult<TagSpending[]> | undefined;

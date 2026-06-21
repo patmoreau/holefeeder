@@ -1,4 +1,4 @@
-import { type AsyncResult, DateInterval, Money, today } from '@holefeeder/shared/core';
+import { type AsyncResult, DateInterval, Id, Money, today } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Settings } from '@/settings/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
@@ -50,7 +50,7 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
       `,
       [start, end],
       (row) => ({
-        categoryId: row.categoryId,
+        categoryId: Id.valid(row.categoryId),
         categoryName: row.categoryName,
         color: row.color,
         budgetAmount: Money.fromCents(row.budgetAmount),

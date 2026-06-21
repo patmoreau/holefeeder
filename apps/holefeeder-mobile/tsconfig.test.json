@@ -6,7 +6,10 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "src/i18n/react-i18next.d.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "**/__tests__/**/*.ts",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ],
   "exclude": ["node_modules"]
 }
