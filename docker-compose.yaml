@@ -42,7 +42,7 @@ services:
 
   powersync:
     image: journeyapps/powersync-service:1.23.0
-    container_name: powersync
+    container_name: holefeeder_powersync
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -141,7 +141,7 @@ services:
       - 8080
 
   api:
-    container_name: api
+    container_name: holefeeder_api
     restart: unless-stopped
     depends_on:
       - postgres
@@ -153,7 +153,7 @@ services:
       - ConnectionStrings__BudgetingConnectionString=Host=postgres;Port=5432;Username=${POSTGRES_APP_USER};Password=${POSTGRES_APP_PASSWORD};Database=${POSTGRES_APP_DB};
 
   web:
-    container_name: web
+    container_name: holefeeder_web
     restart: unless-stopped
     depends_on:
       - api
