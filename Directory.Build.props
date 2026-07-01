@@ -43,6 +43,21 @@
     <PackageReference Include="Microsoft.CodeAnalysis" />
   </ItemGroup>
 
+  <!--
+    Refit 12.x pulls in ReactiveUI.Primitives and declares its analyzers as excluded
+    (exclude="Build,Analyzers" in the nuspec), but NuGet leaks the transitive analyzer
+    anyway. Its R3Bridge source generator then emits an internal PrimitivesR3BridgeGenerated
+    marker attribute into every consuming assembly; combined with InternalsVisibleTo, the
+    duplicated internal type collides across project references (CS0436). We don't use the
+    ReactiveUI R3 bridge, so strip the generator everywhere to honour Refit's own intent.
+  -->
+  <Target Name="RemoveReactiveUiR3BridgeGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)"
+                Condition="$([System.String]::Copy('%(Analyzer.FileName)').Contains('ReactiveUI.Primitives.R3Bridge.Generator'))" />
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub">
       <PrivateAssets>all</PrivateAssets>

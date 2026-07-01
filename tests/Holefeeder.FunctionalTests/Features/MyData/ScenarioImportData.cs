@@ -85,7 +85,7 @@ public class ScenarioImportData(ApiApplicationDriver applicationDriver, ITestOut
                 .And.HaveStatusCode(HttpStatusCode.Accepted)
                 .And.HaveLocation();
 
-            var id = response.Value.Headers.Location!.ExtractGuidFromUrl();
+            var id = response.Value.Headers!.Location!.ExtractGuidFromUrl();
 
             return id;
         });

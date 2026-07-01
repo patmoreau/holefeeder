@@ -102,7 +102,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
 
@@ -121,7 +121,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
 
@@ -141,7 +141,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
@@ -165,7 +165,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 

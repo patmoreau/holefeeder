@@ -68,7 +68,7 @@ internal sealed class StoreItemSteps(BudgetingDatabaseDriver budgetingDatabaseDr
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             var id = (StoreItemId)response.Value.Headers.Location!.ExtractGuidFromUrl();
 

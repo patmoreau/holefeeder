@@ -71,7 +71,7 @@ internal sealed partial class AccountSteps
             response.Should().BeValid()
                 .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            response.Value.Headers.Location.Should().NotBeNull();
+            response.Value.Headers!.Location.Should().NotBeNull();
 
             var id = (AccountId)response.Value.Headers.Location!.ExtractGuidFromUrl();
 
