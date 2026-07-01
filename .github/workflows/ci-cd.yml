@@ -346,9 +346,13 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
 
   deploy:
-    name: Deploy to DigitalOcean
+    name: Deploy to Homelab
     needs: [set-version, tests, publish-docker-images]
-    runs-on: ubuntu-latest
+    # Self-hosted runner on lxc-holefeeder (provisioned by the my-homelab github-runner role).
+    runs-on: [self-hosted, holefeeder]
+    permissions:
+      contents: read
+      packages: read
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
@@ -359,10 +363,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Create .env.secrets file
+      - name: Create .env file
         run: |
           cat <<EOF > .env
           COMPOSE_PROJECT_NAME=holefeeder
@@ -373,7 +374,6 @@ jobs:
           ASSEMBLY_VERSION=${{ env.VERSION }}
           ENV=${{ env.ENVIRONMENT }}
           DOMAIN=drifterapps.app
-          SEQ_API_KEY=${{ secrets.SEQ_APIKEY }}
           POSTGRES_DB=${{ vars.POSTGRES_DB }}
           POSTGRES_USER=${{ vars.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -383,34 +383,19 @@ jobs:
           POWERSYNC_ADMIN_TOKEN=${{ secrets.POWERSYNC_ADMIN_TOKEN }}
           EOF
 
-      - name: Create Docker config
-        run: |
-          mkdir -p ~/.docker
-          auth_string="$(echo -n "${{ secrets.READ_PACKAGES_TOKEN }}" | base64)"
-          echo '{
-            "auths": {
-              "ghcr.io": {
-                "auth": "'"$auth_string"'"
-              }
-            }
-          }' > $GITHUB_WORKSPACE/.docker/config.json
+      # COMPOSE_PROFILES is intentionally unset, so the bundled reverse-proxy / adminer /
+      # portainer / whoami stay down — the homelab provides ingress; logs go to stdout.
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Securely copy Docker config, Docker Compose file, and .env file to the remote server
+      - name: Pull and deploy
         run: |
-          scp -v -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/.docker ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
-          scp -v -o StrictHostKeyChecking=no $GITHUB_WORKSPACE/docker-compose.yaml $GITHUB_WORKSPACE/docker-compose.Production.yaml $GITHUB_WORKSPACE/.env ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }}:~/
+          docker compose -f docker-compose.yaml -f docker-compose.Production.yaml pull
+          docker compose -f docker-compose.yaml -f docker-compose.Production.yaml up -d --remove-orphans
 
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ vars.DIGITALOCEAN_USER }}@${{ vars.DIGITALOCEAN_HOST }} "
-            echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin &&
-            docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml pull &&
-            docker compose -f ~/docker-compose.yaml -f ~/docker-compose.Production.yaml up -d"
+      - name: Prune dangling images
+        run: docker image prune -f
 
   create_check:
     needs: [check_changes, tests]

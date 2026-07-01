@@ -38,8 +38,15 @@ dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:cover
 
 ### Docker (local dev)
 ```bash
-docker compose -f docker-compose.yaml up -d
+# COMPOSE_PROFILES=local (set in .env) starts the bundled reverse-proxy,
+# adminer, portainer and whoami. The Staging override supplies the api/web build.
+docker compose -f docker-compose.yaml -f docker-compose.Staging.yaml up -d
 ```
+
+> Production runs `docker-compose.yaml -f docker-compose.Production.yaml` with
+> `COMPOSE_PROFILES` empty: the bundled infra (Traefik, …) stays down because the
+> homelab provides ingress (gateway Traefik). Logs go to stdout → Loki/Grafana. See the
+> deploy job in `.github/workflows/ci-cd.yml` (self-hosted runner on `lxc-holefeeder`).
 
 ### Run tests in Docker (as CI does)
 ```bash
@@ -88,7 +95,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | ORM | Dapper (queries) + EF Core (migrations support) |
 | DB migrations | DbUp |
 | Authentication | Auth0 via JWT + `Microsoft.Identity.Web` |
-| Logging | Serilog → Seq |
+| Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | Angular (pnpm) inside Blazor Server |
 | Unit testing | xUnit + NSubstitute + FluentAssertions |
@@ -105,4 +112,4 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 
 ### Local Infrastructure (docker-compose.yaml)
 
-The local dev stack includes: **Traefik** (reverse proxy with TLS), **PostgreSQL**, **Seq** (log viewer at `seq.localhost`), **PowerSync**, **Portainer**, **Adminer**. Configure via `.env` (copy from `.env.template`).
+The local dev stack (profile `local`) includes: **Traefik** (reverse proxy with TLS), **PostgreSQL**, **PowerSync**, **Portainer**, **Adminer**. Logs go to stdout (`docker compose logs`). Configure via `.env` (copy from `.env.template`).

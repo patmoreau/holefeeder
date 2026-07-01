@@ -41,7 +41,6 @@
         <PackageReference Include="Microsoft.Identity.Web"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Enrichers.Environment"/>
-        <PackageReference Include="Serilog.Sinks.Seq"/>
     </ItemGroup>
 
     <ItemGroup>
