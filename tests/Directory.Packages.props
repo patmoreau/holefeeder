@@ -5,7 +5,7 @@
     <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.20" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.23" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.23" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.167" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.168" />
     <PackageVersion Include="FluentAssertions" Version="7.2.2" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
