@@ -79,6 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       favicon: './assets/images/safe.png',
     },
     plugins: [
+      'expo-status-bar',
       'expo-build-properties',
       [
         'expo-image',
