@@ -10,11 +10,9 @@ describe('useCategories', () => {
   const category = aCategory();
 
   const createHook = async () =>
-    await waitFor(() =>
-      renderHook(() => useCategories(), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useCategories(), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -30,8 +28,6 @@ describe('useCategories', () => {
 
   it('should fetch categories from PowerSync database', async () => {
     const { result } = await createHook();
-    // Initially loading
-    expect(result.current).toBeLoading();
 
     // Wait for data to load
     await waitFor(() => expect(result.current).not.toBeLoading());

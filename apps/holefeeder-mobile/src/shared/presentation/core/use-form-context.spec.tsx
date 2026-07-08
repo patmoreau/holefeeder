@@ -61,58 +61,58 @@ describe('createFormDataContext / useFormDataContext', () => {
       </RepositoryContext.Provider>
     );
 
-  it('provides the initial value and isDirty=false', () => {
-    const { getByTestId } = renderWithProvider();
+  it('provides the initial value and isDirty=false', async () => {
+    const { getByTestId } = await renderWithProvider();
 
     expect(getByTestId('data').props.children).toBe(JSON.stringify(INITIAL_VALUE));
     expect(getByTestId('dirty').props.children).toBe('false');
   });
 
-  it('updates a field and sets isDirty=true when value actually changes', () => {
-    const { getByTestId, getByText } = renderWithProvider();
+  it('updates a field and sets isDirty=true when value actually changes', async () => {
+    const { getByTestId, getByText } = await renderWithProvider();
 
-    fireEvent.press(getByText('setName'));
+    await fireEvent.press(getByText('setName'));
 
     expect(getByTestId('data').props.children).toBe(JSON.stringify({ id: '1', name: 'Alice' }));
     expect(getByTestId('dirty').props.children).toBe('true');
   });
 
-  it('does not set isDirty when updating a field with the same value', () => {
-    const { getByTestId, getByText } = renderWithProvider();
+  it('does not set isDirty when updating a field with the same value', async () => {
+    const { getByTestId, getByText } = await renderWithProvider();
 
     // Ensure initial is not dirty
     expect(getByTestId('dirty').props.children).toBe('false');
 
     // Update with the same value as INITIAL_VALUE.name
-    fireEvent.press(getByText('setSameName'));
+    await fireEvent.press(getByText('setSameName'));
 
     expect(getByTestId('data').props.children).toBe(JSON.stringify({ id: '1', name: 'Initial' }));
     expect(getByTestId('dirty').props.children).toBe('false');
   });
 
-  it('resets the form to initial value and clears dirty flag', () => {
-    const { getByTestId, getByText } = renderWithProvider();
+  it('resets the form to initial value and clears dirty flag', async () => {
+    const { getByTestId, getByText } = await renderWithProvider();
 
-    fireEvent.press(getByText('setName'));
+    await fireEvent.press(getByText('setName'));
     expect(getByTestId('dirty').props.children).toBe('true');
 
-    fireEvent.press(getByText('reset'));
+    await fireEvent.press(getByText('reset'));
 
     expect(getByTestId('data').props.children).toBe(JSON.stringify(INITIAL_VALUE));
     expect(getByTestId('dirty').props.children).toBe('false');
   });
 
-  it('can replace all form data via setFormData (without toggling dirty flag)', () => {
-    const { getByTestId, getByText } = renderWithProvider();
+  it('can replace all form data via setFormData (without toggling dirty flag)', async () => {
+    const { getByTestId, getByText } = await renderWithProvider();
 
-    fireEvent.press(getByText('setAll'));
+    await fireEvent.press(getByText('setAll'));
 
     expect(getByTestId('data').props.children).toBe(JSON.stringify({ id: '2', name: 'Bob' }));
     // setFormData is a raw setter and does not toggle isDirty by design
     expect(getByTestId('dirty').props.children).toBe('false');
   });
 
-  it('throws a helpful error when used outside of its Provider', () => {
+  it('throws a helpful error when used outside of its Provider', async () => {
     function OutsideConsumer() {
       // This hook call should throw because there is no provider
 
@@ -120,15 +120,15 @@ describe('createFormDataContext / useFormDataContext', () => {
       return <Text>{JSON.stringify(formData)}</Text>;
     }
 
-    expect(() => render(<OutsideConsumer />)).toThrow(new Error('useFormDataContext must be used within a TestProvider'));
+    await expect(render(<OutsideConsumer />)).rejects.toThrow(new Error('useFormDataContext must be used within a TestProvider'));
   });
 
   describe('persistence', () => {
     it('calls the save function with the current database and form data', async () => {
-      const { getByText } = renderWithProvider();
+      const { getByText } = await renderWithProvider();
 
-      fireEvent.press(getByText('setName')); // Change name to Alice
-      fireEvent.press(getByText('save'));
+      await fireEvent.press(getByText('setName')); // Change name to Alice
+      await fireEvent.press(getByText('save'));
 
       await waitFor(() => {
         expect(mockSave).toHaveBeenCalledWith(mockRepositories, { id: '1', name: 'Alice' });
@@ -137,9 +137,9 @@ describe('createFormDataContext / useFormDataContext', () => {
 
     it('handles save failure gracefully', async () => {
       mockSave.mockResolvedValue(Result.failure(['Save failed']));
-      const { getByText, getByTestId } = renderWithProvider();
+      const { getByText, getByTestId } = await renderWithProvider();
 
-      fireEvent.press(getByText('save'));
+      await fireEvent.press(getByText('save'));
 
       await waitFor(() => {
         expect(mockSave).toHaveBeenCalled();
@@ -148,7 +148,7 @@ describe('createFormDataContext / useFormDataContext', () => {
       expect(getByTestId('generalError').props.children).toBe(ErrorKey.saveFailed);
 
       // Clear error
-      fireEvent.press(getByText('clearGeneralError'));
+      await fireEvent.press(getByText('clearGeneralError'));
       expect(getByTestId('generalError').props.children).toBe('null');
     });
   });
@@ -192,8 +192,8 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
     }
 
-    it('provides empty errors object by default', () => {
-      const { getByTestId } = render(
+    it('provides empty errors object by default', async () => {
+      const { getByTestId } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={INITIAL_VALUE} validate={validateFn}>
             <ValidationConsumer />
@@ -205,9 +205,9 @@ describe('createFormDataContext / useFormDataContext', () => {
       expect(getByTestId('hasErrors').props.children).toBe('false');
     });
 
-    it('validates entire form and sets all errors', () => {
+    it('validates entire form and sets all errors', async () => {
       const emptyData = { id: '', name: '' };
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={emptyData} validate={validateFn}>
             <ValidationConsumer />
@@ -215,7 +215,7 @@ describe('createFormDataContext / useFormDataContext', () => {
         </RepositoryContext.Provider>
       );
 
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('validateForm'));
 
       const errors = JSON.parse(getByTestId('errors').props.children);
       expect(errors.name).toBe('Name is required');
@@ -223,8 +223,8 @@ describe('createFormDataContext / useFormDataContext', () => {
       expect(getByTestId('hasErrors').props.children).toBe('true');
     });
 
-    it('clears a single field error', () => {
-      const { getByTestId, getByText } = render(
+    it('clears a single field error', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={{ id: '', name: '' }} validate={validateFn}>
             <ValidationConsumer />
@@ -233,11 +233,11 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Validate to set errors
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('validateForm'));
       expect(getByTestId('hasErrors').props.children).toBe('true');
 
       // Clear name error
-      fireEvent.press(getByText('clearNameError'));
+      await fireEvent.press(getByText('clearNameError'));
 
       const errors = JSON.parse(getByTestId('errors').props.children);
       expect(errors.name).toBeUndefined();
@@ -245,8 +245,8 @@ describe('createFormDataContext / useFormDataContext', () => {
       expect(getByTestId('hasErrors').props.children).toBe('true');
     });
 
-    it('clears all errors', () => {
-      const { getByTestId, getByText } = render(
+    it('clears all errors', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={{ id: '', name: '' }} validate={validateFn}>
             <ValidationConsumer />
@@ -255,18 +255,18 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Validate to set errors
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('validateForm'));
       expect(getByTestId('hasErrors').props.children).toBe('true');
 
       // Clear all errors
-      fireEvent.press(getByText('clearErrors'));
+      await fireEvent.press(getByText('clearErrors'));
 
       expect(getByTestId('errors').props.children).toBe('{}');
       expect(getByTestId('hasErrors').props.children).toBe('false');
     });
 
-    it('auto-validates on field change when validateOnChange is enabled', () => {
-      const { getByTestId, getByText } = render(
+    it('auto-validates on field change when validateOnChange is enabled', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={INITIAL_VALUE} validate={validateFn} validateOnChange>
             <ValidationConsumer />
@@ -278,15 +278,15 @@ describe('createFormDataContext / useFormDataContext', () => {
       expect(getByTestId('errors').props.children).toBe('{}');
 
       // Set a too-long name
-      fireEvent.press(getByText('setLongName'));
+      await fireEvent.press(getByText('setLongName'));
 
       // Should auto-validate and show error
       expect(getByTestId('errors').props.children).toBe(JSON.stringify({ name: 'Name is too long' }));
       expect(getByTestId('hasErrors').props.children).toBe('true');
     });
 
-    it('does not auto-validate when validateOnChange is false', () => {
-      const { getByTestId, getByText } = render(
+    it('does not auto-validate when validateOnChange is false', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={INITIAL_VALUE} validate={validateFn} validateOnChange={false}>
             <ValidationConsumer />
@@ -295,15 +295,15 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Set a too-long name
-      fireEvent.press(getByText('setLongName'));
+      await fireEvent.press(getByText('setLongName'));
 
       // Should NOT auto-validate
       expect(getByTestId('errors').props.children).toBe('{}');
       expect(getByTestId('hasErrors').props.children).toBe('false');
     });
 
-    it('clears errors when resetForm is called', () => {
-      const { getByTestId, getByText } = render(
+    it('clears errors when resetForm is called', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={INITIAL_VALUE} validate={validateFn}>
             <ValidationConsumer />
@@ -312,21 +312,21 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Set empty name and validate
-      fireEvent.press(getByText('setEmptyName'));
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('setEmptyName'));
+      await fireEvent.press(getByText('validateForm'));
 
       expect(getByTestId('hasErrors').props.children).toBe('true');
 
       // Reset form
-      fireEvent.press(getByText('reset'));
+      await fireEvent.press(getByText('reset'));
 
       expect(getByTestId('errors').props.children).toBe('{}');
       expect(getByTestId('hasErrors').props.children).toBe('false');
       expect(getByTestId('data').props.children).toBe(JSON.stringify(INITIAL_VALUE));
     });
 
-    it('returns true from validateForm when no errors', () => {
-      const { getByText } = render(
+    it('returns true from validateForm when no errors', async () => {
+      const { getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={INITIAL_VALUE} validate={validateFn}>
             <ValidationConsumer />
@@ -335,12 +335,12 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Initial value is valid, so validateForm should return true
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('validateForm'));
       // If it returns true, no errors will be set (implicit check via no errors)
     });
 
-    it('returns false from validateForm when errors exist', () => {
-      const { getByTestId, getByText } = render(
+    it('returns false from validateForm when errors exist', async () => {
+      const { getByTestId, getByText } = await render(
         <RepositoryContext.Provider value={mockRepositories}>
           <FormDataProvider initialValue={{ id: '', name: '' }} validate={validateFn}>
             <ValidationConsumer />
@@ -349,7 +349,7 @@ describe('createFormDataContext / useFormDataContext', () => {
       );
 
       // Validate with empty fields
-      fireEvent.press(getByText('validateForm'));
+      await fireEvent.press(getByText('validateForm'));
 
       // Should have errors
       expect(getByTestId('hasErrors').props.children).toBe('true');

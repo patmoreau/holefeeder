@@ -1,5 +1,5 @@
 import { DateOnly } from '@holefeeder/shared/core';
-import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aTransaction, toTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { Transaction } from '@/flows/core/flows/transaction';
@@ -21,9 +21,7 @@ describe('usePagedWatch', () => {
   let watchCountFn: WatchCountFn;
 
   const createHook = async (watchFn: WatchPageFn<Transaction>, watchCountFn: WatchCountFn, maxPages?: number) =>
-    await waitFor(() =>
-      renderHook(() => usePagedWatch<Transaction>(watchFn, watchCountFn, { pageSize: PAGE_SIZE, maxPages: maxPages ?? MAX_PAGES }))
-    );
+    renderHook(() => usePagedWatch<Transaction>(watchFn, watchCountFn, { pageSize: PAGE_SIZE, maxPages: maxPages ?? MAX_PAGES }));
 
   beforeEach(() => {
     flowRepository = FlowsRepositoryInMemory();
@@ -198,7 +196,7 @@ describe('usePagedWatch', () => {
       flowRepository.addTransactions(transaction0, transaction1, transaction2, transaction3, transaction4);
       const { result } = await createHook(watchFn, watchCountFn);
 
-      act(() => result.current.loadNext());
+      await act(async () => result.current.loadNext());
 
       expect(result.current.data).toBeSuccessWithValue([transaction3, transaction4]);
     });
@@ -207,7 +205,7 @@ describe('usePagedWatch', () => {
       flowRepository.addTransactions(transaction0, transaction1, transaction2);
       const { result } = await createHook(watchFn, watchCountFn);
 
-      act(() => result.current.loadNext());
+      await act(async () => result.current.loadNext());
 
       expect(result.current.hasNextPage).toBe(false);
       expect(result.current.data).toBeSuccessWithValue([transaction0, transaction1, transaction2]);
@@ -219,9 +217,9 @@ describe('usePagedWatch', () => {
       flowRepository.addTransactions(transaction0, transaction1, transaction2, transaction3, transaction4);
       const { result } = await createHook(watchFn, watchCountFn);
 
-      act(() => result.current.loadNext());
+      await act(async () => result.current.loadNext());
       expect(result.current.data).toBeSuccessWithValue([transaction3, transaction4]);
-      act(() => result.current.loadPrevious());
+      await act(async () => result.current.loadPrevious());
 
       expect(result.current.data).toBeSuccessWithValue([transaction0, transaction1, transaction2]);
     });
@@ -230,7 +228,7 @@ describe('usePagedWatch', () => {
       flowRepository.addTransactions(transaction0, transaction1, transaction2);
       const { result } = await createHook(watchFn, watchCountFn);
 
-      act(() => result.current.loadPrevious());
+      await act(async () => result.current.loadPrevious());
 
       expect(result.current.hasPreviousPage).toBe(false);
       expect(result.current.data).toBeSuccessWithValue([transaction0, transaction1, transaction2]);

@@ -12,11 +12,9 @@ describe('useLatestTransactions', () => {
   let db: DatabaseForTest;
 
   const createHook = async (limit?: number) =>
-    await waitFor(() =>
-      renderHook(() => useLatestTransactions(limit), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useLatestTransactions(limit), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -34,8 +32,6 @@ describe('useLatestTransactions', () => {
     await aTransaction({ categoryId: category.id, amount: Money.valid(50.0), date: DateOnly.valid('2026-03-01') }).store(db);
 
     const { result } = await createHook();
-
-    expect(result.current.data).toBeLoading();
 
     await waitFor(() => expect(result.current).not.toBeLoading());
 

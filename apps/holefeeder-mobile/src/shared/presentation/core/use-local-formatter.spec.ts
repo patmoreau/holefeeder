@@ -22,17 +22,17 @@ describe('useLocaleFormatter', () => {
   });
 
   describe('initialization', () => {
-    it('should return current locale and currency code', () => {
-      const { result } = renderHook(() => useLocaleFormatter());
+    it('should return current locale and currency code', async () => {
+      const { result } = await renderHook(() => useLocaleFormatter());
 
       expect(result.current.currentLocale).toBe('en-US');
       expect(result.current.currencyCode).toBe('USD');
     });
 
-    it('should default to CAD when currencyCode is null', () => {
+    it('should default to CAD when currencyCode is null', async () => {
       (ExpoLocalization.getLocales as jest.Mock).mockReturnValue([{ languageTag: 'en-US', currencyCode: null }]);
 
-      const { result } = renderHook(() => useLocaleFormatter());
+      const { result } = await renderHook(() => useLocaleFormatter());
 
       expect(result.current.currencyCode).toBe('CAD');
     });
@@ -65,18 +65,18 @@ describe('useLocaleFormatter', () => {
       });
     });
 
-    it('should update locale when app becomes active and locale changed', () => {
-      const { result } = renderHook(() => useLocaleFormatter());
+    it('should update locale when app becomes active and locale changed', async () => {
+      const { result } = await renderHook(() => useLocaleFormatter());
 
       expect(result.current.currentLocale).toBe('en-US');
 
-      act(() => {
+      await act(async () => {
         appStateListeners.forEach((listener) => listener('background'));
       });
 
       (ExpoLocalization.getLocales as jest.Mock).mockReturnValue([mockFrenchLocale]);
 
-      act(() => {
+      await act(async () => {
         appStateListeners.forEach((listener) => listener('active'));
       });
 
@@ -84,19 +84,19 @@ describe('useLocaleFormatter', () => {
       expect(result.current.currencyCode).toBe('CAD');
     });
 
-    it('should not update locale when app becomes active but locale unchanged', () => {
-      const { result } = renderHook(() => useLocaleFormatter());
+    it('should not update locale when app becomes active but locale unchanged', async () => {
+      const { result } = await renderHook(() => useLocaleFormatter());
       const getLocalesSpy = jest.spyOn(ExpoLocalization, 'getLocales');
 
       expect(result.current.currentLocale).toBe('en-US');
 
       getLocalesSpy.mockClear();
 
-      act(() => {
+      await act(async () => {
         appStateListeners.forEach((listener) => listener('background'));
       });
 
-      act(() => {
+      await act(async () => {
         appStateListeners.forEach((listener) => listener('active'));
       });
 
@@ -104,26 +104,26 @@ describe('useLocaleFormatter', () => {
       expect(result.current.currentLocale).toBe('en-US');
     });
 
-    it('should not update locale when app state changes to inactive', () => {
-      const { result } = renderHook(() => useLocaleFormatter());
+    it('should not update locale when app state changes to inactive', async () => {
+      const { result } = await renderHook(() => useLocaleFormatter());
 
       expect(result.current.currentLocale).toBe('en-US');
 
-      act(() => {
+      await act(async () => {
         appStateListeners.forEach((listener) => listener('inactive'));
       });
 
       expect(result.current.currentLocale).toBe('en-US');
     });
 
-    it('should remove listener on unmount', () => {
-      const { unmount } = renderHook(() => useLocaleFormatter());
+    it('should remove listener on unmount', async () => {
+      const { unmount } = await renderHook(() => useLocaleFormatter());
       const removeSpy = jest.fn();
 
       const subscription = (AppState.addEventListener as jest.Mock).mock.results[0].value;
       subscription.remove = removeSpy;
 
-      unmount();
+      await unmount();
 
       expect(removeSpy).toHaveBeenCalled();
     });

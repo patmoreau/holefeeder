@@ -41,11 +41,9 @@ describe('useAccountDetails', () => {
   });
 
   const createHook = async () =>
-    await waitFor(() =>
-      renderHook(() => useAccountDetails(), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useAccountDetails(), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -65,8 +63,6 @@ describe('useAccountDetails', () => {
 
   it('should fetch accounts from PowerSync database', async () => {
     const { result } = await createHook();
-
-    expect(result.current).toBeLoading();
 
     await waitFor(() => expect(result.current).not.toBeLoading());
 

@@ -33,7 +33,7 @@ describe('useFormActions', () => {
 
   describe('handleSave', () => {
     it('should call goBack immediately when form is not dirty', async () => {
-      const { result } = renderHook(() =>
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: false,
@@ -50,7 +50,7 @@ describe('useFormActions', () => {
     it('should save and navigate back when form is dirty and save succeeds', async () => {
       mockSaveForm.mockResolvedValue(true);
 
-      const { result } = renderHook(() =>
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: true,
@@ -70,7 +70,7 @@ describe('useFormActions', () => {
       mockSaveForm.mockResolvedValue(false);
       const errors = { name: 'Name is required', email: 'Email is invalid' };
 
-      const { result } = renderHook(() =>
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: true,
@@ -93,7 +93,7 @@ describe('useFormActions', () => {
     it('should not show error alert when save fails but no validation errors exist', async () => {
       mockSaveForm.mockResolvedValue(false);
 
-      const { result } = renderHook(() =>
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: true,
@@ -112,8 +112,8 @@ describe('useFormActions', () => {
   });
 
   describe('handleCancel', () => {
-    it('should call goBack immediately when form is not dirty', () => {
-      const { result } = renderHook(() =>
+    it('should call goBack immediately when form is not dirty', async () => {
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: false,
@@ -127,8 +127,8 @@ describe('useFormActions', () => {
       expect(mockGoBack).toHaveBeenCalledTimes(1);
     });
 
-    it('should show discard alert when form is dirty', () => {
-      const { result } = renderHook(() =>
+    it('should show discard alert when form is dirty', async () => {
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: true,
@@ -144,8 +144,8 @@ describe('useFormActions', () => {
       expect(mockGoBack).not.toHaveBeenCalled();
     });
 
-    it('should call goBack when user confirms discard', () => {
-      const { result } = renderHook(() =>
+    it('should call goBack when user confirms discard', async () => {
+      const { result } = await renderHook(() =>
         useFormActions({
           saveForm: mockSaveForm,
           isDirty: true,
@@ -165,7 +165,7 @@ describe('useFormActions', () => {
 
   describe('dependency updates', () => {
     it('should update handleSave when dependencies change', async () => {
-      const { result, rerender } = renderHook((props: FormContext) => useFormActions(props), {
+      const { result, rerender } = await renderHook((props: FormContext) => useFormActions(props), {
         initialProps: {
           saveForm: mockSaveForm,
           isDirty: false,
@@ -178,7 +178,7 @@ describe('useFormActions', () => {
 
       // Change isDirty to true
       mockSaveForm.mockResolvedValue(true);
-      rerender({
+      await rerender({
         saveForm: mockSaveForm,
         isDirty: true,
         errors: {},

@@ -16,9 +16,9 @@ describe('useTagList', () => {
   const mockOnChange = jest.fn();
   let hookResult: RenderHookResult<ReturnType<typeof useTagList>, { tags: Tag[]; selected: Tag[]; onChange: (next: Tag[]) => void }>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockOnChange.mockClear();
-    hookResult = renderHook(
+    hookResult = await renderHook(
       ({ tags, selected, onChange }) =>
         useTagList({
           tags,
@@ -45,14 +45,14 @@ describe('useTagList', () => {
   });
 
   describe('when toggling a tag', () => {
-    it('toggle to selected on pressing an unselected tag', () => {
-      act(() => {
+    it('toggle to selected on pressing an unselected tag', async () => {
+      await act(async () => {
         hookResult.result.current.toggleTag(middleTag);
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([selectedTag, middleTag]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [selectedTag, middleTag],
         onChange: mockOnChange,
@@ -61,14 +61,14 @@ describe('useTagList', () => {
       expect(hookResult.result.current.filtered).toStrictEqual([selectedTag, middleTag, firstTag, lastTag]);
     });
 
-    it('toggle to unselected on pressing a selected tag', () => {
-      act(() => {
+    it('toggle to unselected on pressing a selected tag', async () => {
+      await act(async () => {
         hookResult.result.current.toggleTag(selectedTag);
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [],
         onChange: mockOnChange,
@@ -79,42 +79,42 @@ describe('useTagList', () => {
   });
 
   describe('when entering text', () => {
-    it('shows tags matching the text', () => {
-      act(() => {
+    it('shows tags matching the text', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter('d');
       });
 
       expect(hookResult.result.current.filtered).toStrictEqual([selectedTag, middleTag]);
     });
 
-    it('trim spaces', () => {
-      act(() => {
+    it('trim spaces', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter(' d ');
       });
 
       expect(hookResult.result.current.filtered).toStrictEqual([selectedTag, middleTag]);
     });
 
-    it('shows no tags on no match', () => {
-      act(() => {
+    it('shows no tags on no match', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter('z');
       });
 
       expect(hookResult.result.current.filtered).toStrictEqual([]);
     });
 
-    it('on enter with exact single match, selects that tag and clears filter', () => {
-      act(() => {
+    it('on enter with exact single match, selects that tag and clears filter', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter('mid');
       });
 
-      act(() => {
+      await act(async () => {
         hookResult.result.current.onSubmit();
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([middleTag, selectedTag]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [middleTag, selectedTag],
         onChange: mockOnChange,
@@ -124,18 +124,18 @@ describe('useTagList', () => {
       expect(hookResult.result.current.filter).toBe('');
     });
 
-    it('on pressing a tag, selects that tag and clears filter', () => {
-      act(() => {
+    it('on pressing a tag, selects that tag and clears filter', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter('mid');
       });
 
-      act(() => {
+      await act(async () => {
         hookResult.result.current.toggleTag(middleTag);
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([selectedTag, middleTag]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [selectedTag, middleTag],
         onChange: mockOnChange,
@@ -145,18 +145,18 @@ describe('useTagList', () => {
       expect(hookResult.result.current.filter).toBe('');
     });
 
-    it('on enter with multiple matches, creates a new lowercase tag and selects it, then clears filter', () => {
-      act(() => {
+    it('on enter with multiple matches, creates a new lowercase tag and selects it, then clears filter', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter(dTag.tag);
       });
 
-      act(() => {
+      await act(async () => {
         hookResult.result.current.onSubmit();
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([dTag, selectedTag]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [dTag, selectedTag],
         onChange: mockOnChange,
@@ -166,18 +166,18 @@ describe('useTagList', () => {
       expect(hookResult.result.current.filter).toBe('');
     });
 
-    it('on enter, add new tag to list and selects it', () => {
-      act(() => {
+    it('on enter, add new tag to list and selects it', async () => {
+      await act(async () => {
         hookResult.result.current.setFilter(newTag.tag.toUpperCase());
       });
 
-      act(() => {
+      await act(async () => {
         hookResult.result.current.onSubmit();
       });
 
       expect(mockOnChange).toHaveBeenCalledWith([newTag, selectedTag]);
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [firstTag, middleTag, lastTag, selectedTag],
         selected: [newTag, selectedTag],
         onChange: mockOnChange,
@@ -187,13 +187,13 @@ describe('useTagList', () => {
       expect(hookResult.result.current.filter).toBe('');
     });
 
-    it('handles tag list updates with same IDs but different references (database refresh)', () => {
+    it('handles tag list updates with same IDs but different references (database refresh)', async () => {
       // simulating database refresh where we get new objects for the same tags
       const newRefMiddleTag = { ...middleTag };
       const newRefFirstTag = { ...firstTag };
       const newRefSelectedTag = { ...selectedTag };
 
-      hookResult.rerender({
+      await hookResult.rerender({
         tags: [newRefFirstTag, newRefMiddleTag, lastTag, newRefSelectedTag],
         selected: [selectedTag], // selected stays the same (from local state usually)
         onChange: mockOnChange,

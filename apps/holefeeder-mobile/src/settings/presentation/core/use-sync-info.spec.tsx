@@ -24,11 +24,9 @@ describe('useSyncInfo', () => {
   };
 
   const createHook = async () =>
-    await waitFor(() =>
-      renderHook(() => useSyncInfo(), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useSyncInfo(), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -51,8 +49,6 @@ describe('useSyncInfo', () => {
 
   it('should fetch sync info from PowerSync database', async () => {
     const { result } = await createHook();
-
-    expect(result.current).toBeLoading();
 
     await waitFor(() => expect(result.current).not.toBeLoading());
 

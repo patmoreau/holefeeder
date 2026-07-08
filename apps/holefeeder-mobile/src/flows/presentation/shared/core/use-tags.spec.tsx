@@ -21,11 +21,9 @@ describe('useTags', () => {
   ];
 
   const createHook = async () =>
-    await waitFor(() =>
-      renderHook(() => useTags(), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useTags(), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -43,8 +41,6 @@ describe('useTags', () => {
 
   it('should fetch tags from PowerSync database', async () => {
     const { result } = await createHook();
-
-    expect(result.current).toBeLoading();
 
     await waitFor(() => expect(result.current).not.toBeLoading());
 

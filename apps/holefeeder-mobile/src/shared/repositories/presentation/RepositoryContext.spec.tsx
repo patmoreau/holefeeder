@@ -15,18 +15,14 @@ describe('RepositoryContext', () => {
     await db.cleanupTestDb();
   });
 
-  it('should throw error when used outside of RepositoryProvider', () => {
-    expect(() => {
-      renderHook(() => useRepositories());
-    }).toThrow('useRepositories must be used within a RepositoryProvider');
+  it('should throw error when used outside of RepositoryProvider', async () => {
+    await expect(renderHook(() => useRepositories())).rejects.toThrow('useRepositories must be used within a RepositoryProvider');
   });
 
   it('should provide all repositories when used within RepositoryProvider', async () => {
-    const { result } = await waitFor(() =>
-      renderHook(() => useRepositories(), {
-        wrapper: ({ children }) => <RepositoryProvider database={db}>{children}</RepositoryProvider>,
-      })
-    );
+    const { result } = await renderHook(() => useRepositories(), {
+      wrapper: ({ children }) => <RepositoryProvider database={db}>{children}</RepositoryProvider>,
+    });
 
     await waitFor(() => expect(result.current).toBeDefined());
 
@@ -38,12 +34,12 @@ describe('RepositoryContext', () => {
     expect(result.current.storeItemRepository).toBeDefined();
   });
 
-  it('should return the same repository instances on multiple calls', () => {
-    const { result } = renderHook(() => useRepositories(), {
+  it('should return the same repository instances on multiple calls', async () => {
+    const { result } = await renderHook(() => useRepositories(), {
       wrapper: ({ children }) => <RepositoryProvider database={db}>{children}</RepositoryProvider>,
     });
 
-    const { result: result2 } = renderHook(() => useRepositories(), {
+    const { result: result2 } = await renderHook(() => useRepositories(), {
       wrapper: ({ children }) => <RepositoryProvider database={db}>{children}</RepositoryProvider>,
     });
 

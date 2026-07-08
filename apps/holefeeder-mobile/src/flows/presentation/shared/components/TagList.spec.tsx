@@ -26,8 +26,8 @@ const displayTag = (tag: Tag) => `#${tag.tag}`;
 describe('TagList', () => {
   const themeState = aLightThemeState();
 
-  beforeEach(() => {
-    render(
+  beforeEach(async () => {
+    await render(
       <ThemeProviderForTest overrides={themeState}>
         <TestHost />
       </ThemeProviderForTest>
@@ -51,8 +51,8 @@ describe('TagList', () => {
   });
 
   describe('when toggling a tag', () => {
-    it('toggle to selected on pressing an unselected tag', () => {
-      act(() => fireEvent.press(screen.getByTestId(displayTag(middleTag))));
+    it('toggle to selected on pressing an unselected tag', async () => {
+      await act(() => fireEvent.press(screen.getByTestId(displayTag(middleTag))));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -65,8 +65,8 @@ describe('TagList', () => {
       ]);
     });
 
-    it('toggle to unselected on pressing a selected tag', () => {
-      act(() => fireEvent.press(screen.getByTestId(displayTag(selectedTag))));
+    it('toggle to unselected on pressing a selected tag', async () => {
+      await act(() => fireEvent.press(screen.getByTestId(displayTag(selectedTag))));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -81,8 +81,8 @@ describe('TagList', () => {
   });
 
   describe('when entering text', () => {
-    it('shows tags matching the text', () => {
-      act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), 'd'));
+    it('shows tags matching the text', async () => {
+      await act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), 'd'));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -90,8 +90,8 @@ describe('TagList', () => {
       expect(tags.map((tag) => tag.props.children)).toEqual([displayTag(selectedTag), displayTag(middleTag)]);
     });
 
-    it('trim spaces', () => {
-      act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), ' d '));
+    it('trim spaces', async () => {
+      await act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), ' d '));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -99,20 +99,20 @@ describe('TagList', () => {
       expect(tags.map((tag) => tag.props.children)).toEqual([displayTag(selectedTag), displayTag(middleTag)]);
     });
 
-    it('shows no tags on no match', () => {
-      act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), 'z'));
+    it('shows no tags on no match', async () => {
+      await act(() => fireEvent.changeText(screen.getByPlaceholderText(placeHolderText), 'z'));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
       expect(tags.length).toBe(0);
     });
 
-    it('on enter with exact single match, selects that tag and clears filter', () => {
+    it('on enter with exact single match, selects that tag and clears filter', async () => {
       const input = screen.getByPlaceholderText(placeHolderText);
       const add = screen.getByTestId('image-plus');
 
-      act(() => fireEvent.changeText(input, 'mid'));
-      act(() => fireEvent.press(add));
+      await act(() => fireEvent.changeText(input, 'mid'));
+      await act(() => fireEvent.press(add));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -125,11 +125,11 @@ describe('TagList', () => {
       ]);
     });
 
-    it('on pressing a tag, selects that tag and clears filter', () => {
+    it('on pressing a tag, selects that tag and clears filter', async () => {
       const input = screen.getByPlaceholderText(placeHolderText);
 
-      act(() => fireEvent.changeText(input, 'mid'));
-      act(() => fireEvent.press(screen.getByTestId(displayTag(middleTag))));
+      await act(() => fireEvent.changeText(input, 'mid'));
+      await act(() => fireEvent.press(screen.getByTestId(displayTag(middleTag))));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -142,12 +142,12 @@ describe('TagList', () => {
       ]);
     });
 
-    it('on enter with multiple matches, creates a new lowercase tag and selects it, then clears filter', () => {
+    it('on enter with multiple matches, creates a new lowercase tag and selects it, then clears filter', async () => {
       const input = screen.getByPlaceholderText(placeHolderText);
       const add = screen.getByTestId('image-plus');
 
-      act(() => fireEvent.changeText(input, newTag.tag.toUpperCase()));
-      act(() => fireEvent.press(add));
+      await act(() => fireEvent.changeText(input, newTag.tag.toUpperCase()));
+      await act(() => fireEvent.press(add));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 
@@ -161,12 +161,12 @@ describe('TagList', () => {
       ]);
     });
 
-    it('on enter, add new tag to list and selects it', () => {
+    it('on enter, add new tag to list and selects it', async () => {
       const input = screen.getByPlaceholderText(placeHolderText);
       const add = screen.getByTestId('image-plus');
 
-      act(() => fireEvent.changeText(input, newTag.tag));
-      act(() => fireEvent.press(add));
+      await act(() => fireEvent.changeText(input, newTag.tag));
+      await act(() => fireEvent.press(add));
 
       const tags = screen.queryAllByTestId(tagsPattern);
 

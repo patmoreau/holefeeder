@@ -22,11 +22,11 @@ describe('useColorScheme', () => {
     mockUseRNColorScheme.mockReturnValue('light');
 
     // Act
-    const { rerender } = renderHook(() => useColorScheme());
+    const { rerender } = await renderHook(() => useColorScheme());
 
     // Wait for useEffect to run
     await act(async () => {
-      rerender({});
+      await rerender({});
     });
   });
 
@@ -35,11 +35,11 @@ describe('useColorScheme', () => {
     mockUseRNColorScheme.mockReturnValue('dark');
 
     // Act
-    const { result, rerender } = renderHook(() => useColorScheme());
+    const { result, rerender } = await renderHook(() => useColorScheme());
 
     // Wait for useEffect to run
     await act(async () => {
-      rerender({});
+      await rerender({});
     });
 
     // Assert
@@ -51,11 +51,11 @@ describe('useColorScheme', () => {
     mockUseRNColorScheme.mockReturnValue(null!);
 
     // Act
-    const { result, rerender } = renderHook(() => useColorScheme());
+    const { result, rerender } = await renderHook(() => useColorScheme());
 
     // Wait for useEffect to run
     await act(async () => {
-      rerender({});
+      await rerender({});
     });
 
     // Assert

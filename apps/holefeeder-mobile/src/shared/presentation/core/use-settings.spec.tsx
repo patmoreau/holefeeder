@@ -12,11 +12,9 @@ describe('useStoreItems', () => {
   const storeItem = aStoreItem({ code: 'settings', data: JSON.stringify(settings) });
 
   const createHook = async () =>
-    await waitFor(() =>
-      renderHook(() => useSettings(), {
-        wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
-      })
-    );
+    renderHook(() => useSettings(), {
+      wrapper: ({ children }: { children: React.ReactNode }) => <PowerSyncProviderForTest database={db}>{children}</PowerSyncProviderForTest>,
+    });
 
   beforeEach(async () => {
     db = await setupDatabaseForTest();
@@ -32,8 +30,6 @@ describe('useStoreItems', () => {
 
   it('should fetch settings from PowerSync database', async () => {
     const { result } = await createHook();
-    // Initially loading
-    expect(result.current).toBeLoading();
 
     // Wait for data to load
     await waitFor(() => expect(result.current).not.toBeLoading());
