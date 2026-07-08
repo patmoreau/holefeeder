@@ -1,6 +1,6 @@
 import { ConfigContext } from '@expo/config';
-import { withXcodeProject, type ConfigPlugin } from '@expo/config-plugins';
 import { ExpoConfig } from '@expo/config-types';
+import { withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
 import 'dotenv/config';
 
 // Workaround for https://github.com/expo/expo/issues/46204
