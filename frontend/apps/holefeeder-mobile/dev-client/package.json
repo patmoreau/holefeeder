@@ -1,0 +1,21 @@
+{
+  "name": "sqlite-mirror",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx sync.ts",
+    "dev": "tsx watch sync.ts"
+  },
+  "dependencies": {
+    "@journeyapps/react-native-quick-sqlite": "^2.5.0",
+    "@powersync/common": "1.45.0",
+    "@powersync/node": "^0.15.2",
+    "better-sqlite3": "^9.6.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.19.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}

@@ -1,0 +1,86 @@
+import { Id, LocalFormatter, today } from '@holefeeder/shared/core';
+import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Pressable, View, type ViewProps } from 'react-native';
+import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
+import { CategoryTypes } from '@/flows/core/categories/category-type';
+import { Transaction } from '@/flows/core/flows/transaction';
+import { AppCard } from '@/shared/presentation/components/AppCard';
+import { AppText } from '@/shared/presentation/components/AppText';
+import { AppChip } from '@/shared/presentation/components/native/AppChip';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
+import { useStyles } from '@/shared/theme/core/use-styles';
+import { Theme } from '@/types/theme';
+import { spacing } from '@/types/theme/design-tokens';
+
+export type TransactionCardProps = ViewProps & {
+  transaction: Transaction;
+  onPress?: (id: Id, layout: CardLayout) => void;
+};
+
+const createStyles = (theme: Theme) => ({
+  cardDescription: {
+    flex: 1,
+    flexDirection: 'column' as const,
+  },
+  cardAmount: {
+    flexShrink: 0,
+    alignItems: 'flex-end' as const,
+    justifyContent: 'center' as const,
+  },
+  tags: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    marginTop: spacing.xs,
+  },
+  positiveAmount: {
+    color: theme.colors.positive,
+  },
+  negativeAmount: {
+    color: theme.colors.negative,
+  },
+});
+
+export const TransactionCard = ({ transaction, onPress, ...props }: TransactionCardProps) => {
+  const { t } = useTranslation();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
+  const styles = useStyles(createStyles);
+  const pressableRef = useRef<View>(null);
+
+  const amountStyle = transaction.categoryType === CategoryTypes.gain ? styles.positiveAmount : styles.negativeAmount;
+
+  const handlePress = () => {
+    if (!onPress) return;
+    pressableRef.current?.measureInWindow((x, y, w, h) => {
+      onPress(transaction.id, { x, y, width: w, height: h });
+    });
+  };
+
+  return (
+    <Pressable ref={pressableRef} onPress={handlePress}>
+      <AppCard {...props}>
+        <View style={styles.cardDescription}>
+          <AppText variant={'defaultSemiBold'} adjustsFontSizeToFit>
+            {transaction.description}
+          </AppText>
+          {transaction.tags.length > 0 && (
+            <View style={styles.tags}>
+              {transaction.tags.map((tag) => (
+                <AppNative key={tag} matchContents>
+                  <AppChip key={tag} selected={true} label={tag} />
+                </AppNative>
+              ))}
+            </View>
+          )}
+        </View>
+        <View style={styles.cardAmount}>
+          <AppText variant={'default'} adjustsFontSizeToFit style={amountStyle}>
+            {LocalFormatter.currency(transaction.amount, currentLocale, currencyCode)}
+          </AppText>
+          <AppText variant={'footnote'}>{LocalFormatter.date(transaction.date, today(), currentLocale, t)}</AppText>
+        </View>
+      </AppCard>
+    </Pressable>
+  );
+};

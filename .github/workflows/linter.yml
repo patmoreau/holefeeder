@@ -44,17 +44,17 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        working-directory: src/Holefeeder.Web/ClientApp
+        working-directory: backend/src/Holefeeder.Web/ClientApp
         run: pnpm install --dangerously-allow-all-builds
 
       - name: Lint code with ESLint
         id: lint
-        working-directory: src/Holefeeder.Web/ClientApp
+        working-directory: backend/src/Holefeeder.Web/ClientApp
         run: pnpm lint --format stylish --output-file ./eslint-report.txt
 
       - name: Print ESLint report
         if: always()
-        working-directory: src/Holefeeder.Web/ClientApp
+        working-directory: backend/src/Holefeeder.Web/ClientApp
         run: cat ./eslint-report.txt
 
       - name: Upload ESLint report
@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ESLint report
-          path: src/Holefeeder.Web/ClientApp/eslint-report.txt
+          path: backend/src/Holefeeder.Web/ClientApp/eslint-report.txt
 
       - name: Check for errors
         if: ${{ steps.lint.outcome != 'success' }}
@@ -79,11 +79,11 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ./global.json
+          global-json-file: ./backend/global.json
 
       - name: Lint C# files with dotnet format
         id: lint
-        run: dotnet format --severity error --verbosity diagnostic --report ./linter-report || true
+        run: dotnet format backend/DrifterApps.Holefeeder.sln --severity error --verbosity diagnostic --report ./linter-report || true
 
       - name: Save report
         if: always()

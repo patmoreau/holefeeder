@@ -1,0 +1,30 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@holefeeder/shared/core": ["../../packages/shared/src/core/index.ts"],
+      "@holefeeder/shared/testkit": [
+        "../../packages/shared/src/testkit/index.ts"
+      ],
+      "@/*": ["./src/*"],
+      "@/accounts/*": ["./src/accounts/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/assets/*": ["./assets/*"],
+      "@/config/*": ["./src/config/*"],
+      "@/contexts/*": ["./src/contexts/*"],
+      "@/dshboard/*": ["./src/dshboard/*"],
+      "@/flows/*": ["./src/flows/*"],
+      "@/i18n/*": ["./src/i18n/*"],
+      "@/modules/*": ["./modules/*"],
+      "@/settings/*": ["./src/settings/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/user-registration/*": ["./src/user-registration/*"]
+    },
+    "customConditions": ["react-native"]
+  },
+  "references": [{ "path": "../../packages/shared" }],
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/i18n/react-i18next.d.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,16 @@
+services:
+  sqlite-mirror:
+    build:
+      context: ..
+      dockerfile: dev-client/Dockerfile
+    environment:
+      - POWERSYNC_URL=http://powersync:8080
+      - POWERSYNC_TOKEN=${POWERSYNC_TOKEN}
+    volumes:
+      - ./debug-data:/data
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

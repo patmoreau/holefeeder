@@ -52,7 +52,7 @@ jobs:
       - name: Ensure .NET Installed
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ./global.json
+          global-json-file: ./backend/global.json
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4.6.0
@@ -63,7 +63,7 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v4.6.0
         with:
-          configFilePath: GitVersion.yml
+          configFilePath: ./backend/GitVersion.yml
 
       - name: Display GitVersion outputs
         run: |
@@ -103,7 +103,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6
@@ -117,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           load: true
-          context: .
+          context: ./backend
           file: ${{ env.DOCKERFILE_PATH }}
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
@@ -165,13 +165,13 @@ jobs:
       - name: Setup docker compose .env
         run: |
           printf "COMPOSE_DOCKER_CLI_BUILD=1
-          DOCKER_BUILDKIT=1" > .env
+          DOCKER_BUILDKIT=1" > backend/.env
 
       - name: Restore Docker cache for api
         uses: actions/cache@v6
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./src/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./backend/src/Holefeeder.Api/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-api-
 
@@ -179,26 +179,26 @@ jobs:
         uses: actions/cache@v6
         with:
           path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./src/Holefeeder.Web/Dockerfile') }}
+          key: ${{ runner.os }}-web-${{ hashFiles('./backend/src/Holefeeder.Web/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-web-
 
       - name: Running ${{ matrix.target }}
         run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml run ${{ matrix.target }}
+          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml run ${{ matrix.target }}
 
       - name: Tests cleanup
         if: always()
         run: |
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml down
-          docker compose --env-file .env -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml rm --force --all
+          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml down
+          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml rm --force --all
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.target }}
-          path: ./tests-results/*.xml
+          path: ./backend/tests-results/*.xml
           retention-days: 1
 
   tests-reporter:
@@ -324,7 +324,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6
@@ -337,7 +337,7 @@ jobs:
       - name: Publish ${{ matrix.target }} container
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./backend
           file: ${{ env.DOCKERFILE_PATH }}
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}
@@ -365,7 +365,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          cat <<EOF > .env
+          cat <<EOF > backend/.env
           COMPOSE_PROJECT_NAME=holefeeder
           COMPOSE_DOCKER_CLI_BUILD=1
           DOCKER_BUILDKIT=1
@@ -391,8 +391,8 @@ jobs:
 
       - name: Pull and deploy
         run: |
-          docker compose -f docker-compose.yaml -f docker-compose.Production.yaml pull
-          docker compose -f docker-compose.yaml -f docker-compose.Production.yaml up -d --remove-orphans
+          docker compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml pull
+          docker compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml up -d --remove-orphans
 
       - name: Prune dangling images
         run: docker image prune -f

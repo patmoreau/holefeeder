@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1"
+     xmlns="http://www.w3.org/2000/svg"
+     xml:space="preserve"
+     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="rotate(45 334 122)">
+        <!-- Outer border path -->
+        <path d="M 236 92 L 432 92 Q 442 92 442 102 L 442 142 Q 442 152 432 152 L 236 152 Q 226 152 226 142 L 226 102 Q 226 92 236 92 Z M 236 102 Q 236 102 236 102 L 236 142 Q 236 142 236 142 L 432 142 Q 432 142 432 142 L 432 102 Q 432 102 432 102 L 236 102 Z"
+              fill="#000000"/>
+        <text x="334" y="140" font-family="-apple-system, system-ui, sans-serif" font-size="52" font-weight="bold"
+              fill="#000000" text-anchor="middle">DEV</text>
+    </g>
+</svg>

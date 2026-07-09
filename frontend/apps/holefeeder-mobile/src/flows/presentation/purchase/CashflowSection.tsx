@@ -1,0 +1,40 @@
+import { useTranslation } from 'react-i18next';
+import { HasCashflowField } from '@/flows/presentation/purchase/components/fields/HasCashflowField';
+import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
+import { tk } from '@/i18n/translations';
+import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DateIntervalTypeField } from '@/shared/presentation/components/fields/DateIntervalTypeField';
+import { FrequencyField } from '@/shared/presentation/components/fields/FrequencyField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+
+export const CashflowSection = () => {
+  const { t } = useTranslation();
+  const { formData, updateFormField } = usePurchaseForm();
+
+  if (!formData.hasCashflow) {
+    return (
+      <AppFieldSection title={t(tk.purchase.cashflowSection.title)}>
+        <HasCashflowField hasCashflow={formData.hasCashflow} onHasCashflowChange={(value) => updateFormField('hasCashflow', value)} />
+      </AppFieldSection>
+    );
+  }
+
+  return (
+    <AppFieldSection title={t(tk.purchase.cashflowSection.title)}>
+      <HasCashflowField hasCashflow={formData.hasCashflow} onHasCashflowChange={(value) => updateFormField('hasCashflow', value)} />
+      <DateField
+        label={t(tk.purchase.cashflowSection.date)}
+        selectedDate={formData.cashflowEffectiveDate}
+        onDateSelected={(date) => updateFormField('cashflowEffectiveDate', date)}
+      />
+      <DateIntervalTypeField
+        selectedDateIntervalType={formData.cashflowIntervalType}
+        onSelectDateIntervalType={(type) => updateFormField('cashflowIntervalType', type)}
+      />
+      <FrequencyField
+        selectedFrequency={formData.cashflowFrequency}
+        onSelectFrequency={(frequency) => updateFormField('cashflowFrequency', frequency)}
+      />
+    </AppFieldSection>
+  );
+};

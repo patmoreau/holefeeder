@@ -1,0 +1,3 @@
+Please read and strictly follow the instructions defined in `AGENTS.md` in the root of this project.
+
+This prevents duplication and ensures all AI agents (Claude, Cursor, Copilot, Gemini) share a single source of truth for architectural constraints, testing strategies, database schemas, and conventions.

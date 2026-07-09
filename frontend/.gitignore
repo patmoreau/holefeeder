@@ -1,0 +1,21 @@
+# environment file
+**/.env*
+!**/.env.template
+!**/.env.example
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Miscellaneous
+**/.DS_Store
+
+coverage/
+node_modules/
+dist/
+.turbo/
+
+# Legacy (pre-monorepo)
+.debug.sqlite

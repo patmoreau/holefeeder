@@ -1,0 +1,26 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "eslint.runtime": "node",
+    "sqltools.connections": [
+      {
+        "previewLimit": 50,
+        "driver": "SQLite",
+        "database": "./.debug.sqlite",
+        "name": "debug sqlite",
+      },
+      {
+        "previewLimit": 50,
+        "driver": "SQLite",
+        "name": "powersync-db",
+        "database": "./dev-client/debug-data/powersync-cache.db",
+      },
+    ],
+  },
+}
