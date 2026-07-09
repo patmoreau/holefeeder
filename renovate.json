@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>patmoreau/renovate-config"],
+  "extends": ["local>patmoreau/renovate-config", "config:recommended"],
   "packageRules": [
     {
       "matchManagers": ["nuget"],
@@ -30,6 +30,7 @@
     },
     {
       "matchManagers": ["npm"],
+      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/package.json"],
       "matchPackageNames": ["typescript"],
       "allowedVersions": "<5.5.0"
     },

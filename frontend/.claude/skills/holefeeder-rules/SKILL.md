@@ -1,18 +1,21 @@
 # .claude/skills/holefeeder-rules/SKILL.md
 ---
 description: >
-  Business rules for Holefeeder — accounts, transactions, budgets, cashflow.
-  Load when writing tests, reviewing logic, or implementing features that
-  touch financial data.
+  Business rules for Holefeeder — accounts, transactions, categories,
+  cashflow, store items. Load when writing tests, reviewing logic, or
+  implementing features that touch financial data.
 ---
 
-Business rules are documented in docs/business-rules/.
-Read only the files directly related to your task before proceeding:
+Business rules are documented in docs/business-rules/ (canonical, repo root —
+shared by the .NET backend and the JS/TS frontend).
+Start with the index, then read only the files related to your task:
 
-- Accounts: docs/business-rules/accounts.md
-- Transactions: docs/business-rules/transactions.md
-- Budgets: docs/business-rules/budgets.md
+- Index: docs/business-rules/index.md
+- Accounts: docs/business-rules/account.md
+- Transactions: docs/business-rules/transaction.md
+- Categories: docs/business-rules/category.md
 - Cashflow: docs/business-rules/cashflow.md
+- Store items: docs/business-rules/store-item.md
 
 When writing tests, assert all invariants listed in the relevant file:
 1. Focus on happy path scenarios first.

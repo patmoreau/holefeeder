@@ -371,6 +371,6 @@ linter-report/
 .certs/
 src/Web/Holefeeder.Web/ClientApp/eslint-report.md
 **/.meteor/generated/*.json
-coverage/*
+**/coverage/
 **/.meteor/
 **/build/reports/problems/problems-report.html
