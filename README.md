@@ -18,12 +18,22 @@ Here are some of the key concepts and articles which drives my thinking today:
 1. [Event Sourcing](https://docs.microsoft.com/en-us/azure/architecture/patterns/event-sourcing)
 1. [Cloud Design Patterns](https://docs.microsoft.com/en-us/azure/architecture/patterns/)
 
+## Repository structure
+
+This is a monorepo containing both the backend and the clients:
+
+- **`backend/`** — the .NET solution (API, domain, application, infrastructure) plus the Angular web app served by it, tests, and Docker Compose orchestration.
+- **`frontend/`** — the pnpm + Turborepo workspace: React Native mobile app, React web app, and shared packages.
+- **`docs/business-rules/`** — the canonical, language-agnostic business rules shared by the backend and the clients.
+
+Local development runs Docker Compose from `backend/` (`cd backend && docker compose up`).
+
 ## Requirements
 
 You will need the following:
 
 1. [Docker](https://www.docker.com/)
-1. [.Net 8](https://dotnet.microsoft.com/en-us/download)
+1. [.NET 10](https://dotnet.microsoft.com/en-us/download)
 
 ## Getting ready
 
