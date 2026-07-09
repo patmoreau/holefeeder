@@ -88,6 +88,11 @@
                 "-d",
                 "--build"
             ],
+            "options": {
+                "env": {
+                    "COMPOSE_PROFILES": "local"
+                }
+            },
             "problemMatcher": "$msCompile"
         },
         {
