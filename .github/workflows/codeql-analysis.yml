@@ -78,19 +78,19 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ./global.json
+          global-json-file: ./backend/global.json
 
       - name: Restore Api dependencies
-        run: dotnet restore src/Holefeeder.Api/Holefeeder.Api.csproj
+        run: dotnet restore backend/src/Holefeeder.Api/Holefeeder.Api.csproj
 
       - name: Build Api
-        run: dotnet build src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
+        run: dotnet build backend/src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
 
       - name: Restore Web dependencies
-        run: dotnet restore src/Holefeeder.Web/Holefeeder.Web.csproj
+        run: dotnet restore backend/src/Holefeeder.Web/Holefeeder.Web.csproj
 
       - name: Build Web
-        run: dotnet build src/Holefeeder.Web/Holefeeder.Web.csproj --no-restore
+        run: dotnet build backend/src/Holefeeder.Web/Holefeeder.Web.csproj --no-restore
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       # If this step fails, then you should remove it and run the build manually (see below)
