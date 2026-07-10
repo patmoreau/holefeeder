@@ -147,10 +147,12 @@ export const fr: TranslationStructure = {
       empty: 'Aucune dépense cette période',
       overBudget: 'Budget dépassé',
       noBudget: 'Aucun budget défini',
+      avgPerPeriod: 'moy. {{amount}}',
     },
     tagBreakdown: {
       title: 'Dépenses par étiquette',
       empty: 'Aucune dépense étiquetée cette période',
+      avgPerPeriod: 'moy. {{amount}}',
     },
   },
   home: {

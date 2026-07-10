@@ -9,6 +9,7 @@ const defaultCategorySpending = (): CategorySpending => ({
   color: aColor(),
   budgetAmount: Money.ZERO,
   spentAmount: anAmount(),
+  avgAmount: Money.ZERO,
 });
 
 export const aCategorySpending = (overrides?: Partial<CategorySpending>): CategorySpending => ({

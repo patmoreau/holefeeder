@@ -12,6 +12,9 @@ const create = (value: unknown): Result<System> => {
   return Result.success<System>(result.value as unknown as System);
 };
 
+const valid = (value: unknown): System => value as System;
+
 export const System = {
   create: create,
+  valid: valid,
 };

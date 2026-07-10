@@ -6,4 +6,5 @@ export type CategorySpending = {
   color: string;
   budgetAmount: Money;
   spentAmount: Money;
+  avgAmount: Money;
 };

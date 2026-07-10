@@ -105,6 +105,35 @@ const interval = (
   return { from: start, to: end };
 };
 
+const previousPeriods = (
+  effectiveDate: DateOnly,
+  intervalType: DateIntervalType,
+  frequency: number,
+  beforeDate: DateOnly
+): { start: DateOnly; end: DateOnly }[] => {
+  if (intervalType === DateIntervalTypes.oneTime) {
+    return [];
+  }
+
+  const periods: { start: DateOnly; end: DateOnly }[] = [];
+  let start = effectiveDate;
+  let iteration = 1;
+
+  // Walk forward from the anchor; a period is complete only when its exclusive
+  // end (the next boundary) does not pass the current period start (beforeDate).
+  for (;;) {
+    const next = addIteration(effectiveDate, frequency * iteration, intervalType);
+    if (next > beforeDate) {
+      break;
+    }
+    periods.push({ start: start, end: next });
+    start = next;
+    iteration++;
+  }
+
+  return periods;
+};
+
 const datesInRange = (
   effectiveDate: DateOnly,
   fromDate: DateOnly,
@@ -143,4 +172,5 @@ export const DateIntervalType = {
   addIteration: addIteration,
   interval: interval,
   datesInRange: datesInRange,
+  previousPeriods: previousPeriods,
 };

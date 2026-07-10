@@ -1,4 +1,4 @@
-import { type AsyncResult } from '@holefeeder/shared/core';
+import { type AsyncResult, today } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { aCategorySpending } from '@/statistics/__tests__/category-spending-for-test';
@@ -7,13 +7,14 @@ import { CategorySpending } from '@/statistics/core/category-spending';
 import { WatchCategorySpendingUseCase } from './watch-category-spending-use-case';
 
 describe('WatchCategorySpendingUseCase', () => {
+  const effectiveDate = today();
   const settings = aSettings();
   let repository: InsightsRepositoryInMemory;
   let useCase: ReturnType<typeof WatchCategorySpendingUseCase>;
 
   beforeEach(() => {
     repository = InsightsRepositoryInMemory();
-    useCase = WatchCategorySpendingUseCase(repository, settings);
+    useCase = WatchCategorySpendingUseCase(repository, effectiveDate, settings);
   });
 
   it('returns category spending when repository succeeds', async () => {

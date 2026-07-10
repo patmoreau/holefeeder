@@ -1,10 +1,11 @@
-import { type AsyncResult } from '@holefeeder/shared/core';
+import { type AsyncResult, DateOnly } from '@holefeeder/shared/core';
 import { Settings } from '@/settings/core/settings';
 import { CategorySpending } from '../category-spending';
 import { InsightsRepository } from '../insights-repository';
 
-export const WatchCategorySpendingUseCase = (repository: InsightsRepository, settings: Settings) => {
-  const watch = (onDataChange: (result: AsyncResult<CategorySpending[]>) => void) => repository.watchCategorySpending(onDataChange, settings);
+export const WatchCategorySpendingUseCase = (repository: InsightsRepository, effectiveDate: DateOnly, settings: Settings) => {
+  const watch = (onDataChange: (result: AsyncResult<CategorySpending[]>) => void) =>
+    repository.watchCategorySpending(onDataChange, effectiveDate, settings);
 
   return { watch: watch };
 };

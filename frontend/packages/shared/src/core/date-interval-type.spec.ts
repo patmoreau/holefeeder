@@ -135,6 +135,105 @@ describe('DateIntervalType', () => {
     );
   });
 
+  describe('previousPeriods', () => {
+    it.each([
+      {
+        description: 'weekly frequency 1',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.weekly,
+        frequency: 1,
+        beforeDate: '2023-01-22',
+        expected: [
+          { start: '2023-01-01', end: '2023-01-08' },
+          { start: '2023-01-08', end: '2023-01-15' },
+          { start: '2023-01-15', end: '2023-01-22' },
+        ],
+      },
+      {
+        description: 'weekly frequency 2',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.weekly,
+        frequency: 2,
+        beforeDate: '2023-01-29',
+        expected: [
+          { start: '2023-01-01', end: '2023-01-15' },
+          { start: '2023-01-15', end: '2023-01-29' },
+        ],
+      },
+      {
+        description: 'monthly frequency 1',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.monthly,
+        frequency: 1,
+        beforeDate: '2023-04-01',
+        expected: [
+          { start: '2023-01-01', end: '2023-02-01' },
+          { start: '2023-02-01', end: '2023-03-01' },
+          { start: '2023-03-01', end: '2023-04-01' },
+        ],
+      },
+      {
+        description: 'monthly frequency 3',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.monthly,
+        frequency: 3,
+        beforeDate: '2023-10-01',
+        expected: [
+          { start: '2023-01-01', end: '2023-04-01' },
+          { start: '2023-04-01', end: '2023-07-01' },
+          { start: '2023-07-01', end: '2023-10-01' },
+        ],
+      },
+      {
+        description: 'month-boundary anchor on the 31st (short months clamp)',
+        effectiveDate: '2023-01-31',
+        intervalType: DateIntervalTypes.monthly,
+        frequency: 1,
+        beforeDate: '2023-04-30',
+        expected: [
+          { start: '2023-01-31', end: '2023-02-28' },
+          { start: '2023-02-28', end: '2023-03-31' },
+          { start: '2023-03-31', end: '2023-04-30' },
+        ],
+      },
+      {
+        description: 'zero previous periods (anchor === current period start)',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.weekly,
+        frequency: 1,
+        beforeDate: '2023-01-01',
+        expected: [],
+      },
+      {
+        description: 'oneTime never has previous periods',
+        effectiveDate: '2023-01-01',
+        intervalType: DateIntervalTypes.oneTime,
+        frequency: 1,
+        beforeDate: '2024-01-01',
+        expected: [],
+      },
+    ])('returns complete past periods for $description', ({ effectiveDate, intervalType, frequency, beforeDate, expected }) => {
+      const result = DateIntervalType.previousPeriods(DateOnly.valid(effectiveDate), intervalType, frequency, DateOnly.valid(beforeDate));
+      expect(result).toEqual(expected);
+    });
+
+    it('excludes the incomplete period straddling the current period start', () => {
+      // Current period starts 2023-01-18, which falls mid-way through the weekly grid.
+      const result = DateIntervalType.previousPeriods(DateOnly.valid('2023-01-01'), DateIntervalTypes.weekly, 1, DateOnly.valid('2023-01-18'));
+      expect(result).toEqual([
+        { start: '2023-01-01', end: '2023-01-08' },
+        { start: '2023-01-08', end: '2023-01-15' },
+      ]);
+    });
+
+    it('produces contiguous periods where each end equals the next start', () => {
+      const result = DateIntervalType.previousPeriods(DateOnly.valid('2023-01-01'), DateIntervalTypes.monthly, 1, DateOnly.valid('2023-06-01'));
+      for (let i = 0; i < result.length - 1; i++) {
+        expect(result[i].end).toBe(result[i + 1].start);
+      }
+    });
+  });
+
   describe('datesInRange', () => {
     const testCases: {
       intervalType: DateIntervalType;

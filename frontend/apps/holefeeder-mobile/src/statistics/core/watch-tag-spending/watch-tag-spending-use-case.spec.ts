@@ -1,4 +1,4 @@
-import { type AsyncResult } from '@holefeeder/shared/core';
+import { type AsyncResult, today } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { aSettings } from '@/settings/core/__tests__/settings-for-test';
 import { InsightsRepositoryInMemory } from '@/statistics/__tests__/insights-repository-in-memory';
@@ -7,13 +7,14 @@ import { TagSpending } from '@/statistics/core/tag-spending';
 import { WatchTagSpendingUseCase } from './watch-tag-spending-use-case';
 
 describe('WatchTagSpendingUseCase', () => {
+  const effectiveDate = today();
   const settings = aSettings();
   let repository: InsightsRepositoryInMemory;
   let useCase: ReturnType<typeof WatchTagSpendingUseCase>;
 
   beforeEach(() => {
     repository = InsightsRepositoryInMemory();
-    useCase = WatchTagSpendingUseCase(repository, settings);
+    useCase = WatchTagSpendingUseCase(repository, effectiveDate, settings);
   });
 
   it('returns tag spending when repository succeeds', async () => {

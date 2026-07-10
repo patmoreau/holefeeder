@@ -145,10 +145,12 @@ export const en = {
       empty: 'No expenses this period',
       overBudget: 'Over budget',
       noBudget: 'No budget set',
+      avgPerPeriod: 'avg {{amount}}',
     },
     tagBreakdown: {
       title: 'Spending by Tag',
       empty: 'No tagged expenses this period',
+      avgPerPeriod: 'avg {{amount}}',
     },
   },
   home: {

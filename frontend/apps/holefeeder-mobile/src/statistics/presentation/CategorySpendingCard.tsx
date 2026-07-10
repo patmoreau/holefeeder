@@ -19,6 +19,7 @@ export const CategorySpendingCard = ({ item }: CategorySpendingCardProps) => {
 
   const budgetCents = Money.toCents(item.budgetAmount);
   const spentCents = Money.toCents(item.spentAmount);
+  const hasAverage = Money.toCents(item.avgAmount) > 0;
   const hasBudget = budgetCents > 0;
   const isOverBudget = hasBudget && spentCents > budgetCents;
   const isUnderBudget = hasBudget && !isOverBudget;
@@ -41,6 +42,11 @@ export const CategorySpendingCard = ({ item }: CategorySpendingCardProps) => {
             </AppText>
           )}
           {hasBudget && !isOverBudget && <AppText variant="footnote">{`${Math.round(ratio * 100)}%`}</AppText>}
+          {hasAverage && (
+            <AppText variant="footnote">
+              {t(tk.insights.categoryBreakdown.avgPerPeriod, { amount: LocalFormatter.currency(item.avgAmount, currentLocale, currencyCode) })}
+            </AppText>
+          )}
         </AppColumn>
       </AppListItem.Trailing>
     </AppListItem>

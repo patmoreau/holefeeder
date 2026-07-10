@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/shared/core';
+import { type AsyncResult, Result, today } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { DefaultSettings } from '@/settings/core/settings';
 import { useSettings } from '@/shared/presentation/core/use-settings';
@@ -12,8 +12,12 @@ export const useTagSpending = (): AsyncResult<TagSpending[]> => {
   const [data, setData] = useState<AsyncResult<TagSpending[]>>(Result.loading());
 
   const settings = useMemo(() => (settingsResult.isSuccess ? settingsResult.value : DefaultSettings), [settingsResult]);
+  const effectiveDate = useMemo(() => today(), []);
 
-  const useCase = useMemo(() => WatchTagSpendingUseCase(insightsRepository, settings), [insightsRepository, settings]);
+  const useCase = useMemo(
+    () => WatchTagSpendingUseCase(insightsRepository, effectiveDate, settings),
+    [insightsRepository, effectiveDate, settings]
+  );
 
   useEffect(() => {
     const unsubscribe = useCase.watch(setData);
