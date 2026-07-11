@@ -3,6 +3,7 @@ import expoConfig from 'eslint-config-expo/flat.js';
 import rootConfig from '../../eslint.config.mjs';
 
 export default defineConfig([
+  { ignores: ['expo-env.d.ts'] },
   ...rootConfig,
   ...expoConfig,
   {

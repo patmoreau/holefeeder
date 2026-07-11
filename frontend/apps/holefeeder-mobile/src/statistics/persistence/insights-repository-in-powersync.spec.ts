@@ -19,7 +19,6 @@ describe('InsightsRepositoryInPowersync', () => {
   const month4 = withDate(startOfMonth(new Date(2026, 3, 1))).toDateOnly();
   const month5 = withDate(startOfMonth(new Date(2026, 4, 1))).toDateOnly();
   const periodStart = withDate(new Date(2026, 4, 1)).toDateOnly();
-  const periodEnd = withDate(periodStart).addMonths(1).addDays(-1).toDateOnly();
   const effectiveDate = withDate(periodStart).addDays(5).toDateOnly();
   const settings = aSettings({
     effectiveDate: month1,
