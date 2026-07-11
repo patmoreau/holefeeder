@@ -33,6 +33,22 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="EditCategory"
+        options={{
+          title: t(tk.categoryEdit.title),
+          headerTransparent: true,
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
+        name="AddCategory"
+        options={{
+          title: t(tk.categoryEdit.addTitle),
+          headerTransparent: true,
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
         name="BudgetSettings"
         options={{
           presentation: 'modal',
