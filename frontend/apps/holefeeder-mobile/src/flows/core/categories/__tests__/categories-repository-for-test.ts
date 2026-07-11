@@ -1,4 +1,4 @@
-import { type AsyncResult, Result } from '@holefeeder/shared/core';
+import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
 
@@ -25,11 +25,15 @@ export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => 
     return () => {};
   };
 
+  const create = async () => Result.success(Id.newId());
+
+  const update = async (command: { id: Id }) => Result.success(command.id);
+
   const add = (...items: Category[]) => itemsInMemory.push(...items);
 
   const isLoading = () => (loadingInMemory = true);
 
   const isFailing = (errors: string[]) => (errorsInMemory = errors);
 
-  return { watch: watch, add: add, isLoading: isLoading, isFailing: isFailing };
+  return { watch: watch, create: create, update: update, add: add, isLoading: isLoading, isFailing: isFailing };
 };

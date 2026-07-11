@@ -1,7 +1,9 @@
-import { type AsyncResult, Money } from '@holefeeder/shared/core';
+import { type AsyncResult, Id, Money, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
+import { CategoriesRepository, CategoriesRepositoryErrors } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
+import { CreateCategoryCommand } from '@/flows/core/categories/create/create-category-command';
+import { UpdateCategoryCommand } from '@/flows/core/categories/update/update-category-command';
 import { watchQuery } from '@/shared/persistence/watch-query';
 
 type CategoryRow = {
@@ -34,7 +36,45 @@ export const CategoriesRepositoryInPowersync = (db: AbstractPowerSyncDatabase): 
     );
   };
 
+  const create = async (command: CreateCategoryCommand): Promise<Result<Id>> => {
+    try {
+      const id = Id.newId();
+      await db.writeTransaction(async (tx) => {
+        await tx.execute(
+          `INSERT INTO categories (id, type, name, color, budget_amount, favorite, system)
+           VALUES (?, ?, ?, ?, ?, ?, 0)`,
+          [id, command.type, command.name, command.color, Money.toCents(command.budgetAmount), command.favorite ? 1 : 0]
+        );
+      });
+      return Result.success(id);
+    } catch (error) {
+      return Result.failure([String(error)]);
+    }
+  };
+
+  const update = async (command: UpdateCategoryCommand): Promise<Result<Id>> => {
+    try {
+      let rowsAffected = 0;
+      await db.writeTransaction(async (tx) => {
+        const result = await tx.execute(
+          `UPDATE categories
+           SET type = ?, name = ?, color = ?, budget_amount = ?, favorite = ?
+           WHERE id = ? AND system = 0
+           RETURNING *`,
+          [command.type, command.name, command.color, Money.toCents(command.budgetAmount), command.favorite ? 1 : 0, command.id]
+        );
+        rowsAffected = result.rows?.length ?? 0;
+      });
+      if (rowsAffected === 0) return Result.failure([CategoriesRepositoryErrors.categoryNotFound]);
+      return Result.success(command.id);
+    } catch (error) {
+      return Result.failure([String(error)]);
+    }
+  };
+
   return {
     watch: watch,
+    create: create,
+    update: update,
   };
 };
