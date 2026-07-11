@@ -1,23 +1,21 @@
-import { useTranslation } from 'react-i18next';
-import { tk } from '@/i18n/translations';
-import { AppScreen } from '@/shared/presentation/AppScreen';
-import { AppForm } from '@/shared/presentation/components/native/AppForm';
-import { ScreenTitle } from '@/shared/presentation/ScreenTitle';
+import { listStyle } from '@expo/ui/swift-ui/modifiers';
+import { AppView } from '@/shared/presentation/AppView';
+import { AppList } from '@/shared/presentation/components/native/AppList';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { CategorySpendingList } from './CategorySpendingList';
 import { InsightsPeriodHeader } from './InsightsPeriodHeader';
 import { TagSpendingList } from './TagSpendingList';
 
 export default function InsightsScreen() {
-  const { t } = useTranslation();
-
   return (
-    <AppScreen>
-      <ScreenTitle title={t(tk.insights.title)} />
+    <AppView style={{ flex: 1 }}>
       <InsightsPeriodHeader />
-      <AppForm>
-        <CategorySpendingList />
-        <TagSpendingList />
-      </AppForm>
-    </AppScreen>
+      <AppNative style={{ flex: 1 }}>
+        <AppList modifiers={[listStyle('inset')]}>
+          <CategorySpendingList />
+          <TagSpendingList />
+        </AppList>
+      </AppNative>
+    </AppView>
   );
 }

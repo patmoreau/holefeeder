@@ -22,9 +22,9 @@ export const TagSpendingCard = ({ item }: TagSpendingCardProps) => {
   return (
     <AppListItem>
       <AppListItem.Leading>
-        <AppIcon name={AppIconMap.tag.ios} size={16} />
+        <AppIcon name={AppIconMap.tag.ios} size={20} />
       </AppListItem.Leading>
-      <AppText variant="default">{item.tag}</AppText>
+      <AppText variant="defaultSemiBold">{item.tag}</AppText>
       <AppListItem.Trailing>
         <AppColumn alignment="end">
           <AppText variant="defaultSemiBold">{LocalFormatter.currency(item.spentAmount, currentLocale, currencyCode)}</AppText>

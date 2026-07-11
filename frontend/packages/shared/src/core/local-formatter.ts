@@ -30,6 +30,20 @@ const currency = (
   }
 };
 
+const dateRange = (
+  start: DateOnly,
+  end: DateOnly,
+  locale: string,
+  options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
+): string => {
+  try {
+    const formatter = new Intl.DateTimeFormat(locale, { timeZone: 'UTC', ...options });
+    return `${formatter.format(parseISO(start))} – ${formatter.format(parseISO(end))}`;
+  } catch {
+    return `${start} – ${end}`;
+  }
+};
+
 const date = (dateValue: DateOnly, anchorDate: DateOnly, locale: string, t: TranslateFn, options?: Intl.DateTimeFormatOptions): string => {
   try {
     const dateObj = parseISO(dateValue);
@@ -56,4 +70,5 @@ export const LocalFormatter = {
   percentage,
   currency,
   date,
+  dateRange,
 } as const;

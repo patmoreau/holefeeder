@@ -2,8 +2,10 @@ import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
 import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { CategorySpending } from '@/statistics/core/category-spending';
@@ -27,7 +29,10 @@ export const CategorySpendingCard = ({ item }: CategorySpendingCardProps) => {
 
   return (
     <AppListItem>
-      <AppText variant="default">{item.categoryName}</AppText>
+      <AppListItem.Leading>
+        <AppIcon name={AppIconMap.category.ios} size={20} color={item.color} />
+      </AppListItem.Leading>
+      <AppText variant="defaultSemiBold">{item.categoryName}</AppText>
       <AppListItem.Trailing>
         <AppColumn alignment="end">
           <AppText

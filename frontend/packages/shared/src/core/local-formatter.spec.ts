@@ -122,6 +122,63 @@ describe('LocalFormatter', () => {
     });
   });
 
+  describe('dateRange', () => {
+    it('should format a range with the default month/day options', () => {
+      const start = DateOnly.valid('2023-07-01');
+      const end = DateOnly.valid('2023-07-31');
+
+      const formatted = LocalFormatter.dateRange(start, end, 'en-US');
+
+      expect(formatted).toBe('Jul 1 – Jul 31');
+    });
+
+    it('should localize month names based on the provided locale', () => {
+      const start = DateOnly.valid('2023-12-01');
+      const end = DateOnly.valid('2023-12-31');
+
+      const formatted = LocalFormatter.dateRange(start, end, 'fr-CA');
+
+      expect(formatted).toMatch(/déc/);
+    });
+
+    it('should accept custom format options', () => {
+      const start = DateOnly.valid('2023-12-01');
+      const end = DateOnly.valid('2024-01-31');
+
+      const formatted = LocalFormatter.dateRange(start, end, 'en-US', { year: 'numeric', month: 'long' });
+
+      expect(formatted).toMatch(/December/);
+      expect(formatted).toMatch(/January/);
+      expect(formatted).toMatch(/2023/);
+      expect(formatted).toMatch(/2024/);
+    });
+
+    it('should format dates in UTC regardless of the host timezone', () => {
+      const start = DateOnly.valid('2023-01-01');
+      const end = DateOnly.valid('2023-01-01');
+
+      const formatted = LocalFormatter.dateRange(start, end, 'en-US');
+
+      expect(formatted).toBe('Jan 1 – Jan 1');
+    });
+
+    it('should fallback to the raw values on Intl error', () => {
+      const start = DateOnly.valid('2023-07-01');
+      const end = DateOnly.valid('2023-07-31');
+
+      const originalDateTimeFormat = Intl.DateTimeFormat;
+      Intl.DateTimeFormat = jest.fn().mockImplementation(() => {
+        throw new Error('Invalid format');
+      }) as unknown as typeof Intl.DateTimeFormat;
+
+      const formatted = LocalFormatter.dateRange(start, end, 'en-US');
+
+      expect(formatted).toBe(`${start} – ${end}`);
+
+      Intl.DateTimeFormat = originalDateTimeFormat;
+    });
+  });
+
   describe('percentage', () => {
     it('should format percentage with 2 decimal places', () => {
       expect(LocalFormatter.percentage(12.3456)).toBe('12.35%');

@@ -1,45 +1,92 @@
-import { DateInterval, today } from '@holefeeder/shared/core';
-import { parseISO } from 'date-fns';
+import { DateInterval, LocalFormatter, today } from '@holefeeder/shared/core';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import { NO_SUMMARY } from '@/dashboard/core/watch-summary/watch-summary-use-case';
+import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
+import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { tk } from '@/i18n/translations';
 import { DefaultSettings } from '@/settings/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
+import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppText as NativeAppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { spacing } from '@/types/theme/design-tokens';
+import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
+import { Theme } from '@/types/theme/theme';
 
-const createStyles = () => ({
-  container: {
-    paddingHorizontal: spacing['3xl'],
-    paddingBottom: spacing.sm,
+const createStyles = (theme: Theme) => ({
+  banner: {
+    backgroundColor: theme.colors.primary,
+    borderBottomLeftRadius: borderRadius['4xl'],
+    borderBottomRightRadius: borderRadius['4xl'],
+    paddingHorizontal: spacing['2xl'],
+    paddingBottom: spacing['2xl'],
+    gap: spacing.xs,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  period: {
+    color: theme.colors.primaryText,
+    opacity: 0.7,
+  },
+  spendingTitle: {
+    color: theme.colors.primaryText,
+    opacity: 0.5,
+  },
+  total: {
+    color: theme.colors.primaryText,
+    fontWeight: fontWeight.bold,
   },
 });
 
 export const InsightsPeriodHeader = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const settingsResult = useSettings();
-  const { currentLocale } = useLocaleFormatter();
+  const summaryResult = useDashboard();
+  const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
+  const headerHeight = useHeaderHeight();
 
   const settings = settingsResult.isSuccess ? settingsResult.value : DefaultSettings;
+  const summary = summaryResult.isSuccess ? summaryResult.value : NO_SUMMARY;
 
   const periodLabel = useMemo(() => {
     const intervalResult = DateInterval.createFrom(today(), 0, settings.effectiveDate, settings.intervalType, settings.frequency);
     if (!intervalResult.isSuccess) return null;
 
     const { start, end } = intervalResult.value;
-    const formatter = new Intl.DateTimeFormat(currentLocale, { month: 'short', day: 'numeric', timeZone: 'UTC' });
-    return `${formatter.format(parseISO(start))} – ${formatter.format(parseISO(end))}`;
-  }, [settings, currentLocale]);
+    return LocalFormatter.dateRange(start, end, i18n.language);
+  }, [settings, i18n.language]);
 
   if (!periodLabel) return null;
 
   return (
-    <View style={styles.container}>
-      <AppText variant="subtitle">{t(tk.insights.period, { period: periodLabel })}</AppText>
+    <View style={[styles.banner, { paddingTop: headerHeight + spacing.sm }]}>
+      <AppText variant="subtitle" style={styles.period}>
+        {t(tk.insights.period, { period: periodLabel })}
+      </AppText>
+      {summaryResult.isSuccess && (
+        <>
+          <AppText variant="footnote" style={styles.spendingTitle}>
+            {t(tk.dashboard.largeHeader.spendingTitle)}
+          </AppText>
+          <AppNative matchContents>
+            <AppColumn spacing={8} alignment="start">
+              <NativeAppText variant="display" textStyle={styles.total}>
+                {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
+              </NativeAppText>
+              <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
+            </AppColumn>
+          </AppNative>
+        </>
+      )}
     </View>
   );
 };
