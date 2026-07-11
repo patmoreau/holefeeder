@@ -40,7 +40,7 @@ export const CategoryFormContent = () => {
         </AppField>
         <CategoryColorField color={formData.color} onColorChange={(value) => updateFormField('color', value)} />
       </AppFieldSection>
-      <AppFieldSection>
+      <AppFieldSection title={t(tk.categoryEdit.budget)}>
         <AmountField amount={formData.budgetAmount} onAmountChange={(value) => updateFormField('budgetAmount', value)} />
       </AppFieldSection>
       <AppFieldSection>
