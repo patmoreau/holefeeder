@@ -15,6 +15,7 @@ Start with the index, then read only the files related to your task:
 - Transactions: docs/business-rules/transaction.md
 - Categories: docs/business-rules/category.md
 - Cashflow: docs/business-rules/cashflow.md
+- Statistics: docs/business-rules/statistics.md
 - Store items: docs/business-rules/store-item.md
 
 When writing tests, assert all invariants listed in the relevant file:

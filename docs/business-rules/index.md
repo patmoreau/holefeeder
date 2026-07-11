@@ -7,6 +7,7 @@
 | Account     | [account.md](account.md)         | Balance is always computed; closed accounts cannot be reopened or closed again           |
 | Cashflow    | [cashflow.md](cashflow.md)       | Only active cashflows generate upcoming dates; cancelled cashflows cannot be reactivated |
 | Category    | [category.md](category.md)       | Managed via import; system categories required for transfers                             |
+| Statistics  | [statistics.md](statistics.md)   | Always computed, never stored; averages exclude leading empty periods                    |
 | Store Item  | [store-item.md](store-item.md)   | Code is immutable after creation; codes are unique per user                              |
 | Transaction | [transaction.md](transaction.md) | Transfers always create exactly two transactions; atomically or not at all               |
 
@@ -68,5 +69,6 @@ Transactions are **hard deleted** — they are permanently removed when deleted.
 | account.md     | 2026-05       | ✅             |
 | cashflow.md    | 2026-05       | ✅             |
 | category.md    | 2026-05       | ✅             |
+| statistics.md  | 2026-07       | ✅             |
 | store-item.md  | 2026-05       | ✅             |
 | transaction.md | 2026-05       | ✅             |
