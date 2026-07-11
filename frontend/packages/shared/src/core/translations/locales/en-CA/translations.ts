@@ -72,6 +72,30 @@ export const en = {
   cardList: {
     viewAll: 'View All',
   },
+  categoriesSection: {
+    title: 'Categories',
+    manage: 'Manage Categories',
+  },
+  categoryEdit: {
+    title: 'Edit Category',
+    addTitle: 'Add Category',
+    name: 'Name',
+    type: 'Type',
+    color: 'Color',
+    budget: 'Budget',
+    favorite: 'Favorite',
+    categoryTypes: {
+      expense: 'Expense',
+      gain: 'Gain',
+    },
+    errors: {
+      nameRequired: 'Category name is required',
+    },
+  },
+  manageCategories: {
+    title: 'Manage Categories',
+    system: 'System',
+  },
   common: {
     today: 'Today',
     yesterday: 'Yesterday',

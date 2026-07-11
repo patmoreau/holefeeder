@@ -74,6 +74,30 @@ export const fr: TranslationStructure = {
   cardList: {
     viewAll: 'Voir tout',
   },
+  categoriesSection: {
+    title: 'Catégories',
+    manage: 'Gérer les catégories',
+  },
+  categoryEdit: {
+    title: 'Modifier la catégorie',
+    addTitle: 'Ajouter une catégorie',
+    name: 'Nom',
+    type: 'Type',
+    color: 'Couleur',
+    budget: 'Budget',
+    favorite: 'Favori',
+    categoryTypes: {
+      expense: 'Dépense',
+      gain: 'Gain',
+    },
+    errors: {
+      nameRequired: 'Le nom de la catégorie est requis',
+    },
+  },
+  manageCategories: {
+    title: 'Gérer les catégories',
+    system: 'Système',
+  },
   common: {
     today: "Aujourd'hui",
     yesterday: 'Hier',
