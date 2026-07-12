@@ -11,4 +11,5 @@ public record MyDataCategoryDto
     public decimal BudgetAmount { get; init; }
     public bool Favorite { get; init; }
     public bool System { get; init; }
+    public bool Inactive { get; init; }
 }

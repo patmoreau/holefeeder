@@ -37,6 +37,7 @@ public static class ResultErrorExtensions
             { Code: CategoryErrors.CodeIdRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: CategoryErrors.CodeNameRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: CategoryErrors.CodeUserIdRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
+            { Code: CategoryErrors.CodeNotFound } => error.ToProblemDetails(StatusCodes.Status404NotFound),
             { Code: StoreItemErrors.CodeCodeAlreadyExists } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: StoreItemErrors.CodeNotFound } => error.ToProblemDetails(StatusCodes.Status404NotFound),
             { Code: TransactionErrors.CodeIdRequired } => error.ToProblemDetails(StatusCodes.Status400BadRequest),

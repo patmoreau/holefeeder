@@ -16,6 +16,7 @@ internal class CategoryBuilder : FakerBuilder<Category>
             .RuleFor(x => x.Color, _ => CategoryColorBuilder.Create().Build())
             .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
             .RuleFor(x => x.System, false)
+            .RuleFor(x => x.Inactive, false)
             .RuleFor(x => x.BudgetAmount, _ => MoneyBuilder.Create().Build())
             .RuleFor(x => x.UserId, faker => (UserId)faker.RandomGuid());
 
@@ -74,6 +75,12 @@ internal class CategoryBuilder : FakerBuilder<Category>
     public CategoryBuilder IsNotFavorite()
     {
         Faker.RuleFor(f => f.Favorite, false);
+        return this;
+    }
+
+    public CategoryBuilder IsInactive(bool isInactive = true)
+    {
+        Faker.RuleFor(f => f.Inactive, isInactive);
         return this;
     }
 

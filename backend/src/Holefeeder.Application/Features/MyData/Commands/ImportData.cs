@@ -228,6 +228,7 @@ public class ImportData : ICarterModule
                             elementColor.Value,
                             element.Favorite,
                             element.System,
+                            element.Inactive,
                             elementBudgetAmount.Value
                         );
                         if (result.IsFailure)
@@ -252,6 +253,7 @@ public class ImportData : ICarterModule
                         elementColor.Value,
                         element.Favorite,
                         element.System,
+                        element.Inactive,
                         elementBudgetAmount.Value,
                         userId);
 

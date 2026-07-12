@@ -43,6 +43,10 @@ internal class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Catego
             .HasColumnName("system")
             .IsRequired();
         builder
+            .Property(e => e.Inactive)
+            .HasColumnName("inactive")
+            .IsRequired();
+        builder
             .Property(e => e.BudgetAmount)
             .HasColumnName("budget_amount")
             .HasConversion<MoneyValueConverter>()

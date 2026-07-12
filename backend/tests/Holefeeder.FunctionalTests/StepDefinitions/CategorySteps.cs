@@ -9,7 +9,7 @@ using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 
-internal sealed class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
+internal sealed partial class CategorySteps(BudgetingDatabaseDriver budgetingDatabaseDriver)
 {
     public void Exists(IStepRunner runner) =>
         runner.Execute("category exists", async () =>

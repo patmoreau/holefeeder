@@ -63,6 +63,7 @@ public partial class PowerSync : ICarterModule
                 Result<Nothing> result = op.Type switch
                 {
                     "accounts" => await ProcessAccountOperation(op, userContext, context, logger, cancellationToken),
+                    "categories" => await ProcessCategoryOperation(op, userContext, context, logger, cancellationToken),
                     "store_items" => await ProcessStoreItemsOperation(op, userContext, context, logger, cancellationToken),
                     "transactions" => await ProcessTransactionOperation(op, userContext, context, logger, cancellationToken),
                     "cashflows" => await ProcessCashflowOperation(op, userContext, context, logger, cancellationToken),
@@ -153,6 +154,83 @@ public partial class PowerSync : ICarterModule
         catch (Exception)
         {
             LogErrorProcessingAccountOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
+            throw;
+        }
+    }
+
+    private static async Task<Result<Nothing>> ProcessCategoryOperation(SyncOperation op, IUserContext userContext, BudgetingContext context, ILogger logger, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var categoryId = CategoryId.Create(op.Id);
+            var exists = await context.Categories.SingleOrDefaultAsync(x => x.Id == categoryId && x.UserId == userContext.Id, cancellationToken);
+
+            if (op.Op == "DELETE")
+            {
+                if (exists is null)
+                {
+                    return CategoryErrors.NotFound(categoryId);
+                }
+
+                var deleteResult = exists.Modify(inactive: true);
+                if (deleteResult.IsFailure)
+                {
+                    return deleteResult.Error;
+                }
+
+                context.Update(deleteResult.Value);
+                return Nothing.Value;
+            }
+
+            if (exists is null && op.Op == "PATCH")
+            {
+                return CategoryErrors.NotFound(categoryId);
+            }
+
+            var type = op.Data.ContainsKey("type") ? ExtractCategoryType(op.Data, "type") : null;
+            var name = op.Data.ContainsKey("name") ? ExtractString(op.Data, "name") : null;
+            var color = op.Data.ContainsKey("color") ? ExtractCategoryColor(op.Data, "color") : (CategoryColor?) null;
+            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?) null;
+            var system = op.Data.ContainsKey("system") ? ExtractInt(op.Data, "system") != 0 : (bool?) null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+            var budgetAmount = op.Data.ContainsKey("budget_amount") ? ExtractMoney(op.Data, "budget_amount") : (Money?) null;
+
+            if (exists is not null)
+            {
+                var result = exists.Modify(type, name, color, favorite, system, inactive, budgetAmount);
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.Update(result.Value);
+            }
+            else
+            {
+                var result = Category.Import(
+                    categoryId,
+                    type ?? CategoryType.Expense,
+                    name ?? string.Empty,
+                    color ?? CategoryColor.Empty,
+                    favorite ?? false,
+                    system ?? false,
+                    inactive ?? false,
+                    budgetAmount ?? default,
+                    userContext.Id);
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+
+                context.Categories.Add(result.Value);
+            }
+
+            return Nothing.Value;
+        }
+        catch (Exception)
+        {
+            LogErrorProcessingCategoryOperationWithIdIdForUserUserid(logger, op.Id, userContext.Id);
             throw;
         }
     }
@@ -461,6 +539,26 @@ public partial class PowerSync : ICarterModule
         };
     }
 
+    private static CategoryType ExtractCategoryType(IReadOnlyDictionary<string, object> data, string key)
+    {
+        var json = GetJsonElement(data, key);
+        return json.ValueKind switch
+        {
+            JsonValueKind.String => CategoryType.FromName(json.GetString()!, true),
+            _ => throw new InvalidOperationException($"Expected CategoryType for '{key}', got {json.ValueKind}")
+        };
+    }
+
+    private static CategoryColor ExtractCategoryColor(IReadOnlyDictionary<string, object> data, string key)
+    {
+        var json = GetJsonElement(data, key);
+        return json.ValueKind switch
+        {
+            JsonValueKind.String => CategoryColor.Create(json.GetString()!).Value,
+            _ => throw new InvalidOperationException($"Expected string for '{key}', got {json.ValueKind}")
+        };
+    }
+
     private static DateIntervalType ExtractDateIntervalType(IReadOnlyDictionary<string, object> data, string key)
     {
         var json = GetJsonElement(data, key);
@@ -580,6 +678,9 @@ public partial class PowerSync : ICarterModule
 
     [LoggerMessage(LogLevel.Error, "Error processing account operation with id {id} for user {userId}")]
     static partial void LogErrorProcessingAccountOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
+
+    [LoggerMessage(LogLevel.Error, "Error processing category operation with id {id} for user {userId}")]
+    static partial void LogErrorProcessingCategoryOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);
 
     [LoggerMessage(LogLevel.Error, "Error processing store item operation with id {id} for user {userId}")]
     static partial void LogErrorProcessingStoreItemOperationWithIdIdForUserUserid(ILogger logger, Guid id, UserId userId);

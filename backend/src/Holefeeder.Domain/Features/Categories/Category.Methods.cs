@@ -7,13 +7,14 @@ namespace Holefeeder.Domain.Features.Categories;
 public sealed partial record Category
 {
     public Result<Category> Modify(CategoryType? type = null, string? name = null, CategoryColor? color = null,
-        bool? favorite = null, bool? system = null, Money? budgetAmount = null)
+        bool? favorite = null, bool? system = null, bool? inactive = null, Money? budgetAmount = null)
     {
         var newType = type ?? Type;
         var newName = name ?? Name;
         var newColor = color ?? Color;
         var newFavorite = favorite ?? Favorite;
         var newSystem = system ?? System;
+        var newInactive = inactive ?? Inactive;
         var newBudgetAmount = budgetAmount ?? BudgetAmount;
 
         var result = ResultAggregate.Create()
@@ -24,6 +25,7 @@ public sealed partial record Category
             {
                 Favorite = newFavorite,
                 System = newSystem,
+                Inactive = newInactive,
             }.ToResult());
     }
 }

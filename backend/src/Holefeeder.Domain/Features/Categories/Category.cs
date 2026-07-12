@@ -27,6 +27,8 @@ public sealed partial record Category : IAggregateRoot<CategoryId>
 
     public bool System { get; private init; }
 
+    public bool Inactive { get; private init; }
+
     public Money BudgetAmount { get; }
 
     public UserId UserId { get; }

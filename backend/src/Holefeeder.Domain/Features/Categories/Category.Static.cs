@@ -8,7 +8,7 @@ namespace Holefeeder.Domain.Features.Categories;
 public sealed partial record Category
 {
     public static Result<Category> Create(CategoryType type, string name, CategoryColor color, bool favorite,
-        bool system, Money budgetAmount, UserId userId)
+        bool system, bool inactive, Money budgetAmount, UserId userId)
     {
         var result = ResultAggregate.Create()
             .Ensure(NameValidation(name))
@@ -18,12 +18,13 @@ public sealed partial record Category
             () => new Category(CategoryId.New, type, name, color, budgetAmount, userId)
             {
                 Favorite = favorite,
-                System = system
+                System = system,
+                Inactive = inactive
             }.ToResult());
     }
 
     public static Result<Category> Import(CategoryId id, CategoryType type, string name, CategoryColor color,
-        bool favorite, bool system, Money budgetAmount, UserId userId)
+        bool favorite, bool system, bool inactive, Money budgetAmount, UserId userId)
     {
         var result = ResultAggregate.Create()
             .Ensure(IdValidation(id))
@@ -34,7 +35,8 @@ public sealed partial record Category
             () => new Category(id, type, name, color, budgetAmount, userId)
             {
                 Favorite = favorite,
-                System = system
+                System = system,
+                Inactive = inactive
             }.ToResult());
     }
 }

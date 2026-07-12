@@ -36,7 +36,8 @@ internal static class CategoryMapper
             Color = entity.Color,
             Favorite = entity.Favorite,
             Name = entity.Name,
-            System = entity.System
+            System = entity.System,
+            Inactive = entity.Inactive
         };
 
         return dto;

@@ -11,6 +11,7 @@ using Holefeeder.FunctionalTests.Features;
 
 using static Holefeeder.Application.UseCases.PowerSync;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
+using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
@@ -53,6 +54,32 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .Given(AValidAccountPutRequest)
             .When(TheUser.SyncTheirData)
             .Then(Account.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACategoryDelete() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Category.Exists)
+            .And(AValidCategoryDeleteRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Category.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACategoryPatch() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Category.Exists)
+            .And(AValidCategoryPatchRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Category.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACategoryPut() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(AValidCategoryPutRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Category.ShouldBeSynced)
             .PlayAsync();
 
     [Fact]
@@ -200,6 +227,70 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
                     {"description", account.Description},
                     {"favorite", account.Favorite ? 1 : 0},
                     {"inactive", account.Inactive ? 1 : 0},
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCategoryDeleteRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            category.Should().NotBeNull();
+
+            var request = GivenASyncRequest()
+                .WithType("categories")
+                .WithOperation("DELETE")
+                .WithId(category.Id)
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCategoryPatchRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var category = runner.GetContextData<Category>(CategoryContext.ExistingCategory);
+            category.Should().NotBeNull();
+
+            var modified = category.Modify(name: "Updated via sync", budgetAmount: category.BudgetAmount * 2m);
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("categories")
+                .WithOperation("PATCH")
+                .WithId(category.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"name", modified.Value.Name},
+                    {"budget_amount", (int) (modified.Value.BudgetAmount * 100m)}, // Amount is in cents
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void AValidCategoryPutRequest(IStepRunner runner) =>
+        runner.Execute(() =>
+        {
+            var category = GivenACategory()
+                .ForUser(TestUsers[AuthorizedUser].UserId)
+                .Build();
+
+            runner.SetContextData(PowerSyncContext.SyncData, category);
+            var request = GivenASyncRequest()
+                .WithType("categories")
+                .WithOperation("PUT")
+                .WithId(category.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"type", category.Type.Name},
+                    {"name", category.Name},
+                    {"color", (string) category.Color},
+                    {"budget_amount", (int) (category.BudgetAmount * 100m)}, // Amount is in cents
+                    {"favorite", category.Favorite ? 1 : 0},
+                    {"system", category.System ? 1 : 0},
+                    {"inactive", category.Inactive ? 1 : 0},
                 })
                 .Build();
             runner.SetContextData(RequestContext.CurrentRequest, request);

@@ -15,7 +15,8 @@ internal sealed class MyDataCategoryDtoBuilder : FakerBuilder<MyDataCategoryDto>
         .RuleFor(f => f.Color, faker => faker.Internet.Color())
         .RuleFor(f => f.BudgetAmount, faker => faker.Finance.Amount())
         .RuleFor(f => f.Favorite, faker => faker.Random.Bool())
-        .RuleFor(f => f.System, faker => faker.Random.Bool());
+        .RuleFor(f => f.System, faker => faker.Random.Bool())
+        .RuleFor(f => f.Inactive, faker => faker.Random.Bool());
 
     public static MyDataCategoryDtoBuilder GivenMyCategoryData() => new();
 }

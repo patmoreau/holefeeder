@@ -103,6 +103,7 @@ public class CategoryTests
         private readonly CategoryColor _categoryColor = CategoryColorBuilder.Create().Build();
         private readonly bool _favorite = Faker.Random.Bool();
         private readonly bool _system = Faker.Random.Bool();
+        private readonly bool _inactive = Faker.Random.Bool();
         private readonly Money _budgetAmount = MoneyBuilder.Create().Build();
         private UserId _userId = (UserId)Faker.Random.Guid();
 
@@ -113,6 +114,7 @@ public class CategoryTests
                 _categoryColor,
                 _favorite,
                 _system,
+                _inactive,
                 _budgetAmount,
                 _userId);
 
@@ -123,6 +125,7 @@ public class CategoryTests
                 _categoryColor,
                 _favorite,
                 _system,
+                _inactive,
                 _budgetAmount,
                 _userId);
 
