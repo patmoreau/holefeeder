@@ -1,9 +1,12 @@
 import Add from '@expo/material-symbols/add.xml';
 import AddCircle from '@expo/material-symbols/add_circle.xml';
 import Analytics from '@expo/material-symbols/analytics.xml';
+import ArrowDropDown from '@expo/material-symbols/arrow_drop_down.xml';
 import CalendarToday from '@expo/material-symbols/calendar_today.xml';
+import Check from '@expo/material-symbols/check.xml';
 import ChevronLeft from '@expo/material-symbols/chevron_left.xml';
 import ChevronRight from '@expo/material-symbols/chevron_right.xml';
+import Circle from '@expo/material-symbols/circle.xml';
 import Close from '@expo/material-symbols/close.xml';
 import CreditCard from '@expo/material-symbols/credit_card.xml';
 import Dashboard from '@expo/material-symbols/dashboard.xml';
@@ -20,6 +23,7 @@ import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
 import Settings from '@expo/material-symbols/settings.xml';
 import ShoppingCart from '@expo/material-symbols/shopping_cart.xml';
+import Star from '@expo/material-symbols/star.xml';
 import Storefront from '@expo/material-symbols/storefront.xml';
 import Sync from '@expo/material-symbols/sync.xml';
 import TrendingDown from '@expo/material-symbols/trending_down.xml';
@@ -44,6 +48,7 @@ const universalIconMapping = {
   cashflow: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },
   category: { ios: 'tray.2', android: Label },
   close: { ios: 'xmark', android: Close },
+  circle: { ios: 'circle.fill', android: Circle },
   connected: {
     ios: 'rectangle.connected.to.line.below',
     android: NetworkCheck,
@@ -51,10 +56,12 @@ const universalIconMapping = {
   dashboard: { ios: 'rectangle.3.group.fill', android: Dashboard },
   delete: { ios: 'delete.left', android: Delete },
   description: { ios: 'pencil.and.list.clipboard', android: EditNote },
+  dropdown: { ios: 'chevron.up.chevron.down', android: ArrowDropDown },
   edit: { ios: 'square.and.pencil', android: Edit },
   download: { ios: 'square.and.arrow.down', android: Download },
   expand: { ios: 'chevron.right', android: ChevronRight },
   expiresAt: { ios: 'arrow.trianglehead.2.clockwise', android: LockClock },
+  favorite: { ios: 'star.fill', android: Star },
   frequency: { ios: 'clock.badge.exclamationmark', android: FileUploadOff },
   insights: { ios: 'chart.bar.fill', android: Analytics },
   language: { ios: 'globe', android: Language },
@@ -64,7 +71,8 @@ const universalIconMapping = {
     ios: 'square.and.arrow.up.trianglebadge.exclamationmark',
     android: FileUploadOff,
   },
-  save: { ios: 'checkmark', android: AddCircle },
+  save: { ios: 'checkmark.app', android: AddCircle },
+  selected: { ios: 'checkmark', android: Check },
   settings: { ios: 'gearshape.fill', android: Settings },
   share: { ios: 'square.and.arrow.up', android: Upload },
   storeItem: { ios: 'shippingbox', android: Storefront },

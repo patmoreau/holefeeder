@@ -16,6 +16,7 @@ export type ButtonProps = {
   label?: string;
   icon?: UniversalIcon;
   iconPosition?: 'left' | 'right';
+  iconColor?: string;
   variant?: AppButtonVariant;
   onPress?: () => void;
   children?: React.ReactNode;
@@ -70,6 +71,7 @@ export const AppButton = ({
   label,
   icon,
   iconPosition = 'left',
+  iconColor,
   variant = AppButtonVariant.secondary,
   onPress = () => {},
   style,
@@ -81,13 +83,12 @@ export const AppButton = ({
   const modifiers: ModifierConfig[] = [];
   if (Platform.OS === 'ios') {
     modifiers.push(buttonStyle(variantMapping[variant]));
-    modifiers.push(tint(variantColor(variant, theme)));
+    modifiers.push(tint(iconColor ? iconColor : variantIconColor(variant, theme)));
   }
   if (!icon) {
     return <ExpoButton label={label} onPress={onPress} modifiers={modifiers} disabled={disabled} />;
   }
-
-  const buttonIcon = <ExpoIcon name={Icon.select(icon)} size={20} color={variantIconColor(variant, theme)} />;
+  const buttonIcon = <ExpoIcon name={Icon.select(icon)} size={20} color={iconColor ? iconColor : variantIconColor(variant, theme)} />;
 
   return (
     <ExpoButton label={label} onPress={onPress} modifiers={modifiers} disabled={disabled}>

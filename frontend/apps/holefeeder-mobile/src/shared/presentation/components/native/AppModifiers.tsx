@@ -1,4 +1,4 @@
-import { background, border, cornerRadius, frame } from '@expo/ui/swift-ui/modifiers';
+import { background, border, cornerRadius, foregroundStyle, frame } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
 
 type NamedColor =
@@ -28,4 +28,5 @@ export const AppModifiers = {
   background: (color: Color) => background(color),
   border: (color: Color) => border({ color: color }),
   cornerRadius: (radius: number) => cornerRadius(radius),
+  foregroundStyle: (color: Color) => foregroundStyle(color),
 } as const;
