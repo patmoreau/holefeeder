@@ -362,6 +362,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The self-hosted runner can retain root-owned bind-mount directories from
+          # prior docker-compose deploys, which makes checkout cleanup fail before
+          # the new revision is fetched.
+          clean: false
 
       - name: Create .env file
         run: |
