@@ -1,0 +1,83 @@
+{
+  // --- General / debug ---
+  "debug.internalConsoleOptions": "openOnSessionStart",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "search.exclude": {
+    "**/node_modules": true
+  },
+
+  // --- File nesting (dart from frontend + ts/tsx from mobile) ---
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.dart": "$(capture).*.dart",
+    "*.ts": "$(capture).spec.ts, $(capture).spec.tsx",
+    "*.tsx": "${capture}.ts, $(capture).spec.tsx, ${capture}.ios.tsx"
+  },
+
+  // --- Dart / Flutter (frontend) ---
+  "dart.lineLength": 80,
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [
+      80
+    ],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+
+  // --- TypeScript / ESLint / Prettier (frontend + mobile) ---
+  // NOTE: frontend/.vscode had "prettier.enable": false, which was dropped
+  // because the mobile app relies on Prettier as its formatter. Prettier is
+  // now scoped per-language below instead of enabled/disabled globally.
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "typescript.preferences.excludeLibrarySymbolsInNavTo": true,
+  "typescript.tsconfig.fallback": "tsconfig.test.json",
+  "eslint.useFlatConfig": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.sortMembers": "explicit"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // --- Backend (SQLTools / Mend diff base) ---
+  "WhiteSource Advise.Diff.BaseBranch": "main",
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 52339,
+      "driver": "MariaDB",
+      "name": "localhost",
+      "username": "root",
+      "database": "budgeting_tests"
+    }
+  ]
+}

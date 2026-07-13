@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: Holefeeder.Api Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/backend/src/Holefeeder.Api/Holefeeder.Api.csproj"
+        },
+        {
+            "type": "expo",
+            "request": "attach",
+            "name": "Debug Expo app",
+            "projectRoot": "${workspaceFolder}/frontend/apps/holefeeder-mobile",
+            "bundlerPort": "8081",
+            "bundlerHost": "127.0.0.1"
+        }
+    ],
+    "compounds": []
+}

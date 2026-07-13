@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -42,6 +42,9 @@
             "label": "holefeeder test",
             "command": "dotnet",
             "type": "process",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
             "args": [
                 "test",
                 "--settings",
@@ -57,8 +60,8 @@
             "type": "process",
             "args": [
                 "reportgenerator",
-                "-reports:${workspaceFolder}/coverage/coverage.cobertura.xml",
-                "-targetdir:${workspaceFolder}/coverage",
+                "-reports:${workspaceFolder}/backend/coverage/coverage.cobertura.xml",
+                "-targetdir:${workspaceFolder}/backend/coverage",
                 "-filefilters:-*.g.cs"
             ],
             "problemMatcher": "$msCompile"
@@ -81,14 +84,15 @@
             "args": [
                 "compose",
                 "-f",
-                "${workspaceFolder}/docker-compose.yaml",
+                "${workspaceFolder}/backend/docker-compose.yaml",
                 "-f",
-                "${workspaceFolder}/docker-compose.Staging.yaml",
+                "${workspaceFolder}/backend/docker-compose.Staging.yaml",
                 "up",
                 "-d",
                 "--build"
             ],
             "options": {
+                "cwd": "${workspaceFolder}/backend",
                 "env": {
                     "COMPOSE_PROFILES": "local"
                 }
@@ -99,14 +103,26 @@
             "label": "Clean Solution",
             "type": "shell",
             "command": "for d in bin obj; do find . -type d -name \"$d\" -print0 | xargs -0 rm -rf; done",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
             "group": "build",
-            "detail": "Deletes all 'bin' and 'obj' folders in the workspace.",
+            "detail": "Deletes all 'bin' and 'obj' folders in the backend workspace.",
             "problemMatcher": [],
             "presentation": {
                 "panel": "dedicated",
                 "revealProblems": "never",
                 "clear": true
             }
+        },
+        {
+            "label": "mobile: pnpm run ios",
+            "type": "shell",
+            "command": "pnpm run ios",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend/apps/holefeeder-mobile"
+            },
+            "problemMatcher": []
         }
     ]
 }
