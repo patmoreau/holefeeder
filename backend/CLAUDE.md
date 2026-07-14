@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Workflow — Test-Driven Development
+
+This project is developed with **TDD**. For **every new feature**, BEFORE writing any
+implementation code:
+
+1. **State the test plan first.** Enumerate the cases you will cover — happy path, edge
+   cases, exclusions, aggregation/averaging, and error handling — and let the author
+   confirm or adjust before implementation starts.
+2. **Then implement**, writing the tests first.
+
+A good test arranges realistic, varied data with builders, covers the happy path **and**
+edge cases (empty/zero values, exclusions, error handling), and asserts precise expected
+values rather than merely checking that a result exists.
+
 ## Commands
 
 ### Build

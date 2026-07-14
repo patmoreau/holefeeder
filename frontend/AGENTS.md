@@ -7,6 +7,29 @@
 > 2. Update the relevant per-app `AGENTS.md` files to reflect the changes.
 > 3. Ensure these instructions are updated to reflect all structural or architectural changes in the codebase, with specific examples where applicable.
 
+## Workflow — Test-Driven Development
+
+This project is developed with **TDD**. For **every new feature**, BEFORE writing any
+implementation code:
+
+1. **State the test plan first.** Enumerate the cases you will cover — happy path, edge
+   cases, exclusions, aggregation/averaging, and error handling — and let the author
+   confirm or adjust before implementation starts.
+2. **Then implement**, writing the tests first.
+
+Match the depth of
+`apps/holefeeder-mobile/src/statistics/persistence/insights-repository-in-powersync.spec.ts`,
+the reference for a good test in this repo:
+
+- Runs against a real database (`setupDatabaseForTest`), not mocks.
+- Uses builders (`aCategory`, `aTransaction`, `aSettings`) to arrange realistic, varied
+  data across multiple periods.
+- Covers the happy path **and** edge cases: zero/empty values, exclusions (gain
+  categories, system categories), averaging across previous periods, and database-error
+  handling.
+- Asserts precise expected values (`toBeSuccessWithValue`, `toBeFailureWithErrors`), not
+  just "is defined".
+
 ## Monorepo Structure
 
 This is a **pnpm + Turborepo** monorepo.
