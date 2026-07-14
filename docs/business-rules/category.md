@@ -11,7 +11,7 @@ last-reviewed: 2026-05
 A category classifies transactions and cashflows. Every transaction must belong to exactly one category. Categories have a type that determines how they affect account balances, a display colour, and
 an optional budget amount for planning purposes.
 
-Categories are scoped to the owning user and are managed through data import rather than individual create/modify/delete operations.
+Categories are scoped to the owning user. They can be created, modified, and soft deleted individually (synced via PowerSync), as well as populated through data import.
 
 ---
 
@@ -51,7 +51,14 @@ Each category can carry a budget amount used for planning and statistics. A budg
 
 ---
 
+## Deletion
+
+A category cannot be hard deleted. Because transactions are always attached to a category, deleting the record would orphan those transactions, so a category must instead be soft deleted by setting its `Inactive` flag to `true`. The record is retained; an inactive category is hidden from selection in the UI but still resolves for existing transactions that reference it.
+
+---
+
 ## Constraints
 
 - Name must be between 1 and 255 characters
 - All categories are scoped to the owning user — cross-user access is rejected
+- Categories cannot be hard deleted — they must be soft deleted (set `Inactive` to `true`) because transactions are always attached to them
