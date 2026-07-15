@@ -25,7 +25,7 @@
     "@expo/ui": "57.0.4",
     "@expo/vector-icons": "15.1.1",
     "@holefeeder/shared": "workspace:*",
-    "@op-engineering/op-sqlite": "17.1.2",
+    "@op-engineering/op-sqlite": "15.2.14",
     "@powersync/common": "1.57.0",
     "@powersync/op-sqlite": "0.9.13",
     "@powersync/react": "1.10.0",
@@ -75,8 +75,8 @@
     "react-native-worklets": "0.10.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-async-generator-functions": "8.0.1",
-    "@babel/runtime": "8.0.0",
+    "@babel/plugin-transform-async-generator-functions": "7.29.0",
+    "@babel/runtime": "7.29.2",
     "@expo/config": "~57.0.2",
     "@expo/config-types": "~57.0.1",
     "@faker-js/faker": "10.5.0",

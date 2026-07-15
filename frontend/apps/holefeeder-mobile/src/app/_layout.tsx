@@ -13,7 +13,6 @@ import { loggerFactoryForReactNative } from '@/shared/core/logger/logger-factory
 import { LanguageProvider } from '@/shared/language/presentation/LanguageProvider';
 import { AppStorageInMmkv } from '@/shared/persistence/app-storage-in-mmkv';
 import { DatabaseFactory } from '@/shared/persistence/db';
-import { PowersyncConnectorNoop } from '@/shared/persistence/powersync-connector-noop';
 import { PowerSyncAuthProvider } from '@/shared/persistence/presentation/PowerSyncAuthProvider';
 import { RepositoryProvider } from '@/shared/repositories/presentation/RepositoryContext';
 import { ThemeProvider } from '@/shared/theme/presentation/ThemeProvider';
@@ -38,14 +37,16 @@ const RootLayout = () => {
     const init = async () => {
       let db: PowerSyncDatabase | undefined;
       try {
-        logger.warn('Initializing database connection with PowersyncConnectorNoop');
+        logger.warn('Initializing database');
+        // The connection lifecycle is owned solely by PowerSyncAuthProvider, which connects with the
+        // authenticated connector once a user is available and disconnects when they sign out. Connecting
+        // here (previously with a noop connector) started a second, credential-less connection whose
+        // disconnected status leaked into the sync settings screen.
         db = await DatabaseFactory.init();
-        await db.connect(PowersyncConnectorNoop());
-        // db.connect(PowersyncConnectorNoop()).catch((e) => logger.error('Background sync failed', e));
       } catch (error) {
         console.error('Database initialization error:', error);
       } finally {
-        logger.warn('Initializing database connection done');
+        logger.warn('Initializing database done');
         if (mounted) {
           setDatabase(db);
           setLoading(false);
