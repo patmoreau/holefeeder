@@ -21,7 +21,7 @@ export const CategoriesRepositoryInPowersync = (db: AbstractPowerSyncDatabase): 
     return watchQuery<CategoryRow, Category>(
       db,
       `
-        SELECT id, type, name, color, budget_amount as budgetAmount, favorite, system FROM categories ORDER BY favorite DESC, name
+        SELECT id, type, name, color, budget_amount as budgetAmount, favorite, system FROM categories WHERE inactive IS NOT 1 ORDER BY favorite DESC, name
         `,
       [],
       (row) =>
@@ -41,8 +41,8 @@ export const CategoriesRepositoryInPowersync = (db: AbstractPowerSyncDatabase): 
       const id = Id.newId();
       await db.writeTransaction(async (tx) => {
         await tx.execute(
-          `INSERT INTO categories (id, type, name, color, budget_amount, favorite, system)
-           VALUES (?, ?, ?, ?, ?, ?, 0)`,
+          `INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, inactive)
+           VALUES (?, ?, ?, ?, ?, ?, 0, 0)`,
           [id, command.type, command.name, command.color, Money.toCents(command.budgetAmount), command.favorite ? 1 : 0]
         );
       });
@@ -72,9 +72,30 @@ export const CategoriesRepositoryInPowersync = (db: AbstractPowerSyncDatabase): 
     }
   };
 
+  const deactivate = async (id: Id): Promise<Result<void>> => {
+    try {
+      let rowsAffected = 0;
+      await db.writeTransaction(async (tx) => {
+        const result = await tx.execute(
+          `UPDATE categories
+           SET inactive = 1
+           WHERE id = ? AND system = 0
+           RETURNING *`,
+          [id]
+        );
+        rowsAffected = result.rows?.length ?? 0;
+      });
+      if (rowsAffected === 0) return Result.failure([CategoriesRepositoryErrors.categoryNotFound]);
+      return Result.success();
+    } catch (error) {
+      return Result.failure([String(error)]);
+    }
+  };
+
   return {
     watch: watch,
     create: create,
     update: update,
+    deactivate: deactivate,
   };
 };

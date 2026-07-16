@@ -19,7 +19,7 @@ bucket_definitions:
       # Sync all categories - CONVERT MONEY TO CENTS
       - SELECT id, type, name, color,
           CAST((budget_amount * 100) + 0.5 AS INTEGER) as budget_amount,
-          favorite, system, user_id
+          favorite, system, inactive, user_id
         FROM categories
         WHERE user_id = bucket.user_id
 

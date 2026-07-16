@@ -7,6 +7,7 @@ export type CategoriesRepository = {
   watch: (onDataChange: (result: AsyncResult<Category[]>) => void) => () => void;
   create: (command: CreateCategoryCommand) => Promise<Result<Id>>;
   update: (command: UpdateCategoryCommand) => Promise<Result<Id>>;
+  deactivate: (id: Id) => Promise<Result<void>>;
 };
 
 export const CategoriesRepositoryErrors = {

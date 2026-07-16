@@ -49,6 +49,7 @@ export const AppSchema = new Schema({
       budget_amount: column.integer,
       favorite: column.integer,
       system: column.integer,
+      inactive: column.integer,
       user_id: column.text,
     },
     {
@@ -57,6 +58,7 @@ export const AppSchema = new Schema({
         categories_type: ['type'],
         categories_system: ['system'],
         categories_system_type: ['system', 'type'],
+        categories_inactive: ['inactive'],
       },
     }
   ),

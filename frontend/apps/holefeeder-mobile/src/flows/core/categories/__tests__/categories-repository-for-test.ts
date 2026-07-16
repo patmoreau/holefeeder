@@ -6,10 +6,12 @@ export type CategoriesRepositoryInMemory = CategoriesRepository & {
   add: (...items: Category[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
+  deactivatedIds: () => Id[];
 };
 
 export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => {
   const itemsInMemory: Category[] = [];
+  const deactivatedInMemory: Id[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -29,11 +31,30 @@ export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => 
 
   const update = async (command: { id: Id }) => Result.success(command.id);
 
+  const deactivate = async (id: Id) => {
+    if (errorsInMemory.length > 0) {
+      return Result.failure(errorsInMemory);
+    }
+    deactivatedInMemory.push(id);
+    return Result.success();
+  };
+
   const add = (...items: Category[]) => itemsInMemory.push(...items);
 
   const isLoading = () => (loadingInMemory = true);
 
   const isFailing = (errors: string[]) => (errorsInMemory = errors);
 
-  return { watch: watch, create: create, update: update, add: add, isLoading: isLoading, isFailing: isFailing };
+  const deactivatedIds = () => deactivatedInMemory;
+
+  return {
+    watch: watch,
+    create: create,
+    update: update,
+    deactivate: deactivate,
+    add: add,
+    isLoading: isLoading,
+    isFailing: isFailing,
+    deactivatedIds: deactivatedIds,
+  };
 };

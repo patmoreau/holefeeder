@@ -89,12 +89,13 @@ Domain primitives use nominal typing via brand: `Money`, `Variation`, `Id`, `Dat
 All domain operations return `Result<T>` (`Success<T> | Failure`) or `AsyncResult<T>` (adds `Loading`).
 
 ```typescript
-if (result.isSuccess)  result.value   // T
-if (result.isFailure)  result.errors  // string[]
-if (result.isLoading)  /* show spinner */
+if (result.isSuccess) result.value; // T
+if (result.isFailure) result.errors; // string[]
+if (result.isLoading)
+  /* show spinner */
 
-Result.combine({ a: resultA, b: resultB })  // merges multiple results
-Result.combineArray(resultArray)
+  Result.combine({ a: resultA, b: resultB }); // merges multiple results
+Result.combineArray(resultArray);
 ```
 
 ## Repository + Use-Case Pattern
@@ -114,8 +115,13 @@ Example flow: `useAccounts` → `WatchAccountsUseCase` → `AccountsRepository` 
 ```typescript
 const useAccounts = (): AsyncResult<Account[]> => {
   const { accountRepository } = useRepositories();
-  const [accounts, setAccounts] = useState<AsyncResult<Account[]>>(Result.loading());
-  const useCase = useMemo(() => WatchAccountsUseCase(accountRepository), [accountRepository]);
+  const [accounts, setAccounts] = useState<AsyncResult<Account[]>>(
+    Result.loading(),
+  );
+  const useCase = useMemo(
+    () => WatchAccountsUseCase(accountRepository),
+    [accountRepository],
+  );
   useEffect(() => {
     const unsubscribe = useCase.query(setAccounts);
     return () => unsubscribe();
@@ -165,7 +171,7 @@ are thin re-export stubs that point to `@holefeeder/core`.
 The app syncs offline-first via PowerSync (SQLite). All tables use a `user_id` column to isolate multi-tenant data. Monetary values (`amount`, `open_balance`, `budget_amount`) are stored strictly as **positive integer cents**. In other words, all amounts and balances are strictly positive in the database. When calculating a balance: if the associated category type or account type is an expense/liability, a multiplier of `-1` is applied. If the category or account type is a gain/asset, a multiplier of `1` is applied. Convert via `Money.fromCents()` or `Variation.fromCents()`.
 
 - **`accounts`**: User financial accounts. Includes `type`, `name`, `favorite`, `open_balance`, `open_date`, `description`, `inactive`, `user_id`.
-- **`categories`**: Transaction categories. Includes `type`, `name`, `color`, `budget_amount`, `favorite`, `system`, `user_id`.
+- **`categories`**: Transaction categories. Includes `type`, `name`, `color`, `budget_amount`, `favorite`, `system`, `inactive`, `user_id`. Soft deleted via the `inactive` flag (never hard deleted, so existing transactions keep resolving).
 - **`cashflows`**: Recurring transactions/bills. Includes `effective_date`, `amount`, `interval_type`, `frequency`, `recurrence`, `description`, `account_id`, `category_id`, `inactive`, `tags`, `user_id`.
 - **`transactions`**: Individual ledger transactions. Includes `date`, `amount`, `description`, `account_id`, `category_id`, `cashflow_id`, `cashflow_date`, `tags`, `user_id`.
 - **`store_items`**: Key-value pairs for arbitrary user data. Includes `code`, `data`, `user_id`.
@@ -177,12 +183,9 @@ This application enforces a testing strategy focused on high domain reliability 
 - **Unit & Integration Tests (Jest)**:
   - Uses `jest` with `jest-expo` preset. Run tests using `pnpm test`.
   - Test files are named `*.spec.ts(x)` or `*.test.ts(x)`. Files within `__tests__/` are counted towards coverage.
+  - Do not test react-native UI components as they are untestable. Hooks must be tested.
   - Focus on **fakes** instead of mocks for state and persistence. For example, use in-memory repository fakes (`repositories-in-memory`) instead of creating real database instances or heavily mocking methods. Global mocks/fakes are located in `__mocks__/` at root, context helpers in `tests/setup/`.
   - **Coverage Threshold**: Strictly enforced at 70% for branches, functions, lines, and statements (`pnpm test -- --coverage`).
 - **E2E Tests (Maestro)**:
   - User flows are verified using Maestro. Run via `pnpm test:e2e:ios`.
   - Test suites run from the `.maestro/` directory and are filtered with the tag `regression`.
-
-## Git
-
-- Do not commit

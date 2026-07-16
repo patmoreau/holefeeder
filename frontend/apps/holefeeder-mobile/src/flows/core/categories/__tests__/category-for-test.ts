@@ -24,16 +24,20 @@ const defaultCategory = (): Category => ({
 const times = (count: number, overrides?: Partial<Category>): CategoryForTest[] => Array.from({ length: count }, () => aCategory(overrides));
 
 const store = async (db: AbstractPowerSyncDatabase, category: CategoryForTest): Promise<CategoryForTest> => {
-  await db.execute('INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-    category.id,
-    category.type,
-    category.name,
-    category.color,
-    Money.toCents(category.budgetAmount),
-    category.favorite ? 1 : 0,
-    category.system ? 1 : 0,
-    anId(),
-  ]);
+  await db.execute(
+    'INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, inactive, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      category.id,
+      category.type,
+      category.name,
+      category.color,
+      Money.toCents(category.budgetAmount),
+      category.favorite ? 1 : 0,
+      category.system ? 1 : 0,
+      0,
+      anId(),
+    ]
+  );
   return category;
 };
 

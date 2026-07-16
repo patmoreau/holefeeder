@@ -1,19 +1,25 @@
 import { Icon } from '@expo/ui';
+import { Button } from '@expo/ui/swift-ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
+import { DeactivateCategoryUseCase } from '@/flows/core/categories/deactivate/deactivate-category-use-case';
 import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
+import { AppListForEach } from '@/shared/presentation/components/native/AppListForEach';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { showAlert } from '@/shared/presentation/core/show-alert';
+import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
@@ -27,9 +33,19 @@ export const ManageCategoriesScreen = () => {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
   const result = useCategories();
+  const { categoryRepository } = useRepositories();
+  const { showDeleteAlert } = showAlert(t);
 
   const onAdd = () => router.push('/(app)/AddCategory');
   const onEdit = (category: Category) => router.push({ pathname: '/(app)/EditCategory', params: { id: category.id as string } });
+
+  const onDelete = (category: Category) =>
+    showDeleteAlert(category.name, {
+      onConfirm: () => {
+        DeactivateCategoryUseCase(categoryRepository).execute(category.id);
+      },
+      onCancel: () => {},
+    });
 
   const toolbar = (
     <Stack.Toolbar placement="right">
@@ -51,21 +67,35 @@ export const ManageCategoriesScreen = () => {
       {toolbar}
       <AppNative style={{ flex: 1 }}>
         <AppList modifiers={[listStyle('inset')]}>
-          {result.value.map((category) => (
-            <AppListItem key={category.id} onPress={category.system ? undefined : () => onEdit(category)}>
-              <AppListItem.Leading>
-                <AppIcon name={AppIconMap.category.ios} size={20} color={category.color} />
-              </AppListItem.Leading>
-              <AppText variant="defaultSemiBold">{category.name}</AppText>
-              <AppListItem.Trailing>
-                {category.system ? (
-                  <AppText variant="footnote">{t(tk.manageCategories.system)}</AppText>
-                ) : (
-                  <AppIcon name={AppIconMap.expand.ios} size={16} />
-                )}
-              </AppListItem.Trailing>
-            </AppListItem>
-          ))}
+          <AppListForEach>
+            {result.value.map((category) => (
+              <AppListItem key={category.id} onPress={category.system ? undefined : () => onEdit(category)}>
+                <AppListItem.Leading>
+                  <AppIcon name={AppIconMap.category.ios} size={20} color={category.color} />
+                </AppListItem.Leading>
+                <AppSwipeActions>
+                  <AppText variant="defaultSemiBold">{category.name}</AppText>
+                  {!category.system && (
+                    <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
+                      <Button
+                        role="destructive"
+                        label={t(tk.swipeableActions.delete)}
+                        systemImage={AppIconMap.delete.ios}
+                        onPress={() => onDelete(category)}
+                      />
+                    </AppSwipeActions.Actions>
+                  )}
+                </AppSwipeActions>
+                <AppListItem.Trailing>
+                  {category.system ? (
+                    <AppText variant="footnote">{t(tk.manageCategories.system)}</AppText>
+                  ) : (
+                    <AppIcon name={AppIconMap.expand.ios} size={16} />
+                  )}
+                </AppListItem.Trailing>
+              </AppListItem>
+            ))}
+          </AppListForEach>
         </AppList>
       </AppNative>
     </AppScreen>
