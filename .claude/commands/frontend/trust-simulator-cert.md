@@ -7,6 +7,8 @@ description: >
   WSS handshake failures, or add a root cert to a simulator.
 ---
 
+# Skill: Trust local certificate in simulator
+
 Goal: run `xcrun simctl keychain <UDID> add-root-cert "$(mkcert -CAROOT)/rootCA.pem"`
 against the simulator the user chooses. Never hardcode a UDID — always discover
 the current simulators and ask which one.
@@ -14,17 +16,21 @@ the current simulators and ask which one.
 ## Steps
 
 1. **Sanity-check prerequisites.** Confirm the mkcert root CA exists:
+
    ```bash
    test -f "$(mkcert -CAROOT)/rootCA.pem" && echo "rootCA: $(mkcert -CAROOT)/rootCA.pem" || echo "MISSING"
    ```
+
    If `mkcert` is not installed or `rootCA.pem` is missing, stop and tell the user
    to install mkcert / run `mkcert -install` first — do not proceed.
 
 2. **List simulators and identify candidates.** Prefer a Booted device (the one the
    user is actively running); fall back to all available devices if none is booted:
+
    ```bash
    xcrun simctl list devices available
    ```
+
    Note the `Booted` device(s) and each device's name + UDID (the UUID in parentheses).
 
 3. **Ask which simulator** using the AskUserQuestion tool. Present the discovered
@@ -35,16 +41,20 @@ the current simulators and ask which one.
    the intended target before running.
 
 4. **Run the command** with the chosen UDID:
+
    ```bash
    xcrun simctl keychain <UDID> add-root-cert "$(mkcert -CAROOT)/rootCA.pem"
    ```
+
    A silent exit 0 means success (the command prints nothing on success).
 
 5. **Report and advise reboot.** Tell the user it succeeded and that the simulator
    usually needs a reboot to pick up the new trusted root:
+
    ```bash
    xcrun simctl shutdown <UDID> && xcrun simctl boot <UDID>
    ```
+
    Offer to run the reboot; don't do it unprompted (it disrupts their running app).
 
 ## Notes
