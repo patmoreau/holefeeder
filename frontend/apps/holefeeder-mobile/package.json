@@ -10,7 +10,7 @@
     "prebuild:ios:deploy": "APP_ENV=production expo prebuild --clean --platform ios",
     "ios": "APP_ENV=development expo run:ios",
     "preios:deploy": "pnpm run prebuild:ios:deploy",
-    "ios:deploy": "APP_ENV=production expo run:ios --configuration Release --device",
+    "ios:deploy": "APP_ENV=production expo run:ios --configuration Release --no-bundler",
     "web": "APP_ENV=development expo start --web",
     "lint": "eslint .",
     "test": "jest",
