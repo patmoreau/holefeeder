@@ -3,14 +3,13 @@ import * as QuickActions from 'expo-quick-actions';
 import { useQuickActionCallback } from 'expo-quick-actions/hooks';
 import type { RouterAction } from 'expo-quick-actions/router';
 import { router } from 'expo-router';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 import { tk } from '@/i18n/translations';
+import { useAuth } from '@/shared/auth/core/use-auth';
 
 const log = Logger.create('use-quick-actions');
-
-const routerInitializationDelay = 100;
 
 type AvailableQuickActions = '/(app)/Purchase' | '/help';
 
@@ -19,42 +18,51 @@ const isValidQuickActionHref = (href: unknown): href is AvailableQuickActions =>
 };
 
 export function useQuickActions() {
-  log.debug('Initializing Quick Actions');
   const { t } = useTranslation();
+  const { user, isLoading } = useAuth();
+  const isReady = !!user && !isLoading;
+
+  // The action that cold-launched the app (`QuickActions.initial`) is a stable object that is
+  // never cleared, and the library re-dispatches it whenever its effect re-runs. Deduplicating by
+  // object identity lets a genuine re-tap (a fresh event object) through while ignoring re-fires of
+  // the same launch action, so we never yank the user back to Purchase after they've navigated away.
+  const handledActionRef = useRef<QuickActions.Action | null>(null);
+  const pendingHrefRef = useRef<AvailableQuickActions | null>(null);
+  const [pendingSeq, setPendingSeq] = useState(0);
 
   const handleQuickAction = useCallback((action: QuickActions.Action) => {
-    log.debug('Callback invoked:', JSON.stringify(action, null, 2));
-
-    if (action?.params?.href) {
-      const href = action.params.href;
-
-      if (isValidQuickActionHref(href)) {
-        log.debug('Navigating to:', href);
-
-        setTimeout(() => {
-          router.push(href);
-        }, routerInitializationDelay);
-      } else {
-        log.warn('Invalid href:', href);
-      }
-    } else {
-      log.warn('No href found in action params');
+    if (handledActionRef.current === action) {
+      log.debug('Ignoring re-dispatched quick action');
+      return;
     }
+    handledActionRef.current = action;
+
+    const href = action?.params?.href;
+    if (!isValidQuickActionHref(href)) {
+      log.warn('Invalid or missing href in quick action:', JSON.stringify(action?.params));
+      return;
+    }
+
+    log.debug('Queuing navigation for quick action:', href);
+    pendingHrefRef.current = href;
+    setPendingSeq((seq) => seq + 1);
   }, []);
 
   useQuickActionCallback(handleQuickAction);
 
+  // Defer navigation until the app is authenticated and the protected routes are mounted. On a cold
+  // launch the action fires before auth resolves; navigating then would race an unmounted route
+  // stack. `navigate` (not `push`) is idempotent for the target route, so it never stacks duplicate
+  // Purchase screens the way the previous `router.push` did.
   useEffect(() => {
-    log.debug('Setting up event listener');
-    const subscription = QuickActions.addListener((event) => {
-      log.debug('Event fired:', JSON.stringify(event, null, 2));
-    });
-
-    return () => {
-      log.debug('Cleaning up event listener');
-      subscription.remove();
-    };
-  }, []);
+    if (!isReady || pendingHrefRef.current === null) {
+      return;
+    }
+    const href = pendingHrefRef.current;
+    pendingHrefRef.current = null;
+    log.debug('Navigating to quick action target:', href);
+    router.navigate(href, { withAnchor: true });
+  }, [isReady, pendingSeq]);
 
   useEffect(() => {
     const setupQuickActions = async () => {
@@ -80,10 +88,6 @@ export function useQuickActions() {
       }
     };
 
-    setupQuickActions()
-      .then(() => log.debug('Setup complete'))
-      .catch((error) => log.error('Setup failed:', error));
+    setupQuickActions().catch((error) => log.error('Setup failed:', error));
   }, [t]);
-
-  log.debug('Quick Actions initialized');
 }
