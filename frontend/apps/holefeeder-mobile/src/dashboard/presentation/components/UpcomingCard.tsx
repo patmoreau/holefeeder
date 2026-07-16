@@ -67,7 +67,7 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
           <Button label={t(tk.swipeableActions.pay)} systemImage={AppIconMap.purchase.ios} onPress={handlePay} />
         </AppSwipeActions.Actions>
         <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
-          <Button label={t(tk.swipeableActions.delete)} systemImage={AppIconMap.delete.ios} onPress={handleDelete} />
+          <Button role="destructive" label={t(tk.swipeableActions.delete)} systemImage={AppIconMap.delete.ios} onPress={handleDelete} />
           <Button label={t(tk.swipeableActions.clear)} systemImage={AppIconMap.warning.ios} onPress={handleClear} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
