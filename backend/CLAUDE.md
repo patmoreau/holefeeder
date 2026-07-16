@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> Project-wide principles — TDD cycle, Tidy First, commit discipline, commit-message
+> format, and the "Never" list — live in the root `CLAUDE.md`. This file covers
+> **backend-specific** guidance only.
+
 ## Workflow — Test-Driven Development
 
 This project is developed with **TDD**. For **every new feature**, BEFORE writing any
@@ -53,8 +57,9 @@ dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:cover
 ### Docker (local dev)
 ```bash
 # COMPOSE_PROFILES=local (set in .env) starts the bundled reverse-proxy,
-# adminer, portainer and whoami. The Staging override supplies the api/web build.
-docker compose -f docker-compose.yaml -f docker-compose.Staging.yaml up -d
+# adminer, portainer and whoami. docker-compose.override.yaml (a copy of the Staging
+# override) supplies the api/web build, so a bare `up` works locally.
+docker compose up -d
 ```
 
 > Production runs `docker-compose.yaml -f docker-compose.Production.yaml` with
@@ -89,7 +94,7 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 - Application features: `Accounts`, `Categories`, `Dashboard`, `Enumerations`, `MyData`, `Periods`, `Statistics`, `StoreItems`, `Tags`, `Transactions`
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
-Each Application feature folder contains `Commands/` and `Queries/` subdirectories following a CQRS pattern, plus a mapper (`*Mapper.cs`).
+Each Application feature folder contains `Commands/` and `Queries/` subdirectories following a CQRS pattern, plus a mapper (`*Mapper.cs`). Prefer keeping a feature's controller/use-cases/repositories together in its slice rather than grouping by technical role (a `Controllers/` folder, a `Services/` folder, etc.).
 
 ### Key Patterns
 
@@ -112,7 +117,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | Angular (pnpm) inside Blazor Server |
-| Unit testing | xUnit + NSubstitute + FluentAssertions |
+| Unit testing | xUnit + FluentAssertions (no mocks — NSubstitute is legacy, being phased out) |
 | BDD/Functional tests | SpecFlow + Respawn + WireMock.Net |
 | Coverage | Coverlet (Cobertura) + Stryker mutation testing |
 
@@ -127,3 +132,49 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 ### Local Infrastructure (docker-compose.yaml)
 
 The local dev stack (profile `local`) includes: **Traefik** (reverse proxy with TLS), **PostgreSQL**, **PowerSync**, **Portainer**, **Adminer**. Logs go to stdout (`docker compose logs`). Configure via `.env` (copy from `.env.template`).
+
+## Backend Conventions
+
+### .NET
+
+- Favor idiomatic .NET patterns.
+- Limit the use of nulls; favor result/return values over exceptions (FluentResults).
+- Do not add a library that has not been vetted — make a suggestion when appropriate.
+
+### Testing — no mocks
+
+- **Do not use mocks. Do not install a mocking library.** Favor James Shore's "testing
+  without mocks" / Nullables approach: https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks
+- Sociable tests are preferred; narrow-focus integration tests are also welcome.
+- Test against a real test database.
+- Use FluentAssertions as much as possible. Multiple assertions for the same concept are
+  welcome; use assertion scopes where appropriate.
+
+### Strongly typed primitives
+
+Wrap primitive IDs in typed wrappers so a `UserId` can only be used as a `UserId`:
+
+```csharp
+public record UserId(int Value);
+```
+
+Use `.Value` to access the underlying primitive when needed.
+
+### SQL safety
+
+- Never build SQL using string interpolation or concatenation — parameters only.
+
+### Code style
+
+- No code comments unless absolutely necessary.
+- Use long, descriptive names for private methods and explicit, descriptive names for test methods.
+
+### Resilience
+
+This project showcases resiliency patterns (timeouts, circuit breakers, retries). Favor
+standard .NET practices for resilience and the built-in time abstractions where appropriate.
+
+### Developer experience
+
+Keep local setup easy — ideally one command after cloning yields a working environment.
+Docker is the container of choice; minimize manual setup steps.

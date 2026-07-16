@@ -86,7 +86,7 @@
                 "-f",
                 "${workspaceFolder}/backend/docker-compose.yaml",
                 "-f",
-                "${workspaceFolder}/backend/docker-compose.Staging.yaml",
+                "${workspaceFolder}/backend/docker-compose.override.yaml",
                 "up",
                 "-d",
                 "--build"

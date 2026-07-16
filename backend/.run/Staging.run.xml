@@ -11,7 +11,7 @@
         <option name="commandLineOptions" value="--build" />
         <option name="secondarySourceFiles">
           <list>
-            <option value="docker-compose.Staging.yaml" />
+            <option value="docker-compose.override.yaml" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />

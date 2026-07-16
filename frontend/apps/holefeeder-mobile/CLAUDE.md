@@ -1,7 +1,12 @@
-# Holefeeder Mobile — Agent Guide
+# CLAUDE.md — Holefeeder Mobile
+
+This file provides guidance to Claude Code (claude.ai/code) when working with the mobile app.
+
+> Frontend-wide guidance lives in `../../CLAUDE.md`; project-wide principles live in the
+> repo root `../../../CLAUDE.md`.
 
 > [!IMPORTANT]
-> **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, you **must** update this `AGENTS.md` file and the root `AGENTS.md` to reflect the changes. Keep these instructions accurate so they remain a reliable single source of truth!
+> **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, you **must** update this `CLAUDE.md` file and the frontend `../../CLAUDE.md` to reflect the changes. Keep these instructions accurate so they remain a reliable single source of truth!
 
 ## Tech Stack
 
