@@ -58,6 +58,7 @@ Always make structural changes first when both are needed.
 - Wrap body at 72 characters
 - Imperative mood ("Add unit tests" not "Added unit tests")
 - State whether commit is structural or behavioral
+- Add co-authored tag with Claude and model used similar to this `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 
 ## Never
 
