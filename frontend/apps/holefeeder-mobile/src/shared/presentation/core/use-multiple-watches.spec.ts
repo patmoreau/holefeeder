@@ -1,5 +1,5 @@
 import { Result } from '@holefeeder/shared/core';
-import { renderHook } from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import { ErrorKey } from '@/shared/core/error-key';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 
@@ -59,6 +59,18 @@ describe('useMultipleWatches', () => {
 
     it('does not show an error when all watches succeed', async () => {
       const { result } = await renderHook(() => useMultipleWatches({ a: () => Result.success('x') }));
+
+      expect(result.current.errors.showError).toBe(false);
+    });
+
+    it('stays dismissed after setShowError(false) while the watch keeps failing', async () => {
+      const { result } = await renderHook(() => useMultipleWatches({ a: () => Result.failure(['boom']) }));
+
+      expect(result.current.errors.showError).toBe(true);
+
+      await act(async () => {
+        result.current.errors.setShowError(false);
+      });
 
       expect(result.current.errors.showError).toBe(false);
     });
