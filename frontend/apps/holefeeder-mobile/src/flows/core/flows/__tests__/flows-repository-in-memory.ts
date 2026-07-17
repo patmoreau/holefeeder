@@ -17,6 +17,8 @@ export type FlowsRepositoryInMemory = FlowsRepository & {
   addTransactions: (...items: Transaction[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
+  paidCommands: () => PayFlowCommand[];
+  deactivatedCashflowIds: () => Id[];
 };
 
 export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
@@ -24,6 +26,8 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
   const cashflowVariationsInMemory: CashflowVariation[] = [];
   const tagsInMemory: Tag[] = [];
   const transactionsInMemory: Transaction[] = [];
+  const paidCommandsInMemory: PayFlowCommand[] = [];
+  const deactivatedCashflowIdsInMemory: Id[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -84,13 +88,21 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     return Promise.resolve(Result.success(anId()));
   };
 
-  const pay = (_command: PayFlowCommand): Promise<Result<Id>> => {
+  const pay = (command: PayFlowCommand): Promise<Result<Id>> => {
+    paidCommandsInMemory.push(command);
+    if (errorsInMemory.length > 0) return Promise.resolve(Result.failure(errorsInMemory));
     return Promise.resolve(Result.success(anId()));
   };
 
-  const deactivateUpcoming = (_cashflowId: Id): Promise<Result<void>> => {
+  const deactivateUpcoming = (cashflowId: Id): Promise<Result<void>> => {
+    deactivatedCashflowIdsInMemory.push(cashflowId);
+    if (errorsInMemory.length > 0) return Promise.resolve(Result.failure(errorsInMemory));
     return Promise.resolve(Result.success());
   };
+
+  const paidCommands = () => paidCommandsInMemory;
+
+  const deactivatedCashflowIds = () => deactivatedCashflowIdsInMemory;
 
   const transfer = (_command: TransferFlowCommand): Promise<Result<void>> => {
     return Promise.resolve(Result.success());
@@ -196,5 +208,7 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     addTransactions: addTransactions,
     isLoading: isLoading,
     isFailing: isFailing,
+    paidCommands: paidCommands,
+    deactivatedCashflowIds: deactivatedCashflowIds,
   };
 };
