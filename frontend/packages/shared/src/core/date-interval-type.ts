@@ -77,6 +77,34 @@ const addIteration = (effectiveDate: DateOnly, iteration: number, intervalType: 
   }
 };
 
+const daysBetween = (from: DateOnly, to: DateOnly): number => {
+  const [fy, fm, fd] = from.split('-').map(Number);
+  const [ty, tm, td] = to.split('-').map(Number);
+  return Math.round((Date.UTC(ty, tm - 1, td) - Date.UTC(fy, fm - 1, fd)) / 86_400_000);
+};
+
+// Approximate how many `frequency`-sized steps separate the anchor from the lookup date.
+// This only needs to be close: the correction loops in `interval` walk from here to the exact
+// bracketing period, so an off-by-a-few estimate stays correct — it just avoids the O(distance)
+// walk from the anchor that is slow when the anchor is many years before the lookup date.
+const approximateSteps = (effectiveDate: DateOnly, lookupDate: DateOnly, frequency: number, intervalType: DateIntervalType): number => {
+  const [effYear, effMonth] = effectiveDate.split('-').map(Number);
+  const [lookYear, lookMonth] = lookupDate.split('-').map(Number);
+
+  switch (intervalType) {
+    case DateIntervalTypes.daily:
+      return Math.floor(daysBetween(effectiveDate, lookupDate) / frequency);
+    case DateIntervalTypes.weekly:
+      return Math.floor(daysBetween(effectiveDate, lookupDate) / (7 * frequency));
+    case DateIntervalTypes.monthly:
+      return Math.floor(((lookYear - effYear) * 12 + (lookMonth - effMonth)) / frequency);
+    case DateIntervalTypes.yearly:
+      return Math.floor((lookYear - effYear) / frequency);
+    default:
+      return 0;
+  }
+};
+
 const interval = (
   effectiveDate: DateOnly,
   lookupDate: DateOnly,
@@ -87,22 +115,31 @@ const interval = (
     return { from: effectiveDate, to: effectiveDate };
   }
 
-  const next = lookupDate > effectiveDate;
-  let start = effectiveDate;
-  let end = withDate(addIteration(start, frequency, intervalType))
-    .addDays(-1)
-    .toDateOnly();
-  let iteration = 1;
-
-  while (start > lookupDate || end < lookupDate) {
-    start = addIteration(effectiveDate, (next ? frequency : -frequency) * iteration, intervalType);
-    end = withDate(addIteration(start, frequency, intervalType))
+  const periodFrom = (steps: number): DateOnly => addIteration(effectiveDate, steps * frequency, intervalType);
+  const periodEnd = (from: DateOnly): DateOnly =>
+    withDate(addIteration(from, frequency, intervalType))
       .addDays(-1)
       .toDateOnly();
-    iteration++;
+
+  // Seed close to the answer, then correct one step at a time. Periods tile contiguously on the
+  // anchored grid (each end is the day before the next start), so exactly one of these loops runs,
+  // and only for a couple of iterations regardless of how far the lookup date is from the anchor.
+  let steps = approximateSteps(effectiveDate, lookupDate, frequency, intervalType);
+  let from = periodFrom(steps);
+  let to = periodEnd(from);
+
+  while (from > lookupDate) {
+    steps -= 1;
+    from = periodFrom(steps);
+    to = periodEnd(from);
+  }
+  while (to < lookupDate) {
+    steps += 1;
+    from = periodFrom(steps);
+    to = periodEnd(from);
   }
 
-  return { from: start, to: end };
+  return { from, to };
 };
 
 const previousPeriods = (

@@ -1,5 +1,6 @@
 import { DateIntervalType, DateIntervalTypeErrors, DateIntervalTypes } from './date-interval-type';
 import { DateOnly } from './date-only';
+import { withDate } from './with-date';
 
 describe('DateIntervalType', () => {
   describe('create', () => {
@@ -133,6 +134,64 @@ describe('DateIntervalType', () => {
         expect(result).toEqual({ from: expected.from, to: expected.to });
       }
     );
+
+    // Brute-force reference: the original one-period-at-a-time walk. Any optimized
+    // implementation must produce identical results for every input.
+    const referenceInterval = (
+      effectiveDate: DateOnly,
+      lookupDate: DateOnly,
+      frequency: number,
+      intervalType: (typeof DateIntervalTypes)[keyof typeof DateIntervalTypes]
+    ): { from: DateOnly; to: DateOnly } => {
+      if (intervalType === DateIntervalTypes.oneTime) {
+        return { from: effectiveDate, to: effectiveDate };
+      }
+      const add = (n: number) => DateIntervalType.addIteration(effectiveDate, n, intervalType);
+      const endOf = (start: DateOnly) =>
+        withDate(DateIntervalType.addIteration(start, frequency, intervalType))
+          .addDays(-1)
+          .toDateOnly();
+      const next = lookupDate > effectiveDate;
+      let start = effectiveDate;
+      let end = endOf(start);
+      let iteration = 1;
+      while (start > lookupDate || end < lookupDate) {
+        start = add((next ? frequency : -frequency) * iteration);
+        end = endOf(start);
+        iteration++;
+      }
+      return { from: start, to: end };
+    };
+
+    const base = DateOnly.valid('2014-01-09');
+    const offsets = [-4015, -1000, -370, -31, -1, 0, 1, 31, 400, 1500, 3000, 4600];
+    const frequencies = [1, 2, 3, 5, 7, 12];
+
+    it.each(Object.values(DateIntervalTypes))('matches the reference walk across large spans for %s', (intervalType) => {
+      for (const effOffset of [0, 20, 355]) {
+        const effectiveDate = withDate(base).addDays(effOffset).toDateOnly();
+        for (const offset of offsets) {
+          const lookupDate = withDate(effectiveDate).addDays(offset).toDateOnly();
+          for (const frequency of frequencies) {
+            const actual = DateIntervalType.interval(effectiveDate, lookupDate, frequency, intervalType);
+            const expected = referenceInterval(effectiveDate, lookupDate, frequency, intervalType);
+            expect({ intervalType, frequency, offset, ...actual }).toEqual({ intervalType, frequency, offset, ...expected });
+          }
+        }
+      }
+    });
+
+    it('brackets the lookup date on the anchored grid for a 12-year span', () => {
+      const effectiveDate = DateOnly.valid('2014-01-01');
+      const lookupDate = DateOnly.valid('2026-07-11');
+      const { from, to } = DateIntervalType.interval(effectiveDate, lookupDate, 1, DateIntervalTypes.monthly);
+      expect(from <= lookupDate && lookupDate <= to).toBe(true);
+      expect(to).toEqual(
+        withDate(DateIntervalType.addIteration(from, 1, DateIntervalTypes.monthly))
+          .addDays(-1)
+          .toDateOnly()
+      );
+    });
   });
 
   describe('previousPeriods', () => {
