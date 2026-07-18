@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';
 import Animated, { SharedTransition } from 'react-native-reanimated';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountType } from '@/accounts/core/account-type';
+import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { tk } from '@/i18n/translations';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
@@ -13,7 +14,6 @@ import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatt
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
-import { useAccountVariation } from '../core/use-account-variation';
 
 export type CardLayout = { x: number; y: number; width: number; height: number };
 
@@ -81,7 +81,7 @@ export const AccountCard = ({ account, width = 300, style, onPress, ...props }: 
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const pressableRef = useRef<View>(null);
-  const variationResult = useAccountVariation(account.id);
+  const variationResult = useAccountDetail(account.id);
 
   const handlePress = () => {
     if (!onPress) return;
