@@ -33,16 +33,16 @@ export const ProfileSection = () => {
 
   return (
     <AppFieldSection title={t(tk.profileSection.title)}>
-      <AppRow>
+      <AppRow spacing={16}>
         <AppReact matchContents>
           <ExpoImage source={{ uri: avatarUri }} style={styles.avatar} contentFit="cover" />
         </AppReact>
-        <AppSpacer />
-        <AppColumn>
+        <AppColumn spacing={8}>
           <AppText variant={'title'}>{profile.name}</AppText>
           <AppText>{profile.email}</AppText>
           <AuthButton />
         </AppColumn>
+        <AppSpacer />
       </AppRow>
     </AppFieldSection>
   );
