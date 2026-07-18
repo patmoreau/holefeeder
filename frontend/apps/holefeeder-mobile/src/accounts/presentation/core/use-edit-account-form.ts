@@ -19,7 +19,7 @@ export const validateEditAccountForm: ValidationFunction<EditAccountFormData, Ed
   return errors;
 };
 
-const saveAccount = async (repositories: RepositoriesState, formData: EditAccountFormData): Promise<Result<unknown>> => {
+export const saveAccount = async (repositories: RepositoriesState, formData: EditAccountFormData): Promise<Result<unknown>> => {
   const commandResult = UpdateAccountCommand.create({
     id: formData.id,
     type: formData.type,

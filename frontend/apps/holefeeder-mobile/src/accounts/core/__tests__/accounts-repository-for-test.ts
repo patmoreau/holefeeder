@@ -7,10 +7,12 @@ export type AccountsRepositoryInMemory = AccountsRepository & {
   add: (...items: Account[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
+  updatedCommands: () => UpdateAccountCommand[];
 };
 
 export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
   const itemsInMemory: Account[] = [];
+  const updatedCommandsInMemory: UpdateAccountCommand[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -26,6 +28,8 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
   };
 
   const update = async (command: UpdateAccountCommand): Promise<Result<Id>> => {
+    updatedCommandsInMemory.push(command);
+    if (errorsInMemory.length > 0) return Result.failure(errorsInMemory);
     const index = itemsInMemory.findIndex((a) => a.id === command.id);
     if (index === -1) return Result.failure(['account-not-found']);
     itemsInMemory[index] = Account.valid({ ...command });
@@ -38,5 +42,7 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
 
   const isFailing = (errors: string[]) => (errorsInMemory = errors);
 
-  return { watch, update, add, isLoading, isFailing };
+  const updatedCommands = () => updatedCommandsInMemory;
+
+  return { watch, update, add, isLoading, isFailing, updatedCommands };
 };
