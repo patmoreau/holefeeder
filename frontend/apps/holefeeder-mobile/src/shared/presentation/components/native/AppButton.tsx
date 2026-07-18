@@ -83,7 +83,7 @@ export const AppButton = ({
   const modifiers: ModifierConfig[] = [];
   if (Platform.OS === 'ios') {
     modifiers.push(buttonStyle(variantMapping[variant]));
-    modifiers.push(tint(iconColor ? iconColor : variantIconColor(variant, theme)));
+    modifiers.push(tint(iconColor ? iconColor : variantColor(variant, theme)));
   }
   if (!icon) {
     return <ExpoButton label={label} onPress={onPress} modifiers={modifiers} disabled={disabled} />;
