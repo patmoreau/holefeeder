@@ -16,7 +16,7 @@ export const useProfile = (): UserProfile => {
   useEffect(() => {
     if (user) {
       setProfile({
-        name: user.name || `${user.givenName} ${user.familyName}` || '',
+        name: user.name || [user.givenName, user.familyName].filter(Boolean).join(' '),
         username: user.sub || '',
         email: user.email || '',
         avatar: user.picture || 'person.fill',

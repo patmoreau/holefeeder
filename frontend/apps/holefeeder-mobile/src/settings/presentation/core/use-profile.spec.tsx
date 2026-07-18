@@ -44,6 +44,14 @@ describe('useProfile', () => {
     await waitFor(() => expect(result.current.name).toBe('Grace Hopper'));
   });
 
+  it('uses only the given name when the family name is absent', async () => {
+    mockUseAuth.mockReturnValue({ user: { sub: 'auth0|5', givenName: 'Grace' } });
+
+    const { result } = await renderHook(() => useProfile());
+
+    await waitFor(() => expect(result.current.name).toBe('Grace'));
+  });
+
   it('falls back to the default avatar and empty strings when fields are absent', async () => {
     mockUseAuth.mockReturnValue({ user: { sub: 'auth0|3', givenName: 'Alan', familyName: 'Turing' } });
 
@@ -54,12 +62,12 @@ describe('useProfile', () => {
     expect(result.current.avatar).toBe('person.fill');
   });
 
-  it('yields "undefined undefined" for name when no name fields exist (latent bug)', async () => {
+  it('yields an empty name when no name fields exist', async () => {
     mockUseAuth.mockReturnValue({ user: { sub: 'auth0|4' } });
 
     const { result } = await renderHook(() => useProfile());
 
-    // The `|| ''` fallback is dead code: the template literal is always truthy.
-    await waitFor(() => expect(result.current.name).toBe('undefined undefined'));
+    await waitFor(() => expect(result.current.username).toBe('auth0|4'));
+    expect(result.current.name).toBe('');
   });
 });
