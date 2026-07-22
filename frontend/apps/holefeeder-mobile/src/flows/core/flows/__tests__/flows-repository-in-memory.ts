@@ -19,6 +19,7 @@ export type FlowsRepositoryInMemory = FlowsRepository & {
   isFailing: (errors: string[]) => void;
   paidCommands: () => PayFlowCommand[];
   deactivatedCashflowIds: () => Id[];
+  deletedTransactionIds: () => Id[];
 };
 
 export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
@@ -28,6 +29,7 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
   const transactionsInMemory: Transaction[] = [];
   const paidCommandsInMemory: PayFlowCommand[] = [];
   const deactivatedCashflowIdsInMemory: Id[] = [];
+  const deletedTransactionIdsInMemory: Id[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -100,9 +102,20 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     return Promise.resolve(Result.success());
   };
 
+  const deleteTransaction = (transactionId: Id): Promise<Result<void>> => {
+    deletedTransactionIdsInMemory.push(transactionId);
+    if (errorsInMemory.length > 0) return Promise.resolve(Result.failure(errorsInMemory));
+    const index = transactionsInMemory.findIndex((t) => t.id === transactionId);
+    if (index >= 0) transactionsInMemory.splice(index, 1);
+    notifyAll();
+    return Promise.resolve(Result.success());
+  };
+
   const paidCommands = () => paidCommandsInMemory;
 
   const deactivatedCashflowIds = () => deactivatedCashflowIdsInMemory;
+
+  const deletedTransactionIds = () => deletedTransactionIdsInMemory;
 
   const transfer = (_command: TransferFlowCommand): Promise<Result<void>> => {
     return Promise.resolve(Result.success());
@@ -195,6 +208,7 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     modify: modify,
     pay: pay,
     deactivateUpcoming: deactivateUpcoming,
+    deleteTransaction: deleteTransaction,
     transfer: transfer,
     watchAccountVariation: watchAccountVariation,
     watchCashflowVariations: watchCashflowVariations,
@@ -210,5 +224,6 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     isFailing: isFailing,
     paidCommands: paidCommands,
     deactivatedCashflowIds: deactivatedCashflowIds,
+    deletedTransactionIds: deletedTransactionIds,
   };
 };

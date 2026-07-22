@@ -186,6 +186,27 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
     }
   };
 
+  const deleteTransaction = async (transactionId: Id): Promise<Result<void>> => {
+    try {
+      await db.writeTransaction(async (tx) => {
+        await tx.execute(
+          `
+            DELETE FROM transactions
+            WHERE id = ?
+          `,
+          [transactionId]
+        );
+      });
+
+      return Result.success();
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error(`${FlowsRepositoryErrors.deleteTransactionCommandFailed}: `, error.message);
+      }
+      return Result.failure([FlowsRepositoryErrors.deleteTransactionCommandFailed]);
+    }
+  };
+
   const transfer = async (transfer: TransferFlowCommand): Promise<Result<void>> => {
     const sourceId = Id.newId();
     const targetId = Id.newId();
@@ -399,6 +420,7 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
     modify: modify,
     pay: pay,
     deactivateUpcoming: deactivateUpcoming,
+    deleteTransaction: deleteTransaction,
     transfer: transfer,
     watchTags: watchTags,
     watchAccountVariation: watchAccountVariation,

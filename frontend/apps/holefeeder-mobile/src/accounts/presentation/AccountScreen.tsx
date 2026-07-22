@@ -1,60 +1,71 @@
 import { Icon } from '@expo/ui';
+import { List } from '@expo/ui/swift-ui';
+import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { Id, tk } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { t } from 'i18next';
+import { View } from 'react-native';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';
-import { AccountHeaderSmallCard } from '@/accounts/presentation/AccountHeaderSmallCard';
-import { TransactionCard } from '@/accounts/presentation/components/TransactionCard';
+import { TransactionCardList } from '@/accounts/presentation/components/TransactionCardList';
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
-import { useTransactions } from '@/accounts/presentation/core/use-transactions';
-import type { CardLayout } from '@/dashboard/presentation/components/AccountCard';
-import { AppView } from '@/shared/presentation/AppView';
-import { CardHeaderFlashList } from '@/shared/presentation/CardHeaderFlashList';
-import { AppCardDivider } from '@/shared/presentation/components/AppCardDivider';
+import { useAccountTransactions } from '@/accounts/presentation/core/use-account-transactions';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { goBack } from '@/shared/presentation/core/navigation';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { useTheme } from '@/shared/theme/core/use-theme';
+import { borderRadius, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 const createStyles = (theme: Theme) => ({
   container: {
-    ...theme.styles.containers.center,
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  header: {
+    backgroundColor: theme.colors.primary,
+    borderBottomLeftRadius: borderRadius['4xl'],
+    borderBottomRightRadius: borderRadius['4xl'],
+    paddingHorizontal: spacing['2xl'],
+    paddingBottom: spacing['2xl'],
+    gap: spacing.xs,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
 
 export const AccountScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const accountId = Id.valid(id);
-  const { theme } = useTheme();
   const styles = useStyles(createStyles);
+  const headerHeight = useHeaderHeight();
 
   const accountQuery = useAccountDetail(accountId);
-  const transactionsResult = useTransactions(accountId);
+  const { transactions: transactionsResult, hasMore, loadMore } = useAccountTransactions(accountId);
 
   const { data, errors } = useMultipleWatches({
     account: withDefault(() => accountQuery, null),
   });
-  const onFlowPress = (id: Id, _layout: CardLayout) =>
-    router.push({
-      pathname: '/(app)/flows/[id]',
-      params: { id: id as string },
-    });
 
   if (errors.showError) {
     return (
-      <AppView style={styles.container}>
+      <AppNative style={{ flex: 1 }}>
         <AppErrorSheet {...errors} />
-      </AppView>
+      </AppNative>
     );
   }
 
   const { account } = data;
 
   if (!account) return <AppLoadingIndicator />;
+
+  const transactions = transactionsResult.isSuccess ? transactionsResult.value : [];
 
   const onEditPress = () =>
     router.push({
@@ -77,16 +88,16 @@ export const AccountScreen = () => {
           </Stack.Toolbar.MenuAction>
         </Stack.Toolbar.Menu>
       </Stack.Toolbar>
-      <CardHeaderFlashList
-        headerBackgroundColor={theme.colors.primary}
-        largeCard={<AccountHeaderLargeCard account={account} />}
-        smallCard={<AccountHeaderSmallCard account={account} />}
-        pagedResult={transactionsResult}
-        renderItem={(item) => <TransactionCard transaction={item.item} onPress={onFlowPress} />}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={AppCardDivider}
-        ListFooterComponent={transactionsResult.loading ? <AppLoadingIndicator size={'small'} /> : null}
-      />
+      <View style={styles.container}>
+        <View style={[styles.header, { paddingTop: headerHeight + spacing.sm }]}>
+          <AccountHeaderLargeCard account={account} />
+        </View>
+        <AppNative style={{ flex: 1 }}>
+          <List modifiers={[listStyle('inset')]}>
+            <TransactionCardList transactions={transactions} hasMore={hasMore} onLoadMore={loadMore} />
+          </List>
+        </AppNative>
+      </View>
     </>
   );
 };

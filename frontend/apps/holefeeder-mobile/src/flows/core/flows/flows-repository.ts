@@ -13,6 +13,7 @@ export type FlowsRepository = {
   modify(command: ModifyFlowCommand): Promise<Result<Id>>;
   pay(command: PayFlowCommand): Promise<Result<Id>>;
   deactivateUpcoming(cashflowId: Id): Promise<Result<void>>;
+  deleteTransaction(transactionId: Id): Promise<Result<void>>;
   transfer(command: TransferFlowCommand): Promise<Result<void>>;
   watchAccountVariation: (accountId: Id, onDataChange: (result: AsyncResult<AccountVariation | undefined>) => void) => () => void;
   watchCashflowVariations: (onDataChange: (result: AsyncResult<CashflowVariation[]>) => void) => () => void;
@@ -31,5 +32,6 @@ export const FlowsRepositoryErrors = {
   createFlowCommandFailed: 'create-flow-command-failed',
   modifyFlowCommandFailed: 'modify-flow-command-failed',
   payFlowCommandFailed: 'pay-flow-command-failed',
+  deleteTransactionCommandFailed: 'delete-transaction-command-failed',
   noTags: 'no-tags',
 };

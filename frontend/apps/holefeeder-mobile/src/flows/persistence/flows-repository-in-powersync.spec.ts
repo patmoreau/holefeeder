@@ -193,6 +193,35 @@ describe('FlowsRepository', () => {
     });
   });
 
+  describe('deleteTransaction', () => {
+    it('should hard delete a transaction', async () => {
+      const transaction = await aTransaction().store(db);
+
+      const result = await repository.deleteTransaction(transaction.id);
+
+      expect(result.isSuccess).toBe(true);
+
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [transaction.id]);
+
+      expect(dbResult).toHaveLength(0);
+    });
+
+    it('succeeds when the transaction does not exist', async () => {
+      const result = await repository.deleteTransaction(anId());
+
+      expect(result.isSuccess).toBe(true);
+    });
+
+    it('handles database errors', async () => {
+      // Close the database to trigger an error
+      await db.close();
+
+      const result = await repository.deleteTransaction(anId());
+
+      expect(result).toBeFailureWithErrors([FlowsRepositoryErrors.deleteTransactionCommandFailed]);
+    });
+  });
+
   describe('transfer', () => {
     it('should save a transfer transaction', async () => {
       const transferIn = await aCategory({ type: CategoryTypes.gain, name: 'Transfer In' }).store(db);

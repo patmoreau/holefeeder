@@ -68,7 +68,7 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
         {LocalFormatter.currency(account.balance, currentLocale, currencyCode)}
       </AppText>
       <View style={styles.divider} />
-      <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.accountCard.updated)}

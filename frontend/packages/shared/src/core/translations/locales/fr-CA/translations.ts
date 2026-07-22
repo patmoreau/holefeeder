@@ -258,6 +258,9 @@ export const fr: TranslationStructure = {
   recentTransactions: {
     title: 'Transactions récentes',
   },
+  transactionList: {
+    title: 'Transactions',
+  },
   accountDetail: {
     loadMore: 'Charger plus',
   },

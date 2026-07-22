@@ -255,6 +255,9 @@ export const en = {
   recentTransactions: {
     title: 'Recent Transactions',
   },
+  transactionList: {
+    title: 'Transactions',
+  },
   accountDetail: {
     loadMore: 'Load More',
   },
