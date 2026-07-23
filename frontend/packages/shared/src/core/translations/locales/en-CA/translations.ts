@@ -96,6 +96,16 @@ export const en = {
     title: 'Manage Categories',
     system: 'System',
   },
+  tagsSection: {
+    title: 'Tags',
+    manage: 'Manage Tags',
+  },
+  manageTags: {
+    title: 'Manage Tags',
+    transactions: '{{count}} transactions',
+    cashflows: '{{count}} active cashflows',
+    empty: 'No tags yet',
+  },
   common: {
     today: 'Today',
     yesterday: 'Yesterday',

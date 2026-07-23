@@ -66,6 +66,14 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="ManageTags"
+        options={{
+          presentation: 'modal',
+          title: t(tk.manageTags.title),
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
         name="SyncSettings"
         options={{
           presentation: 'modal',

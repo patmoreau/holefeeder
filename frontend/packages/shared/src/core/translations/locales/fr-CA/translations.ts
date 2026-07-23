@@ -98,6 +98,16 @@ export const fr: TranslationStructure = {
     title: 'Gérer les catégories',
     system: 'Système',
   },
+  tagsSection: {
+    title: 'Étiquettes',
+    manage: 'Gérer les étiquettes',
+  },
+  manageTags: {
+    title: 'Gérer les étiquettes',
+    transactions: '{{count}} transactions',
+    cashflows: '{{count}} flux actifs',
+    empty: 'Aucune étiquette',
+  },
   common: {
     today: "Aujourd'hui",
     yesterday: 'Hier',
