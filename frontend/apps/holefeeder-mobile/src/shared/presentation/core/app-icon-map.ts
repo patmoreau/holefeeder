@@ -3,6 +3,7 @@ import AddCircle from '@expo/material-symbols/add_circle.xml';
 import Analytics from '@expo/material-symbols/analytics.xml';
 import ArrowDropDown from '@expo/material-symbols/arrow_drop_down.xml';
 import CalendarToday from '@expo/material-symbols/calendar_today.xml';
+import Cancel from '@expo/material-symbols/cancel.xml';
 import Check from '@expo/material-symbols/check.xml';
 import ChevronLeft from '@expo/material-symbols/chevron_left.xml';
 import ChevronRight from '@expo/material-symbols/chevron_right.xml';
@@ -45,6 +46,7 @@ const universalIconMapping = {
   add: { ios: 'plus', android: Add },
   back: { ios: 'chevron.backward', android: ChevronLeft },
   calendar: { ios: 'calendar', android: CalendarToday },
+  cancel: { ios: 'xmark.circle', android: Cancel },
   cashflow: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },
   category: { ios: 'tray.2', android: Label },
   close: { ios: 'xmark', android: Close },
@@ -54,7 +56,7 @@ const universalIconMapping = {
     android: NetworkCheck,
   },
   dashboard: { ios: 'rectangle.3.group.fill', android: Dashboard },
-  delete: { ios: 'delete.left', android: Delete },
+  delete: { ios: 'trash', android: Delete },
   description: { ios: 'pencil.and.list.clipboard', android: EditNote },
   dropdown: { ios: 'chevron.up.chevron.down', android: ArrowDropDown },
   edit: { ios: 'square.and.pencil', android: Edit },
@@ -71,7 +73,7 @@ const universalIconMapping = {
     ios: 'square.and.arrow.up.trianglebadge.exclamationmark',
     android: FileUploadOff,
   },
-  save: { ios: 'checkmark.app', android: AddCircle },
+  save: { ios: 'checkmark', android: AddCircle },
   selected: { ios: 'checkmark', android: Check },
   settings: { ios: 'gearshape.fill', android: Settings },
   share: { ios: 'square.and.arrow.up', android: Upload },
