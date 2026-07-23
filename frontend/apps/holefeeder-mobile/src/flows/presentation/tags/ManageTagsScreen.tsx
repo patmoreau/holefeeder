@@ -1,6 +1,8 @@
+import { Button } from '@expo/ui/swift-ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DeleteTagUseCase } from '@/flows/core/tags/delete-tag/delete-tag-use-case';
 import { RenameTagUseCase } from '@/flows/core/tags/rename-tag/rename-tag-use-case';
 import { useTagInfos } from '@/flows/presentation/tags/core/use-tag-infos';
 import { RenameTagModal } from '@/flows/presentation/tags/RenameTagModal';
@@ -14,8 +16,10 @@ import { AppListForEach } from '@/shared/presentation/components/native/AppListF
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { showAlert } from '@/shared/presentation/core/show-alert';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
@@ -31,6 +35,7 @@ export const ManageTagsScreen = () => {
   const styles = useStyles(createStyles);
   const result = useTagInfos();
   const { tagRepository } = useRepositories();
+  const { showDeleteAlert } = showAlert(t);
   const [editingTag, setEditingTag] = useState<string | undefined>(undefined);
 
   const onSave = async (newTag: string) => {
@@ -40,6 +45,14 @@ export const ManageTagsScreen = () => {
       setEditingTag(undefined);
     }
   };
+
+  const onDelete = (tag: string) =>
+    showDeleteAlert(tag, {
+      onConfirm: () => {
+        DeleteTagUseCase(tagRepository).execute(tag);
+      },
+      onCancel: () => {},
+    });
 
   if (!result.isSuccess) {
     return (
@@ -67,7 +80,17 @@ export const ManageTagsScreen = () => {
                 <AppListItem.Leading>
                   <AppIcon name={AppIconMap.tag.ios} size={20} />
                 </AppListItem.Leading>
-                <AppText variant="defaultSemiBold">{tagInfo.tag}</AppText>
+                <AppSwipeActions>
+                  <AppText variant="defaultSemiBold">{tagInfo.tag}</AppText>
+                  <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
+                    <Button
+                      role="destructive"
+                      label={t(tk.swipeableActions.delete)}
+                      systemImage={AppIconMap.delete.ios}
+                      onPress={() => onDelete(tagInfo.tag)}
+                    />
+                  </AppSwipeActions.Actions>
+                </AppSwipeActions>
                 <AppListItem.Trailing>
                   <AppColumn alignment="end">
                     <AppText variant="footnote">{t(tk.manageTags.transactions, { count: tagInfo.transactionCount })}</AppText>

@@ -58,6 +58,20 @@ const renameTagInList = (tags: string, oldTag: string, newTag: string): string =
   return renamed.filter((tag, index) => renamed.indexOf(tag) === index).join(',');
 };
 
+const removeTagFromList = (tags: string, tag: string): string =>
+  tags
+    .split(',')
+    .filter((current) => current !== tag)
+    .join(',');
+
+const selectRowsWithTag = (tx: { getAll: <T>(sql: string, params: unknown[]) => Promise<T[]> }, table: string, tag: string) =>
+  tx.getAll<{ id: string; tags: string }>(
+    `SELECT id, tags FROM ${table}
+     WHERE tags IS NOT NULL AND tags <> ''
+       AND Instr(',' || tags || ',', ',' || ? || ',') > 0`,
+    [tag]
+  );
+
 export const TagsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): TagsRepository => {
   const watch = (onDataChange: (result: AsyncResult<TagInfo[]>) => void) => {
     return watchQuery<TagInfoRow, TagInfo>(
@@ -74,12 +88,7 @@ export const TagsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): TagsRe
     try {
       await db.writeTransaction(async (tx) => {
         for (const table of TAGGED_TABLES) {
-          const rows = await tx.getAll<{ id: string; tags: string }>(
-            `SELECT id, tags FROM ${table}
-             WHERE tags IS NOT NULL AND tags <> ''
-               AND Instr(',' || tags || ',', ',' || ? || ',') > 0`,
-            [oldTag]
-          );
+          const rows = await selectRowsWithTag(tx, table, oldTag);
           for (const row of rows) {
             await tx.execute(`UPDATE ${table} SET tags = ? WHERE id = ?`, [renameTagInList(row.tags, oldTag, newTag), row.id]);
           }
@@ -91,5 +100,21 @@ export const TagsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): TagsRe
     }
   };
 
-  return { watch: watch, rename: rename };
+  const remove = async (tag: string): Promise<Result<void>> => {
+    try {
+      await db.writeTransaction(async (tx) => {
+        for (const table of TAGGED_TABLES) {
+          const rows = await selectRowsWithTag(tx, table, tag);
+          for (const row of rows) {
+            await tx.execute(`UPDATE ${table} SET tags = ? WHERE id = ?`, [removeTagFromList(row.tags, tag), row.id]);
+          }
+        }
+      });
+      return Result.success();
+    } catch (error) {
+      return Result.failure([(error as Error)?.message ?? String(error)]);
+    }
+  };
+
+  return { watch: watch, rename: rename, remove: remove };
 };

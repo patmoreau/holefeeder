@@ -145,4 +145,56 @@ describe('TagsRepositoryInPowersync', () => {
       expect(renameResult).toBeFailureWithErrors(['The database connection is not open']);
     });
   });
+
+  describe('remove', () => {
+    const tagsOf = async (table: 'transactions' | 'cashflows', id: string): Promise<string> => {
+      const rows = await db.getAll<{ tags: string }>(`SELECT tags FROM ${table} WHERE id = ?`, [id]);
+      return rows[0].tags;
+    };
+
+    it('removes the tag from all transactions and cashflows that have it exactly', async () => {
+      const tx1 = await aTransaction({ tags: TagList.valid(['groceries', 'travel']) }).store(db);
+      const tx2 = await aTransaction({ tags: TagList.valid(['groceries']) }).store(db);
+      const cf1 = await aCashflow({ tags: TagList.valid(['groceries', 'rent']), inactive: false as Inactive }).store(db);
+
+      const removeResult = await repo.remove('groceries');
+
+      expect(removeResult).toBeSuccessWithValue(undefined);
+      expect(await tagsOf('transactions', tx1.id as string)).toBe('travel');
+      expect(await tagsOf('transactions', tx2.id as string)).toBe('');
+      expect(await tagsOf('cashflows', cf1.id as string)).toBe('rent');
+    });
+
+    it('removes the tag from inactive cashflows as well', async () => {
+      const cf = await aCashflow({ tags: TagList.valid(['groceries', 'rent']), inactive: true as Inactive }).store(db);
+
+      await repo.remove('groceries');
+
+      expect(await tagsOf('cashflows', cf.id as string)).toBe('rent');
+    });
+
+    it('does not remove tags that only contain the tag as a substring', async () => {
+      const tx = await aTransaction({ tags: TagList.valid(['travelling', 'travel']) }).store(db);
+
+      await repo.remove('travel');
+
+      expect(await tagsOf('transactions', tx.id as string)).toBe('travelling');
+    });
+
+    it('preserves the position of remaining tags', async () => {
+      const tx = await aTransaction({ tags: TagList.valid(['first', 'groceries', 'last']) }).store(db);
+
+      await repo.remove('groceries');
+
+      expect(await tagsOf('transactions', tx.id as string)).toBe('first,last');
+    });
+
+    it('handles database errors', async () => {
+      await db.close();
+
+      const removeResult = await repo.remove('groceries');
+
+      expect(removeResult).toBeFailureWithErrors(['The database connection is not open']);
+    });
+  });
 });
