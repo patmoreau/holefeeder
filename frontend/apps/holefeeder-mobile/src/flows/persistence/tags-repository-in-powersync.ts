@@ -1,4 +1,4 @@
-import { type AsyncResult } from '@holefeeder/shared/core';
+import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { TagInfo } from '@/flows/core/tags/tag-info';
 import { TagsRepository } from '@/flows/core/tags/tags-repository';
@@ -51,6 +51,13 @@ const TAGS_SQL = `
   ORDER BY a.tag ASC
 `;
 
+const TAGGED_TABLES = ['transactions', 'cashflows'] as const;
+
+const renameTagInList = (tags: string, oldTag: string, newTag: string): string => {
+  const renamed = tags.split(',').map((tag) => (tag === oldTag ? newTag : tag));
+  return renamed.filter((tag, index) => renamed.indexOf(tag) === index).join(',');
+};
+
 export const TagsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): TagsRepository => {
   const watch = (onDataChange: (result: AsyncResult<TagInfo[]>) => void) => {
     return watchQuery<TagInfoRow, TagInfo>(
@@ -63,5 +70,26 @@ export const TagsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): TagsRe
     );
   };
 
-  return { watch: watch };
+  const rename = async (oldTag: string, newTag: string): Promise<Result<void>> => {
+    try {
+      await db.writeTransaction(async (tx) => {
+        for (const table of TAGGED_TABLES) {
+          const rows = await tx.getAll<{ id: string; tags: string }>(
+            `SELECT id, tags FROM ${table}
+             WHERE tags IS NOT NULL AND tags <> ''
+               AND Instr(',' || tags || ',', ',' || ? || ',') > 0`,
+            [oldTag]
+          );
+          for (const row of rows) {
+            await tx.execute(`UPDATE ${table} SET tags = ? WHERE id = ?`, [renameTagInList(row.tags, oldTag, newTag), row.id]);
+          }
+        }
+      });
+      return Result.success();
+    } catch (error) {
+      return Result.failure([(error as Error)?.message ?? String(error)]);
+    }
+  };
+
+  return { watch: watch, rename: rename };
 };

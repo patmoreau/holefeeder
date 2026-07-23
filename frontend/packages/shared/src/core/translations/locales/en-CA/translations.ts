@@ -105,6 +105,8 @@ export const en = {
     transactions: '{{count}} transactions',
     cashflows: '{{count}} active cashflows',
     empty: 'No tags yet',
+    editTitle: 'Rename Tag',
+    namePlaceholder: 'Tag name',
   },
   common: {
     today: 'Today',

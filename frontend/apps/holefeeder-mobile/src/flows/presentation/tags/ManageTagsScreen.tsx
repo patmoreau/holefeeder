@@ -1,6 +1,9 @@
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RenameTagUseCase } from '@/flows/core/tags/rename-tag/rename-tag-use-case';
 import { useTagInfos } from '@/flows/presentation/tags/core/use-tag-infos';
+import { RenameTagModal } from '@/flows/presentation/tags/RenameTagModal';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
@@ -13,6 +16,7 @@ import { AppLoadingIndicator } from '@/shared/presentation/components/native/App
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
@@ -26,6 +30,16 @@ export const ManageTagsScreen = () => {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
   const result = useTagInfos();
+  const { tagRepository } = useRepositories();
+  const [editingTag, setEditingTag] = useState<string | undefined>(undefined);
+
+  const onSave = async (newTag: string) => {
+    if (editingTag === undefined) return;
+    const renameResult = await RenameTagUseCase(tagRepository).execute(editingTag, newTag);
+    if (renameResult.isSuccess) {
+      setEditingTag(undefined);
+    }
+  };
 
   if (!result.isSuccess) {
     return (
@@ -49,7 +63,7 @@ export const ManageTagsScreen = () => {
         <AppList modifiers={[listStyle('inset')]}>
           <AppListForEach>
             {result.value.map((tagInfo) => (
-              <AppListItem key={tagInfo.tag}>
+              <AppListItem key={tagInfo.tag} onPress={() => setEditingTag(tagInfo.tag)}>
                 <AppListItem.Leading>
                   <AppIcon name={AppIconMap.tag.ios} size={20} />
                 </AppListItem.Leading>
@@ -65,6 +79,9 @@ export const ManageTagsScreen = () => {
           </AppListForEach>
         </AppList>
       </AppNative>
+      {editingTag !== undefined && (
+        <RenameTagModal key={editingTag} tag={editingTag} isPresented onCancel={() => setEditingTag(undefined)} onSave={onSave} />
+      )}
     </AppScreen>
   );
 };

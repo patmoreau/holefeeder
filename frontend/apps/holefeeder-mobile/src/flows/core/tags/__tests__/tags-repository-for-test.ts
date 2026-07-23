@@ -6,10 +6,12 @@ export type TagsRepositoryInMemory = TagsRepository & {
   add: (...items: TagInfo[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
+  renames: () => { oldTag: string; newTag: string }[];
 };
 
 export const TagsRepositoryInMemory = (): TagsRepositoryInMemory => {
   const itemsInMemory: TagInfo[] = [];
+  const renamesInMemory: { oldTag: string; newTag: string }[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -24,10 +26,20 @@ export const TagsRepositoryInMemory = (): TagsRepositoryInMemory => {
     return () => {};
   };
 
+  const rename = async (oldTag: string, newTag: string) => {
+    if (errorsInMemory.length > 0) {
+      return Result.failure(errorsInMemory);
+    }
+    renamesInMemory.push({ oldTag: oldTag, newTag: newTag });
+    return Result.success();
+  };
+
   return {
     watch: watch,
+    rename: rename,
     add: (...items: TagInfo[]) => itemsInMemory.push(...items),
     isLoading: () => (loadingInMemory = true),
     isFailing: (errors: string[]) => (errorsInMemory = errors),
+    renames: () => renamesInMemory,
   };
 };

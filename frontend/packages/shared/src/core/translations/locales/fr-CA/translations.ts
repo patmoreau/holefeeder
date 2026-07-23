@@ -107,6 +107,8 @@ export const fr: TranslationStructure = {
     transactions: '{{count}} transactions',
     cashflows: '{{count}} flux actifs',
     empty: 'Aucune étiquette',
+    editTitle: "Renommer l'étiquette",
+    namePlaceholder: "Nom de l'étiquette",
   },
   common: {
     today: "Aujourd'hui",
