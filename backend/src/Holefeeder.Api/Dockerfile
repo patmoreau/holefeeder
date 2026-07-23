@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 WORKDIR /source
 
-COPY *.sln .
+COPY *.slnx .
 COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .

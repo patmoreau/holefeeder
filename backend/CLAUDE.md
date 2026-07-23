@@ -24,7 +24,7 @@ values rather than merely checking that a result exists.
 
 ### Build
 ```bash
-dotnet build DrifterApps.Holefeeder.sln
+dotnet build DrifterApps.Holefeeder.slnx
 ```
 
 ### Test

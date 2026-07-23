@@ -1,0 +1,63 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Staging" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="backend/.editorconfig" />
+    <File Path="backend/Directory.Build.props" />
+    <File Path="backend/Directory.Build.targets" />
+    <File Path="backend/Directory.Packages.props" />
+    <File Path="backend/global.json" />
+  </Folder>
+  <Folder Name="/src/Api/">
+    <Project Path="backend/src/Holefeeder.Api/Holefeeder.Api.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend/src/Holefeeder.Application/Holefeeder.Application.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend/src/Holefeeder.Domain/Holefeeder.Domain.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend/src/Holefeeder.Infrastructure/Holefeeder.Infrastructure.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/Web/">
+    <Project Path="backend/src/Holefeeder.Web/Holefeeder.Web.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="backend/tests/.editorconfig" />
+    <File Path="backend/tests/Directory.Build.props" />
+    <File Path="backend/tests/Directory.Packages.props" />
+    <Project Path="backend/tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend/tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend/tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+  </Folder>
+</Solution>

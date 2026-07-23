@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.slnx",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.slnx",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/backend/DrifterApps.Holefeeder.sln",
+                "${workspaceFolder}/backend/DrifterApps.Holefeeder.slnx",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

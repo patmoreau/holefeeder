@@ -35,7 +35,7 @@ RUN pnpm config set dangerouslyAllowAllBuilds true
 ###################################
 FROM pre-build AS restore
 
-COPY *.sln .
+COPY *.slnx .
 COPY .editorconfig .
 COPY global.json .
 COPY Directory.Build.props .

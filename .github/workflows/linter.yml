@@ -83,7 +83,7 @@ jobs:
 
       - name: Lint C# files with dotnet format
         id: lint
-        run: dotnet format backend/DrifterApps.Holefeeder.sln --severity error --verbosity diagnostic --report ./linter-report || true
+        run: dotnet format backend/DrifterApps.Holefeeder.slnx --severity error --verbosity diagnostic --report ./linter-report || true
 
       - name: Save report
         if: always()
