@@ -3,6 +3,7 @@ import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Settings } from '@/settings/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
 import { CategorySpending } from '../core/category-spending';
+import { CategoryTagSpending } from '../core/category-tag-spending';
 import { InsightsRepository } from '../core/insights-repository';
 import { TagSpending } from '../core/tag-spending';
 
@@ -19,6 +20,12 @@ type TagSpendingRow = {
   tag: string;
   spentAmount: number;
   avgAmount: number;
+};
+
+type CategoryTagSpendingRow = {
+  categoryId: string;
+  tag: string;
+  spentAmount: number;
 };
 
 type Period = { start: DateOnly; end: DateOnly };
@@ -207,6 +214,41 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
   };
 };
 
+const buildCategoryTagSpendingQuery = (currentStart: DateOnly, currentEnd: DateOnly): BuiltQuery => ({
+  sql: `
+    WITH RECURSIVE split(category_id, tag, remainder, amount) AS (
+      SELECT
+        t.category_id,
+        Ltrim(Substr(t.tags || ',', 1, Instr(t.tags || ',', ',') - 1)) AS tag,
+        Substr(t.tags || ',', Instr(t.tags || ',', ',') + 1)           AS remainder,
+        t.amount
+      FROM transactions t
+      JOIN categories c ON c.id = t.category_id
+      WHERE t.tags IS NOT NULL AND t.tags <> ''
+        AND t.date >= ? AND t.date <= ?
+        AND lower(c.type) = 'expense' AND c.system = 0
+      UNION ALL
+      SELECT
+        category_id,
+        Ltrim(Substr(remainder, 1, Instr(remainder, ',') - 1)) AS tag,
+        Substr(remainder, Instr(remainder, ',') + 1)           AS remainder,
+        amount
+      FROM split
+      WHERE remainder <> ''
+    )
+    SELECT
+      s.category_id        AS categoryId,
+      s.tag                AS tag,
+      SUM(s.amount)        AS spentAmount
+    FROM split s
+    JOIN categories c ON c.id = s.category_id
+    WHERE s.tag <> ''
+    GROUP BY s.category_id, s.tag
+    ORDER BY c.name ASC, spentAmount DESC, s.tag ASC
+  `,
+  params: [currentStart, currentEnd],
+});
+
 export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): InsightsRepository => {
   const watchCategorySpending = (
     onDataChange: (result: AsyncResult<CategorySpending[]>) => void,
@@ -259,5 +301,33 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     );
   };
 
-  return { watchCategorySpending: watchCategorySpending, watchTagSpending: watchTagSpending };
+  const watchCategoryTagSpending = (
+    onDataChange: (result: AsyncResult<CategoryTagSpending[]>) => void,
+    effectiveDate: DateOnly,
+    settings: Settings
+  ) => {
+    const intervalResult = computeInterval(effectiveDate, settings);
+    if (!intervalResult.isSuccess) {
+      onDataChange(intervalResult);
+      return () => {};
+    }
+
+    const { start, end } = intervalResult.value;
+    const { sql, params } = buildCategoryTagSpendingQuery(start, end);
+
+    return watchQuery<CategoryTagSpendingRow, CategoryTagSpending>(
+      db,
+      sql,
+      params,
+      (row) => ({ categoryId: Id.valid(row.categoryId), tag: row.tag, spentAmount: Money.fromCents(row.spentAmount) }),
+      onDataChange,
+      'watchCategoryTagSpending'
+    );
+  };
+
+  return {
+    watchCategorySpending: watchCategorySpending,
+    watchTagSpending: watchTagSpending,
+    watchCategoryTagSpending: watchCategoryTagSpending,
+  };
 };

@@ -19,6 +19,7 @@ import FileUploadOff from '@expo/material-symbols/file_upload_off.xml';
 import Key from '@expo/material-symbols/key.xml';
 import Label from '@expo/material-symbols/label.xml';
 import Language from '@expo/material-symbols/language.xml';
+import Layers from '@expo/material-symbols/layers.xml';
 import LockClock from '@expo/material-symbols/lock_clock.xml';
 import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
@@ -51,6 +52,7 @@ const universalIconMapping = {
   category: { ios: 'tray.2', android: Label },
   close: { ios: 'xmark', android: Close },
   circle: { ios: 'circle.fill', android: Circle },
+  combined: { ios: 'square.stack', android: Layers },
   connected: {
     ios: 'rectangle.connected.to.line.below',
     android: NetworkCheck,

@@ -164,6 +164,7 @@ export const en = {
   insights: {
     title: 'Insights',
     period: '{{period}}',
+    combined: 'Combined',
     categoryBreakdown: {
       title: 'Spending by Category',
       empty: 'No expenses this period',
@@ -175,6 +176,10 @@ export const en = {
       title: 'Spending by Tag',
       empty: 'No tagged expenses this period',
       avgPerPeriod: 'avg {{amount}}',
+    },
+    combinedBreakdown: {
+      title: 'Spending by Category & Tag',
+      empty: 'No expenses this period',
     },
   },
   home: {

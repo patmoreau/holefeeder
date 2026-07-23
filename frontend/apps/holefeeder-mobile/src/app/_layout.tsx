@@ -16,6 +16,7 @@ import { DatabaseFactory } from '@/shared/persistence/db';
 import { PowerSyncAuthProvider } from '@/shared/persistence/presentation/PowerSyncAuthProvider';
 import { RepositoryProvider } from '@/shared/repositories/presentation/RepositoryContext';
 import { ThemeProvider } from '@/shared/theme/presentation/ThemeProvider';
+import { CombinedInsightProvider } from '@/statistics/presentation/CombinedInsightProvider';
 
 Id.setGenerator(Crypto.randomUUID);
 Logger.setLoggerFactory(loggerFactoryForReactNative);
@@ -74,13 +75,15 @@ const RootLayout = () => {
     <ErrorBoundary onError={errorHandler}>
       <LanguageProvider storage={appStorage}>
         <ThemeProvider storage={appStorage}>
-          <AuthenticationProvider config={config.value.authConfig}>
-            <PowerSyncAuthProvider database={database} config={config.value}>
-              <RepositoryProvider database={database}>
-                <HolefeederContent />
-              </RepositoryProvider>
-            </PowerSyncAuthProvider>
-          </AuthenticationProvider>
+          <CombinedInsightProvider storage={appStorage}>
+            <AuthenticationProvider config={config.value.authConfig}>
+              <PowerSyncAuthProvider database={database} config={config.value}>
+                <RepositoryProvider database={database}>
+                  <HolefeederContent />
+                </RepositoryProvider>
+              </PowerSyncAuthProvider>
+            </AuthenticationProvider>
+          </CombinedInsightProvider>
         </ThemeProvider>
       </LanguageProvider>
     </ErrorBoundary>

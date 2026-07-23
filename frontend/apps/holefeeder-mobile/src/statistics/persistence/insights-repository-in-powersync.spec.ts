@@ -9,6 +9,7 @@ import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { InsightsRepository } from '@/statistics/core/insights-repository';
 import { CategorySpending } from '../core/category-spending';
+import { CategoryTagSpending } from '../core/category-tag-spending';
 import { TagSpending } from '../core/tag-spending';
 import { InsightsRepositoryInPowersync } from './insights-repository-in-powersync';
 
@@ -363,6 +364,109 @@ describe('InsightsRepositoryInPowersync', () => {
       await db.close();
 
       const unsubscribe = watchTagSpending(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeFailureWithErrors(['The database connection is not open']);
+
+      unsubscribe();
+    });
+  });
+
+  describe('watch category tag spending', () => {
+    let result: AsyncResult<CategoryTagSpending[]> | undefined;
+
+    const watchCategoryTagSpending = (effectiveDate: DateOnly) => {
+      return repo.watchCategoryTagSpending(
+        (data) => {
+          result = data;
+        },
+        effectiveDate,
+        settings
+      );
+    };
+
+    it('returns tag spending broken down per category for the current period', async () => {
+      const unsubscribe = watchCategoryTagSpending(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { categoryId: foodCategory.id, tag: 'travel', spentAmount: Money.valid(201) },
+        { categoryId: foodCategory.id, tag: 'restaurant', spentAmount: Money.valid(101) },
+        { categoryId: foodCategory.id, tag: 'groceries', spentAmount: Money.valid(100) },
+        { categoryId: homeCategory.id, tag: 'travel', spentAmount: Money.valid(500) },
+        { categoryId: homeCategory.id, tag: 'utilities', spentAmount: Money.valid(500) },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('ignores transactions without tags', async () => {
+      await aTransaction({
+        categoryId: foodCategory.id,
+        amount: Money.valid(999),
+        date: withDate(month1).addDays(2).toDateOnly(),
+        tags: TagList.valid([]),
+      }).store(db);
+
+      const unsubscribe = watchCategoryTagSpending(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { categoryId: foodCategory.id, tag: 'travel', spentAmount: Money.valid(201) },
+        { categoryId: foodCategory.id, tag: 'restaurant', spentAmount: Money.valid(101) },
+        { categoryId: foodCategory.id, tag: 'groceries', spentAmount: Money.valid(100) },
+        { categoryId: homeCategory.id, tag: 'travel', spentAmount: Money.valid(500) },
+        { categoryId: homeCategory.id, tag: 'utilities', spentAmount: Money.valid(500) },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('excludes transactions from gain categories', async () => {
+      const gainCategory = await aCategory({ name: 'Salary', type: 'gain' }).store(db);
+
+      await aTransaction({
+        categoryId: gainCategory.id,
+        amount: Money.valid(1),
+        date: settings.effectiveDate,
+        tags: TagList.valid(['other']),
+      }).store(db);
+
+      const unsubscribe = watchCategoryTagSpending(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue(expect.not.arrayContaining([expect.objectContaining({ tag: 'other' })]));
+
+      unsubscribe();
+    });
+
+    it('excludes transactions from system categories', async () => {
+      const systemCategory = await aCategory({ name: 'Transfer', type: 'expense', system: true as System }).store(db);
+
+      await aTransaction({
+        categoryId: systemCategory.id,
+        amount: Money.valid(300),
+        date: settings.effectiveDate,
+        tags: TagList.valid(['hidden']),
+      }).store(db);
+
+      const unsubscribe = watchCategoryTagSpending(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue(expect.not.arrayContaining([expect.objectContaining({ tag: 'hidden' })]));
+
+      unsubscribe();
+    });
+
+    it('handles database errors', async () => {
+      await db.close();
+
+      const unsubscribe = watchCategoryTagSpending(settings.effectiveDate);
 
       await waitFor(() => expect(result).toBeDefined());
 

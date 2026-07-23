@@ -166,6 +166,7 @@ export const fr: TranslationStructure = {
   insights: {
     title: 'Aperçus',
     period: '{{period}}',
+    combined: 'Combiné',
     categoryBreakdown: {
       title: 'Dépenses par catégorie',
       empty: 'Aucune dépense cette période',
@@ -177,6 +178,10 @@ export const fr: TranslationStructure = {
       title: 'Dépenses par étiquette',
       empty: 'Aucune dépense étiquetée cette période',
       avgPerPeriod: 'moy. {{amount}}',
+    },
+    combinedBreakdown: {
+      title: 'Dépenses par catégorie et étiquette',
+      empty: 'Aucune dépense cette période',
     },
   },
   home: {
