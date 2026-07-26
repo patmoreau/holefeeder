@@ -1,4 +1,3 @@
-import { frame } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
@@ -32,7 +31,7 @@ export const RenameTagModal = ({ tag, isPresented, onCancel, onSave }: RenameTag
   return (
     <AppNative>
       <AppBottomSheet isPresented={isPresented} onDismiss={onCancel} snapPoints={['half']}>
-        <AppColumn spacing={16} modifiers={[frame({ maxWidth: Infinity, maxHeight: Infinity })]}>
+        <AppColumn spacing={16} modifiers={[AppModifiers.fillMaxSize]}>
           <AppFieldGroup>
             <AppFieldSection title={t(tk.manageTags.editTitle)}>
               <AppField icon={AppIconMap.tag} label={t(tk.manageTags.namePlaceholder)} variant="large">
