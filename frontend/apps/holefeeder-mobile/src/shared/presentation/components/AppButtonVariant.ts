@@ -11,10 +11,12 @@ export const AppButtonVariant = {
 
 export type AppButtonVariant = (typeof AppButtonVariant)[keyof typeof AppButtonVariant];
 
-// SwiftUI-native role. `destructive` unlocks red tint + full-swipe inside SwipeActions.
-export const variantRole: Record<AppButtonVariant, ButtonRole> = {
-  primary: 'default',
-  secondary: 'default',
+// SwiftUI-native role. `destructive` unlocks red tint + full-swipe inside
+// SwipeActions. Non-destructive variants MUST be `undefined`, not `'default'`:
+// the native SwipeActions parser drops action buttons whose role is `'default'`.
+export const variantRole: Record<AppButtonVariant, ButtonRole | undefined> = {
+  primary: undefined,
+  secondary: undefined,
   destructive: 'destructive',
-  link: 'default',
+  link: undefined,
 };

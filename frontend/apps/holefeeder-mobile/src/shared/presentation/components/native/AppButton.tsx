@@ -8,6 +8,7 @@ import { ExpoButton } from '@/shared/presentation/components/native/expo/ExpoBut
 import { ExpoIcon } from '@/shared/presentation/components/native/expo/ExpoIcon';
 import { ExpoRow } from '@/shared/presentation/components/native/expo/ExpoRow';
 import { ExpoText } from '@/shared/presentation/components/native/expo/ExpoText';
+import { useInSwipeAction } from '@/shared/presentation/components/native/swipe-action-context';
 import { UniversalIcon } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { Theme } from '@/types/theme/theme';
@@ -78,8 +79,14 @@ export const AppButton = ({
   hostProps,
 }: ButtonProps) => {
   const { theme } = useTheme();
+  const inSwipeAction = useInSwipeAction();
 
   if (Platform.OS === 'ios') {
+    // SwiftUI's .swipeActions only renders plain Buttons; style modifiers make
+    // non-destructive actions get dropped. Render bare (role colors it) here.
+    if (inSwipeAction) {
+      return <ExpoButton role={variantRole[variant]} label={label} systemImage={icon?.ios} onPress={onPress} disabled={disabled} />;
+    }
     const modifiers: ModifierConfig[] = [
       buttonStyle(variantMapping[variant]),
       tint(iconColor ?? variantColor(variant, theme)),
