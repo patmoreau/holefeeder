@@ -1,4 +1,4 @@
-import { background, border, cornerRadius, foregroundStyle, frame } from '@expo/ui/swift-ui/modifiers';
+import { background, border, cornerRadius, foregroundStyle, frame, onAppear } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
 
 type NamedColor =
@@ -27,6 +27,7 @@ export const AppModifiers = {
   fillWidth: frame({ maxWidth: Infinity }),
   fillMaxSize: frame({ maxWidth: Infinity, maxHeight: Infinity }),
   frame: (params: Parameters<typeof frame>[0]) => frame(params),
+  onAppear: (handler: () => void) => onAppear(handler),
   background: (color: Color) => background(color),
   border: (color: Color) => border({ color: color }),
   cornerRadius: (radius: number) => cornerRadius(radius),

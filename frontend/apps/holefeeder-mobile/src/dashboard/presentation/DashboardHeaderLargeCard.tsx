@@ -1,4 +1,3 @@
-import { Divider } from '@expo/ui/swift-ui';
 import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
@@ -7,6 +6,7 @@ import { CategoryType } from '@/flows/core/categories/category-type';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
+import { AppDivider } from '@/shared/presentation/components/native/AppDivider';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
@@ -96,7 +96,7 @@ export const DashboardHeaderLargeCard = ({
           <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
           <AppSpacer />
         </AppRow>
-        <Divider />
+        <AppDivider />
         <AppRow>
           <AppSpacer />
           <AppColumn alignment={'center'} spacing={4}>
