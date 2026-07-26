@@ -160,6 +160,33 @@ Route protection uses `<Stack.Protected guard={!!user}>` inside `HolefeederConte
 Always use `AppIcons.<key>` (SF Symbol name) rather than raw strings. Add new icons to both `AppIcons` and
 `AppIconsMapping` in `src/types/icons.ts`.
 
+## Native UI Wrappers (`@expo/ui` boundary)
+
+`@expo/ui` must **never** be imported outside `src/shared/presentation/components/native/`
+(the `modules/` SwiftUI glue is the only other exception). An ESLint `no-restricted-imports`
+rule fails the build on any violation. Feature code always consumes the `App*` wrappers, never
+`@expo/ui` directly.
+
+Two-layer wrapper pattern inside `native/`:
+
+- `expo/Expo<Name>.tsx` — thin passthrough over the raw `@expo/ui` component
+  (`@expo/ui/swift-ui` for iOS-native primitives).
+- `App<Name>.tsx` — the app-facing component built on its `Expo<Name>`, adding theme-aware
+  props and defaults. Feature code imports this.
+
+When feature code needs an `@expo/ui` component, hook, or modifier that has no wrapper yet,
+**add one** rather than importing `@expo/ui` directly:
+
+- **Component** → new `Expo<Name>` + `App<Name>` pair (e.g. `AppDivider`, `AppSection`,
+  `AppProgressView`).
+- **Modifier** → expose it on `AppModifiers` (e.g. `AppModifiers.frame`, `.onAppear`), or add
+  a prop to the relevant `App*` component (e.g. `AppList`'s `inset` wraps `listStyle('inset')`).
+- **Icon name for a native prop** (toolbar/tab `icon=`) → `AppIcon.select(AppIconMap.x)`.
+- **Hook** → re-export from `native/` (e.g. `use-native-state.ts` re-exports `useNativeState`).
+
+Types that would couple a non-`native/` module to `@expo/ui` are redefined locally when
+structurally safe (e.g. `ButtonRole` in `AppButtonVariant.ts`).
+
 ## i18n
 
 All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files
