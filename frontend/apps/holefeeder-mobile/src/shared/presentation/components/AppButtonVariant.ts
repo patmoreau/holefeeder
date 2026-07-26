@@ -1,4 +1,6 @@
-import type { ButtonRole } from '@expo/ui/swift-ui';
+// Mirrors the SwiftUI Button role (kept local so this module has no @expo/ui
+// dependency); structurally assignable to swift-ui's ButtonRole.
+export type ButtonRole = 'default' | 'cancel' | 'destructive';
 
 export const AppButtonVariant = {
   primary: 'primary',
