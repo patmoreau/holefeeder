@@ -1,5 +1,3 @@
-import { List } from '@expo/ui/swift-ui';
-import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { Id, tk } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
@@ -11,6 +9,7 @@ import { useAccountDetail } from '@/accounts/presentation/core/use-account-detai
 import { useAccountTransactions } from '@/accounts/presentation/core/use-account-transactions';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
@@ -93,9 +92,9 @@ export const AccountScreen = () => {
           <AccountHeaderLargeCard account={account} />
         </View>
         <AppNative style={{ flex: 1 }}>
-          <List modifiers={[listStyle('inset')]}>
+          <AppList inset>
             <TransactionCardList transactions={transactions} hasMore={hasMore} onLoadMore={loadMore} />
-          </List>
+          </AppList>
         </AppNative>
       </View>
     </>

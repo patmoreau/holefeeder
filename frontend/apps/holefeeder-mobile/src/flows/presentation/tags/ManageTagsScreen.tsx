@@ -1,4 +1,3 @@
-import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DeleteTagUseCase } from '@/flows/core/tags/delete-tag/delete-tag-use-case';
@@ -73,7 +72,7 @@ export const ManageTagsScreen = () => {
   return (
     <AppScreen>
       <AppNative style={{ flex: 1 }}>
-        <AppList modifiers={[listStyle('inset')]}>
+        <AppList inset>
           <AppListForEach>
             {result.value.map((tagInfo) => (
               <AppListItem key={tagInfo.tag} onPress={() => setEditingTag(tagInfo.tag)}>

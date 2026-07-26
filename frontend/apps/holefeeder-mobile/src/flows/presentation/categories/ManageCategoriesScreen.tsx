@@ -1,4 +1,3 @@
-import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
@@ -65,7 +64,7 @@ export const ManageCategoriesScreen = () => {
     <AppScreen>
       {toolbar}
       <AppNative style={{ flex: 1 }}>
-        <AppList modifiers={[listStyle('inset')]}>
+        <AppList inset>
           <AppListForEach>
             {result.value.map((category) => (
               <AppListItem key={category.id} onPress={category.system ? undefined : () => onEdit(category)}>

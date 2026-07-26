@@ -1,5 +1,3 @@
-import { List } from '@expo/ui/swift-ui';
-import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { Id, Logger } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
@@ -15,6 +13,7 @@ import { useUpcomingFlows } from '@/dashboard/presentation/core/use-upcoming-flo
 import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHeaderLargeCard';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppReact } from '@/shared/presentation/components/native/AppReact';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
@@ -112,7 +111,7 @@ const DashboardScreen = () => {
 
       <View style={{ flex: 1 }}>
         <AppNative style={{ flex: 1 }}>
-          <List modifiers={[listStyle('inset')]}>
+          <AppList inset>
             <AppColumn style={{ paddingTop: fullHeight - 125 }}>
               <AppReact matchContents>
                 <AccountCardList accounts={accounts} onPress={onAccountPress} />
@@ -120,7 +119,7 @@ const DashboardScreen = () => {
             </AppColumn>
             <LatestTransactionList />
             <UpcomingCardList upcomingFlows={upcomingFlows} />
-          </List>
+          </AppList>
         </AppNative>
       </View>
     </View>

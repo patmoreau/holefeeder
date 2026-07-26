@@ -1,4 +1,3 @@
-import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { AppView } from '@/shared/presentation/AppView';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
@@ -16,7 +15,7 @@ export default function InsightsScreen() {
     <AppView style={{ flex: 1 }}>
       <InsightsPeriodHeader />
       <AppNative style={{ flex: 1 }}>
-        <AppList modifiers={[listStyle('inset')]}>
+        <AppList inset>
           <CombinedInsightToggle />
           {combined ? (
             <CombinedSpendingList />
