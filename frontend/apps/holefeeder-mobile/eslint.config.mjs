@@ -8,7 +8,9 @@ export default defineConfig([
   ...expoConfig,
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['**/native/**'],
+    // native/ holds the App*/Expo* wrappers; modules/ holds native SwiftUI
+    // module glue — both may import @expo/ui directly.
+    ignores: ['**/native/**', 'modules/**'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -17,6 +19,10 @@ export default defineConfig([
             {
               group: ['**/native/expo/**'],
               message: 'Use the App* wrapper from native/ instead of importing Expo components directly.',
+            },
+            {
+              group: ['@expo/ui', '@expo/ui/**'],
+              message: 'Import @expo/ui only inside shared/presentation/components/native/; use an App*/Expo* wrapper elsewhere.',
             },
           ],
         },
