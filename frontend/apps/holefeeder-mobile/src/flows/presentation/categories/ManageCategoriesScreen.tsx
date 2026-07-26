@@ -1,5 +1,4 @@
 import { Icon } from '@expo/ui';
-import { Button } from '@expo/ui/swift-ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppListForEach } from '@/shared/presentation/components/native/AppListForEach';
@@ -77,10 +77,10 @@ export const ManageCategoriesScreen = () => {
                   <AppText variant="defaultSemiBold">{category.name}</AppText>
                   {!category.system && (
                     <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
-                      <Button
-                        role="destructive"
+                      <AppButton
+                        variant="destructive"
                         label={t(tk.swipeableActions.delete)}
-                        systemImage={AppIconMap.delete.ios}
+                        icon={AppIconMap.delete}
                         onPress={() => onDelete(category)}
                       />
                     </AppSwipeActions.Actions>

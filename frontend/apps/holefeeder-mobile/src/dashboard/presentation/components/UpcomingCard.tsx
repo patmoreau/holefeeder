@@ -1,10 +1,10 @@
-import { Button } from '@expo/ui/swift-ui';
 import { LocalFormatter, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useUpcomingFlow } from '@/dashboard/presentation/core/use-pay-form';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppChip } from '@/shared/presentation/components/native/AppChip';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
@@ -64,11 +64,11 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
           {upcomingFlow.description}
         </AppText>
         <AppSwipeActions.Actions edge="leading" allowsFullSwipe={true}>
-          <Button label={t(tk.swipeableActions.pay)} systemImage={AppIconMap.purchase.ios} onPress={handlePay} />
+          <AppButton variant="primary" label={t(tk.swipeableActions.pay)} icon={AppIconMap.purchase} onPress={handlePay} />
         </AppSwipeActions.Actions>
         <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
-          <Button role="destructive" label={t(tk.swipeableActions.delete)} systemImage={AppIconMap.delete.ios} onPress={handleDelete} />
-          <Button label={t(tk.swipeableActions.clear)} systemImage={AppIconMap.cancel.ios} onPress={handleClear} />
+          <AppButton variant="destructive" label={t(tk.swipeableActions.delete)} icon={AppIconMap.delete} onPress={handleDelete} />
+          <AppButton variant="secondary" label={t(tk.swipeableActions.clear)} icon={AppIconMap.cancel} onPress={handleClear} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>

@@ -1,10 +1,10 @@
-import { Button } from '@expo/ui/swift-ui';
 import { LocalFormatter, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTransactionCard } from '@/accounts/presentation/core/use-transaction-card';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { tk } from '@/i18n/translations';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppChip } from '@/shared/presentation/components/native/AppChip';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
@@ -60,7 +60,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
           {transaction.description}
         </AppText>
         <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={true}>
-          <Button role="destructive" label={t(tk.swipeableActions.delete)} systemImage={AppIconMap.delete.ios} onPress={handleDelete} />
+          <AppButton variant="destructive" label={t(tk.swipeableActions.delete)} icon={AppIconMap.delete} onPress={handleDelete} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>

@@ -1,8 +1,8 @@
 import { Icon } from '@expo/ui';
-import { buttonStyle, ModifierConfig, tint } from '@expo/ui/swift-ui/modifiers';
+import { buttonStyle, foregroundStyle, labelStyle, ModifierConfig, tint } from '@expo/ui/swift-ui/modifiers';
 import React from 'react';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
-import { AppButtonVariant } from '@/shared/presentation/components/AppButtonVariant';
+import { AppButtonVariant, variantRole } from '@/shared/presentation/components/AppButtonVariant';
 import { AppHostProps } from '@/shared/presentation/components/native/AppNative';
 import { ExpoButton } from '@/shared/presentation/components/native/expo/ExpoButton';
 import { ExpoIcon } from '@/shared/presentation/components/native/expo/ExpoIcon';
@@ -34,7 +34,6 @@ const variantMapping: Record<
   secondary: 'glass',
   destructive: 'glassProminent',
   link: 'plain',
-  mini: 'bordered',
 };
 
 const variantColor = (variant: AppButtonVariant, theme: Theme) => {
@@ -80,18 +79,44 @@ export const AppButton = ({
 }: ButtonProps) => {
   const { theme } = useTheme();
 
-  const modifiers: ModifierConfig[] = [];
   if (Platform.OS === 'ios') {
-    modifiers.push(buttonStyle(variantMapping[variant]));
-    modifiers.push(tint(iconColor ? iconColor : variantColor(variant, theme)));
+    const modifiers: ModifierConfig[] = [
+      buttonStyle(variantMapping[variant]),
+      tint(iconColor ?? variantColor(variant, theme)),
+      foregroundStyle(iconColor ?? variantIconColor(variant, theme)),
+    ];
+    if (icon && label && iconPosition === 'right') {
+      return (
+        <ExpoButton role={variantRole[variant]} onPress={onPress} modifiers={modifiers} disabled={disabled}>
+          <ExpoRow spacing={2}>
+            <ExpoText>{label}</ExpoText>
+            <ExpoIcon name={Icon.select(icon)} size={20} color={iconColor ?? variantIconColor(variant, theme)} />
+          </ExpoRow>
+        </ExpoButton>
+      );
+    }
+    if (icon && !label) {
+      modifiers.push(labelStyle('iconOnly'));
+    }
+    return (
+      <ExpoButton
+        role={variantRole[variant]}
+        label={label ?? icon?.ios}
+        systemImage={icon?.ios}
+        onPress={onPress}
+        modifiers={modifiers}
+        disabled={disabled}
+      />
+    );
   }
+
   if (!icon) {
-    return <ExpoButton label={label} onPress={onPress} modifiers={modifiers} disabled={disabled} />;
+    return <ExpoButton label={label} onPress={onPress} disabled={disabled} />;
   }
   const buttonIcon = <ExpoIcon name={Icon.select(icon)} size={20} color={iconColor ? iconColor : variantIconColor(variant, theme)} />;
 
   return (
-    <ExpoButton label={label} onPress={onPress} modifiers={modifiers} disabled={disabled}>
+    <ExpoButton label={label} onPress={onPress} disabled={disabled}>
       <ExpoRow spacing={2}>
         {icon && iconPosition === 'left' && buttonIcon}
         {label && <ExpoText>{label}</ExpoText>}

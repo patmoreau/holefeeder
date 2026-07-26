@@ -1,4 +1,3 @@
-import { Button } from '@expo/ui/swift-ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { RenameTagModal } from '@/flows/presentation/tags/RenameTagModal';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
@@ -83,10 +83,10 @@ export const ManageTagsScreen = () => {
                 <AppSwipeActions>
                   <AppText variant="defaultSemiBold">{tagInfo.tag}</AppText>
                   <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
-                    <Button
-                      role="destructive"
+                    <AppButton
+                      variant="destructive"
                       label={t(tk.swipeableActions.delete)}
-                      systemImage={AppIconMap.delete.ios}
+                      icon={AppIconMap.delete}
                       onPress={() => onDelete(tagInfo.tag)}
                     />
                   </AppSwipeActions.Actions>
