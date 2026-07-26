@@ -1,4 +1,3 @@
-import { Icon } from '@expo/ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { router, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +48,7 @@ export const ManageCategoriesScreen = () => {
 
   const toolbar = (
     <Stack.Toolbar placement="right">
-      <Stack.Toolbar.Button icon={Icon.select(AppIconMap.add)} onPress={onAdd} />
+      <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.add)} onPress={onAdd} />
     </Stack.Toolbar>
   );
 

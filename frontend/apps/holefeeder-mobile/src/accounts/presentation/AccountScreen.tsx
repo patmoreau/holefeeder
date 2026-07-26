@@ -1,4 +1,3 @@
-import { Icon } from '@expo/ui';
 import { List } from '@expo/ui/swift-ui';
 import { listStyle } from '@expo/ui/swift-ui/modifiers';
 import { Id, tk } from '@holefeeder/shared/core';
@@ -11,6 +10,7 @@ import { TransactionCardList } from '@/accounts/presentation/components/Transact
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { useAccountTransactions } from '@/accounts/presentation/core/use-account-transactions';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
@@ -76,14 +76,14 @@ export const AccountScreen = () => {
   return (
     <>
       <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button icon={Icon.select(AppIconMap.back)} onPress={() => goBack()} />
+        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.back)} onPress={() => goBack()} />
       </Stack.Toolbar>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Menu icon={Icon.select(AppIconMap.menu)}>
-          <Stack.Toolbar.MenuAction icon={Icon.select(AppIconMap.edit)} onPress={onEditPress}>
+        <Stack.Toolbar.Menu icon={AppIcon.select(AppIconMap.menu)}>
+          <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.edit)} onPress={onEditPress}>
             {t(tk.accountCard.edit)}
           </Stack.Toolbar.MenuAction>
-          <Stack.Toolbar.MenuAction icon={Icon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')}>
+          <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')}>
             {t(tk.accountCard.purchase)}
           </Stack.Toolbar.MenuAction>
         </Stack.Toolbar.Menu>
