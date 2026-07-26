@@ -1,12 +1,16 @@
-import { Icon, Row, Text } from '@expo/ui';
-import { Section, Button } from '@expo/ui/swift-ui';
 import { Dispatch, SetStateAction } from 'react';
 import { AppBottomSheet } from '@/shared/presentation/components/native/AppBottomSheet';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
+import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppSection } from '@/shared/presentation/components/native/AppSection';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
+import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { TestComponentsButtonSection } from './TestComponentsButtonSection';
 import { TestComponentsChipSection } from './TestComponentsChipSection';
 import { TestComponentsIconSymbolSection } from './TestComponentsIconSymbolSection';
@@ -28,75 +32,75 @@ const TestComponentsScreen = ({ show, setShow }: { show: boolean; setShow: Dispa
           <TestComponentsIconSymbolSection />
           <TestComponentsLoadingIndicatorSection />
           <AppList>
-            <Section>
+            <AppSection>
               <AppListItem key={1} onPress={() => {}}>
                 <AppListItem.Leading>
-                  <Icon name="star.fill" size={20} color="#FFD60A" />
+                  <AppIcon name="star.fill" size={20} color="#FFD60A" />
                 </AppListItem.Leading>
-                <Row spacing={0}>
-                  <Text textStyle={{ color: 'gray' }}>{`#42: `}</Text>
-                  <Text>Composite headline</Text>
-                </Row>
+                <AppRow spacing={0}>
+                  <AppText textStyle={{ color: 'gray' }}>{`#42: `}</AppText>
+                  <AppText>Composite headline</AppText>
+                </AppRow>
                 <AppListItem.Supporting>Richer slot content</AppListItem.Supporting>
                 <AppSwipeActions>
-                  <Text>Message from Expo</Text>
+                  <AppText>Message from Expo</AppText>
 
                   <AppSwipeActions.Actions edge="leading" allowsFullSwipe={false}>
-                    <Button label="Pin" systemImage="pin" onPress={() => {}} />
+                    <AppButton variant="secondary" label="Pin" onPress={() => {}} />
                   </AppSwipeActions.Actions>
 
                   <AppSwipeActions.Actions edge="trailing">
-                    <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
+                    <AppButton variant="destructive" label="Delete" icon={AppIconMap.delete} onPress={() => {}} />
                   </AppSwipeActions.Actions>
                 </AppSwipeActions>
               </AppListItem>
-            </Section>
-            <Section>
+            </AppSection>
+            <AppSection>
               <AppListItem key={2} onPress={() => {}}>
                 <AppListItem.Leading>
-                  <Icon name="star.fill" size={20} color="#FFD60A" />
+                  <AppIcon name="star.fill" size={20} color="#FFD60A" />
                 </AppListItem.Leading>
-                <Row spacing={0}>
-                  <Text textStyle={{ color: 'gray' }}>{`#42: `}</Text>
-                  <Text>Composite headline</Text>
-                </Row>
+                <AppRow spacing={0}>
+                  <AppText textStyle={{ color: 'gray' }}>{`#42: `}</AppText>
+                  <AppText>Composite headline</AppText>
+                </AppRow>
                 <AppListItem.Supporting>Richer slot content</AppListItem.Supporting>
                 <AppSwipeActions>
-                  <Text>Message from Expo</Text>
+                  <AppText>Message from Expo</AppText>
 
                   <AppSwipeActions.Actions edge="leading" allowsFullSwipe={false}>
-                    <Button label="Pin" systemImage="pin" onPress={() => {}} />
+                    <AppButton variant="secondary" label="Pin" onPress={() => {}} />
                   </AppSwipeActions.Actions>
 
                   <AppSwipeActions.Actions edge="trailing">
-                    <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
-                    <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
+                    <AppButton variant="destructive" label="Delete" icon={AppIconMap.delete} onPress={() => {}} />
+                    <AppButton variant="destructive" label="Delete" icon={AppIconMap.delete} onPress={() => {}} />
                   </AppSwipeActions.Actions>
                 </AppSwipeActions>
               </AppListItem>
               <AppListItem key={3} onPress={() => {}}>
                 <AppListItem.Leading>
-                  <Icon name="star.fill" size={20} color="#FFD60A" />
+                  <AppIcon name="star.fill" size={20} color="#FFD60A" />
                 </AppListItem.Leading>
-                <Row spacing={0}>
-                  <Text textStyle={{ color: 'gray' }}>{`#42: `}</Text>
-                  <Text>Composite headline</Text>
-                </Row>
+                <AppRow spacing={0}>
+                  <AppText textStyle={{ color: 'gray' }}>{`#42: `}</AppText>
+                  <AppText>Composite headline</AppText>
+                </AppRow>
                 <AppListItem.Supporting>Richer slot content</AppListItem.Supporting>
                 <AppSwipeActions>
-                  <Text>Message from Expo</Text>
+                  <AppText>Message from Expo</AppText>
 
                   <AppSwipeActions.Actions edge="leading" allowsFullSwipe={false}>
-                    <Button label="Pin" systemImage="pin" onPress={() => {}} />
+                    <AppButton variant="secondary" label="Pin" onPress={() => {}} />
                   </AppSwipeActions.Actions>
 
                   <AppSwipeActions.Actions edge="trailing">
-                    <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
-                    <Button label="Delete" systemImage="trash" role="destructive" onPress={() => {}} />
+                    <AppButton variant="destructive" label="Delete" icon={AppIconMap.delete} onPress={() => {}} />
+                    <AppButton variant="destructive" label="Delete" icon={AppIconMap.delete} onPress={() => {}} />
                   </AppSwipeActions.Actions>
                 </AppSwipeActions>
               </AppListItem>
-            </Section>
+            </AppSection>
           </AppList>
         </AppFieldGroup>
       </AppBottomSheet>
