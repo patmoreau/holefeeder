@@ -1,9 +1,9 @@
-import { useNativeState } from '@expo/ui';
 import { useEffectEvent } from 'react';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
+import { useNativeState } from '@/shared/presentation/components/native/use-native-state';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 export const TestComponentsTextSection = () => {

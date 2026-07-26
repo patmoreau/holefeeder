@@ -1,8 +1,8 @@
-import { useNativeState } from '@expo/ui';
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useEffectEvent, useMemo } from 'react';
 import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
+import { useNativeState } from '@/shared/presentation/components/native/use-native-state';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { fontWeight } from '@/types/theme';
