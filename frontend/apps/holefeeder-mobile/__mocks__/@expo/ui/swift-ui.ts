@@ -30,11 +30,26 @@ export const TextField = ({
   onTextChange?: (value: string) => void;
 }) => React.createElement(TextInput, { placeholder, value: text?.value, onChangeText: onTextChange }, children);
 
-export const Button = ({ children, variant, role, onPress }: { children: unknown; variant?: string; role?: string; onPress?: () => void }) =>
+export const Button = ({
+  children,
+  variant,
+  role,
+  onPress,
+  label,
+  systemImage,
+}: {
+  children: unknown;
+  variant?: string;
+  role?: string;
+  onPress?: () => void;
+  label?: string;
+  systemImage?: string;
+}) =>
   React.createElement(
     View,
     { testID: 'button', 'data-variant': variant, 'data-role': role },
-    React.createElement(RNButton, { title: typeof children === 'string' ? children : 'Button', onPress }),
+    React.createElement(RNButton, { title: label ?? (typeof children === 'string' ? children : 'Button'), onPress }),
+    systemImage ? React.createElement(View, { testID: `image-${systemImage}`, onPress }) : null,
     React.createElement(View, null, children)
   );
 
