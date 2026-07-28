@@ -1,6 +1,6 @@
 import { type AsyncResult, Id, Logger, Money, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { AccountVariation } from '@/accounts/core/account-variation';
+import { AccountVariation } from '@/flows/core/flows/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { FlowsRepository, FlowsRepositoryErrors } from '@/flows/core/flows/flows-repository';

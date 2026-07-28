@@ -1,7 +1,5 @@
 import { Inactive, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { AccountForTest } from '@/accounts/core/__tests__/account-for-test';
-import { CategoryForTest } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { Cashflow } from '@/flows/core/flows/cashflow';
 import { TagList } from '@/flows/core/flows/tag-list';
@@ -31,8 +29,7 @@ const defaultCashflow = (): Cashflow => ({
   tags: aTagList(),
 });
 
-const times = (count: number, overrides?: Partial<Cashflow>, account?: AccountForTest, category?: CategoryForTest): CashflowForTest[] =>
-  Array.from({ length: count }, () => aCashflow(overrides));
+const times = (count: number, overrides?: Partial<Cashflow>): CashflowForTest[] => Array.from({ length: count }, () => aCashflow(overrides));
 
 const store = async (db: AbstractPowerSyncDatabase, cashflow: CashflowForTest): Promise<CashflowForTest> => {
   await db.execute(

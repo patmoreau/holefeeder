@@ -1,7 +1,7 @@
 import { type AsyncResult, combineWatchers, DateInterval, Id, Variation } from '@holefeeder/shared/core';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountType } from '@/accounts/core/account-type';
-import { AccountVariation } from '@/accounts/core/account-variation';
+import { AccountVariation } from '@/flows/core/flows/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
 import { CategoryType, CategoryTypes } from '@/shared/core/category-type';

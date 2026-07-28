@@ -1,12 +1,12 @@
 import { type AsyncResult, DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
-import { AccountVariation } from '@/accounts/core/account-variation';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';
 import { aCreateFlowCommand } from '@/flows/core/flows/__tests__/create-flow-command-for-test';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
+import { AccountVariation } from '@/flows/core/flows/account-variation';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { FlowsRepositoryErrors } from '@/flows/core/flows/flows-repository';
