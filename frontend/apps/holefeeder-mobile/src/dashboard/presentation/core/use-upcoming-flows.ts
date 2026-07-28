@@ -2,7 +2,7 @@ import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { WatchUpcomingFlowsUseCase } from '@/flows/core/flows/watch-upcoming/watch-upcoming-flows-use-case';
-import { DefaultSettings } from '@/settings/core/settings';
+import { DefaultSettings } from '@/shared/core/settings';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 

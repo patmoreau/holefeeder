@@ -4,7 +4,7 @@ import { startOfMonth } from 'date-fns';
 import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';
 import { aSummaryData } from '@/dashboard/__tests__/summary-data-for-test';
 import { DashboardComputedSummary, WatchSummaryUseCase } from '@/dashboard/core/watch-summary/watch-summary-use-case';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { CategoryTypes } from '@/shared/core/category-type';
 
 describe('WatchCategoriesUseCase', () => {

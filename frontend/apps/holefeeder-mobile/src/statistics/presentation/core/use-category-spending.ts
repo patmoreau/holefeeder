@@ -1,6 +1,6 @@
 import { type AsyncResult, Result, today } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
-import { DefaultSettings } from '@/settings/core/settings';
+import { DefaultSettings } from '@/shared/core/settings';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { CategorySpending } from '@/statistics/core/category-spending';

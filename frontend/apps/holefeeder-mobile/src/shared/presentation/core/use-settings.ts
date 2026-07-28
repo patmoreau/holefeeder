@@ -1,7 +1,7 @@
 import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { GetSettingsUseCase } from '@/settings/core/get-settings/get-settings-use-case';
-import type { Settings } from '@/settings/core/settings';
+import type { Settings } from '@/shared/core/settings';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
 export const useSettings = (): AsyncResult<Settings> => {

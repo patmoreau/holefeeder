@@ -1,6 +1,6 @@
 import { DateIntervalTypeErrors, DateIntervalTypes, DateOnlyErrors } from '@holefeeder/shared/core';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
-import { Settings, SettingsErrors } from '@/settings/core/settings';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
+import { Settings, SettingsErrors } from '@/shared/core/settings';
 
 describe('Settings', () => {
   it('parse valid settings JSON', () => {

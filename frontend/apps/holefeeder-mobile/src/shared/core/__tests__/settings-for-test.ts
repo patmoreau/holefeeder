@@ -1,7 +1,7 @@
-import { Settings } from '@/settings/core/settings';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
 import { aDateIntervalType } from '@/shared/__tests__/enum-for-test';
 import { aCount } from '@/shared/__tests__/number-for-test';
+import { Settings } from '@/shared/core/settings';
 
 const defaultSettings = (): Settings => ({
   effectiveDate: aPastDate(),

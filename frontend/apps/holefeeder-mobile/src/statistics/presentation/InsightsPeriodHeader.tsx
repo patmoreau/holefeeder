@@ -7,7 +7,7 @@ import { NO_SUMMARY } from '@/dashboard/core/watch-summary/watch-summary-use-cas
 import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
 import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { tk } from '@/i18n/translations';
-import { DefaultSettings } from '@/settings/core/settings';
+import { DefaultSettings } from '@/shared/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';

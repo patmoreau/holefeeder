@@ -4,7 +4,7 @@ import { startOfMonth } from 'date-fns';
 import { aCategory, CategoryForTest } from '@/flows/core/categories/__tests__/category-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { InsightsRepository } from '@/statistics/core/insights-repository';

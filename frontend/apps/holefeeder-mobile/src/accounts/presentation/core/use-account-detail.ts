@@ -2,7 +2,7 @@ import { type AsyncResult, DateInterval, Id, Result, today } from '@holefeeder/s
 import { useEffect, useMemo, useState } from 'react';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { WatchAccountVariationUseCase } from '@/accounts/core/watch-account-variation/watch-account-variation-use-case';
-import { DefaultSettings } from '@/settings/core/settings';
+import { DefaultSettings } from '@/shared/core/settings';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 

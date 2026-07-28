@@ -5,7 +5,7 @@ import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variat
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { WatchUpcomingFlowsUseCase } from '@/flows/core/flows/watch-upcoming/watch-upcoming-flows-use-case';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 
 describe('WatchUpcomingFlowsUseCase', () => {
   const asOfDate = withDate(startOfMonth(today())).toDateOnly();

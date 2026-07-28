@@ -3,7 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';
 import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 
 const mockUseSettings = jest.fn();

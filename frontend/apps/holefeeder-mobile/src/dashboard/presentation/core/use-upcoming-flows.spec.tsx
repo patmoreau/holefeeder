@@ -7,10 +7,10 @@ import { useAccountDetails } from '@/dashboard/presentation/core/use-account-det
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
-import { SETTINGS_CODE } from '@/settings/core/settings';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { CategoryTypes } from '@/shared/core/category-type';
+import { SETTINGS_CODE } from '@/shared/core/settings';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { PowerSyncProviderForTest } from '@/shared/persistence/__tests__/PowerSyncProviderForTest';
 

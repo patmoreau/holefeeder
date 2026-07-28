@@ -7,7 +7,7 @@ import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-r
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
-import { aSettings } from '@/settings/core/__tests__/settings-for-test';
+import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 
 const mockUseSettings = jest.fn();

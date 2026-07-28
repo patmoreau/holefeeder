@@ -2,7 +2,7 @@ import { type AsyncResult, DateIntervalTypes, Money } from '@holefeeder/shared/c
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
 import { SummaryData } from '@/dashboard/core/summary-data';
-import { Settings } from '@/settings/core/settings';
+import { Settings } from '@/shared/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
 
 type SummaryDataRow = {

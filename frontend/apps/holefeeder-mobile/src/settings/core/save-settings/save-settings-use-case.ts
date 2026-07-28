@@ -1,6 +1,6 @@
 import { Id, Result, StoreItem, StoreItemsRepository } from '@holefeeder/shared/core';
 import { SaveSettingsCommand } from '@/settings/core/save-settings/save-settings-command';
-import { Settings, SETTINGS_CODE } from '@/settings/core/settings';
+import { Settings, SETTINGS_CODE } from '@/shared/core/settings';
 
 export const SaveSettingsUseCase = (repository: StoreItemsRepository) => {
   const execute = async (command: SaveSettingsCommand): Promise<Result<void>> => {
