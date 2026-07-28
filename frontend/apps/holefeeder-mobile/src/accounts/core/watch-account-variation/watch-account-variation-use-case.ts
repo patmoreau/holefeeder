@@ -2,9 +2,9 @@ import { type AsyncResult, combineWatchers, DateInterval, Id, Variation } from '
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountType } from '@/accounts/core/account-type';
 import { AccountVariation } from '@/accounts/core/account-variation';
-import { CategoryType, CategoryTypes } from '@/flows/core/categories/category-type';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
+import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { Account } from '../account';
 import { AccountsRepository } from '../accounts-repository';
 

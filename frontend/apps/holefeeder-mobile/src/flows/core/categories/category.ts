@@ -1,5 +1,5 @@
 import { Favorite, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
-import { CategoryType } from '@/flows/core/categories/category-type';
+import { CategoryType } from '@/shared/core/category-type';
 import { System } from '@/shared/core/system';
 
 export type Category = {

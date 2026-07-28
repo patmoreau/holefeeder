@@ -1,5 +1,5 @@
 import { DateOnly, Money } from '@holefeeder/shared/core';
-import { CategoryType } from '@/flows/core/categories/category-type';
+import { CategoryType } from '@/shared/core/category-type';
 
 export type SummaryData = {
   type: CategoryType;

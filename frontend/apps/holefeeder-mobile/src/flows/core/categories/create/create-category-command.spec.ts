@@ -1,10 +1,10 @@
 import { FavoriteErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
 import { CategoryErrors } from '@/flows/core/categories/category';
-import { CategoryTypeErrors, CategoryTypes } from '@/flows/core/categories/category-type';
 import { CreateCategoryCommand } from '@/flows/core/categories/create/create-category-command';
 import { aBoolean } from '@/shared/__tests__/boolean-for-test';
 import { anAmount } from '@/shared/__tests__/number-for-test';
 import { aColor, aString } from '@/shared/__tests__/string-for-test';
+import { CategoryTypeErrors, CategoryTypes } from '@/shared/core/category-type';
 
 describe('CreateCategoryCommand', () => {
   let form: Record<string, unknown>;

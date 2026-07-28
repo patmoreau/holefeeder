@@ -1,5 +1,5 @@
 import { DateOnly, Id, Money, Result } from '@holefeeder/shared/core';
-import { CategoryType } from '../categories/category-type';
+import { CategoryType } from '@/shared/core/category-type';
 import { TagList } from './tag-list';
 export type UpcomingFlow = {
   id: Id;

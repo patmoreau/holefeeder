@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
-import { CategoryType } from '@/flows/core/categories/category-type';
 import { tk } from '@/i18n/translations';
+import { CategoryType } from '@/shared/core/category-type';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';

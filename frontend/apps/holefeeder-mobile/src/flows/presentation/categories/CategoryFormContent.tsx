@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { CategoryColorField } from '@/flows/presentation/categories/CategoryColorField';
 import { useCategoryForm } from '@/flows/presentation/categories/core/use-category-form';
 import { AmountField } from '@/flows/presentation/shared/components/AmountField';
 import { tk } from '@/i18n/translations';
+import { CategoryTypes } from '@/shared/core/category-type';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppForm } from '@/shared/presentation/components/native/AppForm';

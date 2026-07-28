@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
-import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { Tag } from '@/flows/core/flows/tag';
 import { FlowType } from '@/flows/presentation/flow/core/flow-form-data';
 import { useFlowForm } from '@/flows/presentation/flow/core/use-flow-form';
@@ -12,6 +11,7 @@ import { CategoryField } from '@/flows/presentation/shared/components/CategoryFi
 import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
+import { CategoryTypes } from '@/shared/core/category-type';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';

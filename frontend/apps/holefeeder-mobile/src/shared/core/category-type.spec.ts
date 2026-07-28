@@ -1,4 +1,4 @@
-import { CategoryType, CategoryTypeErrors, CategoryTypes } from '@/flows/core/categories/category-type';
+import { CategoryType, CategoryTypeErrors, CategoryTypes } from '@/shared/core/category-type';
 
 describe('CategoryType', () => {
   describe('create', () => {

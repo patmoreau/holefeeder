@@ -9,10 +9,10 @@ import {
   WatchAccountVariationErrors,
   WatchAccountVariationUseCase,
 } from '@/accounts/core/watch-account-variation/watch-account-variation-use-case';
-import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aDateInterval } from '@/shared/__tests__/date-interval-for-test';
+import { CategoryTypes } from '@/shared/core/category-type';
 
 describe('WatchAccountVariationUseCase', () => {
   const account = anAccount({ openBalance: Variation.valid(10), type: AccountTypes.checking });

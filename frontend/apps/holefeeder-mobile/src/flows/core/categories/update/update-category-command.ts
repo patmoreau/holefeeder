@@ -1,6 +1,6 @@
 import { Favorite, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { CategoryErrors } from '@/flows/core/categories/category';
-import { CategoryType } from '@/flows/core/categories/category-type';
+import { CategoryType } from '@/shared/core/category-type';
 
 export type UpdateCategoryCommand = {
   id: Id;

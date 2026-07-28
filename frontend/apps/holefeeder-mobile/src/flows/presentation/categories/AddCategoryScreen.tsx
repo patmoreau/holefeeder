@@ -1,8 +1,8 @@
-import { CategoryTypes } from '@/flows/core/categories/category-type';
 import { CategoryForm } from '@/flows/presentation/categories/CategoryForm';
 import { DEFAULT_CATEGORY_COLOR } from '@/flows/presentation/categories/core/category-colors';
 import { CategoryFormData } from '@/flows/presentation/categories/core/category-form-data';
 import { CategoryFormProvider, validateCategoryForm } from '@/flows/presentation/categories/core/use-category-form';
+import { CategoryTypes } from '@/shared/core/category-type';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 
 export const AddCategoryScreen = () => {
