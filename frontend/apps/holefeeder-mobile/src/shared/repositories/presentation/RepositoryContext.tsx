@@ -1,7 +1,6 @@
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import React, { createContext, ReactNode, useMemo } from 'react';
 import { AccountsRepositoryInPowersync } from '@/accounts/persistence/accounts-repository-in-powersync';
-import { DashboardRepositoryInPowersync } from '@/dashboard/persistence/dashboard-repository-in-powersync';
 import { CategoriesRepositoryInPowersync } from '@/flows/persistence/categories-repository-in-powersync';
 import { FlowsRepositoryInPowersync } from '@/flows/persistence/flows-repository-in-powersync';
 import { TagsRepositoryInPowersync } from '@/flows/persistence/tags-repository-in-powersync';
@@ -9,6 +8,7 @@ import { SettingRepositoryInPowersync } from '@/settings/persistence/setting-rep
 import { StoreItemsRepositoryInPowersync } from '@/shared/persistence/store-items-repository-in-powersync';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 import { InsightsRepositoryInPowersync } from '@/statistics/persistence/insights-repository-in-powersync';
+import { SummaryRepositoryInPowersync } from '@/summary/persistence/summary-repository-in-powersync';
 
 export const RepositoryContext = createContext<RepositoriesState | undefined>(undefined);
 
@@ -17,7 +17,7 @@ export const RepositoryProvider = ({ children, database }: { children: ReactNode
     () => ({
       accountRepository: AccountsRepositoryInPowersync(database),
       categoryRepository: CategoriesRepositoryInPowersync(database),
-      dashboardRepository: DashboardRepositoryInPowersync(database),
+      summaryRepository: SummaryRepositoryInPowersync(database),
       flowRepository: FlowsRepositoryInPowersync(database),
       insightsRepository: InsightsRepositoryInPowersync(database),
       settingRepository: SettingRepositoryInPowersync(database),

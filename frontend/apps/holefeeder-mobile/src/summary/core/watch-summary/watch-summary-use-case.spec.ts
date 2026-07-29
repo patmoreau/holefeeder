@@ -1,11 +1,11 @@
 import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
-import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';
-import { aSummaryData } from '@/dashboard/__tests__/summary-data-for-test';
-import { DashboardComputedSummary, WatchSummaryUseCase } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { CategoryTypes } from '@/shared/core/category-type';
+import { aSummaryData } from '@/summary/__tests__/summary-data-for-test';
+import { SummaryRepositoryInMemory } from '@/summary/__tests__/summary-repository-in-memory';
+import { ComputedSummary, WatchSummaryUseCase } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 describe('WatchCategoriesUseCase', () => {
   const asOfDate = withDate(startOfMonth(today())).toDateOnly();
@@ -14,11 +14,11 @@ describe('WatchCategoriesUseCase', () => {
     intervalType: DateIntervalTypes.monthly,
     frequency: 1,
   });
-  let repository: DashboardRepositoryInMemory;
+  let repository: SummaryRepositoryInMemory;
   let useCase: ReturnType<typeof WatchSummaryUseCase>;
 
   beforeEach(() => {
-    repository = DashboardRepositoryInMemory();
+    repository = SummaryRepositoryInMemory();
     useCase = WatchSummaryUseCase(settings, repository);
   });
 
@@ -33,7 +33,7 @@ describe('WatchCategoriesUseCase', () => {
     ];
     repository.add(...expenses, ...gains);
 
-    let result: AsyncResult<DashboardComputedSummary> | undefined;
+    let result: AsyncResult<ComputedSummary> | undefined;
     const unsubscribe = useCase.watch((data) => {
       result = data;
     });
@@ -61,7 +61,7 @@ describe('WatchCategoriesUseCase', () => {
   it('returns failure when repository fails', async () => {
     repository.isFailing(['error']);
 
-    let result: AsyncResult<DashboardComputedSummary> | undefined;
+    let result: AsyncResult<ComputedSummary> | undefined;
     const unsubscribe = useCase.watch((data) => {
       result = data;
     });
@@ -76,7 +76,7 @@ describe('WatchCategoriesUseCase', () => {
   it('returns loading when repository is loading', async () => {
     repository.isLoading();
 
-    let result: AsyncResult<DashboardComputedSummary> | undefined;
+    let result: AsyncResult<ComputedSummary> | undefined;
     const unsubscribe = useCase.watch((data) => {
       result = data;
     });

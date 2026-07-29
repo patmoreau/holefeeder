@@ -7,9 +7,9 @@ import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test'
 import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
-import { DashboardRepositoryInPowersync } from './dashboard-repository-in-powersync';
+import { SummaryRepositoryInPowersync } from './summary-repository-in-powersync';
 
-describe('DashboardRepositoryInPowersync', () => {
+describe('SummaryRepositoryInPowersync', () => {
   let db: DatabaseForTest;
   const asOfDate = withDate(startOfMonth(today())).toDateOnly();
   const middleOfMonthDate = withDate(asOfDate).addDays(10).toDateOnly();
@@ -98,7 +98,7 @@ describe('DashboardRepositoryInPowersync', () => {
         amount: Money.valid(7000.7),
       }).store(db);
 
-      const repo = DashboardRepositoryInPowersync(db);
+      const repo = SummaryRepositoryInPowersync(db);
 
       let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
@@ -151,7 +151,7 @@ describe('DashboardRepositoryInPowersync', () => {
     });
 
     it('returns empty list when no transactions exist', async () => {
-      const repo = DashboardRepositoryInPowersync(db);
+      const repo = SummaryRepositoryInPowersync(db);
 
       let result: AsyncResult<unknown> | undefined;
       const unsubscribe = repo.watch((data) => {
@@ -168,7 +168,7 @@ describe('DashboardRepositoryInPowersync', () => {
     });
 
     it('handles database errors', async () => {
-      const repo = DashboardRepositoryInPowersync(db);
+      const repo = SummaryRepositoryInPowersync(db);
 
       // Close the database to trigger an error
       await db.close();

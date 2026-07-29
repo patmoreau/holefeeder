@@ -1,6 +1,5 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
-import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
@@ -8,6 +7,7 @@ import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
+import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
@@ -22,13 +22,7 @@ const createStyles = (theme: Theme) => ({
   },
 });
 
-export const DashboardHeaderSmallCard = ({
-  summary,
-  upcomingFlows = [],
-}: {
-  summary: DashboardComputedSummary;
-  upcomingFlows?: UpcomingFlow[];
-}) => {
+export const DashboardHeaderSmallCard = ({ summary, upcomingFlows = [] }: { summary: ComputedSummary; upcomingFlows?: UpcomingFlow[] }) => {
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);

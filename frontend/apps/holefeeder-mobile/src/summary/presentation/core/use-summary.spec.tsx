@@ -1,28 +1,28 @@
 import { Result } from '@holefeeder/shared/core';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { DashboardRepositoryInMemory } from '@/dashboard/__tests__/dashboard-repository-in-memory';
-import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
 import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
+import { SummaryRepositoryInMemory } from '@/summary/__tests__/summary-repository-in-memory';
+import { useSummary } from '@/summary/presentation/core/use-summary';
 
 const mockUseSettings = jest.fn();
 jest.mock('@/shared/presentation/core/use-settings', () => ({
   useSettings: () => mockUseSettings(),
 }));
 
-describe('useDashboard', () => {
-  let dashboardRepository: DashboardRepositoryInMemory;
+describe('useSummary', () => {
+  let summaryRepository: SummaryRepositoryInMemory;
 
   const createHook = async () =>
-    renderHook(() => useDashboard(), {
+    renderHook(() => useSummary(), {
       wrapper: ({ children }: { children: React.ReactNode }) => (
-        <RepositoryContextForTest repositories={{ dashboardRepository }}>{children}</RepositoryContextForTest>
+        <RepositoryContextForTest repositories={{ summaryRepository }}>{children}</RepositoryContextForTest>
       ),
     });
 
   beforeEach(() => {
-    dashboardRepository = DashboardRepositoryInMemory();
+    summaryRepository = SummaryRepositoryInMemory();
     mockUseSettings.mockReturnValue(Result.success(aSettings()));
   });
 
@@ -35,7 +35,7 @@ describe('useDashboard', () => {
   });
 
   it('is loading while the repository is loading', async () => {
-    dashboardRepository.isLoading();
+    summaryRepository.isLoading();
 
     const { result } = await createHook();
 
@@ -43,7 +43,7 @@ describe('useDashboard', () => {
   });
 
   it('propagates a repository failure', async () => {
-    dashboardRepository.isFailing(['boom']);
+    summaryRepository.isFailing(['boom']);
 
     const { result } = await createHook();
 

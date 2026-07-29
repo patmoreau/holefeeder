@@ -1,9 +1,9 @@
 import { type AsyncResult, DateIntervalTypes, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
-import { SummaryData } from '@/dashboard/core/summary-data';
 import { Settings } from '@/shared/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
+import { SummaryData } from '@/summary/core/summary-data';
+import { SummaryRepository } from '@/summary/core/summary-repository';
 
 type SummaryDataRow = {
   type: string;
@@ -11,7 +11,7 @@ type SummaryDataRow = {
   total: number;
 };
 
-export const DashboardRepositoryInPowersync = (db: AbstractPowerSyncDatabase): DashboardRepository => {
+export const SummaryRepositoryInPowersync = (db: AbstractPowerSyncDatabase): SummaryRepository => {
   const getBucketLogic = (settings: Settings) => {
     const { effectiveDate, intervalType, frequency } = settings;
 

@@ -1,11 +1,11 @@
 import { type AsyncResult, DateInterval, Result, today } from '@holefeeder/shared/core';
 import { Settings } from '@/shared/core/settings';
 import { calculateSummary, SummaryResult } from '../calculate-summary';
-import { DashboardRepository } from '../dashboard-repository';
 import { SummaryData } from '../summary-data';
+import { SummaryRepository } from '../summary-repository';
 
-export const WatchSummaryUseCase = (settings: Settings, repository: DashboardRepository) => {
-  const watch = (onDataChange: (result: AsyncResult<DashboardComputedSummary>) => void) =>
+export const WatchSummaryUseCase = (settings: Settings, repository: SummaryRepository) => {
+  const watch = (onDataChange: (result: AsyncResult<ComputedSummary>) => void) =>
     repository.watch((result: AsyncResult<SummaryData[]>) => {
       if (result.isLoading || result.isFailure) {
         onDataChange(result);
@@ -29,7 +29,7 @@ export const WatchSummaryUseCase = (settings: Settings, repository: DashboardRep
   };
 };
 
-export type DashboardComputedSummary = {
+export type ComputedSummary = {
   currentSpending: number;
   variation: {
     amount: number;
@@ -44,7 +44,7 @@ export type DashboardComputedSummary = {
   averageSpending: number;
 };
 
-export const NO_SUMMARY: DashboardComputedSummary = {
+export const NO_SUMMARY: ComputedSummary = {
   currentSpending: 0,
   variation: {
     amount: 0,
@@ -59,7 +59,7 @@ export const NO_SUMMARY: DashboardComputedSummary = {
   averageSpending: 0,
 };
 
-const computeDashboardData = (summary: SummaryResult): DashboardComputedSummary => {
+const computeDashboardData = (summary: SummaryResult): ComputedSummary => {
   const isOver = summary.expenseVariation > 0;
 
   return {

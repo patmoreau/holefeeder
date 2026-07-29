@@ -28,7 +28,7 @@ describe('RepositoryContext', () => {
 
     expect(result.current.accountRepository).toBeDefined();
     expect(result.current.categoryRepository).toBeDefined();
-    expect(result.current.dashboardRepository).toBeDefined();
+    expect(result.current.summaryRepository).toBeDefined();
     expect(result.current.flowRepository).toBeDefined();
     expect(result.current.settingRepository).toBeDefined();
     expect(result.current.storeItemRepository).toBeDefined();

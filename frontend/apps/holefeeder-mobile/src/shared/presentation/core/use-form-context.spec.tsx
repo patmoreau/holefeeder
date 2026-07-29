@@ -11,7 +11,7 @@ import { RepositoryContext } from '@/shared/repositories/presentation/Repository
 const mockRepositories = {
   accountRepository: {},
   categoryRepository: {},
-  dashboardRepository: {},
+  summaryRepository: {},
   flowRepository: {},
   settingRepository: {},
   storeItemRepository: {},

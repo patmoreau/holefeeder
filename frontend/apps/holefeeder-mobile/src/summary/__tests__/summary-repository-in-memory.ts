@@ -1,14 +1,14 @@
 import { type AsyncResult, Result } from '@holefeeder/shared/core';
-import { DashboardRepository } from '@/dashboard/core/dashboard-repository';
-import { SummaryData } from '@/dashboard/core/summary-data';
+import { SummaryData } from '@/summary/core/summary-data';
+import { SummaryRepository } from '@/summary/core/summary-repository';
 
-export type DashboardRepositoryInMemory = DashboardRepository & {
+export type SummaryRepositoryInMemory = SummaryRepository & {
   add: (...items: SummaryData[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
 };
 
-export const DashboardRepositoryInMemory = (): DashboardRepositoryInMemory => {
+export const SummaryRepositoryInMemory = (): SummaryRepositoryInMemory => {
   const itemsInMemory: SummaryData[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];

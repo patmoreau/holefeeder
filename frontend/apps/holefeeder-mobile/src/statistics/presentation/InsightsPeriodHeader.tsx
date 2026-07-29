@@ -3,8 +3,6 @@ import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { NO_SUMMARY } from '@/dashboard/core/watch-summary/watch-summary-use-case';
-import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
 import { tk } from '@/i18n/translations';
 import { DefaultSettings } from '@/shared/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
@@ -15,6 +13,8 @@ import { AppText as NativeAppText } from '@/shared/presentation/components/nativ
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';
+import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
+import { useSummary } from '@/summary/presentation/core/use-summary';
 import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
@@ -49,7 +49,7 @@ const createStyles = (theme: Theme) => ({
 export const InsightsPeriodHeader = () => {
   const { t, i18n } = useTranslation();
   const settingsResult = useSettings();
-  const summaryResult = useDashboard();
+  const summaryResult = useSummary();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
   const headerHeight = useHeaderHeight();
