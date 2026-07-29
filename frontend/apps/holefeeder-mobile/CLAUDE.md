@@ -41,14 +41,15 @@ E2E tests use Maestro: `pnpm test:e2e:ios` runs `.maestro/` suite tagged `regres
 The app relies on feature-based modules to isolate domain logic and UI alongside shared cross-cutting layers:
 
 ```text
-src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, user-registration/)
+src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, summary/, user-registration/)
   core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
   persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
   auth/         ← Auth state and logic
-  core/         ← Shared domain primitives (Money, Id) and result patterns
+  core/         ← Shared domain primitives + kernel value objects shared by 3+ slices
+                  (Money, Id, Result; plus CategoryType, Settings, inactive, system)
   hooks/        ← Cross-cutting React hooks
   language/     ← Language selection state and provider
   persistence/  ← App-wide PowerSync db schema and utilities
@@ -60,6 +61,16 @@ src/config/config.ts      ← All env-var config (never read process.env directl
 src/i18n/                 ← i18next, en-CA and fr-CA locales
 src/types/icons.ts        ← AppIcons (SF Symbols) + AppIconsMapping (→ Material Icons)
 ```
+
+**Slice boundaries.** A feature slice must not import another feature slice. Code shared by
+3+ slices (or a genuine domain value object / read-model) moves to a neutral home:
+`shared/*` for kernel + generic UI (e.g. `shared/presentation/components/fields` for generic
+form inputs like `AmountField`, `DescriptionField`), or its own read-model slice. `summary/`
+is one such read-model slice (current-period spending) consumed one-way by both the
+`dashboard` and `statistics` view slices. Composition/read slices (`dashboard`, `statistics`,
+`summary`) may depend on source slices' public API; a single documented one-directional
+`accounts → flows` edge remains for account-detail projection. See
+`docs/vertical-slice-refactor.md`.
 
 ## Shared Domain Library (`@holefeeder/core`)
 
