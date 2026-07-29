@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { NO_SUMMARY } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { useDashboard } from '@/dashboard/presentation/core/use-dashboard';
-import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { tk } from '@/i18n/translations';
 import { DefaultSettings } from '@/shared/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
+import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppText as NativeAppText } from '@/shared/presentation/components/native/AppText';
@@ -82,7 +82,7 @@ export const InsightsPeriodHeader = () => {
               <NativeAppText variant="display" textStyle={styles.total}>
                 {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
               </NativeAppText>
-              <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
+              <ExpenseTrendBadge variation={summary.variation} variant="amount" />
             </AppColumn>
           </AppNative>
         </>

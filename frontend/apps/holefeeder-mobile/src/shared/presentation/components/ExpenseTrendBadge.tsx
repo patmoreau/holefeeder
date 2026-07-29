@@ -1,6 +1,5 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
-import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
 import { tk } from '@/i18n/translations';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
@@ -11,18 +10,17 @@ import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatt
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { borderRadius } from '@/types/theme/design-tokens';
 
-export const DashboardHeaderExpenseTrend = ({
-  summary,
-  variant = 'amount',
-}: {
-  summary: DashboardComputedSummary;
-  variant?: 'amount' | 'percentage';
-}) => {
+export type ExpenseTrend = {
+  amount: number;
+  percentage: number;
+  isOver: boolean;
+};
+
+export const ExpenseTrendBadge = ({ variation, variant = 'amount' }: { variation: ExpenseTrend; variant?: 'amount' | 'percentage' }) => {
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const { theme } = useTheme();
 
-  const variation = summary.variation;
   const variationText =
     variant === 'amount'
       ? t(tk.dashboard.largeHeader.variation, { variation: LocalFormatter.currency(variation.amount, currentLocale, currencyCode) })

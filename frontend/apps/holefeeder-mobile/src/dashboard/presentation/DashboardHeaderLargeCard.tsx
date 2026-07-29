@@ -1,10 +1,10 @@
 import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
-import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { CategoryType } from '@/shared/core/category-type';
+import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppDivider } from '@/shared/presentation/components/native/AppDivider';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
@@ -93,7 +93,7 @@ export const DashboardHeaderLargeCard = ({
           </AppText>
         </AppRow>
         <AppRow>
-          <DashboardHeaderExpenseTrend summary={summary} variant="amount" />
+          <ExpenseTrendBadge variation={summary.variation} variant="amount" />
           <AppSpacer />
         </AppRow>
         <AppDivider />

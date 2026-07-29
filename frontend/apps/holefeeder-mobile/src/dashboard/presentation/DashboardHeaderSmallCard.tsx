@@ -1,9 +1,9 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { DashboardComputedSummary } from '@/dashboard/core/watch-summary/watch-summary-use-case';
-import { DashboardHeaderExpenseTrend } from '@/dashboard/presentation/DashboardHeaderExpenseTrend';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
+import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
@@ -37,7 +37,7 @@ export const DashboardHeaderSmallCard = ({
     <AppRow style={{ backgroundColor: 'blue', padding: spacing.lg, paddingBottom: spacing.sm }}>
       <AppText textStyle={styles.text}>{t(tk.dashboard.smallHeader.spendingTitle)}</AppText>
       <AppText textStyle={styles.text}>{LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}</AppText>
-      <DashboardHeaderExpenseTrend summary={summary} variant="percentage" />
+      <ExpenseTrendBadge variation={summary.variation} variant="percentage" />
     </AppRow>
   );
 };
