@@ -30,6 +30,42 @@ export default defineConfig([
     },
   },
   {
+    // Vertical-slice boundaries. See docs/vertical-slice-refactor.md.
+    // Applies to production code only; integration test specs may seed
+    // cross-slice data in the shared PowerSync DB.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}', '**/__tests__/**'],
+    rules: {
+      'import-x/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            {
+              target: './src/summary',
+              from: ['./src/accounts', './src/flows', './src/settings', './src/statistics', './src/dashboard', './src/user-registration'],
+              message: 'summary/ is a neutral read-model slice consumed by view slices; it may import only shared/*.',
+            },
+            {
+              target: ['./src/accounts', './src/flows', './src/settings', './src/user-registration'],
+              from: ['./src/dashboard', './src/statistics', './src/summary'],
+              message: 'A domain slice must not import a view/aggregation slice (dashboard/statistics/summary); depend the other way.',
+            },
+            {
+              target: './src/statistics',
+              from: './src/dashboard',
+              message: 'statistics must not import dashboard; share via summary/ or shared/.',
+            },
+            {
+              target: './src/dashboard',
+              from: './src/statistics',
+              message: 'dashboard must not import statistics; share via summary/ or shared/.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     settings: {
       react: { version: '19.2.0' },
       'import-x/resolver': {

@@ -5,11 +5,9 @@
 > only when it is genuine shared kernel — a domain primitive, value object, or config
 > used by 3+ slices, or 95%+ identical duplicated code.
 
-Status: **Phase 3 done** — form fields (Amount/Description) + expense trend badge moved to
-`shared/presentation`; the statistics→dashboard **summary read-model** extracted into a
-neutral `summary/` slice consumed by both dashboard and statistics. Phases 1
-(CategoryType+Settings) and 2 (accounts↔flows core cycle broken) done. Only **Phase 4**
-(boundary lint + barrels) remains.
+Status: **All phases done.** 1 (CategoryType+Settings→shared/core), 2 (accounts↔flows core
+cycle broken), 3 (shared form fields + ExpenseTrendBadge + `summary/` read-model slice),
+4 (boundary lint enforced). See phase outcomes below.
 
 ## Current coupling (audit)
 
@@ -160,16 +158,27 @@ tests, `use-summary` hook). Renames: `DashboardRepository→SummaryRepository`
 screen and statistics insights header now depend one-way on `summary/`; `statistics` no
 longer imports `dashboard`.
 
-### Phase 4 — Enforce boundaries
+### Phase 4 — Enforce boundaries (done)
 
-Add an ESLint `no-restricted-imports` rule (same mechanism already used for `@expo/ui`):
-forbid `@/<feature>/*` imports from a different `@/<feature>/*`, except:
+Implemented with `import-x/no-restricted-paths` in `eslint.config.mjs` (directory-level
+zones — the per-slice public `index.ts` barrels from the original plan were judged
+unnecessary overhead; directory zones give the same guarantee with no import churn).
+Zones (production code only; `*.spec.*` and `__tests__/**` are exempt so integration specs
+may seed cross-slice data in the shared PowerSync DB):
 
-- any slice may import `@/shared/*`;
-- designated composition slices (`dashboard`, `statistics`) may import another slice's
-  **public barrel** (`@/<feature>/index.ts`) only — not deep paths.
+- `summary/` may import only `shared/*` — stays a neutral read-model.
+- Domain slices (`accounts`, `flows`, `settings`, `user-registration`) must not import a
+  view/aggregation slice (`dashboard`, `statistics`, `summary`) — dependencies point the
+  other way.
+- `statistics` ⇎ `dashboard` — sibling view slices must not couple; share via `summary/` or
+  `shared/`.
 
-Requires each slice to publish an `index.ts` public surface. Build fails on new violations.
+Not restricted (allowed composition): view/aggregation slices → source slices; the accepted
+one-directional `accounts → flows` edge; the composition root in `shared/repositories`
+(+ `shared/presentation/core/use-settings`) wiring feature repositories.
+
+Verified: rule flags injected leaf→view, `statistics→dashboard`, and `summary→flows`
+imports; current tree passes clean.
 
 ---
 
