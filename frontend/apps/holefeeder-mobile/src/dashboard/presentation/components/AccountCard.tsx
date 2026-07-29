@@ -74,7 +74,7 @@ const createStyles = (theme: Theme) =>
     },
   });
 
-export const transition = SharedTransition.duration(500).springify().damping(20).stiffness(90);
+const transition = SharedTransition.duration(500).springify().damping(20).stiffness(90);
 
 export const AccountCard = ({ account, width = 300, style, onPress, ...props }: AccountCardProps) => {
   const { t } = useTranslation();

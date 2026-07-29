@@ -11,13 +11,10 @@ export { spacing, borderRadius, fontSize, lineHeight, fontWeight, shadows, compo
 // Theme definitions
 export { lightTheme } from './light';
 export { darkTheme } from './dark';
-export { Theme, ThemeMode, Typography, Fonts } from './theme';
+export { Theme, ThemeMode, Typography } from './theme';
 
 // Base style factory
 export { createBaseStyles } from './base-styles';
-
-// Theme utilities for common patterns
-export { createCardStyle, createSectionStyle, createButtonStyle, createInputStyle, platformPadding, platformSpacing } from './theme-utils';
 
 // Global utility styles (for backward compatibility)
 export { GlobalStyles } from './global-styles';

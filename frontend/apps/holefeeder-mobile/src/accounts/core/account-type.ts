@@ -16,7 +16,7 @@ export const AccountTypeErrors = {
   invalid: 'account-type-invalid',
 };
 
-export const normalizeAccountType = (type: string): AccountType => {
+const normalizeAccountType = (type: string): AccountType => {
   const normalized = type.trim().toLowerCase();
   switch (normalized) {
     case 'checking':

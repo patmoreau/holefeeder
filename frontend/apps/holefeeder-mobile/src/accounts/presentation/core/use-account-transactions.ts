@@ -9,7 +9,7 @@ export type UseAccountTransactionsResult = {
   loadMore: () => void;
 };
 
-export const DEFAULT_TRANSACTIONS_PAGE_SIZE = 50;
+const DEFAULT_TRANSACTIONS_PAGE_SIZE = 50;
 
 export const useAccountTransactions = (accountId: Id, pageSize = DEFAULT_TRANSACTIONS_PAGE_SIZE): UseAccountTransactionsResult => {
   const { flowRepository } = useRepositories();

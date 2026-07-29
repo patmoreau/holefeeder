@@ -7,7 +7,7 @@ import { CategoryFormData } from '@/flows/presentation/categories/core/category-
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 
-export const CategoryFormError = {
+const CategoryFormError = {
   nameRequired: 'nameRequired',
 } as const;
 

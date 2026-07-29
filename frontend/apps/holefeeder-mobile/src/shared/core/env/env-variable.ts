@@ -3,7 +3,7 @@ import { default as Constants } from 'expo-constants';
 
 const extra: Record<string, string | undefined> = Constants.expoConfig?.extra ?? {};
 
-export const readEnvVariable = (key: string): Result<string> => {
+const readEnvVariable = (key: string): Result<string> => {
   // Primary: values baked in at build time via app.config.ts extra
   // Fallback: process.env for test environments (Jest)
   const value = extra[key] ?? process.env[key];

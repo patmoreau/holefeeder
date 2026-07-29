@@ -5,7 +5,7 @@ import { FlowFormData } from '@/flows/presentation/flow/core/flow-form-data';
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 
-export const FlowFormError = {
+const FlowFormError = {
   amountRequired: 'amountRequired',
   accountRequired: 'accountRequired',
   categoryRequired: 'categoryRequired',

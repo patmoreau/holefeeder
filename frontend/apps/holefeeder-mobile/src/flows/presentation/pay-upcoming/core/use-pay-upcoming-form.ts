@@ -5,7 +5,7 @@ import { PayUpcomingFormData } from '@/flows/presentation/pay-upcoming/core/pay-
 import { createFormDataContext, ValidationFunction } from '@/shared/presentation/core/use-form-context';
 import { RepositoriesState } from '@/shared/repositories/core/repositories-state';
 
-export const PayUpcomingFormError = {
+const PayUpcomingFormError = {
   amountRequired: 'amountRequired',
 } as const;
 

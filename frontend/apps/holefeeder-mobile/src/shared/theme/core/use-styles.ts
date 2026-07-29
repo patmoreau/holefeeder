@@ -13,11 +13,3 @@ export const useStyles = <T extends NamedStyles<T>>(stylesFn: StyleFunction<T>):
 
   return useMemo(() => stylesFn(theme, GlobalStyles), [stylesFn, theme]);
 };
-
-const Alignment: Record<string, string> = {
-  center: 'center',
-  'flex-start': 'leading',
-  'flex-end': 'trailing',
-};
-
-export const iosAlignmentStyle = (align: 'center' | 'flex-start' | 'flex-end') => ({ alignment: Alignment[align] });
