@@ -7,7 +7,8 @@ import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-d
 import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseTransferSection } from '@/flows/presentation/purchase/PurchaseTransferSection';
 import { TransferSection } from '@/flows/presentation/purchase/TransferSection';
-import { AmountField } from '@/flows/presentation/shared/components/AmountField';
+import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
+import { AmountField } from '@/shared/presentation/components/fields/AmountField';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
@@ -32,7 +33,7 @@ export const PurchaseFormContent = ({ accounts, categories, tags }: PurchaseForm
           autoFocus
           amount={formData.amount}
           onAmountChange={(amount) => updateFormField('amount', amount)}
-          purchaseType={formData.purchaseType}
+          tone={amountToneFor(formData.purchaseType)}
         />
         <AppFieldGroup>
           {formData.purchaseType !== PurchaseType.transfer && (

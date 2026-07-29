@@ -6,13 +6,14 @@ import { FlowType } from '@/flows/presentation/flow/core/flow-form-data';
 import { useFlowForm } from '@/flows/presentation/flow/core/use-flow-form';
 import { FlowTypeSection } from '@/flows/presentation/flow/FlowTypeSection';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
-import { AmountField } from '@/flows/presentation/shared/components/AmountField';
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
-import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
+import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
 import { CategoryTypes } from '@/shared/core/category-type';
+import { AmountField } from '@/shared/presentation/components/fields/AmountField';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
@@ -46,7 +47,7 @@ export const FlowFormContent = ({ accounts, categories, tags }: FlowFormProps) =
           autoFocus
           amount={formData.amount}
           onAmountChange={(amount) => updateFormField('amount', amount)}
-          purchaseType={formData.flowType}
+          tone={amountToneFor(formData.flowType)}
         />
         <AppFieldGroup>
           <AppFieldSection>

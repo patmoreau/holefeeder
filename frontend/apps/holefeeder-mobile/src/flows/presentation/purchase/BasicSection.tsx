@@ -6,11 +6,11 @@ import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-d
 import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
-import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
 import { CategoryTypes } from '@/shared/core/category-type';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 
 type Props = {

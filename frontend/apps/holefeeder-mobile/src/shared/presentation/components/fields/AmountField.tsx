@@ -1,6 +1,5 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useEffectEvent, useMemo } from 'react';
-import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
 import { useNativeState } from '@/shared/presentation/components/native/use-native-state';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
@@ -9,10 +8,12 @@ import { fontWeight } from '@/types/theme';
 
 const AMOUNT_FONT_SIZE = 48;
 
+export type AmountTone = 'negative' | 'positive' | 'neutral';
+
 type AmountFieldProps = {
   amount: number;
   onAmountChange: (amount: number) => void;
-  purchaseType?: PurchaseType;
+  tone?: AmountTone;
   autoFocus?: boolean;
 };
 
@@ -34,7 +35,7 @@ const formatAmount = (input: string, currentLocale: string, currencyCode: string
   }
 };
 
-export const AmountField = ({ amount, onAmountChange, purchaseType, autoFocus }: AmountFieldProps) => {
+export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocus }: AmountFieldProps) => {
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
 
@@ -57,12 +58,8 @@ export const AmountField = ({ amount, onAmountChange, purchaseType, autoFocus }:
   });
 
   const amountColor = useMemo(() => {
-    return purchaseType === PurchaseType.expense
-      ? theme.colors.negative
-      : purchaseType === PurchaseType.gain
-        ? theme.colors.positive
-        : theme.colors.text;
-  }, [purchaseType, theme.colors.negative, theme.colors.positive, theme.colors.text]);
+    return tone === 'negative' ? theme.colors.negative : tone === 'positive' ? theme.colors.positive : theme.colors.text;
+  }, [tone, theme.colors.negative, theme.colors.positive, theme.colors.text]);
 
   return (
     <AppTextInput

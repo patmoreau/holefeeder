@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { PurchaseFormError, usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
-import { DescriptionField } from '@/flows/presentation/shared/components/DescriptionField';
 import { tk } from '@/i18n/translations';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
+import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 
 const tkErrors: Record<PurchaseFormError, string> = {
