@@ -17,8 +17,8 @@
     <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.20" />
     <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.168" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
-    <PackageVersion Include="Hangfire" Version="1.8.23" />
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.23" />
+    <PackageVersion Include="Hangfire" Version="1.8.24" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.24" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.9" />
@@ -47,9 +47,9 @@
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.19.1" />
     <PackageVersion Include="Microsoft.JSInterop" Version="10.0.9" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="All" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
-    <PackageVersion Include="Refit" Version="13.0.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.7" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageVersion Include="Refit" Version="13.1.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.17" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />

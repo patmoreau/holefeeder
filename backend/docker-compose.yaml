@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.7.6
+    image: traefik:v3.7.10
     container_name: reverse-proxy
     profiles: ["local"]
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:2.43.0-alpine
+    image: portainer/portainer-ce:2.44.0-alpine
     container_name: portainer
     profiles: ["local"]
     expose:
@@ -33,7 +33,7 @@ services:
       - no-new-privileges:true
 
   whoami:
-    image: traefik/whoami:v1.11
+    image: traefik/whoami:v1.12
     container_name: whoami
     profiles: ["local"]
     restart: unless-stopped
@@ -41,7 +41,7 @@ services:
       - no-new-privileges:true
 
   powersync:
-    image: journeyapps/powersync-service:1.23.0
+    image: journeyapps/powersync-service:1.23.3
     container_name: holefeeder_powersync
     restart: unless-stopped
     security_opt:
@@ -129,7 +129,7 @@ services:
     command: ["bash", "/migrator.sh"]
 
   adminer:
-    image: adminer:5.4.2
+    image: adminer:5.5.0
     container_name: adminer
     profiles: ["local"]
     restart: unless-stopped
