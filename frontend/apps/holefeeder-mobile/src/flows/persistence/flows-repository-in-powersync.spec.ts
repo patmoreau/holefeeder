@@ -174,6 +174,47 @@ describe('FlowsRepository', () => {
       expect(dbResult[0].category_id).toBe(cashflow.categoryId);
       expect(dbResult[0].tags).toBe(cashflow.tags.join(','));
     });
+
+    it('should not change the cashflow amount by default', async () => {
+      const cashflow = await aCashflow().store(db);
+      const command: PayFlowCommand = PayFlowCommand.valid({
+        date: cashflow.effectiveDate,
+        amount: Money.valid(999.99),
+        cashflowId: cashflow.id,
+        cashflowDate: cashflow.effectiveDate,
+      });
+
+      const result = await repository.pay(command);
+
+      expect(result.isSuccess).toBe(true);
+
+      const dbResult = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
+      expect(dbResult[0].amount).toBe(Money.toCents(cashflow.amount));
+    });
+
+    it('should update the recurring cashflow amount when requested', async () => {
+      const cashflow = await aCashflow().store(db);
+      const newAmount = Money.valid(999.99);
+      const command: PayFlowCommand = PayFlowCommand.valid({
+        date: cashflow.effectiveDate,
+        amount: newAmount,
+        cashflowId: cashflow.id,
+        cashflowDate: cashflow.effectiveDate,
+        updateRecurringAmount: true,
+      });
+
+      const result = await repository.pay(command);
+
+      expect(result.isSuccess).toBe(true);
+
+      if (result.isFailure || result.isLoading) return;
+
+      const transactions = await db.getAll<Record<string, unknown>>('SELECT * FROM transactions WHERE id = ?', [result.value]);
+      expect(transactions[0].amount).toBe(Money.toCents(newAmount));
+
+      const cashflows = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
+      expect(cashflows[0].amount).toBe(Money.toCents(newAmount));
+    });
   });
 
   describe('deactivateUpcoming', () => {

@@ -8,6 +8,7 @@ const defaultPayFlowCommand = (): PayFlowCommand => ({
   amount: anAmount(),
   cashflowId: anId(),
   cashflowDate: aRecentDate(),
+  updateRecurringAmount: false,
 });
 
 export const aPayFlowCommand = (overrides?: Partial<PayFlowCommand>): PayFlowCommand => {

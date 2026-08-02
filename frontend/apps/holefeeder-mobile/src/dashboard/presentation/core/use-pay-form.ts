@@ -12,6 +12,7 @@ export const useUpcomingFlow = (repositories: RepositoriesState) => {
       amount: upcomingFlow.amount,
       cashflowId: upcomingFlow.id,
       cashflowDate: upcomingFlow.date,
+      updateRecurringAmount: false,
     });
   };
 
@@ -22,6 +23,7 @@ export const useUpcomingFlow = (repositories: RepositoriesState) => {
       amount: Money.ZERO,
       cashflowId: upcomingFlow.id,
       cashflowDate: upcomingFlow.date,
+      updateRecurringAmount: false,
     });
   };
 

@@ -25,6 +25,7 @@ describe('useUpcomingFlow', () => {
           amount: upcomingFlow.amount,
           cashflowId: upcomingFlow.id,
           cashflowDate: upcomingFlow.date,
+          updateRecurringAmount: false,
         },
       ]);
     });
@@ -56,6 +57,7 @@ describe('useUpcomingFlow', () => {
           amount: Money.ZERO,
           cashflowId: upcomingFlow.id,
           cashflowDate: upcomingFlow.date,
+          updateRecurringAmount: false,
         },
       ]);
     });

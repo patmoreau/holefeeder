@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { UpdateRecurringAmountField } from '@/flows/presentation/pay-upcoming/components/UpdateRecurringAmountField';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { tk } from '@/i18n/translations';
 import { AmountField } from '@/shared/presentation/components/fields/AmountField';
@@ -8,6 +9,7 @@ import { AppFieldSection } from '@/shared/presentation/components/native/AppFiel
 export const PayUpcomingFormContent = () => {
   const { t } = useTranslation();
   const { formData, updateFormField } = usePayUpcomingForm();
+  const amountChanged = formData.amount !== formData.originalAmount;
 
   return (
     <>
@@ -19,6 +21,15 @@ export const PayUpcomingFormContent = () => {
           onDateSelected={(date) => updateFormField('date', date)}
         />
       </AppFieldSection>
+      {amountChanged && (
+        <AppFieldSection>
+          <UpdateRecurringAmountField
+            amount={formData.amount}
+            value={formData.updateRecurringAmount}
+            onChange={(value) => updateFormField('updateRecurringAmount', value)}
+          />
+        </AppFieldSection>
+      )}
     </>
   );
 };

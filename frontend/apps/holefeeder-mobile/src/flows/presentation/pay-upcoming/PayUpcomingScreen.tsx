@@ -23,6 +23,8 @@ const PayUpcomingScreen = () => {
     cashflowDate: upcomingFlowResult.value.date,
     date: upcomingFlowResult.value.date,
     amount: upcomingFlowResult.value.amount,
+    originalAmount: upcomingFlowResult.value.amount,
+    updateRecurringAmount: false,
   };
 
   return (

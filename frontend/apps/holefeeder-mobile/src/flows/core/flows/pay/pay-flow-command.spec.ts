@@ -23,7 +23,19 @@ describe('PayFlowCommand', () => {
       amount: Money.valid(form.amount),
       cashflowId: Id.valid(form.cashflowId),
       cashflowDate: DateOnly.valid(form.cashflowDate),
+      updateRecurringAmount: false,
     });
+  });
+
+  it('defaults updateRecurringAmount to false when absent', () => {
+    const result = PayFlowCommand.create(form);
+    expect(result.isSuccess && result.value.updateRecurringAmount).toBe(false);
+  });
+
+  it('captures updateRecurringAmount when provided', () => {
+    form.updateRecurringAmount = true;
+    const result = PayFlowCommand.create(form);
+    expect(result.isSuccess && result.value.updateRecurringAmount).toBe(true);
   });
 
   it('returns failure if date is invalid', () => {

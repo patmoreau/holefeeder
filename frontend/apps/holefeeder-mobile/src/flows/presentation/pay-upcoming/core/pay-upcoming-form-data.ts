@@ -5,4 +5,6 @@ export type PayUpcomingFormData = {
   cashflowDate: DateOnly;
   date: DateOnly;
   amount: number;
+  originalAmount: number;
+  updateRecurringAmount: boolean;
 };

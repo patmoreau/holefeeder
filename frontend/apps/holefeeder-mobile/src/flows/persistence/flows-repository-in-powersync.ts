@@ -136,24 +136,37 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
     const newId = Id.newId();
 
     try {
-      await db.execute(
-        `
-          INSERT INTO transactions (id, date, amount, description, account_id, category_id, cashflow_id, cashflow_date,
-                                    tags)
-          SELECT ?,
-                 ?,
-                 ?,
-                 description,
-                 account_id,
-                 category_id,
-                 id,
-                 ?,
-                 tags
-          FROM cashflows
-          WHERE id = ?
-        `,
-        [newId, command.date, Money.toCents(command.amount), command.cashflowDate, command.cashflowId]
-      );
+      await db.writeTransaction(async (tx) => {
+        await tx.execute(
+          `
+            INSERT INTO transactions (id, date, amount, description, account_id, category_id, cashflow_id, cashflow_date,
+                                      tags)
+            SELECT ?,
+                   ?,
+                   ?,
+                   description,
+                   account_id,
+                   category_id,
+                   id,
+                   ?,
+                   tags
+            FROM cashflows
+            WHERE id = ?
+          `,
+          [newId, command.date, Money.toCents(command.amount), command.cashflowDate, command.cashflowId]
+        );
+
+        if (command.updateRecurringAmount) {
+          await tx.execute(
+            `
+              UPDATE cashflows
+              SET amount = ?
+              WHERE id = ?
+            `,
+            [Money.toCents(command.amount), command.cashflowId]
+          );
+        }
+      });
 
       return Result.success(newId);
     } catch (error) {

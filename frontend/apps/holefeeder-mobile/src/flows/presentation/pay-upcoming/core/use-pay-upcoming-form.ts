@@ -26,6 +26,7 @@ const payUpcoming = async (repositories: RepositoriesState, formData: PayUpcomin
     cashflowDate: formData.cashflowDate,
     date: formData.date,
     amount: formData.amount,
+    updateRecurringAmount: formData.updateRecurringAmount && formData.amount !== formData.originalAmount,
   });
 
   if (result.isFailure) return result;
