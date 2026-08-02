@@ -1,6 +1,7 @@
 import { Money } from '@holefeeder/shared/core';
 import { useNavigation } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
+import { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
@@ -19,7 +20,9 @@ export const PayUpcomingForm = ({ description }: { description: string }) => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
-  navigation.setOptions({ title: description.length > 0 ? `${description}` : t(tk.payUpcoming.title) });
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: description.length > 0 ? `${description}` : t(tk.payUpcoming.title) });
+  }, [navigation, description, t]);
 
   return (
     <AppForm style={{ flex: 1, paddingTop: headerHeight }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -33,6 +36,7 @@ export const PayUpcomingForm = ({ description }: { description: string }) => {
             onPress={() => {
               formData.amount = Money.ZERO;
               formData.date = formData.cashflowDate;
+              formData.updateRecurringAmount = false;
               handleCancel();
             }}
           />
