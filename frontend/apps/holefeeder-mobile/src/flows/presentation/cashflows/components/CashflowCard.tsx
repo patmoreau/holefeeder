@@ -13,7 +13,6 @@ import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
-import { showAlert } from '@/shared/presentation/core/show-alert';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
@@ -35,20 +34,18 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const { flowRepository } = useRepositories();
-  const { showDeleteAlert } = showAlert(t);
 
   const title = cashflow.description.length > 0 ? cashflow.description : categoryName;
 
   const intervalLabel = t(tkIntervalTypes[cashflow.intervalType]);
   const cadence = cashflow.frequency > 1 ? `${cashflow.frequency} × ${intervalLabel}` : intervalLabel;
 
+  // Full-swipe delete: soft-deletes immediately (sets the inactive flag). Removal is
+  // data-driven via the cashflows watch, so it matches iOS's optimistic full-swipe
+  // animation instead of racing a confirmation dialog. If the write fails the row
+  // reappears, which is the correct signal.
   const handleDelete = () => {
-    showDeleteAlert(title, {
-      onConfirm: () => {
-        DeactivateUpcomingFlowUseCase(flowRepository).execute(cashflow.id);
-      },
-      onCancel: () => {},
-    });
+    DeactivateUpcomingFlowUseCase(flowRepository).execute(cashflow.id);
   };
 
   return (
@@ -73,7 +70,7 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
         <AppText variant={'defaultSemiBold'} numberOfLines={1}>
           {title}
         </AppText>
-        <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
+        <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={true}>
           <AppButton variant="destructive" label={t(tk.swipeableActions.delete)} icon={AppIconMap.delete} onPress={handleDelete} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
