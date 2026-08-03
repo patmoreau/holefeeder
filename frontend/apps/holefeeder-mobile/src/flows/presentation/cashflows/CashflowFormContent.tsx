@@ -14,6 +14,7 @@ import { DescriptionField } from '@/shared/presentation/components/fields/Descri
 import { FrequencyField } from '@/shared/presentation/components/fields/FrequencyField';
 import { RecurrenceField } from '@/shared/presentation/components/fields/RecurrenceField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
+import { AppForm } from '@/shared/presentation/components/native/AppForm';
 
 type Props = {
   accounts: Account[];
@@ -26,7 +27,7 @@ export const CashflowFormContent = ({ accounts, categories, tags }: Props) => {
   const { formData, updateFormField, errors } = useCashflowForm();
 
   return (
-    <>
+    <AppForm>
       <AmountField amount={formData.amount} onAmountChange={(amount) => updateFormField('amount', amount)} />
       <AppFieldSection>
         <AccountField
@@ -62,6 +63,6 @@ export const CashflowFormContent = ({ accounts, categories, tags }: Props) => {
           onSelectRecurrence={(recurrence) => updateFormField('recurrence', recurrence)}
         />
       </AppFieldSection>
-    </>
+    </AppForm>
   );
 };
