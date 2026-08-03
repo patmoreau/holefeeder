@@ -66,6 +66,22 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="ManageCashflows"
+        options={{
+          presentation: 'modal',
+          title: t(tk.manageCashflows.title),
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
+        name="EditCashflow"
+        options={{
+          title: t(tk.cashflowEdit.title),
+          headerTransparent: true,
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
         name="ManageTags"
         options={{
           presentation: 'modal',

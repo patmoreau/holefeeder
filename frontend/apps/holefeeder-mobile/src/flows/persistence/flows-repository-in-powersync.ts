@@ -1,16 +1,19 @@
 import { type AsyncResult, Id, Logger, Money, Result } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { AccountVariation } from '@/flows/core/flows/account-variation';
+import { Cashflow } from '@/flows/core/flows/cashflow';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { FlowsRepository, FlowsRepositoryErrors } from '@/flows/core/flows/flows-repository';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';
+import { ModifyCashflowCommand } from '@/flows/core/flows/modify-cashflow/modify-cashflow-command';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { Tag } from '@/flows/core/flows/tag';
 import { TagList } from '@/flows/core/flows/tag-list';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
 import { AccountVariationRow } from '@/flows/persistence/account-variation-row';
+import { CashflowRow } from '@/flows/persistence/cashflow-row';
 import { CashflowVariationRow } from '@/flows/persistence/cashflow-variation-row';
 import { TagRow } from '@/flows/persistence/tag-row';
 import { TransactionRow } from '@/flows/persistence/transaction-row';
@@ -129,6 +132,47 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
         logger.error(`${FlowsRepositoryErrors.modifyFlowCommandFailed}: `, error.message);
       }
       return Result.failure([FlowsRepositoryErrors.modifyFlowCommandFailed]);
+    }
+  };
+
+  const modifyCashflow = async (command: ModifyCashflowCommand): Promise<Result<Id>> => {
+    try {
+      let rowsAffected = 0;
+      await db.writeTransaction(async (tx) => {
+        const result = await tx.execute(
+          `
+            UPDATE cashflows
+            SET effective_date = ?, amount = ?, interval_type = ?, frequency = ?, recurrence = ?,
+                description = ?, account_id = ?, category_id = ?, tags = ?
+            WHERE id = ?
+            RETURNING *
+          `,
+          [
+            command.effectiveDate,
+            Money.toCents(command.amount),
+            command.intervalType,
+            command.frequency,
+            command.recurrence,
+            command.description,
+            command.accountId,
+            command.categoryId,
+            TagList.toConcatenatedString(command.tags),
+            command.id,
+          ]
+        );
+        rowsAffected = result.rows?.length ?? 0;
+      });
+
+      if (rowsAffected === 0) {
+        return Result.failure([FlowsRepositoryErrors.modifyCashflowCommandFailed]);
+      }
+
+      return Result.success(command.id);
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error(`${FlowsRepositoryErrors.modifyCashflowCommandFailed}: `, error.message);
+      }
+      return Result.failure([FlowsRepositoryErrors.modifyCashflowCommandFailed]);
     }
   };
 
@@ -324,6 +368,39 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
       'watchCashflowVariations'
     );
 
+  const watchCashflows = (onDataChange: (result: AsyncResult<Cashflow[]>) => void) =>
+    watchQuery<CashflowRow, Cashflow>(
+      db,
+      `
+        SELECT c.id             AS id,
+               c.effective_date AS effectiveDate,
+               c.amount,
+               c.interval_type  AS intervalType,
+               c.frequency,
+               c.recurrence,
+               c.description,
+               c.account_id     AS accountId,
+               c.category_id    AS categoryId,
+               cc.type          AS categoryType,
+               c.inactive,
+               c.tags
+        FROM cashflows c
+               JOIN categories cc ON cc.id = c.category_id
+        WHERE c.inactive IS NOT 1
+        ORDER BY c.effective_date DESC
+      `,
+      [],
+      (row) =>
+        Cashflow.valid({
+          ...row,
+          amount: Money.fromCents(row.amount),
+          inactive: row.inactive === 1,
+          tags: TagList.fromConcatenatedString(row.tags),
+        }),
+      onDataChange,
+      'watchCashflows'
+    );
+
   const watchTransaction = (transactionId: Id, onDataChange: (result: AsyncResult<Transaction>) => void) =>
     watchSingle<TransactionRow, Transaction>(
       db,
@@ -431,6 +508,7 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
   return {
     create: create,
     modify: modify,
+    modifyCashflow: modifyCashflow,
     pay: pay,
     deactivateUpcoming: deactivateUpcoming,
     deleteTransaction: deleteTransaction,
@@ -438,6 +516,7 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
     watchTags: watchTags,
     watchAccountVariation: watchAccountVariation,
     watchCashflowVariations: watchCashflowVariations,
+    watchCashflows: watchCashflows,
     watchTransaction: watchTransaction,
     watchTransactions: watchTransactions,
     watchTransactionCount: watchTransactionCount,

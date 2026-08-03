@@ -78,6 +78,17 @@ export const fr: TranslationStructure = {
     title: 'Catégories',
     manage: 'Gérer les catégories',
   },
+  cashflowsSection: {
+    title: 'Flux de trésorerie',
+    manage: 'Gérer les flux de trésorerie',
+  },
+  cashflowEdit: {
+    title: 'Modifier le flux de trésorerie',
+  },
+  manageCashflows: {
+    title: 'Gérer les flux de trésorerie',
+    cancel: 'Annuler',
+  },
   categoryEdit: {
     title: 'Modifier la catégorie',
     addTitle: 'Ajouter une catégorie',
@@ -248,6 +259,8 @@ export const fr: TranslationStructure = {
       date: 'Date',
       intervalType: "Type d'intervalle",
       frequency: 'Fréquence',
+      recurrence: 'Récurrence',
+      recurrenceNever: 'Sans fin',
     },
     transactionTypeSection: {
       expense: 'Achat',

@@ -1,8 +1,8 @@
-import { type AsyncResult, DateOnly, Id, Money } from '@holefeeder/shared/core';
+import { type AsyncResult, DateOnly, Id, Inactive, Money } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
-import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';
+import { aCashflow, toCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';
 import { aCreateFlowCommand } from '@/flows/core/flows/__tests__/create-flow-command-for-test';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
@@ -11,6 +11,7 @@ import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { FlowsRepositoryErrors } from '@/flows/core/flows/flows-repository';
 import { aModifyFlowCommand } from '@/flows/core/flows/modify/__tests__/modify-flow-command-for-test';
+import { aModifyCashflowCommand } from '@/flows/core/flows/modify-cashflow/__tests__/modify-cashflow-command-for-test';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { Tag } from '@/flows/core/flows/tag';
 import { TagList } from '@/flows/core/flows/tag-list';
@@ -214,6 +215,84 @@ describe('FlowsRepository', () => {
 
       const cashflows = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
       expect(cashflows[0].amount).toBe(Money.toCents(newAmount));
+    });
+  });
+
+  describe('watchCashflows', () => {
+    it('retrieves active cashflows with their category type', async () => {
+      const category = await aCategory({ type: CategoryTypes.expense }).store(db);
+      const cashflow = await aCashflow({ categoryId: category.id, amount: Money.valid(100) }).store(db);
+
+      let result: AsyncResult<unknown> | undefined;
+      const unsubscribe = repository.watchCashflows((data) => {
+        result = data;
+      });
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+      });
+
+      expect(result).toBeSuccessWithValue([{ ...toCashflow(cashflow), categoryType: category.type }]);
+
+      unsubscribe();
+    });
+
+    it('excludes inactive cashflows', async () => {
+      const category = await aCategory({ type: CategoryTypes.expense }).store(db);
+      await aCashflow({ categoryId: category.id, inactive: true as Inactive }).store(db);
+
+      let result: AsyncResult<unknown[]> | undefined;
+      const unsubscribe = repository.watchCashflows((data) => {
+        result = data;
+      });
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+      });
+
+      expect(result).toBeSuccessWithValue([]);
+
+      unsubscribe();
+    });
+  });
+
+  describe('modifyCashflow', () => {
+    it('should update the cashflow template fields', async () => {
+      const category = await aCategory({ type: CategoryTypes.expense }).store(db);
+      const cashflow = await aCashflow({ categoryId: category.id, amount: Money.valid(100) }).store(db);
+
+      const command = aModifyCashflowCommand({
+        id: cashflow.id,
+        amount: Money.valid(250),
+        description: 'Updated insurance',
+        categoryId: category.id,
+        accountId: cashflow.accountId,
+        frequency: 1,
+        recurrence: 0,
+      });
+
+      const result = await repository.modifyCashflow(command);
+
+      expect(result.isSuccess).toBe(true);
+
+      const rows = await db.getAll<Record<string, unknown>>('SELECT * FROM cashflows WHERE id = ?', [cashflow.id]);
+      expect(rows[0].amount).toBe(Money.toCents(command.amount));
+      expect(rows[0].description).toBe('Updated insurance');
+      expect(rows[0].frequency).toBe(1);
+    });
+
+    it('fails when the cashflow does not exist', async () => {
+      const result = await repository.modifyCashflow(aModifyCashflowCommand({ id: anId() }));
+
+      expect(result).toBeFailureWithErrors([FlowsRepositoryErrors.modifyCashflowCommandFailed]);
+    });
+
+    it('handles database errors', async () => {
+      await db.close();
+
+      const result = await repository.modifyCashflow(aModifyCashflowCommand());
+
+      expect(result).toBeFailureWithErrors([FlowsRepositoryErrors.modifyCashflowCommandFailed]);
     });
   });
 

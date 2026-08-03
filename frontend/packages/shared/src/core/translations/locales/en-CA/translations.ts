@@ -76,6 +76,17 @@ export const en = {
     title: 'Categories',
     manage: 'Manage Categories',
   },
+  cashflowsSection: {
+    title: 'Cashflows',
+    manage: 'Manage Cashflows',
+  },
+  cashflowEdit: {
+    title: 'Edit Cashflow',
+  },
+  manageCashflows: {
+    title: 'Manage Cashflows',
+    cancel: 'Cancel',
+  },
   categoryEdit: {
     title: 'Edit Category',
     addTitle: 'Add Category',
@@ -245,6 +256,8 @@ export const en = {
       date: 'Date',
       intervalType: 'Interval Type',
       frequency: 'Frequency',
+      recurrence: 'Recurrence',
+      recurrenceNever: 'Never ends',
     },
     transactionTypeSection: {
       expense: 'Expense',

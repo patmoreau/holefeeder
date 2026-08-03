@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BudgetSection } from '@/settings/presentation/BudgetSection';
+import { CashflowsSection } from '@/settings/presentation/CashflowsSection';
 import { CategoriesSection } from '@/settings/presentation/CategoriesSection';
 import { DisplaySection } from '@/settings/presentation/DisplaySection';
 import { ProfileSection } from '@/settings/presentation/ProfileSection';
@@ -17,6 +18,7 @@ export const SettingsContent = () => {
         <ProfileSection />
         <BudgetSection />
         <CategoriesSection />
+        <CashflowsSection />
         <TagsSection />
         <DisplaySection />
         {__DEV__ && <TestSection show={show} setShow={setShow} />}

@@ -1,9 +1,11 @@
 import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { AccountVariation } from '@/flows/core/flows/account-variation';
+import { Cashflow } from '@/flows/core/flows/cashflow';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
 import { CreateFlowCommand } from '@/flows/core/flows/create/create-flow-command';
 import { FlowsRepository } from '@/flows/core/flows/flows-repository';
 import { ModifyFlowCommand } from '@/flows/core/flows/modify/modify-flow-command';
+import { ModifyCashflowCommand } from '@/flows/core/flows/modify-cashflow/modify-cashflow-command';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { Tag } from '@/flows/core/flows/tag';
 import { Transaction } from '@/flows/core/flows/transaction';
@@ -13,11 +15,13 @@ import { anId } from '@/shared/__tests__/string-for-test';
 export type FlowsRepositoryInMemory = FlowsRepository & {
   addAccountVariations: (...items: AccountVariation[]) => void;
   addCashflowVariations: (...items: CashflowVariation[]) => void;
+  addCashflows: (...items: Cashflow[]) => void;
   addTags: (...items: Tag[]) => void;
   addTransactions: (...items: Transaction[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
   paidCommands: () => PayFlowCommand[];
+  modifiedCashflows: () => ModifyCashflowCommand[];
   deactivatedCashflowIds: () => Id[];
   deletedTransactionIds: () => Id[];
 };
@@ -25,9 +29,11 @@ export type FlowsRepositoryInMemory = FlowsRepository & {
 export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
   const accountVariationsInMemory: AccountVariation[] = [];
   const cashflowVariationsInMemory: CashflowVariation[] = [];
+  const cashflowsInMemory: Cashflow[] = [];
   const tagsInMemory: Tag[] = [];
   const transactionsInMemory: Transaction[] = [];
   const paidCommandsInMemory: PayFlowCommand[] = [];
+  const modifiedCashflowsInMemory: ModifyCashflowCommand[] = [];
   const deactivatedCashflowIdsInMemory: Id[] = [];
   const deletedTransactionIdsInMemory: Id[] = [];
   let loadingInMemory = false;
@@ -42,6 +48,7 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
 
   const accountVariationListeners: AccountVariationListener[] = [];
   const cashflowVariationsListeners: Listener<CashflowVariation[]>[] = [];
+  const cashflowsListeners: Listener<Cashflow[]>[] = [];
   const tagsListeners: Listener<Tag[]>[] = [];
   const latestTransactionsListeners: LatestTransactionsListener[] = [];
   const transactionListeners: TransactionListener[] = [];
@@ -62,6 +69,7 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
       listener(currentResult(found));
     });
     emit(cashflowVariationsListeners, currentResult(cashflowVariationsInMemory));
+    emit(cashflowsListeners, currentResult(cashflowsInMemory));
     emit(tagsListeners, currentResult(tagsInMemory));
     latestTransactionsListeners.forEach(({ listener, limit }) => listener(currentResult(transactionsInMemory.slice(0, limit))));
     transactionsListeners.forEach(({ listener, accountId, limit, offset }) => {
@@ -90,6 +98,12 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     return Promise.resolve(Result.success(anId()));
   };
 
+  const modifyCashflow = (command: ModifyCashflowCommand): Promise<Result<Id>> => {
+    modifiedCashflowsInMemory.push(command);
+    if (errorsInMemory.length > 0) return Promise.resolve(Result.failure(errorsInMemory));
+    return Promise.resolve(Result.success(command.id));
+  };
+
   const pay = (command: PayFlowCommand): Promise<Result<Id>> => {
     paidCommandsInMemory.push(command);
     if (errorsInMemory.length > 0) return Promise.resolve(Result.failure(errorsInMemory));
@@ -113,6 +127,8 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
 
   const paidCommands = () => paidCommandsInMemory;
 
+  const modifiedCashflows = () => modifiedCashflowsInMemory;
+
   const deactivatedCashflowIds = () => deactivatedCashflowIdsInMemory;
 
   const deletedTransactionIds = () => deletedTransactionIdsInMemory;
@@ -131,6 +147,8 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
 
   const watchCashflowVariations = (onDataChange: Listener<CashflowVariation[]>) =>
     subscribe(cashflowVariationsListeners, onDataChange, currentResult(cashflowVariationsInMemory));
+
+  const watchCashflows = (onDataChange: Listener<Cashflow[]>) => subscribe(cashflowsListeners, onDataChange, currentResult(cashflowsInMemory));
 
   const watchTags = (onDataChange: Listener<Tag[]>) => subscribe(tagsListeners, onDataChange, currentResult(tagsInMemory));
 
@@ -173,6 +191,11 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
     emit(cashflowVariationsListeners, currentResult(cashflowVariationsInMemory));
   };
 
+  const addCashflows = (...items: Cashflow[]) => {
+    cashflowsInMemory.push(...items);
+    emit(cashflowsListeners, currentResult(cashflowsInMemory));
+  };
+
   const addTags = (...items: Tag[]) => {
     tagsInMemory.push(...items);
     emit(tagsListeners, currentResult(tagsInMemory));
@@ -206,23 +229,27 @@ export const FlowsRepositoryInMemory = (): FlowsRepositoryInMemory => {
   return {
     create: create,
     modify: modify,
+    modifyCashflow: modifyCashflow,
     pay: pay,
     deactivateUpcoming: deactivateUpcoming,
     deleteTransaction: deleteTransaction,
     transfer: transfer,
     watchAccountVariation: watchAccountVariation,
     watchCashflowVariations: watchCashflowVariations,
+    watchCashflows: watchCashflows,
     watchTags: watchTags,
     watchTransaction: watchTransaction,
     watchTransactions: watchTransactions,
     watchTransactionCount: watchTransactionCount,
     addAccountVariations: addAccountVariations,
     addCashflowVariations: addCashflowVariations,
+    addCashflows: addCashflows,
     addTags: addTags,
     addTransactions: addTransactions,
     isLoading: isLoading,
     isFailing: isFailing,
     paidCommands: paidCommands,
+    modifiedCashflows: modifiedCashflows,
     deactivatedCashflowIds: deactivatedCashflowIds,
     deletedTransactionIds: deletedTransactionIds,
   };
