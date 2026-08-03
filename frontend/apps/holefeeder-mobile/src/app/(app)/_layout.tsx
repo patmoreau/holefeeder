@@ -53,7 +53,7 @@ const AppLayout = () => {
         options={{
           presentation: 'modal',
           title: t(tk.budgetSection.title),
-          // headerTransparent: true,
+          headerTransparent: true,
           headerTintColor: theme.colors.tint,
         }}
       />
@@ -62,6 +62,7 @@ const AppLayout = () => {
         options={{
           presentation: 'modal',
           title: t(tk.manageCategories.title),
+          headerTransparent: true,
           headerTintColor: theme.colors.tint,
         }}
       />
@@ -70,6 +71,7 @@ const AppLayout = () => {
         options={{
           presentation: 'modal',
           title: t(tk.manageCashflows.title),
+          headerTransparent: true,
           headerTintColor: theme.colors.tint,
         }}
       />
@@ -86,6 +88,7 @@ const AppLayout = () => {
         options={{
           presentation: 'modal',
           title: t(tk.manageTags.title),
+          headerTransparent: true,
           headerTintColor: theme.colors.tint,
         }}
       />
