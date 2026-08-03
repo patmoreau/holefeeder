@@ -85,7 +85,6 @@ export const en = {
   },
   manageCashflows: {
     title: 'Manage Cashflows',
-    cancel: 'Cancel',
   },
   categoryEdit: {
     title: 'Edit Category',

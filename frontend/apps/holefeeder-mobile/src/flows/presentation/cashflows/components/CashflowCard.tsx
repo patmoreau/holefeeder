@@ -42,7 +42,7 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
   const intervalLabel = t(tkIntervalTypes[cashflow.intervalType]);
   const cadence = cashflow.frequency > 1 ? `${cashflow.frequency} × ${intervalLabel}` : intervalLabel;
 
-  const handleCancel = () => {
+  const handleDelete = () => {
     showDeleteAlert(title, {
       onConfirm: () => {
         DeactivateUpcomingFlowUseCase(flowRepository).execute(cashflow.id);
@@ -73,8 +73,8 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
         <AppText variant={'defaultSemiBold'} numberOfLines={1}>
           {title}
         </AppText>
-        <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={true}>
-          <AppButton variant="destructive" label={t(tk.manageCashflows.cancel)} icon={AppIconMap.delete} onPress={handleCancel} />
+        <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={false}>
+          <AppButton variant="destructive" label={t(tk.swipeableActions.delete)} icon={AppIconMap.delete} onPress={handleDelete} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>

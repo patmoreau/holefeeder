@@ -87,7 +87,6 @@ export const fr: TranslationStructure = {
   },
   manageCashflows: {
     title: 'Gérer les flux de trésorerie',
-    cancel: 'Annuler',
   },
   categoryEdit: {
     title: 'Modifier la catégorie',
