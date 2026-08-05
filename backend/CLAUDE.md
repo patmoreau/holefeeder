@@ -62,6 +62,26 @@ dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:cover
 docker compose up -d
 ```
 
+> **Podman (rootless, macOS):** the CLI is Docker-compatible, so `docker compose`
+> works unchanged once the tooling points at the podman machine socket (the
+> `.zshrc` snippet exports this automatically):
+> ```bash
+> export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
+> ```
+> The core stack (api/web/postgres/powersync) needs nothing more. The bundled
+> `local`-profile reverse-proxy additionally needs, one-time per machine:
+> ```bash
+> # Angular prod build OOMs on the 2 GiB default machine — give it headroom:
+> podman machine stop && podman machine set --memory 8192 --cpus 5 && podman machine start
+> # Rootless podman can't bind :80/:443 without this (inside the VM):
+> podman machine ssh 'echo net.ipv4.ip_unprivileged_port_start=80 | sudo tee /etc/sysctl.d/99-unprivileged-ports.conf && sudo sysctl -p /etc/sysctl.d/99-unprivileged-ports.conf'
+> ```
+> and in `.env`, `DOCKER_SOCK` must point at the **in-VM** rootless socket (there is
+> no `/var/run/docker.sock` in the podman machine): `/run/user/<uid>/podman/podman.sock`,
+> where `<uid>` = `podman machine ssh id -u` (typically your macOS uid, e.g. 501).
+> The reverse-proxy/portainer services carry `security_opt: label:disable` so the
+> SELinux-enforcing machine lets Traefik read that socket.
+
 > Production runs `docker-compose.yaml -f docker-compose.Production.yaml` with
 > `COMPOSE_PROFILES` empty: the bundled infra (Traefik, …) stays down because the
 > homelab provides ingress (gateway Traefik). Logs go to stdout → Loki/Grafana. See the

@@ -8,11 +8,18 @@ services:
       - "--configFile=/etc/traefik/traefik.yml"
     security_opt:
       - no-new-privileges:true
+      # Under Podman (SELinux enforcing) the mounted engine socket is denied
+      # without this; no-op on Docker. Required because this container talks to
+      # the container-engine API.
+      - label:disable
     ports:
       - 80:80
       - 443:443
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Container-side path stays /var/run/docker.sock so the Traefik docker
+      # provider config is unchanged. Host side is env-driven: default docker.sock,
+      # or the podman socket (e.g. /run/podman/podman.sock) via DOCKER_SOCK.
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
       # Map the static configuration into the container
       - .docker/traefik/traefik.${ENV}.yml:/etc/traefik/traefik.yml:ro
       # Map the dynamic configuration into the container
@@ -27,10 +34,12 @@ services:
       - 9000
     volumes:
       - portainer_data:/data
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+      # See reverse-proxy: mounts the engine socket, needs SELinux label off on Podman.
+      - label:disable
 
   whoami:
     image: traefik/whoami:v1.12
