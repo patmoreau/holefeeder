@@ -12,10 +12,10 @@
     <PackageVersion Include="Dapper.Transaction" Version="2.1.79" />
     <PackageVersion Include="dbup-core" Version="6.1.1" />
     <PackageVersion Include="dbup-postgresql" Version="7.0.1" />
-    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.168" />
-    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.168" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.20" />
-    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.168" />
+    <PackageVersion Include="DrifterApps.Seeds.Application" Version="1.0.170" />
+    <PackageVersion Include="DrifterApps.Seeds.Domain" Version="1.0.170" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult" Version="1.1.27" />
+    <PackageVersion Include="DrifterApps.Seeds.Infrastructure" Version="1.0.170" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="Hangfire" Version="1.8.24" />
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.24" />
