@@ -372,8 +372,6 @@ jobs:
         run: |
           cat <<EOF > backend/.env
           COMPOSE_PROJECT_NAME=holefeeder
-          COMPOSE_DOCKER_CLI_BUILD=1
-          DOCKER_BUILDKIT=1
           DOCKER_REGISTRY=${{ env.DOCKER_REGISTRY }}
           VERSION=${{ env.VERSION }}
           ASSEMBLY_VERSION=${{ env.VERSION }}
@@ -392,15 +390,15 @@ jobs:
       # portainer / whoami stay down — the homelab provides ingress; logs go to stdout.
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Pull and deploy
         run: |
-          docker compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml pull
-          docker compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml up -d --remove-orphans
+          podman compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml pull
+          podman compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml up -d --remove-orphans
 
       - name: Prune dangling images
-        run: docker image prune -f
+        run: podman image prune -f
 
   create_check:
     needs: [check_changes, tests]
