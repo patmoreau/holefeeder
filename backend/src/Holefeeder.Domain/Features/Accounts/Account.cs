@@ -34,6 +34,7 @@ public sealed partial record Account : IAggregateRoot
     public UserId UserId { get; }
 
     public IReadOnlyCollection<Cashflow> Cashflows { get; init; } = new List<Cashflow>();
+
     public IReadOnlyCollection<Transaction> Transactions { get; init; } = new List<Transaction>();
 }
 
