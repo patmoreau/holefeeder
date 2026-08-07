@@ -342,7 +342,9 @@ jobs:
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
+            ${{ env.DOCKER_REGISTRY }}/holefeeder-${{ matrix.target }}:latest
           cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
 
   deploy:
