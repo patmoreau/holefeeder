@@ -355,29 +355,22 @@ jobs:
     permissions:
       contents: read
       packages: read
-    env:
-      # Talk to the rootful Podman that runs the Quadlet-managed prod containers,
-      # so login creds and auto-update act on the same store.
-      CONTAINER_HOST: unix:///run/podman/podman.sock
-
     environment:
       name: production
 
     steps:
-      # No checkout or .env needed: prod containers are Quadlet units managed by the
-      # homelab role; this job only authenticates and rolls their images.
-
-      - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+      # No checkout, .env, or login needed: prod containers are Quadlet units run by
+      # rootful Podman (GHCR login already deployed on the host by the homelab role);
+      # this job only rolls their images. sudo runs locally as root — env_reset drops
+      # any CONTAINER_HOST, avoiding the remote-client path.
 
       - name: Roll images via auto-update
-        # Prod containers are Quadlet units (io.containers.autoupdate=registry)
-        # provisioned by the my-homelab github-runner role. This pulls the newest
+        # Quadlet units carry io.containers.autoupdate=registry; this pulls the newest
         # :latest and restarts only the units whose image digest changed.
-        run: podman auto-update
+        run: sudo podman auto-update
 
       - name: Prune dangling images
-        run: podman image prune -f
+        run: sudo podman image prune -f
 
   create_check:
     needs: [check_changes, tests]
