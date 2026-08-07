@@ -358,6 +358,9 @@ jobs:
     env:
       VERSION: ${{ needs.set-version.outputs.version }}
       ENVIRONMENT: Production
+      # Talk to the rootful Podman that runs the Quadlet-managed prod containers,
+      # so login creds and auto-update act on the same store.
+      CONTAINER_HOST: unix:///run/podman/podman.sock
 
     environment:
       name: production
@@ -394,10 +397,11 @@ jobs:
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Pull and deploy
-        run: |
-          podman compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml pull
-          podman compose -f backend/docker-compose.yaml -f backend/docker-compose.Production.yaml up -d --remove-orphans
+      - name: Roll images via auto-update
+        # Prod containers are Quadlet units (io.containers.autoupdate=registry)
+        # provisioned by the my-homelab github-runner role. This pulls the newest
+        # :latest and restarts only the units whose image digest changed.
+        run: podman auto-update
 
       - name: Prune dangling images
         run: podman image prune -f
