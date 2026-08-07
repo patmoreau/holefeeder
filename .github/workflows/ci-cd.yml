@@ -356,8 +356,6 @@ jobs:
       contents: read
       packages: read
     env:
-      VERSION: ${{ needs.set-version.outputs.version }}
-      ENVIRONMENT: Production
       # Talk to the rootful Podman that runs the Quadlet-managed prod containers,
       # so login creds and auto-update act on the same store.
       CONTAINER_HOST: unix:///run/podman/podman.sock
@@ -366,33 +364,8 @@ jobs:
       name: production
 
     steps:
-      - uses: actions/checkout@v7
-        with:
-          # The self-hosted runner can retain root-owned bind-mount directories from
-          # prior docker-compose deploys, which makes checkout cleanup fail before
-          # the new revision is fetched.
-          clean: false
-
-      - name: Create .env file
-        run: |
-          cat <<EOF > backend/.env
-          COMPOSE_PROJECT_NAME=holefeeder
-          DOCKER_REGISTRY=${{ env.DOCKER_REGISTRY }}
-          VERSION=${{ env.VERSION }}
-          ASSEMBLY_VERSION=${{ env.VERSION }}
-          ENV=${{ env.ENVIRONMENT }}
-          DOMAIN=drifterapps.app
-          POSTGRES_DB=${{ vars.POSTGRES_DB }}
-          POSTGRES_USER=${{ vars.POSTGRES_USER }}
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_APP_DB=${{ vars.POSTGRES_APP_DB }}
-          POSTGRES_APP_USER=${{ vars.POSTGRES_APP_USER }}
-          POSTGRES_APP_PASSWORD=${{ secrets.POSTGRES_APP_PASSWORD }}
-          POWERSYNC_ADMIN_TOKEN=${{ secrets.POWERSYNC_ADMIN_TOKEN }}
-          EOF
-
-      # COMPOSE_PROFILES is intentionally unset, so the bundled reverse-proxy / adminer /
-      # portainer / whoami stay down — the homelab provides ingress; logs go to stdout.
+      # No checkout or .env needed: prod containers are Quadlet units managed by the
+      # homelab role; this job only authenticates and rolls their images.
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
