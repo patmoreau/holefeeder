@@ -82,10 +82,12 @@ docker compose up -d
 > The reverse-proxy/portainer services carry `security_opt: label:disable` so the
 > SELinux-enforcing machine lets Traefik read that socket.
 
-> Production runs `docker-compose.yaml -f docker-compose.Production.yaml` with
-> `COMPOSE_PROFILES` empty: the bundled infra (Traefik, …) stays down because the
-> homelab provides ingress (gateway Traefik). Logs go to stdout → Loki/Grafana. See the
-> deploy job in `.github/workflows/ci-cd.yml` (self-hosted runner on `lxc-holefeeder`).
+> Production does **not** use Docker/Podman Compose. The api/web containers run as
+> rootful Podman **Quadlet units** (provisioned by the my-homelab github-runner role)
+> on `lxc-holefeeder`; the homelab gateway Traefik provides ingress and logs go to
+> stdout → Loki/Grafana. The deploy job in `.github/workflows/ci-cd.yml` only rolls
+> images: `sudo podman auto-update` pulls the newest `:latest` (published by the
+> `publish-docker-images` job) and restarts changed units, gated on manual approval.
 
 ### Run tests in Docker (as CI does)
 ```bash

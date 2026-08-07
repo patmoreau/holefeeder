@@ -1,7 +1,0 @@
-http:
-  routers:
-    web:
-      rule: "Host(`traefik.drifterapps.app`)"
-      service: "api@internal"
-      tls:
-        certResolver: acme_certresolver
