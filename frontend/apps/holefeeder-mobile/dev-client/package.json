@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@journeyapps/react-native-quick-sqlite": "^2.5.0",
-    "@powersync/common": "1.45.0",
-    "@powersync/node": "^0.15.2",
+    "@powersync/common": "1.57.3",
+    "@powersync/node": "^0.20.0",
     "better-sqlite3": "^9.6.0"
   },
   "devDependencies": {
