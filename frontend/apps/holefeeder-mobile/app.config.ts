@@ -24,9 +24,14 @@ const withDevLauncherBuildPhaseFix: ConfigPlugin = (config) =>
 
 const environment = process.env.APP_ENV || 'development';
 
+// override: true is required. A Release build makes the Expo CLI set
+// NODE_ENV=production, so it auto-loads .env.production before this runs, and
+// dotenv leaves already-set variables alone — without the override, APP_ENV is
+// ignored and a development Release build silently points at production.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config({
   path: `.env.${environment}`,
+  override: true,
 });
 
 const IS_DEV = process.env.APP_ENV === 'development';
@@ -142,6 +147,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       EXPO_PUBLIC_CACHE_REQUESTS: process.env.EXPO_PUBLIC_CACHE_REQUESTS,
       EXPO_PUBLIC_POWERSYNC_URL: process.env.EXPO_PUBLIC_POWERSYNC_URL,
       EXPO_PUBLIC_FORCE_LOGS: process.env.EXPO_PUBLIC_FORCE_LOGS,
+      // Swaps Auth0 for a link-driven stand-in, so it must never reach a
+      // production build. Dropped here rather than trusted to the env files.
+      EXPO_PUBLIC_E2E: environment === 'production' ? undefined : process.env.EXPO_PUBLIC_E2E,
     },
     experiments: {
       typedRoutes: true,

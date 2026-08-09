@@ -11,7 +11,7 @@ export const E2eSessionErrors = {
 
 export type E2eSessionData = TokenInfo & { user: User };
 
-const E2E_AUTH_HOST = 'e2e-auth';
+const E2E_TOKEN_PARAM = 'e2e-auth-token';
 
 type JwtPayload = { sub?: unknown; exp?: unknown };
 
@@ -43,16 +43,17 @@ const decodePayload = (token: string): Result<JwtPayload> => {
   }
 };
 
-// Accepts holefeeder://e2e-auth?token=<jwt>[&email=…][&name=…]. The expiry and the
-// subject come from the token itself so the link cannot claim a session the token
-// does not actually grant.
+// Accepts holefeeder://?e2e-auth-token=<jwt>[&email=…][&name=…]. The link targets the
+// root deliberately: expo-router turns any other host into a route, and an unknown
+// route crashes the render. The expiry and the subject come from the token itself, so
+// a link cannot claim a session the token does not actually grant.
 const parseLink = (link: string): Result<E2eSessionData> => {
-  const match = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)[^?#]*(?:\?([^#]*))?$/i.exec(link);
-  if (!match || match[1] !== E2E_AUTH_HOST) return Result.failure([E2eSessionErrors.invalidLink]);
+  const match = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)(\/?)(?:\?([^#]*))?$/i.exec(link);
+  if (!match || match[1] !== '') return Result.failure([E2eSessionErrors.invalidLink]);
 
-  const params = parseQuery(match[2] ?? '');
+  const params = parseQuery(match[3] ?? '');
 
-  const token = params.token;
+  const token = params[E2E_TOKEN_PARAM];
   if (!token) return Result.failure([E2eSessionErrors.missingToken]);
 
   const payloadResult = decodePayload(token);

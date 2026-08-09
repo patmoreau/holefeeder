@@ -154,6 +154,7 @@ field-level + general errors, validation, save, and an `ErrorSheet` component.
 ## Provider Nesting (root `_layout.tsx`)
 
 `LanguageProvider` → `ThemeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
+(the auth layer becomes `E2eAuthenticationProvider` in E2E builds — see Config / Environments)  
 Route protection uses `<Stack.Protected guard={!!user}>` inside `HolefeederContent` — no manual redirects.
 
 ## Config / Environments
@@ -162,6 +163,26 @@ Route protection uses `<Stack.Protected guard={!!user}>` inside `HolefeederConte
 - All config read through `src/config/config.ts`; never access `process.env` directly in components
 - Local services: `powersync.localtest.me` and `holefeeder.localtest.me` via Traefik + mkcert TLS  
   (iOS Simulator requires `/etc/hosts` override and `xcrun simctl keychain <UDID> add-root-cert`)
+- `pnpm ios:e2e` builds the **E2E variant**: development endpoints plus `EXPO_PUBLIC_E2E=true`.
+  There is no `.env.e2e` — the flag is passed on the command line, and dotenv does not
+  override variables already set in the environment.
+
+### E2E authentication
+
+When `EXPO_PUBLIC_E2E=true`, `_layout.tsx` mounts `E2eAuthenticationProvider` instead of
+`AuthenticationProvider`. It never opens a browser: it waits for a
+`holefeeder://?e2e-auth-token=<jwt>` deep link and serves that token through the same
+`AuthenticationContext`, so everything downstream (`useAuth`, `PowerSyncAuthProvider`,
+`ApiClient`) is unchanged. Subject and expiry are read from the token, not from the link.
+
+The link targets the **root** path on purpose. expo-router turns any other host into a
+route, and an unknown route fails the render with "Element type is invalid".
+
+This is an authentication bypass and must never ship. Two guards, both required:
+
+1. `app.config.ts` sets `EXPO_PUBLIC_E2E` to `undefined` whenever `APP_ENV=production`, so a
+   production build cannot carry the flag regardless of what any env file contains.
+2. `E2eConfig.isEnabled()` accepts only the exact string `'true'`.
 
 ## Path Aliases
 

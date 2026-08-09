@@ -8,7 +8,9 @@ import { ActivityIndicator } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import { HolefeederContent } from '@/app/HolefeederContent';
 import { HolefeederConfig } from '@/config/holefeeder-config';
+import { E2eConfig } from '@/shared/auth/core/e2e-config';
 import { AuthenticationProvider } from '@/shared/auth/presentation/AuthenticationProvider';
+import { E2eAuthenticationProvider } from '@/shared/auth/presentation/E2eAuthenticationProvider';
 import { loggerFactoryForReactNative } from '@/shared/core/logger/logger-factory-for-react-native';
 import { LanguageProvider } from '@/shared/language/presentation/LanguageProvider';
 import { AppStorageInMmkv } from '@/shared/persistence/app-storage-in-mmkv';
@@ -21,6 +23,11 @@ import { CombinedInsightProvider } from '@/statistics/presentation/CombinedInsig
 Id.setGenerator(Crypto.randomUUID);
 Logger.setLoggerFactory(loggerFactoryForReactNative);
 const logger = Logger.create('RootLayout');
+
+// E2E builds take their session from a deep link instead of Auth0. The flag is
+// stripped from production builds in app.config.ts, so this can only ever pick
+// the Auth0 provider there.
+const AuthProvider = E2eConfig.isEnabled() ? E2eAuthenticationProvider : AuthenticationProvider;
 
 const RootLayout = () => {
   const [loading, setLoading] = useState(true);
@@ -76,13 +83,13 @@ const RootLayout = () => {
       <LanguageProvider storage={appStorage}>
         <ThemeProvider storage={appStorage}>
           <CombinedInsightProvider storage={appStorage}>
-            <AuthenticationProvider config={config.value.authConfig}>
+            <AuthProvider config={config.value.authConfig}>
               <PowerSyncAuthProvider database={database} config={config.value}>
                 <RepositoryProvider database={database}>
                   <HolefeederContent />
                 </RepositoryProvider>
               </PowerSyncAuthProvider>
-            </AuthenticationProvider>
+            </AuthProvider>
           </CombinedInsightProvider>
         </ThemeProvider>
       </LanguageProvider>

@@ -12,7 +12,7 @@ describe('E2eSession', () => {
     it('reads the token and the subject claim', () => {
       const token = aToken({ sub: 'auth0|abc123', exp: inOneHour() });
 
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${token}`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${token}`);
 
       expect(result).toBeSuccessWithValue({
         token: token,
@@ -24,7 +24,7 @@ describe('E2eSession', () => {
     it('reads the expiry from the token', () => {
       const exp = inOneHour();
 
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${aToken({ sub: 'auth0|abc123', exp: exp })}`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${aToken({ sub: 'auth0|abc123', exp: exp })}`);
 
       expect(result.isSuccess && result.value.expiresAt).toBe(exp);
     });
@@ -32,7 +32,7 @@ describe('E2eSession', () => {
     it('enriches the user from optional query parameters', () => {
       const token = aToken({ sub: 'auth0|abc123', exp: inOneHour() });
 
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${token}&email=someone%40example.com&name=Test%20User`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${token}&email=someone%40example.com&name=Test%20User`);
 
       expect(result.isSuccess && result.value.user).toEqual({
         sub: 'auth0|abc123',
@@ -41,38 +41,44 @@ describe('E2eSession', () => {
       });
     });
 
-    it('fails when the link is not the e2e-auth link', () => {
-      const result = E2eSession.parseLink(`holefeeder://purchase?token=${aToken({ sub: 'auth0|abc123', exp: inOneHour() })}`);
+    it('fails when the link targets a route rather than the root', () => {
+      const result = E2eSession.parseLink(`holefeeder://purchase?e2e-auth-token=${aToken({ sub: 'auth0|abc123', exp: inOneHour() })}`);
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.invalidLink]);
     });
 
+    it('ignores an ordinary deep link that carries no session', () => {
+      const result = E2eSession.parseLink('holefeeder://?foo=bar');
+
+      expect(result).toBeFailureWithErrors([E2eSessionErrors.missingToken]);
+    });
+
     it('fails when the token is missing', () => {
-      const result = E2eSession.parseLink('holefeeder://e2e-auth');
+      const result = E2eSession.parseLink('holefeeder://');
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.missingToken]);
     });
 
     it('fails when the token is not a three-segment jwt', () => {
-      const result = E2eSession.parseLink('holefeeder://e2e-auth?token=not-a-jwt');
+      const result = E2eSession.parseLink('holefeeder://?e2e-auth-token=not-a-jwt');
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.invalidToken]);
     });
 
     it('fails when the token payload is not json', () => {
-      const result = E2eSession.parseLink('holefeeder://e2e-auth?token=header.bm90LWpzb24.signature');
+      const result = E2eSession.parseLink('holefeeder://?e2e-auth-token=header.bm90LWpzb24.signature');
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.invalidToken]);
     });
 
     it('fails when the payload has no subject', () => {
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${aToken({ exp: inOneHour() })}`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${aToken({ exp: inOneHour() })}`);
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.missingSubject]);
     });
 
     it('fails when the payload has no expiry', () => {
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${aToken({ sub: 'auth0|abc123' })}`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${aToken({ sub: 'auth0|abc123' })}`);
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.missingExpiry]);
     });
@@ -80,7 +86,7 @@ describe('E2eSession', () => {
     it('fails when the token has already expired', () => {
       const expired = Math.floor(Date.now() / 1000) - 1;
 
-      const result = E2eSession.parseLink(`holefeeder://e2e-auth?token=${aToken({ sub: 'auth0|abc123', exp: expired })}`);
+      const result = E2eSession.parseLink(`holefeeder://?e2e-auth-token=${aToken({ sub: 'auth0|abc123', exp: expired })}`);
 
       expect(result).toBeFailureWithErrors([E2eSessionErrors.expiredToken]);
     });
