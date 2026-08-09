@@ -7,7 +7,8 @@ public sealed partial record UserIdentity
     internal static Result<UserIdentity> Create(User user, string identityObjectId)
     {
         var result = ResultAggregate.Create()
-            .Ensure(UserIdValidation(user.Id));
+            .Ensure(UserIdValidation(user.Id))
+            .Ensure(IdentityObjectIdValidation(identityObjectId));
 
         return result.OnSuccess(
             () => new UserIdentity(identityObjectId)

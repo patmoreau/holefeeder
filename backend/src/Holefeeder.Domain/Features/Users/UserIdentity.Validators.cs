@@ -8,4 +8,9 @@ public sealed partial record UserIdentity
         () => id != UserId.Empty
             ? Nothing.Value
             : UserErrors.UserIdRequired;
+
+    private static Func<Result<Nothing>> IdentityObjectIdValidation(string identityObjectId) =>
+        () => !string.IsNullOrWhiteSpace(identityObjectId)
+            ? Nothing.Value
+            : UserErrors.IdentityObjectIdRequired;
 }
