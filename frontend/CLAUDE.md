@@ -66,6 +66,9 @@ pnpm --filter holefeeder-mobile test
 pnpm --filter holefeeder-mobile ios
 ```
 
+End-to-end tests (Maestro) live in `apps/holefeeder-mobile/.maestro/` and need a booted
+simulator, so they are not part of `pnpm test` or CI. See that app's `CLAUDE.md`.
+
 ## `packages/core` — @holefeeder/core
 
 Pure TypeScript library. No React Native, no Expo, no browser-only APIs.

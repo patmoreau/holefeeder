@@ -75,6 +75,11 @@ jobs:
       - name: Run tests
         run: pnpm turbo run test
 
+      # The E2E build swaps Auth0 for a link-driven stand-in. This proves a
+      # production config cannot carry the flag that enables it.
+      - name: Assert production builds carry no E2E auth bypass
+        run: pnpm --filter holefeeder-mobile run assert:production-safe
+
   # Always-runs neutral check. When frontend/** is untouched, create-check
   # returns success (code_was_changed == false); otherwise it reflects lint+test.
   # Mark "frontend-completed" as the required status check in branch protection.

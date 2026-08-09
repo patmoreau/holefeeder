@@ -18,6 +18,7 @@
     "test": "jest",
     "test:e2e:ios": "sh .maestro/run.sh regression",
     "test:e2e:auth": "sh .maestro/run.sh auth",
+    "assert:production-safe": "sh scripts/assert-production-has-no-e2e-flag.sh",
     "npx:fix": "npx expo install --fix"
   },
   "dependencies": {
