@@ -1,0 +1,18 @@
+appId: com.drifterapps.holefeeder
+name: Start an authenticated session without touching Auth0
+---
+# Requires the E2E build (pnpm ios:e2e). On any other build the link is ignored
+# and the flow fails at whatever it asserts next, still on the login screen.
+#
+# MAESTRO_E2E_TOKEN is minted by .maestro/run.sh before Maestro starts.
+- assertVisible:
+    id: 'login-screen'
+- openLink: holefeeder://?e2e-auth-token=${MAESTRO_E2E_TOKEN}
+
+# iOS sometimes asks to confirm opening a custom scheme. The root-path link
+# usually avoids it, but it appears often enough to be worth handling.
+- runFlow:
+    when:
+      visible: '.*Open in .*'
+    commands:
+      - tapOn: '^Open$'

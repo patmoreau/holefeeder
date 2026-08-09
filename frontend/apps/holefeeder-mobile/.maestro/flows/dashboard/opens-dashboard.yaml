@@ -1,0 +1,14 @@
+appId: com.drifterapps.holefeeder
+name: Signed-in user lands on the dashboard
+tags:
+  - regression
+---
+- runFlow: ../../subflows/launch-clean.yaml
+- runFlow: ../../subflows/login-injected.yaml
+
+# The dashboard renders only once PowerSync has a session, so this also covers
+# the token reaching the sync connector.
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000

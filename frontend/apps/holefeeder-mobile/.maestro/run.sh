@@ -16,8 +16,96 @@ set -a
 . "$ENV_FILE"
 set +a
 
+require() {
+  eval "value=\$$1"
+  if [ -z "$value" ]; then
+    echo "$1 is not set in $ENV_FILE" >&2
+    exit 1
+  fi
+}
+
+require E2E_EMAIL
+require E2E_PASSWORD
+
+# The two tags need different builds: `auth` drives the real login pages and so
+# needs the Auth0 build, while everything else injects a session and needs the
+# E2E build. Reading the flag out of the installed bundle turns a baffling
+# mid-flow failure into an immediate explanation.
+assert_installed_build() {
+  udid=$(xcrun simctl list devices booted 2>/dev/null | sed -n 's/.*(\([0-9A-F-]\{36\}\)) (Booted).*/\1/p' | head -1 | tr -d '[:space:]')
+  if [ -z "$udid" ]; then
+    return 0
+  fi
+
+  container=$(xcrun simctl get_app_container "$udid" com.drifterapps.holefeeder app 2>/dev/null) || container=''
+  config="$container/EXConstants.bundle/app.config"
+  if [ -z "$container" ] || [ ! -f "$config" ]; then
+    return 0
+  fi
+
+  installed=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('extra',{}).get('EXPO_PUBLIC_E2E') or '')" "$config")
+
+  if [ "$TAG" = "auth" ] && [ "$installed" = "true" ]; then
+    echo "The installed app is the E2E build, whose login button is a no-op." >&2
+    echo "Flows tagged 'auth' drive the real Auth0 pages — run: pnpm ios:e2e:auth" >&2
+    exit 1
+  fi
+
+  if [ "$TAG" != "auth" ] && [ "$installed" != "true" ]; then
+    echo "The installed app is not the E2E build, so the session link is ignored." >&2
+    echo "Flows tagged '$TAG' inject a session — run: pnpm ios:e2e" >&2
+    exit 1
+  fi
+}
+
+assert_installed_build
+
+MAESTRO_E2E_TOKEN=''
+
+# Flows tagged `auth` drive the real login pages and need no token. Everything
+# else takes its session from an injected one, so mint it up front and fail
+# loudly rather than letting a flow die on an unexplained blank screen.
+if [ "$TAG" != "auth" ]; then
+  require E2E_AUTH0_DOMAIN
+  require E2E_AUTH0_CLIENT_ID
+  require E2E_AUTH0_AUDIENCE
+  require E2E_AUTH0_REALM
+  require E2E_AUTH0_SCOPE
+
+  MAESTRO_E2E_TOKEN=$(python3 - <<'PY'
+import json, os, sys, urllib.error, urllib.request
+
+payload = json.dumps({
+    'grant_type': 'http://auth0.com/oauth/grant-type/password-realm',
+    'realm': os.environ['E2E_AUTH0_REALM'],
+    'client_id': os.environ['E2E_AUTH0_CLIENT_ID'],
+    'audience': os.environ['E2E_AUTH0_AUDIENCE'],
+    'scope': os.environ['E2E_AUTH0_SCOPE'],
+    'username': os.environ['E2E_EMAIL'],
+    'password': os.environ['E2E_PASSWORD'],
+}).encode()
+
+request = urllib.request.Request(
+    f"https://{os.environ['E2E_AUTH0_DOMAIN']}/oauth/token",
+    data=payload,
+    headers={'Content-Type': 'application/json'},
+)
+
+try:
+    with urllib.request.urlopen(request, timeout=30) as response:
+        print(json.load(response)['access_token'])
+except urllib.error.HTTPError as error:
+    body = json.loads(error.read() or b'{}')
+    # Never echo the request: it carries the password.
+    print(f"Auth0 refused the token request: {body.get('error')} — {body.get('error_description')}", file=sys.stderr)
+    sys.exit(1)
+PY
+  )
+fi
+
 exec maestro test \
   --include-tags="$TAG" \
   -e MAESTRO_E2E_EMAIL="$E2E_EMAIL" \
   -e MAESTRO_E2E_PASSWORD="$E2E_PASSWORD" \
+  -e MAESTRO_E2E_TOKEN="$MAESTRO_E2E_TOKEN" \
   "$MAESTRO_DIR"
