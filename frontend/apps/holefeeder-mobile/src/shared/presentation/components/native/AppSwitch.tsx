@@ -4,8 +4,9 @@ type Props = {
   value: boolean;
   onChange?: (value: boolean) => void;
   disabled?: boolean;
+  testID?: string;
 };
 
-export const AppSwitch = ({ value, onChange = () => {}, disabled }: Props) => {
-  return <ExpoSwitch value={value} onValueChange={onChange} disabled={disabled} />;
+export const AppSwitch = ({ value, onChange = () => {}, disabled, testID }: Props) => {
+  return <ExpoSwitch value={value} onValueChange={onChange} disabled={disabled} testID={testID} />;
 };

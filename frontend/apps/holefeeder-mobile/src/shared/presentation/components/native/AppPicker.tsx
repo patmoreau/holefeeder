@@ -12,11 +12,13 @@ export type PickerProps<T extends PickerOption> = {
   onSelectOption: (option: T) => void;
   onOptionLabel: (option: T) => string;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 };
 
-export const AppPicker = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption }: PickerProps<T>) => {
+export const AppPicker = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption, testID }: PickerProps<T>) => {
   return (
     <ExpoPicker
+      testID={testID}
       selectedValue={selectedOption.id}
       onValueChange={(id: string) => {
         const selected = options.find((option) => option.id === id);

@@ -25,6 +25,7 @@ export type ButtonProps = {
   color?: string;
   disabled?: boolean;
   hostProps?: Omit<AppHostProps, 'children'>;
+  testID?: string;
 };
 
 const variantMapping: Record<
@@ -77,6 +78,7 @@ export const AppButton = ({
   style,
   disabled,
   hostProps,
+  testID,
 }: ButtonProps) => {
   const { theme } = useTheme();
   const inSwipeAction = useInSwipeAction();
@@ -85,7 +87,9 @@ export const AppButton = ({
     // SwiftUI's .swipeActions only renders plain Buttons; style modifiers make
     // non-destructive actions get dropped. Render bare (role colors it) here.
     if (inSwipeAction) {
-      return <ExpoButton role={variantRole[variant]} label={label} systemImage={icon?.ios} onPress={onPress} disabled={disabled} />;
+      return (
+        <ExpoButton role={variantRole[variant]} label={label} systemImage={icon?.ios} onPress={onPress} disabled={disabled} testID={testID} />
+      );
     }
     const modifiers: ModifierConfig[] = [
       buttonStyle(variantMapping[variant]),
@@ -94,7 +98,7 @@ export const AppButton = ({
     ];
     if (icon && label && iconPosition === 'right') {
       return (
-        <ExpoButton role={variantRole[variant]} onPress={onPress} modifiers={modifiers} disabled={disabled}>
+        <ExpoButton role={variantRole[variant]} onPress={onPress} modifiers={modifiers} disabled={disabled} testID={testID}>
           <ExpoRow spacing={2}>
             <ExpoText>{label}</ExpoText>
             <ExpoIcon name={Icon.select(icon)} size={20} color={iconColor ?? variantIconColor(variant, theme)} />
@@ -113,17 +117,18 @@ export const AppButton = ({
         onPress={onPress}
         modifiers={modifiers}
         disabled={disabled}
+        testID={testID}
       />
     );
   }
 
   if (!icon) {
-    return <ExpoButton label={label} onPress={onPress} disabled={disabled} />;
+    return <ExpoButton label={label} onPress={onPress} disabled={disabled} testID={testID} />;
   }
   const buttonIcon = <ExpoIcon name={Icon.select(icon)} size={20} color={iconColor ? iconColor : variantIconColor(variant, theme)} />;
 
   return (
-    <ExpoButton label={label} onPress={onPress} disabled={disabled}>
+    <ExpoButton label={label} onPress={onPress} disabled={disabled} testID={testID}>
       <ExpoRow spacing={2}>
         {icon && iconPosition === 'left' && buttonIcon}
         {label && <ExpoText>{label}</ExpoText>}

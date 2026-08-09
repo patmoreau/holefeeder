@@ -198,6 +198,13 @@ When feature code needs an `@expo/ui` component, hook, or modifier that has no w
 Types that would couple a non-`native/` module to `@expo/ui` are redefined locally when
 structurally safe (e.g. `ButtonRole` in `AppButtonVariant.ts`).
 
+**`testID` forwarding.** Every `App*` wrapper must accept `testID` and pass it to its native
+view — `@expo/ui` maps it to `accessibilityIdentifier`, which is how Maestro selects elements.
+Wrappers that spread props (`{...props}`) get this for free; wrappers that enumerate their
+props must declare `testID?: string` and forward it on every return branch. Composite wrappers
+(e.g. `AppField`) put it on their outermost native view. Naming convention:
+`<screen>-<element>` in kebab-case, e.g. `welcome-signup-button`.
+
 ## i18n
 
 All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files

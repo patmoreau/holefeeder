@@ -29,15 +29,16 @@ export type FieldProps = {
   children: ReactNode;
   variant?: 'default' | 'large';
   error?: string;
+  testID?: string;
 };
 
-export const AppField = ({ label, icon, children, variant = 'default' }: FieldProps) => {
+export const AppField = ({ label, icon, children, variant = 'default', testID }: FieldProps) => {
   const styles = useStyles(createStyles);
   const { theme } = useTheme();
 
   if (variant === 'large') {
     return (
-      <ExpoColumn spacing={8}>
+      <ExpoColumn spacing={8} testID={testID}>
         <ExpoRow spacing={8} alignment={'center'}>
           <ExpoIcon name={Icon.select(icon)} size={24} color={theme.colors.primary} style={styles.iconCircle} />
           {label && <ExpoText>{label}</ExpoText>}
@@ -48,7 +49,7 @@ export const AppField = ({ label, icon, children, variant = 'default' }: FieldPr
   }
 
   return (
-    <ExpoRow spacing={8} alignment={'center'}>
+    <ExpoRow spacing={8} alignment={'center'} testID={testID}>
       <ExpoIcon name={Icon.select(icon)} size={24} color={theme.colors.primary} style={styles.iconCircle} />
       {label && <ExpoText>{label}</ExpoText>}
       <ExpoRow alignment={'end'} modifiers={[AppModifiers.fillWidth]}>

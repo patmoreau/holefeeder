@@ -13,15 +13,23 @@ export type PickerProps<T extends PickerOption> = {
   selectedOption: T;
   onSelectOption: (option: T) => void;
   onOptionLabel: (option: T) => string;
+  testID?: string;
 };
 
-export const AppSegmentedMenu = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption }: PickerProps<T>) => {
+export const AppSegmentedMenu = <T extends PickerOption>({
+  options,
+  onOptionLabel,
+  selectedOption,
+  onSelectOption,
+  testID,
+}: PickerProps<T>) => {
   if (!options) {
     return <AppLoadingIndicator size="small" />;
   }
 
   return (
     <Picker
+      testID={testID}
       modifiers={[pickerStyle('segmented'), padding({ horizontal: 12 })]}
       selection={selectedOption.id}
       onSelectionChange={(id: string) => {

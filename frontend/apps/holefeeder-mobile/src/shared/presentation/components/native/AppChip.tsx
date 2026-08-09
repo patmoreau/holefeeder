@@ -9,9 +9,10 @@ export type AppChipProps = {
   label: string;
   selected?: boolean;
   onPress?: () => void;
+  testID?: string;
 };
 
-export function AppChip({ label, selected = false, onPress }: AppChipProps) {
+export function AppChip({ label, selected = false, onPress, testID }: AppChipProps) {
   const { theme } = useTheme();
   const buttonModifiers: ExpoModifierConfig[] = [];
   const textModifiers: ExpoModifierConfig[] = [];
@@ -28,7 +29,7 @@ export function AppChip({ label, selected = false, onPress }: AppChipProps) {
   }
 
   return (
-    <ExpoButton onPress={onPress} modifiers={buttonModifiers}>
+    <ExpoButton onPress={onPress} modifiers={buttonModifiers} testID={testID}>
       <ExpoText modifiers={textModifiers}>{label}</ExpoText>
     </ExpoButton>
   );
