@@ -9,8 +9,8 @@ export const AuthButton = () => {
   const { t } = useTranslation();
 
   if (user) {
-    return <AppButton label={t(tk.auth.logoutButton)} variant="destructive" onPress={logout} />;
+    return <AppButton label={t(tk.auth.logoutButton)} variant="destructive" onPress={logout} testID="auth-logout-button" />;
   }
 
-  return <AppButton label={t(tk.auth.loginButton)} variant="primary" onPress={login} />;
+  return <AppButton label={t(tk.auth.loginButton)} variant="primary" onPress={login} testID="auth-login-button" />;
 };

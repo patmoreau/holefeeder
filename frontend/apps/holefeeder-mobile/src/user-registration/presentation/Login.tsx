@@ -26,7 +26,7 @@ const LoginScreen = () => {
   }
 
   return (
-    <AppNative style={{ flex: 1 }}>
+    <AppNative style={{ flex: 1 }} testID="login-screen">
       <AppColumn spacing={8} alignment={'center'}>
         <AppText variant={'title'} textStyle={{ color: theme.colors.secondaryText }}>
           {t(tk.auth.loginTitle)}

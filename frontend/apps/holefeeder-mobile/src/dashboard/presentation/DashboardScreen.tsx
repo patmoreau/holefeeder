@@ -95,7 +95,7 @@ const DashboardScreen = () => {
   const { accounts, dashboard, upcomingFlows } = data;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="dashboard-screen">
       <Animated.View
         style={[
           styles.header,

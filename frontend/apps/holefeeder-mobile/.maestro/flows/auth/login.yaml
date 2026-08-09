@@ -1,0 +1,18 @@
+appId: com.drifterapps.holefeeder
+name: Registered user signs in and reaches the dashboard
+tags:
+  - auth
+---
+- runFlow: ../../subflows/launch-clean.yaml
+
+- assertVisible:
+    id: 'login-screen'
+
+- runFlow: ../../subflows/login-real.yaml
+
+# The dashboard only renders once PowerSync has a session, so this doubles as a
+# check that the token reached the sync connector.
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000

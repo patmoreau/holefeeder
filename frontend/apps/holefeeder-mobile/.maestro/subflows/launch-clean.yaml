@@ -1,0 +1,8 @@
+appId: com.drifterapps.holefeeder
+name: Launch on a clean slate
+---
+# clearKeychain wipes the Auth0 credentials manager, so the app always starts
+# logged out. clearState drops the local PowerSync database.
+- clearState
+- clearKeychain
+- launchApp

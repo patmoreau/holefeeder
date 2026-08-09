@@ -1,0 +1,4 @@
+# Maestro workspace configuration.
+# Flows live under flows/; reusable fragments under subflows/ (never run directly).
+flows:
+  - 'flows/**'

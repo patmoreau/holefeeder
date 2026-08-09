@@ -1,0 +1,42 @@
+appId: com.drifterapps.holefeeder
+name: Sign in through the real Auth0 Universal Login
+---
+# Drives the actual Auth0 hosted pages. Slow and network-dependent by nature —
+# reserve for flows tagged `auth`. Everything else should get its session from
+# the injected-token subflow instead.
+#
+# Requires MAESTRO_E2E_EMAIL / MAESTRO_E2E_PASSWORD (see .env.e2e.template).
+- assertVisible:
+    id: 'auth-login-button'
+- tapOn:
+    id: 'auth-login-button'
+
+# iOS asks for consent before ASWebAuthenticationSession may share cookies with
+# the identity provider. The sheet is a SpringBoard alert, not part of the app.
+- runFlow:
+    when:
+      visible: '.*Wants to Use.*to Sign In.*'
+    commands:
+      - tapOn: 'Continue'
+
+# Auth0 New Universal Login is identifier-first: email, then password.
+- extendedWaitUntil:
+    visible: 'Email address'
+    timeout: 30000
+- tapOn: 'Email address'
+- inputText: ${MAESTRO_E2E_EMAIL}
+- tapOn: 'Continue'
+
+- extendedWaitUntil:
+    visible: 'Password'
+    timeout: 30000
+- tapOn: 'Password'
+- inputText: ${MAESTRO_E2E_PASSWORD}
+- tapOn: 'Continue'
+
+# First authorization of the API audience may present a consent screen.
+- runFlow:
+    when:
+      visible: 'Accept'
+    commands:
+      - tapOn: 'Accept'

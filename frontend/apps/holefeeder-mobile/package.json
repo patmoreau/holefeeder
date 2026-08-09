@@ -14,7 +14,8 @@
     "web": "APP_ENV=development expo start --web",
     "lint": "eslint .",
     "test": "jest",
-    "test:e2e:ios": "maestro test --include-tags=regression .maestro/",
+    "test:e2e:ios": "sh .maestro/run.sh regression",
+    "test:e2e:auth": "sh .maestro/run.sh auth",
     "npx:fix": "npx expo install --fix"
   },
   "dependencies": {

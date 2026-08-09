@@ -34,7 +34,9 @@ pnpm prebuild:dev           # iOS prebuild (development)
 pnpm ios:deploy             # production build to physical device
 ```
 
-E2E tests use Maestro: `pnpm test:e2e:ios` runs `.maestro/` suite tagged `regression`.
+E2E tests use Maestro: `pnpm test:e2e:ios` runs the `regression` tag, `pnpm test:e2e:auth`
+the `auth` tag. Both need a booted simulator with the app installed, plus credentials in
+`.env.e2e.local` (gitignored — copy `.env.e2e.template`). See `.maestro/README.md`.
 
 ## Architecture: Feature-Based Vertical Slices
 
@@ -232,5 +234,7 @@ This application enforces a testing strategy focused on high domain reliability 
   - Focus on **fakes** instead of mocks for state and persistence. For example, use in-memory repository fakes (`repositories-in-memory`) instead of creating real database instances or heavily mocking methods. Global mocks/fakes are located in `__mocks__/` at root, context helpers in `tests/setup/`.
   - **Coverage Threshold**: Strictly enforced at 70% for branches, functions, lines, and statements (`pnpm test -- --coverage`).
 - **E2E Tests (Maestro)**:
-  - User flows are verified using Maestro. Run via `pnpm test:e2e:ios`.
-  - Test suites run from the `.maestro/` directory and are filtered with the tag `regression`.
+  - User flows are verified using Maestro. Flows live in `.maestro/flows/`, reusable fragments in `.maestro/subflows/`.
+  - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`).
+  - Select elements by `id:` (the `testID` prop), not by visible text — text is translated. Text selectors are only unavoidable inside the Auth0 pages.
+  - Credentials load from `.env.e2e.local` via `.maestro/run.sh`; see `.maestro/README.md`.
