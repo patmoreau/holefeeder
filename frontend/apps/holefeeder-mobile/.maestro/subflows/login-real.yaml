@@ -12,29 +12,63 @@ name: Sign in through the real Auth0 Universal Login
     id: 'auth-login-button'
 
 # iOS asks for consent before ASWebAuthenticationSession may share cookies with
-# the identity provider. The sheet is a SpringBoard alert, not part of the app.
+# the identity provider. The sheet is a SpringBoard alert, not part of the app,
+# and takes about a second to render — a `when: visible:` guard evaluates
+# immediately and would skip it, so wait for it explicitly.
+- extendedWaitUntil:
+    visible: '.*Wants to Use.*to Sign In.*'
+    timeout: 15000
+- tapOn: 'Continue'
+
+# clearKeychain does not touch Safari's cookie jar, which ASWebAuthenticationSession
+# shares. So Auth0 may already have a session and jump straight to the consent
+# screen instead of asking for credentials. Wait for whichever page we land on,
+# then branch — a `when: visible:` guard is only reliable once the page has rendered.
+- extendedWaitUntil:
+    visible: '(Email address|Accept)'
+    timeout: 30000
+
+# Identifier-first login: email, then password, each behind its own Continue.
 - runFlow:
     when:
-      visible: '.*Wants to Use.*to Sign In.*'
+      visible: 'Email address'
     commands:
-      - tapOn: 'Continue'
+      # Anchored: the page also offers "Continue with a passkey", which an
+      # unanchored "Continue" matches first.
+      # Submit with the return key rather than tapping Continue: the keyboard
+      # covers the button and hideKeyboard does not shift the web layout, so a
+      # tap lands on a key instead.
+      - tapOn: 'Email address'
+      - inputText: ${MAESTRO_E2E_EMAIL}
+      - pressKey: Enter
+      - extendedWaitUntil:
+          visible: 'Password'
+          timeout: 30000
+      - tapOn: 'Password'
+      - inputText: ${MAESTRO_E2E_PASSWORD}
+      - pressKey: Enter
+      - waitForAnimationToEnd:
+          timeout: 8000
+      # iOS offers to store the password in the keychain after a successful
+      # submit. It only appears when the password is not already saved.
+      - runFlow:
+          when:
+            visible: '.*Save Password.*'
+          commands:
+            - tapOn: 'Not Now'
 
-# Auth0 New Universal Login is identifier-first: email, then password.
-- extendedWaitUntil:
-    visible: 'Email address'
-    timeout: 30000
-- tapOn: 'Email address'
-- inputText: ${MAESTRO_E2E_EMAIL}
-- tapOn: 'Continue'
 
-- extendedWaitUntil:
-    visible: 'Password'
-    timeout: 30000
-- tapOn: 'Password'
-- inputText: ${MAESTRO_E2E_PASSWORD}
-- tapOn: 'Continue'
+# Auth0 offers to enrol a passkey on a device it has not seen before. Decline,
+# so the account keeps working with the password these flows rely on.
+- runFlow:
+    when:
+      visible: 'Continue without passkeys'
+    commands:
+      - tapOn: 'Continue without passkeys'
+      - waitForAnimationToEnd:
+          timeout: 8000
 
-# First authorization of the API audience may present a consent screen.
+# Consent is asked once per user per app, so it is absent on later runs.
 - runFlow:
     when:
       visible: 'Accept'
