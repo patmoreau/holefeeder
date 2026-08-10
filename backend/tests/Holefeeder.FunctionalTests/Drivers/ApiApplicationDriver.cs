@@ -117,6 +117,19 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
                 return RestService.For<IUser>(httpClient, _refitSettings);
             });
 
+            services.AddSingleton<IUnregisteredUser>(_ =>
+            {
+                var userToken = new JwtTokenBuilder()
+                    .IssuedBy($"{AuthorityDriver.Authority}")
+                    .ForAudience("https://holefeeder-api.drifterapps.app")
+                    .WithScopes("read:user write:user")
+                    .WithClaim(ClaimTypes.NameIdentifier, TestUsers[UnregisteredUser].IdentityObjectId)
+                    .Build();
+                var httpClient = CreateClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userToken);
+                return RestService.For<IUnregisteredUser>(httpClient, _refitSettings);
+            });
+
             services.AddScoped<BudgetingDatabaseDriver>();
             if (UseDatabaseDriver)
             {

@@ -6,6 +6,7 @@ using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
 using Holefeeder.Domain.Features.Transactions;
+using Holefeeder.Domain.Features.Users;
 
 using Microsoft.AspNetCore.Http;
 
@@ -53,6 +54,7 @@ public static class ResultErrorExtensions
             { Code: TransactionErrors.CodeCategoryNotFound } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: TransactionErrors.CodeCategoryNameNotFound } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: SyncErrors.CodeTypeInvalid } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
+            { Code: UserErrors.CodeNotFound } => error.ToProblemDetails(StatusCodes.Status404NotFound),
             _ => error.ToProblemDetails(StatusCodes.Status500InternalServerError)
         };
 }

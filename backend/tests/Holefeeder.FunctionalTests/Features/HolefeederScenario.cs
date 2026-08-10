@@ -31,6 +31,7 @@ public abstract class HolefeederScenario : BaseScenario, IAsyncLifetime
         DatabaseDriver = _apiApplicationDriver.DatabaseDriver;
 
         TheUser = new UserSteps(_apiApplicationDriver);
+        TheUnregisteredUser = new UnregisteredUserSteps(_apiApplicationDriver);
         TheData = new DataSteps(DatabaseDriver);
         Account = new AccountSteps(DatabaseDriver);
         Cashflow = new CashflowSteps(DatabaseDriver);
@@ -40,6 +41,8 @@ public abstract class HolefeederScenario : BaseScenario, IAsyncLifetime
     }
 
     internal UserSteps TheUser { get; }
+
+    internal UnregisteredUserSteps TheUnregisteredUser { get; }
 
     internal DataSteps TheData { get; }
 

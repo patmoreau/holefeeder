@@ -48,6 +48,8 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
         Api.GetAccountsAsync(_faker.Random.Int(0, 5), _faker.Random.Int(1, 10), _faker.Random.WordsArray(3),
             _faker.Random.WordsArray(3)));
 
+    internal void GettingTheCurrentUser(IStepRunner runner) => runner.Execute(() => Api.GetCurrentUserAsync());
+
     internal void GettingCategories(IStepRunner runner) => runner.Execute(() => Api.GetCategoriesAsync());
 
     internal void GettingAccountTypes(IStepRunner runner) => runner.Execute(() => Api.GetAccountTypesAsync());

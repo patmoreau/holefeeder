@@ -9,6 +9,10 @@ public class UnauthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestO
     private readonly UnauthenticatedUserSteps _user = new(appDriver);
 
     [Fact]
+    public Task AttemptToGetTheCurrentUser() =>
+        ScenarioForUnauthenticatedUser("get the current user", _user.GettingTheCurrentUser);
+
+    [Fact]
     public Task AttemptToCloseAccount() => ScenarioForUnauthenticatedUser("close an account", _user.ClosingAnAccount);
 
     [Fact]

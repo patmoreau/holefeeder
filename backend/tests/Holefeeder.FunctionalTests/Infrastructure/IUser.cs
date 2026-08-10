@@ -2,6 +2,7 @@ using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.Users.Queries;
 using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Enumerations;
@@ -20,7 +21,19 @@ public interface IUnauthenticatedUser : IUser;
 
 public interface IForbiddenUser : IUser;
 
-public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IDashboard, IStatistics, IStoreItems, ITags, ITransactions, IPowerSync;
+/// <summary>
+///     Authenticated with a subject that has no user_identities row, which is what a
+///     first-time caller looks like.
+/// </summary>
+public interface IUnregisteredUser : IUsers;
+
+public interface IUser : IAccounts, ICategories, IEnumerations, IMyData, IPeriods, IDashboard, IStatistics, IStoreItems, ITags, ITransactions, IPowerSync, IUsers;
+
+public interface IUsers
+{
+    [Get("/api/v2/users/me")]
+    Task<IApiResponse<GetCurrentUser.Response>> GetCurrentUserAsync();
+}
 
 public interface IAccounts
 {
