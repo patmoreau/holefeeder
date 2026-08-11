@@ -23,7 +23,10 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
     {
         DbAdapter = DbAdapter.Postgres,
         SchemasToInclude = ["public", "hangfire"],
-        TablesToInclude = ["accounts", "cashflows", "categories", "store_items", "transactions"],
+        TablesToInclude =
+        [
+            "accounts", "cashflows", "categories", "store_items", "transactions", "users", "user_identities"
+        ],
         TablesToIgnore = ["schemaversions"],
         WithReseed = true
     };

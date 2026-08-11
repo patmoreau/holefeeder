@@ -145,6 +145,7 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
             if (UseDatabaseDriver)
             {
                 await _databaseDriver.ResetCheckpointAsync();
+                await SeedRegisteredUserAsync();
             }
         }
         catch (InvalidOperationException e)
@@ -160,13 +161,20 @@ public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplication
         {
             await _databaseDriver.InitializeAsync();
 
-            var user = UserBuilder.GivenAUser()
-                .WithId(TestUsers[AuthorizedUser].UserId)
-                .Build();
-            await UserIdentityBuilder.GivenAUserIdentity(user)
-                .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
-                .SavedInDbAsync(DatabaseDriver);
+            await SeedRegisteredUserAsync();
         }
+    }
+
+    // The reset wipes users and user_identities along with everything else, so the
+    // registered test user is seeded again after every reset rather than once.
+    private async Task SeedRegisteredUserAsync()
+    {
+        var user = UserBuilder.GivenAUser()
+            .WithId(TestUsers[AuthorizedUser].UserId)
+            .Build();
+        await UserIdentityBuilder.GivenAUserIdentity(user)
+            .WithIdentityObjectId(TestUsers[AuthorizedUser].IdentityObjectId)
+            .SavedInDbAsync(DatabaseDriver);
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()
