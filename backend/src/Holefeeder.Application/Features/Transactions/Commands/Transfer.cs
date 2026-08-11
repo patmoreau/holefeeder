@@ -19,9 +19,6 @@ namespace Holefeeder.Application.Features.Transactions.Commands;
 
 public class Transfer : ICarterModule
 {
-    public const string CategoryFromName = "Transfer Out";
-    public const string CategoryToName = "Transfer In";
-
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/transactions/transfer",
                 async (Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
@@ -62,18 +59,18 @@ public class Transfer : ICarterModule
         async _ =>
         {
             var categoryFrom = await context.Categories
-                .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == CategoryFromName,
+                .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == Category.TransferOutName,
                     cancellationToken);
             if (categoryFrom is null)
             {
-                return TransactionErrors.CategoryNameNotFound(CategoryFromName);
+                return TransactionErrors.CategoryNameNotFound(Category.TransferOutName);
             }
 
             var categoryTo = await context.Categories
-                .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == CategoryToName,
+                .FirstOrDefaultAsync(x => x.UserId == userContext.Id && x.Name == Category.TransferInName,
                     cancellationToken);
             return categoryTo is null
-                ? TransactionErrors.CategoryNameNotFound(CategoryToName)
+                ? TransactionErrors.CategoryNameNotFound(Category.TransferInName)
                 : (categoryFrom, categoryTo);
         };
 

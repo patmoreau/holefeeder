@@ -148,11 +148,11 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             var result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.FromAccountId);
             result.Should().NotBeNull().And.BeEquivalentTo(request, options =>
                 options.ExcludingMissingMembers());
-            result!.CategoryId.Should().Be(categories.First(x => x.Name == Transfer.CategoryFromName).Id);
+            result!.CategoryId.Should().Be(categories.First(x => x.Name == Category.TransferOutName).Id);
 
             result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.ToAccountId);
             result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
+            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Category.TransferInName).Id);
         });
 
     [AssertionMethod]
@@ -176,12 +176,12 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
             result.Should().NotBeNull().And.BeEquivalentTo(request, options =>
                 options.ExcludingMissingMembers().Excluding(x => x.Description));
             result!.Description.Should().Be($"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'");
-            result!.CategoryId.Should().Be(categories.First(x => x.Name == Transfer.CategoryFromName).Id);
+            result!.CategoryId.Should().Be(categories.First(x => x.Name == Category.TransferOutName).Id);
 
             result = await dbContext.Transactions.FirstOrDefaultAsync(x => x.AccountId == request.ToAccountId);
             result.Should().NotBeNull().And.BeEquivalentTo(request, options => options.ExcludingMissingMembers().Excluding(x => x.Description));
             result!.Description.Should().Be($"Transfer from '{fromAccount.Name}' to '{toAccount.Name}'");
-            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Transfer.CategoryToName).Id);
+            result!.CategoryId.Should().Be(categories.Last(x => x.Name == Category.TransferInName).Id);
         });
 
     [AssertionMethod]

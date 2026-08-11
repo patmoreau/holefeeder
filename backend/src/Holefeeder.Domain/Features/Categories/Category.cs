@@ -5,6 +5,11 @@ namespace Holefeeder.Domain.Features.Categories;
 
 public sealed partial record Category : IAggregateRoot<CategoryId>
 {
+    // The transfer feature resolves its categories by name, so these are part of the
+    // domain rather than of whichever endpoint happens to need them.
+    public const string TransferOutName = "Transfer Out";
+    public const string TransferInName = "Transfer In";
+
     private Category(CategoryId id, CategoryType type, string name, CategoryColor color, Money budgetAmount, UserId userId)
     {
         Id = id;
