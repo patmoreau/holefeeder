@@ -29,15 +29,25 @@ dotnet build DrifterApps.Holefeeder.slnx
 
 ### Test
 ```bash
-# All tests (excluding test helpers)
-dotnet test --settings .runsettings --filter "FullyQualifiedName!~Holefeeder.Tests.Common"
+# Unit tests
+dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 
-# Single test project
-dotnet test tests/Holefeeder.UnitTests/
+# Functional tests
+dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 
-# Single test by name filter
-dotnet test --filter "FullyQualifiedName~MyTestClass"
+# Single test class (VSTest's --filter is not available; the test platform
+# takes its own arguments after --)
+dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-class "*MyTestClass"
 ```
+
+> `--settings .runsettings` reports **"Zero tests ran"** — the projects run on
+> Microsoft.Testing.Platform, which ignores `.runsettings`. Pass the project path
+> instead.
+
+> **Podman (rootless, macOS):** the functional tests start Testcontainers, and Ryuk
+> fails with `making volume mountpoint … operation not supported`. Run them with
+> `TESTCONTAINERS_RYUK_DISABLED=true`, and make sure `DOCKER_HOST` points at the
+> podman machine socket (see the Docker section below).
 
 ### Lint
 ```bash
@@ -50,7 +60,7 @@ cd src/Holefeeder.Web/ClientApp && pnpm lint
 
 ### Code Coverage
 ```bash
-dotnet test --settings .runsettings --filter "FullyQualifiedName!~Holefeeder.Tests.Common"
+dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:coverage -filefilters:-*.g.cs
 ```
 

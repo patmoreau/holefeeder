@@ -45,23 +45,20 @@ production config carries it. Password-grant credentials live in a gitignored
 |---|---|---|---|
 | B1 | domain `User.Register(identityObjectId)` — user + identity minted together | `284e851e` | done |
 | B2 | `GET api/v2/users/me` — 200 / 404 / 401 | `8fcb6f4c` | done |
-| B3 | `POST api/v2/users/register` — 200 / 400 already-exists, policy `WriteUser`, user + identity only | | next |
-| B4 | register seeds system categories Transfer In / Transfer Out (`docs/business-rules/category.md`) | | |
+| B3 | `POST api/v2/users/register` — 200 / 400 already-exists, policy `WriteUser`, user + identity only | `d431839b`, `c10784de` | done |
+| B4 | register seeds system categories Transfer In / Transfer Out (`docs/business-rules/category.md`) | | next |
 | B5 | register seeds starter expense categories, non-system, `favorite=false` — list needed from Patrick | | |
 
 Existing production users are safe: `/me` answers 200 for them, register answers
 400, no migration needed.
 
-### Carried into B3
+### Still open
 
-- **E2E reset script**, deferred from B0.4. Wipes the `e2e-new@…` user's backend
-  rows so onboarding flows are repeatable. Needs that user's credentials in
-  `.env.e2e.local` and needs `/users/register` to exist before there is anything
-  meaningful to delete.
-- **`backend/CLAUDE.md` notes**: functional tests need
-  `TESTCONTAINERS_RYUK_DISABLED=true` under the local podman setup (Ryuk fails
-  with `making volume mountpoint … operation not supported`), plus the
-  `--filter-class` correction.
+- **E2E reset script**, deferred from B0.4 and again from B3. Wipes the
+  `e2e-new@…` user's backend rows so onboarding flows are repeatable.
+  `/users/register` now exists, so the only thing missing is that user's
+  credentials in `.env.e2e.local`.
+- ~~`backend/CLAUDE.md` test-command notes~~ — done alongside B3.
 
 ## Mobile
 
