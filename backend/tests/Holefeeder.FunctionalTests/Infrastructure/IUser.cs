@@ -2,6 +2,7 @@ using Holefeeder.Application.Features.Accounts.Commands;
 using Holefeeder.Application.Features.MyData.Models;
 using Holefeeder.Application.Features.Statistics.Queries;
 using Holefeeder.Application.Features.StoreItems.Queries;
+using Holefeeder.Application.Features.Users.Commands;
 using Holefeeder.Application.Features.Users.Queries;
 using Holefeeder.Application.Features.Tags.Queries;
 using Holefeeder.Application.Models;
@@ -33,6 +34,9 @@ public interface IUsers
 {
     [Get("/api/v2/users/me")]
     Task<IApiResponse<GetCurrentUser.Response>> GetCurrentUserAsync();
+
+    [Post("/api/v2/users/register")]
+    Task<IApiResponse<RegisterUser.Response>> RegisterUserAsync();
 }
 
 public interface IAccounts

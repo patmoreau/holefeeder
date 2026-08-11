@@ -13,4 +13,6 @@ namespace Holefeeder.FunctionalTests.StepDefinitions;
 internal sealed class UnregisteredUserSteps(IApplicationDriver applicationDriver) : ApiSteps<IUnregisteredUser>(applicationDriver)
 {
     internal void GetsTheCurrentUser(IStepRunner runner) => runner.Execute(() => Api.GetCurrentUserAsync());
+
+    internal void Registers(IStepRunner runner) => runner.Execute(() => Api.RegisterUserAsync());
 }

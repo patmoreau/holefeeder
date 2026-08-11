@@ -50,6 +50,8 @@ public abstract class AuthApiSteps<T>(IApplicationDriver applicationDriver) : Ap
 
     internal void GettingTheCurrentUser(IStepRunner runner) => runner.Execute(() => Api.GetCurrentUserAsync());
 
+    internal void RegisteringTheUser(IStepRunner runner) => runner.Execute(() => Api.RegisterUserAsync());
+
     internal void GettingCategories(IStepRunner runner) => runner.Execute(() => Api.GetCategoriesAsync());
 
     internal void GettingAccountTypes(IStepRunner runner) => runner.Execute(() => Api.GetAccountTypesAsync());

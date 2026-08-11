@@ -72,6 +72,8 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
 
     internal void GetsTheCurrentUser(IStepRunner runner) => runner.Execute(() => Api.GetCurrentUserAsync());
 
+    internal void Registers(IStepRunner runner) => runner.Execute(() => Api.RegisterUserAsync());
+
     internal void GetsCategories(IStepRunner runner) => runner.Execute(() => Api.GetCategoriesAsync());
 
     internal void GetsTheListOfAccountTypes(IStepRunner runner) => runner.Execute(() => Api.GetAccountTypesAsync());
