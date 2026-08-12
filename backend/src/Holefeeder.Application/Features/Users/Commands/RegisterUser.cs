@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Application.Context;
 using Holefeeder.Application.Extensions;
+using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.Users;
 
 using Microsoft.AspNetCore.Builder;
@@ -52,7 +53,14 @@ public class RegisterUser : ICarterModule
             return result.Error;
         }
 
+        var categories = Category.CreateSystemCategories(result.Value.Id);
+        if (categories.IsFailure)
+        {
+            return categories.Error;
+        }
+
         await context.Users.AddAsync(result.Value, cancellationToken);
+        await context.Categories.AddRangeAsync(categories.Value, cancellationToken);
 
         return new Response((Guid)result.Value.Id);
     }

@@ -10,6 +10,10 @@ public sealed partial record Category : IAggregateRoot<CategoryId>
     public const string TransferOutName = "Transfer Out";
     public const string TransferInName = "Transfer In";
 
+    // Blue-grey: these categories are plumbing, so they read as neutral next to the
+    // ones the user picks colours for.
+    public static CategoryColor SystemColor => CategoryColor.Create("#607D8B").Value;
+
     private Category(CategoryId id, CategoryType type, string name, CategoryColor color, Money budgetAmount, UserId userId)
     {
         Id = id;
