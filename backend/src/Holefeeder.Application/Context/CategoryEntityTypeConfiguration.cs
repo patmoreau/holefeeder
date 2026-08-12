@@ -56,5 +56,11 @@ internal class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Catego
             .HasColumnName("user_id")
             .HasConversion<StronglyTypedIdValueConverter<UserId>>()
             .IsRequired();
+        // fk_category_user exists in the database; without it in the model EF cannot
+        // know a category has to be inserted after the user that owns it.
+        builder
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId);
     }
 }
