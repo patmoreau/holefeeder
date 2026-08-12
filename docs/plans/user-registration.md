@@ -90,8 +90,8 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 | B6 | `ApiClient.get` + typed HTTP failures — statuses map to kebab-case `ApiErrors` codes instead of `statusText` | — | done (`f45a0a01`, `5f127e94`) |
 | B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | done (`015b5769`) |
 | B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` — written, tagged `onboarding`, **cannot run yet** | done (`87123722`) |
-| B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` | next |
-| B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync | `flows/onboarding/register.yaml` | |
+| B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` — passes | done (`51b865f3`) |
+| B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync | `flows/onboarding/register.yaml` | next |
 | B11 | Onboarding: budget period, reuses `BudgetSettingsForm`, writes `store_items` code=settings, removes the silent `DefaultSettings` fallback | `flows/onboarding/budget-period.yaml` | |
 | B12 | Onboarding: first account, reuses the account form, finish → `(app)` | `flows/onboarding/first-account.yaml` | |
 | B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | |
