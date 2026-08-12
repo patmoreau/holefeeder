@@ -1,9 +1,11 @@
 import { AuthenticationState, buildUrl, Logger, Result } from '@holefeeder/shared/core';
 import { ApiConfig } from '@/shared/api/api-config';
+import { apiErrorForStatus } from '@/shared/api/api-errors';
 
 const logger = Logger.create('api-client');
 
 export type ApiClient = {
+  get: <TOutput>(endpoint: string, req?: RequestInit) => Promise<Result<TOutput>>;
   post: <TInput, TOutput>(endpoint: string, data?: TInput, req?: RequestInit) => Promise<Result<TOutput>>;
 };
 
@@ -68,7 +70,7 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
       }
 
       if (!response.ok) {
-        return Result.failure([response.statusText]);
+        return Result.failure([apiErrorForStatus(response.status)]);
       }
 
       const contentLength = response.headers.get('content-length');
@@ -83,12 +85,16 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
     }
   };
 
+  const get = async <TOutput>(endpoint: string, req?: RequestInit): Promise<Result<TOutput>> =>
+    callApi<TOutput>(endpoint, { ...req, method: 'GET' });
+
   const post = async <TInput, TOutput>(endpoint: string, data?: TInput, req?: RequestInit): Promise<Result<TOutput>> => {
     const body = data ? JSON.stringify(data) : undefined;
     return callApi<TOutput>(endpoint, { ...req, method: 'POST', body });
   };
 
   return {
+    get: get,
     post: post,
   };
 };
