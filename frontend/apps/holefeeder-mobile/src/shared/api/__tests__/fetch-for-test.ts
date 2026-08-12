@@ -44,7 +44,9 @@ export const FetchForTest = (): FetchForTest => {
       ok: matchedPair.response.ok,
       statusText: matchedPair.response.statusText,
       headers: matchedPair.response.headers,
-      json: async () => body,
+      // Real Response.json() parses the body and hands back an object. Returning the
+      // raw string instead let a double parse in the client look correct in tests.
+      json: async () => JSON.parse(typeof body === 'string' ? body : JSON.stringify(body)),
     } as Response;
   };
 

@@ -75,7 +75,7 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
       const contentType = response.headers.get('content-type') ?? '';
       const hasBody = contentLength === null ? true : parseInt(contentLength, 10) > 0;
       const hasJsonBody = hasBody && contentType.includes('application/json');
-      const data = hasJsonBody ? JSON.parse(await response.json()) : undefined;
+      const data = hasJsonBody ? await response.json() : undefined;
       return Result.success(data as T);
     } catch (error) {
       const apiError = error as Error;
