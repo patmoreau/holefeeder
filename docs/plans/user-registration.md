@@ -47,10 +47,29 @@ production config carries it. Password-grant credentials live in a gitignored
 | B2 | `GET api/v2/users/me` — 200 / 404 / 401 | `8fcb6f4c` | done |
 | B3 | `POST api/v2/users/register` — 200 / 400 already-exists, policy `WriteUser`, user + identity only | `d431839b`, `c10784de` | done |
 | B4 | register seeds system categories Transfer In / Transfer Out (`docs/business-rules/category.md`) | `ba68c634`, `11078afc`, `e04d8b5a`, `25591cd9` | done |
-| B5 | register seeds starter expense categories, non-system, `favorite=false` — list needed from Patrick | | next |
+| ~~B5~~ | ~~register seeds starter expense categories~~ — **dropped**, moved to onboarding as B13 | | dropped |
 
 Existing production users are safe: `/me` answers 200 for them, register answers
 400, no migration needed.
+
+**The backend is complete.** Registration mints the user, its identity, and the
+two system transfer categories.
+
+### Why starter categories are not seeded
+
+B5 was built and reverted. Any name the backend writes is frozen text in a
+database row: a French user seeded with "Groceries" keeps it forever, and
+changing the app language later cannot fix it. Seeding from `Accept-Language`
+only moves the freeze to signup time.
+
+The client knows the locale, so the suggestions belong there — the same
+reasoning that already keeps budget period and first account out of
+registration. See B13.
+
+The transfer pair stays in the backend because `Transfer` resolves those two
+**by name**: they are identifiers, not labels. They are also visible in the
+category list, so a French user sees English there. That is a pre-existing wart,
+not something B5 introduced, and deserves its own batch.
 
 ### Still open
 
@@ -66,13 +85,19 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 
 | Batch | Work | Maestro flow | Status |
 |---|---|---|---|
-| B6 | `ApiClient.get` + HTTP status on failure (structural) — today every non-ok collapses to `Result.failure([statusText])`, so 404 is indistinguishable from 500 | — | |
+| B6 | `ApiClient.get` + HTTP status on failure (structural) — today every non-ok collapses to `Result.failure([statusText])`, so 404 is indistinguishable from 500 | — | next |
 | B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | |
 | B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` | |
 | B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` | |
 | B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync | `flows/onboarding/register.yaml` | |
 | B11 | Onboarding: budget period, reuses `BudgetSettingsForm`, writes `store_items` code=settings, removes the silent `DefaultSettings` fallback | `flows/onboarding/budget-period.yaml` | |
 | B12 | Onboarding: first account, reuses the account form, finish → `(app)` | `flows/onboarding/first-account.yaml` | |
+| B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | |
+
+B13 can sit anywhere in the onboarding sequence; after the first account is the
+natural spot, since categories are only useful once there is somewhere to spend
+from. Skipping it must leave a usable app — a user with no expense category can
+still create one from the normal category screen.
 
 The Angular `Holefeeder.Web` and `holefeeder-web` apps are untouched and inherit
 the endpoints later.
