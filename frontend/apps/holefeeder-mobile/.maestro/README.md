@@ -49,6 +49,21 @@ token request aborts the run with Auth0's reason; the password is never echoed.
 
 Quote any value containing spaces (`E2E_AUTH0_SCOPE`) — the file is sourced by `sh`.
 
+## The test user must be registered
+
+Since the app gates on registration, `E2E_EMAIL` needs a `users` row in whichever
+backend the flows point at, or every flow lands on onboarding instead of the app.
+A fresh local database has none. Register them once:
+
+```sh
+# with the local stack up, using a token minted the same way run.sh does
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  https://holefeeder.localtest.me/gateway/api/v2/users/register
+```
+
+Ready for a script — the same one that will wipe the never-registered user between
+onboarding runs.
+
 ## Tags
 
 | Tag          | Build           | Meaning                                                  |
