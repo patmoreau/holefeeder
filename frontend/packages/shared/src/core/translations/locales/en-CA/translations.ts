@@ -183,6 +183,12 @@ export const en = {
       message: 'Failed to save changes. Please try again.',
     },
   },
+  onboarding: {
+    registeringTitle: 'Setting up your account',
+    registeringSubtitle: 'This only takes a moment.',
+    registeringFailedTitle: 'We could not finish setting up',
+    registeringFailedMessage: 'Something went wrong while creating your account. Please try again.',
+  },
   errorSheet: {
     retry: 'Retry',
     dismiss: 'Dismiss',

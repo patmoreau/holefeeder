@@ -185,6 +185,12 @@ export const fr: TranslationStructure = {
       message: "Échec de l'enregistrement des modifications. Veuillez réessayer.",
     },
   },
+  onboarding: {
+    registeringTitle: 'Configuration de votre compte',
+    registeringSubtitle: 'Cela ne prend qu’un instant.',
+    registeringFailedTitle: 'La configuration n’a pas abouti',
+    registeringFailedMessage: 'Une erreur est survenue lors de la création de votre compte. Veuillez réessayer.',
+  },
   errorSheet: {
     retry: 'Réessayer',
     dismiss: 'Fermer',
