@@ -46,8 +46,8 @@ production config carries it. Password-grant credentials live in a gitignored
 | B1 | domain `User.Register(identityObjectId)` — user + identity minted together | `284e851e` | done |
 | B2 | `GET api/v2/users/me` — 200 / 404 / 401 | `8fcb6f4c` | done |
 | B3 | `POST api/v2/users/register` — 200 / 400 already-exists, policy `WriteUser`, user + identity only | `d431839b`, `c10784de` | done |
-| B4 | register seeds system categories Transfer In / Transfer Out (`docs/business-rules/category.md`) | | next |
-| B5 | register seeds starter expense categories, non-system, `favorite=false` — list needed from Patrick | | |
+| B4 | register seeds system categories Transfer In / Transfer Out (`docs/business-rules/category.md`) | `ba68c634`, `11078afc`, `e04d8b5a`, `25591cd9` | done |
+| B5 | register seeds starter expense categories, non-system, `favorite=false` — list needed from Patrick | | next |
 
 Existing production users are safe: `/me` answers 200 for them, register answers
 400, no migration needed.
