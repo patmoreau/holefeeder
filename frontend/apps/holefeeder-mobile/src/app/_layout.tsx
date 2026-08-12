@@ -86,7 +86,7 @@ const RootLayout = () => {
             <AuthProvider config={config.value.authConfig}>
               <PowerSyncAuthProvider database={database} config={config.value}>
                 <RepositoryProvider database={database}>
-                  <HolefeederContent />
+                  <HolefeederContent apiConfig={config.value.apiConfig} />
                 </RepositoryProvider>
               </PowerSyncAuthProvider>
             </AuthProvider>

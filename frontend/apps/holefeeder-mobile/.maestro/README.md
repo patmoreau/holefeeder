@@ -55,8 +55,15 @@ Quote any value containing spaces (`E2E_AUTH0_SCOPE`) — the file is sourced by
 | ------------ | --------------- | -------------------------------------------------------- |
 | `regression` | `ios:e2e`       | Session injected by link. Fast. Run on every change.      |
 | `auth`       | `ios:e2e:auth`  | Drives the hosted Auth0 pages. Slow, network-bound.       |
+| `onboarding` | `ios:e2e`       | **Not runnable yet.** Needs a never-registered user.      |
 
 An untagged flow runs under no tag and so is never executed — always tag.
+
+`onboarding` flows need a second Auth0 user who has never registered, plus a way to
+wipe that user's backend rows between runs. `run.sh` mints one token today, for the
+already-registered `E2E_EMAIL`. Until `E2E_NEW_EMAIL` / `E2E_NEW_PASSWORD` exist in
+`.env.e2e.local` and `run.sh` mints `MAESTRO_E2E_UNREGISTERED_TOKEN`, these flows are
+documentation rather than tests — which is why they are kept out of `regression`.
 
 ## Selectors
 
