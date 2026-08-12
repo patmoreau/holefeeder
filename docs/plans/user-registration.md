@@ -73,10 +73,12 @@ not something B5 introduced, and deserves its own batch.
 
 ### Still open
 
-- **E2E reset script**, deferred from B0.4 and again from B3. Wipes the
-  `e2e-new@…` user's backend rows so onboarding flows are repeatable.
-  `/users/register` now exists, so the only thing missing is that user's
-  credentials in `.env.e2e.local`.
+- **A never-registered E2E user.** Deferred from B0.4, B3, and now blocking B8's
+  Maestro flow — every onboarding flow from here needs a caller the backend has
+  never seen. Needs `E2E_NEW_EMAIL` / `E2E_NEW_PASSWORD` in `.env.e2e.local`,
+  `run.sh` minting `MAESTRO_E2E_UNREGISTERED_TOKEN`, and the reset script that
+  wipes that user's backend rows so the flows are repeatable. Everything else is
+  ready; only the credentials are missing.
 - ~~`backend/CLAUDE.md` test-command notes~~ — done alongside B3.
 
 ## Mobile
@@ -87,8 +89,8 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 |---|---|---|---|
 | B6 | `ApiClient.get` + typed HTTP failures — statuses map to kebab-case `ApiErrors` codes instead of `statusText` | — | done (`f45a0a01`, `5f127e94`) |
 | B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | done (`015b5769`) |
-| B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` | next |
-| B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` | |
+| B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` — written, tagged `onboarding`, **cannot run yet** | done (`87123722`) |
+| B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` | next |
 | B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync | `flows/onboarding/register.yaml` | |
 | B11 | Onboarding: budget period, reuses `BudgetSettingsForm`, writes `store_items` code=settings, removes the silent `DefaultSettings` fallback | `flows/onboarding/budget-period.yaml` | |
 | B12 | Onboarding: first account, reuses the account form, finish → `(app)` | `flows/onboarding/first-account.yaml` | |
