@@ -37,8 +37,10 @@ pnpm ios:deploy             # production build to physical device
 E2E tests use Maestro, and the two tags need different builds:
 `pnpm ios:e2e && pnpm test:e2e:ios` (tag `regression`, session injected by link) and
 `pnpm ios:e2e:auth && pnpm test:e2e:auth` (tag `auth`, real Auth0 pages). Both need a
-booted simulator, the local Docker stack, and credentials in `.env.e2e.local`
-(gitignored — copy `.env.e2e.template`). See `.maestro/README.md`.
+booted simulator, the local Docker stack, and credentials in `.maestro/.env.e2e.local`
+(gitignored — copy `.maestro/.env.e2e.template`). They live under `.maestro/` and not
+in the app root because Metro treats any `.env*.local` there as a source file and
+fails to bundle in dev. See `.maestro/README.md`.
 
 ## Architecture: Feature-Based Vertical Slices
 
@@ -260,4 +262,4 @@ This application enforces a testing strategy focused on high domain reliability 
   - User flows are verified using Maestro. Flows live in `.maestro/flows/`, reusable fragments in `.maestro/subflows/`.
   - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`, needs the `ios:e2e` build), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`, needs the `ios:e2e:auth` build). `run.sh` refuses to run a tag against the wrong build.
   - Select elements by `id:` (the `testID` prop), not by visible text — text is translated. Text selectors are only unavoidable inside the Auth0 pages.
-  - Credentials load from `.env.e2e.local` via `.maestro/run.sh`; see `.maestro/README.md`.
+  - Credentials load from `.maestro/.env.e2e.local` via `.maestro/run.sh`; see `.maestro/README.md`.

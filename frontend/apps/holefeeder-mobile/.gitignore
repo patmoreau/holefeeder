@@ -35,7 +35,10 @@ yarn-error.*
 # local env files
 .env*
 !.env.template
-!.env.e2e.template
+# Maestro credentials live under .maestro/ because Metro treats any .env*.local in
+# the app root as a source file and fails to bundle in dev.
+.maestro/.env*.local
+!.maestro/.env.e2e.template
 
 # typescript
 *.tsbuildinfo

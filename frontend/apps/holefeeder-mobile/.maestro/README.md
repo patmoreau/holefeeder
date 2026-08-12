@@ -33,10 +33,10 @@ that is what makes `clearState` safe. They point at the development endpoints
 
 ## Credentials
 
-`run.sh` reads `../.env.e2e.local`, which is gitignored. Create it once:
+`run.sh` reads `.env.e2e.local` next to it, which is gitignored. Create it once:
 
 ```bash
-cp .env.e2e.template .env.e2e.local
+cp .maestro/.env.e2e.template .maestro/.env.e2e.local
 ```
 
 Fill in the Auth0 dev-tenant user plus the dedicated E2E application (a Native app with
@@ -77,7 +77,7 @@ An untagged flow runs under no tag and so is never executed — always tag.
 `onboarding` flows need a second Auth0 user who has never registered, plus a way to
 wipe that user's backend rows between runs. `run.sh` mints one token today, for the
 already-registered `E2E_EMAIL`. Until `E2E_NEW_EMAIL` / `E2E_NEW_PASSWORD` exist in
-`.env.e2e.local` and `run.sh` mints `MAESTRO_E2E_UNREGISTERED_TOKEN`, these flows are
+`.maestro/.env.e2e.local` and `run.sh` mints `MAESTRO_E2E_UNREGISTERED_TOKEN`, these flows are
 documentation rather than tests — which is why they are kept out of `regression`.
 
 ## Selectors
