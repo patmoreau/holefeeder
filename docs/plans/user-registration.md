@@ -85,8 +85,8 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 
 | Batch | Work | Maestro flow | Status |
 |---|---|---|---|
-| B6 | `ApiClient.get` + HTTP status on failure (structural) — today every non-ok collapses to `Result.failure([statusText])`, so 404 is indistinguishable from 500 | — | next |
-| B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | |
+| B6 | `ApiClient.get` + typed HTTP failures — statuses map to kebab-case `ApiErrors` codes instead of `statusText` | — | done (`f45a0a01`, `5f127e94`) |
+| B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | next |
 | B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` | |
 | B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` | |
 | B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync | `flows/onboarding/register.yaml` | |
