@@ -19,6 +19,7 @@ import { PowerSyncAuthProvider } from '@/shared/persistence/presentation/PowerSy
 import { RepositoryProvider } from '@/shared/repositories/presentation/RepositoryContext';
 import { ThemeProvider } from '@/shared/theme/presentation/ThemeProvider';
 import { CombinedInsightProvider } from '@/statistics/presentation/CombinedInsightProvider';
+import { RegistrationProvider } from '@/user-registration/presentation/RegistrationProvider';
 
 Id.setGenerator(Crypto.randomUUID);
 Logger.setLoggerFactory(loggerFactoryForReactNative);
@@ -86,7 +87,9 @@ const RootLayout = () => {
             <AuthProvider config={config.value.authConfig}>
               <PowerSyncAuthProvider database={database} config={config.value}>
                 <RepositoryProvider database={database}>
-                  <HolefeederContent apiConfig={config.value.apiConfig} />
+                  <RegistrationProvider apiConfig={config.value.apiConfig}>
+                    <HolefeederContent />
+                  </RegistrationProvider>
                 </RepositoryProvider>
               </PowerSyncAuthProvider>
             </AuthProvider>

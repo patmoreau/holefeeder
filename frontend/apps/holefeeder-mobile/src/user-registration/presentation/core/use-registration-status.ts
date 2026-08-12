@@ -8,12 +8,12 @@ import { RegistrationStatus } from '@/user-registration/core/registration-status
 
 const logger = Logger.create('use-registration-status');
 
-export type RegistrationStatusState = {
+export type RegistrationState = {
   status: AsyncResult<RegistrationStatus>;
   recheck: () => void;
 };
 
-export const useRegistrationStatus = (apiConfig: ApiConfig): RegistrationStatusState => {
+export const useRegistrationStatus = (apiConfig: ApiConfig): RegistrationState => {
   const authenticationState = useAuth();
   const userId = authenticationState.user?.sub;
 

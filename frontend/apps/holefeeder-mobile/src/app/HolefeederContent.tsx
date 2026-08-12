@@ -1,19 +1,18 @@
 import { Logger } from '@holefeeder/shared/core';
 import { Stack } from 'expo-router';
-import { ApiConfig } from '@/shared/api/api-config';
 import { useAuth } from '@/shared/auth/core/use-auth';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { RegistrationStatuses } from '@/user-registration/core/registration-status';
-import { useRegistrationStatus } from '@/user-registration/presentation/core/use-registration-status';
 import { RegistrationError } from '@/user-registration/presentation/RegistrationError';
+import { useRegistration } from '@/user-registration/presentation/RegistrationProvider';
 
 const logger = Logger.create('HolefeederContent');
 
-export const HolefeederContent = ({ apiConfig }: { apiConfig: ApiConfig }) => {
+export const HolefeederContent = () => {
   logger.info('AppContent rendering');
   const { user, isLoading } = useAuth();
-  const { status, recheck } = useRegistrationStatus(apiConfig);
+  const { status, recheck } = useRegistration();
 
   useQuickActions();
 
