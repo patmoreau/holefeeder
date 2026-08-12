@@ -65,7 +65,7 @@ public sealed class BudgetingContext : DbContext, IUnitOfWork
     {
         try
         {
-            await _currentTransaction?.RollbackAsync(cancellationToken)!;
+            await (_currentTransaction?.RollbackAsync(cancellationToken) ?? Task.CompletedTask);
         }
         finally
         {
