@@ -15,7 +15,7 @@ tags:
 - runFlow: ../../subflows/launch-clean.yaml
 
 - assertVisible:
-    id: 'login-screen'
+    id: 'welcome-screen'
 - openLink: holefeeder://?e2e-auth-token=${MAESTRO_E2E_UNREGISTERED_TOKEN}
 
 - runFlow:

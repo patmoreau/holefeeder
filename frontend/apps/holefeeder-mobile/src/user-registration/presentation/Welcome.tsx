@@ -2,17 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useAuth } from '@/shared/auth/core/use-auth';
-import { AuthButton } from '@/shared/presentation/AuthButton';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
-import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppText } from '@/shared/presentation/components/native/AppText';
-import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
-const LoginScreen = () => {
-  const { isLoading } = useAuth();
+const WelcomeScreen = () => {
+  const { isLoading, login } = useAuth();
   const { theme } = useTheme();
 
   const { t } = useTranslation();
@@ -26,19 +24,25 @@ const LoginScreen = () => {
   }
 
   return (
-    <AppNative style={{ flex: 1 }} testID="login-screen">
+    <AppNative style={{ flex: 1 }} testID="welcome-screen">
       <AppColumn spacing={8} alignment={'center'}>
         <AppText variant={'title'} textStyle={{ color: theme.colors.secondaryText }}>
-          {t(tk.auth.loginTitle)}
+          {t(tk.auth.welcomeTitle)}
         </AppText>
         <AppText variant={'subtitle'} textStyle={{ color: theme.colors.secondaryText }}>
-          {t(tk.auth.loginSubtitle)}
+          {t(tk.auth.welcomeSubtitle)}
         </AppText>
-        <AuthButton />
-        <AppIcon name={AppIconMap.warning} style={{ paddingTop: 16 }} color={theme.colors.primary} />
+        {/* Both open the same Auth0 flow; only the page it lands on differs. */}
+        <AppButton
+          label={t(tk.auth.createAccountButton)}
+          variant="primary"
+          onPress={() => login({ signUp: true })}
+          testID="welcome-signup-button"
+        />
+        <AppButton label={t(tk.auth.signInButton)} variant="secondary" onPress={() => login()} testID="welcome-signin-button" />
       </AppColumn>
     </AppNative>
   );
 };
 
-export default LoginScreen;
+export default WelcomeScreen;

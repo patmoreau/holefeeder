@@ -1,0 +1,32 @@
+appId: com.drifterapps.holefeeder
+name: Create account opens Auth0 on the signup page
+tags:
+  - auth
+---
+# Stops at the hosted page instead of completing signup: finishing it would create
+# a real Auth0 user on every run, and nothing here can delete one. What this proves
+# is the part the app owns — that Create an account sends screen_hint=signup and
+# Auth0 honours it. Completing a signup end to end belongs with the
+# never-registered E2E user, alongside the onboarding flows.
+- runFlow: ../../subflows/launch-clean.yaml
+
+- assertVisible:
+    id: 'welcome-screen'
+- assertVisible:
+    id: 'welcome-signin-button'
+- tapOn:
+    id: 'welcome-signup-button'
+
+# iOS asks for consent before ASWebAuthenticationSession may share cookies with
+# the identity provider. Same sheet the sign-in subflow handles.
+- extendedWaitUntil:
+    visible: '.*Wants to Use.*to Sign In.*'
+    timeout: 15000
+- tapOn: 'Continue'
+
+# The signup page asks to create a password; the login page never does. If the
+# tenant is still on Classic Universal Login it ignores screen_hint and lands on
+# login instead, and this assertion is what catches that.
+- extendedWaitUntil:
+    visible: '(Create your account|Sign Up|Continue with your email)'
+    timeout: 30000

@@ -52,6 +52,10 @@ export const fr: TranslationStructure = {
     },
   },
   auth: {
+    welcomeTitle: 'Sachez où va votre argent',
+    welcomeSubtitle: 'Planifiez votre budget, inscrivez vos dépenses et voyez ce qu’il vous reste.',
+    signInButton: 'Se connecter',
+    createAccountButton: 'Créer un compte',
     loginTitle: 'Bienvenue',
     loginSubtitle: 'Veuillez vous connecter pour continuer',
     loginButton: 'Connexion',

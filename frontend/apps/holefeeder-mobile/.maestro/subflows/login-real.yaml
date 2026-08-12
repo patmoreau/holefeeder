@@ -7,9 +7,9 @@ name: Sign in through the real Auth0 Universal Login
 #
 # Requires MAESTRO_E2E_EMAIL / MAESTRO_E2E_PASSWORD (see .env.e2e.template).
 - assertVisible:
-    id: 'auth-login-button'
+    id: 'welcome-signin-button'
 - tapOn:
-    id: 'auth-login-button'
+    id: 'welcome-signin-button'
 
 # iOS asks for consent before ASWebAuthenticationSession may share cookies with
 # the identity provider. The sheet is a SpringBoard alert, not part of the app,

@@ -6,7 +6,7 @@ name: Start an authenticated session without touching Auth0
 #
 # MAESTRO_E2E_TOKEN is minted by .maestro/run.sh before Maestro starts.
 - assertVisible:
-    id: 'login-screen'
+    id: 'welcome-screen'
 - openLink: holefeeder://?e2e-auth-token=${MAESTRO_E2E_TOKEN}
 
 # iOS sometimes asks to confirm opening a custom scheme. The root-path link

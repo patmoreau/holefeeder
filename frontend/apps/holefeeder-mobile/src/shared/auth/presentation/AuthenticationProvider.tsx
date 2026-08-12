@@ -1,7 +1,8 @@
-import { AuthenticationState, TokenInfo } from '@holefeeder/shared/core';
+import { AuthenticationState, LoginOptions, TokenInfo } from '@holefeeder/shared/core';
 import React, { createContext, useCallback, useMemo } from 'react';
 import { Auth0Provider, useAuth0 } from 'react-native-auth0';
 import { AuthConfig } from '@/shared/auth/core/auth-config';
+import { authorizeParameters } from '@/shared/auth/core/authorize-parameters';
 import { DatabaseFactory } from '@/shared/persistence/db';
 
 export const AuthenticationContext = createContext<AuthenticationState | undefined>(undefined);
@@ -14,13 +15,12 @@ const InternalAuthenticationProvider = ({ children, config }: { children: React.
     return credentials ? { token: credentials.accessToken, expiresAt: credentials.expiresAt } : undefined;
   };
 
-  const login = useCallback(async () => {
-    await authorize({
-      scope: config.scope,
-      audience: config.audience,
-      redirectUrl: config.redirectUri,
-    });
-  }, [authorize, config.audience, config.redirectUri, config.scope]);
+  const login = useCallback(
+    async (options?: LoginOptions) => {
+      await authorize(authorizeParameters(config, options));
+    },
+    [authorize, config]
+  );
 
   const logout = useCallback(async () => {
     await DatabaseFactory.instance()?.disconnectAndClear();

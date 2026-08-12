@@ -6,7 +6,7 @@ tags:
 - runFlow: ../../subflows/launch-clean.yaml
 
 - assertVisible:
-    id: 'login-screen'
+    id: 'welcome-screen'
 
 - runFlow: ../../subflows/login-real.yaml
 

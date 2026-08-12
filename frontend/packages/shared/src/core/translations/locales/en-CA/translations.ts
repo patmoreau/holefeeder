@@ -50,6 +50,10 @@ export const en = {
     },
   },
   auth: {
+    welcomeTitle: 'Track where your money goes',
+    welcomeSubtitle: 'Plan your budget, record what you spend, and see what is left.',
+    signInButton: 'Sign in',
+    createAccountButton: 'Create an account',
     loginTitle: 'Welcome',
     loginSubtitle: 'Please login to continue',
     loginButton: 'Login',
