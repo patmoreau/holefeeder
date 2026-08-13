@@ -61,7 +61,7 @@ const PurchaseScreen = () => {
   };
 
   return (
-    <AppScreen>
+    <AppScreen testID="purchase-screen">
       <PurchaseFormProvider initialValue={initialData} validate={validatePurchaseForm} validateOnChange>
         <PurchaseForm accounts={accounts!} categories={categories!} tags={tags!} />
       </PurchaseFormProvider>

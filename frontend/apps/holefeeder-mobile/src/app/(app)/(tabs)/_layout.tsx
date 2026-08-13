@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
@@ -16,7 +17,11 @@ const TabsLayout = () => {
   return (
     <>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')} />
+        <AppToolbarButton
+          icon={AppIcon.select(AppIconMap.purchase)}
+          accessibilityLabel={t(tk.purchase.title)}
+          onPress={() => router.push('/(app)/Purchase')}
+        />
       </Stack.Toolbar>
       <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
         <NativeTabs.Trigger name="index">

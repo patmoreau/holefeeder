@@ -1,21 +1,25 @@
 import { Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { tk } from '@/i18n/translations';
 import { BudgetSettingsFormContent } from '@/settings/presentation/budget/BudgetSettingsFormContent';
 import { useSettingsForm } from '@/settings/presentation/core/use-settings-form';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 export const BudgetSettingsForm = () => {
+  const { t } = useTranslation();
   const { saveForm, isDirty, errors } = useSettingsForm();
   const { handleSave, handleCancel } = useFormActions({ saveForm, isDirty, errors });
 
   return (
     <>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.save)} onPress={handleSave} />
+        <AppToolbarButton icon={AppIcon.select(AppIconMap.save)} accessibilityLabel={t(tk.common.save)} onPress={handleSave} />
       </Stack.Toolbar>
       <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.back)} onPress={handleCancel} />
+        <AppToolbarButton icon={AppIcon.select(AppIconMap.back)} accessibilityLabel={t(tk.common.back)} onPress={handleCancel} />
       </Stack.Toolbar>
       <BudgetSettingsFormContent />
     </>

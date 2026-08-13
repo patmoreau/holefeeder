@@ -136,6 +136,7 @@ export const fr: TranslationStructure = {
     loading: 'Chargement...',
     error: 'Erreur',
     retry: 'Réessayer',
+    back: 'Retour',
     cancel: 'Annuler',
     save: 'Enregistrer',
     delete: 'Supprimer',

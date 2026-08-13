@@ -15,6 +15,7 @@ import { AppLoadingIndicator } from '@/shared/presentation/components/native/App
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { showAlert } from '@/shared/presentation/core/show-alert';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
@@ -47,7 +48,7 @@ export const ManageCategoriesScreen = () => {
 
   const toolbar = (
     <Stack.Toolbar placement="right">
-      <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.add)} onPress={onAdd} />
+      <AppToolbarButton icon={AppIcon.select(AppIconMap.add)} accessibilityLabel={t(tk.categoryEdit.addTitle)} onPress={onAdd} />
     </Stack.Toolbar>
   );
 

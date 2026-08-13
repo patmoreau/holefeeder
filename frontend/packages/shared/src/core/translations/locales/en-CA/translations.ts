@@ -134,6 +134,7 @@ export const en = {
     loading: 'Loading...',
     error: 'Error',
     retry: 'Retry',
+    back: 'Back',
     cancel: 'Cancel',
     save: 'Save',
     delete: 'Delete',

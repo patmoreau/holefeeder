@@ -2,6 +2,7 @@ import { Id, tk } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';
 import { TransactionCardList } from '@/accounts/presentation/components/TransactionCardList';
@@ -12,6 +13,7 @@ import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { goBack } from '@/shared/presentation/core/navigation';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
@@ -40,6 +42,7 @@ const createStyles = (theme: Theme) => ({
 });
 
 export const AccountScreen = () => {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const accountId = Id.valid(id);
   const styles = useStyles(createStyles);
@@ -75,7 +78,7 @@ export const AccountScreen = () => {
   return (
     <>
       <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.back)} onPress={() => goBack()} />
+        <AppToolbarButton icon={AppIcon.select(AppIconMap.back)} accessibilityLabel={t(tk.common.back)} onPress={() => goBack()} />
       </Stack.Toolbar>
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Menu icon={AppIcon.select(AppIconMap.menu)}>

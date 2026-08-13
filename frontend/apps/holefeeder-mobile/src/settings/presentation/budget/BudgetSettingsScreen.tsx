@@ -44,7 +44,7 @@ const BudgetSettingsScreen = () => {
   };
 
   return (
-    <AppScreen>
+    <AppScreen testID="budget-settings-screen">
       <SettingsFormProvider initialValue={initialData} validate={validateSettingsForm} validateOnChange>
         <BudgetSettingsForm />
       </SettingsFormProvider>
