@@ -141,7 +141,10 @@ the endpoints later.
 
 ## Known gap, outside this plan
 
-CI runs `pnpm turbo run typecheck`, but only `packages/shared` defines a
-`typecheck` script — the mobile app is never typechecked. Eight `tsc` errors in
-test files and helpers survive because of it. Adding `"typecheck": "tsc
---noEmit"` to the mobile package and fixing them deserves its own batch.
+~~The mobile app is never typechecked in CI~~ — **done** (`7b902d78`). The app
+defines `typecheck` now and the eight errors hiding behind the gap are fixed.
+
+One limit worth knowing: `.expo/` is gitignored, so CI typechecks without the
+generated route manifest and cannot catch a route path that does not exist. Code
+must compile both with and without it — a `@ts-expect-error` that only applies
+when the manifest is present becomes an error itself when it is not.
