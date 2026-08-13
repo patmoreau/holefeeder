@@ -1,0 +1,51 @@
+appId: com.drifterapps.holefeeder
+name: Signing out ends the Auth0 session, not just the local one
+tags:
+  - auth
+---
+# Signing out used to leave the Auth0 cookie in place, so the next sign-in resumed
+# the previous user without ever asking who was signing in. Reaching the email prompt
+# at the end is the whole point of this flow.
+- runFlow: ../../subflows/launch-clean.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'welcome-screen'
+    timeout: 30000
+- runFlow: ../../subflows/login-real.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000
+
+- tapOn: 'Settings'
+- extendedWaitUntil:
+    visible:
+      id: 'auth-logout-button'
+    timeout: 20000
+- tapOn:
+    id: 'auth-logout-button'
+
+# Signing out opens the same browser sheet as signing in, consent and all.
+- runFlow:
+    when:
+      visible: '.*Wants to Use.*to Sign In.*'
+    commands:
+      - tapOn: 'Continue'
+
+- extendedWaitUntil:
+    visible:
+      id: 'welcome-screen'
+    timeout: 30000
+
+- tapOn:
+    id: 'welcome-signin-button'
+- runFlow:
+    when:
+      visible: '.*Wants to Use.*to Sign In.*'
+    commands:
+      - tapOn: 'Continue'
+
+# Asked who is signing in, rather than resuming the last session.
+- extendedWaitUntil:
+    visible: 'Email address'
+    timeout: 30000

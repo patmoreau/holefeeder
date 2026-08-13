@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useMemo } from 'react';
 import { Auth0Provider, useAuth0 } from 'react-native-auth0';
 import { AuthConfig } from '@/shared/auth/core/auth-config';
 import { authorizeParameters } from '@/shared/auth/core/authorize-parameters';
+import { callbackSchemeOf } from '@/shared/auth/core/callback-scheme';
 import { isUserCancellation } from '@/shared/auth/core/is-user-cancellation';
 import { DatabaseFactory } from '@/shared/persistence/db';
 
@@ -39,7 +40,14 @@ const InternalAuthenticationProvider = ({ children, config }: { children: React.
   const logout = useCallback(async () => {
     await DatabaseFactory.instance()?.disconnectAndClear();
     try {
-      await clearSession({ returnToUrl: config.logoutRedirectUri }, {});
+      // Both halves must agree. The SDK derives the browser session's callback
+      // scheme from the bundle identifier, but the configured logout URI carries a
+      // different one (…holefeeder-react… against a bundle of …holefeeder), so Auth0
+      // redirected to a scheme nothing was listening on: the round trip never
+      // finished and the Auth0 cookie survived, which is why the next sign-in
+      // silently reused the previous user. Letting the SDK pick both instead fails
+      // too — that URL is not in the tenant's Allowed Logout URLs.
+      await clearSession({ returnToUrl: config.logoutRedirectUri }, { customScheme: callbackSchemeOf(config.logoutRedirectUri) });
     } catch (error) {
       // Same story as login: the sign-out sheet can be dismissed, and that is not an
       // error either.
