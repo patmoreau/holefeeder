@@ -73,12 +73,10 @@ not something B5 introduced, and deserves its own batch.
 
 ### Still open
 
-- **A never-registered E2E user.** Deferred from B0.4, B3, and now blocking B8's
-  Maestro flow — every onboarding flow from here needs a caller the backend has
-  never seen. Needs `E2E_NEW_EMAIL` / `E2E_NEW_PASSWORD` in `.env.e2e.local`,
-  `run.sh` minting `MAESTRO_E2E_UNREGISTERED_TOKEN`, and the reset script that
-  wipes that user's backend rows so the flows are repeatable. Everything else is
-  ready; only the credentials are missing.
+- ~~A never-registered E2E user~~ — **done** (`f9639d49`). `E2E_NEW_EMAIL` /
+  `E2E_NEW_PASSWORD` are in place, `run.sh` mints a second token, and
+  `reset-new-user.sh` wipes that user's rows before *each* onboarding flow. All
+  four onboarding flows run for real: `pnpm test:e2e:onboarding`.
 - ~~`backend/CLAUDE.md` test-command notes~~ — done alongside B3.
 
 ## Mobile
@@ -89,19 +87,20 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 |---|---|---|---|
 | B6 | `ApiClient.get` + typed HTTP failures — statuses map to kebab-case `ApiErrors` codes instead of `statusText` | — | done (`f45a0a01`, `5f127e94`) |
 | B7 | `users-api` + `CheckRegistrationUseCase` / `RegisterUserUseCase` in the existing `user-registration/` module | — | done (`015b5769`) |
-| B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` — written, tagged `onboarding`, **cannot run yet** | done (`87123722`) |
+| B8 | 3-way gate in `HolefeederContent`: no user → `(auth)`, unregistered → `(onboarding)`, registered → `(app)` | `flows/onboarding/gate.yaml` — passes | done (`87123722`) |
 | B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` — passes | done (`51b865f3`) |
-| B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync (capped — see below) | `flows/onboarding/register.yaml` — written, **cannot run yet** | done (`50710a59`, `3fdfc889`) |
-| B11 | Onboarding: budget period, reuses `BudgetSettingsFormContent`, writes `store_items` code=settings | `flows/onboarding/budget-period.yaml` — written, **cannot run in CI yet** | done (`25e29d47`, `f6d49503`) |
-| B12 | Onboarding: first account, reuses the account form, finish → `(app)`. Takes over opening the gate from B11 | `flows/onboarding/first-account.yaml` — written, **cannot run in CI yet** | done (`24a3ead2`) |
+| B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync (capped — see below) | `flows/onboarding/register.yaml` — passes | done (`50710a59`, `3fdfc889`) |
+| B11 | Onboarding: budget period, reuses `BudgetSettingsFormContent`, writes `store_items` code=settings | `flows/onboarding/budget-period.yaml` — passes | done (`25e29d47`, `f6d49503`) |
+| B12 | Onboarding: first account, reuses the account form, finish → `(app)`. Takes over opening the gate from B11 | `flows/onboarding/first-account.yaml` — passes | done (`24a3ead2`) |
 | B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | next |
 
 ### Two traps in this part of the app
 
 **Toolbar buttons cannot be selected by id.** `Stack.Toolbar.Button` accepts no
 `testID` — the type system rejects it — and it carries an icon, so neither selector
-this repo prefers works. The budget period flow taps it by position as a result.
-Wrapping it the way the `App*` components are wrapped is the real fix.
+this repo prefers works. The onboarding steps put their action in a form row instead,
+which carries an id. Wrapping `Stack.Toolbar.Button` the way the `App*` components
+are wrapped would let the app's own form screens be driven too.
 
 **Maestro cannot type into a field without an id.** Tapping the visible label hits
 the label, and the text goes nowhere; the form then refuses to save for a missing
