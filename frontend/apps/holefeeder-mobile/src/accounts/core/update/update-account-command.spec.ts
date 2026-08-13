@@ -1,4 +1,15 @@
-import { DateOnly, DateOnlyErrors, FavoriteErrors, Id, IdErrors, InactiveErrors, Variation, VariationErrors } from '@holefeeder/shared/core';
+import {
+  DateOnly,
+  DateOnlyErrors,
+  Favorite,
+  FavoriteErrors,
+  Id,
+  IdErrors,
+  Inactive,
+  InactiveErrors,
+  Variation,
+  VariationErrors,
+} from '@holefeeder/shared/core';
 import { AccountErrors } from '@/accounts/core/account';
 import { AccountType, AccountTypeErrors } from '@/accounts/core/account-type';
 import { anUpdateAccountCommand } from '@/accounts/core/update/__tests__/update-account-command-for-test';
@@ -48,7 +59,7 @@ describe('UpdateAccountCommand', () => {
   it('returns failure if favorite is invalid', () => {
     const result = UpdateAccountCommand.create(
       anUpdateAccountCommand({
-        favorite: 'not-a-boolean' as unknown as boolean,
+        favorite: 'not-a-boolean' as unknown as Favorite,
       })
     );
     expect(result).toBeFailureWithErrors([FavoriteErrors.invalid]);
@@ -57,7 +68,7 @@ describe('UpdateAccountCommand', () => {
   it('returns failure if inactive is invalid', () => {
     const result = UpdateAccountCommand.create(
       anUpdateAccountCommand({
-        inactive: 'not-a-boolean' as unknown as boolean,
+        inactive: 'not-a-boolean' as unknown as Inactive,
       })
     );
     expect(result).toBeFailureWithErrors([InactiveErrors.invalid]);

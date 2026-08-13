@@ -18,8 +18,10 @@ export const TestSection = ({ show, setShow }: { show: boolean; setShow: Dispatc
             label={t(tk.testSection.goTo)}
             variant={'link'}
             onPress={() => {
-              // @ts-expect-error -- route not in typed manifest
-              router.push({ pathname: '/+not-found' });
+              // params, because the generated route manifest declares them required
+              // here. Without it the call has to typecheck too: CI has no generated
+              // types, and a @ts-expect-error would then be an error itself.
+              router.push({ pathname: '/+not-found', params: {} });
             }}
           />
         </AppField>

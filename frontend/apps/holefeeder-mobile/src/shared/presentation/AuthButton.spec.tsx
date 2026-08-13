@@ -32,7 +32,7 @@ xdescribe('<AuthButton />', () => {
     });
 
     it('invokes logout method when clicked', () => {
-      act(() => fireEvent.press(screen.queryByRole('button', { name: /auth.logoutButton/i })));
+      act(() => fireEvent.press(screen.getByRole('button', { name: /auth.logoutButton/i })));
 
       expect(mockLogout).toHaveBeenCalled();
     });
@@ -58,7 +58,7 @@ xdescribe('<AuthButton />', () => {
     });
 
     it('invokes login method when clicked', () => {
-      act(() => fireEvent.press(screen.queryByRole('button', { name: /auth.loginButton/i })));
+      act(() => fireEvent.press(screen.getByRole('button', { name: /auth.loginButton/i })));
 
       expect(mockLogin).toHaveBeenCalled();
     });

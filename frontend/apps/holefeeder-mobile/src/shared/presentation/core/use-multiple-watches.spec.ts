@@ -23,7 +23,7 @@ describe('useMultipleWatches', () => {
     });
 
     it('uses the default value for a loading watch wrapped with withDefault', async () => {
-      const { result } = await renderHook(() => useMultipleWatches({ a: withDefault(() => Result.loading<string>(), 'fallback') }));
+      const { result } = await renderHook(() => useMultipleWatches({ a: withDefault(() => Result.loading(), 'fallback') }));
 
       expect(result.current.data.a).toBe('fallback');
     });

@@ -120,9 +120,13 @@ export class DatabaseAdapterForTest extends BaseObserver<DBAdapterListener> impl
 
   async refreshSchema(): Promise<void> {}
 
-  async commit(): Promise<void> {}
+  async commit(): Promise<QueryResult> {
+    return { rowsAffected: 0 };
+  }
 
-  async rollback(): Promise<void> {}
+  async rollback(): Promise<QueryResult> {
+    return { rowsAffected: 0 };
+  }
 
   close(): void {
     this.db.close();
