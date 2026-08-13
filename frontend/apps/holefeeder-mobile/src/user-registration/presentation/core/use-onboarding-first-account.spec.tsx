@@ -1,19 +1,16 @@
 import { Result } from '@holefeeder/shared/core';
 import { act, renderHook } from '@testing-library/react-native';
-import { router } from 'expo-router';
 import React from 'react';
 import { RegistrationStatuses } from '@/user-registration/core/registration-status';
-import { useOnboardingBudgetPeriod } from '@/user-registration/presentation/core/use-onboarding-budget-period';
+import { useOnboardingFirstAccount } from '@/user-registration/presentation/core/use-onboarding-first-account';
 import { Registration, RegistrationContext } from '@/user-registration/presentation/RegistrationProvider';
 
-jest.mock('expo-router', () => ({ router: { replace: jest.fn() } }));
-
 const mockSaveForm = jest.fn();
-jest.mock('@/settings/presentation/core/use-settings-form', () => ({
-  useSettingsForm: () => ({ saveForm: mockSaveForm }),
+jest.mock('@/accounts/presentation/core/use-edit-account-form', () => ({
+  useEditAccountForm: () => ({ saveForm: mockSaveForm }),
 }));
 
-describe('useOnboardingBudgetPeriod', () => {
+describe('useOnboardingFirstAccount', () => {
   const aRegistration = (overrides?: Partial<Registration>): Registration => ({
     status: Result.success(RegistrationStatuses.notRegistered),
     recheck: jest.fn(),
@@ -23,7 +20,7 @@ describe('useOnboardingBudgetPeriod', () => {
   });
 
   const createHook = async (registration: Registration) =>
-    renderHook(() => useOnboardingBudgetPeriod(), {
+    renderHook(() => useOnboardingFirstAccount(), {
       wrapper: ({ children }: { children: React.ReactNode }) => (
         <RegistrationContext.Provider value={registration}>{children}</RegistrationContext.Provider>
       ),
@@ -31,10 +28,9 @@ describe('useOnboardingBudgetPeriod', () => {
 
   beforeEach(() => {
     mockSaveForm.mockReset();
-    (router.replace as jest.Mock).mockReset();
   });
 
-  it('saves the budget period and moves on to the first account', async () => {
+  it('saves the account and lets the caller into the app', async () => {
     mockSaveForm.mockResolvedValue(true);
     const registration = aRegistration();
 
@@ -44,19 +40,7 @@ describe('useOnboardingBudgetPeriod', () => {
     });
 
     expect(mockSaveForm).toHaveBeenCalledTimes(1);
-    expect(router.replace).toHaveBeenCalledWith('/FirstAccount');
-  });
-
-  it('does not open the gate itself — the account step does that', async () => {
-    mockSaveForm.mockResolvedValue(true);
-    const registration = aRegistration();
-
-    const { result } = await createHook(registration);
-    await act(async () => {
-      await result.current.finish();
-    });
-
-    expect(registration.recheck).not.toHaveBeenCalled();
+    expect(registration.recheck).toHaveBeenCalledTimes(1);
   });
 
   it('keeps the caller on the step when the form will not save', async () => {
@@ -68,7 +52,7 @@ describe('useOnboardingBudgetPeriod', () => {
       await result.current.finish();
     });
 
-    expect(router.replace).not.toHaveBeenCalled();
+    expect(registration.recheck).not.toHaveBeenCalled();
   });
 
   it('reports saving so the button can be disabled', async () => {

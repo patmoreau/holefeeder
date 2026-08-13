@@ -1,6 +1,7 @@
 import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { Account } from '@/accounts/core/account';
 import { AccountsRepository } from '@/accounts/core/accounts-repository';
+import { CreateAccountCommand } from '@/accounts/core/create/create-account-command';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 
 export type AccountsRepositoryInMemory = AccountsRepository & {
@@ -8,11 +9,13 @@ export type AccountsRepositoryInMemory = AccountsRepository & {
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
   updatedCommands: () => UpdateAccountCommand[];
+  createdCommands: () => CreateAccountCommand[];
 };
 
 export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
   const itemsInMemory: Account[] = [];
   const updatedCommandsInMemory: UpdateAccountCommand[] = [];
+  const createdCommandsInMemory: CreateAccountCommand[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -25,6 +28,14 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
       onDataChange(Result.success(itemsInMemory));
     }
     return () => {};
+  };
+
+  const create = async (command: CreateAccountCommand): Promise<Result<Id>> => {
+    createdCommandsInMemory.push(command);
+    if (errorsInMemory.length > 0) return Result.failure(errorsInMemory);
+    const id = Id.newId();
+    itemsInMemory.push(Account.valid({ ...command, id, inactive: false }));
+    return Result.success(id);
   };
 
   const update = async (command: UpdateAccountCommand): Promise<Result<Id>> => {
@@ -44,5 +55,7 @@ export const AccountsRepositoryInMemory = (): AccountsRepositoryInMemory => {
 
   const updatedCommands = () => updatedCommandsInMemory;
 
-  return { watch, update, add, isLoading, isFailing, updatedCommands };
+  const createdCommands = () => createdCommandsInMemory;
+
+  return { watch, create, update, add, isLoading, isFailing, updatedCommands, createdCommands };
 };

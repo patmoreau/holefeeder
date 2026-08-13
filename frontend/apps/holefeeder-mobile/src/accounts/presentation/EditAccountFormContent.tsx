@@ -30,7 +30,12 @@ export const EditAccountFormContent = () => {
           label={t(tk.accountEdit.name)}
           error={errors.name ? t(tk.accountEdit.errors.nameRequired) : undefined}
         >
-          <AppTextInput placeholder={t(tk.accountEdit.name)} value={formData.name} onChangeText={(value) => updateFormField('name', value)} />
+          <AppTextInput
+            placeholder={t(tk.accountEdit.name)}
+            value={formData.name}
+            onChangeText={(value) => updateFormField('name', value)}
+            testID="account-name-input"
+          />
         </AppField>
         <AppField icon={AppIconMap.category} label={t(tk.accountEdit.type)}>
           <AppPicker
@@ -56,9 +61,14 @@ export const EditAccountFormContent = () => {
         <AppField icon={AppIconMap.add} label={t(tk.accountEdit.favorite)}>
           <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
         </AppField>
-        <AppField icon={AppIconMap.close} label={t(tk.accountEdit.inactive)}>
-          <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
-        </AppField>
+        {/* An account that does not exist yet cannot be inactive, and offering the
+            choice during onboarding would let someone start with an account the app
+            then hides from them. Deactivating is for accounts that already exist. */}
+        {formData.id !== null && (
+          <AppField icon={AppIconMap.close} label={t(tk.accountEdit.inactive)}>
+            <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
+          </AppField>
+        )}
       </AppFieldSection>
     </AppForm>
   );

@@ -60,7 +60,7 @@ describe('saveAccount', () => {
 
   it('maps the form data to an update command and saves it', async () => {
     const formData = aFormData();
-    accountRepository.add(anAccount({ id: formData.id }));
+    accountRepository.add(anAccount({ id: formData.id ?? undefined }));
 
     const result = await saveAccount(aRepositoriesState({ accountRepository }), formData);
 
@@ -90,7 +90,7 @@ describe('saveAccount', () => {
 
   it('propagates a repository failure after dispatching the command', async () => {
     const formData = aFormData();
-    accountRepository.add(anAccount({ id: formData.id }));
+    accountRepository.add(anAccount({ id: formData.id ?? undefined }));
     accountRepository.isFailing(['boom']);
 
     const result = await saveAccount(aRepositoriesState({ accountRepository }), formData);

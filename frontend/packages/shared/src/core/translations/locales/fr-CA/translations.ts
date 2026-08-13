@@ -189,6 +189,7 @@ export const fr: TranslationStructure = {
     budgetPeriodTitle: 'Quand débute votre budget ?',
     budgetPeriodSubtitle: 'Holefeeder regroupe vos dépenses par période. Vous pourrez le modifier plus tard dans les paramètres.',
     budgetPeriodContinue: 'Continuer',
+    firstAccountTitle: 'Ajoutez votre premier compte',
     registeringTitle: 'Configuration de votre compte',
     registeringSubtitle: 'Cela ne prend qu’un instant.',
     registeringFailedTitle: 'La configuration n’a pas abouti',
