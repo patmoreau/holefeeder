@@ -1,0 +1,28 @@
+appId: com.drifterapps.holefeeder
+name: Backing out of Auth0 leaves the app on the welcome screen
+tags:
+  - auth
+---
+# Cancelling used to surface as "Uncaught (in promise) USER_CANCELLED" — a red error
+# for someone who simply changed their mind.
+- runFlow: ../../subflows/launch-clean.yaml
+
+- assertVisible:
+    id: 'welcome-screen'
+- tapOn:
+    id: 'welcome-signup-button'
+
+- extendedWaitUntil:
+    visible: '.*Wants to Use.*to Sign In.*'
+    timeout: 15000
+- tapOn: 'Cancel'
+
+# Still on the welcome screen, still usable: both ways in are offered again.
+- extendedWaitUntil:
+    visible:
+      id: 'welcome-screen'
+    timeout: 15000
+- assertVisible:
+    id: 'welcome-signup-button'
+- assertVisible:
+    id: 'welcome-signin-button'
