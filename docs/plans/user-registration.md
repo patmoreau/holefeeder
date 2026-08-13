@@ -92,7 +92,7 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 | B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync (capped — see below) | `flows/onboarding/register.yaml` — passes | done (`50710a59`, `3fdfc889`) |
 | B11 | Onboarding: budget period, reuses `BudgetSettingsFormContent`, writes `store_items` code=settings | `flows/onboarding/budget-period.yaml` — passes | done (`25e29d47`, `f6d49503`) |
 | B12 | Onboarding: first account, reuses the account form, finish → `(app)`. Takes over opening the gate from B11 | `flows/onboarding/first-account.yaml` — passes | done (`24a3ead2`) |
-| B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | next |
+| B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts or drops, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` — passes | done (`a5dd3366`) |
 
 ### Two traps in this part of the app
 
@@ -123,10 +123,18 @@ onboarding screen forever, which is what the first end-to-end run did. Reconnect
 PowerSync after registering would be the stricter fix if the empty-dashboard moment
 ever becomes a problem.
 
-B13 can sit anywhere in the onboarding sequence; after the first account is the
-natural spot, since categories are only useful once there is somewhere to spend
-from. Skipping it must leave a usable app — a user with no expense category can
-still create one from the normal category screen.
+**The feature is complete.** A new user signs up, is registered, sets a budget
+period, adds an account, picks categories, and lands in the app — every step
+covered by a flow that runs.
+
+Renaming a suggestion in place was dropped from B13: the switches accept or drop
+each one, and renaming is what the category screen already does well.
+
+One characteristic of the suite, not the app: a flow that finishes and hands
+straight over to the next can lose its last writes, because `clearState` wipes the
+local database before PowerSync has uploaded them. The flows assert what is on
+screen, so they pass either way — checking the backend afterwards needs a moment's
+grace.
 
 The Angular `Holefeeder.Web` and `holefeeder-web` apps are untouched and inherit
 the endpoints later.
