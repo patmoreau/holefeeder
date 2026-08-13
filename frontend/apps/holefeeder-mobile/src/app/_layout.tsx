@@ -3,7 +3,7 @@ import '@azure/core-asynciterator-polyfill';
 import { Id, Logger } from '@holefeeder/shared/core';
 import { PowerSyncDatabase } from '@powersync/react-native';
 import * as Crypto from 'expo-crypto';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import { HolefeederContent } from '@/app/HolefeederContent';
@@ -69,7 +69,10 @@ const RootLayout = () => {
     };
   }, []);
 
-  const config = HolefeederConfig.parseEnv();
+  // Parsing on every render handed out a fresh apiConfig object each time, which
+  // re-ran the registration check on every render — enough re-checks that the gate
+  // noticed registration on its own and skipped the rest of onboarding.
+  const config = useMemo(() => HolefeederConfig.parseEnv(), []);
   if (config.isFailure) {
     logger.error('Error parsing config', config.errors);
     return <></>;
