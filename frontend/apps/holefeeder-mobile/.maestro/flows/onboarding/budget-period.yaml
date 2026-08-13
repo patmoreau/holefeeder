@@ -1,0 +1,39 @@
+appId: com.drifterapps.holefeeder
+name: A new user sets their budget period before entering the app
+tags:
+  - onboarding
+---
+# NOT RUNNABLE YET — same blocker as gate.yaml and register.yaml: it needs the
+# never-registered `e2e-new@…` user and a reset between runs.
+- runFlow: ../../subflows/launch-clean.yaml
+
+- assertVisible:
+    id: 'welcome-screen'
+- openLink: holefeeder://?e2e-auth-token=${MAESTRO_E2E_UNREGISTERED_TOKEN}
+
+- runFlow:
+    when:
+      visible: '.*Open in .*'
+    commands:
+      - tapOn: '^Open$'
+
+# Registering hands over to the budget period rather than opening the app.
+- extendedWaitUntil:
+    visible:
+      id: 'onboarding-budget-period-screen'
+    timeout: 90000
+- assertNotVisible:
+    id: 'dashboard-screen'
+
+# By position, against this repo's own rule of selecting by id: the save action is an
+# expo-router Stack.Toolbar.Button, which does not forward testID to
+# accessibilityIdentifier the way the App* wrappers do, and it is an icon so there is
+# no text to match either. Wrapping Stack.Toolbar.Button the way the other native
+# components are wrapped would fix this properly.
+- tapOn:
+    point: '93%,7%'
+
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000

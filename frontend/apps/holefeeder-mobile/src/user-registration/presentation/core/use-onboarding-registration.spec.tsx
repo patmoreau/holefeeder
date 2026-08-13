@@ -79,18 +79,19 @@ describe('useOnboardingRegistration', () => {
 
     await waitFor(() => expect(registration.register).toHaveBeenCalled());
     expect(result.current.progress).toBeLoading();
-    expect(registration.recheck).not.toHaveBeenCalled();
+    expect(result.current.ready).toBe(false);
   });
 
   it('ignores a sync that finished before registering', async () => {
     lastSyncedAt(new Date('2020-01-01T00:00:00Z'));
     const registration = aRegistration({ registration: Result.success() });
 
-    await createHook(registration);
+    const hook = await createHook(registration);
 
+    const { result } = hook;
     await waitFor(() => expect(registration.register).toHaveBeenCalled());
     // Before the cap elapses, an older sync must not count as this user's data.
-    expect(registration.recheck).not.toHaveBeenCalled();
+    expect(result.current.ready).toBe(false);
   });
 
   it('goes in anyway when the first sync never arrives', async () => {
@@ -98,30 +99,40 @@ describe('useOnboardingRegistration', () => {
     try {
       const registration = aRegistration({ registration: Result.success() });
 
-      const { rerender } = await createHook(registration);
+      const { result, rerender } = await createHook(registration);
       await waitFor(() => expect(registration.register).toHaveBeenCalled());
-      expect(registration.recheck).not.toHaveBeenCalled();
+      expect(result.current.ready).toBe(false);
 
       await act(async () => {
         jest.advanceTimersByTime(SyncWaitInMilliseconds);
       });
       await act(async () => rerender({}));
 
-      expect(registration.recheck).toHaveBeenCalledTimes(1);
+      expect(result.current.ready).toBe(true);
     } finally {
       jest.useRealTimers();
     }
   });
 
-  it('advances once data has synced', async () => {
+  it('is ready once data has synced', async () => {
     const registration = aRegistration({ registration: Result.success() });
 
-    const { rerender } = await createHook(registration);
+    const { result, rerender } = await createHook(registration);
     await waitFor(() => expect(registration.register).toHaveBeenCalled());
 
     lastSyncedAt(new Date(Date.now() + 1000));
     await act(async () => rerender({}));
 
-    await waitFor(() => expect(registration.recheck).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+  });
+
+  it('never opens the gate itself — onboarding is not finished here', async () => {
+    const registration = aRegistration({ registration: Result.success() });
+
+    const { rerender } = await createHook(registration);
+    lastSyncedAt(new Date(Date.now() + 1000));
+    await act(async () => rerender({}));
+
+    expect(registration.recheck).not.toHaveBeenCalled();
   });
 });

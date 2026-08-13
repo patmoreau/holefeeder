@@ -184,6 +184,9 @@ export const en = {
     },
   },
   onboarding: {
+    budgetPeriodTitle: 'When does your budget start?',
+    budgetPeriodSubtitle: 'Holefeeder groups your spending into periods. You can change this later in settings.',
+    budgetPeriodContinue: 'Continue',
     registeringTitle: 'Setting up your account',
     registeringSubtitle: 'This only takes a moment.',
     registeringFailedTitle: 'We could not finish setting up',

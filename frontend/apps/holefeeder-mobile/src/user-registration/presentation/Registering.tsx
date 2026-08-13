@@ -1,4 +1,5 @@
-import React from 'react';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
@@ -10,9 +11,16 @@ import { useTheme } from '@/shared/theme/core/use-theme';
 import { useOnboardingRegistration } from '@/user-registration/presentation/core/use-onboarding-registration';
 
 const RegisteringScreen = () => {
-  const { progress, retry } = useOnboardingRegistration();
+  const { progress, ready, retry } = useOnboardingRegistration();
   const { t } = useTranslation();
   const { theme } = useTheme();
+
+  // replace, not push: registering is done and must not be reachable by going back.
+  useEffect(() => {
+    if (ready) {
+      router.replace('/BudgetPeriod');
+    }
+  }, [ready]);
 
   if (progress.isFailure) {
     return (

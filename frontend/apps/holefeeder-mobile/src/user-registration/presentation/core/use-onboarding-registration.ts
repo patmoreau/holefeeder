@@ -5,6 +5,7 @@ import { useRegistration } from '@/user-registration/presentation/RegistrationPr
 
 export type OnboardingRegistrationState = {
   progress: AsyncResult<void>;
+  ready: boolean;
   retry: () => void;
 };
 
@@ -18,13 +19,15 @@ export const SyncWaitInMilliseconds = 10_000;
 // Registers the caller, then holds the screen until their data has actually
 // arrived. Advancing on the register response alone drops them into an app with no
 // accounts and no categories, which reads as broken rather than new.
+//
+// Reporting readiness rather than opening the gate: onboarding continues with the
+// budget period, and only its last step lets the caller into the app.
 export const useOnboardingRegistration = (): OnboardingRegistrationState => {
-  const { registration, register, recheck } = useRegistration();
+  const { registration, register } = useRegistration();
   const { lastSyncedAt } = useSyncStatus();
 
   const [registeredAt, setRegisteredAt] = useState<Date | undefined>(undefined);
   const started = useRef(false);
-  const advanced = useRef(false);
 
   useEffect(() => {
     if (started.current) {
@@ -55,17 +58,7 @@ export const useOnboardingRegistration = (): OnboardingRegistrationState => {
   const synced = !!registeredAt && !!lastSyncedAt && lastSyncedAt.getTime() >= registeredAt.getTime();
   const ready = !!registeredAt && (synced || waitedLongEnough);
 
-  useEffect(() => {
-    if (!ready || advanced.current) {
-      return;
-    }
-    advanced.current = true;
-    // Flips the gate: the caller is registered now, so it routes them to the app.
-    recheck();
-  }, [ready, recheck]);
-
   const retry = () => {
-    advanced.current = false;
     setRegisteredAt(undefined);
     setWaitedLongEnough(false);
     register();
@@ -73,6 +66,7 @@ export const useOnboardingRegistration = (): OnboardingRegistrationState => {
 
   return {
     progress: registration.isFailure ? registration : Result.loading(),
+    ready: ready,
     retry: retry,
   };
 };
