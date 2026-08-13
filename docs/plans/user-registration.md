@@ -93,8 +93,8 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 | B9 | Welcome screen replaces Login; `Create account` passes `screen_hint: 'signup'`; i18n en + fr | `flows/auth/signup.yaml` — passes | done (`51b865f3`) |
 | B10 | Onboarding: registering screen, progress + retry, waits for first PowerSync sync (capped — see below) | `flows/onboarding/register.yaml` — written, **cannot run yet** | done (`50710a59`, `3fdfc889`) |
 | B11 | Onboarding: budget period, reuses `BudgetSettingsFormContent`, writes `store_items` code=settings | `flows/onboarding/budget-period.yaml` — written, **cannot run in CI yet** | done (`25e29d47`, `f6d49503`) |
-| B12 | Onboarding: first account, reuses the account form, finish → `(app)`. Takes over opening the gate from B11 | `flows/onboarding/first-account.yaml` | next |
-| B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | |
+| B12 | Onboarding: first account, reuses the account form, finish → `(app)`. Takes over opening the gate from B11 | `flows/onboarding/first-account.yaml` — written, **cannot run in CI yet** | done (`24a3ead2`) |
+| B13 | Onboarding: suggested categories — localised en/fr suggestions the user accepts, renames, or skips, written through PowerSync. Replaces the dropped B5 | `flows/onboarding/categories.yaml` | next |
 
 ### Two traps in this part of the app
 
@@ -102,6 +102,12 @@ Unit tests are mandatory throughout; Maestro covers wiring and navigation.
 `testID` — the type system rejects it — and it carries an icon, so neither selector
 this repo prefers works. The budget period flow taps it by position as a result.
 Wrapping it the way the `App*` components are wrapped is the real fix.
+
+**Maestro cannot type into a field without an id.** Tapping the visible label hits
+the label, and the text goes nowhere; the form then refuses to save for a missing
+value, which looks like a product bug. Fields the flows drive need a `testID`.
+`hideKeyboard` also fails on this setup, and is unnecessary when the save action is
+in the header.
 
 **Buttons after a form get clipped.** An `AppButton` placed after the form inside a
 SwiftUI column lands past the home indicator, where nothing can tap it. Form actions
