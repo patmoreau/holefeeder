@@ -1,17 +1,20 @@
 import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
 import { CategoriesRepository } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
+import { CreateCategoryCommand } from '@/flows/core/categories/create/create-category-command';
 
 export type CategoriesRepositoryInMemory = CategoriesRepository & {
   add: (...items: Category[]) => void;
   isLoading: () => void;
   isFailing: (errors: string[]) => void;
   deactivatedIds: () => Id[];
+  createdCommands: () => CreateCategoryCommand[];
 };
 
 export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => {
   const itemsInMemory: Category[] = [];
   const deactivatedInMemory: Id[] = [];
+  const createdInMemory: CreateCategoryCommand[] = [];
   let loadingInMemory = false;
   let errorsInMemory: string[] = [];
 
@@ -27,7 +30,11 @@ export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => 
     return () => {};
   };
 
-  const create = async () => Result.success(Id.newId());
+  const create = async (command: CreateCategoryCommand) => {
+    createdInMemory.push(command);
+    if (errorsInMemory.length > 0) return Result.failure(errorsInMemory);
+    return Result.success(Id.newId());
+  };
 
   const update = async (command: { id: Id }) => Result.success(command.id);
 
@@ -47,6 +54,8 @@ export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => 
 
   const deactivatedIds = () => deactivatedInMemory;
 
+  const createdCommands = () => createdInMemory;
+
   return {
     watch: watch,
     create: create,
@@ -56,5 +65,6 @@ export const CategoriesRepositoryInMemory = (): CategoriesRepositoryInMemory => 
     isLoading: isLoading,
     isFailing: isFailing,
     deactivatedIds: deactivatedIds,
+    createdCommands: createdCommands,
   };
 };

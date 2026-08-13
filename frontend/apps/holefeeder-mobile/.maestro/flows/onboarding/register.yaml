@@ -37,6 +37,13 @@ tags:
 
 - extendedWaitUntil:
     visible:
+      id: 'onboarding-categories-screen'
+    timeout: 30000
+- tapOn:
+    id: 'onboarding-categories-finish-button'
+
+- extendedWaitUntil:
+    visible:
       id: 'dashboard-screen'
     timeout: 60000
 

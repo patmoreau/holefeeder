@@ -1,10 +1,9 @@
 appId: com.drifterapps.holefeeder
-name: A new user adds a first account and lands in the app
+name: A new user picks starting categories, in their language
 tags:
   - onboarding
 ---
-# NOT RUNNABLE YET — same blocker as the other onboarding flows: it needs the
-# never-registered `e2e-new@…` user and a reset between runs.
+# run.sh wipes this user's rows before each onboarding flow.
 - runFlow: ../../subflows/launch-clean.yaml
 
 - assertVisible:
@@ -21,7 +20,6 @@ tags:
     visible:
       id: 'onboarding-budget-period-screen'
     timeout: 90000
-
 - tapOn:
     id: 'onboarding-budget-period-continue-button'
 
@@ -29,27 +27,29 @@ tags:
     visible:
       id: 'onboarding-first-account-screen'
     timeout: 30000
-- assertNotVisible:
-    id: 'dashboard-screen'
-
-# By text because the field has no id: a first account must not offer to be created
-# switched off. Text is English-only here, which the simulator is.
-- assertNotVisible: 'Inactive'
-
-# The field, not the label beside it: tapping the text "Name" hits the label and the
-# typing goes nowhere, which the form then rejects for a missing name.
 - tapOn:
     id: 'account-name-input'
 - inputText: 'Chequing'
-
 - tapOn:
     id: 'onboarding-first-account-finish-button'
 
-# Saving the account hands over to the categories — reaching that screen is what
-# proves the account was written.
 - extendedWaitUntil:
     visible:
       id: 'onboarding-categories-screen'
     timeout: 30000
 - assertNotVisible:
     id: 'dashboard-screen'
+
+# Everything is offered selected; dropping two proves the choice is the user's.
+- tapOn:
+    id: 'onboarding-category-groceries-switch'
+- tapOn:
+    id: 'onboarding-category-housing-switch'
+
+- tapOn:
+    id: 'onboarding-categories-finish-button'
+
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000

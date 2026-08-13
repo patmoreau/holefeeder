@@ -1,17 +1,15 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
-import { useRegistration } from '@/user-registration/presentation/RegistrationProvider';
 
 export type OnboardingFirstAccountState = {
   isSaving: boolean;
   finish: () => Promise<void>;
 };
 
-// The last step of onboarding, so this is the one that opens the gate: rechecking
-// makes the status registered and the caller lands in the app.
+// Hands over to the suggested categories, which is the step that opens the gate.
 export const useOnboardingFirstAccount = (): OnboardingFirstAccountState => {
   const { saveForm } = useEditAccountForm();
-  const { recheck } = useRegistration();
   const [isSaving, setIsSaving] = useState(false);
 
   const finish = async () => {
@@ -22,7 +20,8 @@ export const useOnboardingFirstAccount = (): OnboardingFirstAccountState => {
         // The form surfaces its own errors; staying put is the whole response.
         return;
       }
-      recheck();
+      // replace, not push: the account is saved and going back would re-ask it.
+      router.replace('/Categories');
     } finally {
       setIsSaving(false);
     }
