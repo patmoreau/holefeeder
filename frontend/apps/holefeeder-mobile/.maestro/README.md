@@ -70,15 +70,20 @@ onboarding runs.
 | ------------ | --------------- | -------------------------------------------------------- |
 | `regression` | `ios:e2e`       | Session injected by link. Fast. Run on every change.      |
 | `auth`       | `ios:e2e:auth`  | Drives the hosted Auth0 pages. Slow, network-bound.       |
-| `onboarding` | `ios:e2e`       | **Not runnable yet.** Needs a never-registered user.      |
+| `onboarding` | `ios:e2e`       | New-user journey. Wipes and reuses `E2E_NEW_EMAIL`.       |
 
 An untagged flow runs under no tag and so is never executed — always tag.
 
-`onboarding` flows need a second Auth0 user who has never registered, plus a way to
-wipe that user's backend rows between runs. `run.sh` mints one token today, for the
-already-registered `E2E_EMAIL`. Until `E2E_NEW_EMAIL` / `E2E_NEW_PASSWORD` exist in
-`.maestro/.env.e2e.local` and `run.sh` mints `MAESTRO_E2E_UNREGISTERED_TOKEN`, these flows are
-documentation rather than tests — which is why they are kept out of `regression`.
+`onboarding` flows run against `E2E_NEW_EMAIL`, a second Auth0 user, and reach the
+app as `${MAESTRO_E2E_UNREGISTERED_TOKEN}`. `run.sh` runs them one at a time, calling
+`reset-new-user.sh` before each: the first flow registers that user, so without a
+reset in between every later flow would meet an account that already exists and
+never see onboarding.
+
+`reset-new-user.sh` reads the subject out of the token and deletes that user's rows
+straight from the local database. There is no API for it on purpose — a "delete my
+account" endpoint invented for tests would be a destructive route in production.
+It needs the local stack up.
 
 ## Selectors
 

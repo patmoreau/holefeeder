@@ -260,6 +260,7 @@ This application enforces a testing strategy focused on high domain reliability 
   - **Coverage Threshold**: Strictly enforced at 70% for branches, functions, lines, and statements (`pnpm test -- --coverage`).
 - **E2E Tests (Maestro)**:
   - User flows are verified using Maestro. Flows live in `.maestro/flows/`, reusable fragments in `.maestro/subflows/`.
-  - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`, needs the `ios:e2e` build), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`, needs the `ios:e2e:auth` build). `run.sh` refuses to run a tag against the wrong build.
+  - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`, needs the `ios:e2e` build), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`, needs the `ios:e2e:auth` build), `onboarding` for the new-user journey (`pnpm test:e2e:onboarding`, needs the `ios:e2e` build and the local stack). `run.sh` refuses to run a tag against the wrong build.
+  - `onboarding` flows use a second Auth0 user (`E2E_NEW_EMAIL`) and are run one at a time, each preceded by `reset-new-user.sh`, which wipes that user's backend rows so the journey starts from nothing every time.
   - Select elements by `id:` (the `testID` prop), not by visible text — text is translated. Text selectors are only unavoidable inside the Auth0 pages.
   - Credentials load from `.maestro/.env.e2e.local` via `.maestro/run.sh`; see `.maestro/README.md`.
