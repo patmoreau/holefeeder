@@ -16,7 +16,8 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
 const accountTypeOptions = Object.values(AccountTypes).map((type) => ({ id: type, label: type }));
 
-export const EditAccountFormContent = () => {
+// See BudgetSettingsFormContent for why onboarding puts its action in a footer row.
+export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode }) => {
   const { t } = useTranslation();
   const { formData, updateFormField, errors } = useEditAccountForm();
 
@@ -70,6 +71,7 @@ export const EditAccountFormContent = () => {
           </AppField>
         )}
       </AppFieldSection>
+      {footer}
     </AppForm>
   );
 };

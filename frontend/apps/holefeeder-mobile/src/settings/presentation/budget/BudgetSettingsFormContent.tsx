@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useSettingsForm } from '@/settings/presentation/core/use-settings-form';
@@ -7,7 +8,10 @@ import { FrequencyField } from '@/shared/presentation/components/fields/Frequenc
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppForm } from '@/shared/presentation/components/native/AppForm';
 
-export const BudgetSettingsFormContent = () => {
+// footer lets a caller add a row of its own — onboarding puts its Continue button
+// there. Inside the form, because a button placed after one is clipped past the home
+// indicator, and the header toolbar takes no testID for the flows to select.
+export const BudgetSettingsFormContent = ({ footer }: { footer?: React.ReactNode }) => {
   const { t } = useTranslation();
   const { formData, updateFormField } = useSettingsForm();
 
@@ -25,6 +29,7 @@ export const BudgetSettingsFormContent = () => {
         />
         <FrequencyField selectedFrequency={formData.frequency} onSelectFrequency={(frequency) => updateFormField('frequency', frequency)} />
       </AppFieldSection>
+      {footer}
     </AppForm>
   );
 };

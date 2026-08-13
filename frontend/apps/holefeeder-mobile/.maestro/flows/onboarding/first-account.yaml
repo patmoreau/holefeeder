@@ -22,10 +22,8 @@ tags:
       id: 'onboarding-budget-period-screen'
     timeout: 90000
 
-# Both save actions are Stack.Toolbar.Buttons, which take no testID — see
-# budget-period.yaml for why these are taps by position.
 - tapOn:
-    point: '93%,7%'
+    id: 'onboarding-budget-period-continue-button'
 
 - extendedWaitUntil:
     visible:
@@ -45,7 +43,7 @@ tags:
 - inputText: 'Chequing'
 
 - tapOn:
-    point: '93%,7%'
+    id: 'onboarding-first-account-finish-button'
 
 - extendedWaitUntil:
     visible:

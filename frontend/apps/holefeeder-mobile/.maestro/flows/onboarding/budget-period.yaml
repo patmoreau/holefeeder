@@ -25,15 +25,14 @@ tags:
 - assertNotVisible:
     id: 'dashboard-screen'
 
-# By position, against this repo's own rule of selecting by id: the save action is an
-# expo-router Stack.Toolbar.Button, which does not forward testID to
-# accessibilityIdentifier the way the App* wrappers do, and it is an icon so there is
-# no text to match either. Wrapping Stack.Toolbar.Button the way the other native
-# components are wrapped would fix this properly.
 - tapOn:
-    point: '93%,7%'
+    id: 'onboarding-budget-period-continue-button'
 
+# Saving the period hands over to the first account rather than opening the app —
+# reaching that screen is what proves the period was written.
 - extendedWaitUntil:
     visible:
-      id: 'dashboard-screen'
-    timeout: 60000
+      id: 'onboarding-first-account-screen'
+    timeout: 30000
+- assertNotVisible:
+    id: 'dashboard-screen'

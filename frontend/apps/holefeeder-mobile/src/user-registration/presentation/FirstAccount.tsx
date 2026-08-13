@@ -8,25 +8,33 @@ import { EditAccountFormProvider, validateEditAccountForm } from '@/accounts/pre
 import { EditAccountFormContent } from '@/accounts/presentation/EditAccountFormContent';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
-import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppButton } from '@/shared/presentation/components/native/AppButton';
+import { AppField } from '@/shared/presentation/components/native/AppField';
+import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useOnboardingFirstAccount } from '@/user-registration/presentation/core/use-onboarding-first-account';
 
-// Inside the provider so it can reach the form it is saving. Save lives in the header
-// toolbar for the same reason as the budget step: a button after the form is clipped
-// past the home indicator.
+// See BudgetPeriod for why the action is a row rather than a toolbar button.
 const FirstAccountStep = () => {
   const { isSaving, finish } = useOnboardingFirstAccount();
+  const { t } = useTranslation();
 
   return (
-    <>
-      <Stack.Toolbar placement="right">
-        {/* No testID: Stack.Toolbar.Button does not accept one, which is why the
-            Maestro flow has to tap this by position. */}
-        <Stack.Toolbar.Button icon={AppIcon.select(AppIconMap.save)} onPress={finish} disabled={isSaving} />
-      </Stack.Toolbar>
-      <EditAccountFormContent />
-    </>
+    <EditAccountFormContent
+      footer={
+        <AppFieldSection>
+          <AppField icon={AppIconMap.save}>
+            <AppButton
+              label={t(tk.onboarding.firstAccountFinish)}
+              variant="link"
+              disabled={isSaving}
+              onPress={finish}
+              testID="onboarding-first-account-finish-button"
+            />
+          </AppField>
+        </AppFieldSection>
+      }
+    />
   );
 };
 

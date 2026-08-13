@@ -188,6 +188,7 @@ export const en = {
     budgetPeriodSubtitle: 'Holefeeder groups your spending into periods. You can change this later in settings.',
     budgetPeriodContinue: 'Continue',
     firstAccountTitle: 'Add your first account',
+    firstAccountFinish: 'Finish',
     registeringTitle: 'Setting up your account',
     registeringSubtitle: 'This only takes a moment.',
     registeringFailedTitle: 'We could not finish setting up',

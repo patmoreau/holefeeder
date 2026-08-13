@@ -3,15 +3,8 @@ name: An unregistered user lands on onboarding, not the app
 tags:
   - onboarding
 ---
-# NOT RUNNABLE YET, and deliberately not tagged `regression` so it cannot break the
-# suite that is. It needs a second Auth0 user who has never registered — the
-# `e2e-new@…` account — and run.sh currently mints exactly one token, from
-# E2E_EMAIL/E2E_PASSWORD, for the already-registered user.
-#
-# To finish this: add E2E_NEW_EMAIL / E2E_NEW_PASSWORD to .env.e2e.local, have
-# run.sh mint MAESTRO_E2E_UNREGISTERED_TOKEN alongside the existing one, and wipe
-# that user's backend rows first so the flow is repeatable (the reset script
-# deferred from B0.4).
+# run.sh wipes this user's backend rows before each onboarding flow, so they arrive
+# here as someone the backend has never seen.
 - runFlow: ../../subflows/launch-clean.yaml
 
 - assertVisible:
@@ -24,12 +17,12 @@ tags:
     commands:
       - tapOn: '^Open$'
 
-# The gate asks the API who this caller is before choosing a group, so the wait
-# covers the round trip as well as the decision.
+# Registering runs on arrival and hands over to the budget period, so this is where
+# an unregistered caller ends up. The wait covers the register round trip.
 - extendedWaitUntil:
     visible:
-      id: 'onboarding-registering-screen'
-    timeout: 60000
+      id: 'onboarding-budget-period-screen'
+    timeout: 90000
 
 # The point of the batch: an unregistered caller must never reach the app.
 - assertNotVisible:

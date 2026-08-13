@@ -1,11 +1,10 @@
 appId: com.drifterapps.holefeeder
-name: A new user is registered and lands in the app
+name: Onboarding is asked once, not on every launch
 tags:
   - onboarding
 ---
-# NOT RUNNABLE YET — same blocker as gate.yaml: it needs the never-registered
-# `e2e-new@…` user and a reset that wipes their backend rows between runs.
-# See gate.yaml for what has to be added to run.sh and .env.e2e.local.
+# Completes onboarding, then comes back: the second launch must go straight to the
+# app. Registration is not something a user should be asked to do twice.
 - runFlow: ../../subflows/launch-clean.yaml
 
 - assertVisible:
@@ -20,27 +19,41 @@ tags:
 
 - extendedWaitUntil:
     visible:
-      id: 'onboarding-registering-screen'
-    timeout: 60000
+      id: 'onboarding-budget-period-screen'
+    timeout: 90000
 
-# The screen holds until PowerSync has pulled the rows registration created, so
-# reaching the dashboard proves both the register call and the first sync.
+- tapOn:
+    id: 'onboarding-budget-period-continue-button'
+
+- extendedWaitUntil:
+    visible:
+      id: 'onboarding-first-account-screen'
+    timeout: 30000
+- tapOn:
+    id: 'account-name-input'
+- inputText: 'Chequing'
+- tapOn:
+    id: 'onboarding-first-account-finish-button'
+
 - extendedWaitUntil:
     visible:
       id: 'dashboard-screen'
-    timeout: 90000
+    timeout: 60000
 
-# Registration is not something the user should have to do twice.
+# Same user, fresh launch: straight in, no onboarding.
 - runFlow: ../../subflows/launch-clean.yaml
+- assertVisible:
+    id: 'welcome-screen'
 - openLink: holefeeder://?e2e-auth-token=${MAESTRO_E2E_UNREGISTERED_TOKEN}
 - runFlow:
     when:
       visible: '.*Open in .*'
     commands:
       - tapOn: '^Open$'
+
 - extendedWaitUntil:
     visible:
       id: 'dashboard-screen'
     timeout: 60000
 - assertNotVisible:
-    id: 'onboarding-registering-screen'
+    id: 'onboarding-budget-period-screen'

@@ -60,19 +60,10 @@ assert_installed_build() {
 
 assert_installed_build
 
-MAESTRO_E2E_TOKEN=''
-
-# Flows tagged `auth` drive the real login pages and need no token. Everything
-# else takes its session from an injected one, so mint it up front and fail
-# loudly rather than letting a flow die on an unexplained blank screen.
-if [ "$TAG" != "auth" ]; then
-  require E2E_AUTH0_DOMAIN
-  require E2E_AUTH0_CLIENT_ID
-  require E2E_AUTH0_AUDIENCE
-  require E2E_AUTH0_REALM
-  require E2E_AUTH0_SCOPE
-
-  MAESTRO_E2E_TOKEN=$(python3 - <<'PY'
+# Mints an access token for E2E_USERNAME / E2E_USERPASSWORD through the password
+# grant, so flows never have to drive the login pages.
+mint_token() {
+  python3 - <<'TOKEN_PY'
 import json, os, sys, urllib.error, urllib.request
 
 payload = json.dumps({
@@ -81,8 +72,8 @@ payload = json.dumps({
     'client_id': os.environ['E2E_AUTH0_CLIENT_ID'],
     'audience': os.environ['E2E_AUTH0_AUDIENCE'],
     'scope': os.environ['E2E_AUTH0_SCOPE'],
-    'username': os.environ['E2E_EMAIL'],
-    'password': os.environ['E2E_PASSWORD'],
+    'username': os.environ['E2E_USERNAME'],
+    'password': os.environ['E2E_USERPASSWORD'],
 }).encode()
 
 request = urllib.request.Request(
@@ -99,8 +90,49 @@ except urllib.error.HTTPError as error:
     # Never echo the request: it carries the password.
     print(f"Auth0 refused the token request: {body.get('error')} — {body.get('error_description')}", file=sys.stderr)
     sys.exit(1)
-PY
-  )
+TOKEN_PY
+}
+
+MAESTRO_E2E_TOKEN=''
+
+# Flows tagged `auth` drive the real login pages and need no token. Everything
+# else takes its session from an injected one, so mint it up front and fail
+# loudly rather than letting a flow die on an unexplained blank screen.
+if [ "$TAG" != "auth" ]; then
+  require E2E_AUTH0_DOMAIN
+  require E2E_AUTH0_CLIENT_ID
+  require E2E_AUTH0_AUDIENCE
+  require E2E_AUTH0_REALM
+  require E2E_AUTH0_SCOPE
+
+  MAESTRO_E2E_TOKEN=$(E2E_USERNAME="$E2E_EMAIL" E2E_USERPASSWORD="$E2E_PASSWORD" mint_token)
+fi
+
+# Onboarding flows need a caller the backend has never seen — a different Auth0 user
+# — and that user's rows wiped so the run repeats.
+MAESTRO_E2E_UNREGISTERED_TOKEN=''
+if [ "$TAG" = "onboarding" ]; then
+  require E2E_NEW_EMAIL
+  require E2E_NEW_PASSWORD
+
+  MAESTRO_E2E_UNREGISTERED_TOKEN=$(E2E_USERNAME="$E2E_NEW_EMAIL" E2E_USERPASSWORD="$E2E_NEW_PASSWORD" mint_token)
+
+  # One flow at a time, each behind its own reset: the first flow registers the
+  # user, and every flow after it would then meet an account that already exists
+  # and never see onboarding at all.
+  status=0
+  for flow in "$MAESTRO_DIR"/flows/onboarding/*.yaml; do
+    echo ""
+    echo "== $(basename "$flow")"
+    "$MAESTRO_DIR/reset-new-user.sh" "$MAESTRO_E2E_UNREGISTERED_TOKEN"
+    maestro test \
+      -e MAESTRO_E2E_EMAIL="$E2E_EMAIL" \
+      -e MAESTRO_E2E_PASSWORD="$E2E_PASSWORD" \
+      -e MAESTRO_E2E_TOKEN="$MAESTRO_E2E_TOKEN" \
+      -e MAESTRO_E2E_UNREGISTERED_TOKEN="$MAESTRO_E2E_UNREGISTERED_TOKEN" \
+      "$flow" || status=1
+  done
+  exit "$status"
 fi
 
 exec maestro test \
@@ -108,4 +140,5 @@ exec maestro test \
   -e MAESTRO_E2E_EMAIL="$E2E_EMAIL" \
   -e MAESTRO_E2E_PASSWORD="$E2E_PASSWORD" \
   -e MAESTRO_E2E_TOKEN="$MAESTRO_E2E_TOKEN" \
+  -e MAESTRO_E2E_UNREGISTERED_TOKEN="$MAESTRO_E2E_UNREGISTERED_TOKEN" \
   "$MAESTRO_DIR"
