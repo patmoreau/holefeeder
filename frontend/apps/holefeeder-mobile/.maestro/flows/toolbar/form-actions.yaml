@@ -1,0 +1,36 @@
+appId: com.drifterapps.holefeeder
+name: Form toolbar actions can be selected by id
+tags:
+  - regression
+---
+# Only works because E2E builds render header actions as ordinary views through
+# headerRight. The native toolbar shows nothing to Maestro — no testID, and its items
+# never reach the automation tree at all. budget-period.yaml keeps a coordinate tap so
+# one flow still drives the real toolbar.
+- runFlow: ../../subflows/launch-clean.yaml
+- runFlow: ../../subflows/login-injected.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000
+
+- tapOn:
+    id: 'purchase'
+- extendedWaitUntil:
+    visible:
+      id: 'purchase-screen'
+    timeout: 20000
+
+- tapOn:
+    id: 'purchase-back-button'
+
+# The form opens with a category already picked, so leaving counts as discarding.
+- extendedWaitUntil:
+    visible: 'Discard changes?'
+    timeout: 10000
+- tapOn: 'Discard'
+
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 20000

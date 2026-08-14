@@ -1,10 +1,11 @@
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
+import { AppToolbar } from '@/shared/presentation/components/native/AppToolbar';
 import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -16,13 +17,14 @@ const TabsLayout = () => {
 
   return (
     <>
-      <Stack.Toolbar placement="right">
+      <AppToolbar placement="right">
         <AppToolbarButton
           icon={AppIcon.select(AppIconMap.purchase)}
+          testID="purchase"
           accessibilityLabel={t(tk.purchase.title)}
           onPress={() => router.push('/(app)/Purchase')}
         />
-      </Stack.Toolbar>
+      </AppToolbar>
       <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Icon sf={AppIconMap.dashboard.ios} />

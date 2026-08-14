@@ -108,6 +108,25 @@ if [ "$TAG" != "auth" ]; then
   MAESTRO_E2E_TOKEN=$(E2E_USERNAME="$E2E_EMAIL" E2E_USERPASSWORD="$E2E_PASSWORD" mint_token)
 fi
 
+# The Auth0 session outlives the app: clearState and clearKeychain do not touch the
+# cookie jar that ASWebAuthenticationSession shares with Safari. So these flows are
+# not independent — one that signs in leaves the next one facing silent SSO instead
+# of the hosted pages it waits for. Run them in an order that keeps the session in a
+# known state: logout clears it, signup and the cancelled signup leave it clear, and
+# login is last because it leaves one behind.
+if [ "$TAG" = "auth" ]; then
+  status=0
+  for flow in logout.yaml signup.yaml signup-cancelled.yaml login.yaml; do
+    echo ""
+    echo "== $flow"
+    maestro test \
+      -e MAESTRO_E2E_EMAIL="$E2E_EMAIL" \
+      -e MAESTRO_E2E_PASSWORD="$E2E_PASSWORD" \
+      "$MAESTRO_DIR/flows/auth/$flow" || status=1
+  done
+  exit "$status"
+fi
+
 # Onboarding flows need a caller the backend has never seen — a different Auth0 user
 # — and that user's rows wiped so the run repeats.
 MAESTRO_E2E_UNREGISTERED_TOKEN=''

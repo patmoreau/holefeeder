@@ -1,4 +1,4 @@
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Category } from '@/flows/core/categories/category';
 import { DeactivateCategoryUseCase } from '@/flows/core/categories/deactivate/deactivate-category-use-case';
@@ -15,6 +15,7 @@ import { AppLoadingIndicator } from '@/shared/presentation/components/native/App
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
+import { AppToolbar } from '@/shared/presentation/components/native/AppToolbar';
 import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { showAlert } from '@/shared/presentation/core/show-alert';
@@ -47,9 +48,9 @@ export const ManageCategoriesScreen = () => {
     });
 
   const toolbar = (
-    <Stack.Toolbar placement="right">
+    <AppToolbar placement="right">
       <AppToolbarButton icon={AppIcon.select(AppIconMap.add)} accessibilityLabel={t(tk.categoryEdit.addTitle)} onPress={onAdd} />
-    </Stack.Toolbar>
+    </AppToolbar>
   );
 
   if (!result.isSuccess) {

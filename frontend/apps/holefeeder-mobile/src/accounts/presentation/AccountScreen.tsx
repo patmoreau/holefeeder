@@ -1,7 +1,6 @@
 import { Id, tk } from '@holefeeder/shared/core';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
-import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountHeaderLargeCard } from '@/accounts/presentation/AccountHeaderLargeCard';
@@ -13,6 +12,7 @@ import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppToolbar } from '@/shared/presentation/components/native/AppToolbar';
 import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { goBack } from '@/shared/presentation/core/navigation';
@@ -77,9 +77,11 @@ export const AccountScreen = () => {
 
   return (
     <>
-      <Stack.Toolbar placement="left">
+      <AppToolbar placement="left">
         <AppToolbarButton icon={AppIcon.select(AppIconMap.back)} accessibilityLabel={t(tk.common.back)} onPress={() => goBack()} />
-      </Stack.Toolbar>
+      </AppToolbar>
+      {/* Stays native everywhere: Menu is a toolbar primitive with no plain-view
+          equivalent, so it cannot move into the E2E header the way buttons can. */}
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Menu icon={AppIcon.select(AppIconMap.menu)}>
           <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.edit)} onPress={onEditPress}>
