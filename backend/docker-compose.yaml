@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.7.10
+    image: traefik:v3.7.11
     container_name: reverse-proxy
     profiles: ["local"]
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       - no-new-privileges:true
 
   powersync:
-    image: journeyapps/powersync-service:1.23.3
+    image: journeyapps/powersync-service:1.25.0
     container_name: holefeeder_powersync
     restart: unless-stopped
     security_opt:
