@@ -137,9 +137,6 @@ importers:
       expo-localization:
         specifier: 57.0.1
         version: 57.0.1(expo@57.0.16)(react@19.2.3)
-      expo-modules-core:
-        specifier: 57.0.13
-        version: 57.0.13(a1c1c8393e5c6f795242e4f0bd0ff0da)
       expo-quick-actions:
         specifier: 6.0.2
         version: 6.0.2(expo@57.0.16)(supports-color@8.1.1)(typescript@6.0.3)

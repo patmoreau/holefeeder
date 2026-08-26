@@ -1,8 +1,6 @@
 import { ConfigContext } from '@expo/config';
 import { ExpoConfig } from '@expo/config-types';
 import { withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
-import 'dotenv/config';
-
 // Workaround for https://github.com/expo/expo/issues/46204
 // expo-dev-client@56 adds inputPaths to the "Strip Local Network Keys" build phase
 // but no outputPaths, creating a cycle in Xcode's dependency graph that causes
@@ -28,15 +26,21 @@ const environment = process.env.APP_ENV || 'development';
 // NODE_ENV=production, so it auto-loads .env.production before this runs, and
 // dotenv leaves already-set variables alone — without the override, APP_ENV is
 // ignored and a development Release build silently points at production.
+// quiet: true silences dotenv v17's "injected env" banner. That banner goes to
+// stdout, and `expo config --json` / expo-doctor parse this config's stdout as
+// JSON, so any extra line makes them fail.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('dotenv').config({ quiet: true });
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config({
   path: `.env.${environment}`,
   override: true,
+  quiet: true,
 });
 
 const IS_DEV = process.env.APP_ENV === 'development';
 const iosIconFile = IS_DEV ? 'safe_dev.icon' : 'safe.icon';
-console.log(`Running in ${environment} mode`);
+console.error(`Running in ${environment} mode`);
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const appConfig: ExpoConfig = {
