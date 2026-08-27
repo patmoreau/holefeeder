@@ -5,6 +5,7 @@ using Holefeeder.Application.Features.Transactions.Queries;
 using Holefeeder.Application.Models;
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Infrastructure;
 
 using Refit;
 
@@ -43,6 +44,7 @@ public class ScenarioGetTransactions(ApiApplicationDriver applicationDriver, ITe
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;
-            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Description);
+            accounts.Content.Should().HaveSameCount(expected)
+                .And.BeInDescendingOrder(x => x.Description, DatabaseCollation.Comparer);
         });
 }

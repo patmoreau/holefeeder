@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentScenario.Attributes;
 using Holefeeder.Application.Features.Accounts.Queries;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.FunctionalTests.Drivers;
+using Holefeeder.FunctionalTests.Infrastructure;
 
 using Refit;
 
@@ -40,6 +41,7 @@ public class GetAccountsScenario(ApiApplicationDriver applicationDriver, ITestOu
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful();
             var accounts = response.Value;
-            accounts.Content.Should().HaveSameCount(expected).And.BeInDescendingOrder(x => x.Name);
+            accounts.Content.Should().HaveSameCount(expected)
+                .And.BeInDescendingOrder(x => x.Name, DatabaseCollation.Comparer);
         });
 }
