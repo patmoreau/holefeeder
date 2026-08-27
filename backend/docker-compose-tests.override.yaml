@@ -18,9 +18,7 @@ services:
       - --no-restore
       - --configuration
       - Release
-      - --report-xunit-trx
-      - --report-xunit-trx-filename
-      - test-results.functional.xml
+      - --report-trx
       - --results-directory
       - /TestResults
       - --coverage
@@ -37,9 +35,7 @@ services:
       - --no-restore
       - --configuration
       - Release
-      - --report-xunit-trx
-      - --report-xunit-trx-filename
-      - test-results.unit.xml
+      - --report-trx
       - --results-directory
       - /TestResults
       - --coverage

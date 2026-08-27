@@ -16,6 +16,7 @@
         <PackageReference Include="FluentAssertions"/>
         <PackageReference Include="FluentAssertions.Analyzers"/>
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
         <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NSubstitute.Analyzers.CSharp"/>
         <PackageReference Include="WireMock.Net"/>

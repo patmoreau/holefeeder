@@ -20,6 +20,7 @@
         <PackageReference Include="FluentAssertions.Analyzers"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
         <PackageReference Include="Nito.AsyncEx"/>
         <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NSubstitute.Analyzers.CSharp">
