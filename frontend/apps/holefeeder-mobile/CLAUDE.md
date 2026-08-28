@@ -10,9 +10,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Tech Stack
 
-- React Native (Expo SDK 56)
+- React Native (Expo SDK 57)
 - expo-router (file-based routing)
-- PowerSync + op-sqlite (offline-first sync)
+- PowerSync v2 (offline-first sync). `@powersync/react-native` bundles the OP-SQLite
+  adapter, so there is no `@powersync/op-sqlite` package and no `OPSqliteOpenFactory` —
+  pass the open options straight through as `database: { dbFilename }`.
+  `@op-engineering/op-sqlite` is a direct peer dependency.
 - Auth0 (react-native-auth0)
 - i18next
 - pnpm
