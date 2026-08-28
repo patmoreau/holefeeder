@@ -79,7 +79,12 @@ Monorepo with two independent sub-projects:
 Shared services (Traefik reverse proxy, PostgreSQL, PowerSync) are started via Docker Compose from `backend/`:
 
 ```bash
-cd backend && docker compose up -d
+cd backend && docker compose --profile local up -d
 ```
+
+`--profile local` is required: `reverse-proxy` (Traefik), `adminer`, `portainer`, and `whoami`
+are all declared with `profiles: ["local"]`, so a plain `docker compose up -d` starts the API,
+PostgreSQL, PowerSync, and the web app with no reverse proxy in front of them. Everything then
+fails to resolve on `*.localtest.me` and clients report "cannot reach the server".
 
 Both sub-projects depend on this stack for local development.
