@@ -1,4 +1,5 @@
-import { Logger } from '@holefeeder/shared/core';
+import { Id, Logger } from '@holefeeder/shared/core';
+import { useLocalSearchParams } from 'expo-router';
 import { PurchaseFormDefaults } from '@/flows/presentation/purchase/core/purchase-form-defaults';
 import { PurchaseFormProvider, validatePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseForm } from '@/flows/presentation/purchase/PurchaseForm';
@@ -23,6 +24,7 @@ const createStyles = (theme: Theme) => ({
 
 const PurchaseScreen = () => {
   logger.debug('Rendering PurchaseScreen');
+  const { accountId } = useLocalSearchParams<{ accountId?: string }>();
   const accountsQuery = useAccounts();
   const categoriesQuery = useCategories();
   const tagsQuery = useTags();
@@ -45,7 +47,11 @@ const PurchaseScreen = () => {
 
   const { accounts, categories, tags } = data;
 
-  const initialData = PurchaseFormDefaults.create({ accounts: accounts, categories: categories });
+  const initialData = PurchaseFormDefaults.create({
+    accounts: accounts,
+    categories: categories,
+    accountId: accountId ? Id.valid(accountId) : undefined,
+  });
 
   return (
     <AppScreen testID="purchase-screen">

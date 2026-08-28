@@ -75,6 +75,12 @@ export const AccountScreen = () => {
       params: { id: accountId as string },
     });
 
+  const onPurchasePress = () =>
+    router.push({
+      pathname: '/(app)/Purchase',
+      params: { accountId: accountId as string },
+    });
+
   return (
     <>
       <AppToolbar placement="left">
@@ -87,7 +93,7 @@ export const AccountScreen = () => {
           <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.edit)} onPress={onEditPress}>
             {t(tk.accountCard.edit)}
           </Stack.Toolbar.MenuAction>
-          <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.purchase)} onPress={() => router.push('/(app)/Purchase')}>
+          <Stack.Toolbar.MenuAction icon={AppIcon.select(AppIconMap.purchase)} onPress={onPurchasePress}>
             {t(tk.accountCard.purchase)}
           </Stack.Toolbar.MenuAction>
         </Stack.Toolbar.Menu>
