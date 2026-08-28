@@ -71,7 +71,7 @@ Always make structural changes first when both are needed.
 Monorepo with two independent sub-projects:
 
 - **`backend/`** — .NET 10 solution (API, domain, application, infrastructure + Angular SPA). Authoritative agent guide: `backend/CLAUDE.md`.
-- **`frontend/`** — pnpm + Turborepo workspace (Expo/React Native mobile app, React web app, shared `@holefeeder/core` package). Authoritative agent guide: `frontend/CLAUDE.md`.
+- **`frontend/`** — pnpm + Turborepo workspace (Expo/React Native mobile app, React web app, shared `@holefeeder/shared` package). Authoritative agent guide: `frontend/CLAUDE.md`.
 - **`docs/business-rules/`** — language-agnostic business rules shared by both sub-projects. Consult this when implementing or validating domain logic in either sub-project.
 
 ### Local development infrastructure

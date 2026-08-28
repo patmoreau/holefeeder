@@ -1,7 +1,7 @@
 # Vertical Slice Refactor Plan — holefeeder-mobile
 
 > Goal: each feature slice owns everything it needs and does not cross into another
-> feature. Code shared by multiple slices lives in `shared/` (or `@holefeeder/core`)
+> feature. Code shared by multiple slices lives in `shared/` (or `@holefeeder/shared/core`)
 > only when it is genuine shared kernel — a domain primitive, value object, or config
 > used by 3+ slices, or 95%+ identical duplicated code.
 
@@ -38,7 +38,7 @@ account) but is declared in `accounts/core/account-variation.ts`. Wrong home.
 | `CategoryType` / `CategoryTypes` | `flows/core/categories/category-type.ts` | accounts, dashboard |
 
 `Settings` = app-wide reporting-period config. `CategoryType` = value object + multiplier.
-Both are shared kernel used by 3–4 slices → belong in `shared/core` (or `@holefeeder/core`),
+Both are shared kernel used by 3–4 slices → belong in `shared/core` (or `@holefeeder/shared/core`),
 not inside a feature slice.
 
 ### 3. Aggregation slices composing over source slices (`dashboard`, `statistics`)

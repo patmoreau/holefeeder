@@ -47,7 +47,7 @@ holefeeder-ui/
 │   ├── holefeeder-mobile/   ← Expo / React Native app  →  CLAUDE.md inside
 │   └── holefeeder-web/      ← React 19 + Vite + MUI web app (planned)
 └── packages/
-    └── core/                ← @holefeeder/core — shared platform-agnostic library
+    └── shared/              ← @holefeeder/shared — shared platform-agnostic library
 ```
 
 ## Key Commands (run from repo root)
@@ -60,8 +60,8 @@ pnpm lint                      # turbo: lint all packages
 pnpm typecheck                 # turbo: typecheck all packages
 
 # Per-workspace
-pnpm --filter @holefeeder/core build
-pnpm --filter @holefeeder/core test
+pnpm --filter @holefeeder/shared build
+pnpm --filter @holefeeder/shared test
 pnpm --filter holefeeder-mobile test
 pnpm --filter holefeeder-mobile ios
 ```
@@ -69,11 +69,17 @@ pnpm --filter holefeeder-mobile ios
 End-to-end tests (Maestro) live in `apps/holefeeder-mobile/.maestro/` and need a booted
 simulator, so they are not part of `pnpm test` or CI. See that app's `CLAUDE.md`.
 
-## `packages/core` — @holefeeder/core
+## `packages/shared` — @holefeeder/shared
 
 Pure TypeScript library. No React Native, no Expo, no browser-only APIs.
 
-**Exports:**
+There is **no root export** — the package exposes exactly two subpaths, so always import from
+one of them:
+
+- `@holefeeder/shared/core` — everything listed below
+- `@holefeeder/shared/testkit` — test-only helpers and builders
+
+**`/core` exports:**
 
 - **Branded value objects**: `Money`, `Variation`, `Id`, `DateOnly`
 - **Result pattern**: `Result<T>`, `AsyncResult<T>` (`Success | Failure | Loading`)
@@ -85,40 +91,43 @@ Pure TypeScript library. No React Native, no Expo, no browser-only APIs.
 - **Language type**: `LanguageType`
 - **Translations**: `en`, `fr` locale objects + `tk` key-path helper + `TranslationStructure`
 
-**`Id` dependency injection** — `expo-crypto` is NOT imported by `@holefeeder/core`. Each app must call
+**`Id` dependency injection** — `expo-crypto` is NOT imported by `@holefeeder/shared`. Each app must call
 `Id.setGenerator(fn)` at bootstrap before any call to `Id.newId()`:
 
 ```typescript
 // apps/holefeeder-mobile/src/app/_layout.tsx
 import * as Crypto from 'expo-crypto';
+import { Id } from '@holefeeder/shared/core';
 Id.setGenerator(Crypto.randomUUID);
 ```
 
 **Build:**
 
 ```bash
-pnpm --filter @holefeeder/core build   # tsc --build (composite project reference)
+pnpm --filter @holefeeder/shared build   # tsc --build (composite project reference)
 ```
 
-Metro dev mode reads TypeScript directly via the `"source"` field in package.json — no pre-build needed.
+Both subpath exports resolve to `dist/`, so the package has to be built before apps resolve
+it. Turbo's `dependsOn: ["^build"]` handles that for `build`/`test`/`lint`/`typecheck`. The
+mobile Metro config adds `packages/shared` to `watchFolders` for hot reload during dev.
 
 ## Adding locale strings
 
-Locale strings live in `packages/core/src/translations/locales/`. Add keys to both:
+Locale strings live in `packages/shared/src/core/translations/locales/`. Add keys to both:
 
-- `packages/core/src/translations/locales/en-CA/translations.ts`
-- `packages/core/src/translations/locales/fr-CA/translations.ts`
+- `packages/shared/src/core/translations/locales/en-CA/translations.ts`
+- `packages/shared/src/core/translations/locales/fr-CA/translations.ts`
 
-The mobile app re-exports everything from `@holefeeder/core` via stubs in `src/i18n/locales/*/`.
+The mobile app re-exports everything from `@holefeeder/shared/core` via stubs in `src/i18n/locales/*/`.
 
 ## Dependency Graph
 
 ```text
-apps/holefeeder-mobile  ──→  packages/core
-apps/holefeeder-web     ──→  packages/core  (planned)
+apps/holefeeder-mobile  ──→  packages/shared
+apps/holefeeder-web     ──→  packages/shared  (planned)
 ```
 
-Turbo enforces `dependsOn: ["^build"]` so `packages/core` is always built before apps.
+Turbo enforces `dependsOn: ["^build"]` so `packages/shared` is always built before apps.
 
 ## Git
 

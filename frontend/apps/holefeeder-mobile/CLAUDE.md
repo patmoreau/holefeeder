@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 - i18next
 - pnpm
 - TypeScript strict
-- **@holefeeder/core** (shared domain library)
+- **@holefeeder/shared** (shared domain library)
 
 ## Key Commands
 
@@ -81,17 +81,19 @@ is one such read-model slice (current-period spending) consumed one-way by both 
 `accounts → flows` edge remains for account-detail projection. See
 `docs/vertical-slice-refactor.md`.
 
-## Shared Domain Library (`@holefeeder/core`)
+## Shared Domain Library (`@holefeeder/shared`)
 
-Branded value objects, Result pattern, logger, auth types, and locale strings live in `packages/core`
-and are published as `@holefeeder/core`. Import from `@holefeeder/core` directly, or via the re-export
-stubs in `src/shared/core/` and `src/i18n/` which preserve the old `@/shared/core/...` import paths.
+Branded value objects, Result pattern, logger, auth types, and locale strings live in
+`packages/shared` and are published as `@holefeeder/shared`. The package has no root export —
+import from `@holefeeder/shared/core` (or `@holefeeder/shared/testkit` in tests). App-local
+modules under `src/shared/core/` and the stubs in `src/i18n/` build on it while preserving the
+`@/shared/core/...` import paths.
 
 At app bootstrap (`src/app/_layout.tsx`) the UUID generator and logger factory must be injected:
 
 ```typescript
 import * as Crypto from 'expo-crypto';
-import { Id } from '@holefeeder/core';
+import { Id } from '@holefeeder/shared/core';
 Id.setGenerator(Crypto.randomUUID);
 ```
 
@@ -238,8 +240,8 @@ props must declare `testID?: string` and forward it on every return branch. Comp
 ## i18n
 
 All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files
-in **`packages/core/src/translations/locales/`** (en-CA and fr-CA) — the files in `src/i18n/locales/`
-are thin re-export stubs that point to `@holefeeder/core`.
+in **`packages/shared/src/core/translations/locales/`** (en-CA and fr-CA) — the files in `src/i18n/locales/`
+are thin re-export stubs that point to `@holefeeder/shared/core`.
 
 ## Database Schema (PowerSync)
 
