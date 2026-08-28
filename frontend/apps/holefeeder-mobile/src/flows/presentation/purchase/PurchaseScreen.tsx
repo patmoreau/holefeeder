@@ -1,5 +1,5 @@
-import { Logger, today } from '@holefeeder/shared/core';
-import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
+import { Logger } from '@holefeeder/shared/core';
+import { PurchaseFormDefaults } from '@/flows/presentation/purchase/core/purchase-form-defaults';
 import { PurchaseFormProvider, validatePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseForm } from '@/flows/presentation/purchase/PurchaseForm';
 import { useAccounts } from '@/flows/presentation/shared/core/use-accounts';
@@ -45,20 +45,7 @@ const PurchaseScreen = () => {
 
   const { accounts, categories, tags } = data;
 
-  const initialData: PurchaseFormData = {
-    purchaseType: PurchaseType.expense,
-    date: today(),
-    amount: 0,
-    description: '',
-    sourceAccount: accounts[0],
-    category: categories[0],
-    tags: [],
-    hasCashflow: false,
-    cashflowEffectiveDate: today(),
-    cashflowIntervalType: 'monthly',
-    cashflowFrequency: 1,
-    targetAccount: accounts![1] || accounts![0],
-  };
+  const initialData = PurchaseFormDefaults.create({ accounts: accounts, categories: categories });
 
   return (
     <AppScreen testID="purchase-screen">
