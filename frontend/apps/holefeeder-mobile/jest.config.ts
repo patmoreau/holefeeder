@@ -18,7 +18,7 @@ const config: Config = {
   testRegex: [],
   testPathIgnorePatterns: ['/node_modules/', '.*/__tests__/.*', '/src/__tests__/mocks/'],
   transformIgnorePatterns: [
-    'node_modules/(?!((.pnpm/)?(@?react-native|@react-native-community|@react-navigation|expo|@expo|react-native-safe-area-context|react-native-screens|react-native-gesture-handler|react-native-reanimated|react-native-svg|react-native-vector-icons|@faker-js|@powersync|@op-engineering|uuid)))',
+    'node_modules/(?!((.pnpm/)?(@?react-native|@react-native-community|@react-navigation|expo|@expo|react-native-safe-area-context|react-native-screens|react-native-gesture-handler|react-native-reanimated|react-native-svg|react-native-vector-icons|standard-navigation|@faker-js|@powersync|@op-engineering|uuid)))',
   ],
   setupFilesAfterEnv: ['<rootDir>/tests/setup/index.ts'],
   collectCoverageFrom: [
