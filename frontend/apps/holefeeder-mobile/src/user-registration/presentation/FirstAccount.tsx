@@ -1,8 +1,6 @@
-import { DateOnly, today } from '@holefeeder/shared/core';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AccountTypes } from '@/accounts/core/account-type';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';
 import { EditAccountFormProvider, validateEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
 import { EditAccountFormContent } from '@/accounts/presentation/EditAccountFormContent';
@@ -43,16 +41,7 @@ const FirstAccountStep = () => {
 const FirstAccountScreen = () => {
   const { t } = useTranslation();
 
-  const initialData: EditAccountFormData = {
-    id: null,
-    name: '',
-    type: AccountTypes.checking,
-    openBalance: 0,
-    openDate: DateOnly.valid(today()),
-    description: '',
-    favorite: true,
-    inactive: false,
-  };
+  const initialData = EditAccountFormData.forNewAccount({ favorite: true });
 
   return (
     <AppScreen testID="onboarding-first-account-screen">
