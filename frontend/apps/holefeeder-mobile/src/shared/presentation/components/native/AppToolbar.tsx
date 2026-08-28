@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import React from 'react';
+import React, { Children, isValidElement } from 'react';
 import { View } from 'react-native';
 import { E2eConfig } from '@/shared/auth/core/e2e-config';
+import { AppToolbarButton, AppToolbarButtonProps } from './AppToolbarButton';
 
 export type AppToolbarPlacement = 'left' | 'right';
 
@@ -9,6 +10,20 @@ export type AppToolbarProps = {
   placement: AppToolbarPlacement;
   children: React.ReactNode;
 };
+
+// expo-router reads a header toolbar's children by element identity: it keeps the ones
+// whose `type` is Stack.Toolbar.Button, .Menu, .View or .Spacer and silently drops the
+// rest, before anything renders. A wrapper component therefore produces an empty header,
+// however faithfully it renders Stack.Toolbar.Button underneath. Swap the wrapper for the
+// element expo-router matches on, and leave every other child alone.
+export const toNativeToolbarChildren = (children: React.ReactNode): React.ReactNode =>
+  Children.map(children, (child) => {
+    if (!isValidElement<AppToolbarButtonProps>(child) || child.type !== AppToolbarButton) {
+      return child;
+    }
+    const { testID: _testID, ...props } = child.props;
+    return <Stack.Toolbar.Button {...props} />;
+  });
 
 // The native toolbar renders its items outside the accessibility tree, so nothing
 // Maestro can select ever appears — not a testID, which it does not accept, and not
@@ -25,5 +40,5 @@ export const AppToolbar = ({ placement, children }: AppToolbarProps) => {
     return <Stack.Screen options={placement === 'right' ? { headerRight: header } : { headerLeft: header }} />;
   }
 
-  return <Stack.Toolbar placement={placement}>{children}</Stack.Toolbar>;
+  return <Stack.Toolbar placement={placement}>{toNativeToolbarChildren(children)}</Stack.Toolbar>;
 };

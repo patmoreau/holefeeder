@@ -18,6 +18,8 @@ export type AppToolbarButtonProps = Pick<StackToolbarButtonProps, 'icon' | 'onPr
   testID?: string;
 };
 
+// Must be a direct child of AppToolbar: outside it, expo-router does not recognise this
+// wrapper as a toolbar item and the header renders empty.
 export const AppToolbarButton = ({ accessibilityLabel, testID, ...props }: AppToolbarButtonProps) => {
   if (E2eConfig.isEnabled()) {
     // Label as text rather than the icon: the E2E header is a test fixture, and the
