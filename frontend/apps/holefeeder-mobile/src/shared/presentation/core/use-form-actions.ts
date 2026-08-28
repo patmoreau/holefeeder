@@ -1,10 +1,10 @@
-import { createLogger } from '@powersync/common';
+import { Logger } from '@holefeeder/shared/core';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { goBack } from '@/shared/presentation/core/navigation';
 import { showAlert } from '@/shared/presentation/core/show-alert';
 
-const logger = createLogger('useFormActions');
+const logger = Logger.create('useFormActions');
 
 export type FormContext = {
   saveForm: () => Promise<boolean>;

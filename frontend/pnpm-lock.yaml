@@ -72,20 +72,17 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@op-engineering/op-sqlite':
-        specifier: 15.2.14
-        version: 15.2.14(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+        specifier: 17.2.0
+        version: 17.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@powersync/common':
-        specifier: 1.57.0
-        version: 1.57.0
-      '@powersync/op-sqlite':
-        specifier: 0.9.13
-        version: 0.9.13(@op-engineering/op-sqlite@15.2.14(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3))(@powersync/common@1.57.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+        specifier: 2.1.0
+        version: 2.1.0
       '@powersync/react':
-        specifier: 1.10.0
-        version: 1.10.0(@powersync/common@1.57.0)(react@19.2.3)
+        specifier: 2.0.0
+        version: 2.0.0(@powersync/common@2.1.0)(react@19.2.3)
       '@powersync/react-native':
-        specifier: 1.35.7
-        version: 1.35.7(@powersync/common@1.57.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+        specifier: 2.1.0
+        version: 2.1.0(@op-engineering/op-sqlite@17.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3))(@powersync/common@2.1.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))
@@ -231,9 +228,6 @@ importers:
       '@faker-js/faker':
         specifier: 10.5.0
         version: 10.5.0
-      '@powersync/node':
-        specifier: 0.19.2
-        version: 0.19.2(@powersync/common@1.57.0)(better-sqlite3@12.11.1)
       '@react-native-community/cli':
         specifier: 20.2.0
         version: 20.2.0(supports-color@8.1.1)(typescript@6.0.3)
@@ -1668,8 +1662,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@op-engineering/op-sqlite@15.2.14':
-    resolution: {integrity: sha512-b6ZtLBL/wIosshJnP+6xsthPdNxEBSxDHbeSEApJyzeXWRfQpRWxm5e5wkFH6OUfdzDNgx3p6VnqWObFIq8xoQ==}
+  '@op-engineering/op-sqlite@17.2.0':
+    resolution: {integrity: sha512-TmJSf83WGVZQ13RoYf+5oUrM2v7AenjifXeVwmyOqgXZaDL/dfnQDaVioD+3v8VH9syki3iyAI/fGUCZkJ3yYg==}
     peerDependencies:
       '@sqlite.org/sqlite-wasm': '*'
       react: '*'
@@ -1688,43 +1682,27 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@powersync/common@1.57.0':
-    resolution: {integrity: sha512-uYccCxK5mwahELRouY3YY584TZgjFU8wPPKZQQ6sAOUoMikV8D/+v+UYsNI280MKMnhFqLkxk4TPZIG7ArIzTQ==}
+  '@powersync/common@2.1.0':
+    resolution: {integrity: sha512-9TbmpTVJ22TA4ZQjfrRR/YkGzMuaNRnPHwT613efp/Sch0jbLhW6kObLmwp0nStUkRqAHSuNHwfclR4wyjvPpQ==}
 
-  '@powersync/node@0.19.2':
-    resolution: {integrity: sha512-lF7v/rkiLujAojn7Vjgvs1AibhL5zlEQVYO0iCUGoE1S1Hw7lxfUvAa1mTneKWCEmj0EC9yQBHkPUyBDZXVdLA==}
+  '@powersync/react-native@2.1.0':
+    resolution: {integrity: sha512-IMpCgExjA9AwrJXa9FZ0iraD8AZlmu0pqq0riwow3pZiJV+V+MfrS1oJmXMcrexJfQYI4Mrg6kdbLiRfqp79WQ==}
     peerDependencies:
-      '@powersync/common': ^1.57.0
-      better-sqlite3: 12.x
-    peerDependenciesMeta:
-      better-sqlite3:
-        optional: true
-
-  '@powersync/op-sqlite@0.9.13':
-    resolution: {integrity: sha512-v791Slrc4p9P6Y5CbO/7KW0RGKGVBaOgC8sKBo8JGT0Gr0HnRpaZK3QwfNxPPDHpmKHo85e/RBnABELm9q2EAA==}
-    deprecated: Since version 2 of the PowerSync React Native SDK, the OP-SQLite integration is built-in and doesn't require this dependency. Remove it from your package.json after upgrading. For updated setup instructions, see https://docs.powersync.com/client-sdks/reference/react-native-and-expo#installation.
-    peerDependencies:
-      '@op-engineering/op-sqlite': ^13.0.0 || ^14.0.0 || ^15.0.0
-      '@powersync/common': ^1.57.0
+      '@op-engineering/op-sqlite': ^17.1.0
+      '@powersync/common': ^2.1.0
       react: '*'
       react-native: '*'
 
-  '@powersync/react-native@1.35.7':
-    resolution: {integrity: sha512-6MSXM3BZ8eRy8dTV9GvWdUlqxMaa8wdRPUEkhFS1prJmJzeCpnrbaubcDyHSubWCgPF1Iqx2R+qOm/HVNnaw8A==}
+  '@powersync/react@2.0.0':
+    resolution: {integrity: sha512-HCIhyGRWOVjWOEyLfDhFCHhVmchtzNFIP0RKKjCsXiCr9pCfmuE5FHtI5LR5BdqgrVn0n0RcpH8LbGyxP8iVxg==}
     peerDependencies:
-      '@journeyapps/react-native-quick-sqlite': ^2.5.2
-      '@powersync/common': ^1.57.0
+      '@powersync/common': ^2.0.0
       react: '*'
-      react-native: '*'
-    peerDependenciesMeta:
-      '@journeyapps/react-native-quick-sqlite':
-        optional: true
 
-  '@powersync/react@1.10.0':
-    resolution: {integrity: sha512-orM29qocbF8zYTBM27j9nPNztyplpbNVaw8djpqxl8N2wESqHTbHOKpatg+Fa5aofgjzmrkiGwevJvCbiWYYWQ==}
+  '@powersync/shared-internals@1.1.1':
+    resolution: {integrity: sha512-EiYxTbqbD6lfpDERLyECBsORDfrrgLSf4nmQ35Ug4cUNKFBwO4tGPZaquGeXbr4O+uJk0QFE/f6+33MLCDurIA==}
     peerDependencies:
-      '@powersync/common': ^1.51.0
-      react: '*'
+      '@powersync/common': 2.0.0
 
   '@radix-ui/primitive@1.1.7':
     resolution: {integrity: sha512-rqWnm76nYT8HoNNqEjpgJ7Pw/DrBj5iBTrmEPo6HTX5+VJyBNOqTdv4g89G63HuR5g0AaENoAcH7Is5fF2kZ8Q==}
@@ -3241,9 +3219,6 @@ packages:
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
-
-  comlink@4.4.2:
-    resolution: {integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==}
 
   command-exists@1.2.9:
     resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
@@ -6633,10 +6608,6 @@ packages:
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
-  undici@7.29.0:
-    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
-    engines: {node: '>=20.18.1'}
-
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
     engines: {node: '>=4'}
@@ -8829,7 +8800,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@op-engineering/op-sqlite@15.2.14(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
+  '@op-engineering/op-sqlite@17.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
     dependencies:
       react: 19.2.3
       react-native: 0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1)
@@ -8840,36 +8811,25 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@powersync/common@1.57.0':
-    dependencies:
-      js-logger: 1.6.1
+  '@powersync/common@2.1.0': {}
 
-  '@powersync/node@0.19.2(@powersync/common@1.57.0)(better-sqlite3@12.11.1)':
+  '@powersync/react-native@2.1.0(@op-engineering/op-sqlite@17.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3))(@powersync/common@2.1.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
     dependencies:
-      '@powersync/common': 1.57.0
-      comlink: 4.4.2
-      undici: 7.29.0
-    optionalDependencies:
-      better-sqlite3: 12.11.1
-
-  '@powersync/op-sqlite@0.9.13(@op-engineering/op-sqlite@15.2.14(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3))(@powersync/common@1.57.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
-    dependencies:
-      '@op-engineering/op-sqlite': 15.2.14(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
-      '@powersync/common': 1.57.0
+      '@op-engineering/op-sqlite': 17.2.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+      '@powersync/common': 2.1.0
+      '@powersync/react': 2.0.0(@powersync/common@2.1.0)(react@19.2.3)
+      '@powersync/shared-internals': 1.1.1(@powersync/common@2.1.0)
       react: 19.2.3
       react-native: 0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1)
 
-  '@powersync/react-native@1.35.7(@powersync/common@1.57.0)(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
+  '@powersync/react@2.0.0(@powersync/common@2.1.0)(react@19.2.3)':
     dependencies:
-      '@powersync/common': 1.57.0
-      '@powersync/react': 1.10.0(@powersync/common@1.57.0)(react@19.2.3)
+      '@powersync/common': 2.1.0
       react: 19.2.3
-      react-native: 0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@react-native-community/cli@20.2.0(supports-color@8.1.1)(typescript@6.0.3))(@react-native/jest-preset@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.17)(react@19.2.3)(supports-color@8.1.1)
 
-  '@powersync/react@1.10.0(@powersync/common@1.57.0)(react@19.2.3)':
+  '@powersync/shared-internals@1.1.1(@powersync/common@2.1.0)':
     dependencies:
-      '@powersync/common': 1.57.0
-      react: 19.2.3
+      '@powersync/common': 2.1.0
 
   '@radix-ui/primitive@1.1.7': {}
 
@@ -10600,8 +10560,6 @@ snapshots:
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
-
-  comlink@4.4.2: {}
 
   command-exists@1.2.9: {}
 
@@ -14825,8 +14783,6 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@8.3.0: {}
-
-  undici@7.29.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 

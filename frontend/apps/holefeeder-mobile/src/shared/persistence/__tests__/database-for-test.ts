@@ -1,61 +1,14 @@
 import fs from 'fs';
-import {
-  AbstractPowerSyncDatabase,
-  type CreateSyncImplementationOptions,
-  type DBAdapter,
-  type PowerSyncBackendConnector,
-  type PowerSyncDatabaseOptionsWithSettings,
-  type RequiredAdditionalConnectionOptions,
-  Schema,
-  SqliteBucketStorage,
-  type StreamingSyncImplementation,
-} from '@powersync/common';
+import { type CommonPowerSyncDatabase, Schema } from '@powersync/common';
+import { PowerSyncDatabase } from '@powersync/react-native';
 import { DatabaseAdapterForTest } from '@/shared/persistence/__tests__/database-adapter-for-test';
 import { AppSchema } from '@/shared/persistence/app-schema';
 
-export class DatabaseForTest extends AbstractPowerSyncDatabase {
-  async _initialize(): Promise<void> {
-    return Promise.resolve();
-  }
+export type DatabaseForTest = CommonPowerSyncDatabase & {
+  cleanupTestDb: () => Promise<void>;
+};
 
-  protected openDBAdapter(options: PowerSyncDatabaseOptionsWithSettings): DBAdapter {
-    throw new Error('openDBAdapter not supported in TestDB');
-  }
-
-  protected generateBucketStorageAdapter(): SqliteBucketStorage {
-    return new SqliteBucketStorage(this.database, this.logger);
-  }
-
-  protected generateSyncStreamImplementation(
-    connector: PowerSyncBackendConnector,
-    options: CreateSyncImplementationOptions & RequiredAdditionalConnectionOptions
-  ): StreamingSyncImplementation {
-    return {
-      connected: false,
-      lastSyncedAt: new Date(),
-      retryDelayMs: 0,
-      waitForConnected: async () => {},
-      triggerUpdate: async () => {},
-      disconnect: async () => {},
-      dispose: async () => {},
-      obtainLock: async () => () => {},
-    } as unknown as StreamingSyncImplementation;
-  }
-
-  async connect() {
-    return;
-  }
-
-  async cleanupTestDb() {
-    try {
-      // db.close() disposes TriggerManagerImpl (clearing its 120s setTimeout)
-      // and closes the underlying SQLite connection — prevents Jest worker leaks.
-      await this.close({ disconnect: false });
-    } catch {}
-  }
-}
-
-export const setupDatabaseForTest = async (inMemory: boolean = true) => {
+export const setupDatabaseForTest = async (inMemory: boolean = true): Promise<DatabaseForTest> => {
   try {
     if (!inMemory && fs.existsSync('.debug.sqlite')) {
       fs.unlinkSync('.debug.sqlite');
@@ -63,9 +16,9 @@ export const setupDatabaseForTest = async (inMemory: boolean = true) => {
   } catch {}
   const adapter = new DatabaseAdapterForTest(inMemory ? ':memory:' : '.debug.sqlite');
 
-  const db = new DatabaseForTest({
+  const db = new PowerSyncDatabase({
     schema: AppSchema,
-    database: adapter,
+    opened: adapter,
   });
 
   await db.init();
@@ -76,7 +29,15 @@ export const setupDatabaseForTest = async (inMemory: boolean = true) => {
     await adapter.execute(sql);
   }
 
-  return db;
+  return Object.assign(db, {
+    cleanupTestDb: async () => {
+      try {
+        // db.close() disposes TriggerManagerImpl (clearing its 120s setTimeout)
+        // and closes the underlying SQLite connection — prevents Jest worker leaks.
+        await db.close({ disconnect: false });
+      } catch {}
+    },
+  });
 };
 
 const generateSqlFromSchema = (schema: Schema): string[] => {

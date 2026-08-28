@@ -1,8 +1,19 @@
 import { Config } from 'jest';
 
+// jest-expo/jest-preset ships no type declarations, and ts-node loads this config file on
+// its own, so an ambient module declaration would not be visible here.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const expoPreset = require('jest-expo/jest-preset') as { transform: NonNullable<Config['transform']> };
+
 /** @jest-config-loader esbuild-register */
 const config: Config = {
   preset: 'jest-expo',
+  // @powersync/shared-internals ships ESM-only .mjs bundles, which the preset's
+  // `\.[jt]sx?$` transform does not match. Reuse the same babel-jest options for them.
+  transform: {
+    ...expoPreset.transform,
+    '\\.mjs$': expoPreset.transform['\\.[jt]sx?$'],
+  },
   testMatch: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
   testRegex: [],
   testPathIgnorePatterns: ['/node_modules/', '.*/__tests__/.*', '/src/__tests__/mocks/'],
