@@ -45,6 +45,7 @@ const universalIconMapping = {
   account: { ios: 'creditcard', android: CreditCard },
   accounts: { ios: 'wallet.bifold.fill', android: Wallet },
   add: { ios: 'plus', android: Add },
+  addCircle: { ios: 'plus.circle', android: AddCircle },
   back: { ios: 'chevron.backward', android: ChevronLeft },
   calendar: { ios: 'calendar', android: CalendarToday },
   cancel: { ios: 'xmark.circle', android: Cancel },

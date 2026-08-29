@@ -33,6 +33,14 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="AddAccount"
+        options={{
+          title: t(tk.accountEdit.addTitle),
+          headerTransparent: true,
+          headerTintColor: theme.colors.tint,
+        }}
+      />
+      <Stack.Screen
         name="EditCategory"
         options={{
           title: t(tk.categoryEdit.title),

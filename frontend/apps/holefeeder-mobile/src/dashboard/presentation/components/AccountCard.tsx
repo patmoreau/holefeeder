@@ -20,6 +20,7 @@ export type CardLayout = { x: number; y: number; width: number; height: number }
 export type AccountCardProps = ViewProps & {
   account: AccountSummary;
   width?: number;
+  height?: number;
   onPress?: (id: Id, layout: CardLayout) => void;
 };
 
@@ -76,7 +77,7 @@ const createStyles = (theme: Theme) =>
 
 const transition = SharedTransition.duration(500).springify().damping(20).stiffness(90);
 
-export const AccountCard = ({ account, width = 300, style, onPress, ...props }: AccountCardProps) => {
+export const AccountCard = ({ account, width = 300, height, style, onPress, ...props }: AccountCardProps) => {
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
@@ -93,7 +94,7 @@ export const AccountCard = ({ account, width = 300, style, onPress, ...props }: 
   return (
     <Pressable ref={pressableRef} onPress={handlePress}>
       <Animated.View sharedTransitionTag={`tag-${account.id}`} sharedTransitionStyle={transition}>
-        <AppCard scrollable={'horizontal'} cardWidth={width} style={style} {...props}>
+        <AppCard scrollable={'horizontal'} cardWidth={width} style={[{ height, justifyContent: 'space-between' }, style]} {...props}>
           <View style={styles.header}>
             <AppText variant={'defaultSemiBold'} adjustsFontSizeToFit>
               {account.name}

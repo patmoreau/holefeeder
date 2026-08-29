@@ -76,6 +76,8 @@ const DashboardScreen = () => {
       params: { id: id as string },
     });
 
+  const onAddAccountPress = () => router.push('/(app)/AddAccount');
+
   logger.debug('Fetching data');
   const { data, errors } = useMultipleWatches({
     accounts: withDefault(() => accountsQuery, []),
@@ -114,7 +116,7 @@ const DashboardScreen = () => {
           <AppList inset>
             <AppColumn style={{ paddingTop: fullHeight - 125 }}>
               <AppReact matchContents>
-                <AccountCardList accounts={accounts} onPress={onAccountPress} />
+                <AccountCardList accounts={accounts} onPress={onAccountPress} onAddPress={onAddAccountPress} />
               </AppReact>
             </AppColumn>
             <LatestTransactionList />

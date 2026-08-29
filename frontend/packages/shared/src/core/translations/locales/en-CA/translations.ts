@@ -1,6 +1,7 @@
 export const en = {
   accountEdit: {
     title: 'Edit Account',
+    addTitle: 'Add Account',
     name: 'Name',
     type: 'Type',
     openBalance: 'Opening Balance',
@@ -22,6 +23,7 @@ export const en = {
     },
   },
   accountCard: {
+    add: 'Add an account',
     currentBalance: 'Current Balance',
     projected: 'Projected',
     updated: 'Updated',

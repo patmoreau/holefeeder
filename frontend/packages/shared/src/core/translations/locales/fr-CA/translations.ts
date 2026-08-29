@@ -3,6 +3,7 @@ import { TranslationStructure } from '../../translations';
 export const fr: TranslationStructure = {
   accountEdit: {
     title: 'Modifier le compte',
+    addTitle: 'Ajouter un compte',
     name: 'Nom',
     type: 'Type',
     openBalance: "Solde d'ouverture",
@@ -24,6 +25,7 @@ export const fr: TranslationStructure = {
     },
   },
   accountCard: {
+    add: 'Ajouter un compte',
     currentBalance: 'Solde actuel',
     projected: 'Projeté',
     updated: 'Mis à jour',
