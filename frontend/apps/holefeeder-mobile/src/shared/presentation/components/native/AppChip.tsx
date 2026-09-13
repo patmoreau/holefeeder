@@ -12,6 +12,8 @@ export type AppChipProps = {
   testID?: string;
 };
 
+export const chipFontModifier = () => IosModifiers.font({ textStyle: 'footnote' });
+
 export function AppChip({ label, selected = false, onPress, testID }: AppChipProps) {
   const { theme } = useTheme();
   const buttonModifiers: ExpoModifierConfig[] = [];
@@ -22,10 +24,7 @@ export function AppChip({ label, selected = false, onPress, testID }: AppChipPro
       IosModifiers.controlSize('mini'),
       IosModifiers.tint(selected ? theme.colors.primary : theme.colors.secondary)
     );
-    textModifiers.push(
-      IosModifiers.font({ size: theme.typography.chip.fontSize }),
-      IosModifiers.foregroundStyle(selected ? theme.colors.primary : theme.colors.secondary)
-    );
+    textModifiers.push(chipFontModifier(), IosModifiers.foregroundStyle(selected ? theme.colors.primary : theme.colors.secondary));
   }
 
   return (
