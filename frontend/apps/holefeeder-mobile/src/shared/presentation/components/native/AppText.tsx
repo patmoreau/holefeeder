@@ -50,7 +50,7 @@ export const dynamicTypeFontModifier = (variant: ThemedTextVariant) => {
   return textStyle ? font({ textStyle, weight: iosFontWeights[variant] }) : undefined;
 };
 
-const createStyles = (theme: Theme) => ({
+export const createTextVariantStyles = (theme: Theme) => ({
   default: {
     ...theme.typography.body,
     color: theme.colors.text,
@@ -74,11 +74,11 @@ const createStyles = (theme: Theme) => ({
   },
   subtitle: {
     ...theme.typography.subtitle,
-    color: theme.colors.text + '60',
+    color: theme.colors.secondaryText,
   },
   footnote: {
     ...theme.typography.footnote,
-    color: theme.colors.text + '60',
+    color: theme.colors.secondaryText,
   },
   link: {
     color: theme.colors.link,
@@ -90,7 +90,7 @@ const createStyles = (theme: Theme) => ({
 });
 
 export const AppText = ({ textStyle, variant = 'default', adjustsFontSizeToFit, modifiers = [], ...props }: ThemedTextProps) => {
-  const styles = useStyles(createStyles);
+  const styles = useStyles(createTextVariantStyles);
   const variantStyle = styles[variant] as UniversalTextStyle;
   const dynamicTypeFont = Platform.OS === 'ios' ? dynamicTypeFontModifier(variant) : undefined;
 

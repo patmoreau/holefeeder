@@ -1,4 +1,5 @@
-import { dynamicTypeFontModifier, type ThemedTextVariant } from './AppText';
+import { lightTheme } from '@/types/theme/light';
+import { createTextVariantStyles, dynamicTypeFontModifier, type ThemedTextVariant } from './AppText';
 
 describe('dynamicTypeFontModifier', () => {
   it('should map the body variants to the body text style so they scale with Dynamic Type', () => {
@@ -44,5 +45,18 @@ describe('dynamicTypeFontModifier', () => {
     ];
 
     variants.forEach((variant) => expect(() => dynamicTypeFontModifier(variant)).not.toThrow());
+  });
+});
+
+describe('createTextVariantStyles', () => {
+  const styles = createTextVariantStyles(lightTheme);
+
+  it.each(['subtitle', 'footnote'] as const)('should colour %s with the secondary text token', (variant) => {
+    expect(styles[variant].color).toBe(lightTheme.colors.secondaryText);
+  });
+
+  it('should colour the primary variants with the text token', () => {
+    expect(styles.default.color).toBe(lightTheme.colors.text);
+    expect(styles.defaultSemiBold.color).toBe(lightTheme.colors.text);
   });
 });

@@ -32,11 +32,11 @@ const createStyles = (theme: Theme) => ({
   },
   subtitle: {
     ...theme.typography.subtitle,
-    color: theme.colors.text + '60',
+    color: theme.colors.secondaryText,
   },
   footnote: {
     ...theme.typography.footnote,
-    color: theme.colors.text + '60',
+    color: theme.colors.secondaryText,
   },
   link: {
     color: theme.colors.link,
