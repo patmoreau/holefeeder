@@ -1,3 +1,6 @@
+import { frame } from '@expo/ui/swift-ui/modifiers';
+import { Platform } from 'react-native';
+import { componentSizes } from '@/types/theme/design-tokens';
 import {
   ExpoListItem,
   type ExpoListItemLeadingProps,
@@ -11,7 +14,11 @@ export type AppListItemLeadingProps = ExpoListItemLeadingProps;
 export type AppListItemTrailingProps = ExpoListItemTrailingProps;
 export type AppListItemSupportingProps = ExpoListItemSupportingProps;
 
-const AppListItemComponent = (props: AppListItemProps) => <ExpoListItem {...props} />;
+export const minTouchTargetModifier = () => frame({ minHeight: componentSizes.minTouchTarget });
+
+const AppListItemComponent = ({ modifiers = [], ...props }: AppListItemProps) => (
+  <ExpoListItem {...props} modifiers={Platform.OS === 'ios' ? [minTouchTargetModifier(), ...modifiers] : modifiers} />
+);
 
 export const AppListItem = Object.assign(AppListItemComponent, {
   Leading: ExpoListItem.Leading,
