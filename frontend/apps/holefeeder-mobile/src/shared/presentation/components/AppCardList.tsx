@@ -1,7 +1,7 @@
 import { FlashList, FlashListProps } from '@shopify/flash-list';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { RefreshControl, StyleProp, View, ViewStyle } from 'react-native';
+import { RefreshControl, StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
 import Reanimated from 'react-native-reanimated';
 import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
@@ -74,6 +74,7 @@ export const AppCardList = <T,>({
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
   const { theme } = useTheme();
+  const { width: windowWidth } = useWindowDimensions();
 
   const isHorizontal = scrollable === 'horizontal';
 
@@ -111,7 +112,7 @@ export const AppCardList = <T,>({
 
   if (isHorizontal) {
     return (
-      <View style={style}>
+      <View style={[{ width: windowWidth }, style]}>
         {headerComponent}
         <AnimatedFlashList
           horizontal
