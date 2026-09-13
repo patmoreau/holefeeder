@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ConfigContext } from '@expo/config';
 import { ExpoConfig } from '@expo/config-types';
-import { withInfoPlist, withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
+import { withAppDelegate, withInfoPlist, withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
 
 // Workaround for https://github.com/expo/expo/issues/46204
 // expo-dev-client@56 adds inputPaths to the "Strip Local Network Keys" build phase
@@ -31,13 +31,16 @@ const withDevLauncherBuildPhaseFix: ConfigPlugin = (config) =>
 // (ExpoAppDelegateSubscriberManager.swift, "TODO: - Configuring and Discarding Scenes").
 const SCENE_DELEGATE_FILENAME = 'SceneDelegate.swift';
 
-const sceneDelegateSource = `import UIKit
+const sceneDelegateSource = `internal import QuickActionsModule
+import UIKit
 
-// The AppDelegate builds the window and starts React Native in
-// didFinishLaunchingWithOptions, which runs before a scene connects, so adopt
-// that window rather than creating a second one. URL and activity callbacks are
-// delivered here under the scene lifecycle, so hand them back to the app
-// delegate chain that Expo's subscribers — Auth0, expo-linking — hook into.
+// Owns the window and starts React Native, both moved out of the AppDelegate by
+// withReactNativeSceneStartup, so the scene is connected before anything reads
+// its launch options. URL and activity callbacks are delivered here under the
+// scene lifecycle and are handed back to the app delegate chain that Expo's
+// subscribers — Auth0, expo-linking — hook into. Shortcuts go to the app's own
+// quick-actions module instead, which reads them on demand rather than as a
+// constant fixed at startup.
 @objc(SceneDelegate)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
@@ -49,20 +52,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let windowScene = scene as? UIWindowScene else { return }
 
-    let appDelegate = UIApplication.shared.delegate
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
 
-    if let existingWindow = (appDelegate?.window ?? nil) {
-      existingWindow.windowScene = windowScene
-      window = existingWindow
-      existingWindow.makeKeyAndVisible()
+    if let shortcutItem = connectionOptions.shortcutItem {
+      QuickActionsStore.shared.recordLaunchAction(shortcutItem)
     }
 
+    let sceneWindow = UIWindow(windowScene: windowScene)
+    window = sceneWindow
+    appDelegate?.window = sceneWindow
+    appDelegate?.reactNativeFactory?.startReactNative(
+      withModuleName: "main",
+      in: sceneWindow,
+      launchOptions: nil
+    )
+
     if let url = connectionOptions.urlContexts.first?.url {
-      _ = appDelegate?.application?(UIApplication.shared, open: url, options: [:])
+      _ = UIApplication.shared.delegate?.application?(UIApplication.shared, open: url, options: [:])
     }
 
     for userActivity in connectionOptions.userActivities {
-      _ = appDelegate?.application?(UIApplication.shared, continue: userActivity) { _ in }
+      _ = UIApplication.shared.delegate?.application?(UIApplication.shared, continue: userActivity) { _ in }
     }
   }
 
@@ -73,6 +83,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
     _ = UIApplication.shared.delegate?.application?(UIApplication.shared, continue: userActivity) { _ in }
+  }
+
+  func windowScene(
+    _ windowScene: UIWindowScene,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    QuickActionsStore.shared.trigger(shortcutItem)
+    completionHandler(true)
   }
 }
 `;
@@ -113,7 +132,29 @@ const withSceneDelegateSource: ConfigPlugin = (config) =>
     return modConfig;
   });
 
-const withUIScene: ConfigPlugin = (config) => withSceneManifest(withSceneDelegateSource(config));
+// React Native must not start in didFinishLaunchingWithOptions: that runs before
+// any scene connects, so a cold-launch shortcut cannot be recorded before the
+// Expo module registry reads it. SceneDelegate does both instead.
+const withReactNativeSceneStartup: ConfigPlugin = (config) =>
+  withAppDelegate(config, (modConfig) => {
+    const startup = `#if os(iOS) || os(tvOS)
+    window = UIWindow(frame: UIScreen.main.bounds)
+    factory.startReactNative(
+      withModuleName: "main",
+      in: window,
+      launchOptions: launchOptions)
+#endif
+`;
+
+    if (!modConfig.modResults.contents.includes(startup)) {
+      throw new Error('withUIScene: AppDelegate startup block not found — the Expo template changed');
+    }
+
+    modConfig.modResults.contents = modConfig.modResults.contents.replace(startup, '');
+    return modConfig;
+  });
+
+const withUIScene: ConfigPlugin = (config) => withSceneManifest(withSceneDelegateSource(withReactNativeSceneStartup(config)));
 
 const environment = process.env.APP_ENV || 'development';
 
@@ -212,7 +253,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           },
         },
       ],
-      'expo-quick-actions',
       [
         'expo-router',
         {

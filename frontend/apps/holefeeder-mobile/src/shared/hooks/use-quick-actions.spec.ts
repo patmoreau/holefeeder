@@ -1,29 +1,28 @@
 import { act, renderHook } from '@testing-library/react-native';
-import type { Action } from 'expo-quick-actions';
 import { router } from 'expo-router';
+import type { QuickAction } from '@/modules/quick-actions';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';
 
-// Capture the callback the hook registers with expo-quick-actions so tests can
-// simulate the OS dispatching a quick action (both the cold-launch "initial"
-// action and a warm listener event). The handler is stable across renders, so
-// the latest registered callback is the one to invoke.
-const mockUseQuickActionCallback = jest.fn();
-jest.mock('expo-quick-actions/hooks', () => ({
-  useQuickActionCallback: (cb: (action: Action) => void) => mockUseQuickActionCallback(cb),
-}));
-
 const mockSetItems = jest.fn().mockResolvedValue(undefined);
-jest.mock('expo-quick-actions', () => ({
-  setItems: (...args: unknown[]) => mockSetItems(...args),
-  addListener: jest.fn(() => ({ remove: jest.fn() })),
-  initial: null,
+const mockGetInitialAction = jest.fn().mockResolvedValue(null);
+const mockAddListener = jest.fn((_event: string, _listener: (action: QuickAction) => void) => ({ remove: jest.fn() }));
+
+jest.mock('@/modules/quick-actions', () => ({
+  __esModule: true,
+  default: {
+    setItems: (...args: unknown[]) => mockSetItems(...args),
+    getInitialAction: () => mockGetInitialAction(),
+    addListener: (event: string, listener: (action: QuickAction) => void) => mockAddListener(event, listener),
+  },
 }));
 
+const mockPathname = jest.fn(() => '/');
 jest.mock('expo-router', () => ({
   router: {
     navigate: jest.fn(),
     push: jest.fn(),
   },
+  usePathname: () => mockPathname(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -40,26 +39,75 @@ jest.mock('@/shared/auth/core/use-auth', () => ({
 const mockNavigate = router.navigate as jest.Mock;
 const mockPush = router.push as jest.Mock;
 
-const purchaseAction = (overrides: Partial<Action> = {}): Action =>
-  ({ id: '0', title: 'Purchase', params: { href: '/(app)/Purchase' }, ...overrides }) as Action;
+const purchaseAction = (overrides: Partial<QuickAction> = {}): QuickAction => ({
+  id: '0',
+  title: 'Purchase',
+  params: { href: '/(app)/Purchase' },
+  ...overrides,
+});
 
-const capturedCallback = (): ((action: Action) => void) => mockUseQuickActionCallback.mock.calls.at(-1)![0];
+// The hook subscribes through the module's own event listener, so the most
+// recently registered callback is the one the OS would dispatch to.
+const capturedListener = (): ((action: QuickAction) => void) => mockAddListener.mock.calls.at(-1)![1];
 
-const dispatch = async (action: Action) => {
+const dispatch = async (action: QuickAction) => {
   await act(async () => {
-    capturedCallback()(action);
+    capturedListener()(action);
   });
 };
 
 const renderReady = async () => {
   mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, isLoading: false });
-  return renderHook(() => useQuickActions());
+  // renderHook is async here, and awaiting it also settles the pending
+  // getInitialAction promise the hook kicks off on mount.
+  return await renderHook(() => useQuickActions());
 };
 
 describe('useQuickActions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockPathname.mockReturnValue('/');
+    mockGetInitialAction.mockResolvedValue(null);
     mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, isLoading: false });
+  });
+
+  describe('cold launch', () => {
+    it('should navigate to the action the app was launched with', async () => {
+      mockGetInitialAction.mockResolvedValue(purchaseAction());
+
+      await renderReady();
+
+      expect(mockNavigate).toHaveBeenCalledWith('/(app)/Purchase', { withAnchor: true });
+    });
+
+    it('should ask the native module for the launch action exactly once', async () => {
+      await renderReady();
+
+      expect(mockGetInitialAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not navigate when the app was not launched from a quick action', async () => {
+      mockGetInitialAction.mockResolvedValue(null);
+
+      await renderReady();
+
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    it('should hold the launch action until the user is authenticated', async () => {
+      mockGetInitialAction.mockResolvedValue(purchaseAction());
+      mockUseAuth.mockReturnValue({ user: null, isLoading: true });
+      const { rerender } = await renderHook(() => useQuickActions());
+
+      expect(mockNavigate).not.toHaveBeenCalled();
+
+      mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, isLoading: false });
+      await act(async () => {
+        rerender({});
+      });
+
+      expect(mockNavigate).toHaveBeenCalledWith('/(app)/Purchase', { withAnchor: true });
+    });
   });
 
   describe('navigation', () => {
@@ -98,7 +146,7 @@ describe('useQuickActions', () => {
     });
   });
 
-  describe('deduplication of a re-dispatched launch action', () => {
+  describe('deduplication of a re-dispatched action', () => {
     it('should navigate only once when the same action object is dispatched repeatedly', async () => {
       await renderReady();
       const action = purchaseAction();
@@ -121,7 +169,7 @@ describe('useQuickActions', () => {
   });
 
   describe('auth readiness gating', () => {
-    it('should not navigate when a launch action arrives before the user is authenticated', async () => {
+    it('should not navigate when an action arrives before the user is authenticated', async () => {
       mockUseAuth.mockReturnValue({ user: null, isLoading: true });
       await renderHook(() => useQuickActions());
 
@@ -147,6 +195,41 @@ describe('useQuickActions', () => {
     });
   });
 
+  describe('retrying until the route stack is mounted', () => {
+    it('should navigate again when the pathname changes but the target was not reached', async () => {
+      const { rerender } = await renderReady();
+
+      await dispatch(purchaseAction());
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+
+      mockPathname.mockReturnValue('/somewhere-in-between');
+      await act(async () => {
+        rerender({});
+      });
+
+      expect(mockNavigate).toHaveBeenCalledTimes(2);
+    });
+
+    it('should stop navigating once the pathname reports the target route', async () => {
+      const { rerender } = await renderReady();
+
+      await dispatch(purchaseAction());
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+
+      // The resolved pathname drops the (app) group segment.
+      mockPathname.mockReturnValue('/Purchase');
+      await act(async () => {
+        rerender({});
+      });
+      mockPathname.mockReturnValue('/elsewhere');
+      await act(async () => {
+        rerender({});
+      });
+
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('registration', () => {
     it('should register the purchase and help quick actions', async () => {
       await renderReady();
@@ -154,7 +237,14 @@ describe('useQuickActions', () => {
       expect(mockSetItems).toHaveBeenCalledTimes(1);
       const items = mockSetItems.mock.calls[0][0];
       expect(items).toHaveLength(2);
-      expect(items.map((item: { params: { href: string } }) => item.params.href)).toEqual(['/(app)/Purchase', '/help']);
+      expect(items.map((item: QuickAction) => item.params?.href)).toEqual(['/(app)/Purchase', '/help']);
+    });
+
+    it('should register icons as bare SF Symbol names', async () => {
+      await renderReady();
+
+      const items = mockSetItems.mock.calls[0][0];
+      expect(items.map((item: QuickAction) => item.icon)).toEqual(['cart.fill.badge.plus', 'person.crop.circle.badge.questionmark']);
     });
   });
 });
