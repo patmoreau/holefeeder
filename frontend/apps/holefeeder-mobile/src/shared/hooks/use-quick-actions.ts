@@ -1,5 +1,5 @@
 import { Logger } from '@holefeeder/shared/core';
-import { router, usePathname } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
@@ -14,14 +14,18 @@ const isValidQuickActionHref = (href: unknown): href is AvailableQuickActions =>
   return href === '/(app)/Purchase' || href === '/help';
 };
 
-// usePathname reports the resolved route, which omits group segments like (app).
-const routeFor = (href: AvailableQuickActions) => href.replace(/\/\([^)]*\)/g, '');
+// Routes behind the auth guard live in the (app) group.
+const PROTECTED_GROUP = '(app)';
 
 export function useQuickActions() {
   const { t } = useTranslation();
   const { user, isLoading } = useAuth();
   const isReady = !!user && !isLoading;
-  const pathname = usePathname();
+  const segments = useSegments();
+  // usePathname is not usable here: navigating before the protected stack mounts updates the
+  // router state — so the pathname reports the target — while the screen never appears. The
+  // segments report what is actually rendered, so this waits for the guarded group to be mounted.
+  const isProtectedStackMounted = segments[0] === PROTECTED_GROUP;
 
   const handledActionRef = useRef<QuickAction | null>(null);
   const pendingHrefRef = useRef<AvailableQuickActions | null>(null);
@@ -64,25 +68,18 @@ export function useQuickActions() {
     };
   }, [handleQuickAction]);
 
-  // Defer navigation until the app is authenticated, then keep the request pending until the
-  // pathname confirms arrival. On a cold launch the protected route stack mounts after auth
-  // resolves, so the first navigate can land before the target route exists and is silently
-  // dropped; re-running as the pathname settles retries it. `navigate` (not `push`) is idempotent
-  // for the target route, so a retry never stacks duplicate Purchase screens.
+  // Hold the action until the guarded stack is mounted. Auth resolving is not enough: that is the
+  // same commit the stack mounts in, and navigating then updates the route state without the
+  // screen ever rendering. `navigate` (not `push`) is idempotent for the target route.
   useEffect(() => {
-    if (!isReady || pendingHrefRef.current === null) {
+    if (!isReady || !isProtectedStackMounted || pendingHrefRef.current === null) {
       return;
     }
     const href = pendingHrefRef.current;
-    if (pathname === routeFor(href)) {
-      log.debug('Quick action target reached:', pathname);
-      pendingHrefRef.current = null;
-      return;
-    }
-
+    pendingHrefRef.current = null;
     log.debug('Navigating to quick action target:', href);
     router.navigate(href, { withAnchor: true });
-  }, [isReady, pendingSeq, pathname]);
+  }, [isReady, isProtectedStackMounted, pendingSeq]);
 
   useEffect(() => {
     const setupQuickActions = async () => {

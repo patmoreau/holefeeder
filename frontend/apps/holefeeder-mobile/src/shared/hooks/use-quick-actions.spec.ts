@@ -16,13 +16,13 @@ jest.mock('@/modules/quick-actions', () => ({
   },
 }));
 
-const mockPathname = jest.fn(() => '/');
+const mockSegments = jest.fn<string[], []>(() => ['(app)', '(tabs)']);
 jest.mock('expo-router', () => ({
   router: {
     navigate: jest.fn(),
     push: jest.fn(),
   },
-  usePathname: () => mockPathname(),
+  useSegments: () => mockSegments(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -66,7 +66,7 @@ const renderReady = async () => {
 describe('useQuickActions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockPathname.mockReturnValue('/');
+    mockSegments.mockReturnValue(['(app)', '(tabs)']);
     mockGetInitialAction.mockResolvedValue(null);
     mockUseAuth.mockReturnValue({ user: { id: 'user-1' }, isLoading: false });
   });
@@ -195,33 +195,36 @@ describe('useQuickActions', () => {
     });
   });
 
-  describe('retrying until the route stack is mounted', () => {
-    it('should navigate again when the pathname changes but the target was not reached', async () => {
-      const { rerender } = await renderReady();
+  describe('waiting for the guarded stack', () => {
+    it('should not navigate while the protected group is not mounted', async () => {
+      mockSegments.mockReturnValue(['index']);
 
+      await renderReady();
       await dispatch(purchaseAction());
-      expect(mockNavigate).toHaveBeenCalledTimes(1);
 
-      mockPathname.mockReturnValue('/somewhere-in-between');
-      await act(async () => {
-        rerender({});
-      });
-
-      expect(mockNavigate).toHaveBeenCalledTimes(2);
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    it('should stop navigating once the pathname reports the target route', async () => {
+    it('should navigate once the protected group mounts', async () => {
+      mockSegments.mockReturnValue(['index']);
       const { rerender } = await renderReady();
-
       await dispatch(purchaseAction());
-      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).not.toHaveBeenCalled();
 
-      // The resolved pathname drops the (app) group segment.
-      mockPathname.mockReturnValue('/Purchase');
+      mockSegments.mockReturnValue(['(app)', '(tabs)']);
       await act(async () => {
         rerender({});
       });
-      mockPathname.mockReturnValue('/elsewhere');
+
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith('/(app)/Purchase', { withAnchor: true });
+    });
+
+    it('should navigate only once as the stack continues to settle', async () => {
+      const { rerender } = await renderReady();
+      await dispatch(purchaseAction());
+
+      mockSegments.mockReturnValue(['(app)', 'Purchase']);
       await act(async () => {
         rerender({});
       });
