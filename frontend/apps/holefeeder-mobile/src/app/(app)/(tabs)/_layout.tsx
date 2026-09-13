@@ -28,15 +28,15 @@ const TabsLayout = () => {
       <NativeTabs key={language} iconColor={theme.colors.tabIconDefault} tintColor={theme.colors.tabIconSelected}>
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Icon sf={AppIconMap.dashboard.ios} />
-          <NativeTabs.Trigger.Label>{t(tk.tabs.dashboard)}</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label hidden>{t(tk.tabs.dashboard)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="statistics">
           <NativeTabs.Trigger.Icon sf={AppIconMap.insights.ios} />
-          <NativeTabs.Trigger.Label>{t(tk.tabs.insights)}</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label hidden>{t(tk.tabs.insights)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
           <NativeTabs.Trigger.Icon sf={AppIconMap.settings.ios} />
-          <NativeTabs.Trigger.Label>{t(tk.tabs.settings)}</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label hidden>{t(tk.tabs.settings)}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     </>
