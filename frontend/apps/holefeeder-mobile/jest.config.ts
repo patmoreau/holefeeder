@@ -35,6 +35,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@holefeeder/shared/core$': '<rootDir>/../../packages/shared/src/core/index.ts',
     '^@holefeeder/shared/testkit$': '<rootDir>/../../packages/shared/src/testkit/index.ts',
+    '^@/modules/(.*)$': '<rootDir>/modules/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
   },
