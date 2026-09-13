@@ -1,6 +1,9 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { ConfigContext } from '@expo/config';
 import { ExpoConfig } from '@expo/config-types';
-import { withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
+import { withInfoPlist, withXcodeProject, type ConfigPlugin } from 'expo/config-plugins';
+
 // Workaround for https://github.com/expo/expo/issues/46204
 // expo-dev-client@56 adds inputPaths to the "Strip Local Network Keys" build phase
 // but no outputPaths, creating a cycle in Xcode's dependency graph that causes
@@ -19,6 +22,98 @@ const withDevLauncherBuildPhaseFix: ConfigPlugin = (config) =>
     }
     return modConfig;
   });
+
+// Workaround for https://github.com/expo/expo/issues/46663
+// The iOS 27 SDK refuses to launch an app that has not adopted the UIScene
+// lifecycle, and Expo SDK 57 still generates a pre-scene AppDelegate with no
+// UIApplicationSceneManifest. Remove this once Expo ships its own migration —
+// expo-modules-core leaves scene handling unimplemented today
+// (ExpoAppDelegateSubscriberManager.swift, "TODO: - Configuring and Discarding Scenes").
+const SCENE_DELEGATE_FILENAME = 'SceneDelegate.swift';
+
+const sceneDelegateSource = `import UIKit
+
+// The AppDelegate builds the window and starts React Native in
+// didFinishLaunchingWithOptions, which runs before a scene connects, so adopt
+// that window rather than creating a second one. URL and activity callbacks are
+// delivered here under the scene lifecycle, so hand them back to the app
+// delegate chain that Expo's subscribers — Auth0, expo-linking — hook into.
+@objc(SceneDelegate)
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard let windowScene = scene as? UIWindowScene else { return }
+
+    let appDelegate = UIApplication.shared.delegate
+
+    if let existingWindow = (appDelegate?.window ?? nil) {
+      existingWindow.windowScene = windowScene
+      window = existingWindow
+      existingWindow.makeKeyAndVisible()
+    }
+
+    if let url = connectionOptions.urlContexts.first?.url {
+      _ = appDelegate?.application?(UIApplication.shared, open: url, options: [:])
+    }
+
+    for userActivity in connectionOptions.userActivities {
+      _ = appDelegate?.application?(UIApplication.shared, continue: userActivity) { _ in }
+    }
+  }
+
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    guard let url = URLContexts.first?.url else { return }
+    _ = UIApplication.shared.delegate?.application?(UIApplication.shared, open: url, options: [:])
+  }
+
+  func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+    _ = UIApplication.shared.delegate?.application?(UIApplication.shared, continue: userActivity) { _ in }
+  }
+}
+`;
+
+const withSceneManifest: ConfigPlugin = (config) =>
+  withInfoPlist(config, (modConfig) => {
+    modConfig.modResults.UIApplicationSceneManifest = {
+      UIApplicationSupportsMultipleScenes: false,
+      UISceneConfigurations: {
+        UIWindowSceneSessionRoleApplication: [
+          {
+            UISceneConfigurationName: 'Default Configuration',
+            UISceneDelegateClassName: '$(PRODUCT_MODULE_NAME).SceneDelegate',
+          },
+        ],
+      },
+    };
+    return modConfig;
+  });
+
+const withSceneDelegateSource: ConfigPlugin = (config) =>
+  withXcodeProject(config, (modConfig) => {
+    const { projectName, platformProjectRoot } = modConfig.modRequest;
+    if (!projectName) {
+      throw new Error('withUIScene: could not resolve the iOS project name');
+    }
+
+    // Written here rather than in a separate mod so the file always exists
+    // before it is registered in the same pass.
+    fs.writeFileSync(path.join(platformProjectRoot, projectName, SCENE_DELEGATE_FILENAME), sceneDelegateSource);
+
+    const project = modConfig.modResults;
+    const relativePath = `${projectName}/${SCENE_DELEGATE_FILENAME}`;
+    if (!project.hasFile(relativePath)) {
+      project.addSourceFile(relativePath, { target: project.getFirstTarget().uuid }, project.findPBXGroupKey({ name: projectName }));
+    }
+
+    return modConfig;
+  });
+
+const withUIScene: ConfigPlugin = (config) => withSceneManifest(withSceneDelegateSource(config));
 
 const environment = process.env.APP_ENV || 'development';
 
@@ -160,5 +255,5 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       reactCompiler: true,
     },
   };
-  return withDevLauncherBuildPhaseFix(appConfig);
+  return withUIScene(withDevLauncherBuildPhaseFix(appConfig));
 };
