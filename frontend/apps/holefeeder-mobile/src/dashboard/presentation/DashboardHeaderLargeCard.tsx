@@ -6,6 +6,7 @@ import { CategoryType } from '@/shared/core/category-type';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppDivider } from '@/shared/presentation/components/native/AppDivider';
+import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
@@ -29,12 +30,10 @@ const createStyles = (theme: Theme) => ({
   divider: {
     height: 1,
     backgroundColor: theme.colors.primaryText,
-    opacity: 0.2,
     marginVertical: spacing.lg,
   },
   subtitle: {
     color: theme.colors.primaryText,
-    opacity: 0.5,
     marginBottom: spacing.xs,
   },
   positiveText: {
@@ -90,11 +89,11 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
           <ExpenseTrendBadge variation={summary.variation} variant="amount" />
           <AppSpacer />
         </AppRow>
-        <AppDivider />
+        <AppDivider modifiers={[AppModifiers.background(theme.colors.primaryText)]} />
         <AppRow>
           <AppSpacer />
           <AppColumn alignment={'center'} spacing={4}>
-            <AppText variant={'subtitle'} style={styles.subtitle}>
+            <AppText variant={'subtitle'} textStyle={styles.subtitle}>
               {t(tk.dashboard.largeHeader.netFlow)}
             </AppText>
             <AppColumn
@@ -110,7 +109,7 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
           </AppColumn>
           <AppSpacer />
           <AppColumn alignment={'center'} spacing={4}>
-            <AppText variant={'subtitle'} style={styles.subtitle}>
+            <AppText variant={'subtitle'} textStyle={styles.subtitle}>
               {t(tk.accountCard.projected)}
             </AppText>
             <AppColumn
