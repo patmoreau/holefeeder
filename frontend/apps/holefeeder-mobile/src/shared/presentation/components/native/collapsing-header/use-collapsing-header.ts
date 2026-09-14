@@ -27,9 +27,14 @@ export type UseCollapsingHeaderOptions = {
    * instead: there the inset is only the status bar, and the toolbar row would be swallowed.
    */
   collapsedHeight?: number;
+  /**
+   * How far down the screen the scrolling list already starts, subtracted from the spacer that
+   * keeps its first row clear of the header. Defaults to what the tab screens' lists apply.
+   */
+  listTopInset?: number;
 };
 
-export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride }: UseCollapsingHeaderOptions = {}) => {
+export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, listTopInset }: UseCollapsingHeaderOptions = {}) => {
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [cardHeight, setCardHeight] = useState(0);
@@ -38,6 +43,7 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride }
     cardHeight,
     windowHeight,
     insetTop: collapsedHeightOverride ?? insets.top,
+    listTopInset,
   });
 
   const scrollOffset = useSharedValue(0);
