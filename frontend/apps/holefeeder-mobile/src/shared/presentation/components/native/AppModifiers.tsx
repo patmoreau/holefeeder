@@ -1,5 +1,6 @@
 import { background, border, cornerRadius, foregroundStyle, frame, onAppear } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
+import { onScrollOffsetChange } from '@/modules/app-modifiers';
 
 type NamedColor =
   | 'primary'
@@ -32,4 +33,5 @@ export const AppModifiers = {
   border: (color: Color) => border({ color: color }),
   cornerRadius: (radius: number) => cornerRadius(radius),
   foregroundStyle: (color: Color) => foregroundStyle(color),
+  onScrollOffsetChange: (handler: (offsetY: number) => void) => onScrollOffsetChange(handler),
 } as const;
