@@ -20,7 +20,16 @@ export type CollapsingHeader = ReturnType<typeof useCollapsingHeader>;
  * `listModifiers` to the scrolling `AppList`, render `spacerHeight` as its first row, and give the
  * rest to `AppCollapsingHeader`.
  */
-export const useCollapsingHeader = () => {
+export type UseCollapsingHeaderOptions = {
+  /**
+   * Height the header collapses to. Defaults to the top safe-area inset, which under the tabs'
+   * transparent header is the toolbar area. A pushed screen should pass `useHeaderHeight()`
+   * instead: there the inset is only the status bar, and the toolbar row would be swallowed.
+   */
+  collapsedHeight?: number;
+};
+
+export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride }: UseCollapsingHeaderOptions = {}) => {
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [cardHeight, setCardHeight] = useState(0);
@@ -28,7 +37,7 @@ export const useCollapsingHeader = () => {
   const { fullHeight, collapsedHeight, travel, spacerHeight } = collapsingHeaderHeights({
     cardHeight,
     windowHeight,
-    insetTop: insets.top,
+    insetTop: collapsedHeightOverride ?? insets.top,
   });
 
   const scrollOffset = useSharedValue(0);
