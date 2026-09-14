@@ -8,11 +8,16 @@ struct ScrollTransitionModifierView: ViewModifier {
     let opacityIdentity: Double
     let opacityOther: Double
 
+    @ViewBuilder
     func body(content: Content) -> some View {
-        content.scrollTransition { view, phase in
-            view
-            .scaleEffect(phase.isIdentity ? scaleIdentity : scaleOther)
-            .opacity(phase.isIdentity ? opacityIdentity : opacityOther)
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            content.scrollTransition { view, phase in
+                view
+                .scaleEffect(phase.isIdentity ? scaleIdentity : scaleOther)
+                .opacity(phase.isIdentity ? opacityIdentity : opacityOther)
+            }
+        } else {
+            content
         }
     }
 }

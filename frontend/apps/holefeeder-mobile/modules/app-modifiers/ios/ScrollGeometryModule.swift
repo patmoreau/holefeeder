@@ -5,12 +5,17 @@ import SwiftUI
 struct ScrollGeometryModifierView: ViewModifier {
     let onOffsetChange: (CGFloat) -> Void
 
+    @ViewBuilder
     func body(content: Content) -> some View {
-        content
-        .onScrollGeometryChange(for: CGFloat.self) { geo in
-            geo.contentOffset.y
-        } action: { _, newValue in
-            onOffsetChange(newValue)
+        if #available(iOS 18.0, tvOS 18.0, *) {
+            content
+            .onScrollGeometryChange(for: CGFloat.self) { geo in
+                geo.contentOffset.y
+            } action: { _, newValue in
+                onOffsetChange(newValue)
+            }
+        } else {
+            content
         }
     }
 }
@@ -22,7 +27,7 @@ public class ScrollGeometryModule: Module {
         OnCreate {
             ViewModifierRegistry.register("onScrollOffsetChange") { params, _, eventDispatcher in
                 ScrollGeometryModifierView { offsetY in
-                    eventDispatcher?.dispatch("onScrollOffsetChange", payload: ["offsetY": offsetY])
+                    eventDispatcher(["onScrollOffsetChange": ["offsetY": offsetY]])
                 }
             }
         }
