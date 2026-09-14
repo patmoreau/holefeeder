@@ -14,6 +14,7 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     gap: spacing.sm,
+    flexWrap: 'wrap' as const,
   },
   label: {
     color: theme.colors.primaryText,

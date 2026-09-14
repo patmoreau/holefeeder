@@ -1,16 +1,12 @@
 import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { CategoryType } from '@/shared/core/category-type';
+import { AppText } from '@/shared/presentation/components/AppText';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
-import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
-import { AppDivider } from '@/shared/presentation/components/native/AppDivider';
-import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
-import { AppRow } from '@/shared/presentation/components/native/AppRow';
-import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
-import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -18,18 +14,44 @@ import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-
 import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
+// Built from React Native views rather than a SwiftUI host so the card reports its own height.
+// The header above it sizes to that, which is what keeps the layout correct at every Dynamic
+// Type setting — a host only reports its content size with `matchContents`, and that collapses
+// the width as well, leaving the divider and pills too narrow.
 const createStyles = (theme: Theme) => ({
+  column: {
+    gap: spacing.sm,
+    paddingBottom: spacing.lg,
+  },
   textColor: {
     color: theme.colors.primaryText,
   },
   largeTitle: {
     fontWeight: fontWeight.bold,
     color: theme.colors.primaryText,
-    marginBottom: spacing.xs,
   },
   subtitle: {
     color: theme.colors.primaryText,
-    marginBottom: spacing.xs,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: theme.colors.primaryText,
+  },
+  totals: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-evenly' as const,
+    // Without this the columns stretch to the row height and the pills balloon with it.
+    alignItems: 'flex-start' as const,
+  },
+  total: {
+    alignItems: 'center' as const,
+    gap: spacing.xs,
+  },
+  pill: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.full,
+    alignSelf: 'center' as const,
   },
   positiveText: {
     color: theme.colors.positive,
@@ -66,62 +88,39 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
     ? `+ ${LocalFormatter.currency(projectedNetFlowAmount, currentLocale, currencyCode)}`
     : `- ${LocalFormatter.currency(projectedNetFlowAmount, currentLocale, currencyCode)}`;
 
+  const pillBackground = { backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground };
+
   return (
-    <AppNative style={{ flex: 1 }}>
-      <AppColumn spacing={8} alignment={'start'} style={{ paddingBottom: spacing.lg }}>
-        <AppRow>
-          <AppText variant={'subtitle'} textStyle={styles.textColor}>
-            {t(tk.dashboard.largeHeader.spendingTitle)}
+    <View style={styles.column}>
+      <AppText variant={'subtitle'} style={styles.textColor}>
+        {t(tk.dashboard.largeHeader.spendingTitle)}
+      </AppText>
+      <AppText variant={'display'} style={styles.largeTitle}>
+        {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
+      </AppText>
+      {/* The badge is shared with a SwiftUI screen, so it stays native and sizes to its content. */}
+      <AppNative matchContents>
+        <ExpenseTrendBadge variation={summary.variation} variant="amount" />
+      </AppNative>
+      <View style={styles.divider} />
+      <View style={styles.totals}>
+        <View style={styles.total}>
+          <AppText variant={'subtitle'} style={styles.subtitle}>
+            {t(tk.dashboard.largeHeader.netFlow)}
           </AppText>
-          <AppSpacer />
-        </AppRow>
-        <AppRow>
-          <AppText variant={'display'} textStyle={styles.largeTitle}>
-            {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
+          <View style={[styles.pill, pillBackground]}>
+            <AppText style={netFlowPositive ? styles.positiveText : styles.negativeText}>{netFlowText}</AppText>
+          </View>
+        </View>
+        <View style={styles.total}>
+          <AppText variant={'subtitle'} style={styles.subtitle}>
+            {t(tk.accountCard.projected)}
           </AppText>
-        </AppRow>
-        <AppRow>
-          <ExpenseTrendBadge variation={summary.variation} variant="amount" />
-          <AppSpacer />
-        </AppRow>
-        <AppDivider modifiers={[AppModifiers.background(theme.colors.primaryText)]} />
-        <AppRow>
-          <AppSpacer />
-          <AppColumn alignment={'center'} spacing={4}>
-            <AppText variant={'subtitle'} textStyle={styles.subtitle}>
-              {t(tk.dashboard.largeHeader.netFlow)}
-            </AppText>
-            <AppColumn
-              style={{
-                paddingHorizontal: spacing.sm,
-                paddingVertical: spacing.xs,
-                borderRadius: borderRadius.full,
-                backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground,
-              }}
-            >
-              <AppText textStyle={netFlowPositive ? styles.positiveText : styles.negativeText}>{netFlowText}</AppText>
-            </AppColumn>
-          </AppColumn>
-          <AppSpacer />
-          <AppColumn alignment={'center'} spacing={4}>
-            <AppText variant={'subtitle'} textStyle={styles.subtitle}>
-              {t(tk.accountCard.projected)}
-            </AppText>
-            <AppColumn
-              style={{
-                paddingHorizontal: spacing.sm,
-                paddingVertical: spacing.xs,
-                borderRadius: borderRadius.full,
-                backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground,
-              }}
-            >
-              <AppText textStyle={projectedIsOver ? styles.positiveText : styles.negativeText}>{projectedNetFlowText}</AppText>
-            </AppColumn>
-          </AppColumn>
-          <AppSpacer />
-        </AppRow>
-        <AppSpacer />
-      </AppColumn>
-    </AppNative>
+          <View style={[styles.pill, pillBackground]}>
+            <AppText style={projectedIsOver ? styles.positiveText : styles.negativeText}>{projectedNetFlowText}</AppText>
+          </View>
+        </View>
+      </View>
+    </View>
   );
 };

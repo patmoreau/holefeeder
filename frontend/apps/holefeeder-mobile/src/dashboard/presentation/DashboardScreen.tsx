@@ -1,6 +1,6 @@
 import { Id, Logger } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import Animated, { Extrapolation, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,6 +23,7 @@ import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
+import { spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 const logger = Logger.create('DashboardScreen');
@@ -42,7 +43,6 @@ const createStyles = (theme: Theme) => ({
     right: 0,
     zIndex: 1000,
     overflow: 'hidden' as const,
-    paddingLeft: 16,
     // justifyContent: 'flex-end' as const,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -65,7 +65,9 @@ const createStyles = (theme: Theme) => ({
     left: 16,
     // Clear of the toolbar buttons on the right.
     right: 72,
-    height: TOOLBAR_ROW_HEIGHT,
+    // A floor rather than a fixed height, so the row still centres on the toolbar buttons at
+    // small text sizes but grows instead of clipping at large ones.
+    minHeight: TOOLBAR_ROW_HEIGHT,
     justifyContent: 'center' as const,
   },
 });
@@ -80,7 +82,11 @@ const DashboardScreen = () => {
 
   const insets = useSafeAreaInsets();
 
-  const fullHeight = height / 3;
+  // The header is as tall as the card needs, so it follows the text size on its own. The
+  // window fraction is only a starting value for the first frame, before the card has laid out.
+  const [cardHeight, setCardHeight] = useState(0);
+  // Capped so the largest accessibility text sizes cannot grow the header over the whole screen.
+  const fullHeight = Math.min(cardHeight || height / 3, height / 2);
   // The screen sits under a transparent stack header, so the top inset is the toolbar area.
   const collapsedHeight = insets.top;
 
@@ -136,7 +142,10 @@ const DashboardScreen = () => {
           },
         ]}
       >
-        <Animated.View style={[{ height: fullHeight }, cardStyle]}>
+        <Animated.View
+          style={[{ paddingTop: collapsedHeight, paddingHorizontal: spacing.lg }, cardStyle]}
+          onLayout={(event) => setCardHeight(event.nativeEvent.layout.height)}
+        >
           <DashboardHeaderLargeCard summary={dashboard} upcomingFlows={upcomingFlows} />
         </Animated.View>
         <Animated.View style={[styles.smallCardContainer, smallCardStyle]} pointerEvents="none">
