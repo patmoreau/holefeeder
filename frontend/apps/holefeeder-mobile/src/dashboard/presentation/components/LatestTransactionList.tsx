@@ -6,6 +6,7 @@ import { useLatestTransactions } from '@/dashboard/presentation/core/use-latest-
 import { tk } from '@/i18n/translations';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppListForEach } from '@/shared/presentation/components/native/AppListForEach';
+import { AppListSectionTitle } from '@/shared/presentation/components/native/AppListSectionTitle';
 
 export type LatestTransactionListProps = ViewProps & {};
 
@@ -20,12 +21,15 @@ export const LatestTransactionList = ({ style }: LatestTransactionListProps) => 
   }
 
   return (
-    <AppFieldSection title={t(tk.recentTransactions.title)}>
-      <AppListForEach>
-        {transactions.map((transaction) => (
-          <LatestTransactionCard key={transaction.id + transaction.date} transaction={transaction} />
-        ))}
-      </AppListForEach>
-    </AppFieldSection>
+    <>
+      <AppListSectionTitle title={t(tk.recentTransactions.title)} />
+      <AppFieldSection>
+        <AppListForEach>
+          {transactions.map((transaction) => (
+            <LatestTransactionCard key={transaction.id + transaction.date} transaction={transaction} />
+          ))}
+        </AppListForEach>
+      </AppFieldSection>
+    </>
   );
 };

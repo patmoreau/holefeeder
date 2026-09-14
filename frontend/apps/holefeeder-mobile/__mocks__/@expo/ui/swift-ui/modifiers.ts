@@ -28,3 +28,6 @@ export const onSubmit = jest.fn((props) => props);
 export const textContentType = jest.fn((props) => props);
 export const textInputAutocapitalization = jest.fn((props) => props);
 export const kerning = jest.fn((props) => props);
+export const listRowBackground = jest.fn((props) => props);
+export const listRowInsets = jest.fn((props) => props);
+export const listRowSeparator = jest.fn((props) => props);

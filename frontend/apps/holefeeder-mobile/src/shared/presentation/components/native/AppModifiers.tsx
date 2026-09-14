@@ -1,4 +1,14 @@
-import { background, border, cornerRadius, foregroundStyle, frame, onAppear } from '@expo/ui/swift-ui/modifiers';
+import {
+  background,
+  border,
+  cornerRadius,
+  foregroundStyle,
+  frame,
+  listRowBackground,
+  listRowInsets,
+  listRowSeparator,
+  onAppear,
+} from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
 import { onScrollOffsetChange } from '@/modules/app-modifiers';
 
@@ -34,4 +44,7 @@ export const AppModifiers = {
   cornerRadius: (radius: number) => cornerRadius(radius),
   foregroundStyle: (color: Color) => foregroundStyle(color),
   onScrollOffsetChange: (handler: (offsetY: number) => void) => onScrollOffsetChange(handler),
+  listRowBackground: (color: Color) => listRowBackground(color),
+  listRowInsets: (params: Parameters<typeof listRowInsets>[0]) => listRowInsets(params),
+  hideListRowSeparator: listRowSeparator('hidden'),
 } as const;
