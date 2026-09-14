@@ -23,7 +23,6 @@ import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
-import { borderRadius } from '@/types/theme';
 import { Theme } from '@/types/theme/theme';
 
 const logger = Logger.create('DashboardScreen');
@@ -134,7 +133,6 @@ const DashboardScreen = () => {
           headerStyle,
           {
             backgroundColor: theme.colors.primary,
-            borderRadius: borderRadius['4xl'],
           },
         ]}
       >
