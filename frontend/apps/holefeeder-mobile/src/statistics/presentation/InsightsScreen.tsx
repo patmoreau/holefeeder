@@ -85,9 +85,9 @@ export default function InsightsScreen() {
         <Animated.View style={cardStyle} onLayout={(event) => setCardHeight(event.nativeEvent.layout.height)}>
           <InsightsPeriodHeader />
         </Animated.View>
-      </Animated.View>
-      <Animated.View style={[styles.smallCardContainer, smallCardStyle]} pointerEvents="none">
-        <SpendingHeaderSmallCard summary={summary} />
+        <Animated.View style={[styles.smallCardContainer, smallCardStyle]} pointerEvents="none">
+          <SpendingHeaderSmallCard summary={summary} />
+        </Animated.View>
       </Animated.View>
 
       <View style={{ flex: 1 }}>
