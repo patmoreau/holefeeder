@@ -27,11 +27,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primaryText,
     marginBottom: spacing.xs,
   },
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.primaryText,
-    marginVertical: spacing.lg,
-  },
   subtitle: {
     color: theme.colors.primaryText,
     marginBottom: spacing.xs,
