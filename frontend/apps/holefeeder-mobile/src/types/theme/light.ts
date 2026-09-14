@@ -31,11 +31,6 @@ const typography = {
     fontSize: fontSize!.md,
     fontWeight: fontWeight.normal,
   },
-  chip: {
-    fontSize: fontSize!.base,
-    fontWeight: fontWeight.normal,
-    lineHeight: fontSize!.base * lineHeight.tight,
-  },
   errorField: {
     fontSize: fontSize!.sm,
   },

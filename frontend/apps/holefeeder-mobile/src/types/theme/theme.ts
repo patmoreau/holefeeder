@@ -55,7 +55,6 @@ export interface Theme {
     body: TextStyle;
     secondary: TextStyle;
     footnote: TextStyle;
-    chip: TextStyle;
     errorField: TextStyle;
   };
   styles: ReturnType<typeof createBaseStyles> & {};
