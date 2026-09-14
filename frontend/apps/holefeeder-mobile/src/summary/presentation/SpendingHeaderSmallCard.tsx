@@ -25,13 +25,13 @@ const createStyles = (theme: Theme) => ({
   },
 });
 
-export const DashboardHeaderSmallCard = ({ summary }: { summary: ComputedSummary }) => {
+export const SpendingHeaderSmallCard = ({ summary }: { summary: ComputedSummary }) => {
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
   return (
-    <View style={styles.row} testID="dashboard-header-small">
+    <View style={styles.row} testID="spending-header-small">
       <AppText variant={'subtitle'} style={styles.label}>
         {t(tk.dashboard.smallHeader.spendingTitle)}
       </AppText>

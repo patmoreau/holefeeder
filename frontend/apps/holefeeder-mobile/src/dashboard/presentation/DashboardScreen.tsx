@@ -11,7 +11,6 @@ import { UpcomingCardList } from '@/dashboard/presentation/components/UpcomingCa
 import { useAccountDetails } from '@/dashboard/presentation/core/use-account-details';
 import { useUpcomingFlows } from '@/dashboard/presentation/core/use-upcoming-flows';
 import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHeaderLargeCard';
-import { DashboardHeaderSmallCard } from '@/dashboard/presentation/DashboardHeaderSmallCard';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppList } from '@/shared/presentation/components/native/AppList';
@@ -23,6 +22,7 @@ import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
+import { SpendingHeaderSmallCard } from '@/summary/presentation/SpendingHeaderSmallCard';
 import { spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
@@ -149,7 +149,7 @@ const DashboardScreen = () => {
           <DashboardHeaderLargeCard summary={dashboard} upcomingFlows={upcomingFlows} />
         </Animated.View>
         <Animated.View style={[styles.smallCardContainer, smallCardStyle]} pointerEvents="none">
-          <DashboardHeaderSmallCard summary={dashboard} />
+          <SpendingHeaderSmallCard summary={dashboard} />
         </Animated.View>
       </Animated.View>
 

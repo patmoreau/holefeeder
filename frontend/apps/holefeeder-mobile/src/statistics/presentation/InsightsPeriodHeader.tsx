@@ -15,22 +15,15 @@ import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
-import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
+import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
 const createStyles = (theme: Theme) => ({
+  // The screen owns the header's background, corners and shadow now; this is only its content.
   banner: {
-    backgroundColor: theme.colors.primary,
-    borderBottomLeftRadius: borderRadius['4xl'],
-    borderBottomRightRadius: borderRadius['4xl'],
-    paddingHorizontal: spacing['2xl'],
-    paddingBottom: spacing['2xl'],
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
     gap: spacing.xs,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
   },
   period: {
     color: theme.colors.primaryText,
