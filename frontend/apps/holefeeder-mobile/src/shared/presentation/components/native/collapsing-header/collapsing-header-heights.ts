@@ -19,6 +19,12 @@ export type CollapsingHeaderHeights = {
 // keeps its first row clear of the header is that much shorter than the header itself.
 export const LIST_TOP_INSET = 125;
 
+// The toolbar row the collapsed header leaves visible, and how far above the header's bottom edge
+// its buttons actually sit — measured against the toolbar rather than derived, because the safe
+// area reports the whole header rather than that row.
+export const TOOLBAR_ROW_HEIGHT = 44;
+export const TOOLBAR_ROW_INSET = 9;
+
 export const collapsingHeaderHeights = ({
   cardHeight,
   windowHeight,

@@ -1,41 +1,29 @@
 import type { ReactNode } from 'react';
-import Animated from 'react-native-reanimated';
-import { useStyles } from '@/shared/theme/core/use-styles';
+import { useWindowDimensions, View } from 'react-native';
+import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { AppReact } from '@/shared/presentation/components/native/AppReact';
+import { AppRectangle } from '@/shared/presentation/components/native/AppRectangle';
+import { AppZStack } from '@/shared/presentation/components/native/AppZStack';
 import { spacing } from '@/types/theme/design-tokens';
-import { Theme } from '@/types/theme/theme';
+import { TOOLBAR_ROW_HEIGHT } from './collapsing-header-heights';
 import type { CollapsingHeader } from './use-collapsing-header';
 
-// The toolbar row the collapsed header leaves visible, and how far above the header's bottom edge
-// its buttons actually sit — measured against the toolbar rather than derived, because the safe
-// area reports the whole header rather than that row.
-const TOOLBAR_ROW_HEIGHT = 44;
-const TOOLBAR_ROW_INSET = 9;
-
-const createStyles = (theme: Theme) => ({
-  header: {
+const styles = {
+  host: {
     position: 'absolute' as const,
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    overflow: 'hidden' as const,
-    backgroundColor: theme.colors.primary,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
   },
-  smallCardContainer: {
-    position: 'absolute' as const,
-    bottom: TOOLBAR_ROW_INSET,
-    left: spacing.lg,
+  smallCard: {
+    paddingLeft: spacing.lg,
     // Clear of the toolbar buttons on the right.
-    right: 72,
-    minHeight: TOOLBAR_ROW_HEIGHT,
+    paddingRight: 72,
+    height: TOOLBAR_ROW_HEIGHT,
     justifyContent: 'center' as const,
   },
-});
+};
 
 export type AppCollapsingHeaderProps = {
   header: CollapsingHeader;
@@ -46,18 +34,25 @@ export type AppCollapsingHeaderProps = {
 };
 
 export const AppCollapsingHeader = ({ header, children, small }: AppCollapsingHeaderProps) => {
-  const styles = useStyles(createStyles);
+  const { width } = useWindowDimensions();
 
   return (
-    <Animated.View style={[styles.header, header.headerStyle]}>
-      <Animated.View style={header.largeCardStyle} onLayout={header.onCardLayout}>
-        {children}
-      </Animated.View>
-      {small ? (
-        <Animated.View style={[styles.smallCardContainer, header.smallCardStyle]} pointerEvents="none">
-          {small}
-        </Animated.View>
-      ) : null}
-    </Animated.View>
+    <AppNative style={[styles.host, { height: header.fullHeight }]} pointerEvents="none" ignoreSafeArea="all">
+      <AppZStack alignment="topLeading">
+        <AppRectangle modifiers={header.barModifiers} />
+        <AppZStack alignment="topLeading" modifiers={header.largeCardModifiers}>
+          <AppReact matchContents onLayout={header.onCardLayout}>
+            <View style={{ width }}>{children}</View>
+          </AppReact>
+        </AppZStack>
+        {small ? (
+          <AppZStack alignment="topLeading" modifiers={header.smallCardModifiers}>
+            <AppReact matchContents>
+              <View style={[styles.smallCard, { width }]}>{small}</View>
+            </AppReact>
+          </AppZStack>
+        ) : null}
+      </AppZStack>
+    </AppNative>
   );
 };

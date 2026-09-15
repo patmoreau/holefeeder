@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useWindowDimensions, type LayoutChangeEvent } from 'react-native';
-import { Extrapolation, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
-import { collapsingHeaderHeights } from './collapsing-header-heights';
+import { useTheme } from '@/shared/theme/core/use-theme';
+import { collapsingHeaderHeights, TOOLBAR_ROW_HEIGHT, TOOLBAR_ROW_INSET } from './collapsing-header-heights';
 
 // Where the two cards hand over. They overlap, otherwise the large one is gone before the small
 // one arrives and the header reads as empty part way through the scroll.
@@ -16,9 +16,10 @@ export type CollapsingHeader = ReturnType<typeof useCollapsingHeader>;
 /**
  * Drives a header that shrinks to the toolbar area as a list scrolls beneath it.
  *
- * The offset lives in a Reanimated shared value, so scrolling never re-renders the screen. Pass
- * `listModifiers` to the scrolling `AppList`, render `spacerHeight` as its first row, and give the
- * rest to `AppCollapsingHeader`.
+ * The scroll offset never reaches JavaScript: `listModifiers` hands it to the SwiftUI side, which
+ * interpolates the header on the main thread alongside the list itself. Pass `listModifiers` to the
+ * scrolling `AppList`, render `spacerHeight` as its first row, and give the rest to
+ * `AppCollapsingHeader`.
  */
 export type UseCollapsingHeaderOptions = {
   /**
@@ -35,6 +36,8 @@ export type UseCollapsingHeaderOptions = {
 };
 
 export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, listTopInset }: UseCollapsingHeaderOptions = {}) => {
+  const id = useId();
+  const { theme } = useTheme();
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [cardHeight, setCardHeight] = useState(0);
@@ -46,32 +49,31 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, 
     listTopInset,
   });
 
-  const scrollOffset = useSharedValue(0);
-
-  const headerStyle = useAnimatedStyle(() => ({
-    height: interpolate(scrollOffset.value, [0, travel], [fullHeight, collapsedHeight], Extrapolation.CLAMP),
-  }));
-
-  const largeCardStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollOffset.value, [0, travel * LARGE_FADE_END], [1, 0], Extrapolation.CLAMP),
-    transform: [{ translateY: -interpolate(scrollOffset.value, [0, travel], [0, travel], Extrapolation.CLAMP) }],
-  }));
-
-  const smallCardStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollOffset.value, [travel * SMALL_FADE_START, travel * SMALL_FADE_END], [0, 1], Extrapolation.CLAMP),
-  }));
-
   return {
+    fullHeight,
     collapsedHeight,
     spacerHeight,
-    headerStyle,
-    largeCardStyle,
-    smallCardStyle,
-    onCardLayout: (event: LayoutChangeEvent) => setCardHeight(event.nativeEvent.layout.height),
-    listModifiers: [
-      AppModifiers.onScrollOffsetChange((offsetY: number) => {
-        scrollOffset.value = offsetY;
+    barModifiers: [
+      AppModifiers.collapsingHeaderBar({
+        id,
+        fullHeight,
+        collapsedHeight,
+        backgroundColor: theme.colors.primary,
       }),
     ],
+    largeCardModifiers: [AppModifiers.collapsingHeaderLargeCard({ id, travel, fadeEnd: LARGE_FADE_END })],
+    smallCardModifiers: [
+      AppModifiers.collapsingHeaderSmallCard({
+        id,
+        fullHeight,
+        collapsedHeight,
+        rowInset: TOOLBAR_ROW_INSET,
+        rowHeight: TOOLBAR_ROW_HEIGHT,
+        fadeStart: SMALL_FADE_START,
+        fadeEnd: SMALL_FADE_END,
+      }),
+    ],
+    onCardLayout: (event: LayoutChangeEvent) => setCardHeight(event.nativeEvent.layout.height),
+    listModifiers: [AppModifiers.collapsingHeaderSource(id)],
   };
 };

@@ -10,7 +10,13 @@ import {
   onAppear,
 } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
-import { onScrollOffsetChange } from '@/modules/app-modifiers';
+import {
+  collapsingHeaderBar,
+  collapsingHeaderLargeCard,
+  collapsingHeaderSmallCard,
+  collapsingHeaderSource,
+  onScrollOffsetChange,
+} from '@/modules/app-modifiers';
 
 type NamedColor =
   | 'primary'
@@ -44,6 +50,10 @@ export const AppModifiers = {
   cornerRadius: (radius: number) => cornerRadius(radius),
   foregroundStyle: (color: Color) => foregroundStyle(color),
   onScrollOffsetChange: (handler: (offsetY: number) => void) => onScrollOffsetChange(handler),
+  collapsingHeaderSource: (id: string) => collapsingHeaderSource(id),
+  collapsingHeaderBar: (params: Parameters<typeof collapsingHeaderBar>[0]) => collapsingHeaderBar(params),
+  collapsingHeaderLargeCard: (params: Parameters<typeof collapsingHeaderLargeCard>[0]) => collapsingHeaderLargeCard(params),
+  collapsingHeaderSmallCard: (params: Parameters<typeof collapsingHeaderSmallCard>[0]) => collapsingHeaderSmallCard(params),
   listRowBackground: (color: Color) => listRowBackground(color),
   listRowInsets: (params: Parameters<typeof listRowInsets>[0]) => listRowInsets(params),
   hideListRowSeparator: listRowSeparator('hidden'),
