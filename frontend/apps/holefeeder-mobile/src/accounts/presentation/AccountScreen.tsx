@@ -13,6 +13,7 @@ import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorS
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppList } from '@/shared/presentation/components/native/AppList';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppToolbar } from '@/shared/presentation/components/native/AppToolbar';
 import { AppToolbarButton } from '@/shared/presentation/components/native/AppToolbarButton';
@@ -42,9 +43,10 @@ export const AccountScreen = () => {
   const accountId = Id.valid(id);
   const styles = useStyles(createStyles);
   // A pushed screen, so the navigation header reports its own height; the safe-area inset
-  // here is only the status bar and would collapse over the toolbar row.
-  // This list starts at the top of the screen, so the spacer is the whole header height.
-  const header = useCollapsingHeader({ collapsedHeight: useHeaderHeight(), listTopInset: 0 });
+  // here is only the status bar and would collapse over the toolbar row. The list is laid out
+  // below that navigation header, so the spacer only has to cover the rest of the header.
+  const navigationHeaderHeight = useHeaderHeight();
+  const header = useCollapsingHeader({ collapsedHeight: navigationHeaderHeight, listTopInset: navigationHeaderHeight });
 
   const accountQuery = useAccountDetail(accountId);
   const { transactions: transactionsResult, hasMore, loadMore } = useAccountTransactions(accountId);
@@ -104,7 +106,10 @@ export const AccountScreen = () => {
         </AppCollapsingHeader>
         <AppNative style={{ flex: 1 }}>
           <AppList inset modifiers={header.listModifiers}>
-            <AppColumn style={{ paddingTop: header.spacerHeight }} />
+            <AppColumn
+              style={{ paddingTop: header.spacerHeight }}
+              modifiers={[AppModifiers.listRowInsets({ top: 0, bottom: 0, leading: 0, trailing: 0 }), AppModifiers.hideListRowSeparator]}
+            />
             <TransactionCardList transactions={transactions} hasMore={hasMore} onLoadMore={loadMore} />
           </AppList>
         </AppNative>
