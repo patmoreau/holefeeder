@@ -12,7 +12,8 @@ import { Theme } from '@/types/theme/theme';
 
 export type AddAccountCardProps = {
   width?: number;
-  height?: number;
+  minHeight?: number;
+  onMeasure?: (height: number) => void;
   onPress: () => void;
 };
 
@@ -43,13 +44,18 @@ const createStyles = (theme: Theme) =>
 
 const iconSize = 32;
 
-export const AddAccountCard = ({ width = 300, height, onPress }: AddAccountCardProps) => {
+export const AddAccountCard = ({ width = 300, minHeight, onMeasure, onPress }: AddAccountCardProps) => {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
 
   return (
     <Pressable accessibilityLabel={t(tk.accountCard.add)} accessibilityRole="button" onPress={onPress} testID="dashboard-add-account-card">
-      <AppCard scrollable="horizontal" cardWidth={width} style={[styles.card, { height }]}>
+      <AppCard
+        scrollable="horizontal"
+        cardWidth={width}
+        style={[styles.card, { minHeight }]}
+        onLayout={(event) => onMeasure?.(event.nativeEvent.layout.height)}
+      >
         <View style={styles.content}>
           <SymbolView
             name={AppIconMap.addCircle.ios}
