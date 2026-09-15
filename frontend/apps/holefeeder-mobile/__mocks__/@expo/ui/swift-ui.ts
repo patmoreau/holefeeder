@@ -63,3 +63,7 @@ export const ScrollView = ({ children }: { children: unknown }) => React.createE
 export const Picker = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'picker' }, children);
 
 export const DatePicker = ({ testID }: { testID?: string }) => React.createElement(View, { testID: testID ?? 'date-picker' });
+
+export const ZStack = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'zstack' }, children);
+
+export const RNHostView = ({ children }: { children: unknown }) => React.createElement(View, { testID: 'rn-host' }, children);

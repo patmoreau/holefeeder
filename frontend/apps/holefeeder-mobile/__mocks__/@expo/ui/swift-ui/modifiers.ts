@@ -40,3 +40,7 @@ export const shapes = {
   circle: jest.fn(() => ({ type: 'circle' })),
   ellipse: jest.fn(() => ({ type: 'ellipse' })),
 };
+export const cornerRadius = jest.fn((props) => props);
+export const onAppear = jest.fn((props) => props);
+export const createModifier = jest.fn((name, params) => ({ $type: name, ...params }));
+export const createModifierWithEventListener = jest.fn((name, eventListener) => ({ $type: name, eventListener }));
