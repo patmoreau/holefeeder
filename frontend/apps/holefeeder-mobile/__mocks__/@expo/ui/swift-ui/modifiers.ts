@@ -31,3 +31,12 @@ export const kerning = jest.fn((props) => props);
 export const listRowBackground = jest.fn((props) => props);
 export const listRowInsets = jest.fn((props) => props);
 export const listRowSeparator = jest.fn((props) => props);
+export const onTapGesture = jest.fn((props) => props);
+export const contentShape = jest.fn((props) => props);
+export const shapes = {
+  rectangle: jest.fn(() => ({ type: 'rectangle' })),
+  roundedRectangle: jest.fn((props) => ({ type: 'roundedRectangle', ...props })),
+  capsule: jest.fn(() => ({ type: 'capsule' })),
+  circle: jest.fn(() => ({ type: 'circle' })),
+  ellipse: jest.fn(() => ({ type: 'ellipse' })),
+};

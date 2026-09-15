@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { BudgetSection } from '@/settings/presentation/BudgetSection';
-import { CashflowsSection } from '@/settings/presentation/CashflowsSection';
-import { CategoriesSection } from '@/settings/presentation/CategoriesSection';
 import { DisplaySection } from '@/settings/presentation/DisplaySection';
+import { HolefeederSection } from '@/settings/presentation/HolefeederSection';
 import { ProfileSection } from '@/settings/presentation/ProfileSection';
 import { SyncSection } from '@/settings/presentation/SyncSection';
-import { TagsSection } from '@/settings/presentation/TagsSection';
 import TestComponentsScreen from '@/settings/presentation/test/TestComponentsScreen';
 import { TestSection } from '@/settings/presentation/TestSection';
 import { AppForm } from '@/shared/presentation/components/native/AppForm';
@@ -16,10 +13,7 @@ export const SettingsContent = () => {
     <>
       <AppForm>
         <ProfileSection />
-        <BudgetSection />
-        <CategoriesSection />
-        <CashflowsSection />
-        <TagsSection />
+        <HolefeederSection />
         <DisplaySection />
         {__DEV__ && <TestSection show={show} setShow={setShow} />}
         <SyncSection />
