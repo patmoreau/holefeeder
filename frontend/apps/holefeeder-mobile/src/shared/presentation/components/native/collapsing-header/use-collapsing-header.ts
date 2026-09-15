@@ -41,6 +41,7 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, 
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [cardHeight, setCardHeight] = useState(0);
+  const [smallCardHeight, setSmallCardHeight] = useState(0);
 
   const { fullHeight, collapsedHeight, travel, spacerHeight } = collapsingHeaderHeights({
     cardHeight,
@@ -68,12 +69,13 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, 
         fullHeight,
         collapsedHeight,
         rowInset: TOOLBAR_ROW_INSET,
-        rowHeight: TOOLBAR_ROW_HEIGHT,
+        rowHeight: Math.max(smallCardHeight, TOOLBAR_ROW_HEIGHT),
         fadeStart: SMALL_FADE_START,
         fadeEnd: SMALL_FADE_END,
       }),
     ],
     onCardLayout: (event: LayoutChangeEvent) => setCardHeight(event.nativeEvent.layout.height),
+    onSmallCardLayout: (event: LayoutChangeEvent) => setSmallCardHeight(event.nativeEvent.layout.height),
     listModifiers: [AppModifiers.collapsingHeaderSource(id)],
   };
 };

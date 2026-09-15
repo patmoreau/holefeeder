@@ -20,7 +20,7 @@ const styles = {
     paddingLeft: spacing.lg,
     // Clear of the toolbar buttons on the right.
     paddingRight: 72,
-    height: TOOLBAR_ROW_HEIGHT,
+    minHeight: TOOLBAR_ROW_HEIGHT,
     justifyContent: 'center' as const,
   },
 };
@@ -41,14 +41,18 @@ export const AppCollapsingHeader = ({ header, children, small }: AppCollapsingHe
       <AppZStack alignment="topLeading">
         <AppRectangle modifiers={header.barModifiers} />
         <AppZStack alignment="topLeading" modifiers={header.largeCardModifiers}>
-          <AppReact matchContents onLayout={header.onCardLayout}>
-            <View style={{ width }}>{children}</View>
+          <AppReact matchContents>
+            <View style={{ width, height: header.fullHeight, overflow: 'hidden' }}>
+              <View onLayout={header.onCardLayout}>{children}</View>
+            </View>
           </AppReact>
         </AppZStack>
         {small ? (
           <AppZStack alignment="topLeading" modifiers={header.smallCardModifiers}>
             <AppReact matchContents>
-              <View style={[styles.smallCard, { width }]}>{small}</View>
+              <View style={[styles.smallCard, { width }]} onLayout={header.onSmallCardLayout}>
+                {small}
+              </View>
             </AppReact>
           </AppZStack>
         ) : null}
