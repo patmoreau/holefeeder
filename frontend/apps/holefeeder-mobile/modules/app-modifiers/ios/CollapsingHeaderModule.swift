@@ -20,6 +20,10 @@ final class CollapsingHeaderRegistry {
         return store
     }
 
+    // The registry outlives every screen, so a store left behind once its header is gone is a leak
+    // that grows with each visit. Only JavaScript knows when a header is finished with its id: the
+    // modifier views holding a store are rebuilt on every body evaluation, so their lifetime says
+    // nothing about the header's.
     func discard(id: String) {
         stores.removeValue(forKey: id)
     }
@@ -203,6 +207,12 @@ public class CollapsingHeaderModule: Module {
                     fadeStart: length(params, "fadeStart"),
                     fadeEnd: length(params, "fadeEnd", fallback: 1)
                 )
+            }
+        }
+
+        Function("discardStore") { (id: String) in
+            DispatchQueue.main.async {
+                CollapsingHeaderRegistry.shared.discard(id: id)
             }
         }
 

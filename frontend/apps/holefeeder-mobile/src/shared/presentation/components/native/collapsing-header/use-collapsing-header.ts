@@ -1,6 +1,7 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { discardCollapsingHeaderStore } from '@/modules/app-modifiers';
 import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { collapsingHeaderHeights, TOOLBAR_ROW_HEIGHT, TOOLBAR_ROW_INSET } from './collapsing-header-heights';
@@ -37,6 +38,8 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride }
   const insets = useSafeAreaInsets();
   const [cardHeight, setCardHeight] = useState(0);
   const [smallCardHeight, setSmallCardHeight] = useState(0);
+
+  useEffect(() => () => discardCollapsingHeaderStore(id), [id]);
 
   const { fullHeight, collapsedHeight, travel, spacerHeight } = collapsingHeaderHeights({
     cardHeight,
