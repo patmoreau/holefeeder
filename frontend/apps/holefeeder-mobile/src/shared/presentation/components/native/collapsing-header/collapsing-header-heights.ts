@@ -4,8 +4,6 @@ export type CollapsingHeaderInput = {
   windowHeight: number;
   /** Top safe-area inset, which under a transparent stack header is the toolbar area. */
   insetTop: number;
-  /** How far down the screen the list already starts on its own. */
-  listTopInset?: number;
 };
 
 export type CollapsingHeaderHeights = {
@@ -15,22 +13,13 @@ export type CollapsingHeaderHeights = {
   spacerHeight: number;
 };
 
-// A list sitting behind the header already starts this far down the screen, so the spacer that
-// keeps its first row clear of the header is that much shorter than the header itself.
-export const LIST_TOP_INSET = 125;
-
 // The toolbar row the collapsed header leaves visible, and how far above the header's bottom edge
 // its buttons actually sit — measured against the toolbar rather than derived, because the safe
 // area reports the whole header rather than that row.
 export const TOOLBAR_ROW_HEIGHT = 44;
 export const TOOLBAR_ROW_INSET = 9;
 
-export const collapsingHeaderHeights = ({
-  cardHeight,
-  windowHeight,
-  insetTop,
-  listTopInset = LIST_TOP_INSET,
-}: CollapsingHeaderInput): CollapsingHeaderHeights => {
+export const collapsingHeaderHeights = ({ cardHeight, windowHeight, insetTop }: CollapsingHeaderInput): CollapsingHeaderHeights => {
   // The card's own height, so the header follows the text size, capped so the largest
   // accessibility sizes cannot grow it over the whole screen.
   const fullHeight = Math.min(cardHeight || windowHeight / 3, windowHeight / 2);
@@ -39,6 +28,6 @@ export const collapsingHeaderHeights = ({
     fullHeight,
     collapsedHeight: insetTop,
     travel: Math.max(0, fullHeight - insetTop),
-    spacerHeight: Math.max(0, fullHeight - listTopInset),
+    spacerHeight: fullHeight,
   };
 };

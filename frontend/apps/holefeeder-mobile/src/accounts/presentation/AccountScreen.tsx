@@ -43,10 +43,9 @@ export const AccountScreen = () => {
   const accountId = Id.valid(id);
   const styles = useStyles(createStyles);
   // A pushed screen, so the navigation header reports its own height; the safe-area inset
-  // here is only the status bar and would collapse over the toolbar row. The list is laid out
-  // below that navigation header, so the spacer only has to cover the rest of the header.
+  // here is only the status bar and would collapse over the toolbar row.
   const navigationHeaderHeight = useHeaderHeight();
-  const header = useCollapsingHeader({ collapsedHeight: navigationHeaderHeight, listTopInset: navigationHeaderHeight });
+  const header = useCollapsingHeader({ collapsedHeight: navigationHeaderHeight });
 
   const accountQuery = useAccountDetail(accountId);
   const { transactions: transactionsResult, hasMore, loadMore } = useAccountTransactions(accountId);

@@ -28,14 +28,9 @@ export type UseCollapsingHeaderOptions = {
    * instead: there the inset is only the status bar, and the toolbar row would be swallowed.
    */
   collapsedHeight?: number;
-  /**
-   * How far down the screen the scrolling list already starts, subtracted from the spacer that
-   * keeps its first row clear of the header. Defaults to what the tab screens' lists apply.
-   */
-  listTopInset?: number;
 };
 
-export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, listTopInset }: UseCollapsingHeaderOptions = {}) => {
+export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride }: UseCollapsingHeaderOptions = {}) => {
   const id = useId();
   const { theme } = useTheme();
   const { height: windowHeight } = useWindowDimensions();
@@ -47,7 +42,6 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, 
     cardHeight,
     windowHeight,
     insetTop: collapsedHeightOverride ?? insets.top,
-    listTopInset,
   });
 
   return {
@@ -76,6 +70,9 @@ export const useCollapsingHeader = ({ collapsedHeight: collapsedHeightOverride, 
     ],
     onCardLayout: (event: LayoutChangeEvent) => setCardHeight(event.nativeEvent.layout.height),
     onSmallCardLayout: (event: LayoutChangeEvent) => setSmallCardHeight(event.nativeEvent.layout.height),
-    listModifiers: [AppModifiers.collapsingHeaderSource(id)],
+    // Without this the list takes a top content inset from the transparent navigation bar, and
+    // that inset is only applied the first time a screen is presented. The spacer row then has to
+    // be the whole header height, and where the first row lands stops depending on it.
+    listModifiers: [AppModifiers.collapsingHeaderSource(id), AppModifiers.ignoreTopSafeArea],
   };
 };

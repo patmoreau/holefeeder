@@ -1,4 +1,4 @@
-import { collapsingHeaderHeights, LIST_TOP_INSET } from './collapsing-header-heights';
+import { collapsingHeaderHeights } from './collapsing-header-heights';
 
 const WINDOW = 900;
 const INSET = 100;
@@ -41,16 +41,16 @@ describe('collapsingHeaderHeights', () => {
   });
 
   describe('the list spacer', () => {
-    it('should be the header height less the inset the list already applies', () => {
+    it('should be the whole header height, since the list applies no inset of its own', () => {
       const { spacerHeight } = collapsingHeaderHeights({ cardHeight: 260, windowHeight: WINDOW, insetTop: INSET });
 
-      expect(spacerHeight).toBe(260 - LIST_TOP_INSET);
+      expect(spacerHeight).toBe(260);
     });
 
-    it('should never be negative for a short header', () => {
-      const { spacerHeight } = collapsingHeaderHeights({ cardHeight: 40, windowHeight: WINDOW, insetTop: INSET });
+    it('should follow the capped header height rather than the card', () => {
+      const { spacerHeight } = collapsingHeaderHeights({ cardHeight: 800, windowHeight: WINDOW, insetTop: INSET });
 
-      expect(spacerHeight).toBe(0);
+      expect(spacerHeight).toBe(WINDOW / 2);
     });
   });
 

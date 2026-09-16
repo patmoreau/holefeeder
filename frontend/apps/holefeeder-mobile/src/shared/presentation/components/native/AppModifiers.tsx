@@ -4,6 +4,7 @@ import {
   cornerRadius,
   foregroundStyle,
   frame,
+  ignoreSafeArea,
   listRowBackground,
   listRowInsets,
   listRowSeparator,
@@ -57,4 +58,5 @@ export const AppModifiers = {
   listRowBackground: (color: Color) => listRowBackground(color),
   listRowInsets: (params: Parameters<typeof listRowInsets>[0]) => listRowInsets(params),
   hideListRowSeparator: listRowSeparator('hidden'),
+  ignoreTopSafeArea: ignoreSafeArea({ regions: 'container', edges: 'top' }),
 } as const;
