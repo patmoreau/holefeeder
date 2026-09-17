@@ -3,15 +3,12 @@ packages:
   - 'packages/*'
 
 allowBuilds:
+  '@parcel/watcher': true
   better-sqlite3: true
   browser-tabs-lock: true
   esbuild: true
   msgpackr-extract: true
   unrs-resolver: true
-
-ignoredBuiltDependencies:
-  - react-native-mmkv
-  - react-native-nitro-modules
 
 minimumReleaseAgeExclude:
   - expo-dev-client@57.0.9
@@ -24,14 +21,7 @@ minimumReleaseAgeExclude:
   - expo-file-system@57.0.2
   - expo-modules-core@57.0.10
   - expo@57.0.11
-  - expo-build-properties@57.0.9
+  - expo-build-properties@57.0.9 || 57.0.20
   - expo-router@57.0.11
   - expo-sharing@57.0.10
   - expo-symbols@57.0.2
-
-onlyBuiltDependencies:
-  - better-sqlite3
-  - browser-tabs-lock
-  - esbuild
-  - msgpackr-extract
-  - unrs-resolver
