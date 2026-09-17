@@ -26,6 +26,7 @@ export const en = {
     add: 'Add an account',
     currentBalance: 'Current Balance',
     projected: 'Projected',
+    upcoming: 'Upcoming',
     updated: 'Updated',
     edit: 'Edit',
     purchase: 'Purchase',

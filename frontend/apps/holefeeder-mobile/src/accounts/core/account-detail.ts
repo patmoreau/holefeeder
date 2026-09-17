@@ -21,6 +21,12 @@ const valid = (value: Record<string, unknown>): AccountDetail => ({
   upcomingVariation: Variation.valid(value.upcomingVariation),
 });
 
+const upcomingChange = (detail: AccountDetail): Variation => Variation.multiply(detail.upcomingVariation, AccountType.multiplier[detail.type]);
+
+const isUpcomingFavourable = (detail: AccountDetail): boolean => detail.upcomingVariation >= 0;
+
 export const AccountDetail = {
   valid: valid,
+  upcomingChange: upcomingChange,
+  isUpcomingFavourable: isUpcomingFavourable,
 };

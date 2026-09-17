@@ -31,6 +31,14 @@ const createStyles = (theme: Theme) => ({
     opacity: 0.5,
     marginBottom: spacing.xs,
   },
+  totals: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+  },
+  total: {
+    flex: 1,
+    alignItems: 'center' as const,
+  },
   pill: {
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.sm,
@@ -42,6 +50,9 @@ const createStyles = (theme: Theme) => ({
   negativePill: {
     backgroundColor: theme.colors.negativeBackground,
   },
+  neutralPill: {
+    backgroundColor: theme.colors.secondaryBackground,
+  },
   positiveText: {
     color: theme.colors.positive,
     fontWeight: fontWeight.semiBold,
@@ -50,7 +61,13 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.negative,
     fontWeight: fontWeight.semiBold,
   },
+  neutralText: {
+    color: theme.colors.amountNeutral,
+    fontWeight: fontWeight.semiBold,
+  },
 });
+
+type Tone = 'positive' | 'negative' | 'neutral';
 
 export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) => {
   const { t } = useTranslation();
@@ -58,6 +75,25 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
   const styles = useStyles(createStyles);
 
   const isPositive = Variation.multiply(account.balance, AccountType.multiplier[account.type]) >= 0;
+  const upcomingChange = AccountDetail.upcomingChange(account);
+  const upcomingTone: Tone = upcomingChange === 0 ? 'neutral' : AccountDetail.isUpcomingFavourable(account) ? 'positive' : 'negative';
+  const upcomingSign = upcomingChange > 0 ? '+ ' : upcomingChange < 0 ? '- ' : '';
+
+  const pillStyle = { positive: styles.positivePill, negative: styles.negativePill, neutral: styles.neutralPill };
+  const textStyle = { positive: styles.positiveText, negative: styles.negativeText, neutral: styles.neutralText };
+
+  const total = (label: string, value: string, tone: Tone) => (
+    <View style={styles.total}>
+      <AppText variant={'subtitle'} style={styles.subtitle} numberOfLines={1}>
+        {label}
+      </AppText>
+      <View style={[styles.pill, pillStyle[tone]]}>
+        <AppText style={textStyle[tone]} numberOfLines={1} adjustsFontSizeToFit>
+          {value}
+        </AppText>
+      </View>
+    </View>
+  );
 
   return (
     <>
@@ -68,33 +104,18 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
         {LocalFormatter.currency(account.balance, currentLocale, currencyCode)}
       </AppText>
       <View style={styles.divider} />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <AppText variant={'subtitle'} style={styles.subtitle}>
-            {t(tk.accountCard.updated)}
-          </AppText>
-          <View style={[styles.pill, styles.positivePill]}>
-            <AppText style={styles.positiveText} adjustsFontSizeToFit>
-              {LocalFormatter.date(account.lastTransactionDate!, today(), currentLocale, t)}
-            </AppText>
-          </View>
-        </View>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <AppText variant={'subtitle'} style={styles.subtitle}>
-            {t(tk.accountCard.projected)}
-          </AppText>
-          <View style={[styles.pill, isPositive ? styles.positivePill : styles.negativePill]}>
-            <AppText style={isPositive ? styles.positiveText : styles.negativeText} adjustsFontSizeToFit>
-              {LocalFormatter.currency(account.projectedBalance, currentLocale, currencyCode)}
-            </AppText>
-          </View>
-          {account.upcomingVariation !== 0 && (
-            <AppText variant={'footnote'} style={[isPositive ? styles.positiveText : styles.negativeText, { opacity: 0.7 }]}>
-              {account.upcomingVariation >= 0 ? '+' : ''}
-              {LocalFormatter.currency(account.upcomingVariation, currentLocale, currencyCode)}
-            </AppText>
-          )}
-        </View>
+      <View style={styles.totals}>
+        {total(t(tk.accountCard.updated), LocalFormatter.date(account.lastTransactionDate!, today(), currentLocale, t), 'positive')}
+        {total(
+          t(tk.accountCard.upcoming),
+          `${upcomingSign}${LocalFormatter.currency(Math.abs(upcomingChange), currentLocale, currencyCode)}`,
+          upcomingTone
+        )}
+        {total(
+          t(tk.accountCard.projected),
+          LocalFormatter.currency(account.projectedBalance, currentLocale, currencyCode),
+          isPositive ? 'positive' : 'negative'
+        )}
       </View>
     </>
   );

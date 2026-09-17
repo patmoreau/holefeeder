@@ -28,6 +28,7 @@ export const fr: TranslationStructure = {
     add: 'Ajouter un compte',
     currentBalance: 'Solde actuel',
     projected: 'Projeté',
+    upcoming: 'À venir',
     updated: 'Mis à jour',
     edit: 'Éditer',
     purchase: 'Acheter',
