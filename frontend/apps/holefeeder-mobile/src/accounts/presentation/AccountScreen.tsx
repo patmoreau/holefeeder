@@ -98,7 +98,7 @@ export const AccountScreen = () => {
         </Stack.Toolbar.Menu>
       </Stack.Toolbar>
       <View style={styles.container}>
-        <AppCollapsingHeader header={header} small={<AccountHeaderSmallCard account={account} />}>
+        <AppCollapsingHeader header={header} leadingToolbar small={<AccountHeaderSmallCard account={account} />}>
           <View style={[styles.headerContent, { paddingTop: header.collapsedHeight + spacing.sm }]}>
             <AccountHeaderLargeCard account={account} />
           </View>

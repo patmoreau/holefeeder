@@ -1,3 +1,5 @@
+import { spacing } from '@/types/theme/design-tokens';
+
 export type CollapsingHeaderInput = {
   /** Height the header's card reported, or 0 before it has laid out. */
   cardHeight: number;
@@ -18,6 +20,12 @@ export type CollapsingHeaderHeights = {
 // area reports the whole header rather than that row.
 export const TOOLBAR_ROW_HEIGHT = 44;
 export const TOOLBAR_ROW_INSET = 9;
+export const TOOLBAR_BUTTON_CLEARANCE = 72;
+
+export const smallCardInsets = ({ leadingToolbar }: { leadingToolbar: boolean }) => ({
+  paddingLeft: leadingToolbar ? TOOLBAR_BUTTON_CLEARANCE : spacing.lg,
+  paddingRight: TOOLBAR_BUTTON_CLEARANCE,
+});
 
 export const collapsingHeaderHeights = ({ cardHeight, windowHeight, insetTop }: CollapsingHeaderInput): CollapsingHeaderHeights => {
   // The card's own height, so the header follows the text size, capped so the largest

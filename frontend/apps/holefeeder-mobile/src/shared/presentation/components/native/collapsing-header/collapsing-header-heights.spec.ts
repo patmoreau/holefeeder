@@ -1,4 +1,5 @@
-import { collapsingHeaderHeights } from './collapsing-header-heights';
+import { spacing } from '@/types/theme/design-tokens';
+import { collapsingHeaderHeights, smallCardInsets, TOOLBAR_BUTTON_CLEARANCE } from './collapsing-header-heights';
 
 const WINDOW = 900;
 const INSET = 100;
@@ -60,5 +61,19 @@ describe('collapsingHeaderHeights', () => {
 
       expect(collapsedHeight).toBe(INSET);
     });
+  });
+});
+
+describe('smallCardInsets', () => {
+  it('should clear the trailing toolbar buttons', () => {
+    expect(smallCardInsets({ leadingToolbar: false }).paddingRight).toBe(TOOLBAR_BUTTON_CLEARANCE);
+  });
+
+  it('should keep the standard margin on the leading side when no button sits there', () => {
+    expect(smallCardInsets({ leadingToolbar: false }).paddingLeft).toBe(spacing.lg);
+  });
+
+  it('should clear the leading toolbar button when one sits there', () => {
+    expect(smallCardInsets({ leadingToolbar: true }).paddingLeft).toBe(TOOLBAR_BUTTON_CLEARANCE);
   });
 });
