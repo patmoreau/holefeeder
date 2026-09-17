@@ -7,19 +7,20 @@ import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
 
-const createStyles = (theme: Theme) => ({
+export const createStyles = (theme: Theme) => ({
   row: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     gap: spacing.sm,
-    flexWrap: 'wrap' as const,
   },
   name: {
     color: theme.colors.primaryText,
+    flexShrink: 1,
   },
   balance: {
     color: theme.colors.primaryText,
     fontWeight: fontWeight.semiBold,
+    flexShrink: 0,
   },
 });
 
