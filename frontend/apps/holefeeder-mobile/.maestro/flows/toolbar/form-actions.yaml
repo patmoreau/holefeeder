@@ -21,10 +21,14 @@ tags:
       id: 'purchase-screen'
     timeout: 20000
 
+# The defaults the form opens with live in its initial value and leave it pristine, so
+# backing out of an untouched form just closes it. Type into the amount field — it holds
+# focus on open, so no selector is needed — to reach the discard path on purpose.
+- inputText: '500'
+
 - tapOn:
     id: 'purchase-back-button'
 
-# The form opens with a category already picked, so leaving counts as discarding.
 - extendedWaitUntil:
     visible: 'Discard changes?'
     timeout: 10000
