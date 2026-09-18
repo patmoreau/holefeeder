@@ -17,7 +17,8 @@ tags:
       id: 'dashboard-screen'
     timeout: 60000
 
-- tapOn: 'Settings'
+- tapOn:
+    id: 'tabs-settings'
 - extendedWaitUntil:
     visible:
       id: 'auth-logout-button'
