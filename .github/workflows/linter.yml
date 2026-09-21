@@ -96,11 +96,20 @@ jobs:
         if: ${{ steps.lint.outcome != 'success' }}
         run: echo "::error::dotnet format found issues in the code. Please fix them."
 
+  agent_files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check generated assistant command files are in sync
+        run: scripts/sync-agent-files.sh --check
+
   create_check:
-    needs: [check_changes, csharp, typescript]
+    needs: [check_changes, csharp, typescript, agent_files]
     uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
     if: always() && needs.check_changes.result == 'success'
     with:
       code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
       check_name: 'linter-completed'
-      check_result: ${{ needs.csharp.result }}
+      check_result: ${{ needs.agent_files.result == 'success' && needs.csharp.result || needs.agent_files.result }}
