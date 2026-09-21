@@ -1,4 +1,5 @@
 ---
+mode: agent
 description: Build the production mobile app and install it on the connected iPhone
 ---
 

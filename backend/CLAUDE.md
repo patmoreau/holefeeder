@@ -3,8 +3,8 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > Project-wide principles — TDD cycle, Tidy First, commit discipline, commit-message
-> format, and the "Never" list — live in the root `CLAUDE.md`. This file covers
-> **backend-specific** guidance only.
+> format, and the "Never" list — live in the root `AGENTS.md` and the process docs it
+> includes (`docs/contributing/`). This file covers **backend-specific** guidance only.
 
 ## Workflow — Test-Driven Development
 

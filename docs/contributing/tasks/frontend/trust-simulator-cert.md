@@ -1,8 +1,7 @@
 ---
+name: trust-simulator-cert
 description: Install the local mkcert root CA into an iOS Simulator so it trusts the *.localtest.me TLS certs
 ---
-
-<!-- Generated from docs/contributing/tasks/frontend/trust-simulator-cert.md by scripts/sync-agent-files.sh. Do not edit. -->
 
 # Skill: Trust local certificate in simulator
 

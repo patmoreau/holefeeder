@@ -1,4 +1,5 @@
 ---
+mode: agent
 description: Add a new REST endpoint to the Holefeeder backend following the existing feature structure
 ---
 

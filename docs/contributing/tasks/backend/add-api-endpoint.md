@@ -1,8 +1,7 @@
 ---
+name: add-api-endpoint
 description: Add a new REST endpoint to the Holefeeder backend following the existing feature structure
 ---
-
-<!-- Generated from docs/contributing/tasks/backend/add-api-endpoint.md by scripts/sync-agent-files.sh. Do not edit. -->
 
 # Skill: Add a new REST endpoint to Holefeeder backend
 

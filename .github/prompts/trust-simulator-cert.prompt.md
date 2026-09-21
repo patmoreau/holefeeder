@@ -1,4 +1,5 @@
 ---
+mode: agent
 description: Install the local mkcert root CA into an iOS Simulator so it trusts the *.localtest.me TLS certs
 ---
 

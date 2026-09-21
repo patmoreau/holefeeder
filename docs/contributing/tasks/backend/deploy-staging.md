@@ -1,8 +1,7 @@
 ---
+name: deploy-staging
 description: Deploy Holefeeder to the Staging environment
 ---
-
-<!-- Generated from docs/contributing/tasks/backend/deploy-staging.md by scripts/sync-agent-files.sh. Do not edit. -->
 
 # Skill: Deploy Holefeeder to Staging
 

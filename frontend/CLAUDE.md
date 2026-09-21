@@ -3,9 +3,9 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > Project-wide principles — TDD cycle, Tidy First, commit discipline, and the "Never" list —
-> live in the root `../CLAUDE.md`. This file is the single source of truth for the **frontend**,
-> shared by all AI agents (Claude, Cursor, Copilot, Gemini). Per-app details live in
-> `apps/holefeeder-mobile/CLAUDE.md`.
+> live in the root `../AGENTS.md` and the process docs it includes (`../docs/contributing/`).
+> This file is the single source of truth for the **frontend**, shared by all AI agents
+> (Claude, Cursor, Copilot, Gemini). Per-app details live in `apps/holefeeder-mobile/CLAUDE.md`.
 
 > [!IMPORTANT]
 > **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, complete the following steps:

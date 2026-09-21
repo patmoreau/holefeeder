@@ -1,4 +1,5 @@
 ---
+mode: agent
 description: Deploy Holefeeder to the Staging environment
 ---
 

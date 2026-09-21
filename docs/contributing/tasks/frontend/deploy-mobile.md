@@ -1,8 +1,7 @@
 ---
+name: deploy-mobile
 description: Build the production mobile app and install it on the connected iPhone
 ---
-
-<!-- Generated from docs/contributing/tasks/frontend/deploy-mobile.md by scripts/sync-agent-files.sh. Do not edit. -->
 
 # Skill: Deploy Holefeeder to mobile device
 
