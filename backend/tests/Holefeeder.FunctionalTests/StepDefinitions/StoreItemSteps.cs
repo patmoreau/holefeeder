@@ -106,7 +106,7 @@ internal sealed class StoreItemSteps(BudgetingDatabaseDriver budgetingDatabaseDr
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.StoreItems.FindAsync((StoreItemId) request.Operations.First().Id);
+            var result = await dbContext.StoreItems.FindAsync((StoreItemId)request.Operations.First().Id);
 
             if (request.Operations.First().Op == "DELETE")
             {

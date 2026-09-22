@@ -54,7 +54,7 @@ public class GetUpcoming : ICarterModule
                     Date = d,
                     Amount = x.Amount,
                     Description = x.Description,
-                    Tags = [..x.Tags],
+                    Tags = [.. x.Tags],
                     Category = new CategoryInfoViewModel(x.Category!.Id, x.Category.Name, x.Category.Type,
                         x.Category.Color),
                     Account = new AccountInfoViewModel(x.Account!.Id, x.Account.Name)

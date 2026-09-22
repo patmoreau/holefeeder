@@ -11,7 +11,7 @@ public partial record Cashflow
 {
     public Result<Cashflow> Cancel() => Inactive
         ? CashflowErrors.AlreadyInactive(Id)
-        : this with {Inactive = true};
+        : this with { Inactive = true };
 
     public Result<Cashflow> SetTags(params string[] tags)
     {

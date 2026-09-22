@@ -35,6 +35,6 @@ public class ScenarioGetCurrentUser(ApiApplicationDriver applicationDriver, ITes
                 .And.HaveContent();
 
             var expected = UserSteps.TestUsers[UserSteps.AuthorizedUser].UserId;
-            response.Value.Content.Should().NotBeNull().And.BeEquivalentTo(new { Id = (Guid) expected });
+            response.Value.Content.Should().NotBeNull().And.BeEquivalentTo(new { Id = (Guid)expected });
         });
 }

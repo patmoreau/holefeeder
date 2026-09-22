@@ -12,10 +12,10 @@ using Holefeeder.FunctionalTests.Features;
 using static Holefeeder.Application.UseCases.PowerSync;
 using static Holefeeder.Tests.Common.Builders.Accounts.AccountBuilder;
 using static Holefeeder.Tests.Common.Builders.Categories.CategoryBuilder;
-using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
-using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
+using static Holefeeder.Tests.Common.Builders.StoreItems.StoreItemBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CashflowBuilder;
+using static Holefeeder.Tests.Common.Builders.Transactions.TransactionBuilder;
 
 namespace Holefeeder.FunctionalTests.UseCases.PowerSync;
 

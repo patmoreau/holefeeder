@@ -48,7 +48,7 @@ public class GetCurrentUser : ICarterModule
             return UserErrors.NotFound;
         }
 
-        return new Response((Guid) userId);
+        return new Response((Guid)userId);
     }
 
     public record Response(Guid Id);

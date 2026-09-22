@@ -30,7 +30,7 @@ public class ImportData : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app) =>
         app.MapPost("api/v2/my-data/import-data",
-                [DisableRequestSizeLimit](Request request, IUserContext userContext,
+                [DisableRequestSizeLimit] (Request request, IUserContext userContext,
                     IRequestScheduler requestScheduler, BudgetingContext context, IMemoryCache memoryCache, ILogger<Handler> logger) =>
                 {
                     var requestId = Guid.NewGuid();
@@ -42,7 +42,7 @@ public class ImportData : ICarterModule
                         userId.Value,
                         CancellationToken.None), nameof(ImportData));
 
-                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new {Id = requestId}, new {Id = requestId});
+                    return Results.AcceptedAtRoute(nameof(ImportDataStatus), new { Id = requestId }, new { Id = requestId });
                 })
             .AddEndpointFilter<ValidationFilter<Request>>()
             .Produces(StatusCodes.Status201Created)
@@ -64,7 +64,7 @@ public class ImportData : ICarterModule
                 UserId userId = UserId.Create(uId);
                 await context.BeginWorkAsync(cancellationToken);
 
-                UpdateProgress(requestId, _importDataStatus with {Status = CommandStatus.InProgress});
+                UpdateProgress(requestId, _importDataStatus with { Status = CommandStatus.InProgress });
                 ThrowImportExceptionOnFailure(await ImportAccountsAsync(requestId, request, userId, cancellationToken));
                 ThrowImportExceptionOnFailure(await ImportCategoriesAsync(requestId, request, userId, cancellationToken));
                 ThrowImportExceptionOnFailure(await ImportCashflowsAsync(requestId, request, userId, cancellationToken));
@@ -72,13 +72,13 @@ public class ImportData : ICarterModule
 
                 await context.CommitWorkAsync(cancellationToken);
 
-                UpdateProgress(requestId, _importDataStatus with {Status = CommandStatus.Completed});
+                UpdateProgress(requestId, _importDataStatus with { Status = CommandStatus.Completed });
             }
 #pragma warning disable CA1031
             catch (Exception e)
             {
                 UpdateProgress(requestId,
-                    _importDataStatus with {Status = CommandStatus.Error, Message = e.ToString()});
+                    _importDataStatus with { Status = CommandStatus.Error, Message = e.ToString() });
                 await context.RollbackWorkAsync(cancellationToken);
             }
 #pragma warning restore CA1031

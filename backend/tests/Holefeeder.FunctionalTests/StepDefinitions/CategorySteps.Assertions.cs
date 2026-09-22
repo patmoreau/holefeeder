@@ -23,7 +23,7 @@ internal sealed partial class CategorySteps
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.Categories.FindAsync((CategoryId) request.Operations.First().Id);
+            var result = await dbContext.Categories.FindAsync((CategoryId)request.Operations.First().Id);
 
             if (request.Operations.First().Op == "DELETE")
             {

@@ -34,7 +34,7 @@ public partial class PowerSync : ICarterModule
                     LogPowersyncCompletedWithResultResult(logger, result);
                     return result switch
                     {
-                        {IsFailure: true} => result.Error.ToProblem(),
+                        { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.NoContent()
                     };
                 })
@@ -112,11 +112,11 @@ public partial class PowerSync : ICarterModule
 
             var type = op.Data.ContainsKey("type") ? ExtractAccountType(op.Data, "type") : null;
             var name = op.Data.ContainsKey("name") ? ExtractString(op.Data, "name") : null;
-            var openBalance = op.Data.ContainsKey("open_balance") ? ExtractMoney(op.Data, "open_balance") : (Money?) null;
-            var openDate = op.Data.ContainsKey("open_date") ? ExtractDate(op.Data, "open_date") : (DateOnly?) null;
+            var openBalance = op.Data.ContainsKey("open_balance") ? ExtractMoney(op.Data, "open_balance") : (Money?)null;
+            var openDate = op.Data.ContainsKey("open_date") ? ExtractDate(op.Data, "open_date") : (DateOnly?)null;
             var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
-            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?) null;
-            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?)null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?)null;
 
             if (exists is not null)
             {
@@ -189,11 +189,11 @@ public partial class PowerSync : ICarterModule
 
             var type = op.Data.ContainsKey("type") ? ExtractCategoryType(op.Data, "type") : null;
             var name = op.Data.ContainsKey("name") ? ExtractString(op.Data, "name") : null;
-            var color = op.Data.ContainsKey("color") ? ExtractCategoryColor(op.Data, "color") : (CategoryColor?) null;
-            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?) null;
-            var system = op.Data.ContainsKey("system") ? ExtractInt(op.Data, "system") != 0 : (bool?) null;
-            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
-            var budgetAmount = op.Data.ContainsKey("budget_amount") ? ExtractMoney(op.Data, "budget_amount") : (Money?) null;
+            var color = op.Data.ContainsKey("color") ? ExtractCategoryColor(op.Data, "color") : (CategoryColor?)null;
+            var favorite = op.Data.ContainsKey("favorite") ? ExtractInt(op.Data, "favorite") != 0 : (bool?)null;
+            var system = op.Data.ContainsKey("system") ? ExtractInt(op.Data, "system") != 0 : (bool?)null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?)null;
+            var budgetAmount = op.Data.ContainsKey("budget_amount") ? ExtractMoney(op.Data, "budget_amount") : (Money?)null;
 
             if (exists is not null)
             {
@@ -314,8 +314,8 @@ public partial class PowerSync : ICarterModule
                 return TransactionErrors.NotFound(transactionId);
             }
 
-            var date = op.Data.ContainsKey("date") ? ExtractDate(op.Data, "date") : (DateOnly?) null;
-            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
+            var date = op.Data.ContainsKey("date") ? ExtractDate(op.Data, "date") : (DateOnly?)null;
+            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?)null;
             var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
             var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
             var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
@@ -391,15 +391,15 @@ public partial class PowerSync : ICarterModule
                 return CashflowErrors.NotFound(cashflowId);
             }
 
-            var effectiveDate = op.Data.ContainsKey("effective_date") ? ExtractDate(op.Data, "effective_date") : (DateOnly?) null;
+            var effectiveDate = op.Data.ContainsKey("effective_date") ? ExtractDate(op.Data, "effective_date") : (DateOnly?)null;
             var intervalType = op.Data.ContainsKey("interval_type") ? ExtractDateIntervalType(op.Data, "interval_type") : null;
-            var frequency = op.Data.ContainsKey("frequency") ? ExtractInt(op.Data, "frequency") : (int?) null;
-            var recurrence = op.Data.ContainsKey("recurrence") ? ExtractInt(op.Data, "recurrence") : (int?) null;
-            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?) null;
+            var frequency = op.Data.ContainsKey("frequency") ? ExtractInt(op.Data, "frequency") : (int?)null;
+            var recurrence = op.Data.ContainsKey("recurrence") ? ExtractInt(op.Data, "recurrence") : (int?)null;
+            var amount = op.Data.ContainsKey("amount") ? ExtractMoney(op.Data, "amount") : (Money?)null;
             var description = op.Data.ContainsKey("description") ? ExtractString(op.Data, "description") : null;
             var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
             var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
-            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?) null;
+            var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?)null;
             var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
 
             if (exists is not null)
@@ -480,7 +480,7 @@ public partial class PowerSync : ICarterModule
         var json = GetJsonElement(data, key);
         if (json.TryGetInt64(out var number))
         {
-            return (int) number;
+            return (int)number;
         }
 
         throw new InvalidOperationException($"Expected number for '{key}', got {json.ValueKind}");

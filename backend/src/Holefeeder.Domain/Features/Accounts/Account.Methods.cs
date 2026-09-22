@@ -21,7 +21,7 @@ public sealed partial record Account
 
         return Cashflows.Count > 0
             ? AccountErrors.ActiveCashflows
-            : this with {Inactive = true};
+            : this with { Inactive = true };
     }
 
     public Result<Account> Modify(AccountType? type = null, string? name = null, Money? openBalance = null,

@@ -105,7 +105,7 @@ internal sealed partial class UserSteps(IApplicationDriver applicationDriver) : 
             {
                 var response = await Api.ImportDataStatusAsync(id);
 
-                if(response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(retryDelayInSeconds));
                     tries++;

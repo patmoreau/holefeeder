@@ -12,13 +12,13 @@ public readonly struct Id : IEquatable<Id>, IPrimitiveType<Guid>, IParsable<Id>
 
     public static Result<Id> Create(Guid value) => Guid.Empty == value
         ? IdValueErrors.NoEmptyValue
-        : new Id {Value = value};
+        : new Id { Value = value };
 
     public static implicit operator Guid(Id value) => value.Value;
 
     public static implicit operator Id(Guid value) => Create(value).Value;
 
-    public static Id Empty => new() {Value = Guid.Empty};
+    public static Id Empty => new() { Value = Guid.Empty };
 
     public override int GetHashCode() => Value.GetHashCode();
 

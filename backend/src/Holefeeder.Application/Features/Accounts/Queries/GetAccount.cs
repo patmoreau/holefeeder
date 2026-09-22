@@ -23,7 +23,7 @@ public class GetAccount : ICarterModule
                     var result = await Handle(new Request(AccountId.Create(id)), userContext, context, cancellationToken);
                     return result switch
                     {
-                        {IsFailure: true} => result.Error.ToProblem(),
+                        { IsFailure: true } => result.Error.ToProblem(),
                         _ => Results.Ok(result.Value)
                     };
                 })

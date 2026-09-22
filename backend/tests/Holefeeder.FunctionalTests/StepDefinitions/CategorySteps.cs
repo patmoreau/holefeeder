@@ -39,7 +39,7 @@ internal sealed partial class CategorySteps(BudgetingDatabaseDriver budgetingDat
             var categoryOut = await GivenATransferOutCategory().ForUser(TestUsers[AuthorizedUser].UserId)
                 .SavedInDbAsync(budgetingDatabaseDriver);
 
-            var categories = new List<Category> {categoryIn, categoryOut};
+            var categories = new List<Category> { categoryIn, categoryOut };
             runner.SetContextData(CategoryContext.ExistingCategories, categories);
         });
 }

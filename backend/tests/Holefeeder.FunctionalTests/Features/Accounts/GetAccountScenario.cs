@@ -72,10 +72,10 @@ public class GetAccountScenario(ApiApplicationDriver applicationDriver, ITestOut
                 .And
                 .BeEquivalentTo(new
                 {
-                    Id = (Guid) account.Id,
+                    Id = (Guid)account.Id,
                     account.Type,
                     account.Name,
-                    OpenBalance = (decimal) account.OpenBalance,
+                    OpenBalance = (decimal)account.OpenBalance,
                     account.OpenDate,
                     TransactionCount = 1,
                     Balance = decimal.Add(account.OpenBalance, transaction.Amount * category.Type.Multiplier),

@@ -55,7 +55,7 @@ public static class SummaryCalculator
             .Select(g => (
                 Type: g.Key.CategoryType,
                 Period: g.Key.Item2,
-                Total: (Money) g.Select(x => x.Total.Value).Sum()));
+                Total: (Money)g.Select(x => x.Total.Value).Sum()));
 
     private static Dictionary<(DateOnly From, DateOnly To), Money> FilterByType(
         IEnumerable<(CategoryType Type, (DateOnly From, DateOnly To) Period, Money Total)> data,

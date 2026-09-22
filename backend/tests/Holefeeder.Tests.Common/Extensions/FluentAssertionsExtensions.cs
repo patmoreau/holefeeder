@@ -23,10 +23,10 @@ internal class MoneyEquivalencyStep : IEquivalencyStep
     {
         switch (comparands)
         {
-            case {Subject: decimal subjectDecimal, Expectation: Money expectedMoney}:
+            case { Subject: decimal subjectDecimal, Expectation: Money expectedMoney }:
                 subjectDecimal.Should().Be(expectedMoney.Value);
                 return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
-            case {Subject: Money subjectMoney, Expectation: decimal expectedDecimal}:
+            case { Subject: Money subjectMoney, Expectation: decimal expectedDecimal }:
                 subjectMoney.Value.Should().Be(expectedDecimal);
                 return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
             default:
@@ -42,10 +42,10 @@ internal class ColorEquivalencyStep : IEquivalencyStep
     {
         switch (comparands)
         {
-            case {Subject: string subjectString, Expectation: CategoryColor expectedCategoryColor}:
+            case { Subject: string subjectString, Expectation: CategoryColor expectedCategoryColor }:
                 subjectString.Should().BeEquivalentTo(expectedCategoryColor.ToString());
                 return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
-            case {Subject: CategoryColor subjectCategoryColor, Expectation: string expectedString}:
+            case { Subject: CategoryColor subjectCategoryColor, Expectation: string expectedString }:
                 subjectCategoryColor.ToString().Should().BeEquivalentTo(expectedString);
                 return EquivalencyResult.AssertionCompleted; // Indicating that the comparison is handled
             default:

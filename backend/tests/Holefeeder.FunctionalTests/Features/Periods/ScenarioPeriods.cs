@@ -23,11 +23,11 @@ public class ScenarioPeriods(ApiApplicationDriver applicationDriver, ITestOutput
 
     private void UserSettingsExists(IStepRunner runner) =>
         StoreItem.HasUserSettings(runner, new UserSettings
-            {
-                EffectiveDate = new DateOnly(2023, 1, 1),
-                IntervalType = DateIntervalType.Monthly,
-                Frequency = 1
-            });
+        {
+            EffectiveDate = new DateOnly(2023, 1, 1),
+            IntervalType = DateIntervalType.Monthly,
+            Frequency = 1
+        });
 
     private void TheUserComputeTheirPeriod(IStepRunner runner) =>
         TheUser.ComputesTheirPeriod(runner, new DateOnly(2025, 2, 5), 1);

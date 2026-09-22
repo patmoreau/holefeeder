@@ -68,7 +68,7 @@ public class ScenarioGetStoreItem(ApiApplicationDriver applicationDriver, ITestO
                 .And
                 .BeEquivalentTo(new
                 {
-                    Id = (Guid) item.Id,
+                    Id = (Guid)item.Id,
                     item.Code,
                     item.Data
                 });

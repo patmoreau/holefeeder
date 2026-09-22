@@ -44,7 +44,7 @@ public class ScenarioGetForAllCategories(ApiApplicationDriver applicationDriver,
                 ]);
             var expectedPurchase = new StatisticsDto(_categories["purchase"].Id,
                 _categories["purchase"].Name, _categories["purchase"].Color, 500.5m,
-                new[] {new YearStatisticsDto(2023, 500.5m, new[] {new MonthStatisticsDto(2, 500.5m)})});
+                new[] { new YearStatisticsDto(2023, 500.5m, new[] { new MonthStatisticsDto(2, 500.5m) }) });
 
             response.Should().BeValid()
                 .And.Subject.Value.Should().BeSuccessful()

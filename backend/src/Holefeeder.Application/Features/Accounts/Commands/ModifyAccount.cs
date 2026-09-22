@@ -22,12 +22,12 @@ public class ModifyAccount : ICarterModule
         app.MapPost("api/v2/accounts/modify-account",
                 async (Request request, IUserContext userContext, BudgetingContext context, CancellationToken cancellationToken) =>
                 {
-                    var result =  await Handle(request, userContext, context, cancellationToken);
+                    var result = await Handle(request, userContext, context, cancellationToken);
                     return result switch
-                        {
-                            { IsFailure: true } => result.Error.ToProblem(),
-                            _ => Results.NoContent()
-                        };
+                    {
+                        { IsFailure: true } => result.Error.ToProblem(),
+                        _ => Results.NoContent()
+                    };
                 })
             .AddEndpointFilter<ValidationFilter<Request>>()
             .AddEndpointFilter<UnitOfWorkFilter>()
@@ -60,7 +60,7 @@ public class ModifyAccount : ICarterModule
         return Nothing.Value;
     }
 
-    internal record Request([Required]AccountId Id, [MinLength(1), MaxLength(255)]string Name, Money OpenBalance, string Description);
+    internal record Request([Required] AccountId Id, [MinLength(1), MaxLength(255)] string Name, Money OpenBalance, string Description);
 
     internal class Validator : AbstractValidator<Request>
     {

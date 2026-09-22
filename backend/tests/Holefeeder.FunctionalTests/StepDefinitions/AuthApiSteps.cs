@@ -11,6 +11,7 @@ using static Holefeeder.Tests.Common.Builders.Accounts.FavoriteAccountRequestBui
 using static Holefeeder.Tests.Common.Builders.Accounts.ModifyAccountRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Accounts.OpenAccountRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.MyData.ImportDataRequestBuilder;
+using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.CreateStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.StoreItems.ModifyStoreItemRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.CancelCashflowRequestBuilder;
@@ -21,7 +22,6 @@ using static Holefeeder.Tests.Common.Builders.Transactions.ModifyCashflowRequest
 using static Holefeeder.Tests.Common.Builders.Transactions.ModifyTransactionRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.PayCashflowRequestBuilder;
 using static Holefeeder.Tests.Common.Builders.Transactions.TransferRequestBuilder;
-using static Holefeeder.Tests.Common.Builders.PowerSync.SyncRequestBuilder;
 
 namespace Holefeeder.FunctionalTests.StepDefinitions;
 

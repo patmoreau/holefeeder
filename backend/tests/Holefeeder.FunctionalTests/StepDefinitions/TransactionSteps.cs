@@ -104,7 +104,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
 
             response.Value.Headers!.Location.Should().NotBeNull();
 
-            var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
+            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
@@ -123,7 +123,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
 
             response.Value.Headers!.Location.Should().NotBeNull();
 
-            var id = (TransactionId) response.Value.Headers.Location!.ExtractGuidFromUrl();
+            var id = (TransactionId)response.Value.Headers.Location!.ExtractGuidFromUrl();
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
@@ -195,7 +195,7 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
 
             await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
 
-            var result = await dbContext.Transactions.FindAsync((TransactionId) request.Operations.First().Id);
+            var result = await dbContext.Transactions.FindAsync((TransactionId)request.Operations.First().Id);
 
             if (request.Operations.First().Op == "DELETE")
             {
