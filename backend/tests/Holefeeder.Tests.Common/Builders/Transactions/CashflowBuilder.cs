@@ -50,6 +50,12 @@ internal class CashflowBuilder : FakerBuilder<Cashflow>
         return this;
     }
 
+    public CashflowBuilder WithSequentialDescription()
+    {
+        Faker.RuleFor(x => x.Description, faker => $"description{faker.IndexFaker:D4}");
+        return this;
+    }
+
     public CashflowBuilder OnEffectiveDate(DateOnly effectiveDate)
     {
         Faker.RuleFor(x => x.EffectiveDate, effectiveDate);

@@ -53,6 +53,7 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
                 .ForAccount(account)
                 .ForCategory(category)
                 .ForUser(TestUsers[AuthorizedUser].UserId)
+                .WithSequentialDescription()
                 .CollectionSavedInDbAsync(budgetingDatabaseDriver, new Faker().Random.Int(2, 10));
 
             runner.SetContextData(CashflowContext.ExistingCashflows, cashflows);
