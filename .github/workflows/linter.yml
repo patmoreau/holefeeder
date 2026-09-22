@@ -115,4 +115,6 @@ jobs:
     with:
       code_was_changed: ${{ needs.check_changes.outputs.code_was_changed }}
       check_name: 'linter-completed'
-      check_result: ${{ needs.agent_files.result == 'success' && needs.csharp.result || needs.agent_files.result }}
+      # Any failed or cancelled job above fails the check; otherwise carry the csharp
+      # result through, which is 'skipped' when check_changes saw no code change.
+      check_result: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || needs.csharp.result }}
