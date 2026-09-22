@@ -36,9 +36,17 @@
     },
     {
       "matchManagers": ["npm"],
+      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/**"],
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "NPM minor and patch updates",
-      "groupSlug": "npm-minor-patch-updates"
+      "groupName": "Angular minor and patch updates",
+      "groupSlug": "angular-minor-patch-updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Frontend minor and patch updates",
+      "groupSlug": "frontend-minor-patch-updates"
     },
     {
       "matchManagers": ["nuget"],
@@ -49,10 +57,11 @@
     },
     {
       "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true,
-      "groupName": "NPM major updates",
-      "groupSlug": "npm-major-updates"
+      "groupName": "Frontend major updates",
+      "groupSlug": "frontend-major-updates"
     },
     {
       "matchUpdateTypes": ["major"],
