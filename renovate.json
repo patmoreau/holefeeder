@@ -57,6 +57,11 @@
     {
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/**"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }
