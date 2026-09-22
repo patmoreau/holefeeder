@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.7.12
+    image: traefik:v3.7.13
     container_name: reverse-proxy
     profiles: ["local"]
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       - traefik_certs:/letsencrypt
 
   portainer:
-    image: portainer/portainer-ce:2.45.0-alpine
+    image: portainer/portainer-ce:2.45.1-alpine
     container_name: portainer
     profiles: ["local"]
     expose:
@@ -50,7 +50,7 @@ services:
       - no-new-privileges:true
 
   powersync:
-    image: journeyapps/powersync-service:1.25.0
+    image: journeyapps/powersync-service:1.26.1
     container_name: holefeeder_powersync
     restart: unless-stopped
     security_opt:

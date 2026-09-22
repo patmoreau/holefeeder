@@ -2,10 +2,10 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
   <ItemGroup>
-    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.27" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.26" />
-    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.26" />
-    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.170" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.36" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.33" />
+    <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.33" />
+    <PackageVersion Include="DrifterApps.Seeds.Testing" Version="1.0.179" />
     <PackageVersion Include="FluentAssertions" Version="7.2.2" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1">
       <PrivateAssets>all</PrivateAssets>
@@ -22,8 +22,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Respawn" Version="7.0.0" />
-    <PackageVersion Include="WireMock.Net" Version="2.15.0" />
-    <PackageVersion Include="xunit.analyzers" Version="2.0.0">
+    <PackageVersion Include="WireMock.Net" Version="2.17.0" />
+    <PackageVersion Include="xunit.analyzers" Version="2.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
@@ -31,7 +31,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
-    <PackageVersion Include="xunit.v3.runner.console" Version="4.0.0" />
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.1" />
+    <PackageVersion Include="xunit.v3.runner.console" Version="4.0.1" />
   </ItemGroup>
 </Project>
