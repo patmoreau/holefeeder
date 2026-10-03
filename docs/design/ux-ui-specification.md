@@ -66,7 +66,7 @@ _layout (providers: Language → Theme → CombinedInsight → Auth → PowerSyn
         │   └── settings     Settings
         ├── Purchase                  push,  ?accountId
         ├── accounts/[id]             transparentModal — Account detail
-        ├── flows/[id]                transparentModal — Edit transaction
+        ├── flows/[id]                card — Edit transaction
         ├── AddAccount / EditAccount  push
         ├── AddCategory / EditCategory push
         ├── EditCashflow              push

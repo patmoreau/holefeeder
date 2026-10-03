@@ -19,7 +19,7 @@ type AmountFieldProps = {
 export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocus }: AmountFieldProps) => {
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
-  const { textAmount, selection, handleChangeText } = useAmountInput({
+  const { textAmount, selection, handleChangeText, handleFocus, handleSelectionChange } = useAmountInput({
     amount: amount,
     onAmountChange: onAmountChange,
     currentLocale: currentLocale,
@@ -37,7 +37,8 @@ export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocu
       keyboardType="decimal-pad"
       onChangeText={handleChangeText}
       autoFocus={autoFocus}
-      selectTextOnFocus={true}
+      onFocus={handleFocus}
+      onSelectionChange={handleSelectionChange}
       textStyle={{
         textAlign: 'center',
         fontSize: AMOUNT_FONT_SIZE,
