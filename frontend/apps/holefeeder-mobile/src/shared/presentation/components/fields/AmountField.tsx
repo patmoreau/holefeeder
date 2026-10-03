@@ -9,7 +9,7 @@ const AMOUNT_FONT_SIZE = 48;
 
 export type AmountTone = 'negative' | 'positive' | 'neutral';
 
-type AmountFieldProps = {
+export type AmountFieldProps = {
   amount: number;
   onAmountChange: (amount: number) => void;
   tone?: AmountTone;

@@ -3,18 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { AccountTypes } from '@/accounts/core/account-type';
 import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
 import { tk } from '@/i18n/translations';
-import { AmountField } from '@/shared/presentation/components/fields/AmountField';
+import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppForm } from '@/shared/presentation/components/native/AppForm';
 import { AppPicker } from '@/shared/presentation/components/native/AppPicker';
 import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
-const accountTypeOptions = Object.values(AccountTypes).map((type) => ({ id: type, label: type }));
+const accountTypeOptions = Object.values(AccountTypes).map((type) => ({
+  id: type,
+  label: type,
+}));
 
 // See BudgetSettingsFormContent for why onboarding puts its action in a footer row.
 export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode }) => {
@@ -24,7 +26,11 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
   const selectedTypeOption = accountTypeOptions.find((o) => o.id === formData.type) ?? accountTypeOptions[0];
 
   return (
-    <AppForm>
+    <AmountHeroForm
+      caption={t(tk.accountEdit.openBalance)}
+      amount={formData.openBalance}
+      onAmountChange={(value) => updateFormField('openBalance', value)}
+    >
       <AppFieldSection>
         <AppField
           icon={AppIconMap.account}
@@ -48,7 +54,6 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
         </AppField>
       </AppFieldSection>
       <AppFieldSection>
-        <AmountField amount={formData.openBalance} onAmountChange={(value) => updateFormField('openBalance', value)} />
         <DateField
           label={t(tk.accountEdit.openDate)}
           selectedDate={formData.openDate}
@@ -72,6 +77,6 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
         )}
       </AppFieldSection>
       {footer}
-    </AppForm>
+    </AmountHeroForm>
   );
 };

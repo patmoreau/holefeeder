@@ -11,13 +11,10 @@ import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
 import { CategoryTypes } from '@/shared/core/category-type';
-import { AmountField } from '@/shared/presentation/components/fields/AmountField';
+import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
-import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
-import { AppFieldGroup } from '@/shared/presentation/components/native/AppFieldGroup';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppNative } from '@/shared/presentation/components/native/AppNative';
 
 type FlowFormProps = {
   accounts: Account[];
@@ -40,34 +37,30 @@ export const FlowFormContent = ({ accounts, categories, tags }: FlowFormProps) =
   const variant = formData.flowType === FlowType.expense ? CategoryTypes.expense : CategoryTypes.gain;
 
   return (
-    <AppNative style={{ flex: 1 }}>
-      <AppColumn spacing={8}>
-        <FlowTypeSection selectedFlowType={formData.flowType} onSelectFlowType={(type) => updateFormField('flowType', type)} />
-        <AmountField
-          autoFocus
-          amount={formData.amount}
-          onAmountChange={(amount) => updateFormField('amount', amount)}
-          tone={amountToneFor(formData.flowType)}
+    <AmountHeroForm
+      header={<FlowTypeSection selectedFlowType={formData.flowType} onSelectFlowType={(type) => updateFormField('flowType', type)} />}
+      caption={t(tk.purchase.basicSection.amount)}
+      autoFocus
+      amount={formData.amount}
+      onAmountChange={(amount) => updateFormField('amount', amount)}
+      tone={amountToneFor(formData.flowType)}
+    >
+      <AppFieldSection>
+        <DateField
+          label={t(tk.purchase.basicSection.date)}
+          selectedDate={formData.date}
+          onDateSelected={(date) => updateFormField('date', date)}
         />
-        <AppFieldGroup>
-          <AppFieldSection>
-            <DateField
-              label={t(tk.purchase.basicSection.date)}
-              selectedDate={formData.date}
-              onDateSelected={(date) => updateFormField('date', date)}
-            />
-            <AccountField
-              label={t(tk.purchase.basicSection.account)}
-              accounts={accounts}
-              selectedAccount={formData.account}
-              onSelectAccount={updateAccount}
-            />
-            <CategoryField categories={categories} selectedCategory={formData.category} onSelectCategory={updateCategory} variant={variant} />
-            <TagList tags={tags} selected={selectedTags} onChange={updateTags} categoryId={formData.category.id} />
-            <DescriptionField description={formData.description} onDescriptionChange={updateDescription} />
-          </AppFieldSection>
-        </AppFieldGroup>
-      </AppColumn>
-    </AppNative>
+        <AccountField
+          label={t(tk.purchase.basicSection.account)}
+          accounts={accounts}
+          selectedAccount={formData.account}
+          onSelectAccount={updateAccount}
+        />
+        <CategoryField categories={categories} selectedCategory={formData.category} onSelectCategory={updateCategory} variant={variant} />
+        <TagList tags={tags} selected={selectedTags} onChange={updateTags} categoryId={formData.category.id} />
+        <DescriptionField description={formData.description} onDescriptionChange={updateDescription} />
+      </AppFieldSection>
+    </AmountHeroForm>
   );
 };

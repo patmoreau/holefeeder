@@ -30,7 +30,7 @@ const PayUpcomingScreen = () => {
   return (
     <AppModal>
       <PayUpcomingFormProvider initialValue={initialData} validate={validatePayUpcomingForm} validateOnChange>
-        <PayUpcomingForm description={upcomingFlowResult.value.description} />
+        <PayUpcomingForm description={upcomingFlowResult.value.description} categoryType={upcomingFlowResult.value.categoryType} />
       </PayUpcomingFormProvider>
     </AppModal>
   );

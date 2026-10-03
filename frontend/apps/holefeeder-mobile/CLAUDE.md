@@ -160,6 +160,13 @@ Use `createFormDataContext<FormData, ErrorEnum>(displayName, saveFn)` from
 `src/shared/presentation/core/use-form-context.tsx` to get a typed context factory with built-in: dirty tracking,
 field-level + general errors, validation, save, and an `ErrorSheet` component.
 
+Forms built around an amount (purchase, transaction, cashflow, pay upcoming, account opening
+balance, category budget) use `AmountHeroForm` from `src/shared/presentation/components/fields/`
+instead of `AppForm`: the amount sits pinned at the top with a caption (`AmountHero`), tinted by
+`tone`, and the fields scroll beneath it in an `AppFieldGroup`. An optional `header` renders
+above the amount (e.g. the purchase type selector). The input logic — locale formatting, digits
+shifting in as cents, selecting the whole amount on focus — lives in `useAmountInput`.
+
 ## Provider Nesting (root `_layout.tsx`)
 
 `LanguageProvider` → `ThemeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  

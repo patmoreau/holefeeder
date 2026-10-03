@@ -3,16 +3,18 @@ import { CategoryColorField } from '@/flows/presentation/categories/CategoryColo
 import { useCategoryForm } from '@/flows/presentation/categories/core/use-category-form';
 import { tk } from '@/i18n/translations';
 import { CategoryTypes } from '@/shared/core/category-type';
-import { AmountField } from '@/shared/presentation/components/fields/AmountField';
+import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppForm } from '@/shared/presentation/components/native/AppForm';
 import { AppPicker } from '@/shared/presentation/components/native/AppPicker';
 import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
-const categoryTypeOptions = Object.values(CategoryTypes).map((type) => ({ id: type, label: type }));
+const categoryTypeOptions = Object.values(CategoryTypes).map((type) => ({
+  id: type,
+  label: type,
+}));
 
 export const CategoryFormContent = () => {
   const { t } = useTranslation();
@@ -21,7 +23,11 @@ export const CategoryFormContent = () => {
   const selectedTypeOption = categoryTypeOptions.find((o) => o.id === formData.type) ?? categoryTypeOptions[0];
 
   return (
-    <AppForm>
+    <AmountHeroForm
+      caption={t(tk.categoryEdit.budget)}
+      amount={formData.budgetAmount}
+      onAmountChange={(value) => updateFormField('budgetAmount', value)}
+    >
       <AppFieldSection>
         <AppField
           icon={AppIconMap.category}
@@ -40,14 +46,11 @@ export const CategoryFormContent = () => {
         </AppField>
         <CategoryColorField color={formData.color} onColorChange={(value) => updateFormField('color', value)} />
       </AppFieldSection>
-      <AppFieldSection title={t(tk.categoryEdit.budget)}>
-        <AmountField amount={formData.budgetAmount} onAmountChange={(value) => updateFormField('budgetAmount', value)} />
-      </AppFieldSection>
       <AppFieldSection>
         <AppField icon={AppIconMap.add} label={t(tk.categoryEdit.favorite)}>
           <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
         </AppField>
       </AppFieldSection>
-    </AppForm>
+    </AmountHeroForm>
   );
 };

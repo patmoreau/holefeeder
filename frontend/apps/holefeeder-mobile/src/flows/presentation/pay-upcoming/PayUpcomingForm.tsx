@@ -5,27 +5,41 @@ import { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
+import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
+import { CategoryType } from '@/shared/core/category-type';
+import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
-import { AppForm } from '@/shared/presentation/components/native/AppForm';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
 import { useFormActions } from '@/shared/presentation/core/use-form-actions';
 
-export const PayUpcomingForm = ({ description }: { description: string }) => {
+export const PayUpcomingForm = ({ description, categoryType }: { description: string; categoryType: CategoryType }) => {
   const { t } = useTranslation();
-  const { formData, saveForm, isDirty, errors } = usePayUpcomingForm();
-  const { handleSave, handleCancel } = useFormActions({ saveForm, isDirty, errors });
+  const { formData, updateFormField, saveForm, isDirty, errors } = usePayUpcomingForm();
+  const { handleSave, handleCancel } = useFormActions({
+    saveForm,
+    isDirty,
+    errors,
+  });
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: description.length > 0 ? `${description}` : t(tk.payUpcoming.title) });
+    navigation.setOptions({
+      title: description.length > 0 ? `${description}` : t(tk.payUpcoming.title),
+    });
   }, [navigation, description, t]);
 
   return (
-    <AppForm style={{ flex: 1, paddingTop: headerHeight }} contentContainerStyle={{ flexGrow: 1 }}>
+    <AmountHeroForm
+      hostStyle={{ paddingTop: headerHeight }}
+      caption={t(tk.purchase.basicSection.amount)}
+      amount={formData.amount}
+      onAmountChange={(amount) => updateFormField('amount', amount)}
+      tone={amountToneFor(categoryType)}
+    >
       <AppColumn spacing={8}>
         <PayUpcomingFormContent />
         <AppRow spacing={8}>
@@ -44,6 +58,6 @@ export const PayUpcomingForm = ({ description }: { description: string }) => {
           <AppSpacer />
         </AppRow>
       </AppColumn>
-    </AppForm>
+    </AmountHeroForm>
   );
 };

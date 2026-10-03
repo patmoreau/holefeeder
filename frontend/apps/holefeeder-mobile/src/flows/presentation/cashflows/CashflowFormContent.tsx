@@ -6,15 +6,15 @@ import { useCashflowForm } from '@/flows/presentation/cashflows/core/use-cashflo
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
+import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
-import { AmountField } from '@/shared/presentation/components/fields/AmountField';
+import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { DateIntervalTypeField } from '@/shared/presentation/components/fields/DateIntervalTypeField';
 import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { FrequencyField } from '@/shared/presentation/components/fields/FrequencyField';
 import { RecurrenceField } from '@/shared/presentation/components/fields/RecurrenceField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppForm } from '@/shared/presentation/components/native/AppForm';
 
 type Props = {
   accounts: Account[];
@@ -27,8 +27,12 @@ export const CashflowFormContent = ({ accounts, categories, tags }: Props) => {
   const { formData, updateFormField, errors } = useCashflowForm();
 
   return (
-    <AppForm>
-      <AmountField amount={formData.amount} onAmountChange={(amount) => updateFormField('amount', amount)} />
+    <AmountHeroForm
+      caption={t(tk.purchase.basicSection.amount)}
+      amount={formData.amount}
+      onAmountChange={(amount) => updateFormField('amount', amount)}
+      tone={amountToneFor(formData.category.type)}
+    >
       <AppFieldSection>
         <AccountField
           label={t(tk.purchase.basicSection.account)}
@@ -63,6 +67,6 @@ export const CashflowFormContent = ({ accounts, categories, tags }: Props) => {
           onSelectRecurrence={(recurrence) => updateFormField('recurrence', recurrence)}
         />
       </AppFieldSection>
-    </AppForm>
+    </AmountHeroForm>
   );
 };
