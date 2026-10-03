@@ -91,7 +91,7 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
   const pillBackground = { backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground };
 
   return (
-    <View style={styles.column}>
+    <View style={styles.column} testID="dashboard-header-large">
       <AppText variant={'subtitle'} style={styles.textColor}>
         {t(tk.dashboard.largeHeader.spendingTitle)}
       </AppText>

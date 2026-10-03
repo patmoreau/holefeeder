@@ -1,0 +1,100 @@
+appId: com.drifterapps.holefeeder
+name: Tapping an amount that is not focused selects the whole number
+tags:
+  - regression
+---
+# Maestro cannot read a text selection, so the flow checks its effect instead: after
+# tapping the amount, typing "5" must replace the whole number (giving 0.05). Were the
+# caret left where the tap landed, the digit would be appended instead (1,234.55).
+# The decimal separator follows the simulator's locale, hence the [.,] in the patterns.
+#
+# The edit case needs a transaction of its own, so the purchase is saved with a random
+# amount, which also picks it out of Recent Transactions: amounts are user data, not
+# translated text. Each run leaves that transaction behind in the test user's data.
+- runFlow: ../../subflows/launch-clean.yaml
+- runFlow: ../../subflows/login-injected.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000
+
+# A form whose amount takes focus as it opens: focus elsewhere, then come back to it.
+- openLink: holefeeder:///Purchase
+- extendedWaitUntil:
+    visible:
+      id: 'purchase-screen'
+    timeout: 20000
+- inputText: '12345'
+# The number pad has no return key to dismiss it and covers the note field, so move the
+# focus to the tag filter, which stays above it.
+- tapOn:
+    id: 'tag-filter-input'
+- tapOn:
+    id: 'amount-field'
+    point: '70%,50%'
+- inputText: '5'
+- assertVisible:
+    id: 'amount-field'
+    text: '0[.,]05'
+
+- evalScript: ${output.cents = String(10000 + Math.floor(Math.random() * 90000))}
+- evalScript: ${output.amount = output.cents.slice(0, 3) + '[.,]' + output.cents.slice(3)}
+- tapOn:
+    id: 'tag-filter-input'
+- tapOn:
+    id: 'amount-field'
+    point: '70%,50%'
+- inputText: ${output.cents}
+- assertVisible:
+    id: 'amount-field'
+    text: ${output.amount}
+- tapOn:
+    id: 'purchase-save-button'
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 20000
+
+# Editing a transaction: the amount takes focus as the screen opens...
+# The spending header can show the same figure, so look below it.
+- tapOn:
+    text: .*${output.amount}.*
+    below:
+      id: 'dashboard-header-large'
+- extendedWaitUntil:
+    visible:
+      id: 'amount-field'
+    timeout: 20000
+- inputText: '12345'
+- assertVisible:
+    id: 'amount-field'
+    text: '123[.,]45'
+# ...and a tap after the focus moved elsewhere selects it again.
+- tapOn:
+    id: 'tag-filter-input'
+- tapOn:
+    id: 'amount-field'
+    point: '70%,50%'
+- inputText: '5'
+- assertVisible:
+    id: 'amount-field'
+    text: '0[.,]05'
+
+# A form whose amount is not focused when it opens.
+- openLink: holefeeder:///AddAccount
+- extendedWaitUntil:
+    visible:
+      id: 'amount-field'
+    timeout: 20000
+- tapOn:
+    id: 'amount-field'
+- inputText: '12345'
+- tapOn:
+    id: 'account-name-input'
+- tapOn:
+    id: 'amount-field'
+    point: '70%,50%'
+- inputText: '5'
+- assertVisible:
+    id: 'amount-field'
+    text: '0[.,]05'

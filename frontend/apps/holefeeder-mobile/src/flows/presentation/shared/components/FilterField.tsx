@@ -24,6 +24,7 @@ export const FilterField = ({ filter, setFilter, onSubmit }: FilterFieldProps) =
         placeholder={t(tk.tagList.placeHolder)}
         onSubmitEditing={onSubmit}
         returnKeyType="search"
+        testID="tag-filter-input"
       />
       <AppButton icon={AppIconMap.add} color={theme.colors.primary} onPress={onSubmit} />
     </AppRow>

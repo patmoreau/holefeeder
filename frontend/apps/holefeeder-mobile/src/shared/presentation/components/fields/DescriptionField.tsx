@@ -9,14 +9,20 @@ type Props = {
   description: string;
   onDescriptionChange: (description: string) => void;
   error?: string;
+  testID?: string;
 };
 
-export const DescriptionField = ({ description, onDescriptionChange, error }: Props) => {
+export const DescriptionField = ({ description, onDescriptionChange, error, testID = 'description-input' }: Props) => {
   const { t } = useTranslation();
 
   return (
     <AppField icon={AppIconMap.description} error={error}>
-      <AppTextInput placeholder={t(tk.purchase.basicSection.description)} value={description} onChangeText={onDescriptionChange} />
+      <AppTextInput
+        placeholder={t(tk.purchase.basicSection.description)}
+        value={description}
+        onChangeText={onDescriptionChange}
+        testID={testID}
+      />
     </AppField>
   );
 };
