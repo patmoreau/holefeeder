@@ -7,38 +7,25 @@ import { BudgetSettingsFormContent } from '@/settings/presentation/budget/Budget
 import { SettingsFormProvider, validateSettingsForm } from '@/settings/presentation/core/use-settings-form';
 import { DefaultSettings } from '@/shared/core/settings';
 import { AppScreen } from '@/shared/presentation/AppScreen';
-import { AppButton } from '@/shared/presentation/components/native/AppButton';
-import { AppField } from '@/shared/presentation/components/native/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { AppPinnedActions } from '@/shared/presentation/components/native/AppPinnedActions';
 import { useOnboardingBudgetPeriod } from '@/user-registration/presentation/core/use-onboarding-budget-period';
 
-// Inside the provider so it can reach the form it is saving. The action is a row in
-// the form itself: rows are laid out and hit-tested reliably, and unlike the header
-// toolbar they carry a testID for the flows to select.
+// Inside the provider so it can reach the form it is saving. The action is pinned
+// below the form rather than in the header toolbar, which takes no testID for the
+// flows to select.
 const BudgetPeriodStep = () => {
   const { isSaving, finish } = useOnboardingBudgetPeriod();
   const { t } = useTranslation();
-
   return (
-    <BudgetSettingsFormContent
-      footer={
-        <AppFieldSection>
-          <AppField icon={AppIconMap.save}>
-            <AppButton
-              label={t(tk.onboarding.budgetPeriodContinue)}
-              variant="link"
-              disabled={isSaving}
-              onPress={finish}
-              testID="onboarding-budget-period-continue-button"
-            />
-          </AppField>
-        </AppFieldSection>
-      }
-    />
+    <>
+      <BudgetSettingsFormContent />
+      <AppPinnedActions
+        primary={{ label: t(tk.onboarding.budgetPeriodContinue), onPress: finish, testID: 'onboarding-budget-period-continue-button' }}
+        disabled={isSaving}
+      />
+    </>
   );
 };
-
 // The defaults seed the form rather than standing in for an answer: whatever the
 // caller leaves here is written to store_items, so the app stops running on values
 // nobody ever chose.

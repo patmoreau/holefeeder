@@ -18,8 +18,7 @@ const accountTypeOptions = Object.values(AccountTypes).map((type) => ({
   label: type,
 }));
 
-// See BudgetSettingsFormContent for why onboarding puts its action in a footer row.
-export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode }) => {
+export const EditAccountFormContent = ({ showsFavorite = true }: { showsFavorite?: boolean }) => {
   const { t } = useTranslation();
   const { formData, updateFormField, errors } = useEditAccountForm();
 
@@ -59,20 +58,23 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
       <AppFieldSection>
         <DescriptionField description={formData.description} onDescriptionChange={(value) => updateFormField('description', value)} />
       </AppFieldSection>
-      <AppFieldSection>
-        <AppField icon={AppIconMap.favorite} label={t(tk.accountEdit.favorite)}>
-          <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
-        </AppField>
-        {/* An account that does not exist yet cannot be inactive, and offering the
+      {(showsFavorite || formData.id !== null) && (
+        <AppFieldSection>
+          {showsFavorite && (
+            <AppField icon={AppIconMap.favorite} label={t(tk.accountEdit.favorite)}>
+              <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
+            </AppField>
+          )}
+          {/* An account that does not exist yet cannot be inactive, and offering the
             choice during onboarding would let someone start with an account the app
             then hides from them. Deactivating is for accounts that already exist. */}
-        {formData.id !== null && (
-          <AppField icon={AppIconMap.inactive} label={t(tk.accountEdit.inactive)}>
-            <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
-          </AppField>
-        )}
-      </AppFieldSection>
-      {footer}
+          {formData.id !== null && (
+            <AppField icon={AppIconMap.inactive} label={t(tk.accountEdit.inactive)}>
+              <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
+            </AppField>
+          )}
+        </AppFieldSection>
+      )}
     </AmountHeroForm>
   );
 };

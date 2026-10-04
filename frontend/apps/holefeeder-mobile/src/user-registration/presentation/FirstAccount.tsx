@@ -6,33 +6,22 @@ import { EditAccountFormProvider, validateEditAccountForm } from '@/accounts/pre
 import { EditAccountFormContent } from '@/accounts/presentation/EditAccountFormContent';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
-import { AppButton } from '@/shared/presentation/components/native/AppButton';
-import { AppField } from '@/shared/presentation/components/native/AppField';
-import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
-import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { AppPinnedActions } from '@/shared/presentation/components/native/AppPinnedActions';
 import { useOnboardingFirstAccount } from '@/user-registration/presentation/core/use-onboarding-first-account';
 
-// See BudgetPeriod for why the action is a row rather than a toolbar button.
+// See BudgetPeriod for why the action is pinned below the form. Favorite is hidden: with
+// a single account it means nothing, and the account is created as a favourite anyway.
 const FirstAccountStep = () => {
   const { isSaving, finish } = useOnboardingFirstAccount();
   const { t } = useTranslation();
-
   return (
-    <EditAccountFormContent
-      footer={
-        <AppFieldSection>
-          <AppField icon={AppIconMap.save}>
-            <AppButton
-              label={t(tk.onboarding.firstAccountFinish)}
-              variant="link"
-              disabled={isSaving}
-              onPress={finish}
-              testID="onboarding-first-account-finish-button"
-            />
-          </AppField>
-        </AppFieldSection>
-      }
-    />
+    <>
+      <EditAccountFormContent showsFavorite={false} />
+      <AppPinnedActions
+        primary={{ label: t(tk.onboarding.firstAccountFinish), onPress: finish, testID: 'onboarding-first-account-finish-button' }}
+        disabled={isSaving}
+      />
+    </>
   );
 };
 

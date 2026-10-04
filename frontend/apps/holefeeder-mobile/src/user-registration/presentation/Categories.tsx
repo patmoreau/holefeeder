@@ -3,10 +3,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
-import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppForm } from '@/shared/presentation/components/native/AppForm';
+import { AppPinnedActions } from '@/shared/presentation/components/native/AppPinnedActions';
 import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useOnboardingCategories } from '@/user-registration/presentation/core/use-onboarding-categories';
@@ -26,33 +26,20 @@ const CategoriesScreen = () => {
             </AppField>
           ))}
         </AppFieldSection>
-        <AppFieldSection>
-          {failed && (
+        {failed && (
+          <AppFieldSection>
             <AppField icon={AppIconMap.warning} label={t(tk.errors.saveFailed.title)}>
               <></>
             </AppField>
-          )}
-          <AppField icon={AppIconMap.save}>
-            <AppButton
-              label={t(tk.onboarding.categoriesFinish)}
-              variant="link"
-              disabled={isSaving}
-              onPress={finish}
-              testID="onboarding-categories-finish-button"
-            />
-          </AppField>
-          <AppField icon={AppIconMap.cancel}>
-            {/* Skipping is a real answer: nothing downstream depends on these. */}
-            <AppButton
-              label={t(tk.onboarding.categoriesSkip)}
-              variant="link"
-              disabled={isSaving}
-              onPress={skip}
-              testID="onboarding-categories-skip-button"
-            />
-          </AppField>
-        </AppFieldSection>
+          </AppFieldSection>
+        )}
       </AppForm>
+      {/* Skipping is a real answer: nothing downstream depends on these. */}
+      <AppPinnedActions
+        primary={{ label: t(tk.onboarding.categoriesFinish), onPress: finish, testID: 'onboarding-categories-finish-button' }}
+        secondary={{ label: t(tk.onboarding.categoriesSkip), onPress: skip, testID: 'onboarding-categories-skip-button' }}
+        disabled={isSaving}
+      />
     </AppScreen>
   );
 };

@@ -32,8 +32,6 @@ tags:
 - tapOn:
     id: 'account-name-input'
 - inputText: 'Chequing'
-# The name field's keyboard covers Finish on smaller iPhones; put it away first.
-- pressKey: Enter
 - tapOn:
     id: 'onboarding-first-account-finish-button'
 
