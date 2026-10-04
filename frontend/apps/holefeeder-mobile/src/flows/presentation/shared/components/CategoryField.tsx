@@ -11,6 +11,7 @@ import { AppModifiers } from '@/shared/presentation/components/native/AppModifie
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap, UniversalIcon } from '@/shared/presentation/core/app-icon-map';
+import { useTheme } from '@/shared/theme/core/use-theme';
 
 type Props = {
   categories: Category[];
@@ -22,6 +23,7 @@ type Props = {
 
 export function CategoryField({ categories, selectedCategory, onSelectCategory, variant, error }: Props) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const filteredCategories = variant ? categories.filter((category) => category.type === variant) : categories;
   const isSelectedCategoryInFiltered = filteredCategories.some((category) => category.id === selectedCategory.id);
 
@@ -36,8 +38,8 @@ export function CategoryField({ categories, selectedCategory, onSelectCategory, 
   const menuLabel = selected ? (
     <AppRow spacing={6} alignment="center">
       <AppIcon name={selected.favorite ? AppIconMap.favorite : AppIconMap.circle} size={14} color={selected.color} />
-      <AppText modifiers={[AppModifiers.foregroundStyle('accentColor')]}>{selected.name}</AppText>
-      <AppIcon name={AppIconMap.dropdown} size={14} />
+      <AppText modifiers={[AppModifiers.foregroundStyle(theme.colors.primary)]}>{selected.name}</AppText>
+      <AppIcon name={AppIconMap.dropdown} size={14} color={theme.colors.primary} />
     </AppRow>
   ) : (
     ''

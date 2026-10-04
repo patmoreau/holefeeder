@@ -1,5 +1,8 @@
-import { StyleProp, ViewStyle } from 'react-native';
+import * as IosModifiers from '@expo/ui/swift-ui/modifiers';
+import { Platform, StyleProp, ViewStyle } from 'react-native';
+import { useTheme } from '@/shared/theme/core/use-theme';
 import { ExpoPicker } from './expo/ExpoPicker';
+import { ExpoZStack } from './expo/ExpoZStack';
 
 export type PickerOption = {
   id: string;
@@ -16,7 +19,8 @@ export type PickerProps<T extends PickerOption> = {
 };
 
 export const AppPicker = <T extends PickerOption>({ options, onOptionLabel, selectedOption, onSelectOption, testID }: PickerProps<T>) => {
-  return (
+  const { theme } = useTheme();
+  const picker = (
     <ExpoPicker
       testID={testID}
       selectedValue={selectedOption.id}
@@ -30,4 +34,7 @@ export const AppPicker = <T extends PickerOption>({ options, onOptionLabel, sele
       ))}
     </ExpoPicker>
   );
+
+  if (Platform.OS !== 'ios') return picker;
+  return <ExpoZStack modifiers={[IosModifiers.tint(theme.colors.primary)]}>{picker}</ExpoZStack>;
 };

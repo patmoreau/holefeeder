@@ -13,7 +13,7 @@ export function CategoryColorField({ color, onColorChange }: Props) {
   const { t } = useTranslation();
 
   return (
-    <AppField label={t(tk.categoryEdit.color)} icon={AppIconMap.category}>
+    <AppField label={t(tk.categoryEdit.color)} icon={AppIconMap.color}>
       <AppColorPicker value={color} onChange={onColorChange} />
     </AppField>
   );

@@ -22,11 +22,10 @@ export type TagListProps = {
 export function TagList({ tags, selected, onChange, categoryId }: TagListProps) {
   const { t } = useTranslation();
   const { filter, setFilter, onSubmit, toggleTag, filtered } = useTagList({ tags, selected, onChange, categoryId });
+  const isSelected = (tag: Tag) => selected.some((t) => t.tag === tag.tag);
 
   const buildList = () =>
-    filtered.map((tag) => (
-      <AppChip key={tag.tag} label={`#${tag.tag}`} selected={selected.some((t) => t.tag === tag.tag)} onPress={() => toggleTag(tag)} />
-    ));
+    filtered.map((tag) => <AppChip key={tag.tag} label={`#${tag.tag}`} selected={isSelected(tag)} filled onPress={() => toggleTag(tag)} />);
 
   return (
     <AppField label={t(tk.purchase.basicSection.tags)} icon={AppIconMap.tag} variant="large">

@@ -32,11 +32,7 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
       onAmountChange={(value) => updateFormField('openBalance', value)}
     >
       <AppFieldSection>
-        <AppField
-          icon={AppIconMap.account}
-          label={t(tk.accountEdit.name)}
-          error={errors.name ? t(tk.accountEdit.errors.nameRequired) : undefined}
-        >
+        <AppField icon={AppIconMap.name} label={t(tk.accountEdit.name)} error={errors.name ? t(tk.accountEdit.errors.nameRequired) : undefined}>
           <AppTextInput
             placeholder={t(tk.accountEdit.name)}
             value={formData.name}
@@ -44,7 +40,7 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
             testID="account-name-input"
           />
         </AppField>
-        <AppField icon={AppIconMap.category} label={t(tk.accountEdit.type)}>
+        <AppField icon={AppIconMap.type} label={t(tk.accountEdit.type)}>
           <AppPicker
             options={accountTypeOptions}
             selectedOption={selectedTypeOption}
@@ -64,14 +60,14 @@ export const EditAccountFormContent = ({ footer }: { footer?: React.ReactNode })
         <DescriptionField description={formData.description} onDescriptionChange={(value) => updateFormField('description', value)} />
       </AppFieldSection>
       <AppFieldSection>
-        <AppField icon={AppIconMap.add} label={t(tk.accountEdit.favorite)}>
+        <AppField icon={AppIconMap.favorite} label={t(tk.accountEdit.favorite)}>
           <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
         </AppField>
         {/* An account that does not exist yet cannot be inactive, and offering the
             choice during onboarding would let someone start with an account the app
             then hides from them. Deactivating is for accounts that already exist. */}
         {formData.id !== null && (
-          <AppField icon={AppIconMap.close} label={t(tk.accountEdit.inactive)}>
+          <AppField icon={AppIconMap.inactive} label={t(tk.accountEdit.inactive)}>
             <AppSwitch value={formData.inactive} onChange={(value) => updateFormField('inactive', value)} />
           </AppField>
         )}

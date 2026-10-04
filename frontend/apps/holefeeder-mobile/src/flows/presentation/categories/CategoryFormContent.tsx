@@ -30,13 +30,13 @@ export const CategoryFormContent = () => {
     >
       <AppFieldSection>
         <AppField
-          icon={AppIconMap.category}
+          icon={AppIconMap.name}
           label={t(tk.categoryEdit.name)}
           error={errors.name ? t(tk.categoryEdit.errors.nameRequired) : undefined}
         >
           <AppTextInput placeholder={t(tk.categoryEdit.name)} value={formData.name} onChangeText={(value) => updateFormField('name', value)} />
         </AppField>
-        <AppField icon={AppIconMap.category} label={t(tk.categoryEdit.type)}>
+        <AppField icon={AppIconMap.type} label={t(tk.categoryEdit.type)}>
           <AppPicker
             options={categoryTypeOptions}
             selectedOption={selectedTypeOption}
@@ -47,7 +47,7 @@ export const CategoryFormContent = () => {
         <CategoryColorField color={formData.color} onColorChange={(value) => updateFormField('color', value)} />
       </AppFieldSection>
       <AppFieldSection>
-        <AppField icon={AppIconMap.add} label={t(tk.categoryEdit.favorite)}>
+        <AppField icon={AppIconMap.favorite} label={t(tk.categoryEdit.favorite)}>
           <AppSwitch value={formData.favorite} onChange={(value) => updateFormField('favorite', value)} />
         </AppField>
       </AppFieldSection>

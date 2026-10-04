@@ -8,23 +8,26 @@ import { ExpoText } from './expo/ExpoText';
 export type AppChipProps = {
   label: string;
   selected?: boolean;
+  filled?: boolean;
   onPress?: () => void;
   testID?: string;
 };
 
 export const chipFontModifier = () => IosModifiers.font({ textStyle: 'footnote' });
 
-export function AppChip({ label, selected = false, onPress, testID }: AppChipProps) {
+export function AppChip({ label, selected = false, filled = false, onPress, testID }: AppChipProps) {
   const { theme } = useTheme();
   const buttonModifiers: ExpoModifierConfig[] = [];
   const textModifiers: ExpoModifierConfig[] = [];
   if (Platform.OS === 'ios') {
+    const color = selected ? theme.colors.primary : theme.colors.secondaryText;
+    const prominent = selected && filled;
     buttonModifiers.push(
-      IosModifiers.buttonStyle('bordered'),
+      IosModifiers.buttonStyle(prominent ? 'borderedProminent' : 'bordered'),
       IosModifiers.controlSize('mini'),
-      IosModifiers.tint(selected ? theme.colors.primary : theme.colors.secondary)
+      IosModifiers.tint(color)
     );
-    textModifiers.push(chipFontModifier(), IosModifiers.foregroundStyle(selected ? theme.colors.primary : theme.colors.secondary));
+    textModifiers.push(chipFontModifier(), IosModifiers.foregroundStyle(prominent ? theme.colors.primaryText : color));
   }
 
   return (

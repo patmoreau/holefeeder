@@ -1,6 +1,7 @@
 import Add from '@expo/material-symbols/add.xml';
 import AddCircle from '@expo/material-symbols/add_circle.xml';
 import Analytics from '@expo/material-symbols/analytics.xml';
+import Archive from '@expo/material-symbols/archive.xml';
 import ArrowDropDown from '@expo/material-symbols/arrow_drop_down.xml';
 import CalendarToday from '@expo/material-symbols/calendar_today.xml';
 import Cancel from '@expo/material-symbols/cancel.xml';
@@ -16,6 +17,7 @@ import Download from '@expo/material-symbols/download.xml';
 import Edit from '@expo/material-symbols/edit.xml';
 import EditNote from '@expo/material-symbols/edit_note.xml';
 import FileUploadOff from '@expo/material-symbols/file_upload_off.xml';
+import GridView from '@expo/material-symbols/grid_view.xml';
 import Key from '@expo/material-symbols/key.xml';
 import Label from '@expo/material-symbols/label.xml';
 import Language from '@expo/material-symbols/language.xml';
@@ -23,11 +25,13 @@ import Layers from '@expo/material-symbols/layers.xml';
 import LockClock from '@expo/material-symbols/lock_clock.xml';
 import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
+import Palette from '@expo/material-symbols/palette.xml';
 import Settings from '@expo/material-symbols/settings.xml';
 import ShoppingCart from '@expo/material-symbols/shopping_cart.xml';
 import Star from '@expo/material-symbols/star.xml';
 import Storefront from '@expo/material-symbols/storefront.xml';
 import Sync from '@expo/material-symbols/sync.xml';
+import TextFields from '@expo/material-symbols/text_fields.xml';
 import TrendingDown from '@expo/material-symbols/trending_down.xml';
 import TrendingUp from '@expo/material-symbols/trending_up.xml';
 import Upload from '@expo/material-symbols/upload.xml';
@@ -52,6 +56,7 @@ const universalIconMapping = {
   cashflow: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },
   category: { ios: 'tray.2', android: Label },
   close: { ios: 'xmark', android: Close },
+  color: { ios: 'paintpalette', android: Palette },
   circle: { ios: 'circle.fill', android: Circle },
   combined: { ios: 'square.stack', android: Layers },
   connected: {
@@ -68,10 +73,12 @@ const universalIconMapping = {
   expiresAt: { ios: 'arrow.trianglehead.2.clockwise', android: LockClock },
   favorite: { ios: 'star.fill', android: Star },
   frequency: { ios: 'clock.badge.exclamationmark', android: FileUploadOff },
+  inactive: { ios: 'archivebox', android: Archive },
   insights: { ios: 'chart.bar', android: Analytics },
   language: { ios: 'globe', android: Language },
   purchase: { ios: 'cart', android: ShoppingCart },
   menu: { ios: 'ellipsis', android: MoreVertical },
+  name: { ios: 'textformat', android: TextFields },
   uploadOutstanding: {
     ios: 'square.and.arrow.up.trianglebadge.exclamationmark',
     android: FileUploadOff,
@@ -85,6 +92,7 @@ const universalIconMapping = {
   tag: { ios: 'tag', android: Label },
   theme: { ios: 'pencil.and.scribble', android: Edit },
   token: { ios: 'key.horizontal', android: Key },
+  type: { ios: 'square.grid.2x2', android: GridView },
   trendUp: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },
   trendDown: { ios: 'chart.line.downtrend.xyaxis', android: TrendingDown },
   upload: { ios: 'square.and.arrow.up', android: Upload },
