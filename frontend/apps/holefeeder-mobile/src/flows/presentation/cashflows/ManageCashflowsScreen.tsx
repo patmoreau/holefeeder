@@ -6,10 +6,12 @@ import { useCategories } from '@/flows/presentation/shared/core/use-categories';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
+import { EmptyState } from '@/shared/presentation/components/EmptyState';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppForm } from '@/shared/presentation/components/native/AppForm';
 import { AppListForEach } from '@/shared/presentation/components/native/AppListForEach';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { Theme } from '@/types/theme/theme';
 
@@ -39,18 +41,28 @@ export const ManageCashflowsScreen = () => {
   return (
     <AppScreen>
       <AppForm>
-        <AppFieldSection title={t(tk.manageCashflows.title)}>
-          <AppListForEach>
-            {cashflowsResult.value.map((cashflow) => (
-              <CashflowCard
-                key={cashflow.id}
-                cashflow={cashflow}
-                categoryName={category(cashflow)?.name ?? ''}
-                color={category(cashflow)?.color}
-              />
-            ))}
-          </AppListForEach>
-        </AppFieldSection>
+        {cashflowsResult.value.length === 0 && (
+          <EmptyState
+            icon={AppIconMap.cashflow}
+            title={t(tk.emptyStates.cashflows.title)}
+            hint={t(tk.emptyStates.cashflows.hint)}
+            testID="manage-cashflows-empty"
+          />
+        )}
+        {cashflowsResult.value.length > 0 && (
+          <AppFieldSection title={t(tk.manageCashflows.title)}>
+            <AppListForEach>
+              {cashflowsResult.value.map((cashflow) => (
+                <CashflowCard
+                  key={cashflow.id}
+                  cashflow={cashflow}
+                  categoryName={category(cashflow)?.name ?? ''}
+                  color={category(cashflow)?.color}
+                />
+              ))}
+            </AppListForEach>
+          </AppFieldSection>
+        )}
       </AppForm>
     </AppScreen>
   );

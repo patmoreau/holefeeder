@@ -147,6 +147,28 @@ export const en = {
     edit: 'Edit',
     done: 'Done',
   },
+  emptyStates: {
+    addExpense: 'Add expense',
+    transactions: {
+      title: 'No transactions yet',
+      hint: 'Expenses you record will show up here.',
+    },
+    accountTransactions: {
+      title: 'No transactions in {{account}}',
+      hint: 'Record an expense or income on this account and it will appear here.',
+    },
+    upcoming: {
+      title: 'Nothing scheduled',
+      hint: 'Turn on Cashflow when you add an expense to repeat it on a schedule.',
+    },
+    cashflows: {
+      title: 'No cashflows yet',
+      hint: 'Turn on Cashflow when you add an expense or income, and it will repeat on its own schedule.',
+    },
+    tags: {
+      hint: 'Tags you add to expenses show up here, ready to rename or remove.',
+    },
+  },
   dashboard: {
     largeHeader: {
       avgSpending: 'Avg. Spending',

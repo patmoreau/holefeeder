@@ -8,6 +8,7 @@ import { AccountHeaderSmallCard } from '@/accounts/presentation/AccountHeaderSma
 import { TransactionCardList } from '@/accounts/presentation/components/TransactionCardList';
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { useAccountTransactions } from '@/accounts/presentation/core/use-account-transactions';
+import { EmptyState } from '@/shared/presentation/components/EmptyState';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
@@ -109,7 +110,22 @@ export const AccountScreen = () => {
               style={{ paddingTop: header.spacerHeight }}
               modifiers={[AppModifiers.listRowInsets({ top: 0, bottom: 0, leading: 0, trailing: 0 }), AppModifiers.hideListRowSeparator]}
             />
-            <TransactionCardList transactions={transactions} hasMore={hasMore} onLoadMore={loadMore} />
+            <TransactionCardList
+              transactions={transactions}
+              hasMore={hasMore}
+              onLoadMore={loadMore}
+              empty={
+                transactionsResult.isSuccess && (
+                  <EmptyState
+                    icon={AppIconMap.purchase}
+                    title={t(tk.emptyStates.accountTransactions.title, { account: account.name })}
+                    hint={t(tk.emptyStates.accountTransactions.hint)}
+                    action={{ label: t(tk.emptyStates.addExpense), onPress: onPurchasePress, testID: 'account-empty-add-expense' }}
+                    testID="account-transactions-empty"
+                  />
+                )
+              }
+            />
           </AppList>
         </AppNative>
       </View>

@@ -7,6 +7,7 @@ import { RenameTagModal } from '@/flows/presentation/tags/RenameTagModal';
 import { tk } from '@/i18n/translations';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppView } from '@/shared/presentation/AppView';
+import { EmptyState } from '@/shared/presentation/components/EmptyState';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
@@ -63,9 +64,13 @@ export const ManageTagsScreen = () => {
 
   if (result.value.length === 0) {
     return (
-      <AppView style={styles.container}>
-        <AppText variant="default">{t(tk.manageTags.empty)}</AppText>
-      </AppView>
+      <AppScreen>
+        <AppNative style={{ flex: 1 }}>
+          <AppList inset>
+            <EmptyState icon={AppIconMap.tag} title={t(tk.manageTags.empty)} hint={t(tk.emptyStates.tags.hint)} testID="manage-tags-empty" />
+          </AppList>
+        </AppNative>
+      </AppScreen>
     );
   }
 

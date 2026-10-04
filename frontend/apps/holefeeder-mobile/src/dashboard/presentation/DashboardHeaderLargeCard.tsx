@@ -12,6 +12,7 @@ import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
+import { SpendingTrend } from '@/summary/core/spending-trend';
 import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { borderRadius, fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
@@ -101,9 +102,11 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
         {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
       </AppText>
       {/* The badge is shared with a SwiftUI screen, so it stays native and sizes to its content. */}
-      <AppNative matchContents>
-        <ExpenseTrendBadge variation={summary.variation} variant="amount" />
-      </AppNative>
+      {SpendingTrend.isShown(summary) && (
+        <AppNative matchContents>
+          <ExpenseTrendBadge variation={summary.variation} variant="amount" />
+        </AppNative>
+      )}
       <View style={styles.divider} />
       <View style={styles.totals}>
         <View style={styles.total}>

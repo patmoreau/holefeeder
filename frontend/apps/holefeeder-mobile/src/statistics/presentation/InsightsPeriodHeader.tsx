@@ -13,6 +13,7 @@ import { AppText as NativeAppText } from '@/shared/presentation/components/nativ
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';
+import { SpendingTrend } from '@/summary/core/spending-trend';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -75,7 +76,7 @@ export const InsightsPeriodHeader = () => {
               <NativeAppText variant="display" textStyle={styles.total}>
                 {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
               </NativeAppText>
-              <ExpenseTrendBadge variation={summary.variation} variant="amount" />
+              {SpendingTrend.isShown(summary) && <ExpenseTrendBadge variation={summary.variation} variant="amount" />}
             </AppColumn>
           </AppNative>
         </>

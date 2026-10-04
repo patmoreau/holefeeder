@@ -139,3 +139,6 @@ Shared by the category- and tag-spending mobile insights.
 - Averages never count leading empty periods in the denominator — the divisor starts
   at the first period with activity.
 - A missing/empty period contributes **0**, never a null or a skipped row.
+- The spending trend (current spend compared with the average) is shown only when
+  there is an average to compare with: an average that rounds to zero cents means
+  no history, and the trend is hidden rather than shown as a meaningless change.

@@ -149,6 +149,28 @@ export const fr: TranslationStructure = {
     edit: 'Modifier',
     done: 'Terminé',
   },
+  emptyStates: {
+    addExpense: 'Ajouter une dépense',
+    transactions: {
+      title: 'Aucune transaction pour l’instant',
+      hint: 'Les dépenses que vous enregistrez apparaîtront ici.',
+    },
+    accountTransactions: {
+      title: 'Aucune transaction dans {{account}}',
+      hint: 'Enregistrez une dépense ou un revenu dans ce compte et elle apparaîtra ici.',
+    },
+    upcoming: {
+      title: 'Rien de prévu',
+      hint: 'Activez Flux de trésorerie en ajoutant une dépense pour la répéter selon un calendrier.',
+    },
+    cashflows: {
+      title: 'Aucun flux de trésorerie',
+      hint: 'Activez Flux de trésorerie en ajoutant une dépense ou un revenu, et il se répétera selon son propre calendrier.',
+    },
+    tags: {
+      hint: 'Les étiquettes ajoutées à vos dépenses apparaissent ici, prêtes à être renommées ou retirées.',
+    },
+  },
   dashboard: {
     largeHeader: {
       avgSpending: 'Dép. moy.',

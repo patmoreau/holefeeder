@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TransactionCard } from '@/accounts/presentation/components/TransactionCard';
 import { Transaction } from '@/flows/core/flows/transaction';
@@ -12,10 +13,20 @@ export type TransactionCardListProps = {
   transactions: Transaction[];
   hasMore?: boolean;
   onLoadMore?: () => void;
+  empty?: React.ReactNode;
 };
 
-export const TransactionCardList = ({ transactions, hasMore = false, onLoadMore }: TransactionCardListProps) => {
+export const TransactionCardList = ({ transactions, hasMore = false, onLoadMore, empty }: TransactionCardListProps) => {
   const { t } = useTranslation();
+
+  if (transactions.length === 0 && !hasMore && empty) {
+    return (
+      <>
+        <AppListSectionTitle title={t(tk.transactionList.title)} />
+        {empty}
+      </>
+    );
+  }
 
   return (
     <>
