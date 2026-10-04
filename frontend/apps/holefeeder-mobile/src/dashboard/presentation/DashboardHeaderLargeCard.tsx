@@ -7,6 +7,7 @@ import { tk } from '@/i18n/translations';
 import { CategoryType } from '@/shared/core/category-type';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
+import { AmountTone } from '@/shared/presentation/components/fields/AmountField';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
@@ -62,6 +63,10 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.negative,
     fontWeight: fontWeight.semiBold,
   },
+  neutralText: {
+    color: theme.colors.text,
+    fontWeight: fontWeight.semiBold,
+  },
 });
 
 export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summary: ComputedSummary; upcomingFlows?: UpcomingFlow[] }) => {
@@ -81,7 +86,12 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
   const projectedIsOver = projectedNetFlowTotal >= 0;
   const projected = signedAmount(projectedIsOver, projectedNetFlowTotal, currentLocale, currencyCode);
 
-  const pillBackground = { backgroundColor: projectedIsOver ? theme.colors.positiveBackground : theme.colors.negativeBackground };
+  const pillBackground: Record<AmountTone, { backgroundColor: string }> = {
+    positive: { backgroundColor: theme.colors.positiveBackground },
+    negative: { backgroundColor: theme.colors.negativeBackground },
+    neutral: { backgroundColor: theme.colors.secondaryBackground },
+  };
+  const pillText = { positive: styles.positiveText, negative: styles.negativeText, neutral: styles.neutralText };
 
   return (
     <View style={styles.column} testID="dashboard-header-large">
@@ -101,16 +111,16 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.dashboard.largeHeader.netFlow)}
           </AppText>
-          <View style={[styles.pill, pillBackground]}>
-            <AppText style={netFlow.tone === 'positive' ? styles.positiveText : styles.negativeText}>{netFlow.text}</AppText>
+          <View style={[styles.pill, pillBackground[netFlow.tone]]}>
+            <AppText style={pillText[netFlow.tone]}>{netFlow.text}</AppText>
           </View>
         </View>
         <View style={styles.total}>
           <AppText variant={'subtitle'} style={styles.subtitle}>
             {t(tk.accountCard.projected)}
           </AppText>
-          <View style={[styles.pill, pillBackground]}>
-            <AppText style={projected.tone === 'positive' ? styles.positiveText : styles.negativeText}>{projected.text}</AppText>
+          <View style={[styles.pill, pillBackground[projected.tone]]}>
+            <AppText style={pillText[projected.tone]}>{projected.text}</AppText>
           </View>
         </View>
       </View>
