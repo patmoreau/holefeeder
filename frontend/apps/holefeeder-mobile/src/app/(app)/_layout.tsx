@@ -129,7 +129,7 @@ const AppLayout = () => {
       <Stack.Screen
         name="flows/[id]"
         options={{
-          presentation: 'card',
+          presentation: 'modal',
           title: '',
           headerTransparent: true,
         }}
