@@ -28,6 +28,35 @@ describe('AccountDetail', () => {
     });
   });
 
+  describe('isProjectedFavourable', () => {
+    const withBalances = (type: AccountType, balance: number, projectedBalance: number): AccountDetail =>
+      AccountDetail.valid({
+        ...anAccountDetail(type, 0),
+        balance: Variation.valid(balance),
+        projectedBalance: Variation.valid(projectedBalance),
+      });
+
+    it('should be favourable when a checking account is projected above zero', () => {
+      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 500, 300))).toBe(true);
+    });
+
+    it('should be unfavourable when a checking account is projected below zero', () => {
+      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 500, -300))).toBe(false);
+    });
+
+    it('should follow the projected balance, not the current one', () => {
+      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, -508.11, 461.89))).toBe(true);
+    });
+
+    it('should be unfavourable when a credit card is projected to owe', () => {
+      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.creditCard, 0, 250))).toBe(false);
+    });
+
+    it('should be favourable when nothing is projected', () => {
+      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 0, 0))).toBe(true);
+    });
+  });
+
   describe('isUpcomingFavourable', () => {
     it('should be favourable when upcoming gains outweigh expenses', () => {
       expect(AccountDetail.isUpcomingFavourable(anAccountDetail(AccountTypes.checking, 100))).toBe(true);

@@ -1,8 +1,7 @@
-import { LocalFormatter, today, Variation } from '@holefeeder/shared/core';
+import { LocalFormatter, today } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
-import { AccountType } from '@/accounts/core/account-type';
 import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
@@ -74,7 +73,6 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
-  const isPositive = Variation.multiply(account.balance, AccountType.multiplier[account.type]) >= 0;
   const upcomingChange = AccountDetail.upcomingChange(account);
   const upcomingTone: Tone = upcomingChange === 0 ? 'neutral' : AccountDetail.isUpcomingFavourable(account) ? 'positive' : 'negative';
   const upcomingSign = upcomingChange > 0 ? '+ ' : upcomingChange < 0 ? '- ' : '';
@@ -114,7 +112,7 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
         {total(
           t(tk.accountCard.projected),
           LocalFormatter.currency(account.projectedBalance, currentLocale, currencyCode),
-          isPositive ? 'positive' : 'negative'
+          AccountDetail.isProjectedFavourable(account) ? 'positive' : 'negative'
         )}
       </View>
     </>

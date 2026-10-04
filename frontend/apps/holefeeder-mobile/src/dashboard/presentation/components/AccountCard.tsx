@@ -1,10 +1,10 @@
-import { Id, LocalFormatter, today, Variation } from '@holefeeder/shared/core';
+import { Id, LocalFormatter, today } from '@holefeeder/shared/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';
 import Animated, { SharedTransition } from 'react-native-reanimated';
+import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountSummary } from '@/accounts/core/account-summary';
-import { AccountType } from '@/accounts/core/account-type';
 import { useAccountDetail } from '@/accounts/presentation/core/use-account-detail';
 import { tk } from '@/i18n/translations';
 import { AppCard } from '@/shared/presentation/components/AppCard';
@@ -117,13 +117,10 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
           {variationResult.isSuccess &&
             (() => {
               const detail = variationResult.value;
-              const balanceSign = detail.balance >= 0 ? '' : '-';
-              const projectedSign = detail.balance >= 0 ? '' : '-';
               return (
                 <>
                   <View style={styles.balanceSection}>
                     <AppText variant={'title'} adjustsFontSizeToFit>
-                      {balanceSign}
                       {LocalFormatter.currency(detail.balance, currentLocale, currencyCode)}
                     </AppText>
                   </View>
@@ -139,13 +136,10 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
                         variant={'defaultSemiBold'}
                         style={[
                           styles.projectedAmount,
-                          Variation.multiply(detail.balance, AccountType.multiplier[detail.type]) >= 0
-                            ? styles.positiveAmount
-                            : styles.negativeAmount,
+                          AccountDetail.isProjectedFavourable(detail) ? styles.positiveAmount : styles.negativeAmount,
                         ]}
                         adjustsFontSizeToFit
                       >
-                        {projectedSign}
                         {LocalFormatter.currency(detail.projectedBalance, currentLocale, currencyCode)}
                       </AppText>
                     </View>
