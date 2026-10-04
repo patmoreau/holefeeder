@@ -25,12 +25,15 @@ const upcomingChange = (detail: AccountDetail): Variation => Variation.multiply(
 
 const isUpcomingFavourable = (detail: AccountDetail): boolean => detail.upcomingVariation >= 0;
 
-const isProjectedFavourable = (detail: AccountDetail): boolean =>
-  Variation.multiply(detail.projectedBalance, AccountType.multiplier[detail.type]) >= 0;
+const ownedBalance = (detail: AccountDetail): Variation => Variation.multiply(detail.balance, AccountType.multiplier[detail.type]);
+
+const ownedProjectedBalance = (detail: AccountDetail): Variation =>
+  Variation.multiply(detail.projectedBalance, AccountType.multiplier[detail.type]);
 
 export const AccountDetail = {
   valid: valid,
   upcomingChange: upcomingChange,
   isUpcomingFavourable: isUpcomingFavourable,
-  isProjectedFavourable: isProjectedFavourable,
+  ownedBalance: ownedBalance,
+  ownedProjectedBalance: ownedProjectedBalance,
 };

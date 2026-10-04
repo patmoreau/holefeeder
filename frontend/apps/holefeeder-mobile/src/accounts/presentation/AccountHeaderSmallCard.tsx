@@ -2,6 +2,7 @@ import { LocalFormatter } from '@holefeeder/shared/core';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AppText } from '@/shared/presentation/components/AppText';
+import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -34,7 +35,7 @@ export const AccountHeaderSmallCard = ({ account }: { account: AccountDetail }) 
         {account.name}
       </AppText>
       <AppText variant={'title'} style={styles.balance}>
-        {LocalFormatter.currency(account.balance, currentLocale, currencyCode)}
+        {LocalFormatter.currency(displayAmount(AccountDetail.ownedBalance(account)).amount, currentLocale, currencyCode)}
       </AppText>
     </View>
   );

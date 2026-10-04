@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
+import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { borderRadius, fontSize, fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -75,7 +76,8 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
 
   const upcomingChange = AccountDetail.upcomingChange(account);
   const upcomingTone: Tone = upcomingChange === 0 ? 'neutral' : AccountDetail.isUpcomingFavourable(account) ? 'positive' : 'negative';
-  const upcomingSign = upcomingChange > 0 ? '+ ' : upcomingChange < 0 ? '- ' : '';
+  const balance = displayAmount(AccountDetail.ownedBalance(account));
+  const projected = displayAmount(AccountDetail.ownedProjectedBalance(account));
 
   const pillStyle = { positive: styles.positivePill, negative: styles.negativePill, neutral: styles.neutralPill };
   const textStyle = { positive: styles.positiveText, negative: styles.negativeText, neutral: styles.neutralText };
@@ -99,21 +101,13 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
         {account.name}
       </AppText>
       <AppText variant={'largeTitle'} style={styles.largeTitle}>
-        {LocalFormatter.currency(account.balance, currentLocale, currencyCode)}
+        {LocalFormatter.currency(balance.amount, currentLocale, currencyCode)}
       </AppText>
       <View style={styles.divider} />
       <View style={styles.totals}>
         {total(t(tk.accountCard.updated), LocalFormatter.date(account.lastTransactionDate!, today(), currentLocale, t), 'positive')}
-        {total(
-          t(tk.accountCard.upcoming),
-          `${upcomingSign}${LocalFormatter.currency(Math.abs(upcomingChange), currentLocale, currencyCode)}`,
-          upcomingTone
-        )}
-        {total(
-          t(tk.accountCard.projected),
-          LocalFormatter.currency(account.projectedBalance, currentLocale, currencyCode),
-          AccountDetail.isProjectedFavourable(account) ? 'positive' : 'negative'
-        )}
+        {total(t(tk.accountCard.upcoming), LocalFormatter.currency(Math.abs(upcomingChange), currentLocale, currencyCode), upcomingTone)}
+        {total(t(tk.accountCard.projected), LocalFormatter.currency(projected.amount, currentLocale, currencyCode), projected.tone)}
       </View>
     </>
   );

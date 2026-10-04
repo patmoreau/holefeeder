@@ -28,32 +28,36 @@ describe('AccountDetail', () => {
     });
   });
 
-  describe('isProjectedFavourable', () => {
-    const withBalances = (type: AccountType, balance: number, projectedBalance: number): AccountDetail =>
+  describe('owned balances', () => {
+    const withBalances = (type: AccountType, balance: number, projectedBalance: number = balance): AccountDetail =>
       AccountDetail.valid({
         ...anAccountDetail(type, 0),
         balance: Variation.valid(balance),
         projectedBalance: Variation.valid(projectedBalance),
       });
 
-    it('should be favourable when a checking account is projected above zero', () => {
-      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 500, 300))).toBe(true);
+    it('should count a checking account in credit as owned', () => {
+      expect(AccountDetail.ownedBalance(withBalances(AccountTypes.checking, 500))).toBe(500);
     });
 
-    it('should be unfavourable when a checking account is projected below zero', () => {
-      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 500, -300))).toBe(false);
+    it('should count an overdrawn checking account as owed', () => {
+      expect(AccountDetail.ownedBalance(withBalances(AccountTypes.checking, -508.11))).toBe(-508.11);
     });
 
-    it('should follow the projected balance, not the current one', () => {
-      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, -508.11, 461.89))).toBe(true);
+    it('should count a credit card balance as owed', () => {
+      expect(AccountDetail.ownedBalance(withBalances(AccountTypes.creditCard, 250))).toBe(-250);
     });
 
-    it('should be unfavourable when a credit card is projected to owe', () => {
-      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.creditCard, 0, 250))).toBe(false);
+    it('should count a credit card in credit as owned', () => {
+      expect(AccountDetail.ownedBalance(withBalances(AccountTypes.creditCard, -20))).toBe(20);
     });
 
-    it('should be favourable when nothing is projected', () => {
-      expect(AccountDetail.isProjectedFavourable(withBalances(AccountTypes.checking, 0, 0))).toBe(true);
+    it('should take the projected balance from the projection, not the current balance', () => {
+      expect(AccountDetail.ownedProjectedBalance(withBalances(AccountTypes.checking, -508.11, 461.89))).toBe(461.89);
+    });
+
+    it('should count a credit card projected to owe as owed', () => {
+      expect(AccountDetail.ownedProjectedBalance(withBalances(AccountTypes.creditCard, 0, 250))).toBe(-250);
     });
   });
 

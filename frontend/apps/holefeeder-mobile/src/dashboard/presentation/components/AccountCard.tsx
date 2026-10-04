@@ -10,6 +10,7 @@ import { tk } from '@/i18n/translations';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
+import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -117,11 +118,14 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
           {variationResult.isSuccess &&
             (() => {
               const detail = variationResult.value;
+              const balance = displayAmount(AccountDetail.ownedBalance(detail));
+              const projected = displayAmount(AccountDetail.ownedProjectedBalance(detail));
+              const toneStyle = { positive: styles.positiveAmount, negative: styles.negativeAmount, neutral: undefined };
               return (
                 <>
                   <View style={styles.balanceSection}>
-                    <AppText variant={'title'} adjustsFontSizeToFit>
-                      {LocalFormatter.currency(detail.balance, currentLocale, currencyCode)}
+                    <AppText variant={'title'} style={toneStyle[balance.tone]} adjustsFontSizeToFit>
+                      {LocalFormatter.currency(balance.amount, currentLocale, currencyCode)}
                     </AppText>
                   </View>
 
@@ -132,15 +136,8 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
                     </View>
                     <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-end' }}>
                       <AppText variant={'footnote'}>{t(tk.accountCard.projected)}</AppText>
-                      <AppText
-                        variant={'defaultSemiBold'}
-                        style={[
-                          styles.projectedAmount,
-                          AccountDetail.isProjectedFavourable(detail) ? styles.positiveAmount : styles.negativeAmount,
-                        ]}
-                        adjustsFontSizeToFit
-                      >
-                        {LocalFormatter.currency(detail.projectedBalance, currentLocale, currencyCode)}
+                      <AppText variant={'defaultSemiBold'} style={[styles.projectedAmount, toneStyle[projected.tone]]} adjustsFontSizeToFit>
+                        {LocalFormatter.currency(projected.amount, currentLocale, currencyCode)}
                       </AppText>
                     </View>
                   </View>

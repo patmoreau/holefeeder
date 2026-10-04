@@ -36,6 +36,17 @@ Account balance is always computed, never stored:
 - Credit account types (CreditCard, CreditLine, Loan, Mortgage) use sign **−1**
 - Gain categories use sign **+1**; Expense categories use sign **−1**
 
+### Displaying Amounts
+
+Amounts are **never shown with a sign**. Colour alone tells the direction:
+
+- **Green** — in the user's favour: money owned, a net gain, a favourable change
+- **Red** — against the user: money owed, a net loss, an unfavourable change
+- **Neutral** — zero, including any value that rounds to zero at two decimals
+
+Balances are shown from the owner's point of view — see
+[Displaying Balances](account.md#displaying-balances).
+
 ### Tags
 
 Tags behave the same way on both transactions and cashflows:

@@ -1,7 +1,6 @@
 import { LocalFormatter, Money } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { signedAmount } from '@/dashboard/presentation/core/signed-amount';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { CategoryType } from '@/shared/core/category-type';
@@ -9,6 +8,7 @@ import { AppText } from '@/shared/presentation/components/AppText';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AmountTone } from '@/shared/presentation/components/fields/AmountField';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
+import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -75,16 +75,15 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
 
-  const netFlow = signedAmount(summary.netFlow.isOver, summary.netFlow.amount, currentLocale, currencyCode);
+  const baseNetFlow = summary.netFlow.isOver ? summary.netFlow.amount : -summary.netFlow.amount;
+  const netFlow = displayAmount(baseNetFlow);
 
   const upcomingVariation = upcomingFlows.reduce((acc, flow) => {
     return acc + (Money.toCents(flow.amount) / 100) * CategoryType.multiplier[flow.categoryType];
   }, 0);
 
-  const baseNetFlow = summary.netFlow.isOver ? summary.netFlow.amount : -summary.netFlow.amount;
   const projectedNetFlowTotal = baseNetFlow + upcomingVariation;
-  const projectedIsOver = projectedNetFlowTotal >= 0;
-  const projected = signedAmount(projectedIsOver, projectedNetFlowTotal, currentLocale, currencyCode);
+  const projected = displayAmount(projectedNetFlowTotal);
 
   const pillBackground: Record<AmountTone, { backgroundColor: string }> = {
     positive: { backgroundColor: theme.colors.positiveBackground },
@@ -112,7 +111,7 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
             {t(tk.dashboard.largeHeader.netFlow)}
           </AppText>
           <View style={[styles.pill, pillBackground[netFlow.tone]]}>
-            <AppText style={pillText[netFlow.tone]}>{netFlow.text}</AppText>
+            <AppText style={pillText[netFlow.tone]}>{LocalFormatter.currency(netFlow.amount, currentLocale, currencyCode)}</AppText>
           </View>
         </View>
         <View style={styles.total}>
@@ -120,7 +119,7 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
             {t(tk.accountCard.projected)}
           </AppText>
           <View style={[styles.pill, pillBackground[projected.tone]]}>
-            <AppText style={pillText[projected.tone]}>{projected.text}</AppText>
+            <AppText style={pillText[projected.tone]}>{LocalFormatter.currency(projected.amount, currentLocale, currencyCode)}</AppText>
           </View>
         </View>
       </View>

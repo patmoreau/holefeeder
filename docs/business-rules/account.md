@@ -1,7 +1,7 @@
 ---
 path: docs/business-rules/account.md
 domain: account
-last-reviewed: 2026-05
+last-reviewed: 2026-10
 ---
 
 # Account Rules
@@ -28,6 +28,29 @@ The current balance is always computed: opening balance plus the sum of all tran
 | Mortgage   | Negative |
 
 For positive-sign accounts, gains increase the balance and expenses decrease it. For negative-sign accounts, the effect is reversed.
+
+---
+
+## Displaying Balances
+
+A balance is shown from the owner's point of view:
+
+> **Displayed value = balance × account type sign**
+
+A positive displayed value is money the user **owns**, shown in green. A negative one is
+money the user **owes**, shown in red. Zero is neutral. The amount itself never carries a sign
+(see [Displaying Amounts](index.md#displaying-amounts)).
+
+The same rule applies to the current balance and to the projected balance; the projected
+balance is judged on its own value, not on the current one.
+
+| Account                 | Balance | Shown   | Colour  |
+|-------------------------|---------|---------|---------|
+| Checking                | 500     | $500.00 | green   |
+| Checking, overdrawn     | −508.11 | $508.11 | red     |
+| Credit card, owing      | 250     | $250.00 | red     |
+| Credit card, in credit  | −20     | $20.00  | green   |
+| Any account             | 0       | $0.00   | neutral |
 
 ---
 
