@@ -13,6 +13,8 @@ export type CashflowVariation = {
   frequency: number;
   intervalType: DateIntervalType;
   categoryType: CategoryType;
+  categoryName: string;
+  categoryColor: string;
   tags: TagList;
 };
 
@@ -31,6 +33,8 @@ const valid = (value: Record<string, unknown>): CashflowVariation => ({
   frequency: value.frequency as number,
   intervalType: DateIntervalType.valid(value.intervalType),
   categoryType: CategoryType.valid(value.categoryType),
+  categoryName: value.categoryName as string,
+  categoryColor: value.categoryColor as string,
   tags: TagList.valid(value.tags),
 });
 

@@ -16,6 +16,8 @@ const defaultCashflowVariation = (): CashflowVariation => ({
   frequency: aCount(),
   intervalType: aDateIntervalType(),
   categoryType: aCategoryType(),
+  categoryName: aString(),
+  categoryColor: '#3B82F6',
   tags: aTagList(),
 });
 

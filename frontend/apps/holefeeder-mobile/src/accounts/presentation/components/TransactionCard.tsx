@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTransactionCard } from '@/accounts/presentation/core/use-transaction-card';
+import { FlowTitle } from '@/flows/core/flows/flow-title';
 import { Transaction } from '@/flows/core/flows/transaction';
-import { FlowRowAmount, FlowRowIcon, FlowRowTags } from '@/flows/presentation/shared/components/FlowRow';
+import { FlowRowAmount, FlowRowDetails, FlowRowIcon } from '@/flows/presentation/shared/components/FlowRow';
 import { tk } from '@/i18n/translations';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
@@ -23,7 +24,7 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
   const { showDeleteAlert } = showAlert(t);
 
   const handleDelete = () => {
-    showDeleteAlert(transaction.description, {
+    showDeleteAlert(FlowTitle.title(transaction), {
       onConfirm: () => {
         transactionCardUseCase.delete(transaction);
       },
@@ -41,21 +42,21 @@ export const TransactionCard = ({ transaction }: TransactionCardProps) => {
       }
     >
       <AppListItem.Leading>
-        <FlowRowIcon />
+        <FlowRowIcon color={transaction.categoryColor} />
       </AppListItem.Leading>
       <AppListItem.Trailing>
         <FlowRowAmount amount={transaction.amount} date={transaction.date} />
       </AppListItem.Trailing>
       <AppSwipeActions>
         <AppText variant={'defaultSemiBold'} numberOfLines={1}>
-          {transaction.description}
+          {FlowTitle.title(transaction)}
         </AppText>
         <AppSwipeActions.Actions edge="trailing" allowsFullSwipe={true}>
           <AppButton variant="destructive" label={t(tk.swipeableActions.delete)} icon={AppIconMap.delete} onPress={handleDelete} />
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>
-        <FlowRowTags tags={transaction.tags} />
+        <FlowRowDetails categoryName={transaction.categoryName} showsCategory={FlowTitle.showsCategory(transaction)} tags={transaction.tags} />
       </AppListItem.Supporting>
     </AppListItem>
   );

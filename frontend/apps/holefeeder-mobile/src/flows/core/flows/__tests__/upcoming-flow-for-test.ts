@@ -12,6 +12,8 @@ const defaultUpcomingFlow = (): UpcomingFlow => ({
   description: aString(),
   tags: aTagList(),
   categoryType: CategoryTypes.expense,
+  categoryName: aString(),
+  categoryColor: '#3B82F6',
 });
 
 export const aUpcomingFlow = (overrides?: Partial<UpcomingFlow>): UpcomingFlow => ({

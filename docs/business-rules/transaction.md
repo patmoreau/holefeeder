@@ -1,7 +1,7 @@
 ---
 path: docs/business-rules/transaction.md
 domain: transaction
-last-reviewed: 2026-05
+last-reviewed: 2026-10
 ---
 
 # Transaction Rules
@@ -11,6 +11,23 @@ last-reviewed: 2026-05
 A transaction is a record of a financial movement on an account for a specific date and amount. Every transaction must reference an account, a category, and a user-declared date.
 
 A transaction may optionally be linked to a cashflow, recording which scheduled occurrence it covers. See [Cashflow Rules](cashflow.md) for cashflow rules.
+
+---
+
+## Displaying Transactions
+
+The description is optional, so a transaction is titled by what the user wrote, falling back
+to its category:
+
+- **Title** — the description; when it is empty or only spaces, the category name
+- **Category line** — the category name is shown under the title only when the title is a
+  real description, never twice
+- **Icon** — the category's icon in the category's colour, so rows of different categories
+  can be told apart at a glance
+
+The description itself is stored as entered: an empty description stays empty and is never
+replaced by the category name in the data. The same rules apply to upcoming cashflow
+occurrences.
 
 ---
 

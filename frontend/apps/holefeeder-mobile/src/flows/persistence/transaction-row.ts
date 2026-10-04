@@ -6,6 +6,8 @@ export type TransactionRow = {
   accountId: string;
   categoryId: string;
   categoryType: string;
+  categoryName: string;
+  categoryColor: string;
   tags: string;
   cashflowId: string | null;
   cashflowDate: string | null;

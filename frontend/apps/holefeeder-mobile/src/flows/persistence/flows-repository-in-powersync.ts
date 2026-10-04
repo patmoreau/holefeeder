@@ -351,11 +351,13 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
                tx.lastPaidDate,
                tx.lastCashflowDate,
                c.amount,
-               COALESCE(NULLIF(c.description, ''), cc.name) AS description,
+               c.description,
                c.effective_date AS effectiveDate,
                c.frequency,
                c.interval_type  AS intervalType,
                cc.type          AS categoryType,
+               cc.name          AS categoryName,
+               cc.color         AS categoryColor,
                c.tags           AS tags
         FROM cashflows c
                LEFT JOIN tx_agg tx ON tx.cashflow_id = c.id
@@ -412,6 +414,8 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
                t.account_id    AS accountId,
                t.category_id   AS categoryId,
                c.type          AS categoryType,
+               c.name          AS categoryName,
+               c.color         AS categoryColor,
                t.tags,
                t.cashflow_id   AS cashflowId,
                t.cashflow_date AS cashflowDate
@@ -438,10 +442,12 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
         SELECT t.id,
                t.date,
                t.amount,
-               COALESCE(NULLIF(t.description, ''), c.name) AS description,
+               t.description,
                t.account_id    AS accountId,
                t.category_id   AS categoryId,
                c.type          AS categoryType,
+               c.name          AS categoryName,
+               c.color         AS categoryColor,
                t.tags,
                t.cashflow_id   AS cashflowId,
                t.cashflow_date AS cashflowDate

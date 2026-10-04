@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { type ViewProps } from 'react-native';
+import { FlowTitle } from '@/flows/core/flows/flow-title';
 import { Transaction } from '@/flows/core/flows/transaction';
-import { FlowRowAmount, FlowRowIcon, FlowRowTags } from '@/flows/presentation/shared/components/FlowRow';
+import { FlowRowAmount, FlowRowDetails, FlowRowIcon } from '@/flows/presentation/shared/components/FlowRow';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 
@@ -20,16 +21,16 @@ export const LatestTransactionCard = ({ transaction, ...props }: LatestTransacti
       }
     >
       <AppListItem.Leading>
-        <FlowRowIcon />
+        <FlowRowIcon color={transaction.categoryColor} />
       </AppListItem.Leading>
       <AppListItem.Trailing>
         <FlowRowAmount amount={transaction.amount} date={transaction.date} />
       </AppListItem.Trailing>
       <AppText variant={'defaultSemiBold'} numberOfLines={1}>
-        {transaction.description}
+        {FlowTitle.title(transaction)}
       </AppText>
       <AppListItem.Supporting>
-        <FlowRowTags tags={transaction.tags} />
+        <FlowRowDetails categoryName={transaction.categoryName} showsCategory={FlowTitle.showsCategory(transaction)} tags={transaction.tags} />
       </AppListItem.Supporting>
     </AppListItem>
   );

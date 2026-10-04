@@ -9,7 +9,7 @@ import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 
-export const FlowRowIcon = () => <AppIcon name={AppIconMap.purchase.ios} size={20} color="#FFD60A" />;
+export const FlowRowIcon = ({ color }: { color: string }) => <AppIcon name={AppIconMap.category.ios} size={20} color={color} />;
 
 export const FlowRowAmount = ({ amount, date }: { amount: Money; date: DateOnly }) => {
   const { t } = useTranslation();
@@ -23,8 +23,9 @@ export const FlowRowAmount = ({ amount, date }: { amount: Money; date: DateOnly 
   );
 };
 
-export const FlowRowTags = ({ tags }: { tags: TagList }) => (
-  <AppRow spacing={2}>
+export const FlowRowDetails = ({ categoryName, showsCategory, tags }: { categoryName: string; showsCategory: boolean; tags: TagList }) => (
+  <AppRow spacing={4} alignment={'center'}>
+    {showsCategory && <AppText variant={'footnote'}>{categoryName}</AppText>}
     {tags.map((tag) => (
       <AppChip key={tag} selected={true} label={tag} />
     ))}

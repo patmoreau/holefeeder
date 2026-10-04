@@ -10,6 +10,8 @@ export type Transaction = {
   accountId: Id;
   categoryId: Id;
   categoryType: CategoryType;
+  categoryName: string;
+  categoryColor: string;
   tags: TagList;
   cashflowId?: Id;
   cashflowDate?: DateOnly;
@@ -23,6 +25,8 @@ const valid = (value: Record<string, unknown>): Transaction => ({
   accountId: Id.valid(value.accountId),
   categoryId: Id.valid(value.categoryId),
   categoryType: CategoryType.valid(value.categoryType),
+  categoryName: value.categoryName as string,
+  categoryColor: value.categoryColor as string,
   tags: TagList.valid(value.tags),
   cashflowId: value.cashflowId ? Id.valid(value.cashflowId) : undefined,
   cashflowDate: value.cashflowDate ? DateOnly.valid(value.cashflowDate) : undefined,

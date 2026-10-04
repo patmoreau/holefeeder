@@ -7,6 +7,8 @@ export type UpcomingFlow = {
   amount: Money;
   description: string;
   categoryType: CategoryType;
+  categoryName: string;
+  categoryColor: string;
   tags: TagList;
 };
 
@@ -17,6 +19,8 @@ const create = (value: Record<string, unknown>): Result<UpcomingFlow> =>
     amount: Money.create(value.amount),
     description: Result.success(value.description as string),
     categoryType: CategoryType.create(value.categoryType),
+    categoryName: Result.success(value.categoryName as string),
+    categoryColor: Result.success(value.categoryColor as string),
     tags: TagList.create(value.tags),
   });
 
@@ -26,6 +30,8 @@ const valid = (value: Record<string, unknown>): UpcomingFlow => ({
   amount: Money.valid(value.amount),
   description: value.description as string,
   categoryType: CategoryType.valid(value.categoryType),
+  categoryName: value.categoryName as string,
+  categoryColor: value.categoryColor as string,
   tags: TagList.valid(value.tags),
 });
 

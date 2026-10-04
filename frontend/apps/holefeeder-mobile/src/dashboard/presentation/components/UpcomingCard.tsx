@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useUpcomingFlow } from '@/dashboard/presentation/core/use-pay-form';
+import { FlowTitle } from '@/flows/core/flows/flow-title';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
-import { FlowRowAmount, FlowRowIcon, FlowRowTags } from '@/flows/presentation/shared/components/FlowRow';
+import { FlowRowAmount, FlowRowDetails, FlowRowIcon } from '@/flows/presentation/shared/components/FlowRow';
 import { tk } from '@/i18n/translations';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
@@ -27,7 +28,7 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
   const handleClear = () => upcomingFlowUseCase.clear(upcomingFlow);
 
   const handleDelete = () => {
-    showDeleteAlert(upcomingFlow.description, {
+    showDeleteAlert(FlowTitle.title(upcomingFlow), {
       onConfirm: () => {
         upcomingFlowUseCase.delete(upcomingFlow);
       },
@@ -45,14 +46,14 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
       }
     >
       <AppListItem.Leading>
-        <FlowRowIcon />
+        <FlowRowIcon color={upcomingFlow.categoryColor} />
       </AppListItem.Leading>
       <AppListItem.Trailing>
         <FlowRowAmount amount={upcomingFlow.amount} date={upcomingFlow.date} />
       </AppListItem.Trailing>
       <AppSwipeActions>
         <AppText variant={'defaultSemiBold'} numberOfLines={1}>
-          {upcomingFlow.description}
+          {FlowTitle.title(upcomingFlow)}
         </AppText>
         <AppSwipeActions.Actions edge="leading" allowsFullSwipe={true}>
           <AppButton variant="primary" label={t(tk.swipeableActions.pay)} icon={AppIconMap.purchase} onPress={handlePay} />
@@ -63,7 +64,11 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>
-        <FlowRowTags tags={upcomingFlow.tags} />
+        <FlowRowDetails
+          categoryName={upcomingFlow.categoryName}
+          showsCategory={FlowTitle.showsCategory(upcomingFlow)}
+          tags={upcomingFlow.tags}
+        />
       </AppListItem.Supporting>
     </AppListItem>
   );

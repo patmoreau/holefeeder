@@ -9,5 +9,7 @@ export type CashflowVariationRow = {
   frequency: number;
   intervalType: string;
   categoryType: string;
+  categoryName: string;
+  categoryColor: string;
   tags: string;
 };

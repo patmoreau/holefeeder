@@ -55,6 +55,8 @@ describe('WatchUpcomingFlowsUseCase', () => {
         date: firstCashflow.effectiveDate,
         tags: firstCashflow.tags,
         categoryType: firstCashflow.categoryType,
+        categoryName: firstCashflow.categoryName,
+        categoryColor: firstCashflow.categoryColor,
       },
       {
         id: secondCashflow.id,
@@ -63,6 +65,8 @@ describe('WatchUpcomingFlowsUseCase', () => {
         date: secondCashflow.effectiveDate,
         tags: secondCashflow.tags,
         categoryType: secondCashflow.categoryType,
+        categoryName: secondCashflow.categoryName,
+        categoryColor: secondCashflow.categoryColor,
       },
     ]);
 

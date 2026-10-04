@@ -1,4 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
+import { FlowTitle } from '@/flows/core/flows/flow-title';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { PayUpcomingFormData } from '@/flows/presentation/pay-upcoming/core/pay-upcoming-form-data';
 import { PayUpcomingFormProvider, validatePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
@@ -30,7 +31,7 @@ const PayUpcomingScreen = () => {
   return (
     <AppModal>
       <PayUpcomingFormProvider initialValue={initialData} validate={validatePayUpcomingForm} validateOnChange>
-        <PayUpcomingForm description={upcomingFlowResult.value.description} categoryType={upcomingFlowResult.value.categoryType} />
+        <PayUpcomingForm description={FlowTitle.title(upcomingFlowResult.value)} categoryType={upcomingFlowResult.value.categoryType} />
       </PayUpcomingFormProvider>
     </AppModal>
   );

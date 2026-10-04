@@ -21,6 +21,8 @@ const defaultTransaction = (): Transaction => ({
   accountId: anId(),
   categoryId: anId(),
   categoryType: aCategoryType(),
+  categoryName: aString(),
+  categoryColor: '#3B82F6',
   cashflowId: undefined,
   cashflowDate: undefined,
   tags: aTagList(),

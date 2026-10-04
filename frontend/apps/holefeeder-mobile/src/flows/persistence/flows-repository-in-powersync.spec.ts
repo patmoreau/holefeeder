@@ -453,6 +453,26 @@ describe('FlowsRepository', () => {
   });
 
   describe('watchCashflowVariations', () => {
+    it('keeps an empty description empty rather than naming it after the category', async () => {
+      const category = await aCategory({ type: CategoryTypes.expense }).store(db);
+      await aCashflow({ categoryId: category.id, description: '' }).store(db);
+
+      let result: AsyncResult<CashflowVariation[]> | undefined;
+      const unsubscribe = repository.watchCashflowVariations((data) => {
+        result = data;
+      });
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+      });
+
+      expect(result?.isSuccess && result.value[0].description).toBe('');
+      expect(result?.isSuccess && result.value[0].categoryName).toBe(category.name);
+      expect(result?.isSuccess && result.value[0].categoryColor).toBe(category.color);
+
+      unsubscribe();
+    });
+
     it('retrieves cashflows never paid', async () => {
       const category = await aCategory({ type: CategoryTypes.expense }).store(db);
       const cashflow = await aCashflow({ categoryId: category.id, amount: Money.valid(100) }).store(db);
@@ -471,6 +491,8 @@ describe('FlowsRepository', () => {
           id: cashflow.id,
           accountId: cashflow.accountId,
           categoryType: category.type,
+          categoryName: category.name,
+          categoryColor: category.color,
           amount: Money.valid(100),
           description: cashflow.description,
           effectiveDate: cashflow.effectiveDate,
@@ -510,6 +532,8 @@ describe('FlowsRepository', () => {
           id: cashflow.id,
           accountId: cashflow.accountId,
           categoryType: category.type,
+          categoryName: category.name,
+          categoryColor: category.color,
           amount: Money.valid(100),
           description: cashflow.description,
           effectiveDate: cashflow.effectiveDate,
@@ -584,6 +608,8 @@ describe('FlowsRepository', () => {
         accountId: transaction.accountId,
         categoryId: transaction.categoryId,
         categoryType: category.type,
+        categoryName: category.name,
+        categoryColor: category.color,
         tags: transaction.tags,
         cashflowId: undefined,
         cashflowDate: undefined,
@@ -627,6 +653,29 @@ describe('FlowsRepository', () => {
   });
 
   describe('watchTransactions', () => {
+    it('keeps an empty description empty rather than naming it after the category', async () => {
+      const category = await aCategory({ type: CategoryTypes.expense }).store(db);
+      await aTransaction({ categoryId: category.id, description: '' }).store(db);
+
+      let result: AsyncResult<Transaction[]> | undefined;
+      const unsubscribe = repository.watchTransactions(
+        (data) => {
+          result = data;
+        },
+        undefined,
+        10
+      );
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+      });
+
+      expect(result?.isSuccess && result.value[0].description).toBe('');
+      expect(result?.isSuccess && result.value[0].categoryName).toBe(category.name);
+
+      unsubscribe();
+    });
+
     it('retrieves transactions', async () => {
       const category = await aCategory({ type: CategoryTypes.expense }).store(db);
       const transaction = await aTransaction({
@@ -657,6 +706,8 @@ describe('FlowsRepository', () => {
           accountId: transaction.accountId,
           categoryId: transaction.categoryId,
           categoryType: category.type,
+          categoryName: category.name,
+          categoryColor: category.color,
           tags: transaction.tags,
           cashflowId: undefined,
           cashflowDate: undefined,
