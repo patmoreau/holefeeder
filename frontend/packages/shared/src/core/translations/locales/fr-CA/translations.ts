@@ -272,7 +272,6 @@ export const fr: TranslationStructure = {
   payUpcoming: {
     title: 'Payer un flux',
     pay: 'Payer',
-    clear: 'Annuler',
     updateRecurring: 'Modifier le montant récurrent à {{amount}} pour l’avenir',
   },
   purchase: {

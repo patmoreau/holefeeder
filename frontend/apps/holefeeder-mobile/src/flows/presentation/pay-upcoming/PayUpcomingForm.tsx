@@ -46,7 +46,7 @@ export const PayUpcomingForm = ({ description, categoryType }: { description: st
           <AppSpacer />
           <AppButton
             variant="secondary"
-            label={t(tk.payUpcoming.clear)}
+            label={t(tk.common.cancel)}
             onPress={() => {
               formData.amount = Money.ZERO;
               formData.date = formData.cashflowDate;

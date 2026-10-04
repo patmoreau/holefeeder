@@ -269,7 +269,6 @@ export const en = {
   payUpcoming: {
     title: 'Pay Upcoming Flow',
     pay: 'Pay',
-    clear: 'Clear',
     updateRecurring: 'Update recurring amount to {{amount}} going forward',
   },
   purchase: {
