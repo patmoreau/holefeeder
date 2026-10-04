@@ -83,7 +83,7 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
   const textStyle = { positive: styles.positiveText, negative: styles.negativeText, neutral: styles.neutralText };
 
   const total = (label: string, value: string, tone: Tone) => (
-    <View style={styles.total}>
+    <View style={styles.total} testID="account-header-large">
       <AppText variant={'subtitle'} style={styles.subtitle} numberOfLines={1}>
         {label}
       </AppText>

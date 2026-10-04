@@ -30,6 +30,9 @@ tags:
 - tapOn:
     id: 'account-name-input'
 - inputText: 'Chequing'
+# The pinned Finish rises with the keyboard, but its accessibility frame keeps the
+# old position, so Maestro would tap the keyboard. Put the keyboard away first.
+- pressKey: Enter
 - tapOn:
     id: 'onboarding-first-account-finish-button'
 

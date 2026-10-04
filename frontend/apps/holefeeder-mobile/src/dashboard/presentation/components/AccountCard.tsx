@@ -94,7 +94,7 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
   };
 
   return (
-    <Pressable ref={pressableRef} onPress={handlePress}>
+    <Pressable ref={pressableRef} onPress={handlePress} testID="dashboard-account-card">
       <Animated.View sharedTransitionTag={`tag-${account.id}`} sharedTransitionStyle={transition}>
         <AppCard
           scrollable={'horizontal'}

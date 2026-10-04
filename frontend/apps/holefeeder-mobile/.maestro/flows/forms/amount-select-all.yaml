@@ -55,11 +55,25 @@ tags:
     timeout: 20000
 
 # Editing a transaction: the amount takes focus as the screen opens...
-# The spending header can show the same figure, so look below it.
+# The purchase went to the first account. Transactions of the same day are not in
+# insertion order, so it can sit anywhere among the ones earlier runs left behind:
+# scroll the account's list to it rather than expect it in Recent Transactions.
+# The purchase form stays in the hierarchy with the same digits in its field, so
+# match the row by its currency symbol, which the field does not show.
 - tapOn:
-    text: .*${output.amount}.*
-    below:
-      id: 'dashboard-header-large'
+    id: 'dashboard-account-card'
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: 'account-header-large'
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      text: '.*(\x24${output.amount}|${output.amount}.?\x24).*'
+    direction: DOWN
+    timeout: 60000
+- tapOn:
+    text: '.*(\x24${output.amount}|${output.amount}.?\x24).*'
 - extendedWaitUntil:
     visible:
       id: 'amount-field'
