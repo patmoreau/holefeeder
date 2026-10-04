@@ -25,10 +25,9 @@ tags:
       id: 'purchase-screen'
     timeout: 20000
 - inputText: '12345'
-# The number pad has no return key to dismiss it and covers the note field, so move the
-# focus to the tag filter, which stays above it.
+# The number pad has no return key; the Done button above it puts the keyboard away.
 - tapOn:
-    id: 'tag-filter-input'
+    id: 'keyboard-done-button'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'
@@ -40,7 +39,7 @@ tags:
 - evalScript: ${output.cents = String(10000 + Math.floor(Math.random() * 90000))}
 - evalScript: ${output.amount = output.cents.slice(0, 3) + '[.,]' + output.cents.slice(3)}
 - tapOn:
-    id: 'tag-filter-input'
+    id: 'keyboard-done-button'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'
@@ -71,7 +70,7 @@ tags:
     text: '123[.,]45'
 # ...and a tap after the focus moved elsewhere selects it again.
 - tapOn:
-    id: 'tag-filter-input'
+    id: 'keyboard-done-button'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'

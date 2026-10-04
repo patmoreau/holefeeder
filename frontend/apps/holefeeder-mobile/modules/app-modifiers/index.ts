@@ -46,3 +46,10 @@ export type ScrollTransitionParams = {
 };
 
 export const scrollTransition = (params: ScrollTransitionParams = {}) => createModifier('scrollTransition', params);
+
+export type KeyboardDoneButtonParams = {
+  label: string;
+  identifier: string;
+};
+
+export const keyboardDoneButton = (params: KeyboardDoneButtonParams) => createModifier('keyboardDoneButton', params);

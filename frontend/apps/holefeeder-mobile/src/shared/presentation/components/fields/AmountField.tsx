@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { tk } from '@/i18n/translations';
 import { useAmountInput } from '@/shared/presentation/components/fields/use-amount-input';
 import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
@@ -18,6 +20,7 @@ export type AmountFieldProps = {
 };
 
 export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocus, testID = 'amount-field' }: AmountFieldProps) => {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const { textAmount, selection, handleChangeText, handleFocus, handleSelectionChange } = useAmountInput({
@@ -41,6 +44,7 @@ export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocu
       onFocus={handleFocus}
       onSelectionChange={handleSelectionChange}
       testID={testID}
+      doneButton={{ label: t(tk.common.done), identifier: 'keyboard-done-button' }}
       textStyle={{
         textAlign: 'center',
         fontSize: AMOUNT_FONT_SIZE,

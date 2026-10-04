@@ -1,10 +1,13 @@
 {
-  "platforms": ["apple"],
+  "platforms": [
+    "apple"
+  ],
   "apple": {
     "modules": [
       "CollapsingHeaderModule",
       "ScrollGeometryModule",
-      "ScrollTransitionModule"
+      "ScrollTransitionModule",
+      "KeyboardDoneModule"
     ]
   }
 }

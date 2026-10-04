@@ -166,6 +166,10 @@ instead of `AppForm`: the amount sits pinned at the top with a caption (`AmountH
 `tone`, and the fields scroll beneath it in an `AppFieldGroup`. An optional `header` renders
 above the amount (e.g. the purchase type selector). The input logic — locale formatting, digits
 shifting in as cents, selecting the whole amount on focus — lives in `useAmountInput`.
+On iOS the number pad has no return key, so `AmountField` asks `AppTextInput` for a Done
+bar (`doneButton`): `KeyboardDoneModule` in `modules/app-modifiers` attaches a UIKit input
+accessory to number-pad fields. SwiftUI's `.toolbar(placement: .keyboard)` does not render
+inside `@expo/ui` hosts, which is why it is UIKit.
 
 ## Provider Nesting (root `_layout.tsx`)
 
