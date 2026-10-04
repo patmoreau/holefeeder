@@ -1,20 +1,15 @@
-import { LocalFormatter, today } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useUpcomingFlow } from '@/dashboard/presentation/core/use-pay-form';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
+import { FlowRowAmount, FlowRowIcon, FlowRowTags } from '@/flows/presentation/shared/components/FlowRow';
 import { tk } from '@/i18n/translations';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
-import { AppChip } from '@/shared/presentation/components/native/AppChip';
-import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
-import { AppIcon } from '@/shared/presentation/components/native/AppIcon';
 import { AppListItem } from '@/shared/presentation/components/native/AppListItem';
-import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSwipeActions } from '@/shared/presentation/components/native/AppSwipeActions';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { showAlert } from '@/shared/presentation/core/show-alert';
-import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
 export type UpcomingCardProps = {
@@ -23,7 +18,6 @@ export type UpcomingCardProps = {
 
 export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
   const { t } = useTranslation();
-  const { currentLocale, currencyCode } = useLocaleFormatter();
   const repositories = useRepositories();
   const upcomingFlowUseCase = useUpcomingFlow(repositories);
   const { showDeleteAlert } = showAlert(t);
@@ -51,13 +45,10 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
       }
     >
       <AppListItem.Leading>
-        <AppIcon name={AppIconMap.purchase.ios} size={20} color="#FFD60A" />
+        <FlowRowIcon />
       </AppListItem.Leading>
       <AppListItem.Trailing>
-        <AppColumn alignment={'end'}>
-          <AppText variant={'default'}>{LocalFormatter.currency(upcomingFlow.amount, currentLocale, currencyCode)}</AppText>
-          <AppText variant={'footnote'}>{LocalFormatter.date(upcomingFlow.date, today(), currentLocale, t)}</AppText>
-        </AppColumn>
+        <FlowRowAmount amount={upcomingFlow.amount} date={upcomingFlow.date} />
       </AppListItem.Trailing>
       <AppSwipeActions>
         <AppText variant={'defaultSemiBold'} numberOfLines={1}>
@@ -72,11 +63,7 @@ export const UpcomingCard = ({ upcomingFlow }: UpcomingCardProps) => {
         </AppSwipeActions.Actions>
       </AppSwipeActions>
       <AppListItem.Supporting>
-        <AppRow spacing={2}>
-          {upcomingFlow.tags.map((tag) => (
-            <AppChip key={tag} selected={true} label={tag} />
-          ))}
-        </AppRow>
+        <FlowRowTags tags={upcomingFlow.tags} />
       </AppListItem.Supporting>
     </AppListItem>
   );
