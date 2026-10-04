@@ -27,6 +27,9 @@ export const fr: TranslationStructure = {
   accountCard: {
     add: 'Ajouter un compte',
     currentBalance: 'Solde actuel',
+    availableBalance: 'Solde disponible',
+    amountDue: 'Solde dû',
+    creditBalance: 'Solde créditeur',
     projected: 'Projeté',
     upcoming: 'À venir',
     updated: 'Mis à jour',

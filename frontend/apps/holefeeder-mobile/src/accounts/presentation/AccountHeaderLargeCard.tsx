@@ -100,6 +100,9 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
       <AppText variant={'title'} style={styles.textColor}>
         {account.name}
       </AppText>
+      <AppText variant={'subtitle'} style={styles.subtitle}>
+        {t(tk.accountCard[AccountDetail.balanceCaption(account)])}
+      </AppText>
       <AppText variant={'largeTitle'} style={styles.largeTitle}>
         {LocalFormatter.currency(balance.amount, currentLocale, currencyCode)}
       </AppText>

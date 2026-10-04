@@ -25,6 +25,9 @@ export const en = {
   accountCard: {
     add: 'Add an account',
     currentBalance: 'Current Balance',
+    availableBalance: 'Available Balance',
+    amountDue: 'Amount Due',
+    creditBalance: 'Credit Balance',
     projected: 'Projected',
     upcoming: 'Upcoming',
     updated: 'Updated',

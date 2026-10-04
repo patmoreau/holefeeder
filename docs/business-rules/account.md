@@ -52,6 +52,23 @@ balance is judged on its own value, not on the current one.
 | Credit card, in credit  | −20     | $20.00  | green   |
 | Any account             | 0       | $0.00   | neutral |
 
+### Balance caption
+
+Because the amount carries no sign, the balance is always named by a caption that says which
+way it goes. Colour is never the only cue.
+
+| Account type                                         | Balance > 0                                  | Balance < 0                                  | Balance = 0                       |
+|------------------------------------------------------|----------------------------------------------|----------------------------------------------|-----------------------------------|
+| Asset — Checking, Savings, Investment                | Available Balance · *Solde disponible*       | Amount Due · *Solde dû*                      | Available Balance (neutral)       |
+| Liability — CreditCard, CreditLine, Loan, Mortgage   | Amount Due · *Solde dû*                      | Credit Balance · *Solde créditeur*           | Amount Due (neutral)              |
+
+In terms of the displayed value (balance × account type sign): a negative value is always
+**Amount Due**; a positive value is **Available Balance** for an asset and **Credit Balance**
+for a liability; zero follows the account's normal state.
+
+The caption names the current balance. The projected balance keeps its "Projected" label and
+relies on colour, with the current balance's caption right beside it.
+
 ---
 
 ## Open Account

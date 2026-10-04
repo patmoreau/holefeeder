@@ -27,6 +27,16 @@ const isUpcomingFavourable = (detail: AccountDetail): boolean => detail.upcoming
 
 const ownedBalance = (detail: AccountDetail): Variation => Variation.multiply(detail.balance, AccountType.multiplier[detail.type]);
 
+export type BalanceCaption = 'availableBalance' | 'amountDue' | 'creditBalance';
+
+const balanceCaption = (detail: AccountDetail): BalanceCaption => {
+  const isAsset = AccountType.multiplier[detail.type] > 0;
+  const owned = Math.round(ownedBalance(detail) * 100);
+  if (owned < 0) return 'amountDue';
+  if (owned > 0) return isAsset ? 'availableBalance' : 'creditBalance';
+  return isAsset ? 'availableBalance' : 'amountDue';
+};
+
 const ownedProjectedBalance = (detail: AccountDetail): Variation =>
   Variation.multiply(detail.projectedBalance, AccountType.multiplier[detail.type]);
 
@@ -36,4 +46,5 @@ export const AccountDetail = {
   isUpcomingFavourable: isUpcomingFavourable,
   ownedBalance: ownedBalance,
   ownedProjectedBalance: ownedProjectedBalance,
+  balanceCaption: balanceCaption,
 };

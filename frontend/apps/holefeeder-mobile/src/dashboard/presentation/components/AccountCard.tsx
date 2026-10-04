@@ -124,6 +124,7 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
               return (
                 <>
                   <View style={styles.balanceSection}>
+                    <AppText variant={'footnote'}>{t(tk.accountCard[AccountDetail.balanceCaption(detail)])}</AppText>
                     <AppText variant={'title'} style={toneStyle[balance.tone]} adjustsFontSizeToFit>
                       {LocalFormatter.currency(balance.amount, currentLocale, currencyCode)}
                     </AppText>

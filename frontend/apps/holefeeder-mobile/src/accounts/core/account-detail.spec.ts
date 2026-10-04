@@ -61,6 +61,43 @@ describe('AccountDetail', () => {
     });
   });
 
+  describe('balanceCaption', () => {
+    const withBalance = (type: AccountType, balance: number): AccountDetail =>
+      AccountDetail.valid({ ...anAccountDetail(type, 0), balance: Variation.valid(balance) });
+
+    it('should name a positive checking balance the available balance', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.checking, 500))).toBe('availableBalance');
+    });
+
+    it('should name an overdrawn checking balance the amount due', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.checking, -508.11))).toBe('amountDue');
+    });
+
+    it('should name a positive credit card balance the amount due', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.creditCard, 250))).toBe('amountDue');
+    });
+
+    it('should name a negative credit card balance the credit balance', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.creditCard, -20))).toBe('creditBalance');
+    });
+
+    it('should name a positive loan balance the amount due', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.loan, 12000))).toBe('amountDue');
+    });
+
+    it('should follow the normal state of an asset at zero', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.checking, 0))).toBe('availableBalance');
+    });
+
+    it('should follow the normal state of a liability at zero', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.creditCard, 0))).toBe('amountDue');
+    });
+
+    it('should treat a balance that rounds to zero as zero', () => {
+      expect(AccountDetail.balanceCaption(withBalance(AccountTypes.creditCard, -0.001))).toBe('amountDue');
+    });
+  });
+
   describe('isUpcomingFavourable', () => {
     it('should be favourable when upcoming gains outweigh expenses', () => {
       expect(AccountDetail.isUpcomingFavourable(anAccountDetail(AccountTypes.checking, 100))).toBe(true);
