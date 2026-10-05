@@ -2,45 +2,44 @@ import { Image as ExpoImage } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useProfile } from '@/settings/presentation/core/use-profile';
-import { AuthButton } from '@/shared/presentation/AuthButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppReact } from '@/shared/presentation/components/native/AppReact';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
 import { AppText } from '@/shared/presentation/components/native/AppText';
-import { useStyles } from '@/shared/theme/core/use-styles';
-import { Theme } from '@/types/theme/theme';
 
-const createStyles = (theme: Theme) => ({
+const AVATAR_SIZE = 52;
+
+const styles = {
   avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: theme.colors.primary,
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_SIZE / 2,
   },
-});
+};
 
 export const ProfileSection = () => {
   const profile = useProfile();
   const { t } = useTranslation();
-  const styles = useStyles(createStyles);
 
   const avatarUri =
     profile.avatar ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || profile.email || 'User')}&size=120&background=007AFF&color=fff`;
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || profile.email || 'User')}&size=${AVATAR_SIZE * 3}&background=007AFF&color=fff`;
 
   return (
     <AppFieldSection title={t(tk.profileSection.title)}>
-      <AppRow spacing={16}>
+      <AppRow spacing={14} alignment={'center'}>
         <AppReact matchContents>
           <ExpoImage source={{ uri: avatarUri }} style={styles.avatar} contentFit="cover" />
         </AppReact>
-        <AppColumn spacing={8}>
-          <AppText variant={'title'}>{profile.name}</AppText>
-          <AppText>{profile.email}</AppText>
-          <AuthButton />
+        <AppColumn spacing={2} alignment={'start'}>
+          <AppText variant={'defaultSemiBold'} numberOfLines={1}>
+            {profile.name}
+          </AppText>
+          <AppText variant={'footnote'} numberOfLines={1}>
+            {profile.email}
+          </AppText>
         </AppColumn>
         <AppSpacer />
       </AppRow>

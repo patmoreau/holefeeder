@@ -19,9 +19,11 @@ tags:
 
 - tapOn:
     id: 'tabs-settings'
-- extendedWaitUntil:
-    visible:
+# Logout is the last row of Settings, below the fold on smaller iPhones.
+- scrollUntilVisible:
+    element:
       id: 'auth-logout-button'
+    direction: DOWN
     timeout: 20000
 - tapOn:
     id: 'auth-logout-button'

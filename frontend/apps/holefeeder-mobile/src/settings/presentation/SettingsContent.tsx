@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DisplaySection } from '@/settings/presentation/DisplaySection';
 import { HolefeederSection } from '@/settings/presentation/HolefeederSection';
+import { LogoutSection } from '@/settings/presentation/LogoutSection';
 import { ProfileSection } from '@/settings/presentation/ProfileSection';
 import { SyncSection } from '@/settings/presentation/SyncSection';
 import TestComponentsScreen from '@/settings/presentation/test/TestComponentsScreen';
@@ -17,6 +18,7 @@ export const SettingsContent = () => {
         <DisplaySection />
         {__DEV__ && <TestSection show={show} setShow={setShow} />}
         <SyncSection />
+        <LogoutSection />
       </AppForm>
       <TestComponentsScreen show={show} setShow={setShow} />
     </>
