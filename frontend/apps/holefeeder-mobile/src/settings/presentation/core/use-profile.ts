@@ -6,8 +6,13 @@ export const initialProfile: UserProfile = {
   name: '',
   username: '',
   email: '',
-  avatar: 'person.fill',
+  avatar: '',
 };
+
+export const AVATAR_SIZE = 52;
+
+const initialsAvatar = (label: string): string =>
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(label)}&size=${AVATAR_SIZE * 3}&background=007AFF&color=fff`;
 
 export const useProfile = (): UserProfile => {
   const { user } = useAuth();
@@ -15,11 +20,13 @@ export const useProfile = (): UserProfile => {
 
   useEffect(() => {
     if (user) {
+      const name = user.name || [user.givenName, user.familyName].filter(Boolean).join(' ');
+      const email = user.email || '';
       setProfile({
-        name: user.name || [user.givenName, user.familyName].filter(Boolean).join(' '),
+        name: name,
         username: user.sub || '',
-        email: user.email || '',
-        avatar: user.picture || 'person.fill',
+        email: email,
+        avatar: user.picture || initialsAvatar(name || email || 'User'),
       });
     } else {
       setProfile(initialProfile);

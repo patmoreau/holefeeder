@@ -52,14 +52,24 @@ describe('useProfile', () => {
     await waitFor(() => expect(result.current.name).toBe('Grace'));
   });
 
-  it('falls back to the default avatar and empty strings when fields are absent', async () => {
+  it('falls back to an initials avatar and empty strings when fields are absent', async () => {
     mockUseAuth.mockReturnValue({ user: { sub: 'auth0|3', givenName: 'Alan', familyName: 'Turing' } });
 
     const { result } = await renderHook(() => useProfile());
 
     await waitFor(() => expect(result.current.username).toBe('auth0|3'));
     expect(result.current.email).toBe('');
-    expect(result.current.avatar).toBe('person.fill');
+    expect(result.current.avatar).toBe('https://ui-avatars.com/api/?name=Alan%20Turing&size=156&background=007AFF&color=fff');
+  });
+
+  it('builds the initials avatar from the email when there is no name', async () => {
+    mockUseAuth.mockReturnValue({ user: { sub: 'auth0|6', email: 'ada@example.com' } });
+
+    const { result } = await renderHook(() => useProfile());
+
+    await waitFor(() =>
+      expect(result.current.avatar).toBe('https://ui-avatars.com/api/?name=ada%40example.com&size=156&background=007AFF&color=fff')
+    );
   });
 
   it('yields an empty name when no name fields exist', async () => {
