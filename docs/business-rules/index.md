@@ -47,6 +47,10 @@ Amounts are **never shown with a sign**. Colour alone tells the direction:
 Balances are shown from the owner's point of view — see
 [Displaying Balances](account.md#displaying-balances).
 
+When an amount is entered, the currency symbol sits beside the number on the side
+the locale puts it ("$42.50" in en-CA, "42,50 $" in fr-CA). It is not part of the
+editable value, which stays digits only.
+
 ### Tags
 
 Tags behave the same way on both transactions and cashflows:

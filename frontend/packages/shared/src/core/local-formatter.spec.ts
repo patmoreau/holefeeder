@@ -196,4 +196,27 @@ describe('LocalFormatter', () => {
       expect(LocalFormatter.percentage(-5.678)).toBe('-5.68%');
     });
   });
+
+  describe('currencySymbol', () => {
+    it('places the dollar before the amount in English Canada', () => {
+      expect(LocalFormatter.currencySymbol('en-CA', 'CAD')).toEqual({ symbol: '$', position: 'before' });
+    });
+
+    it('places the dollar after the amount in French Canada', () => {
+      expect(LocalFormatter.currencySymbol('fr-CA', 'CAD')).toEqual({ symbol: '$', position: 'after' });
+    });
+
+    it('takes the symbol from the currency and the side from the locale', () => {
+      expect(LocalFormatter.currencySymbol('en-CA', 'EUR')).toEqual({ symbol: '€', position: 'before' });
+      expect(LocalFormatter.currencySymbol('fr-CA', 'EUR')).toEqual({ symbol: '€', position: 'after' });
+    });
+
+    it('falls back to Canadian dollars when no currency is set', () => {
+      expect(LocalFormatter.currencySymbol('en-CA', '')).toEqual({ symbol: '$', position: 'before' });
+    });
+
+    it('shows the code after the amount when the currency is unknown', () => {
+      expect(LocalFormatter.currencySymbol('en-CA', 'XX')).toEqual({ symbol: 'XX', position: 'after' });
+    });
+  });
 });

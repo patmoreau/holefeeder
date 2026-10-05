@@ -30,6 +30,23 @@ const currency = (
   }
 };
 
+export type CurrencySymbol = { symbol: string; position: 'before' | 'after' };
+
+const currencySymbol = (locale: string, currencyCode: string): CurrencySymbol => {
+  const safeCurrencyCode = currencyCode || 'CAD';
+  try {
+    const formatted = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: safeCurrencyCode,
+      currencyDisplay: 'narrowSymbol',
+    }).format(1);
+    const symbol = formatted.replace(/[\d\s.,\u00a0\u202f]/g, '');
+    return { symbol: symbol, position: /^\d/.test(formatted.trim()) ? 'after' : 'before' };
+  } catch {
+    return { symbol: safeCurrencyCode, position: 'after' };
+  }
+};
+
 const dateRange = (
   start: DateOnly,
   end: DateOnly,
@@ -69,6 +86,7 @@ const date = (dateValue: DateOnly, anchorDate: DateOnly, locale: string, t: Tran
 export const LocalFormatter = {
   percentage,
   currency,
+  currencySymbol,
   date,
   dateRange,
 } as const;
