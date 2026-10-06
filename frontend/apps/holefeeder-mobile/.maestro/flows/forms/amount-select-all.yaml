@@ -25,9 +25,14 @@ tags:
       id: 'purchase-screen'
     timeout: 20000
 - inputText: '12345'
-# The number pad has no return key; the Done button above it puts the keyboard away.
+# Move the focus away from the amount, so the next tap comes back to it. Dragging the
+# form puts the number pad away, uncovering the note; tapping the note moves the focus
+# even when no software keyboard shows.
+- swipe:
+    start: '50%,60%'
+    end: '50%,35%'
 - tapOn:
-    id: 'keyboard-done-button'
+    id: 'description-input'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'
@@ -38,8 +43,11 @@ tags:
 
 - evalScript: ${output.cents = String(10000 + Math.floor(Math.random() * 90000))}
 - evalScript: ${output.amount = output.cents.slice(0, 3) + '[.,]' + output.cents.slice(3)}
+- swipe:
+    start: '50%,60%'
+    end: '50%,35%'
 - tapOn:
-    id: 'keyboard-done-button'
+    id: 'description-input'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'
@@ -83,8 +91,11 @@ tags:
     id: 'amount-field'
     text: '123[.,]45'
 # ...and a tap after the focus moved elsewhere selects it again.
+- swipe:
+    start: '50%,60%'
+    end: '50%,35%'
 - tapOn:
-    id: 'keyboard-done-button'
+    id: 'description-input'
 - tapOn:
     id: 'amount-field'
     point: '70%,50%'

@@ -6,8 +6,7 @@
     "modules": [
       "CollapsingHeaderModule",
       "ScrollGeometryModule",
-      "ScrollTransitionModule",
-      "KeyboardDoneModule"
+      "ScrollTransitionModule"
     ]
   }
 }
