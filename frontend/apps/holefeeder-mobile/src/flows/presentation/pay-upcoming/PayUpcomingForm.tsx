@@ -1,4 +1,3 @@
-import { Money } from '@holefeeder/shared/core';
 import { useNavigation } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useLayoutEffect } from 'react';
@@ -44,16 +43,7 @@ export const PayUpcomingForm = ({ description, categoryType }: { description: st
         <PayUpcomingFormContent />
         <AppRow spacing={8}>
           <AppSpacer />
-          <AppButton
-            variant="secondary"
-            label={t(tk.common.cancel)}
-            onPress={() => {
-              formData.amount = Money.ZERO;
-              formData.date = formData.cashflowDate;
-              formData.updateRecurringAmount = false;
-              handleCancel();
-            }}
-          />
+          <AppButton variant="secondary" label={t(tk.common.cancel)} onPress={handleCancel} />
           <AppButton variant="primary" label={t(tk.payUpcoming.pay)} onPress={handleSave} />
           <AppSpacer />
         </AppRow>
