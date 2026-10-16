@@ -78,9 +78,8 @@ const environment = process.env.APP_ENV || 'development';
 // NODE_ENV=production, so it auto-loads .env.production before this runs, and
 // dotenv leaves already-set variables alone — without the override, APP_ENV is
 // ignored and a development Release build silently points at production.
-// quiet: true silences dotenv v17's "injected env" banner. That banner goes to
-// stdout, and `expo config --json` / expo-doctor parse this config's stdout as
-// JSON, so any extra line makes them fail.
+// quiet: true silences dotenv's "injected env" banner, printed on every Expo
+// CLI command that evaluates this config.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config({ quiet: true });
 // eslint-disable-next-line @typescript-eslint/no-require-imports
