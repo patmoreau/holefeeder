@@ -16,11 +16,12 @@ export const useAccountTransactions = (accountId: Id, pageSize = DEFAULT_TRANSAC
   const [limit, setLimit] = useState(pageSize);
   const [transactions, setTransactions] = useState<AsyncResult<Transaction[]>>(Result.loading());
   const [totalCount, setTotalCount] = useState(0);
+  const [windowKey, setWindowKey] = useState({ accountId: accountId, pageSize: pageSize });
 
-  // Reset the window whenever the account changes.
-  useEffect(() => {
+  if (windowKey.accountId !== accountId || windowKey.pageSize !== pageSize) {
+    setWindowKey({ accountId: accountId, pageSize: pageSize });
     setLimit(pageSize);
-  }, [accountId, pageSize]);
+  }
 
   useEffect(() => {
     const unsubscribe = flowRepository.watchTransactions(setTransactions, accountId, limit);

@@ -1,5 +1,5 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
-import { useEffectEvent, useRef } from 'react';
+import { useRef } from 'react';
 import { useNativeState } from '@/shared/presentation/components/native/use-native-state';
 
 const FOCUS_SETTLE_MS = 500;
@@ -41,38 +41,36 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
   const selectAllUntil = useRef(0);
   const formattedText = useRef(textAmount.value);
 
-  const handleChangeText = useEffectEvent((value: string) => {
-    // noinspection BadExpressionStatementJS
-    'worklet';
+  const handleChangeText = (value: string) => {
     const { displayAmount: formatted, amount: newAmount } = formatAmount(value, currentLocale, currencyCode);
     selectAllUntil.current = 0;
     formattedText.current = formatted;
     if (formatted !== value) {
-      textAmount.value = formatted;
-      selection.value = { start: formatted.length, end: formatted.length };
+      textAmount.set(formatted);
+      selection.set({ start: formatted.length, end: formatted.length });
       onAmountChange(newAmount);
     }
-  });
-
-  const selectAll = () => {
-    selection.value = { start: 0, end: textAmount.value.length };
   };
 
-  const handleFocus = useEffectEvent(() => {
+  const selectAll = () => {
+    selection.set({ start: 0, end: textAmount.get().length });
+  };
+
+  const handleFocus = () => {
     selectAllUntil.current = Date.now() + FOCUS_SETTLE_MS;
     selectAll();
-  });
+  };
 
-  const handleSelectionChange = useEffectEvent(({ start, end }: Selection) => {
+  const handleSelectionChange = ({ start, end }: Selection) => {
     if (Date.now() > selectAllUntil.current) return;
-    if (textAmount.value !== formattedText.current) {
+    if (textAmount.get() !== formattedText.current) {
       selectAllUntil.current = 0;
       return;
     }
-    if (start === 0 && end === textAmount.value.length) return;
+    if (start === 0 && end === textAmount.get().length) return;
     selectAllUntil.current = 0;
     selectAll();
-  });
+  };
 
   return {
     textAmount: textAmount,

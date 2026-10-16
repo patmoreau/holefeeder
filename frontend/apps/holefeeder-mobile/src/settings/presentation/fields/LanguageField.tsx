@@ -1,5 +1,5 @@
 import { LanguageType } from '@holefeeder/shared/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useLanguage } from '@/shared/language/core/use-language';
@@ -28,11 +28,7 @@ export const LanguageField = () => {
     }));
   }, []);
 
-  const [selectedOption, setSelectedOption] = useState<LanguageOption>(options[0]);
-
-  useEffect(() => {
-    setSelectedOption(options.find((opt) => opt.value === language) ?? options[0]);
-  }, [language, options]);
+  const selectedOption = options.find((opt) => opt.value === language) ?? options[0];
 
   return (
     <AppField label={t(tk.displaySection.language)} icon={AppIconMap.language}>

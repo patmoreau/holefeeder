@@ -26,16 +26,16 @@ export const useAccountDetail = (id: Id): AsyncResult<AccountDetail> => {
   }, [id, dateIntervalResult, accountRepository, flowRepository]);
 
   useEffect(() => {
-    if (!dateIntervalResult.isSuccess) {
-      setAccount(Result.failure(dateIntervalResult.isFailure ? dateIntervalResult.errors : []));
-      return;
-    }
     if (!useCase) {
       return;
     }
     const unsubscribe = useCase.watchVariation(setAccount);
     return () => unsubscribe();
-  }, [useCase, dateIntervalResult]);
+  }, [useCase]);
+
+  if (!dateIntervalResult.isSuccess) {
+    return Result.failure(dateIntervalResult.isFailure ? dateIntervalResult.errors : []);
+  }
 
   return account;
 };

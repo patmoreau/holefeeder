@@ -66,12 +66,14 @@ export const useMultipleWatches = <T extends WatchHooks>(hooks: T): MultiWatchRe
   if (errors.length > 0) logger.error(errors);
 
   const hasErrors = errors.length > 0;
+  const [hadErrors, setHadErrors] = useState(false);
 
-  useEffect(() => {
+  if (hasErrors !== hadErrors) {
+    setHadErrors(hasErrors);
     if (hasErrors) {
       setShowError(true);
     }
-  }, [hasErrors]);
+  }
 
   const data = Object.entries(results).reduce<Record<string, unknown>>((acc, [key, result]) => {
     const hook = hooks[key];

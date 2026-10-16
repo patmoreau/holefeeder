@@ -37,11 +37,9 @@ export const useOnboardingRegistration = (): OnboardingRegistrationState => {
     register();
   }, [register]);
 
-  useEffect(() => {
-    if (registration.isSuccess && !registeredAt) {
-      setRegisteredAt(new Date());
-    }
-  }, [registration, registeredAt]);
+  if (registration.isSuccess && !registeredAt) {
+    setRegisteredAt(new Date());
+  }
 
   const [waitedLongEnough, setWaitedLongEnough] = useState(false);
 

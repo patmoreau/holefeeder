@@ -1,4 +1,3 @@
-import { useEffectEvent } from 'react';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppText } from '@/shared/presentation/components/native/AppText';
@@ -9,10 +8,9 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 export const TestComponentsTextSection = () => {
   const text = useNativeState('');
 
-  const handleChangeText = useEffectEvent((value: string) => {
-    'worklet';
-    text.value = value;
-  });
+  const handleChangeText = (value: string) => {
+    text.set(value);
+  };
 
   return (
     <AppFieldSection title={'AppChip'}>

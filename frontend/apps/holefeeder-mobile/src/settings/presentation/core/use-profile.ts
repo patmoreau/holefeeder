@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { UserProfile } from '@/settings/presentation/core/user-profile';
 import { useAuth } from '@/shared/auth/core/use-auth';
 
@@ -16,22 +15,17 @@ const initialsAvatar = (label: string): string =>
 
 export const useProfile = (): UserProfile => {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<UserProfile>(initialProfile);
 
-  useEffect(() => {
-    if (user) {
-      const name = user.name || [user.givenName, user.familyName].filter(Boolean).join(' ');
-      const email = user.email || '';
-      setProfile({
-        name: name,
-        username: user.sub || '',
-        email: email,
-        avatar: user.picture || initialsAvatar(name || email || 'User'),
-      });
-    } else {
-      setProfile(initialProfile);
-    }
-  }, [user]);
+  if (!user) {
+    return initialProfile;
+  }
 
-  return profile;
+  const name = user.name || [user.givenName, user.familyName].filter(Boolean).join(' ');
+  const email = user.email || '';
+  return {
+    name: name,
+    username: user.sub || '',
+    email: email,
+    avatar: user.picture || initialsAvatar(name || email || 'User'),
+  };
 };

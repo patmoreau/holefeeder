@@ -1,5 +1,5 @@
 import { Logger } from '@holefeeder/shared/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { AppField } from '@/shared/presentation/components/native/AppField';
@@ -35,11 +35,7 @@ export const ThemeField = () => {
     }));
   }, []);
 
-  const [selectedOption, setSelectedOption] = useState<ThemeOption>(options[0]);
-
-  useEffect(() => {
-    setSelectedOption(options.find((opt) => opt.value === themeMode) ?? options[0]);
-  }, [themeMode, options]);
+  const selectedOption = options.find((opt) => opt.value === themeMode) ?? options[0];
 
   return (
     <AppField label={t(tk.displaySection.theme)} icon={AppIconMap.theme}>

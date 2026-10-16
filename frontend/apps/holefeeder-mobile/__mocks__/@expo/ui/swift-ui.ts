@@ -16,7 +16,16 @@ export const HStack = ({ children }: { children: unknown }) =>
 export const Text = ({ children }: { children: unknown }) =>
   React.createElement(RNText, { testID: typeof children === 'string' ? children : 'text' }, children);
 
-export const useNativeState = <T>(initialValue: T): { value: T } => ({ value: initialValue });
+export const useNativeState = <T>(initialValue: T): { value: T; get: () => T; set: (value: T) => void } => {
+  const state = {
+    value: initialValue,
+    get: () => state.value,
+    set: (value: T) => {
+      state.value = value;
+    },
+  };
+  return state;
+};
 
 export const TextField = ({
   children,

@@ -1,5 +1,5 @@
 import { Id } from '@holefeeder/shared/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useWindowDimensions, type ViewProps } from 'react-native';
 import { AccountSummary } from '@/accounts/core/account-summary';
 import { AccountCard, type CardLayout } from '@/dashboard/presentation/components/AccountCard';
@@ -18,10 +18,12 @@ export const AccountCardList = ({ accounts, onPress, onAddPress, style }: Accoun
   // The list takes its row height from whatever it renders, the footer included, so the
   // cards have to agree on one rather than each taking its content's height.
   const [cardHeight, setCardHeight] = useState(0);
+  const [measuredFontScale, setMeasuredFontScale] = useState(fontScale);
 
-  useEffect(() => {
+  if (measuredFontScale !== fontScale) {
+    setMeasuredFontScale(fontScale);
     setCardHeight(0);
-  }, [fontScale]);
+  }
 
   const onCardMeasure = useCallback((height: number) => {
     setCardHeight((tallest) => (height > tallest ? height : tallest));
