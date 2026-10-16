@@ -7,15 +7,7 @@ import { Theme } from '@/types/theme/theme';
 import { ExpoText, ExpoTextProps } from './expo/ExpoText';
 
 export type ThemedTextVariant =
-  | 'default'
-  | 'defaultSemiBold'
-  | 'display'
-  | 'errorField'
-  | 'footnote'
-  | 'largeTitle'
-  | 'link'
-  | 'subtitle'
-  | 'title';
+  'default' | 'defaultSemiBold' | 'display' | 'errorField' | 'footnote' | 'largeTitle' | 'link' | 'subtitle' | 'title';
 
 export type ThemedTextProps = ExpoTextProps & {
   variant?: ThemedTextVariant;
