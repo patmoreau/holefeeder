@@ -28,7 +28,7 @@ export const AppErrorSheet = ({ showError, setShowError, error, onRetry }: AppEr
         <Text modifiers={[font({ size: 24, weight: 'bold' }), foregroundStyle('red')]}>{t(tkErrorTitles[error])}</Text>
         <ExpoRow spacing={16}>
           <ExpoIcon name={AppIconMap.warning} />
-          <Text modifiers={[font({ size: 17 }), frame({ maxWidth: width, height: 100 })]}>{t(tkErrorMessages[error])}</Text>
+          <Text modifiers={[font({ size: 17 }), frame({ maxWidth: width, minHeight: 100, maxHeight: 100 })]}>{t(tkErrorMessages[error])}</Text>
         </ExpoRow>
         <ExpoRow spacing={16}>
           {onRetry && <AppButton label={t(tk.errorSheet.retry)} variant="primary" onPress={onRetry} />}

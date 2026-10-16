@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { GlobalStyles } from '@/types/theme/global-styles';
 import { Theme } from '@/types/theme/theme';
-import NamedStyles = StyleSheet.NamedStyles;
+
+type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
 
 type StyleFunction<T> = (theme: Theme, globalStyles: typeof GlobalStyles) => T;
 

@@ -1,6 +1,6 @@
-import { Host, UniversalHostProps } from '@expo/ui';
+import { Host, type HostProps } from '@expo/ui/swift-ui';
 
-export type ExpoHostProps = UniversalHostProps & {};
+export type ExpoHostProps = HostProps & {};
 
 export const ExpoHost = (props: ExpoHostProps) => {
   return <Host {...props} />;

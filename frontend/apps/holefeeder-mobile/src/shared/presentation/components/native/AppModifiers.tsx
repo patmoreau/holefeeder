@@ -45,7 +45,7 @@ export type Color = string | ColorValue | NamedColor;
 export const AppModifiers = {
   fillWidth: frame({ maxWidth: Infinity }),
   fillMaxSize: frame({ maxWidth: Infinity, maxHeight: Infinity }),
-  frame: (params: Parameters<typeof frame>[0]) => frame(params),
+  frame,
   fixedSize: fixedSize(),
   onAppear: (handler: () => void) => onAppear(handler),
   background: (color: Color) => background(color),

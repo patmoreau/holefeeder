@@ -1,7 +1,7 @@
 import { Id, LocalFormatter, today } from '@holefeeder/shared/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, View, type ViewProps } from 'react-native';
+import { Pressable, StyleSheet, View, type ViewInstance, type ViewProps } from 'react-native';
 import Animated, { SharedTransition } from 'react-native-reanimated';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { AccountSummary } from '@/accounts/core/account-summary';
@@ -83,7 +83,7 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
   const { t } = useTranslation();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const styles = useStyles(createStyles);
-  const pressableRef = useRef<View>(null);
+  const pressableRef = useRef<ViewInstance>(null);
   const variationResult = useAccountDetail(account.id);
 
   const handlePress = () => {

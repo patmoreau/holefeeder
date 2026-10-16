@@ -13,7 +13,7 @@ export const useLocaleFormatter = (): LocaleHook => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      if (appState.current?.match(/inactive|background/) && nextAppState === 'active') {
         const newLocale = getLocales()[0];
 
         if (newLocale.languageTag !== localeInfo.languageTag) {

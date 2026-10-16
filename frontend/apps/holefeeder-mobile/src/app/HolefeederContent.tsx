@@ -1,5 +1,5 @@
 import { Logger } from '@holefeeder/shared/core';
-import { Stack } from 'expo-router';
+import { type Href, Stack } from 'expo-router';
 import { useAuth } from '@/shared/auth/core/use-auth';
 import { useQuickActions } from '@/shared/hooks/use-quick-actions';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
@@ -32,16 +32,17 @@ export const HolefeederContent = () => {
 
   const isRegistered = status.isSuccess && status.value === RegistrationStatuses.registered;
   const isNotRegistered = status.isSuccess && status.value === RegistrationStatuses.notRegistered;
+  const entry: Href = !user ? '/Welcome' : isNotRegistered ? '/Registering' : '/';
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!user && isRegistered}>
+      <Stack.Protected guard={!!user && isRegistered} redirectTo={entry}>
         <Stack.Screen name="(app)" />
       </Stack.Protected>
-      <Stack.Protected guard={!!user && isNotRegistered}>
+      <Stack.Protected guard={!!user && isNotRegistered} redirectTo={entry}>
         <Stack.Screen name="(onboarding)" />
       </Stack.Protected>
-      <Stack.Protected guard={!user}>
+      <Stack.Protected guard={!user} redirectTo={entry}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
       <Stack.Screen name="+not-found" />

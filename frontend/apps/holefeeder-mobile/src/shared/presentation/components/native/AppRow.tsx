@@ -2,6 +2,6 @@ import { ExpoRow, ExpoRowProps } from './expo/ExpoRow';
 
 export type AppRowProps = ExpoRowProps & {};
 
-export const AppRow = (props: AppRowProps) => {
-  return <ExpoRow {...props} />;
+export const AppRow = ({ spacing = 0, ...props }: AppRowProps) => {
+  return <ExpoRow spacing={spacing} {...props} />;
 };

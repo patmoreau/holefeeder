@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Tech Stack
 
-- React Native (Expo SDK 57)
+- React Native (Expo SDK 58)
 - expo-router (file-based routing)
 - PowerSync v2 (offline-first sync). `@powersync/react-native` bundles the OP-SQLite
   adapter, so there is no `@powersync/op-sqlite` package and no `OPSqliteOpenFactory` —
@@ -173,7 +173,10 @@ form is dragged (`scrollDismissesKeyboard`), the platform convention. Do not add
 
 `LanguageProvider` → `ThemeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
 (the auth layer becomes `E2eAuthenticationProvider` in E2E builds — see Config / Environments)  
-Route protection uses `<Stack.Protected guard={!!user}>` inside `HolefeederContent` — no manual redirects.
+Route protection uses `<Stack.Protected guard={...} redirectTo={entry}>` inside `HolefeederContent` — no manual redirects.
+Since SDK 58 a guarded screen renders as a redirect rather than disappearing, so every guard
+needs `redirectTo` (`/Welcome`, `/Registering` or `/`); without it the root stack, which has no
+anchor, falls through to `+not-found`.
 
 ## Config / Environments
 
