@@ -67,9 +67,9 @@ export const ManageCategoriesScreen = () => {
       {toolbar}
       <AppNative style={{ flex: 1 }}>
         <AppList inset>
-          <AppListForEach>
-            {result.value.map((category) => (
-              <AppListItem key={category.id} onPress={category.system ? undefined : () => onEdit(category)}>
+          <AppListForEach data={result.value} keyExtractor={(category) => category.id}>
+            {({ item: category }) => (
+              <AppListItem onPress={category.system ? undefined : () => onEdit(category)}>
                 <AppListItem.Leading>
                   <AppIcon name={AppIconMap.category.ios} size={20} color={category.color} />
                 </AppListItem.Leading>
@@ -94,7 +94,7 @@ export const ManageCategoriesScreen = () => {
                   )}
                 </AppListItem.Trailing>
               </AppListItem>
-            ))}
+            )}
           </AppListForEach>
         </AppList>
       </AppNative>

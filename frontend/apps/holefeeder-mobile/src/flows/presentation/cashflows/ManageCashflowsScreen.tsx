@@ -51,15 +51,8 @@ export const ManageCashflowsScreen = () => {
         )}
         {cashflowsResult.value.length > 0 && (
           <AppFieldSection title={t(tk.manageCashflows.title)}>
-            <AppListForEach>
-              {cashflowsResult.value.map((cashflow) => (
-                <CashflowCard
-                  key={cashflow.id}
-                  cashflow={cashflow}
-                  categoryName={category(cashflow)?.name ?? ''}
-                  color={category(cashflow)?.color}
-                />
-              ))}
+            <AppListForEach data={cashflowsResult.value} keyExtractor={(cashflow) => cashflow.id}>
+              {({ item }) => <CashflowCard cashflow={item} categoryName={category(item)?.name ?? ''} color={category(item)?.color} />}
             </AppListForEach>
           </AppFieldSection>
         )}

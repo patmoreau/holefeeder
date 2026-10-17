@@ -1,5 +1,7 @@
 import { ExpoListForEach, type ExpoListForEachProps } from './expo/ExpoListForEach';
 
-export type AppListForEachProps = ExpoListForEachProps & {};
+export type AppListForEachProps<T> = ExpoListForEachProps<T>;
 
-export const AppListForEach = (props: AppListForEachProps) => <ExpoListForEach {...props} />;
+export const AppListForEach = <T,>({ recycling = false, ...props }: AppListForEachProps<T>) => (
+  <ExpoListForEach recycling={recycling} {...props} />
+);

@@ -1,5 +1,5 @@
-import { ListForEach, type ListForEachElementsProps } from '@expo/ui/swift-ui';
+import { ListForEach, type ListForEachProps } from '@expo/ui/swift-ui';
 
-export type ExpoListForEachProps = ListForEachElementsProps;
+export type ExpoListForEachProps<T> = ListForEachProps<T>;
 
-export const ExpoListForEach = (props: ExpoListForEachProps) => <ListForEach {...props} />;
+export const ExpoListForEach = <T,>(props: ExpoListForEachProps<T>) => <ListForEach {...props} />;

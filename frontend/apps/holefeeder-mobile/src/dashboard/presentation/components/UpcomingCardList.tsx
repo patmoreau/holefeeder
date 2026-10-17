@@ -35,10 +35,8 @@ export const UpcomingCardList = ({ upcomingFlows }: UpcomingCardListProps) => {
     <>
       <AppListSectionTitle title={t(tk.upcomingList.title)} />
       <AppFieldSection>
-        <AppListForEach>
-          {upcomingFlows.map((flow) => (
-            <UpcomingCard key={flow.id + flow.date} upcomingFlow={flow} />
-          ))}
+        <AppListForEach data={upcomingFlows} keyExtractor={(flow) => flow.id + flow.date}>
+          {({ item }) => <UpcomingCard upcomingFlow={item} />}
         </AppListForEach>
       </AppFieldSection>
     </>

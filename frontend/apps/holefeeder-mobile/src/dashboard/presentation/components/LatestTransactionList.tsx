@@ -41,10 +41,8 @@ export const LatestTransactionList = ({ style }: LatestTransactionListProps) => 
     <>
       <AppListSectionTitle title={t(tk.recentTransactions.title)} />
       <AppFieldSection>
-        <AppListForEach>
-          {transactions.map((transaction) => (
-            <LatestTransactionCard key={transaction.id + transaction.date} transaction={transaction} />
-          ))}
+        <AppListForEach data={transactions} keyExtractor={(transaction) => transaction.id + transaction.date}>
+          {({ item }) => <LatestTransactionCard transaction={item} />}
         </AppListForEach>
       </AppFieldSection>
     </>

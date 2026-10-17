@@ -32,10 +32,8 @@ export const TransactionCardList = ({ transactions, hasMore = false, onLoadMore,
     <>
       <AppListSectionTitle title={t(tk.transactionList.title)} />
       <AppFieldSection>
-        <AppListForEach>
-          {transactions.map((transaction) => (
-            <TransactionCard key={transaction.id} transaction={transaction} />
-          ))}
+        <AppListForEach data={transactions} keyExtractor={(transaction) => transaction.id}>
+          {({ item }) => <TransactionCard transaction={item} />}
         </AppListForEach>
         {hasMore && (
           // Sentinel row: when it scrolls into view the list loads the next page,

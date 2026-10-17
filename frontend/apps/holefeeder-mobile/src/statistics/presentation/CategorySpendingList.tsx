@@ -26,10 +26,8 @@ export const CategorySpendingList = () => {
     <>
       <AppListSectionTitle title={t(tk.insights.categoryBreakdown.title)} />
       <AppFieldSection>
-        <AppListForEach>
-          {result.value.map((item) => (
-            <CategorySpendingCard key={item.categoryId} item={item} />
-          ))}
+        <AppListForEach data={result.value} keyExtractor={(item) => item.categoryId}>
+          {({ item }) => <CategorySpendingCard item={item} />}
         </AppListForEach>
       </AppFieldSection>
     </>

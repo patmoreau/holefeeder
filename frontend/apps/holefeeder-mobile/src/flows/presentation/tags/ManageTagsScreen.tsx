@@ -78,9 +78,9 @@ export const ManageTagsScreen = () => {
     <AppScreen>
       <AppNative style={{ flex: 1 }}>
         <AppList inset>
-          <AppListForEach>
-            {result.value.map((tagInfo) => (
-              <AppListItem key={tagInfo.tag} onPress={() => setEditingTag(tagInfo.tag)}>
+          <AppListForEach data={result.value} keyExtractor={(tagInfo) => tagInfo.tag}>
+            {({ item: tagInfo }) => (
+              <AppListItem onPress={() => setEditingTag(tagInfo.tag)}>
                 <AppListItem.Leading>
                   <AppIcon name={AppIconMap.tag.ios} size={20} />
                 </AppListItem.Leading>
@@ -102,7 +102,7 @@ export const ManageTagsScreen = () => {
                   </AppColumn>
                 </AppListItem.Trailing>
               </AppListItem>
-            ))}
+            )}
           </AppListForEach>
         </AppList>
       </AppNative>
