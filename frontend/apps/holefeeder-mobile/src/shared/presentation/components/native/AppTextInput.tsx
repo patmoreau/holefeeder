@@ -1,5 +1,7 @@
-import { TextInputProps, useNativeState, ObservableState } from '@expo/ui';
+import { TextInputProps, TextInputRef, useNativeState, ObservableState } from '@expo/ui';
 import { ExpoTextInput } from './expo/ExpoTextinput';
+
+export type AppTextInputRef = TextInputRef;
 
 export type AppTextInputProps = Omit<TextInputProps, 'value'> & {
   value?: string | ObservableState<string>;

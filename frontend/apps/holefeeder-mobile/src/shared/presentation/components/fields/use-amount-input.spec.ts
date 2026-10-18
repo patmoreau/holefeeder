@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { useAmountInput } from '@/shared/presentation/components/fields/use-amount-input';
+import type { AppTextInputRef } from '@/shared/presentation/components/native/AppTextInput';
 
 const NO_BREAK_SPACE = '\u00a0';
 
@@ -13,6 +14,18 @@ describe('useAmountInput', () => {
         currencyCode: 'CAD',
       })
     );
+
+  const attachInput = (result: { current: ReturnType<typeof useAmountInput> }) => {
+    const setSelection = jest.fn(async (_start: number, _end: number) => {});
+    result.current.inputRef.current = { setSelection: setSelection } as unknown as AppTextInputRef;
+    return {
+      lastSelection: () => {
+        const call = setSelection.mock.lastCall;
+        return call ? { start: call[0], end: call[1] } : undefined;
+      },
+      selectionCount: () => setSelection.mock.calls.length,
+    };
+  };
 
   describe('initial display', () => {
     it('formats the amount with grouping and two decimals for en-CA', async () => {
@@ -85,10 +98,11 @@ describe('useAmountInput', () => {
 
     it('moves the caret to the end after reformatting', async () => {
       const { result } = await createHook();
+      const input = attachInput(result);
 
       await act(async () => result.current.handleChangeText('123456'));
 
-      expect(result.current.selection.value).toEqual({ start: 8, end: 8 });
+      expect(input.lastSelection()).toEqual({ start: 8, end: 8 });
     });
   });
 
@@ -96,85 +110,93 @@ describe('useAmountInput', () => {
     beforeEach(() => jest.useFakeTimers());
     afterEach(() => jest.useRealTimers());
 
+    const tapPlacesCaret = async (result: { current: ReturnType<typeof useAmountInput> }, at: number) =>
+      act(async () => result.current.handleSelectionChange({ start: at, end: at }));
+
     it('selects the whole amount', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
 
       await act(async () => result.current.handleFocus());
 
-      expect(result.current.selection.value).toEqual({ start: 0, end: 8 });
+      expect(input.lastSelection()).toEqual({ start: 0, end: 8 });
     });
 
     it('selects the whole amount after it was edited', async () => {
       const { result } = await createHook();
+      const input = attachInput(result);
       await act(async () => result.current.handleChangeText('123456'));
 
       await act(async () => result.current.handleFocus());
 
-      expect(result.current.selection.value).toEqual({ start: 0, end: 8 });
+      expect(input.lastSelection()).toEqual({ start: 0, end: 8 });
     });
-
-    const placeCaret = async (result: { current: ReturnType<typeof useAmountInput> }, at: number) => {
-      result.current.selection.value = { start: at, end: at };
-      await act(async () => result.current.handleSelectionChange({ start: at, end: at }));
-    };
 
     it('selects the whole amount when the tap that focused the field places the caret', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
 
-      await placeCaret(result, 3);
+      await tapPlacesCaret(result, 3);
 
-      expect(result.current.selection.value).toEqual({ start: 0, end: 8 });
+      expect(input.lastSelection()).toEqual({ start: 0, end: 8 });
+      expect(input.selectionCount()).toBe(2);
     });
 
     it('does not treat its own whole selection as the tap', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
       await act(async () => result.current.handleSelectionChange({ start: 0, end: 8 }));
 
-      await placeCaret(result, 3);
+      await tapPlacesCaret(result, 3);
 
-      expect(result.current.selection.value).toEqual({ start: 0, end: 8 });
+      expect(input.lastSelection()).toEqual({ start: 0, end: 8 });
+      expect(input.selectionCount()).toBe(2);
     });
 
     it('lets a later tap place the caret once the whole amount was selected', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
-      await placeCaret(result, 3);
+      await tapPlacesCaret(result, 3);
 
-      await placeCaret(result, 5);
+      await tapPlacesCaret(result, 5);
 
-      expect(result.current.selection.value).toEqual({ start: 5, end: 5 });
+      expect(input.selectionCount()).toBe(2);
     });
 
     it('keeps the caret at the end when typing right after focus', async () => {
       const { result } = await createHook();
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
       await act(async () => result.current.handleChangeText('5'));
 
-      await act(async () => result.current.handleSelectionChange({ start: 4, end: 4 }));
+      await tapPlacesCaret(result, 4);
 
-      expect(result.current.selection.value).toEqual({ start: 4, end: 4 });
+      expect(input.lastSelection()).toEqual({ start: 4, end: 4 });
     });
 
     it('does not reselect when the caret moves because a digit was just typed', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
       result.current.textAmount.value = '1,000.005';
 
-      await placeCaret(result, 9);
+      await tapPlacesCaret(result, 9);
 
-      expect(result.current.selection.value).toEqual({ start: 9, end: 9 });
+      expect(input.selectionCount()).toBe(1);
     });
 
     it('lets the caret move once the focus has settled', async () => {
       const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
       await act(async () => result.current.handleFocus());
       await act(async () => jest.advanceTimersByTime(600));
 
-      await placeCaret(result, 3);
+      await tapPlacesCaret(result, 3);
 
-      expect(result.current.selection.value).toEqual({ start: 3, end: 3 });
+      expect(input.selectionCount()).toBe(1);
     });
   });
 });

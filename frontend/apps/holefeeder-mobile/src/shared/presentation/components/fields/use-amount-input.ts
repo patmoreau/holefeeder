@@ -1,5 +1,6 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
 import { useRef } from 'react';
+import type { AppTextInputRef } from '@/shared/presentation/components/native/AppTextInput';
 import { useNativeState } from '@/shared/presentation/components/native/use-native-state';
 
 const FOCUS_SETTLE_MS = 500;
@@ -37,7 +38,7 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
       style: 'decimal',
     })
   );
-  const selection = useNativeState({ start: 0, end: 0 });
+  const inputRef = useRef<AppTextInputRef | null>(null);
   const selectAllUntil = useRef(0);
   const formattedText = useRef(textAmount.value);
 
@@ -47,13 +48,13 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
     formattedText.current = formatted;
     if (formatted !== value) {
       textAmount.set(formatted);
-      selection.set({ start: formatted.length, end: formatted.length });
+      inputRef.current?.setSelection(formatted.length, formatted.length);
       onAmountChange(newAmount);
     }
   };
 
   const selectAll = () => {
-    selection.set({ start: 0, end: textAmount.get().length });
+    inputRef.current?.setSelection(0, textAmount.get().length);
   };
 
   const handleFocus = () => {
@@ -74,7 +75,7 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
 
   return {
     textAmount: textAmount,
-    selection: selection,
+    inputRef: inputRef,
     handleChangeText: handleChangeText,
     handleFocus: handleFocus,
     handleSelectionChange: handleSelectionChange,
