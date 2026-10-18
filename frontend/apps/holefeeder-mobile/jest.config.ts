@@ -5,7 +5,6 @@ import { Config } from 'jest';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const expoPreset = require('jest-expo/jest-preset') as { transform: NonNullable<Config['transform']> };
 
-/** @jest-config-loader esbuild-register */
 const config: Config = {
   preset: 'jest-expo',
   // @powersync/shared-internals ships ESM-only .mjs bundles, which the preset's
