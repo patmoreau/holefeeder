@@ -32,7 +32,7 @@ export const TransactionCardList = ({ transactions, hasMore = false, onLoadMore,
     <>
       <AppListSectionTitle title={t(tk.transactionList.title)} />
       <AppFieldSection>
-        <AppListForEach data={transactions} keyExtractor={(transaction) => transaction.id}>
+        <AppListForEach data={transactions} keyExtractor={(transaction) => transaction.id} recycling>
           {({ item }) => <TransactionCard transaction={item} />}
         </AppListForEach>
         {hasMore && (
