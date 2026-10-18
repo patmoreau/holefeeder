@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { useTheme } from '@/shared/theme/core/use-theme';
 
+export const unstable_settings = {
+  anchor: '(tabs)',
+};
+
 const AppLayout = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
