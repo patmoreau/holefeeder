@@ -245,6 +245,10 @@ export const en = {
     title: 'Insights',
     period: '{{period}}',
     combined: 'Combined',
+    spending: {
+      title: 'Spending',
+      link: 'Spending this period',
+    },
     categoryBreakdown: {
       title: 'Spending by Category',
       empty: 'No expenses this period',

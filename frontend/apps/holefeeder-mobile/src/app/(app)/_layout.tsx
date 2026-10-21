@@ -131,6 +131,13 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="insights/spending"
+        options={{
+          title: '',
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
         name="flows/[id]"
         options={{
           presentation: 'modal',

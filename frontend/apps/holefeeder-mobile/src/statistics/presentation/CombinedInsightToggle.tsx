@@ -13,7 +13,7 @@ export const CombinedInsightToggle = () => {
   return (
     <AppFieldSection>
       <AppField label={t(tk.insights.combined)} icon={AppIconMap.combined}>
-        <AppSwitch value={combined} onChange={setCombined} />
+        <AppSwitch value={combined} onChange={setCombined} testID="spending-combined-toggle" />
       </AppField>
     </AppFieldSection>
   );
