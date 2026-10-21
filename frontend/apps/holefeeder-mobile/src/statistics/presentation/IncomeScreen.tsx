@@ -16,6 +16,7 @@ import { useSummary } from '@/summary/presentation/core/use-summary';
 import { CategoryIncomeList } from './CategoryIncomeList';
 import { IncomePeriodHeader } from './IncomePeriodHeader';
 import { PeriodAmountSmallCard } from './PeriodAmountSmallCard';
+import { TagIncomeList } from './TagIncomeList';
 
 export const IncomeScreen = () => {
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ export const IncomeScreen = () => {
             <AppList inset modifiers={header.listModifiers}>
               <AppColumn style={{ paddingTop: header.spacerHeight }} />
               <CategoryIncomeList />
+              <TagIncomeList />
             </AppList>
           </AppNative>
         </View>

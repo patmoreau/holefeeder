@@ -262,6 +262,11 @@ export const en = {
         empty: 'No income this period',
         avgPerPeriod: 'avg {{amount}}',
       },
+      tagBreakdown: {
+        title: 'Income by Tag',
+        empty: 'No tagged income this period',
+        avgPerPeriod: 'avg {{amount}}',
+      },
     },
     spending: {
       title: 'Spending',

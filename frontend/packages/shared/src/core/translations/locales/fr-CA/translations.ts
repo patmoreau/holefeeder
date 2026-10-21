@@ -264,6 +264,11 @@ export const fr: TranslationStructure = {
         empty: 'Aucun revenu cette période',
         avgPerPeriod: 'moy. {{amount}}',
       },
+      tagBreakdown: {
+        title: 'Revenus par étiquette',
+        empty: 'Aucun revenu étiqueté cette période',
+        avgPerPeriod: 'moy. {{amount}}',
+      },
     },
     spending: {
       title: 'Dépenses',
