@@ -1,5 +1,6 @@
 import { type AsyncResult, DateInterval, DateIntervalType, DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
+import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { Settings } from '@/shared/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
 import { CategorySpending } from '../core/category-spending';
@@ -37,7 +38,7 @@ const computeInterval = (effectiveDate: DateOnly, settings: Settings) =>
 const previousPeriods = (settings: Settings, currentStart: DateOnly): Period[] =>
   DateIntervalType.previousPeriods(settings.effectiveDate, settings.intervalType, settings.frequency, currentStart);
 
-const buildCategorySpendingQuery = (periods: Period[], currentStart: DateOnly, currentEnd: DateOnly): BuiltQuery => {
+const buildCategoryTotalsQuery = (type: CategoryType, periods: Period[], currentStart: DateOnly, currentEnd: DateOnly): BuiltQuery => {
   if (periods.length === 0) {
     return {
       sql: `
@@ -50,11 +51,11 @@ const buildCategorySpendingQuery = (periods: Period[], currentStart: DateOnly, c
           0 AS avgAmount
         FROM categories c
         INNER JOIN transactions t ON t.category_id = c.id AND t.date >= ? AND t.date <= ?
-        WHERE c.system = 0 AND lower(c.type) = 'expense'
+        WHERE c.system = 0 AND lower(c.type) = ?
         GROUP BY c.id, c.name, c.color, c.budget_amount
         ORDER BY avgAmount DESC, spentAmount DESC, c.name ASC
       `,
-      params: [currentStart, currentEnd],
+      params: [currentStart, currentEnd, type],
     };
   }
 
@@ -93,10 +94,10 @@ const buildCategorySpendingQuery = (periods: Period[], currentStart: DateOnly, c
       FROM categories c
       LEFT JOIN current_period cp ON cp.category_id = c.id
       LEFT JOIN avg_periods    ap ON ap.category_id = c.id
-      WHERE c.system = 0 AND lower(c.type) = 'expense'
+      WHERE c.system = 0 AND lower(c.type) = ?
       ORDER BY avgAmount DESC, spentAmount DESC, c.name ASC
     `,
-    params: [...periods.flatMap((p, i) => [i, p.start, p.end]), currentStart, currentEnd],
+    params: [...periods.flatMap((p, i) => [i, p.start, p.end]), currentStart, currentEnd, type],
   };
 };
 
@@ -262,7 +263,7 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     }
 
     const { start, end } = intervalResult.value;
-    const { sql, params } = buildCategorySpendingQuery(previousPeriods(settings, start), start, end);
+    const { sql, params } = buildCategoryTotalsQuery(CategoryTypes.expense, previousPeriods(settings, start), start, end);
 
     return watchQuery<CategorySpendingRow, CategorySpending>(
       db,
