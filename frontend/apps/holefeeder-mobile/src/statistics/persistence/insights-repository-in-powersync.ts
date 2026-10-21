@@ -102,7 +102,7 @@ const buildCategoryTotalsQuery = (type: CategoryType, periods: Period[], current
   };
 };
 
-const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, currentEnd: DateOnly): BuiltQuery => {
+const buildTagTotalsQuery = (type: CategoryType, periods: Period[], currentStart: DateOnly, currentEnd: DateOnly): BuiltQuery => {
   if (periods.length === 0) {
     return {
       sql: `
@@ -115,7 +115,7 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
           JOIN categories c ON c.id = t.category_id
           WHERE t.tags IS NOT NULL AND t.tags <> ''
             AND t.date >= ? AND t.date <= ?
-            AND lower(c.type) = 'expense' AND c.system = 0
+            AND lower(c.type) = ? AND c.system = 0
           UNION ALL
           SELECT
             Ltrim(Substr(remainder, 1, Instr(remainder, ',') - 1)) AS tag,
@@ -130,7 +130,7 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
         GROUP BY tag
         ORDER BY spentAmount DESC
       `,
-      params: [currentStart, currentEnd],
+      params: [currentStart, currentEnd, type],
     };
   }
 
@@ -151,7 +151,7 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
         JOIN categories c ON c.id = t.category_id
         JOIN period_defs pd ON t.date >= pd.period_start AND t.date < pd.period_end
         WHERE t.tags IS NOT NULL AND t.tags <> ''
-          AND lower(c.type) = 'expense' AND c.system = 0
+          AND lower(c.type) = ? AND c.system = 0
         UNION ALL
         SELECT
           idx,
@@ -183,7 +183,7 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
         JOIN categories c ON c.id = t.category_id
         WHERE t.tags IS NOT NULL AND t.tags <> ''
           AND t.date >= ? AND t.date <= ?
-          AND lower(c.type) = 'expense' AND c.system = 0
+          AND lower(c.type) = ? AND c.system = 0
         UNION ALL
         SELECT
           Ltrim(Substr(remainder, 1, Instr(remainder, ',') - 1)) AS tag,
@@ -212,7 +212,7 @@ const buildTagSpendingQuery = (periods: Period[], currentStart: DateOnly, curren
       LEFT JOIN avg_periods  ap ON ap.tag = at.tag
       ORDER BY avgAmount DESC, spentAmount DESC, at.tag ASC
     `,
-    params: [...periods.flatMap((p, i) => [i, p.start, p.end]), currentStart, currentEnd],
+    params: [...periods.flatMap((p, i) => [i, p.start, p.end]), type, currentStart, currentEnd, type],
   };
 };
 
@@ -317,7 +317,7 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     }
 
     const { start, end } = intervalResult.value;
-    const { sql, params } = buildTagSpendingQuery(previousPeriods(settings, start), start, end);
+    const { sql, params } = buildTagTotalsQuery(CategoryTypes.expense, previousPeriods(settings, start), start, end);
 
     return watchQuery<TagSpendingRow, TagSpending>(
       db,
