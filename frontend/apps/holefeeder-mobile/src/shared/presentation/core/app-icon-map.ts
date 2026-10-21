@@ -28,6 +28,7 @@ import LockClock from '@expo/material-symbols/lock_clock.xml';
 import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
 import Palette from '@expo/material-symbols/palette.xml';
+import Payments from '@expo/material-symbols/payments.xml';
 import Settings from '@expo/material-symbols/settings.xml';
 import ShoppingCart from '@expo/material-symbols/shopping_cart.xml';
 import Star from '@expo/material-symbols/star.xml';
@@ -77,6 +78,7 @@ const universalIconMapping = {
   favorite: { ios: 'star.fill', android: Star },
   frequency: { ios: 'clock.badge.exclamationmark', android: FileUploadOff },
   inactive: { ios: 'archivebox', android: Archive },
+  income: { ios: 'banknote', android: Payments },
   insights: { ios: 'chart.bar', android: Analytics },
   language: { ios: 'globe', android: Language },
   purchase: { ios: 'cart', android: ShoppingCart },

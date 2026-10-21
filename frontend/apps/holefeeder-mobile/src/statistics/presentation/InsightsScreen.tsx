@@ -38,6 +38,13 @@ export default function InsightsScreen() {
           <AppList inset modifiers={header.listModifiers}>
             <AppColumn style={{ paddingTop: header.spacerHeight }} />
             <AppFieldLink
+              label={t(tk.insights.income.link)}
+              value={LocalFormatter.currency(summary.totalIncome, currentLocale, currencyCode)}
+              icon={AppIconMap.income}
+              onPress={() => router.push('/(app)/insights/income')}
+              testID="insights-income-link"
+            />
+            <AppFieldLink
               label={t(tk.insights.spending.link)}
               value={LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
               icon={AppIconMap.purchase}

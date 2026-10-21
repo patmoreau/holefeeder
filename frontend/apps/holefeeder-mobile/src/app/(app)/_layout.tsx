@@ -131,6 +131,13 @@ const AppLayout = () => {
         }}
       />
       <Stack.Screen
+        name="insights/income"
+        options={{
+          title: '',
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
         name="insights/spending"
         options={{
           title: '',

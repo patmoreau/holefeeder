@@ -252,6 +252,17 @@ export const en = {
       overspent: 'Overspent by {{amount}}',
       brokeEven: 'Broke even',
     },
+    income: {
+      title: 'Income',
+      link: 'Income this period',
+      currentTitle: 'Current Income',
+      smallTitle: 'Income:',
+      categoryBreakdown: {
+        title: 'Income by Category',
+        empty: 'No income this period',
+        avgPerPeriod: 'avg {{amount}}',
+      },
+    },
     spending: {
       title: 'Spending',
       link: 'Spending this period',

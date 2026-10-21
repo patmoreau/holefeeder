@@ -254,6 +254,17 @@ export const fr: TranslationStructure = {
       overspent: 'Dépassement de {{amount}}',
       brokeEven: 'À l’équilibre',
     },
+    income: {
+      title: 'Revenus',
+      link: 'Revenus de la période',
+      currentTitle: 'Revenus actuels',
+      smallTitle: 'Revenus :',
+      categoryBreakdown: {
+        title: 'Revenus par catégorie',
+        empty: 'Aucun revenu cette période',
+        avgPerPeriod: 'moy. {{amount}}',
+      },
+    },
     spending: {
       title: 'Dépenses',
       link: 'Dépenses de la période',

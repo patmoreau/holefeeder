@@ -1,5 +1,5 @@
 appId: com.drifterapps.holefeeder
-name: Insights opens the spending details and comes back
+name: Insights opens the income and spending details and comes back
 tags:
   - regression
   - insights
@@ -31,6 +31,20 @@ tags:
 
 - tapOn:
     id: 'spending-back-button'
+- extendedWaitUntil:
+    visible:
+      id: 'insights-screen'
+    timeout: 20000
+
+- tapOn:
+    id: 'insights-income-link'
+- extendedWaitUntil:
+    visible:
+      id: 'income-screen'
+    timeout: 20000
+
+- tapOn:
+    id: 'income-back-button'
 - extendedWaitUntil:
     visible:
       id: 'insights-screen'
