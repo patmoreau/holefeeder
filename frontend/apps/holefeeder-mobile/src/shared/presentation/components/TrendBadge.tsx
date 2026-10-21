@@ -6,13 +6,17 @@ import { UniversalIcon } from '@/shared/presentation/core/app-icon-map';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { borderRadius } from '@/types/theme/design-tokens';
 
-export type TrendBadgeTone = 'positive' | 'negative';
+export type TrendBadgeTone = 'positive' | 'negative' | 'neutral';
 
 export const TrendBadge = ({ text, tone, icon }: { text: string; tone: TrendBadgeTone; icon: UniversalIcon }) => {
   const { theme } = useTheme();
 
-  const color = tone === 'negative' ? theme.colors.negative : theme.colors.positive;
-  const backgroundColor = tone === 'negative' ? theme.colors.negativeBackground : theme.colors.positiveBackground;
+  const colors = {
+    positive: { color: theme.colors.positive, backgroundColor: theme.colors.positiveBackground },
+    negative: { color: theme.colors.negative, backgroundColor: theme.colors.negativeBackground },
+    neutral: { color: theme.colors.text, backgroundColor: theme.colors.secondaryBackground },
+  };
+  const { color, backgroundColor } = colors[tone];
 
   return (
     <AppColumn

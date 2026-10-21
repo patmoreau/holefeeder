@@ -17,6 +17,8 @@ tags:
     visible:
       id: 'insights-spending-link'
     timeout: 20000
+- assertVisible:
+    id: 'insights-net-header'
 
 - tapOn:
     id: 'insights-spending-link'

@@ -13,8 +13,8 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
-import { SpendingHeaderSmallCard } from '@/summary/presentation/SpendingHeaderSmallCard';
-import { SpendingPeriodHeader } from './SpendingPeriodHeader';
+import { NetHeaderSmallCard } from './NetHeaderSmallCard';
+import { NetPeriodHeader } from './NetPeriodHeader';
 
 export default function InsightsScreen() {
   const { t } = useTranslation();
@@ -26,8 +26,8 @@ export default function InsightsScreen() {
 
   return (
     <View style={{ flex: 1 }} testID="insights-screen">
-      <AppCollapsingHeader header={header} small={<SpendingHeaderSmallCard summary={summary} />}>
-        <SpendingPeriodHeader />
+      <AppCollapsingHeader header={header} small={<NetHeaderSmallCard summary={summary} />}>
+        <NetPeriodHeader />
       </AppCollapsingHeader>
 
       <View style={{ flex: 1 }}>

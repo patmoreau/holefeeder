@@ -16,6 +16,7 @@ import Delete from '@expo/material-symbols/delete.xml';
 import Download from '@expo/material-symbols/download.xml';
 import Edit from '@expo/material-symbols/edit.xml';
 import EditNote from '@expo/material-symbols/edit_note.xml';
+import Equal from '@expo/material-symbols/equal.xml';
 import FileUploadOff from '@expo/material-symbols/file_upload_off.xml';
 import GridView from '@expo/material-symbols/grid_view.xml';
 import Info from '@expo/material-symbols/info.xml';
@@ -70,6 +71,7 @@ const universalIconMapping = {
   dropdown: { ios: 'chevron.up.chevron.down', android: ArrowDropDown },
   edit: { ios: 'square.and.pencil', android: Edit },
   download: { ios: 'square.and.arrow.down', android: Download },
+  equal: { ios: 'equal.circle', android: Equal },
   expand: { ios: 'chevron.right', android: ChevronRight },
   expiresAt: { ios: 'arrow.trianglehead.2.clockwise', android: LockClock },
   favorite: { ios: 'star.fill', android: Star },

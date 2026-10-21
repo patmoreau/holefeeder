@@ -245,6 +245,13 @@ export const en = {
     title: 'Insights',
     period: '{{period}}',
     combined: 'Combined',
+    net: {
+      title: 'Net this period',
+      smallTitle: 'Net:',
+      saved: 'Saved {{percentage}} of income',
+      overspent: 'Overspent by {{amount}}',
+      brokeEven: 'Broke even',
+    },
     spending: {
       title: 'Spending',
       link: 'Spending this period',

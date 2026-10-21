@@ -107,6 +107,24 @@ Same shape as category spending, but grouped by **tag** instead of category.
   returned, with `spentAmount = 0` and its historical average.
 - Ordered by `avgAmount` desc, then `spentAmount` desc, then tag asc.
 
+## Net This Period (mobile insight)
+
+The Insights header: what is left of the current period's income after its spending.
+
+**Rules:**
+
+- Income and spending are the current period's totals from the mobile summary, which
+  counts **non-system** categories only, so transfers between the user's own accounts
+  are excluded.
+- Computed in whole cents: **net** = income − spending.
+- The amount is shown **unsigned**; the badge carries the direction:
+  - **Saved** when net > 0, with **percentage** = net ÷ income × 100, rounded to a
+    whole number (a one-cent surplus is "saved 0%").
+  - **Overspent by** |net| when net < 0, including a period with spending and no
+    income.
+  - **Broke even** when net = 0 with some income or spending.
+  - No badge when the period has neither income nor spending.
+
 ---
 
 ## Previous-period averaging

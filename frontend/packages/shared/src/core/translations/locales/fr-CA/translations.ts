@@ -247,6 +247,13 @@ export const fr: TranslationStructure = {
     title: 'Aperçus',
     period: '{{period}}',
     combined: 'Combiné',
+    net: {
+      title: 'Net de la période',
+      smallTitle: 'Net :',
+      saved: 'Épargné {{percentage}} du revenu',
+      overspent: 'Dépassement de {{amount}}',
+      brokeEven: 'À l’équilibre',
+    },
     spending: {
       title: 'Dépenses',
       link: 'Dépenses de la période',
