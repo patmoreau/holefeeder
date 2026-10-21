@@ -23,13 +23,14 @@ const createStyles = (theme: Theme) => ({
 
 export type FieldProps = {
   label?: string;
+  value?: string;
   icon: UniversalIcon;
   onPress?: (() => void) | undefined;
   error?: string;
   testID?: string;
 };
 
-export const AppFieldLink = ({ label, icon, onPress, testID }: FieldProps) => {
+export const AppFieldLink = ({ label, value, icon, onPress, testID }: FieldProps) => {
   const styles = useStyles(createStyles);
   const { theme } = useTheme();
 
@@ -38,6 +39,7 @@ export const AppFieldLink = ({ label, icon, onPress, testID }: FieldProps) => {
       <ExpoIcon name={Icon.select(icon)} size={24} color={theme.colors.primary} style={styles.iconCircle} />
       {label && <ExpoText>{label}</ExpoText>}
       <ExpoSpacer />
+      {value && <ExpoText textStyle={{ color: theme.colors.secondaryText }}>{value}</ExpoText>}
       <ExpoIcon name={Icon.select(AppIconMap.expand)} size={16} color={theme.colors.link} />
     </ExpoRow>
   );
