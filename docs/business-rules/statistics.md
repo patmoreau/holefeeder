@@ -135,6 +135,17 @@ Same shape as category spending, but grouped by **tag** instead of category.
   returned, with `spentAmount = 0` and its historical average.
 - Ordered by `avgAmount` desc, then `spentAmount` desc, then tag asc.
 
+## Tag Income (mobile insight)
+
+Same shape as tag spending, over income instead of spending.
+
+**Rules:**
+
+- Same tag splitting, averaging and ordering rules as tag spending, with
+  **`receivedAmount`** in place of `spentAmount`.
+- Only transactions on **non-system, gain** categories contribute, so transfers in
+  are excluded.
+
 ## Net This Period (mobile insight)
 
 The Insights header: what is left of the current period's income after its spending.

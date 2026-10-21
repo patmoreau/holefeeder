@@ -11,6 +11,7 @@ import { InsightsRepository } from '@/statistics/core/insights-repository';
 import { CategoryIncome } from '../core/category-income';
 import { CategorySpending } from '../core/category-spending';
 import { CategoryTagSpending } from '../core/category-tag-spending';
+import { TagIncome } from '../core/tag-income';
 import { TagSpending } from '../core/tag-spending';
 import { InsightsRepositoryInPowersync } from './insights-repository-in-powersync';
 
@@ -480,6 +481,154 @@ describe('InsightsRepositoryInPowersync', () => {
       await db.close();
 
       const unsubscribe = watchTagSpending(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeFailureWithErrors(['The database connection is not open']);
+
+      unsubscribe();
+    });
+  });
+
+  describe('watch tag income', () => {
+    let result: AsyncResult<TagIncome[]> | undefined;
+    let payCheckId: CategoryForTest['id'];
+
+    beforeEach(async () => {
+      const payCheck = await aCategory({ name: 'Pay check', type: 'gain' }).store(db);
+      const freelance = await aCategory({ name: 'Freelance', type: 'gain' }).store(db);
+      payCheckId = payCheck.id;
+
+      for (const [month, amount] of [
+        [month1, 4000],
+        [month2, 4100],
+        [month3, 4200],
+        [month4, 4300],
+        [month5, 4400],
+      ] as const) {
+        await aTransaction({
+          categoryId: payCheck.id,
+          amount: Money.valid(amount),
+          date: withDate(month).addDays(1).toDateOnly(),
+          tags: TagList.valid(['salary']),
+        }).store(db);
+      }
+      await aTransaction({
+        categoryId: freelance.id,
+        amount: Money.valid(200),
+        date: withDate(month5).addDays(3).toDateOnly(),
+        tags: TagList.valid(['side', 'client-a']),
+      }).store(db);
+    });
+
+    const watchTagIncome = (effectiveDate: DateOnly) => {
+      return repo.watchTagIncome(
+        (data) => {
+          result = data;
+        },
+        effectiveDate,
+        settings
+      );
+    };
+
+    it('returns tag income when there is no previous period', async () => {
+      const unsubscribe = watchTagIncome(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([{ tag: 'salary', receivedAmount: Money.valid(4000), avgAmount: Money.ZERO }]);
+
+      unsubscribe();
+    });
+
+    it('returns tag income with average of previous periods, counting each tag of a transaction', async () => {
+      const unsubscribe = watchTagIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { tag: 'salary', receivedAmount: Money.valid(4400), avgAmount: Money.valid(4150) },
+        { tag: 'client-a', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+        { tag: 'side', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('includes ZERO received amount for a tag seen only in previous periods', async () => {
+      await aTransaction({ categoryId: payCheckId, amount: Money.valid(600), date: month3, tags: TagList.valid(['gift']) }).store(db);
+
+      const unsubscribe = watchTagIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ tag: 'salary' }),
+        { tag: 'gift', receivedAmount: Money.ZERO, avgAmount: Money.valid(300) },
+        expect.objectContaining({ tag: 'client-a' }),
+        expect.objectContaining({ tag: 'side' }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('excludes transactions from expense categories', async () => {
+      await aTransaction({ categoryId: foodCategory.id, amount: Money.valid(50), date: periodStart, tags: TagList.valid(['salary']) }).store(
+        db
+      );
+
+      const unsubscribe = watchTagIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { tag: 'salary', receivedAmount: Money.valid(4400), avgAmount: Money.valid(4150) },
+        { tag: 'client-a', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+        { tag: 'side', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('excludes transactions from system categories', async () => {
+      const transferIn = await aCategory({ name: 'Transfer In', type: 'gain', system: System.valid(true) }).store(db);
+
+      await aTransaction({ categoryId: transferIn.id, amount: Money.valid(900), date: periodStart, tags: TagList.valid(['salary']) }).store(db);
+
+      const unsubscribe = watchTagIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { tag: 'salary', receivedAmount: Money.valid(4400), avgAmount: Money.valid(4150) },
+        { tag: 'client-a', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+        { tag: 'side', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('ignores untagged income and blank tags', async () => {
+      await aTransaction({ categoryId: payCheckId, amount: Money.valid(100), date: periodStart, tags: TagList.valid([]) }).store(db);
+      await aTransaction({ categoryId: payCheckId, amount: Money.valid(70), date: periodStart, tags: TagList.valid(['', ' ']) }).store(db);
+
+      const unsubscribe = watchTagIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        { tag: 'salary', receivedAmount: Money.valid(4400), avgAmount: Money.valid(4150) },
+        { tag: 'client-a', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+        { tag: 'side', receivedAmount: Money.valid(200), avgAmount: Money.ZERO },
+      ]);
+
+      unsubscribe();
+    });
+
+    it('handles database errors', async () => {
+      await db.close();
+
+      const unsubscribe = watchTagIncome(effectiveDate);
 
       await waitFor(() => expect(result).toBeDefined());
 

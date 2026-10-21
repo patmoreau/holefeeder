@@ -7,6 +7,7 @@ import { CategoryIncome } from '../core/category-income';
 import { CategorySpending } from '../core/category-spending';
 import { CategoryTagSpending } from '../core/category-tag-spending';
 import { InsightsRepository } from '../core/insights-repository';
+import { TagIncome } from '../core/tag-income';
 import { TagSpending } from '../core/tag-spending';
 
 type CategorySpendingRow = {
@@ -329,6 +330,26 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     );
   };
 
+  const watchTagIncome = (onDataChange: (result: AsyncResult<TagIncome[]>) => void, effectiveDate: DateOnly, settings: Settings) => {
+    const intervalResult = computeInterval(effectiveDate, settings);
+    if (!intervalResult.isSuccess) {
+      onDataChange(intervalResult);
+      return () => {};
+    }
+
+    const { start, end } = intervalResult.value;
+    const { sql, params } = buildTagTotalsQuery(CategoryTypes.gain, previousPeriods(settings, start), start, end);
+
+    return watchQuery<TagSpendingRow, TagIncome>(
+      db,
+      sql,
+      params,
+      (row) => ({ tag: row.tag, receivedAmount: Money.fromCents(row.spentAmount), avgAmount: Money.fromCents(row.avgAmount) }),
+      onDataChange,
+      'watchTagIncome'
+    );
+  };
+
   const watchCategoryTagSpending = (
     onDataChange: (result: AsyncResult<CategoryTagSpending[]>) => void,
     effectiveDate: DateOnly,
@@ -357,6 +378,7 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     watchCategorySpending: watchCategorySpending,
     watchCategoryIncome: watchCategoryIncome,
     watchTagSpending: watchTagSpending,
+    watchTagIncome: watchTagIncome,
     watchCategoryTagSpending: watchCategoryTagSpending,
   };
 };
