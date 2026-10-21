@@ -9,6 +9,7 @@ export type SummaryResult = {
   netFlow: number;
   currentGains: Money;
   averageExpenses: Money;
+  averageGains: Money;
 };
 
 export const calculateSummary = (
@@ -26,6 +27,7 @@ export const calculateSummary = (
   const netFlow = calculateNetFlow(currentGains, currentExpenses);
 
   const averageExpenses = calculateAverage(expenses);
+  const averageGains = calculateAverage(gains);
   const expenseVariation = calculateExpenseVariation(averageExpenses, currentExpenses);
   const variationPercentage = calculateExpenseVariationPercentage(averageExpenses, expenseVariation);
 
@@ -36,6 +38,7 @@ export const calculateSummary = (
     netFlow,
     currentGains,
     averageExpenses,
+    averageGains,
   };
 };
 

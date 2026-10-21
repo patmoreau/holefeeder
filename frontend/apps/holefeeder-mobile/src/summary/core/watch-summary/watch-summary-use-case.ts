@@ -1,4 +1,4 @@
-import { type AsyncResult, DateInterval, Result, today } from '@holefeeder/shared/core';
+import { type AsyncResult, DateInterval, Money, Result, today } from '@holefeeder/shared/core';
 import { Settings } from '@/shared/core/settings';
 import { calculateSummary, SummaryResult } from '../calculate-summary';
 import { SummaryData } from '../summary-data';
@@ -42,6 +42,12 @@ export type ComputedSummary = {
   };
   totalIncome: number;
   averageSpending: number;
+  averageIncome: number;
+  incomeVariation: {
+    amount: number;
+    percentage: number;
+    isBelow: boolean;
+  };
 };
 
 export const NO_SUMMARY: ComputedSummary = {
@@ -57,6 +63,12 @@ export const NO_SUMMARY: ComputedSummary = {
   },
   totalIncome: 0,
   averageSpending: 0,
+  averageIncome: 0,
+  incomeVariation: {
+    amount: 0,
+    percentage: 0,
+    isBelow: false,
+  },
 };
 
 const computeDashboardData = (summary: SummaryResult): ComputedSummary => {
@@ -75,5 +87,18 @@ const computeDashboardData = (summary: SummaryResult): ComputedSummary => {
     },
     totalIncome: summary.currentGains,
     averageSpending: summary.averageExpenses,
+    averageIncome: summary.averageGains,
+    incomeVariation: computeIncomeVariation(summary.currentGains, summary.averageGains),
+  };
+};
+
+const computeIncomeVariation = (currentGains: Money, averageGains: Money): ComputedSummary['incomeVariation'] => {
+  const variationCents = Money.toCents(currentGains) - Money.toCents(averageGains);
+  const averageCents = Money.toCents(averageGains);
+
+  return {
+    amount: Math.abs(variationCents) / 100,
+    percentage: averageCents === 0 ? 0 : Math.round((Math.abs(variationCents) / averageCents) * 100 * 100) / 100,
+    isBelow: variationCents < 0,
   };
 };

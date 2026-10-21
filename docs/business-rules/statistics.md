@@ -105,6 +105,21 @@ received per previous period. The mirror of category spending.
   (`c.system = 0 AND lower(c.type) = 'gain'`), so transfers in are excluded.
 - Income categories carry no budget; none is reported.
 
+## Income vs Average (mobile insight)
+
+The badge on the Income page header: this period's income against the average.
+
+**Rules:**
+
+- **Average income** is the mean of the per-period gain totals in the mobile summary,
+  computed the same way as average spending (every period bucket, the current one
+  included).
+- **Variation** = current income − average income, in whole cents, shown unsigned
+  with its percentage of the average (two decimals; `0` when the average is `0`).
+- The direction is the opposite of spending: income **above** the average is good,
+  **below** is flagged.
+- Hidden when the average rounds to zero cents (no history).
+
 ## Tag Spending (mobile insight)
 
 Same shape as category spending, but grouped by **tag** instead of category.

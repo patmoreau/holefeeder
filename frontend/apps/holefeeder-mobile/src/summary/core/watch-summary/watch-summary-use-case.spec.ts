@@ -53,7 +53,61 @@ describe('WatchCategoriesUseCase', () => {
         isOver: true,
       },
       totalIncome: Money.valid(3000),
+      averageIncome: Money.valid(3000),
+      incomeVariation: {
+        amount: 0,
+        percentage: 0,
+        isBelow: false,
+      },
     });
+
+    unsubscribe();
+  });
+
+  it('reports income below its average', async () => {
+    const previousMonth = withDate(asOfDate).addMonths(-1).toDateOnly();
+    repository.add(
+      aSummaryData({ date: previousMonth, type: CategoryTypes.gain, total: Money.valid(4000) }),
+      aSummaryData({ date: asOfDate, type: CategoryTypes.gain, total: Money.valid(2000) })
+    );
+
+    let result: AsyncResult<ComputedSummary> | undefined;
+    const unsubscribe = useCase.watch((data) => {
+      result = data;
+    });
+
+    await waitFor(() => expect(result).toBeDefined());
+
+    expect(result).toBeSuccessWithValue(
+      expect.objectContaining({
+        averageIncome: Money.valid(3000),
+        incomeVariation: { amount: 1000, percentage: 33.33, isBelow: true },
+      })
+    );
+
+    unsubscribe();
+  });
+
+  it('reports income above its average', async () => {
+    const previousMonth = withDate(asOfDate).addMonths(-1).toDateOnly();
+    repository.add(
+      aSummaryData({ date: previousMonth, type: CategoryTypes.gain, total: Money.valid(1000) }),
+      aSummaryData({ date: asOfDate, type: CategoryTypes.gain, total: Money.valid(3000) })
+    );
+
+    let result: AsyncResult<ComputedSummary> | undefined;
+    const unsubscribe = useCase.watch((data) => {
+      result = data;
+    });
+
+    await waitFor(() => expect(result).toBeDefined());
+
+    expect(result).toBeSuccessWithValue(
+      expect.objectContaining({
+        averageIncome: Money.valid(2000),
+        incomeVariation: { amount: 1000, percentage: 50, isBelow: false },
+      })
+    );
 
     unsubscribe();
   });

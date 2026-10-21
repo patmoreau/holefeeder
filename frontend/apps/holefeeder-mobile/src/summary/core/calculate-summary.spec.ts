@@ -38,6 +38,7 @@ describe('calculateSummary', () => {
     expect(result.currentExpenses).toBe(0);
     expect(result.currentGains).toBe(0);
     expect(result.averageExpenses).toBe(0);
+    expect(result.averageGains).toBe(0);
   });
 
   it('should calculate summary correctly with complex monthly data', () => {
@@ -94,5 +95,6 @@ describe('calculateSummary', () => {
     expect(result.netFlow).toBe(1799.1);
     expect(result.currentGains).toBe(3000.3);
     expect(result.averageExpenses).toBe(500.5);
+    expect(result.averageGains).toBe(2000.2);
   });
 });
