@@ -13,8 +13,8 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
-import { NetHeaderSmallCard } from './NetHeaderSmallCard';
 import { NetPeriodHeader } from './NetPeriodHeader';
+import { PeriodAmountSmallCard } from './PeriodAmountSmallCard';
 
 export default function InsightsScreen() {
   const { t } = useTranslation();
@@ -26,7 +26,10 @@ export default function InsightsScreen() {
 
   return (
     <View style={{ flex: 1 }} testID="insights-screen">
-      <AppCollapsingHeader header={header} small={<NetHeaderSmallCard summary={summary} />}>
+      <AppCollapsingHeader
+        header={header}
+        small={<PeriodAmountSmallCard label={t(tk.insights.net.smallTitle)} amount={summary.netFlow.amount} testID="net-header-small" />}
+      >
         <NetPeriodHeader />
       </AppCollapsingHeader>
 
