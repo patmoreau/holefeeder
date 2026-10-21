@@ -92,6 +92,19 @@ spend per previous period.
 - `avgAmount` is rounded to whole cents in SQL; all amounts cross the boundary as
   `Money`.
 
+## Category Income (mobile insight)
+
+Per gain category: how much was received in the current period alongside the average
+received per previous period. The mirror of category spending.
+
+**Rules:**
+
+- Same period, averaging, rounding and ordering rules as category spending, with
+  **`receivedAmount`** in place of `spentAmount`.
+- Only **non-system, gain** categories are considered
+  (`c.system = 0 AND lower(c.type) = 'gain'`), so transfers in are excluded.
+- Income categories carry no budget; none is reported.
+
 ## Tag Spending (mobile insight)
 
 Same shape as category spending, but grouped by **tag** instead of category.

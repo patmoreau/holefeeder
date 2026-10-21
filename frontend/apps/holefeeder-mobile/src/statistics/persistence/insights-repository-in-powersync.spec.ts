@@ -8,6 +8,7 @@ import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { InsightsRepository } from '@/statistics/core/insights-repository';
+import { CategoryIncome } from '../core/category-income';
 import { CategorySpending } from '../core/category-spending';
 import { CategoryTagSpending } from '../core/category-tag-spending';
 import { TagSpending } from '../core/tag-spending';
@@ -235,6 +236,121 @@ describe('InsightsRepositoryInPowersync', () => {
       await db.close();
 
       const unsubscribe = watchCategorySpending(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeFailureWithErrors(['The database connection is not open']);
+
+      unsubscribe();
+    });
+  });
+
+  describe('watch category income', () => {
+    let result: AsyncResult<CategoryIncome[]> | undefined;
+
+    beforeEach(async () => {
+      const payCheck = await aCategory({ name: 'Pay check', type: 'gain' }).store(db);
+      const freelance = await aCategory({ name: 'Freelance', type: 'gain' }).store(db);
+
+      for (const [month, amount] of [
+        [month1, 4000],
+        [month2, 4100],
+        [month3, 4200],
+        [month4, 4300],
+        [month5, 4400],
+      ] as const) {
+        await aTransaction({ categoryId: payCheck.id, amount: Money.valid(amount), date: withDate(month).addDays(1).toDateOnly() }).store(db);
+      }
+      await aTransaction({ categoryId: freelance.id, amount: Money.valid(200), date: withDate(month5).addDays(3).toDateOnly() }).store(db);
+    });
+
+    const watchCategoryIncome = (effectiveDate: DateOnly) => {
+      return repo.watchCategoryIncome(
+        (data) => {
+          result = data;
+        },
+        effectiveDate,
+        settings
+      );
+    };
+
+    it('returns category income when there is no previous period', async () => {
+      const unsubscribe = watchCategoryIncome(settings.effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ categoryName: 'Pay check', receivedAmount: Money.valid(4000), avgAmount: Money.ZERO }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('returns category income with average of previous periods', async () => {
+      const unsubscribe = watchCategoryIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ categoryName: 'Pay check', receivedAmount: Money.valid(4400), avgAmount: Money.valid(4150) }),
+        expect.objectContaining({ categoryName: 'Freelance', receivedAmount: Money.valid(200), avgAmount: Money.ZERO }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('includes ZERO received amount', async () => {
+      const gift = await aCategory({ name: 'Gift', type: 'gain' }).store(db);
+
+      await aTransaction({ categoryId: gift.id, amount: Money.valid(600), date: month3 }).store(db);
+
+      const unsubscribe = watchCategoryIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ categoryName: 'Pay check' }),
+        expect.objectContaining({ categoryName: 'Gift', receivedAmount: Money.ZERO, avgAmount: Money.valid(300) }),
+        expect.objectContaining({ categoryName: 'Freelance' }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('excludes expense categories', async () => {
+      const unsubscribe = watchCategoryIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ categoryName: 'Pay check' }),
+        expect.objectContaining({ categoryName: 'Freelance' }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('excludes system categories', async () => {
+      const transferIn = await aCategory({ name: 'Transfer In', type: 'gain', system: System.valid(true) }).store(db);
+
+      await aTransaction({ categoryId: transferIn.id, amount: Money.valid(900), date: periodStart }).store(db);
+
+      const unsubscribe = watchCategoryIncome(effectiveDate);
+
+      await waitFor(() => expect(result).toBeDefined());
+
+      expect(result).toBeSuccessWithValue([
+        expect.objectContaining({ categoryName: 'Pay check' }),
+        expect.objectContaining({ categoryName: 'Freelance' }),
+      ]);
+
+      unsubscribe();
+    });
+
+    it('handles database errors', async () => {
+      await db.close();
+
+      const unsubscribe = watchCategoryIncome(effectiveDate);
 
       await waitFor(() => expect(result).toBeDefined());
 

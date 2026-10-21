@@ -3,6 +3,7 @@ import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { Settings } from '@/shared/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
+import { CategoryIncome } from '../core/category-income';
 import { CategorySpending } from '../core/category-spending';
 import { CategoryTagSpending } from '../core/category-tag-spending';
 import { InsightsRepository } from '../core/insights-repository';
@@ -282,6 +283,32 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
     );
   };
 
+  const watchCategoryIncome = (onDataChange: (result: AsyncResult<CategoryIncome[]>) => void, effectiveDate: DateOnly, settings: Settings) => {
+    const intervalResult = computeInterval(effectiveDate, settings);
+    if (!intervalResult.isSuccess) {
+      onDataChange(intervalResult);
+      return () => {};
+    }
+
+    const { start, end } = intervalResult.value;
+    const { sql, params } = buildCategoryTotalsQuery(CategoryTypes.gain, previousPeriods(settings, start), start, end);
+
+    return watchQuery<CategorySpendingRow, CategoryIncome>(
+      db,
+      sql,
+      params,
+      (row) => ({
+        categoryId: Id.valid(row.categoryId),
+        categoryName: row.categoryName,
+        color: row.color,
+        receivedAmount: Money.fromCents(row.spentAmount),
+        avgAmount: Money.fromCents(row.avgAmount),
+      }),
+      onDataChange,
+      'watchCategoryIncome'
+    );
+  };
+
   const watchTagSpending = (onDataChange: (result: AsyncResult<TagSpending[]>) => void, effectiveDate: DateOnly, settings: Settings) => {
     const intervalResult = computeInterval(effectiveDate, settings);
     if (!intervalResult.isSuccess) {
@@ -328,6 +355,7 @@ export const InsightsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): In
 
   return {
     watchCategorySpending: watchCategorySpending,
+    watchCategoryIncome: watchCategoryIncome,
     watchTagSpending: watchTagSpending,
     watchCategoryTagSpending: watchCategoryTagSpending,
   };
