@@ -7,15 +7,10 @@ import { AppCollapsingHeader, useCollapsingHeader } from '@/shared/presentation/
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { SpendingHeaderSmallCard } from '@/summary/presentation/SpendingHeaderSmallCard';
-import { CategorySpendingList } from './CategorySpendingList';
-import { CombinedInsightToggle } from './CombinedInsightToggle';
-import { CombinedSpendingList } from './CombinedSpendingList';
-import { useCombinedInsight } from './core/use-combined-insight';
 import { InsightsPeriodHeader } from './InsightsPeriodHeader';
-import { TagSpendingList } from './TagSpendingList';
+import { SpendingBreakdown } from './SpendingBreakdown';
 
 export default function InsightsScreen() {
-  const { combined } = useCombinedInsight();
   const summaryResult = useSummary();
   const header = useCollapsingHeader();
 
@@ -31,15 +26,7 @@ export default function InsightsScreen() {
         <AppNative style={{ flex: 1 }}>
           <AppList inset modifiers={header.listModifiers}>
             <AppColumn style={{ paddingTop: header.spacerHeight }} />
-            <CombinedInsightToggle />
-            {combined ? (
-              <CombinedSpendingList />
-            ) : (
-              <>
-                <CategorySpendingList />
-                <TagSpendingList />
-              </>
-            )}
+            <SpendingBreakdown />
           </AppList>
         </AppNative>
       </View>
