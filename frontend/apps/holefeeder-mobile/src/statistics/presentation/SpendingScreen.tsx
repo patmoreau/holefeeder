@@ -14,8 +14,8 @@ import { goBack } from '@/shared/presentation/core/navigation';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { SpendingHeaderSmallCard } from '@/summary/presentation/SpendingHeaderSmallCard';
-import { InsightsPeriodHeader } from './InsightsPeriodHeader';
 import { SpendingBreakdown } from './SpendingBreakdown';
+import { SpendingPeriodHeader } from './SpendingPeriodHeader';
 
 export const SpendingScreen = () => {
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ export const SpendingScreen = () => {
       </AppToolbar>
       <View style={{ flex: 1 }} testID="spending-screen">
         <AppCollapsingHeader header={header} leadingToolbar small={<SpendingHeaderSmallCard summary={summary} />}>
-          <InsightsPeriodHeader />
+          <SpendingPeriodHeader />
         </AppCollapsingHeader>
 
         <View style={{ flex: 1 }}>

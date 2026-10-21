@@ -1,20 +1,17 @@
 import { DateInterval, LocalFormatter, today } from '@holefeeder/shared/core';
 import { useHeaderHeight } from 'expo-router/react-navigation';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { tk } from '@/i18n/translations';
 import { DefaultSettings } from '@/shared/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
-import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppText as NativeAppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useStyles } from '@/shared/theme/core/use-styles';
-import { SpendingTrend } from '@/summary/core/spending-trend';
-import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
@@ -40,7 +37,13 @@ const createStyles = (theme: Theme) => ({
   },
 });
 
-export const InsightsPeriodHeader = () => {
+type InsightsPeriodHeaderProps = {
+  title: string;
+  amount: number;
+  badge?: ReactNode;
+};
+
+export const InsightsPeriodHeader = ({ title, amount, badge }: InsightsPeriodHeaderProps) => {
   const { t, i18n } = useTranslation();
   const settingsResult = useSettings();
   const summaryResult = useSummary();
@@ -49,7 +52,6 @@ export const InsightsPeriodHeader = () => {
   const headerHeight = useHeaderHeight();
 
   const settings = settingsResult.isSuccess ? settingsResult.value : DefaultSettings;
-  const summary = summaryResult.isSuccess ? summaryResult.value : NO_SUMMARY;
 
   const periodLabel = useMemo(() => {
     const intervalResult = DateInterval.createFrom(today(), 0, settings.effectiveDate, settings.intervalType, settings.frequency);
@@ -69,14 +71,14 @@ export const InsightsPeriodHeader = () => {
       {summaryResult.isSuccess && (
         <>
           <AppText variant="footnote" style={styles.spendingTitle}>
-            {t(tk.dashboard.largeHeader.spendingTitle)}
+            {title}
           </AppText>
           <AppNative matchContents>
             <AppColumn spacing={8} alignment="start">
               <NativeAppText variant="display" textStyle={styles.total}>
-                {LocalFormatter.currency(summary.currentSpending, currentLocale, currencyCode)}
+                {LocalFormatter.currency(amount, currentLocale, currencyCode)}
               </NativeAppText>
-              {SpendingTrend.isShown(summary) && <ExpenseTrendBadge variation={summary.variation} variant="amount" />}
+              {badge}
             </AppColumn>
           </AppNative>
         </>

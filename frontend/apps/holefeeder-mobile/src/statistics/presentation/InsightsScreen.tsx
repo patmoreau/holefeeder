@@ -14,7 +14,7 @@ import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatt
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { SpendingHeaderSmallCard } from '@/summary/presentation/SpendingHeaderSmallCard';
-import { InsightsPeriodHeader } from './InsightsPeriodHeader';
+import { SpendingPeriodHeader } from './SpendingPeriodHeader';
 
 export default function InsightsScreen() {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ export default function InsightsScreen() {
   return (
     <View style={{ flex: 1 }} testID="insights-screen">
       <AppCollapsingHeader header={header} small={<SpendingHeaderSmallCard summary={summary} />}>
-        <InsightsPeriodHeader />
+        <SpendingPeriodHeader />
       </AppCollapsingHeader>
 
       <View style={{ flex: 1 }}>
