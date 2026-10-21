@@ -90,6 +90,18 @@ require('dotenv').config({
 });
 
 const IS_DEV = process.env.APP_ENV === 'development';
+
+type DeployVersion = { version: string; build: number; commit: string };
+
+const readDeployVersion = (): DeployVersion | undefined => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, 'deploy-version.json'), 'utf8')) as DeployVersion;
+  } catch {
+    return undefined;
+  }
+};
+
+const deployVersion = readDeployVersion();
 const iosIconFile = IS_DEV ? 'safe_dev.icon' : 'safe.icon';
 console.error(`Running in ${environment} mode`);
 
@@ -99,7 +111,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: 'Holefeeder',
     slug: 'holefeeder',
     owner: 'Drifter Apps Inc.',
-    version: '1.0.0',
+    version: deployVersion?.version ?? '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/safe.png',
     scheme: 'holefeeder',
@@ -108,6 +120,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       supportsTablet: true,
       icon: `./assets/${iosIconFile}`,
       bundleIdentifier: 'com.drifterapps.holefeeder',
+      buildNumber: String(deployVersion?.build ?? 1),
       deploymentTarget: '16.4',
       infoPlist: {
         ...config.ios?.infoPlist,
@@ -184,6 +197,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
     ],
     extra: {
+      deployCommit: deployVersion?.commit,
       EXPO_PUBLIC_AUTH0_DOMAIN: process.env.EXPO_PUBLIC_AUTH0_DOMAIN,
       EXPO_PUBLIC_AUTH0_CLIENT_ID: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID,
       EXPO_PUBLIC_AUTH0_AUDIENCE: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE,

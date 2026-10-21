@@ -351,6 +351,10 @@ export const en = {
   settings: {
     title: 'Settings',
     parameters: 'Parameters',
+    aboutSection: {
+      title: 'About',
+      version: 'Version',
+    },
     syncSection: {
       title: 'Synchronization',
       navigation: 'Statistics',

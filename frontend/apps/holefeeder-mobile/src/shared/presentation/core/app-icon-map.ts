@@ -18,6 +18,7 @@ import Edit from '@expo/material-symbols/edit.xml';
 import EditNote from '@expo/material-symbols/edit_note.xml';
 import FileUploadOff from '@expo/material-symbols/file_upload_off.xml';
 import GridView from '@expo/material-symbols/grid_view.xml';
+import Info from '@expo/material-symbols/info.xml';
 import Key from '@expo/material-symbols/key.xml';
 import Label from '@expo/material-symbols/label.xml';
 import Language from '@expo/material-symbols/language.xml';
@@ -96,6 +97,7 @@ const universalIconMapping = {
   trendUp: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },
   trendDown: { ios: 'chart.line.downtrend.xyaxis', android: TrendingDown },
   upload: { ios: 'square.and.arrow.up', android: Upload },
+  version: { ios: 'info.circle', android: Info },
   warning: { ios: 'exclamationmark.triangle', android: Warning },
 } satisfies Record<string, UniversalIcon>;
 

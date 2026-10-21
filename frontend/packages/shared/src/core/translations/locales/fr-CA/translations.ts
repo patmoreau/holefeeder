@@ -354,6 +354,10 @@ export const fr: TranslationStructure = {
   settings: {
     title: 'Paramètres',
     parameters: 'Paramètres',
+    aboutSection: {
+      title: 'À propos',
+      version: 'Version',
+    },
     syncSection: {
       title: 'Synchronisation',
       navigation: 'Statistiques',

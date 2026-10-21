@@ -41,13 +41,35 @@ bundler process running afterward.
    process to stop. (Release builds embed the JS bundle, so Metro isn't needed
    at runtime.)
 
-3. **Report the result.** A successful run ends with `Build Succeeded`
-   (0 errors) followed by `Installing …Holefeeder.app` → `Complete 100%`.
-   Report success or surface the build error.
+3. **Check the install, then record the deploy.** A successful run ends with
+   `Build Succeeded` (0 errors) followed by `Installing …Holefeeder.app` →
+   `Complete 100%`. `CommandError: … the device is locked` after that line
+   only means the app could not be opened; the install itself succeeded.
+
+   Only when the install completed, commit the version file the deploy wrote:
+
+   ```bash
+   git add frontend/apps/holefeeder-mobile/deploy-version.json
+   git commit -m "chore(mobile): Deploy <version> (<build>)"
+   ```
+
+   with the version and build from the `Deploying …` line at the start of the
+   run. If the build or the install failed, leave the file uncommitted: the
+   next deploy recomputes the number from the last committed one.
+
+4. **Report the result**: the version and build, the commit it was built from,
+   and that Settings → About on the phone should show the same
+   `<version> (<build>) · <commit>`.
 
 ## Notes
 
 - The device UDID is stable per device; discover it each run rather than
   hardcoding, so this keeps working if the phone is replaced.
-- `pnpm run ios:deploy` first runs `preios:deploy` (`expo prebuild --clean`),
-  which regenerates the native `ios/` directory before building.
+- `pnpm run ios:deploy` first runs `preios:deploy`, which writes the next
+  version to `deploy-version.json` and then runs `expo prebuild --clean` to
+  regenerate the native `ios/` directory before building.
+- The version is the deploy date, `YYYY.M.D`, and the build counts that day's
+  deploys from 1. iOS shows them as `2026.10.20 (2)`. The commit is the one the
+  app was built from, with `-dirty` when the working tree had other changes.
+  The next number is computed from the committed `deploy-version.json`, so it
+  only moves once a deploy is recorded.

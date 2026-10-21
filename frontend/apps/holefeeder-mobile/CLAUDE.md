@@ -37,6 +37,14 @@ pnpm prebuild:dev           # iOS prebuild (development)
 pnpm ios:deploy             # production build to physical device
 ```
 
+Phone deploys are versioned by date. `pnpm ios:deploy` runs
+`scripts/bump-deploy-version.mjs`, which writes `deploy-version.json`: the version
+`YYYY.M.D`, that day's build number from 1, and the commit built from. `app.config.ts`
+reads it for `version`, `ios.buildNumber` and `extra.deployCommit`, and Settings → About
+shows `2026.10.20 (2) · 650039e9`. The file is committed after each successful install
+(`chore(mobile): Deploy …`); the next number comes from the committed copy. See
+`docs/contributing/tasks/frontend/deploy-mobile.md`.
+
 E2E tests use Maestro, and the two tags need different builds:
 `pnpm ios:e2e && pnpm test:e2e:ios` (tag `regression`, session injected by link) and
 `pnpm ios:e2e:auth && pnpm test:e2e:auth` (tag `auth`, real Auth0 pages). Both need a
