@@ -2,6 +2,7 @@ appId: com.drifterapps.holefeeder
 name: Form toolbar actions can be selected by id
 tags:
   - regression
+  - forms
 ---
 # Only works because E2E builds render header actions as ordinary views through
 # headerRight. The native toolbar shows nothing to Maestro — no testID, and its items

@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:e2e": "sh .maestro/run.sh",
     "test:e2e:ios": "sh .maestro/run.sh regression",
     "test:e2e:auth": "sh .maestro/run.sh auth",
     "test:e2e:onboarding": "sh .maestro/run.sh onboarding",

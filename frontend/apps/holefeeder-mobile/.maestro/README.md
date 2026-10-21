@@ -68,9 +68,21 @@ onboarding runs.
 
 | Tag          | Build           | Meaning                                                  |
 | ------------ | --------------- | -------------------------------------------------------- |
-| `regression` | `ios:e2e`       | Session injected by link. Fast. Run on every change.      |
+| `regression` | `ios:e2e`       | Every session-injected flow. Run before a push.           |
+| `smoke`      | `ios:e2e`       | The few core happy paths. Run on every mobile commit.     |
 | `auth`       | `ios:e2e:auth`  | Drives the hosted Auth0 pages. Slow, network-bound.       |
 | `onboarding` | `ios:e2e`       | New-user journey. Wipes and reuses `E2E_NEW_EMAIL`.       |
+
+Every `regression` flow also carries the tag of the feature it exercises — today
+`dashboard`, `insights` and `forms`. A commit runs `smoke` plus the tags of the
+features it touches, in one pass:
+
+```sh
+pnpm test:e2e smoke,insights
+```
+
+Before a push, run all of `regression`, `onboarding` and `auth`. `auth` and
+`onboarding` are run on their own: `run.sh` sequences their flows itself.
 
 An untagged flow runs under no tag and so is never executed — always tag.
 

@@ -12,5 +12,6 @@ The instructions above apply in full. A few Claude-specific notes:
 - Business rules in `docs/business-rules/` are shared by both sub-projects; a change to
   domain logic usually belongs there too.
 - Commits: conventional-commit format from `docs/contributing/git-instructions.md`,
-  structural and behavioral changes never mixed, the mobile E2E tags run when the change
-  touches the mobile app, and never push.
+  structural and behavioral changes never mixed, the Maestro `smoke` tag plus the touched
+  features' tags run when a commit touches the mobile app (every tag before a push), and
+  never push.

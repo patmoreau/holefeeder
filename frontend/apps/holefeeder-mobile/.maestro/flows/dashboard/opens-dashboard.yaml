@@ -2,6 +2,8 @@ appId: com.drifterapps.holefeeder
 name: Signed-in user lands on the dashboard
 tags:
   - regression
+  - smoke
+  - dashboard
 ---
 - runFlow: ../../subflows/launch-clean.yaml
 - runFlow: ../../subflows/login-injected.yaml

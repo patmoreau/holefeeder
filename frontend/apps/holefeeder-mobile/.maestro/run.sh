@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
-# Runs the Maestro suite for a given tag (default: regression).
+# Runs the Maestro suite for a given tag (default: regression), or a comma-separated
+# list of tags such as `smoke,insights`; a flow runs when it carries any of them.
+# `auth` and `onboarding` must be passed alone.
 # Credentials come from .maestro/.env.e2e.local, gitignored — see .env.e2e.template.
 set -e
 

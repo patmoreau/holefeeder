@@ -286,7 +286,8 @@ This application enforces a testing strategy focused on high domain reliability 
 - **E2E Tests (Maestro)**:
   - User flows are verified using Maestro. Flows live in `.maestro/flows/`, reusable fragments in `.maestro/subflows/`.
   - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`, needs the `ios:e2e` build), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`, needs the `ios:e2e:auth` build), `onboarding` for the new-user journey (`pnpm test:e2e:onboarding`, needs the `ios:e2e` build and the local stack). `run.sh` refuses to run a tag against the wrong build.
-  - All three tags run before a commit that touches this app — they are outside `pnpm test` and CI, so a flow resting on behaviour that has since changed goes unnoticed until someone runs it.
+  - Every `regression` flow also carries a feature tag (`dashboard`, `insights`, `forms`), and the core happy paths carry `smoke`. A commit that touches this app runs `smoke` plus the tags of the features it touches in one pass (`pnpm test:e2e smoke,insights`); a new flow gets the tag of its feature.
+  - Before a push, all of `regression`, `onboarding` and `auth` run — they are outside `pnpm test` and CI, so a flow resting on behaviour that has since changed goes unnoticed until someone runs it.
   - Boot exactly one simulator. `run.sh` reads the installed build's E2E flag off the first booted device while Maestro picks its own, so a second booted simulator lets the guard pass on one and the flow run on the other.
   - `onboarding` flows use a second Auth0 user (`E2E_NEW_EMAIL`) and are run one at a time, each preceded by `reset-new-user.sh`, which wipes that user's backend rows so the journey starts from nothing every time.
   - Select elements by `id:` (the `testID` prop), not by visible text — text is translated. Text selectors are only unavoidable inside the Auth0 pages.

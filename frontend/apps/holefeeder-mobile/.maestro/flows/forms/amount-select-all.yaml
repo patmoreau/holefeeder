@@ -2,6 +2,7 @@ appId: com.drifterapps.holefeeder
 name: Tapping an amount that is not focused selects the whole number
 tags:
   - regression
+  - forms
 ---
 # Maestro cannot read a text selection, so the flow checks its effect instead: after
 # tapping the amount, typing "5" must replace the whole number (giving 0.05). Were the

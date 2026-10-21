@@ -14,13 +14,18 @@ Only commit when:
 2. ALL compiler/linter warnings resolved
 3. Single logical unit of work
 
-"ALL tests" includes the Maestro E2E tags when the change touches the mobile app —
-`regression`, `onboarding` and `auth`, each against the build its tag requires. They live
-outside `pnpm test` and CI, so nothing else will catch a flow that has gone stale. See
-`frontend/apps/holefeeder-mobile/CLAUDE.md`.
+"ALL tests" includes the Maestro E2E flows when the change touches the mobile app: the
+`smoke` tag plus the tags of the features the change touches (e.g. `insights`), against
+the `ios:e2e` build. See `frontend/apps/holefeeder-mobile/.maestro/README.md`.
 
 Never mix structural and behavioral changes in the same commit.
 Always make structural changes first when both are needed.
+
+## Before a Push
+
+When the commits being pushed touch the mobile app, run every Maestro tag first —
+`regression`, `onboarding` and `auth`, each against the build its tag requires. They
+live outside `pnpm test` and CI, so nothing else will catch a flow that has gone stale.
 
 ## Commit Message Rules
 
