@@ -62,6 +62,11 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
     selectAll();
   };
 
+  const handleBlur = () => {
+    selectAllUntil.current = 0;
+    inputRef.current?.setSelection(0, 0);
+  };
+
   const handleSelectionChange = ({ start, end }: Selection) => {
     if (Date.now() > selectAllUntil.current) return;
     if (textAmount.get() !== formattedText.current) {
@@ -78,6 +83,7 @@ export const useAmountInput = ({ amount, onAmountChange, currentLocale, currency
     inputRef: inputRef,
     handleChangeText: handleChangeText,
     handleFocus: handleFocus,
+    handleBlur: handleBlur,
     handleSelectionChange: handleSelectionChange,
   };
 };

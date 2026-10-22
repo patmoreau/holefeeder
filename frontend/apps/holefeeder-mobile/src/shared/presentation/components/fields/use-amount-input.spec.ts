@@ -199,4 +199,16 @@ describe('useAmountInput', () => {
       expect(input.selectionCount()).toBe(1);
     });
   });
+
+  describe('blur', () => {
+    it('collapses the selection to the start so the next focus selects the whole amount anew', async () => {
+      const { result } = await createHook({ amount: 1000 });
+      const input = attachInput(result);
+      await act(async () => result.current.handleFocus());
+
+      await act(async () => result.current.handleBlur());
+
+      expect(input.lastSelection()).toEqual({ start: 0, end: 0 });
+    });
+  });
 });

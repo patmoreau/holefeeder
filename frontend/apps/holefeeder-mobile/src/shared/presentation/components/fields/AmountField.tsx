@@ -26,7 +26,7 @@ export type AmountFieldProps = {
 export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocus, testID = 'amount-field' }: AmountFieldProps) => {
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
-  const { textAmount, inputRef, handleChangeText, handleFocus, handleSelectionChange } = useAmountInput({
+  const { textAmount, inputRef, handleChangeText, handleFocus, handleBlur, handleSelectionChange } = useAmountInput({
     amount: amount,
     onAmountChange: onAmountChange,
     currentLocale: currentLocale,
@@ -55,6 +55,7 @@ export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocu
         onChangeText={handleChangeText}
         autoFocus={autoFocus}
         onFocus={handleFocus}
+        onBlur={handleBlur}
         onSelectionChange={handleSelectionChange}
         testID={testID}
         textStyle={{
