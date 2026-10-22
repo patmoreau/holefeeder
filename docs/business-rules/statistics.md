@@ -160,6 +160,10 @@ periods.
   period at a time. Ordered oldest first.
 - A period with no transactions reports `0` income and `0` expenses — never missing.
 - Totals are added in whole cents. Data outside the N periods is ignored.
+- The area between the two lines is shaded **surplus** where income is above
+  expenses and **deficit** where expenses are above. A band ends exactly where the
+  lines cross (linear interpolation between periods) or meet; where they are equal
+  over a whole segment there is no band.
 
 ## Net This Period (mobile insight)
 

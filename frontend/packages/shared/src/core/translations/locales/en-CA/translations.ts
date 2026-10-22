@@ -249,6 +249,7 @@ export const en = {
       title: 'Income vs Expenses',
       income: 'Income',
       expenses: 'Expenses',
+      deficit: 'Deficit',
       net: 'Net',
       excludesTransfers: 'Excludes transfers between your accounts',
       summary: 'Income above expenses in {{count}} of {{total}} periods',

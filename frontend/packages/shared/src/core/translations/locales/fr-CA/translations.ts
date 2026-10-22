@@ -251,6 +251,7 @@ export const fr: TranslationStructure = {
       title: 'Revenus et dépenses',
       income: 'Revenus',
       expenses: 'Dépenses',
+      deficit: 'Déficit',
       net: 'Net',
       excludesTransfers: 'Exclut les virements entre vos comptes',
       summary: 'Revenus supérieurs aux dépenses dans {{count}} périodes sur {{total}}',

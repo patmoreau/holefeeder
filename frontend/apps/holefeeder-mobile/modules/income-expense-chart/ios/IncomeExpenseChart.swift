@@ -8,12 +8,26 @@ internal struct IncomeExpenseChartPoint: Record {
     @Field var expenses: Double = 0
 }
 
+internal struct IncomeExpenseChartBandPoint: Record {
+    @Field var x: Double = 0
+    @Field var low: Double = 0
+    @Field var high: Double = 0
+}
+
+internal struct IncomeExpenseChartBand: Record {
+    @Field var kind: String = "surplus"
+    @Field var points: [IncomeExpenseChartBandPoint] = []
+}
+
 internal final class IncomeExpenseChartProps: ExpoSwiftUI.ViewProps {
     @Field var points: [IncomeExpenseChartPoint] = []
     @Field var incomeLabel: String = ""
     @Field var expensesLabel: String = ""
     @Field var incomeColor: Color = .green
     @Field var expensesColor: Color = .orange
+    @Field var bands: [IncomeExpenseChartBand] = []
+    @Field var deficitLabel: String = ""
+    @Field var deficitColor: Color = .red
     @Field var currencyCode: String = "CAD"
     @Field var accessibilitySummary: String = ""
     @Field var identifier: String = ""
@@ -44,6 +58,28 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
 
     var body: some View {
         Chart {
+            ForEach(Array(props.bands.enumerated()), id: \.offset) { bandIndex, band in
+                ForEach(Array(band.points.enumerated()), id: \.offset) { _, point in
+                    if band.kind == "deficit" {
+                        AreaMark(
+                            x: .value("Period", point.x),
+                            yStart: .value("Low", point.low),
+                            yEnd: .value("High", point.high),
+                            series: .value("Band", bandIndex)
+                        )
+                        .foregroundStyle(by: .value("Series", props.deficitLabel))
+                    } else {
+                        AreaMark(
+                            x: .value("Period", point.x),
+                            yStart: .value("Low", point.low),
+                            yEnd: .value("High", point.high),
+                            series: .value("Band", bandIndex)
+                        )
+                        .foregroundStyle(props.incomeColor.opacity(0.15))
+                    }
+                }
+            }
+
             ForEach(Array(props.points.enumerated()), id: \.offset) { index, point in
                 LineMark(
                     x: .value("Period", Double(index)),
@@ -91,7 +127,11 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
             }
         }
         .chartYScale(domain: 0...yUpperBound)
-        .chartForegroundStyleScale([props.incomeLabel: props.incomeColor, props.expensesLabel: props.expensesColor])
+        .chartForegroundStyleScale([
+            props.incomeLabel: props.incomeColor,
+            props.expensesLabel: props.expensesColor,
+            props.deficitLabel: props.deficitColor.opacity(0.25),
+        ])
         .chartLegend(position: .top, alignment: .leading)
         .chartYAxis {
             AxisMarks(position: .leading) { value in

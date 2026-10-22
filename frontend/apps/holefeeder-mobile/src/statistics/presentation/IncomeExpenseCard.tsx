@@ -12,6 +12,7 @@ import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { PeriodLabel } from '@/summary/core/period-label';
 import { PeriodSeries } from '@/summary/core/period-series';
+import { SurplusBands } from '@/summary/core/surplus-bands';
 import { usePeriodSeries } from '@/summary/presentation/core/use-period-series';
 import { IncomeExpenseChartView } from './IncomeExpenseChartView';
 
@@ -30,6 +31,11 @@ export const IncomeExpenseCard = () => {
   const series = seriesResult.value;
   const labels = PeriodLabel.forSeries(series, settings, currentLocale);
   const totals = PeriodSeries.totals(series);
+  const points = series.map((period, index) => ({
+    label: labels[index],
+    income: Money.toCents(period.gains) / 100,
+    expenses: Money.toCents(period.expenses) / 100,
+  }));
   const currency = (amount: number) => LocalFormatter.currency(amount, currentLocale, currencyCode);
 
   const total = (label: string, amount: string, color?: string) => (
@@ -46,15 +52,14 @@ export const IncomeExpenseCard = () => {
       <AppListSectionTitle title={t(tk.insights.chart.title)} />
       <AppFieldSection>
         <IncomeExpenseChartView
-          points={series.map((period, index) => ({
-            label: labels[index],
-            income: Money.toCents(period.gains) / 100,
-            expenses: Money.toCents(period.expenses) / 100,
-          }))}
+          points={points}
           incomeLabel={t(tk.insights.chart.income)}
           expensesLabel={t(tk.insights.chart.expenses)}
           incomeColor={theme.colors.chartIncome}
           expensesColor={theme.colors.chartExpenses}
+          bands={SurplusBands.of(points)}
+          deficitLabel={t(tk.insights.chart.deficit)}
+          deficitColor={theme.colors.negative}
           currencyCode={currencyCode}
           accessibilitySummary={t(tk.insights.chart.summary, { count: PeriodSeries.surplusCount(series), total: series.length })}
           identifier="insights-income-expense-chart"
