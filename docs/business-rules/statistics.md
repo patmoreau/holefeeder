@@ -146,6 +146,21 @@ Same shape as tag spending, over income instead of spending.
 - Only transactions on **non-system, gain** categories contribute, so transfers in
   are excluded.
 
+## Income vs Expenses Series (mobile insight)
+
+The data behind the Insights chart: income and expenses for each of the last N budget
+periods.
+
+**Rules:**
+
+- Built from the mobile summary's per-period totals, so **non-system** categories
+  only (transfers excluded).
+- Periods follow the user's budget settings (anchor date, interval type, frequency);
+  the last one is the period containing the effective date, the others step back one
+  period at a time. Ordered oldest first.
+- A period with no transactions reports `0` income and `0` expenses — never missing.
+- Totals are added in whole cents. Data outside the N periods is ignored.
+
 ## Net This Period (mobile insight)
 
 The Insights header: what is left of the current period's income after its spending.
