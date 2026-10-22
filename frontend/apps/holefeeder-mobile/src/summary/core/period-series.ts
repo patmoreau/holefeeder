@@ -32,6 +32,24 @@ const of = (data: SummaryData[], settings: Settings, asOf: DateOnly, count: numb
     expenses: Money.fromCents(totalCents(data, CategoryTypes.expense, from, to)),
   }));
 
+export type SeriesTotals = {
+  gains: Money;
+  expenses: Money;
+  net: number;
+};
+
+const totals = (series: PeriodTotals[]): SeriesTotals => {
+  const gainsCents = series.reduce((sum, period) => sum + Money.toCents(period.gains), 0);
+  const expensesCents = series.reduce((sum, period) => sum + Money.toCents(period.expenses), 0);
+
+  return { gains: Money.fromCents(gainsCents), expenses: Money.fromCents(expensesCents), net: (gainsCents - expensesCents) / 100 };
+};
+
+const surplusCount = (series: PeriodTotals[]): number =>
+  series.filter((period) => Money.toCents(period.gains) > Money.toCents(period.expenses)).length;
+
 export const PeriodSeries = {
   of: of,
+  totals: totals,
+  surplusCount: surplusCount,
 };

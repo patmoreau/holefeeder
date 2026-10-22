@@ -106,4 +106,35 @@ describe('PeriodSeries', () => {
       ]);
     });
   });
+
+  const totalsOf = (gains: number, expenses: number) => ({
+    from: d('2026-10-01'),
+    to: d('2026-10-31'),
+    gains: Money.valid(gains),
+    expenses: Money.valid(expenses),
+  });
+
+  describe('totals', () => {
+    it('adds income and expenses over the whole range and nets them', () => {
+      expect(PeriodSeries.totals([totalsOf(4200, 4780), totalsOf(4400, 3260.1)])).toEqual({
+        gains: Money.valid(8600),
+        expenses: Money.valid(8040.1),
+        net: 559.9,
+      });
+    });
+
+    it('reports a negative net when expenses are above income', () => {
+      expect(PeriodSeries.totals([totalsOf(100, 250)]).net).toBe(-150);
+    });
+
+    it('is all zero for an empty range', () => {
+      expect(PeriodSeries.totals([])).toEqual({ gains: Money.ZERO, expenses: Money.ZERO, net: 0 });
+    });
+  });
+
+  describe('surplusCount', () => {
+    it('counts the periods where income is above expenses, not those that break even', () => {
+      expect(PeriodSeries.surplusCount([totalsOf(4200, 3650), totalsOf(4200, 4520), totalsOf(1000, 1000), totalsOf(4400, 3260)])).toBe(2);
+    });
+  });
 });
