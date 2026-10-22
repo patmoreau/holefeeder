@@ -179,7 +179,7 @@ form is dragged (`scrollDismissesKeyboard`), the platform convention. Do not add
 
 ## Provider Nesting (root `_layout.tsx`)
 
-`LanguageProvider` → `ThemeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
+`LanguageProvider` → `ThemeProvider` → `CombinedInsightProvider` → `InsightsRangeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
 (the auth layer becomes `E2eAuthenticationProvider` in E2E builds — see Config / Environments)  
 Route protection uses `<Stack.Protected guard={...} redirectTo={entry}>` inside `HolefeederContent` — no manual redirects.
 Since SDK 58 a guarded screen renders as a redirect rather than disappearing, so every guard

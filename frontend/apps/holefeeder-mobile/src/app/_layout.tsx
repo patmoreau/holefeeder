@@ -19,6 +19,7 @@ import { PowerSyncAuthProvider } from '@/shared/persistence/presentation/PowerSy
 import { RepositoryProvider } from '@/shared/repositories/presentation/RepositoryContext';
 import { ThemeProvider } from '@/shared/theme/presentation/ThemeProvider';
 import { CombinedInsightProvider } from '@/statistics/presentation/CombinedInsightProvider';
+import { InsightsRangeProvider } from '@/statistics/presentation/InsightsRangeProvider';
 import { RegistrationProvider } from '@/user-registration/presentation/RegistrationProvider';
 
 Id.setGenerator(Crypto.randomUUID);
@@ -87,15 +88,17 @@ const RootLayout = () => {
       <LanguageProvider storage={appStorage}>
         <ThemeProvider storage={appStorage}>
           <CombinedInsightProvider storage={appStorage}>
-            <AuthProvider config={config.value.authConfig}>
-              <PowerSyncAuthProvider database={database} config={config.value}>
-                <RepositoryProvider database={database}>
-                  <RegistrationProvider apiConfig={config.value.apiConfig}>
-                    <HolefeederContent />
-                  </RegistrationProvider>
-                </RepositoryProvider>
-              </PowerSyncAuthProvider>
-            </AuthProvider>
+            <InsightsRangeProvider storage={appStorage}>
+              <AuthProvider config={config.value.authConfig}>
+                <PowerSyncAuthProvider database={database} config={config.value}>
+                  <RepositoryProvider database={database}>
+                    <RegistrationProvider apiConfig={config.value.apiConfig}>
+                      <HolefeederContent />
+                    </RegistrationProvider>
+                  </RepositoryProvider>
+                </PowerSyncAuthProvider>
+              </AuthProvider>
+            </InsightsRangeProvider>
           </CombinedInsightProvider>
         </ThemeProvider>
       </LanguageProvider>
