@@ -6,31 +6,38 @@ import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppListSectionTitle } from '@/shared/presentation/components/native/AppListSectionTitle';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
+import { AppSegmentedMenu } from '@/shared/presentation/components/native/AppSegmentedMenu';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { NetBalance, NetBalanceKinds, NetBalanceResult } from '@/summary/core/net-balance';
 import { PeriodLabel } from '@/summary/core/period-label';
+import { PeriodRange } from '@/summary/core/period-range';
 import { PeriodSeries } from '@/summary/core/period-series';
 import { SurplusBands } from '@/summary/core/surplus-bands';
 import { usePeriodSeries } from '@/summary/presentation/core/use-period-series';
+import { useInsightsRange } from './core/use-insights-range';
 import { IncomeExpenseChartView } from './IncomeExpenseChartView';
-
-const PERIOD_COUNT = 6;
 
 export const IncomeExpenseCard = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const settingsResult = useSettings();
-  const seriesResult = usePeriodSeries(PERIOD_COUNT);
+  const { periodCount, options, setPeriodCount } = useInsightsRange();
+  const seriesResult = usePeriodSeries(periodCount);
 
   if (!seriesResult.isSuccess) return null;
 
   const settings = settingsResult.isSuccess ? settingsResult.value : DefaultSettings;
+  const rangeOptions = options.map((count) => ({ id: String(count), count }));
+  const rangeLabel = ({ count }: { count: number }) => {
+    const { unit, amount } = PeriodRange.span(count, settings);
+    return t(`insights.range.${unit}`, { count: amount });
+  };
   const series = seriesResult.value;
-  const labels = PeriodLabel.forSeries(series, settings, currentLocale);
+  const labels = PeriodLabel.forSeries(series, settings, currentLocale, 6);
   const totals = PeriodSeries.totals(series);
   const currency = (amount: number) => LocalFormatter.currency(amount, currentLocale, currencyCode);
 
@@ -73,6 +80,13 @@ export const IncomeExpenseCard = () => {
     <>
       <AppListSectionTitle title={t(tk.insights.chart.title)} />
       <AppFieldSection>
+        <AppSegmentedMenu
+          options={rangeOptions}
+          selectedOption={rangeOptions.find((option) => option.count === periodCount) ?? rangeOptions[1]}
+          onSelectOption={(option) => setPeriodCount(option.count)}
+          onOptionLabel={rangeLabel}
+          testID="insights-range-picker"
+        />
         <IncomeExpenseChartView
           points={points}
           incomeLabel={t(tk.insights.chart.income)}

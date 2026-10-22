@@ -21,6 +21,8 @@ tags:
     id: 'insights-net-header'
 - assertVisible:
     id: 'insights-income-expense-chart'
+- assertVisible:
+    id: 'insights-range-picker'
 
 - tapOn:
     id: 'insights-spending-link'

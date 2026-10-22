@@ -159,6 +159,10 @@ periods.
   the last one is the period containing the effective date, the others step back one
   period at a time. Ordered oldest first.
 - A period with no transactions reports `0` income and `0` expenses — never missing.
+- N is the user's chosen range: **3, 6 or 12** periods, default 6, remembered across
+  restarts. Each option is labelled by the time it covers — count × frequency in the
+  budget's unit (days, weeks, months, years), expressed in years when it is a whole
+  number of them (12 months, 52 weeks).
 - Totals are added in whole cents. Data outside the N periods is ignored.
 - The area between the two lines is shaded **surplus** where income is above
   expenses and **deficit** where expenses are above. A band ends exactly where the
