@@ -36,10 +36,10 @@ describe('PeriodLabel', () => {
       expect(PeriodLabel.forSeries(series, quarterly, 'en-CA')).toEqual(['Jul 1', 'Oct 1']);
     });
 
-    it('adds the year where a series crosses into a new one', () => {
+    it('leaves the year out even when a series crosses into a new one', () => {
       const series = [period('2026-12-01', '2026-12-31'), period('2027-01-01', '2027-01-31'), period('2027-02-01', '2027-02-28')];
 
-      expect(PeriodLabel.forSeries(series, monthly, 'en-CA')).toEqual(['Dec 2026', 'Jan 2027', 'Feb']);
+      expect(PeriodLabel.forSeries(series, monthly, 'en-CA')).toEqual(['Dec', 'Jan', 'Feb']);
     });
   });
 
@@ -60,21 +60,8 @@ describe('PeriodLabel', () => {
       ['2026-10-01', '2026-10-31'],
     ].map(([from, to]) => period(from, to));
 
-    it('labels every other period counting back from the current one, with the year on the first label of each year', () => {
-      expect(PeriodLabel.forSeries(months, monthly, 'en-CA', 6)).toEqual([
-        '',
-        'Dec 2025',
-        '',
-        'Feb 2026',
-        '',
-        'Apr',
-        '',
-        'Jun',
-        '',
-        'Aug',
-        '',
-        'Oct',
-      ]);
+    it('labels every other period counting back from the current one', () => {
+      expect(PeriodLabel.forSeries(months, monthly, 'en-CA', 6)).toEqual(['', 'Dec', '', 'Feb', '', 'Apr', '', 'Jun', '', 'Aug', '', 'Oct']);
     });
 
     it('labels every period when they fit', () => {
