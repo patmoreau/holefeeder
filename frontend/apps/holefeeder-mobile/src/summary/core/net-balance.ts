@@ -17,9 +17,9 @@ export type NetBalanceResult =
 
 const toCents = (amount: number) => Math.round(amount * 100);
 
-const of = (summary: ComputedSummary): NetBalanceResult => {
-  const incomeCents = toCents(summary.totalIncome);
-  const spendingCents = toCents(summary.currentSpending);
+const between = (income: number, spending: number): NetBalanceResult => {
+  const incomeCents = toCents(income);
+  const spendingCents = toCents(spending);
   const netCents = incomeCents - spendingCents;
 
   if (incomeCents === 0 && spendingCents === 0) return { kind: NetBalanceKinds.none };
@@ -29,6 +29,9 @@ const of = (summary: ComputedSummary): NetBalanceResult => {
   return { kind: NetBalanceKinds.saved, amount: netCents / 100, percentage: Math.round((netCents / incomeCents) * 100) };
 };
 
+const of = (summary: ComputedSummary): NetBalanceResult => between(summary.totalIncome, summary.currentSpending);
+
 export const NetBalance = {
   of: of,
+  between: between,
 };

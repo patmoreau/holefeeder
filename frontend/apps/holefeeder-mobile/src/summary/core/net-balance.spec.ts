@@ -33,4 +33,16 @@ describe('NetBalance', () => {
       expect(NetBalance.of(summaryOf(1000, 999.99))).toEqual({ kind: 'saved', amount: 0.01, percentage: 0 });
     });
   });
+
+  describe('between', () => {
+    it('compares any income with any spending', () => {
+      expect(NetBalance.between(4200, 4780)).toEqual({ kind: 'overspent', amount: 580 });
+      expect(NetBalance.between(4400, 3260)).toEqual({ kind: 'saved', amount: 1140, percentage: 26 });
+    });
+
+    it('breaks even or reports nothing like of does', () => {
+      expect(NetBalance.between(1000, 1000)).toEqual({ kind: 'brokeEven' });
+      expect(NetBalance.between(0, 0)).toEqual({ kind: 'none' });
+    });
+  });
 });
