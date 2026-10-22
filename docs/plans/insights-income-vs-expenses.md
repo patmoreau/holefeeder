@@ -7,6 +7,9 @@ Design: Penpot file "Holefeeder Mobile", boards PROPOSAL 18B2 (Insights), 18D
 (Spending), 18E (Income), light row y=10400 and dark row y=23300; prototype flows
 "Insights proposal 18" and "Insights proposal 18 — Dark".
 
+**Status (2026-10-21):** steps 1–9 shipped to the phone (deploys 2026.10.21 (1)–(9));
+step 10 clean-up done in code, Penpot refresh tracked separately.
+
 Each step below is one deliverable: it ends with tests green, the Maestro tags run, a
 deploy to the phone (`/frontend:deploy-mobile`) and a review on the device before the
 next step starts. Structural commits come first inside a step when needed.
@@ -30,6 +33,18 @@ next step starts. Structural commits come first inside a step when needed.
   e.g. monthly ×1, 12 periods → "1 year"; weekly ×2, 6 periods → "12 weeks";
   localized en-CA / fr-CA.
 - The Income page has no Combined toggle (too few income entries to be useful).
+
+## Changes made while building
+
+- Spending and Income pages have no navigation-bar title; their headers say
+  "Current Spending" / "Current Income", like account detail.
+- Only "Income this period" and "Spending this period" link rows on Insights; the
+  tag-count row was dropped.
+- Chart selection is touch-and-hold then drag (`chartOverlay`), because
+  `chartXSelection` needs iOS 17 and the app targets 16.4.
+- Range options are 3 / 6 / 12 periods, default 6, remembered across restarts.
+- Axis labels: at most six, counted back from the current period, never with the
+  year; the tooltip carries the full period name.
 
 ## Steps
 
