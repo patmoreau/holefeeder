@@ -19,8 +19,8 @@ export const SettingsContent = () => {
         <DisplaySection />
         {__DEV__ && <TestSection show={show} setShow={setShow} />}
         <SyncSection />
-        <LogoutSection />
         <AboutSection />
+        <LogoutSection />
       </AppForm>
       <TestComponentsScreen show={show} setShow={setShow} />
     </>
