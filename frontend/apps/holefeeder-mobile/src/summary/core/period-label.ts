@@ -9,12 +9,21 @@ const format = (date: DateOnly, locale: string, options: Intl.DateTimeFormatOpti
 
 const isOneMonth = (settings: Settings) => settings.intervalType === DateIntervalTypes.monthly && settings.frequency === 1;
 
-const forSeries = (series: PeriodTotals[], settings: Settings, locale: string): string[] => {
+const forSeries = (series: PeriodTotals[], settings: Settings, locale: string, maxLabels: number = series.length): string[] => {
   const byMonth = isOneMonth(settings);
-  const crossesYear = new Set(series.map((period) => yearOf(period.from))).size > 1;
+  const step = Math.max(1, Math.ceil(series.length / Math.max(1, maxLabels)));
+  const lastIndex = series.length - 1;
+  const visible = series.map((_, index) => (lastIndex - index) % step === 0);
+  const visibleYears = series.filter((_, index) => visible[index]).map((period) => yearOf(period.from));
+  const crossesYear = new Set(visibleYears).size > 1;
 
+  let previousYear: string | undefined;
   return series.map((period, index) => {
-    const showYear = crossesYear && (index === 0 || yearOf(period.from) !== yearOf(series[index - 1].from));
+    if (!visible[index]) return '';
+
+    const year = yearOf(period.from);
+    const showYear = crossesYear && year !== previousYear;
+    previousYear = year;
     const options: Intl.DateTimeFormatOptions = byMonth ? { month: 'short' } : { month: 'short', day: 'numeric' };
 
     return format(period.from, locale, showYear ? { ...options, year: 'numeric' } : options);

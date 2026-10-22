@@ -43,6 +43,45 @@ describe('PeriodLabel', () => {
     });
   });
 
+  describe('forSeries with a label limit', () => {
+    const monthly = aSettings({ intervalType: DateIntervalTypes.monthly, frequency: 1 });
+    const months = [
+      ['2025-11-01', '2025-11-30'],
+      ['2025-12-01', '2025-12-31'],
+      ['2026-01-01', '2026-01-31'],
+      ['2026-02-01', '2026-02-28'],
+      ['2026-03-01', '2026-03-31'],
+      ['2026-04-01', '2026-04-30'],
+      ['2026-05-01', '2026-05-31'],
+      ['2026-06-01', '2026-06-30'],
+      ['2026-07-01', '2026-07-31'],
+      ['2026-08-01', '2026-08-31'],
+      ['2026-09-01', '2026-09-30'],
+      ['2026-10-01', '2026-10-31'],
+    ].map(([from, to]) => period(from, to));
+
+    it('labels every other period counting back from the current one, with the year on the first label of each year', () => {
+      expect(PeriodLabel.forSeries(months, monthly, 'en-CA', 6)).toEqual([
+        '',
+        'Dec 2025',
+        '',
+        'Feb 2026',
+        '',
+        'Apr',
+        '',
+        'Jun',
+        '',
+        'Aug',
+        '',
+        'Oct',
+      ]);
+    });
+
+    it('labels every period when they fit', () => {
+      expect(PeriodLabel.forSeries(months.slice(6), monthly, 'en-CA', 6)).toEqual(['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']);
+    });
+  });
+
   describe('forTooltip', () => {
     it('names a one-month period by its month and year', () => {
       const monthly = aSettings({ intervalType: DateIntervalTypes.monthly, frequency: 1 });
