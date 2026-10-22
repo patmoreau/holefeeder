@@ -42,4 +42,19 @@ describe('PeriodLabel', () => {
       expect(PeriodLabel.forSeries(series, monthly, 'en-CA')).toEqual(['Dec 2026', 'Jan 2027', 'Feb']);
     });
   });
+
+  describe('forTooltip', () => {
+    it('names a one-month period by its month and year', () => {
+      const monthly = aSettings({ intervalType: DateIntervalTypes.monthly, frequency: 1 });
+
+      expect(PeriodLabel.forTooltip(period('2026-09-01', '2026-09-30'), monthly, 'en-CA')).toBe('September 2026');
+      expect(PeriodLabel.forTooltip(period('2026-09-01', '2026-09-30'), monthly, 'fr-CA')).toBe('septembre 2026');
+    });
+
+    it('names other periods by their date range', () => {
+      const biweekly = aSettings({ intervalType: DateIntervalTypes.weekly, frequency: 2 });
+
+      expect(PeriodLabel.forTooltip(period('2026-09-25', '2026-10-08'), biweekly, 'en-CA')).toBe('Sep 25 – Oct 8');
+    });
+  });
 });
