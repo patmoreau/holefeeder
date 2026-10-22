@@ -257,6 +257,16 @@ export const fr: TranslationStructure = {
       tooltipSaved: 'Épargné {{amount}}',
       summary: 'Revenus supérieurs aux dépenses dans {{count}} périodes sur {{total}}',
     },
+    range: {
+      day_one: '{{count}} jour',
+      day_other: '{{count}} jours',
+      week_one: '{{count}} semaine',
+      week_other: '{{count}} semaines',
+      month_one: '{{count}} mois',
+      month_other: '{{count}} mois',
+      year_one: '{{count}} an',
+      year_other: '{{count}} ans',
+    },
     net: {
       title: 'Net de la période',
       smallTitle: 'Net :',

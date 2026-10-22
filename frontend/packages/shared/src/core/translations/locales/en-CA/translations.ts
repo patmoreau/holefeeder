@@ -255,6 +255,16 @@ export const en = {
       tooltipSaved: 'Saved {{amount}}',
       summary: 'Income above expenses in {{count}} of {{total}} periods',
     },
+    range: {
+      day_one: '{{count}} day',
+      day_other: '{{count}} days',
+      week_one: '{{count}} week',
+      week_other: '{{count}} weeks',
+      month_one: '{{count}} month',
+      month_other: '{{count}} months',
+      year_one: '{{count}} year',
+      year_other: '{{count}} years',
+    },
     net: {
       title: 'Net this period',
       smallTitle: 'Net:',
