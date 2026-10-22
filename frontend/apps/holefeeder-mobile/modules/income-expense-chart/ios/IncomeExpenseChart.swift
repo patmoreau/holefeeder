@@ -46,7 +46,7 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
         Chart {
             ForEach(Array(props.points.enumerated()), id: \.offset) { index, point in
                 LineMark(
-                    x: .value("Period", point.label),
+                    x: .value("Period", Double(index)),
                     y: .value("Amount", point.income),
                     series: .value("Series", props.incomeLabel)
                 )
@@ -56,7 +56,7 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
                 .symbolSize(index == lastIndex ? 48 : 16)
 
                 LineMark(
-                    x: .value("Period", point.label),
+                    x: .value("Period", Double(index)),
                     y: .value("Amount", point.expenses),
                     series: .value("Series", props.expensesLabel)
                 )
@@ -67,16 +67,27 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
             }
 
             if let last = props.points.last {
-                PointMark(x: .value("Period", last.label), y: .value("Amount", last.income))
+                PointMark(x: .value("Period", Double(lastIndex)), y: .value("Amount", last.income))
                     .opacity(0)
                     .annotation(position: .top, alignment: .trailing, spacing: 6) {
                         endLabel(currency(last.income), style: .primary)
                     }
-                PointMark(x: .value("Period", last.label), y: .value("Amount", last.expenses))
+                PointMark(x: .value("Period", Double(lastIndex)), y: .value("Amount", last.expenses))
                     .opacity(0)
                     .annotation(position: .top, alignment: .trailing, spacing: 6) {
                         endLabel(currency(last.expenses), style: .secondary)
                     }
+            }
+        }
+        .chartXScale(domain: -0.5...(Double(max(lastIndex, 0)) + 0.5))
+        .chartXAxis {
+            AxisMarks(preset: .aligned, values: props.points.indices.map(Double.init)) { value in
+                AxisGridLine()
+                AxisValueLabel(anchor: .top) {
+                    if let position = value.as(Double.self), props.points.indices.contains(Int(position)) {
+                        Text(props.points[Int(position)].label)
+                    }
+                }
             }
         }
         .chartYScale(domain: 0...yUpperBound)
