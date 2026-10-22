@@ -273,7 +273,6 @@ export const en = {
       brokeEven: 'Broke even',
     },
     income: {
-      title: 'Income',
       link: 'Income this period',
       currentTitle: 'Current Income',
       smallTitle: 'Income:',
@@ -289,7 +288,6 @@ export const en = {
       },
     },
     spending: {
-      title: 'Spending',
       link: 'Spending this period',
     },
     categoryBreakdown: {

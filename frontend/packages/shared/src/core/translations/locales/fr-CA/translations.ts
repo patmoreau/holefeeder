@@ -275,7 +275,6 @@ export const fr: TranslationStructure = {
       brokeEven: 'À l’équilibre',
     },
     income: {
-      title: 'Revenus',
       link: 'Revenus de la période',
       currentTitle: 'Revenus actuels',
       smallTitle: 'Revenus :',
@@ -291,7 +290,6 @@ export const fr: TranslationStructure = {
       },
     },
     spending: {
-      title: 'Dépenses',
       link: 'Dépenses de la période',
     },
     categoryBreakdown: {
