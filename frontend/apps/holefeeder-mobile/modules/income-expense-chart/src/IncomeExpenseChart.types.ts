@@ -4,6 +4,9 @@ export type IncomeExpenseChartPoint = {
   label: string;
   income: number;
   expenses: number;
+  tooltipTitle: string;
+  netText: string;
+  netTone: 'positive' | 'negative' | 'neutral';
 };
 
 export type IncomeExpenseChartBand = {
@@ -20,6 +23,8 @@ export type IncomeExpenseChartProps = {
   bands: IncomeExpenseChartBand[];
   deficitLabel: string;
   deficitColor: string;
+  positiveColor: string;
+  negativeColor: string;
   currencyCode: string;
   accessibilitySummary: string;
   identifier?: string;

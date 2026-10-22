@@ -6,6 +6,9 @@ internal struct IncomeExpenseChartPoint: Record {
     @Field var label: String = ""
     @Field var income: Double = 0
     @Field var expenses: Double = 0
+    @Field var tooltipTitle: String = ""
+    @Field var netText: String = ""
+    @Field var netTone: String = "neutral"
 }
 
 internal struct IncomeExpenseChartBandPoint: Record {
@@ -28,6 +31,8 @@ internal final class IncomeExpenseChartProps: ExpoSwiftUI.ViewProps {
     @Field var bands: [IncomeExpenseChartBand] = []
     @Field var deficitLabel: String = ""
     @Field var deficitColor: Color = .red
+    @Field var positiveColor: Color = .green
+    @Field var negativeColor: Color = .red
     @Field var currencyCode: String = "CAD"
     @Field var accessibilitySummary: String = ""
     @Field var identifier: String = ""
@@ -35,6 +40,9 @@ internal final class IncomeExpenseChartProps: ExpoSwiftUI.ViewProps {
 
 internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
     @ObservedObject var props: IncomeExpenseChartProps
+    @State private var selectedIndex: Int?
+
+    private let tooltipWidth: CGFloat = 150
 
     private var lastIndex: Int { props.points.count - 1 }
 
@@ -45,6 +53,50 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
 
     private func currency(_ value: Double) -> String {
         value.formatted(.currency(code: props.currencyCode).precision(.fractionLength(0)))
+    }
+
+    private func amount(_ value: Double) -> String {
+        value.formatted(.currency(code: props.currencyCode))
+    }
+
+    private func netColor(_ tone: String) -> Color {
+        switch tone {
+        case "positive": return props.positiveColor
+        case "negative": return props.negativeColor
+        default: return .primary
+        }
+    }
+
+    private func select(atPlotX x: CGFloat, proxy: ChartProxy) {
+        guard let position: Double = proxy.value(atX: x), !props.points.isEmpty else { return }
+        let index = min(max(Int(position.rounded()), 0), lastIndex)
+        if index != selectedIndex {
+            selectedIndex = index
+            UISelectionFeedbackGenerator().selectionChanged()
+        }
+    }
+
+    private func legendLine(_ color: Color, _ label: String, _ value: Double) -> some View {
+        HStack(spacing: 4) {
+            Circle().fill(color).frame(width: 6, height: 6)
+            Text(label).foregroundStyle(.secondary)
+            Spacer(minLength: 4)
+            Text(amount(value)).foregroundStyle(.primary)
+        }
+        .font(.caption2)
+    }
+
+    private func tooltip(for point: IncomeExpenseChartPoint) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(point.tooltipTitle).font(.caption.weight(.semibold))
+            legendLine(props.incomeColor, props.incomeLabel, point.income)
+            legendLine(props.expensesColor, props.expensesLabel, point.expenses)
+            Text(point.netText).font(.caption2.weight(.semibold)).foregroundStyle(netColor(point.netTone))
+        }
+        .padding(8)
+        .frame(width: tooltipWidth, alignment: .leading)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .shadow(color: .black.opacity(0.12), radius: 6, y: 2)
     }
 
     private func endLabel(_ text: String, style: HierarchicalShapeStyle) -> some View {
@@ -102,7 +154,20 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
                 .symbolSize(index == lastIndex ? 48 : 16)
             }
 
-            if let last = props.points.last {
+            if let index = selectedIndex, props.points.indices.contains(index) {
+                let point = props.points[index]
+                RuleMark(x: .value("Period", Double(index)))
+                    .foregroundStyle(Color.secondary.opacity(0.6))
+                    .lineStyle(StrokeStyle(lineWidth: 1))
+                PointMark(x: .value("Period", Double(index)), y: .value("Amount", point.income))
+                    .foregroundStyle(props.incomeColor)
+                    .symbolSize(90)
+                PointMark(x: .value("Period", Double(index)), y: .value("Amount", point.expenses))
+                    .foregroundStyle(props.expensesColor)
+                    .symbolSize(90)
+            }
+
+            if selectedIndex == nil, let last = props.points.last {
                 PointMark(x: .value("Period", Double(lastIndex)), y: .value("Amount", last.income))
                     .opacity(0)
                     .annotation(position: .top, alignment: .trailing, spacing: 6) {
@@ -139,6 +204,36 @@ internal struct IncomeExpenseChartSwiftUI: ExpoSwiftUI.View {
                 AxisValueLabel {
                     if let amount = value.as(Double.self) {
                         Text(currency(amount))
+                    }
+                }
+            }
+        }
+        .chartOverlay { proxy in
+            GeometryReader { geometry in
+                let plot = geometry[proxy.plotAreaFrame]
+                ZStack(alignment: .topLeading) {
+                    Rectangle()
+                        .fill(.clear)
+                        .contentShape(Rectangle())
+                        .gesture(
+                            LongPressGesture(minimumDuration: 0.2)
+                                .sequenced(before: DragGesture(minimumDistance: 0))
+                                .onChanged { value in
+                                    if case .second(true, let drag?) = value {
+                                        select(atPlotX: drag.location.x - plot.origin.x, proxy: proxy)
+                                    }
+                                }
+                                .onEnded { _ in selectedIndex = nil }
+                        )
+                        .accessibilityHidden(true)
+
+                    if let index = selectedIndex, props.points.indices.contains(index),
+                       let x = proxy.position(forX: Double(index)) {
+                        let halfWidth = tooltipWidth / 2
+                        let centre = min(max(plot.origin.x + x, halfWidth), geometry.size.width - halfWidth)
+                        tooltip(for: props.points[index])
+                            .position(x: centre, y: plot.origin.y + 44)
+                            .allowsHitTesting(false)
                     }
                 }
             }

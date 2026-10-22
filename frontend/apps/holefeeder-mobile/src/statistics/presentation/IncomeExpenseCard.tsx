@@ -10,6 +10,7 @@ import { AppText } from '@/shared/presentation/components/native/AppText';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useTheme } from '@/shared/theme/core/use-theme';
+import { NetBalance, NetBalanceKinds, NetBalanceResult } from '@/summary/core/net-balance';
 import { PeriodLabel } from '@/summary/core/period-label';
 import { PeriodSeries } from '@/summary/core/period-series';
 import { SurplusBands } from '@/summary/core/surplus-bands';
@@ -31,12 +32,33 @@ export const IncomeExpenseCard = () => {
   const series = seriesResult.value;
   const labels = PeriodLabel.forSeries(series, settings, currentLocale);
   const totals = PeriodSeries.totals(series);
-  const points = series.map((period, index) => ({
-    label: labels[index],
-    income: Money.toCents(period.gains) / 100,
-    expenses: Money.toCents(period.expenses) / 100,
-  }));
   const currency = (amount: number) => LocalFormatter.currency(amount, currentLocale, currencyCode);
+
+  const netLine = (balance: NetBalanceResult): { netText: string; netTone: 'positive' | 'negative' | 'neutral' } => {
+    switch (balance.kind) {
+      case NetBalanceKinds.saved:
+        return { netText: t(tk.insights.chart.tooltipSaved, { amount: currency(balance.amount) }), netTone: 'positive' };
+      case NetBalanceKinds.overspent:
+        return { netText: t(tk.insights.net.overspent, { amount: currency(balance.amount) }), netTone: 'negative' };
+      case NetBalanceKinds.brokeEven:
+        return { netText: t(tk.insights.net.brokeEven), netTone: 'neutral' };
+      case NetBalanceKinds.none:
+        return { netText: '', netTone: 'neutral' };
+    }
+  };
+
+  const points = series.map((period, index) => {
+    const income = Money.toCents(period.gains) / 100;
+    const expenses = Money.toCents(period.expenses) / 100;
+
+    return {
+      label: labels[index],
+      income,
+      expenses,
+      tooltipTitle: PeriodLabel.forTooltip(period, settings, currentLocale),
+      ...netLine(NetBalance.between(income, expenses)),
+    };
+  });
 
   const total = (label: string, amount: string, color?: string) => (
     <AppColumn alignment="start" spacing={2}>
@@ -60,6 +82,8 @@ export const IncomeExpenseCard = () => {
           bands={SurplusBands.of(points)}
           deficitLabel={t(tk.insights.chart.deficit)}
           deficitColor={theme.colors.negative}
+          positiveColor={theme.colors.positive}
+          negativeColor={theme.colors.negative}
           currencyCode={currencyCode}
           accessibilitySummary={t(tk.insights.chart.summary, { count: PeriodSeries.surplusCount(series), total: series.length })}
           identifier="insights-income-expense-chart"

@@ -254,6 +254,7 @@ export const fr: TranslationStructure = {
       deficit: 'Déficit',
       net: 'Net',
       excludesTransfers: 'Exclut les virements entre vos comptes',
+      tooltipSaved: 'Épargné {{amount}}',
       summary: 'Revenus supérieurs aux dépenses dans {{count}} périodes sur {{total}}',
     },
     net: {

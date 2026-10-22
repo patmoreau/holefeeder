@@ -252,6 +252,7 @@ export const en = {
       deficit: 'Deficit',
       net: 'Net',
       excludesTransfers: 'Excludes transfers between your accounts',
+      tooltipSaved: 'Saved {{amount}}',
       summary: 'Income above expenses in {{count}} of {{total}} periods',
     },
     net: {
