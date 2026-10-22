@@ -27,6 +27,8 @@ const colors = {
   negative: '#FF6F42',
   negativeBackground: '#3A1E1E',
   amountNeutral: '#F2F2F7',
+  chartIncome: '#26A69A',
+  chartExpenses: '#D96F26',
 };
 
 export const darkTheme: Theme = {

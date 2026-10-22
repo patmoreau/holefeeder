@@ -19,6 +19,8 @@ tags:
     timeout: 20000
 - assertVisible:
     id: 'insights-net-header'
+- assertVisible:
+    id: 'insights-income-expense-chart'
 
 - tapOn:
     id: 'insights-spending-link'

@@ -245,6 +245,14 @@ export const en = {
     title: 'Insights',
     period: '{{period}}',
     combined: 'Combined',
+    chart: {
+      title: 'Income vs Expenses',
+      income: 'Income',
+      expenses: 'Expenses',
+      net: 'Net',
+      excludesTransfers: 'Excludes transfers between your accounts',
+      summary: 'Income above expenses in {{count}} of {{total}} periods',
+    },
     net: {
       title: 'Net this period',
       smallTitle: 'Net:',

@@ -46,6 +46,8 @@ export interface Theme {
     negative: string;
     negativeBackground: string;
     amountNeutral: string;
+    chartIncome: string;
+    chartExpenses: string;
   };
   typography: {
     display: TextStyle;

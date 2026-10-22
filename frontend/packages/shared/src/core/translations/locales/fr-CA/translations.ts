@@ -247,6 +247,14 @@ export const fr: TranslationStructure = {
     title: 'Aperçus',
     period: '{{period}}',
     combined: 'Combiné',
+    chart: {
+      title: 'Revenus et dépenses',
+      income: 'Revenus',
+      expenses: 'Dépenses',
+      net: 'Net',
+      excludesTransfers: 'Exclut les virements entre vos comptes',
+      summary: 'Revenus supérieurs aux dépenses dans {{count}} périodes sur {{total}}',
+    },
     net: {
       title: 'Net de la période',
       smallTitle: 'Net :',

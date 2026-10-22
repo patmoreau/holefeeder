@@ -13,6 +13,7 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
+import { IncomeExpenseCard } from './IncomeExpenseCard';
 import { NetPeriodHeader } from './NetPeriodHeader';
 import { PeriodAmountSmallCard } from './PeriodAmountSmallCard';
 
@@ -37,6 +38,7 @@ export default function InsightsScreen() {
         <AppNative style={{ flex: 1 }}>
           <AppList inset modifiers={header.listModifiers}>
             <AppColumn style={{ paddingTop: header.spacerHeight }} />
+            <IncomeExpenseCard />
             <AppFieldLink
               label={t(tk.insights.income.link)}
               value={LocalFormatter.currency(summary.totalIncome, currentLocale, currencyCode)}

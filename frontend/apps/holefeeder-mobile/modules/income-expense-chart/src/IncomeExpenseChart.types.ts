@@ -14,6 +14,6 @@ export type IncomeExpenseChartProps = {
   expensesColor: string;
   currencyCode: string;
   accessibilitySummary: string;
+  identifier?: string;
   style?: StyleProp<ViewStyle>;
-  testID?: string;
 };

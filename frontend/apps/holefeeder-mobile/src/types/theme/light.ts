@@ -67,6 +67,8 @@ const colors = {
   negative: '#D32F2F',
   negativeBackground: '#FFF2F2',
   amountNeutral: '#1C1C1E',
+  chartIncome: '#2E7D32',
+  chartExpenses: '#FF8C42',
 } as const;
 
 export const lightTheme: Theme = {
