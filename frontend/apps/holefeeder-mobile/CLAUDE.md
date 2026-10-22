@@ -174,8 +174,13 @@ instead of `AppForm`: the amount sits pinned at the top with a caption (`AmountH
 `tone`, and the fields scroll beneath it in an `AppFieldGroup`. An optional `header` renders
 above the amount (e.g. the purchase type selector). The input logic — locale formatting, digits
 shifting in as cents, selecting the whole amount on focus — lives in `useAmountInput`.
+The amount itself is a React Native `TextInput` hosted through `AppReact`, not an
+`@expo/ui` text field: on iOS 27 SwiftUI stops reporting focus for every field after the
+first form closes, so select-all on focus and `autoFocus` only worked once per launch.
 On iOS the number pad has no return key: `AppFieldGroup` puts the keyboard away when the
 form is dragged (`scrollDismissesKeyboard`), the platform convention. Do not add a Done bar.
+That modifier only reaches SwiftUI fields, so `AppFieldGroup` also calls
+`Keyboard.dismiss()` when a drag starts, for React Native inputs such as the amount.
 
 ## Provider Nesting (root `_layout.tsx`)
 

@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
+import type { TextInputInstance } from 'react-native';
 import { useAmountInput } from '@/shared/presentation/components/fields/use-amount-input';
-import type { AppTextInputRef } from '@/shared/presentation/components/native/AppTextInput';
 
 const NO_BREAK_SPACE = '\u00a0';
 
@@ -17,7 +17,7 @@ describe('useAmountInput', () => {
 
   const attachInput = (result: { current: ReturnType<typeof useAmountInput> }) => {
     const setSelection = jest.fn(async (_start: number, _end: number) => {});
-    result.current.inputRef.current = { setSelection: setSelection } as unknown as AppTextInputRef;
+    result.current.inputRef.current = { setSelection: setSelection } as unknown as TextInputInstance;
     return {
       lastSelection: () => {
         const call = setSelection.mock.lastCall;
@@ -31,7 +31,7 @@ describe('useAmountInput', () => {
     it('formats the amount with grouping and two decimals for en-CA', async () => {
       const { result } = await createHook({ amount: 1000 });
 
-      expect(result.current.textAmount.value).toBe('1,000.00');
+      expect(result.current.text).toBe('1,000.00');
     });
 
     it('formats the amount with the locale separators for fr-CA', async () => {
@@ -40,13 +40,13 @@ describe('useAmountInput', () => {
         currentLocale: 'fr-CA',
       });
 
-      expect(result.current.textAmount.value).toBe(`1${NO_BREAK_SPACE}000,00`);
+      expect(result.current.text).toBe(`1${NO_BREAK_SPACE}000,00`);
     });
 
     it('shows zero as 0.00', async () => {
       const { result } = await createHook({ amount: 0 });
 
-      expect(result.current.textAmount.value).toBe('0.00');
+      expect(result.current.text).toBe('0.00');
     });
   });
 
@@ -57,7 +57,7 @@ describe('useAmountInput', () => {
 
       await act(async () => result.current.handleChangeText('12345'));
 
-      expect(result.current.textAmount.value).toBe('123.45');
+      expect(result.current.text).toBe('123.45');
       expect(onAmountChange).toHaveBeenCalledWith(123.45);
     });
 
@@ -67,7 +67,7 @@ describe('useAmountInput', () => {
 
       await act(async () => result.current.handleChangeText('1a2'));
 
-      expect(result.current.textAmount.value).toBe('0.12');
+      expect(result.current.text).toBe('0.12');
       expect(onAmountChange).toHaveBeenCalledWith(0.12);
     });
 
@@ -80,7 +80,7 @@ describe('useAmountInput', () => {
 
       await act(async () => result.current.handleChangeText(''));
 
-      expect(result.current.textAmount.value).toBe('0.00');
+      expect(result.current.text).toBe('0.00');
       expect(onAmountChange).toHaveBeenCalledWith(0);
     });
 
@@ -177,17 +177,6 @@ describe('useAmountInput', () => {
       expect(input.lastSelection()).toEqual({ start: 4, end: 4 });
     });
 
-    it('does not reselect when the caret moves because a digit was just typed', async () => {
-      const { result } = await createHook({ amount: 1000 });
-      const input = attachInput(result);
-      await act(async () => result.current.handleFocus());
-      result.current.textAmount.value = '1,000.005';
-
-      await tapPlacesCaret(result, 9);
-
-      expect(input.selectionCount()).toBe(1);
-    });
-
     it('lets the caret move once the focus has settled', async () => {
       const { result } = await createHook({ amount: 1000 });
       const input = attachInput(result);
@@ -197,18 +186,6 @@ describe('useAmountInput', () => {
       await tapPlacesCaret(result, 3);
 
       expect(input.selectionCount()).toBe(1);
-    });
-  });
-
-  describe('blur', () => {
-    it('collapses the selection to the start so the next focus selects the whole amount anew', async () => {
-      const { result } = await createHook({ amount: 1000 });
-      const input = attachInput(result);
-      await act(async () => result.current.handleFocus());
-
-      await act(async () => result.current.handleBlur());
-
-      expect(input.lastSelection()).toEqual({ start: 0, end: 0 });
     });
   });
 });

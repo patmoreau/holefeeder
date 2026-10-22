@@ -1,11 +1,11 @@
 import { LocalFormatter } from '@holefeeder/shared/core';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { TextInput } from 'react-native';
 import { useAmountInput } from '@/shared/presentation/components/fields/use-amount-input';
-import { AppModifiers } from '@/shared/presentation/components/native/AppModifiers';
+import { AppReact } from '@/shared/presentation/components/native/AppReact';
 import { AppRow } from '@/shared/presentation/components/native/AppRow';
 import { AppSpacer } from '@/shared/presentation/components/native/AppSpacer';
 import { AppText } from '@/shared/presentation/components/native/AppText';
-import { AppTextInput } from '@/shared/presentation/components/native/AppTextInput';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useTheme } from '@/shared/theme/core/use-theme';
 import { fontWeight } from '@/types/theme';
@@ -26,12 +26,16 @@ export type AmountFieldProps = {
 export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocus, testID = 'amount-field' }: AmountFieldProps) => {
   const { theme } = useTheme();
   const { currentLocale, currencyCode } = useLocaleFormatter();
-  const { textAmount, inputRef, handleChangeText, handleFocus, handleBlur, handleSelectionChange } = useAmountInput({
+  const { text, inputRef, handleChangeText, handleFocus, handleSelectionChange } = useAmountInput({
     amount: amount,
     onAmountChange: onAmountChange,
     currentLocale: currentLocale,
     currencyCode: currencyCode,
   });
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus, inputRef]);
 
   const amountColor = useMemo(() => {
     return tone === 'negative' ? theme.colors.negative : tone === 'positive' ? theme.colors.positive : theme.colors.text;
@@ -48,24 +52,24 @@ export const AmountField = ({ amount, onAmountChange, tone = 'neutral', autoFocu
     <AppRow spacing={4} alignment={'center'}>
       <AppSpacer />
       {currency.position === 'before' && symbol}
-      <AppTextInput
-        ref={inputRef}
-        value={textAmount}
-        keyboardType="decimal-pad"
-        onChangeText={handleChangeText}
-        autoFocus={autoFocus}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onSelectionChange={handleSelectionChange}
-        testID={testID}
-        textStyle={{
-          textAlign: 'center',
-          fontSize: AMOUNT_FONT_SIZE,
-          fontWeight: fontWeight.semiBold,
-          color: amountColor,
-        }}
-        modifiers={[AppModifiers.fixedSize]}
-      />
+      <AppReact matchContents>
+        <TextInput
+          value={text}
+          keyboardType="decimal-pad"
+          onChangeText={handleChangeText}
+          ref={inputRef}
+          onFocus={handleFocus}
+          onSelectionChange={(event) => handleSelectionChange(event.nativeEvent.selection)}
+          autoCorrect={false}
+          testID={testID}
+          style={{
+            textAlign: 'center',
+            fontSize: AMOUNT_FONT_SIZE,
+            fontWeight: fontWeight.semiBold,
+            color: amountColor,
+          }}
+        />
+      </AppReact>
       {currency.position === 'after' && symbol}
       <AppSpacer />
     </AppRow>
