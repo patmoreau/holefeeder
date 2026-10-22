@@ -321,7 +321,7 @@ public partial class PowerSync : ICarterModule
             var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
             var cashflowId = op.Data.ContainsKey("cashflow_id") ? ExtractCashflowId(op.Data, "cashflow_id") : null;
             var cashflowDate = op.Data.ContainsKey("cashflow_date") ? ExtractNullableDate(op.Data, "cashflow_date") : null;
-            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
+            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : null;
 
             if (exists is not null)
             {
@@ -339,7 +339,7 @@ public partial class PowerSync : ICarterModule
                     return result.Error;
                 }
 
-                var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                var transaction = tags is not null ? result.Value.SetTags(tags) : result;
                 context.Update(transaction.Value);
             }
             else
@@ -355,7 +355,7 @@ public partial class PowerSync : ICarterModule
                     cashflowDate,
                     userContext.Id);
 
-                var transaction = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                var transaction = tags is not null ? result.Value.SetTags(tags) : result;
                 context.Transactions.Add(transaction);
             }
 
@@ -400,7 +400,7 @@ public partial class PowerSync : ICarterModule
             var accountId = op.Data.ContainsKey("account_id") ? ExtractAccountId(op.Data, "account_id") : null;
             var categoryId = op.Data.ContainsKey("category_id") ? ExtractCategoryId(op.Data, "category_id") : null;
             var inactive = op.Data.ContainsKey("inactive") ? ExtractInt(op.Data, "inactive") != 0 : (bool?)null;
-            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : [];
+            var tags = op.Data.ContainsKey("tags") ? ExtractTags(op.Data, "tags") : null;
 
             if (exists is not null)
             {
@@ -420,7 +420,7 @@ public partial class PowerSync : ICarterModule
                     return result.Error;
                 }
 
-                var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                var cashflow = tags is not null ? result.Value.SetTags(tags) : result;
                 context.Update(cashflow.Value);
             }
             else
@@ -438,7 +438,7 @@ public partial class PowerSync : ICarterModule
                     inactive ?? false,
                     userContext.Id);
 
-                var cashflow = tags.Length > 0 ? result.Value.SetTags(tags) : result;
+                var cashflow = tags is not null ? result.Value.SetTags(tags) : result;
                 context.Cashflows.Add(cashflow);
             }
 

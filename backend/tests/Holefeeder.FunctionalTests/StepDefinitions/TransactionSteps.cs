@@ -219,6 +219,6 @@ internal sealed class TransactionSteps(BudgetingDatabaseDriver budgetingDatabase
                 result.CashflowDate.Should().BeNull();
             else
                 result.CashflowDate.Should().Be(expected.CashflowDate);
-            result.Tags.Should().Contain(expected.Tags);
+            result.Tags.Should().BeEquivalentTo(expected.Tags);
         });
 }

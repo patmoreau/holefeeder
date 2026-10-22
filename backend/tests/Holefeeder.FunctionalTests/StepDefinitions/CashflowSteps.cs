@@ -159,6 +159,6 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
             result.Description.Should().Be(expected.Description);
             result.AccountId.Should().Be(expected.AccountId);
             result.CategoryId.Should().Be(expected.CategoryId);
-            result.Tags.Should().Contain(expected.Tags);
+            result.Tags.Should().BeEquivalentTo(expected.Tags);
         });
 }

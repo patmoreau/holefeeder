@@ -132,6 +132,17 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .PlayAsync();
 
     [Fact]
+    public Task WhenSyncingATransactionPatchThatClearsTags() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Transaction.Exists)
+            .And(ATransactionPatchRequestClearingTags)
+            .When(TheUser.SyncTheirData)
+            .Then(Transaction.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
     public Task WhenSyncingATransactionPut() =>
         ScenarioRunner.Create(ScenarioOutput)
             .Given(Account.Exists)
@@ -159,6 +170,17 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             .And(Category.Exists)
             .And(Cashflow.Exists)
             .And(AValidCashflowPatchRequest)
+            .When(TheUser.SyncTheirData)
+            .Then(Cashflow.ShouldBeSynced)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenSyncingACashflowPatchThatClearsTags() =>
+        ScenarioRunner.Create(ScenarioOutput)
+            .Given(Account.Exists)
+            .And(Category.Exists)
+            .And(Cashflow.Exists)
+            .And(ACashflowPatchRequestClearingTags)
             .When(TheUser.SyncTheirData)
             .Then(Cashflow.ShouldBeSynced)
             .PlayAsync();
@@ -394,6 +416,26 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
             return request;
         });
 
+    private static void ATransactionPatchRequestClearingTags(IStepRunner runner) =>
+        runner.Execute<Transaction, Request>(transaction =>
+        {
+            transaction.Should().BeValid();
+            transaction.Value.Tags.Should().NotBeEmpty();
+            var modified = transaction.Value.SetTags();
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("transactions")
+                .WithOperation("PATCH")
+                .WithId(transaction.Value.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"tags", string.Empty}
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
     private static void AValidTransactionPutRequest(IStepRunner runner) =>
         runner.Execute(() =>
         {
@@ -455,6 +497,26 @@ public class ScenarioSync(ApiApplicationDriver applicationDriver, ITestOutputHel
                 {
                     {"amount", (int) (modified.Value.Amount * 100m)}, // Amount is in cents
                     {"description", modified.Value.Description}
+                })
+                .Build();
+            runner.SetContextData(RequestContext.CurrentRequest, request);
+            return request;
+        });
+
+    private static void ACashflowPatchRequestClearingTags(IStepRunner runner) =>
+        runner.Execute<Cashflow, Request>(cashflow =>
+        {
+            cashflow.Should().BeValid();
+            cashflow.Value.Tags.Should().NotBeEmpty();
+            var modified = cashflow.Value.SetTags();
+            runner.SetContextData(PowerSyncContext.SyncData, modified.Value);
+            var request = GivenASyncRequest()
+                .WithType("cashflows")
+                .WithOperation("PATCH")
+                .WithId(cashflow.Value.Id)
+                .WithData(new Dictionary<string, object>
+                {
+                    {"tags", string.Empty}
                 })
                 .Build();
             runner.SetContextData(RequestContext.CurrentRequest, request);
