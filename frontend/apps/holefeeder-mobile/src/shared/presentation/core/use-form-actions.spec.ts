@@ -1,10 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
+import { endEditing } from '@/shared/presentation/core/end-editing';
 import * as navigation from '@/shared/presentation/core/navigation';
 import { FormContext, useFormActions } from '@/shared/presentation/core/use-form-actions';
 
 // Mock dependencies
 jest.mock('@/shared/presentation/core/navigation', () => ({
   goBack: jest.fn(),
+}));
+
+jest.mock('@/shared/presentation/core/end-editing', () => ({
+  endEditing: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -64,6 +69,24 @@ describe('useFormActions', () => {
         expect(mockSaveForm).toHaveBeenCalledTimes(1);
         expect(mockGoBack).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('should end editing before saving a dirty form', async () => {
+      mockSaveForm.mockResolvedValue(true);
+      const mockEndEditing = endEditing as jest.Mock;
+
+      const { result } = await renderHook(() =>
+        useFormActions({
+          saveForm: mockSaveForm,
+          isDirty: true,
+          errors: {},
+        })
+      );
+
+      await result.current.handleSave();
+
+      expect(mockEndEditing).toHaveBeenCalledTimes(1);
+      expect(mockEndEditing.mock.invocationCallOrder[0]).toBeLessThan(mockSaveForm.mock.invocationCallOrder[0]);
     });
 
     it('should show error alert when save fails with validation errors', async () => {

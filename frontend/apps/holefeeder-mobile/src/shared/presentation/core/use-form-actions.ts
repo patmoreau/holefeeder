@@ -1,6 +1,7 @@
 import { Logger } from '@holefeeder/shared/core';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { endEditing } from '@/shared/presentation/core/end-editing';
 import { goBack } from '@/shared/presentation/core/navigation';
 import { showAlert } from '@/shared/presentation/core/show-alert';
 
@@ -28,6 +29,7 @@ export const useFormActions = ({ saveForm, isDirty, errors }: FormContext): Form
   const handleSave = useCallback(async () => {
     logger.warn(`handleSave called. isDirty: ${isDirty}, errors: ${JSON.stringify(errors)}`);
     if (isDirty) {
+      await endEditing();
       const success = await saveForm();
       if (!success) {
         // Validation failed or save failed
