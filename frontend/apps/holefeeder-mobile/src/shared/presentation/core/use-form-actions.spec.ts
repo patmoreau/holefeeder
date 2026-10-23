@@ -89,6 +89,23 @@ describe('useFormActions', () => {
       expect(mockEndEditing.mock.invocationCallOrder[0]).toBeLessThan(mockSaveForm.mock.invocationCallOrder[0]);
     });
 
+    it('should end editing before going back from a form that is not dirty', async () => {
+      const mockEndEditing = endEditing as jest.Mock;
+
+      const { result } = await renderHook(() =>
+        useFormActions({
+          saveForm: mockSaveForm,
+          isDirty: false,
+          errors: {},
+        })
+      );
+
+      await result.current.handleSave();
+
+      expect(mockEndEditing).toHaveBeenCalledTimes(1);
+      expect(mockEndEditing.mock.invocationCallOrder[0]).toBeLessThan(mockGoBack.mock.invocationCallOrder[0]);
+    });
+
     it('should show error alert when save fails with validation errors', async () => {
       mockSaveForm.mockResolvedValue(false);
       const errors = { name: 'Name is required', email: 'Email is invalid' };
@@ -144,10 +161,45 @@ describe('useFormActions', () => {
         })
       );
 
-      result.current.handleCancel();
+      await result.current.handleCancel();
 
       expect(mockShowDiscardAlert).not.toHaveBeenCalled();
       expect(mockGoBack).toHaveBeenCalledTimes(1);
+    });
+
+    it('should end editing before going back when form is not dirty', async () => {
+      const mockEndEditing = endEditing as jest.Mock;
+
+      const { result } = await renderHook(() =>
+        useFormActions({
+          saveForm: mockSaveForm,
+          isDirty: false,
+          errors: {},
+        })
+      );
+
+      await result.current.handleCancel();
+
+      expect(mockEndEditing).toHaveBeenCalledTimes(1);
+      expect(mockEndEditing.mock.invocationCallOrder[0]).toBeLessThan(mockGoBack.mock.invocationCallOrder[0]);
+    });
+
+    it('should end editing before going back when user confirms discard', async () => {
+      const mockEndEditing = endEditing as jest.Mock;
+
+      const { result } = await renderHook(() =>
+        useFormActions({
+          saveForm: mockSaveForm,
+          isDirty: true,
+          errors: {},
+        })
+      );
+
+      await result.current.handleCancel();
+      await mockShowDiscardAlert.mock.calls[0][0].onConfirm();
+
+      expect(mockEndEditing).toHaveBeenCalledTimes(1);
+      expect(mockEndEditing.mock.invocationCallOrder[0]).toBeLessThan(mockGoBack.mock.invocationCallOrder[0]);
     });
 
     it('should show discard alert when form is dirty', async () => {
@@ -159,10 +211,10 @@ describe('useFormActions', () => {
         })
       );
 
-      result.current.handleCancel();
+      await result.current.handleCancel();
 
       expect(mockShowDiscardAlert).toHaveBeenCalledWith({
-        onConfirm: mockGoBack,
+        onConfirm: expect.any(Function),
       });
       expect(mockGoBack).not.toHaveBeenCalled();
     });
@@ -176,11 +228,11 @@ describe('useFormActions', () => {
         })
       );
 
-      result.current.handleCancel();
+      await result.current.handleCancel();
 
       // Simulate user confirming the discard alert
       const onConfirm = mockShowDiscardAlert.mock.calls[0][0].onConfirm;
-      onConfirm();
+      await onConfirm();
 
       expect(mockGoBack).toHaveBeenCalledTimes(1);
     });

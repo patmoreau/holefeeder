@@ -15,7 +15,12 @@ export type FormContext = {
 
 type FormActions = {
   handleSave: () => Promise<void>;
-  handleCancel: () => void;
+  handleCancel: () => Promise<void>;
+};
+
+const leaveForm = async () => {
+  await endEditing();
+  goBack();
 };
 
 /**
@@ -28,8 +33,8 @@ export const useFormActions = ({ saveForm, isDirty, errors }: FormContext): Form
 
   const handleSave = useCallback(async () => {
     logger.warn(`handleSave called. isDirty: ${isDirty}, errors: ${JSON.stringify(errors)}`);
+    await endEditing();
     if (isDirty) {
-      await endEditing();
       const success = await saveForm();
       if (!success) {
         // Validation failed or save failed
@@ -44,12 +49,12 @@ export const useFormActions = ({ saveForm, isDirty, errors }: FormContext): Form
     goBack();
   }, [errors, isDirty, saveForm, showFormErrorAlert]);
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useCallback(async () => {
     if (!isDirty) {
-      goBack();
+      await leaveForm();
       return;
     }
-    showDiscardAlert({ onConfirm: goBack });
+    showDiscardAlert({ onConfirm: leaveForm });
   }, [isDirty, showDiscardAlert]);
 
   return { handleSave, handleCancel };

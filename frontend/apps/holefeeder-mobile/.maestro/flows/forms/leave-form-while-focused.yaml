@@ -1,0 +1,68 @@
+appId: com.drifterapps.holefeeder
+name: Leaving a form while the tag filter has focus does not close the app
+tags:
+  - regression
+  - forms
+---
+# UIKit aborts the app when a form row is deleted while a field inside it holds
+# focus, and leaving a form deletes all of its rows. The tag filter shares its row
+# with the chips, so the narrowing below also has every keystroke re-render that row
+# while focused, down to no match at all and back. The simulator has not reproduced
+# the abort (the phone has); this flow guards the paths it took there.
+- runFlow: ../../subflows/launch-clean.yaml
+- runFlow: ../../subflows/login-injected.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000
+
+- openLink: holefeeder:///Purchase
+- extendedWaitUntil:
+    visible:
+      id: 'purchase-screen'
+    timeout: 20000
+- swipe:
+    start: '50%,60%'
+    end: '50%,35%'
+- tapOn:
+    id: 'tag-filter-input'
+- inputText: 's'
+- inputText: 't'
+- inputText: 'z'
+- inputText: 'q'
+- eraseText: 1
+- eraseText: 1
+- eraseText: 1
+- inputText: 'r'
+- eraseText: 2
+- assertVisible:
+    id: 'purchase-screen'
+
+# Leaving the form tears its rows down. Typing in the filter does not make the form
+# dirty, so save goes straight back, with the field still focused.
+- inputText: 'st'
+- tapOn:
+    id: 'purchase-save-button'
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 20000
+
+# The back button leaves the same way.
+- openLink: holefeeder:///Purchase
+- extendedWaitUntil:
+    visible:
+      id: 'purchase-screen'
+    timeout: 20000
+- swipe:
+    start: '50%,60%'
+    end: '50%,35%'
+- tapOn:
+    id: 'tag-filter-input'
+- inputText: 'st'
+- tapOn:
+    id: 'purchase-back-button'
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 20000
