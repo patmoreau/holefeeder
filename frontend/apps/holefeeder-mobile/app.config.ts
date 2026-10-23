@@ -190,9 +190,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         'expo-splash-screen',
         {
-          image: './assets/images/safe.png',
+          image: './assets/images/splash-tile.png',
+          imageWidth: 120,
           resizeMode: 'contain',
-          backgroundColor: '#ffffff',
+          backgroundColor: '#F2F2F7',
+          dark: {
+            image: './assets/images/splash-tile-dark.png',
+            backgroundColor: '#1C1C1E',
+          },
         },
       ],
     ],

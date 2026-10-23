@@ -9,6 +9,7 @@ import {
   listRowBackground,
   listRowInsets,
   listRowSeparator,
+  multilineTextAlignment,
   onAppear,
 } from '@expo/ui/swift-ui/modifiers';
 import type { ColorValue } from 'react-native';
@@ -61,4 +62,5 @@ export const AppModifiers = {
   listRowInsets: (params: Parameters<typeof listRowInsets>[0]) => listRowInsets(params),
   hideListRowSeparator: listRowSeparator('hidden'),
   ignoreTopSafeArea: ignoreSafeArea({ regions: 'container', edges: 'top' }),
+  centerText: multilineTextAlignment('center'),
 } as const;
