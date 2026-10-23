@@ -262,6 +262,40 @@ props must declare `testID?: string` and forward it on every return branch. Comp
 (e.g. `AppField`) put it on their outermost native view. Naming convention:
 `<screen>-<element>` in kebab-case, e.g. `welcome-signup-button`.
 
+## Platform Workarounds
+
+Each entry below works around a bug in iOS, SwiftUI or `@expo/ui`, not in the app. Last
+checked against the release notes of `@expo/ui` 58.0.22, `expo-router` 58.0.25 and
+`expo` 58.0.17: none of them is fixed upstream. On every Expo bump, read the release notes
+for these entries, and remove a workaround only after the bug stops reproducing on a device.
+
+- **SwiftUI focus stops working after the first form.** On iOS 27, `@FocusState` stops
+  reporting focus for every `@expo/ui` text field once the first form closes, so select-all
+  on focus and `autoFocus` only work once per launch. The amount is a React Native
+  `TextInput` hosted through `AppReact` instead (see Form Pattern). Any new field that needs
+  focus events has the same problem.
+- **Leaving a form with a field focused aborts the app.** When a SwiftUI `List` deletes its
+  rows while a text field inside them is first responder, UIKit fails the assertion
+  `_resignOrRebaseFirstResponderViewWithIndexPathMapping`. The crash is intermittent and has
+  only been seen on a device. `useFormActions` calls `endEditing()`
+  (`src/shared/presentation/core/end-editing.ts`, backed by `modules/expo-end-editing`)
+  before every exit: save, cancel and discard. A screen that leaves a form any other way
+  must call it too. Maestro flow: `flows/forms/leave-form-while-focused.yaml`.
+- **Styled buttons don't render in swipe actions.** SwiftUI's `.swipeActions` only renders
+  plain `Button`s reliably: with `buttonStyle`, `foregroundStyle` or `labelStyle` applied,
+  non-destructive actions show up blank. `AppSwipeActions.Actions` provides
+  `SwipeActionContext`, and inside it `AppButton` drops those modifiers.
+- **`transparentModal` breaks text field focus.** Inside a `transparentModal` route,
+  `@expo/ui` text fields change their selection but never report focus. A screen with text
+  inputs must use `card` or `modal`. `accounts/[id]` stays `transparentModal` because it has
+  no inputs and needs it for the shared card transition.
+- **`matchContents` hosts keep their first size.** A host measures its children once, when
+  it mounts, so changing the text size while the app runs leaves its content at the old
+  size. `AppNative` and `AppReact` key every `matchContents` host on `fontScale` to remount
+  it, and `AccountCardList` resets its measured card height when `fontScale` changes. A
+  remount loses transient native state inside the host. `@expo/ui` 58.0.22 fixes a stale
+  size after a host's child remounts, which is a different case.
+
 ## i18n
 
 All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files
