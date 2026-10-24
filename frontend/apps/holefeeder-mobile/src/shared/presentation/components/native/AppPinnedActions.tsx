@@ -19,11 +19,10 @@ export type PinnedAction = {
 export type AppPinnedActionsProps = {
   primary: PinnedAction;
   secondary?: PinnedAction;
-  secondaryStyle?: 'link' | 'button';
   disabled?: boolean;
 };
 
-export const AppPinnedActions = ({ primary, secondary, secondaryStyle = 'button', disabled }: AppPinnedActionsProps) => {
+export const AppPinnedActions = ({ primary, secondary, disabled }: AppPinnedActionsProps) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
@@ -33,13 +32,9 @@ export const AppPinnedActions = ({ primary, secondary, secondaryStyle = 'button'
     ? [IosModifiers.buttonStyle('glassProminent'), IosModifiers.controlSize('large'), IosModifiers.tint(theme.colors.primary)]
     : [];
   const labelModifiers: ExpoModifierConfig[] = isIos ? [IosModifiers.frame({ maxWidth: Infinity })] : [];
-  const secondaryModifiers: ExpoModifierConfig[] = !isIos
-    ? []
-    : secondaryStyle === 'button'
-      ? [IosModifiers.buttonStyle('glass'), IosModifiers.controlSize('large'), IosModifiers.foregroundStyle(theme.colors.text)]
-      : [IosModifiers.buttonStyle('plain'), IosModifiers.foregroundStyle(theme.colors.primary)];
-  const secondaryLabelModifiers: ExpoModifierConfig[] =
-    isIos && secondaryStyle === 'button' ? [IosModifiers.frame({ maxWidth: Infinity })] : [];
+  const secondaryModifiers: ExpoModifierConfig[] = isIos
+    ? [IosModifiers.buttonStyle('glass'), IosModifiers.controlSize('large'), IosModifiers.foregroundStyle(theme.colors.text)]
+    : [];
 
   return (
     <View
@@ -52,13 +47,13 @@ export const AppPinnedActions = ({ primary, secondary, secondaryStyle = 'button'
       }}
     >
       <AppNative matchContents={{ vertical: true }}>
-        <ExpoColumn spacing={secondaryStyle === 'button' ? spacing.md : spacing.xs}>
+        <ExpoColumn spacing={spacing.md}>
           <ExpoButton onPress={primary.onPress} disabled={disabled} modifiers={primaryModifiers} testID={primary.testID}>
             <ExpoText modifiers={labelModifiers}>{primary.label}</ExpoText>
           </ExpoButton>
           {secondary && (
             <ExpoButton onPress={secondary.onPress} disabled={disabled} modifiers={secondaryModifiers} testID={secondary.testID}>
-              <ExpoText modifiers={secondaryLabelModifiers}>{secondary.label}</ExpoText>
+              <ExpoText modifiers={labelModifiers}>{secondary.label}</ExpoText>
             </ExpoButton>
           )}
         </ExpoColumn>

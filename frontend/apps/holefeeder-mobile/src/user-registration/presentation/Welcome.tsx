@@ -45,7 +45,6 @@ const WelcomeScreen = () => {
         <AppPinnedActions
           primary={{ label: t(tk.auth.createAccountButton), onPress: () => login({ signUp: true }), testID: 'welcome-signup-button' }}
           secondary={{ label: t(tk.auth.signInButton), onPress: () => login(), testID: 'welcome-signin-button' }}
-          secondaryStyle="button"
         />
       )}
     </BrandBackground>
