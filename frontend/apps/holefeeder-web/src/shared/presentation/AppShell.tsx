@@ -91,7 +91,7 @@ export const AppShell = () => {
           </ListItemIcon>
           <ListItemText primary={translate(tk.tabs.legacy)} slotProps={{ primary: { fontSize: 15 } }} />
         </ListItemButton>
-        <Typography data-testid="nav-version" sx={{ px: 1.5, pt: 1, fontSize: 12, color: 'text.secondary' }}>
+        <Typography data-testid="nav-version" sx={{ pt: 1, fontSize: 12, color: 'text.secondary', textAlign: 'center' }}>
           {versionLabel}
         </Typography>
       </Box>
