@@ -117,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           load: true
-          context: ./backend
+          context: ${{ matrix.target == 'web' && '.' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
           build-args: BUILD_VERSION=${{ env.VERSION }}
           push: false
@@ -339,7 +339,7 @@ jobs:
       - name: Publish ${{ matrix.target }} container
         uses: docker/build-push-action@v7
         with:
-          context: ./backend
+          context: ${{ matrix.target == 'web' && '.' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
           target: final
           build-args: BUILD_VERSION=${{ env.VERSION }}

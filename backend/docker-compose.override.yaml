@@ -72,8 +72,8 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: ./src/Holefeeder.Web/Dockerfile
+      context: ..
+      dockerfile: ./backend/src/Holefeeder.Web/Dockerfile
       tags:
         - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}'
     labels:

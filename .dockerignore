@@ -1,0 +1,37 @@
+# Build context for the web image (backend/src/Holefeeder.Web/Dockerfile),
+# which builds from the repository root to reach both backend/ and frontend/.
+# Everything is excluded, then only what that Dockerfile copies is let back in.
+**
+
+!backend/*.slnx
+!backend/.editorconfig
+!backend/global.json
+!backend/Directory.Build.props
+!backend/Directory.Build.targets
+!backend/Directory.Packages.props
+!backend/nuget.config
+!backend/src/Directory.Build.props
+!backend/src/Holefeeder.Web
+!backend/src/Holefeeder.Web/**
+backend/src/Holefeeder.Web/**/bin
+backend/src/Holefeeder.Web/**/obj
+backend/src/Holefeeder.Web/ClientApp/node_modules
+backend/src/Holefeeder.Web/ClientApp/.angular
+backend/src/Holefeeder.Web/ClientApp/dist
+
+!frontend/package.json
+!frontend/pnpm-lock.yaml
+!frontend/pnpm-workspace.yaml
+!frontend/tsconfig.json
+!frontend/packages/shared/package.json
+!frontend/packages/shared/tsconfig.json
+!frontend/packages/shared/src
+!frontend/packages/shared/src/**
+!frontend/apps/holefeeder-mobile/package.json
+!frontend/apps/holefeeder-web
+!frontend/apps/holefeeder-web/**
+frontend/apps/holefeeder-web/node_modules
+frontend/apps/holefeeder-web/dist
+frontend/apps/holefeeder-web/test-results
+frontend/apps/holefeeder-web/.env*
+!frontend/apps/holefeeder-web/.env.example

@@ -1,3 +1,11 @@
+allowBuilds:
+  '@parcel/watcher': set this to true or false
+  core-js: set this to true or false
+  esbuild: set this to true or false
+  fsevents: set this to true or false
+  lmdb: set this to true or false
+  msgpackr-extract: set this to true or false
+  unrs-resolver: set this to true or false
 onlyBuiltDependencies:
   - core-js
   - esbuild

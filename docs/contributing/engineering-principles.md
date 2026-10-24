@@ -37,6 +37,12 @@ Separate all changes into two distinct types:
 - Always make structural changes first when both are needed
 - Validate structural changes do not alter behavior by running tests before and after
 
+## Main Is Always Deployable
+
+- Anything committed on `main` can be deployed to production at any time
+- Unfinished features ship hidden, disabled or as skeletons — never broken
+- Order commits so each one is safe on its own (e.g. move a route before linking to it)
+
 ## Never
 
 - Add a new library without approval

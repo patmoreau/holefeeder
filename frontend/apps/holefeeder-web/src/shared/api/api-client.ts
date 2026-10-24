@@ -22,7 +22,7 @@ export const ApiClient = (auth: AuthenticationState, config: ApiConfig): ApiClie
         ...(tokenInfo ? { Authorization: `Bearer ${tokenInfo.token}` } : {}),
       };
 
-      const response = await fetch(buildUrl(config.url, endpoint), {
+      const response = await fetch(buildUrl(new URL(config.url, window.location.origin).href, endpoint), {
         ...options,
         headers,
         signal: controller.signal,

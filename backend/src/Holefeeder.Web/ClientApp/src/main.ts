@@ -66,6 +66,8 @@ function setupGlobalErrorHandling() {
 // Set up error handling before bootstrapping
 setupGlobalErrorHandling();
 
+const appBaseUrl = new URL('.', document.baseURI).href.replace(/\/$/, '');
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),{
@@ -89,8 +91,8 @@ bootstrapApplication(AppComponent, {
         config: {
           authority: 'https://dev-vx1jio3owhaqdmqa.ca.auth0.com',
           clientId: 'gXVZOUw6cxoIR6N5qqXFyRVuZDbkkVxu',
-          redirectUrl: window.location.origin,
-          postLogoutRedirectUri: window.location.origin,
+          redirectUrl: appBaseUrl,
+          postLogoutRedirectUri: appBaseUrl,
           responseType: 'code',
           scope: 'openid profile email offline_access read:user write:user',
           silentRenew: true,

@@ -49,6 +49,7 @@ app.MapHealthChecks("/healthz",
     new HealthCheckOptions { Predicate = _ => true }
 );
 
+app.MapFallbackToFile("angular/{*path:nonfile}", "angular/index.html");
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

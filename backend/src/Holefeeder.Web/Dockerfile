@@ -35,16 +35,16 @@ RUN pnpm config set dangerouslyAllowAllBuilds true
 ###################################
 FROM pre-build AS restore
 
-COPY *.slnx .
-COPY .editorconfig .
-COPY global.json .
-COPY Directory.Build.props .
-COPY Directory.Build.targets .
-COPY Directory.Packages.props .
-COPY nuget.config .
-COPY src/Directory.Build.props src/
+COPY backend/*.slnx .
+COPY backend/.editorconfig .
+COPY backend/global.json .
+COPY backend/Directory.Build.props .
+COPY backend/Directory.Build.targets .
+COPY backend/Directory.Packages.props .
+COPY backend/nuget.config .
+COPY backend/src/Directory.Build.props src/
 
-COPY src/Holefeeder.Web/*.csproj src/Holefeeder.Web/
+COPY backend/src/Holefeeder.Web/*.csproj src/Holefeeder.Web/
 
 RUN dotnet restore src/Holefeeder.Web/Holefeeder.Web.csproj
 
@@ -56,7 +56,7 @@ ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 
 WORKDIR /source
-COPY src/Holefeeder.Web/. src/Holefeeder.Web/.
+COPY backend/src/Holefeeder.Web/. src/Holefeeder.Web/.
 WORKDIR /source/src/Holefeeder.Web
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
@@ -74,6 +74,37 @@ RUN apt --fix-broken install
 RUN apt-get install google-chrome-stable -y
 
 ###################################
+# React web app stage
+###################################
+# Built from the frontend monorepo; the image builds from the repository root
+# so both backend/ and frontend/ are in context (see /.dockerignore).
+FROM node:24-slim AS react
+WORKDIR /frontend
+RUN corepack enable
+
+COPY frontend/package.json frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml frontend/tsconfig.json ./
+COPY frontend/packages/shared/package.json packages/shared/
+COPY frontend/apps/holefeeder-web/package.json apps/holefeeder-web/
+COPY frontend/apps/holefeeder-mobile/package.json apps/holefeeder-mobile/
+RUN pnpm install --frozen-lockfile --filter "holefeeder-web..."
+
+COPY frontend/packages/shared/tsconfig.json packages/shared/
+COPY frontend/packages/shared/src packages/shared/src
+COPY frontend/apps/holefeeder-web/index.html frontend/apps/holefeeder-web/tsconfig.json frontend/apps/holefeeder-web/tsconfig.node.json frontend/apps/holefeeder-web/vite.config.ts apps/holefeeder-web/
+COPY frontend/apps/holefeeder-web/public apps/holefeeder-web/public
+COPY frontend/apps/holefeeder-web/src apps/holefeeder-web/src
+
+ARG VITE_AUTH0_DOMAIN=dev-vx1jio3owhaqdmqa.ca.auth0.com
+ARG VITE_AUTH0_CLIENT_ID=gXVZOUw6cxoIR6N5qqXFyRVuZDbkkVxu
+ARG VITE_AUTH0_AUDIENCE=https://holefeeder-api.drifterapps.app
+ARG VITE_API_BASE_URL=/gateway
+ENV VITE_AUTH0_DOMAIN=${VITE_AUTH0_DOMAIN} \
+    VITE_AUTH0_CLIENT_ID=${VITE_AUTH0_CLIENT_ID} \
+    VITE_AUTH0_AUDIENCE=${VITE_AUTH0_AUDIENCE} \
+    VITE_API_BASE_URL=${VITE_API_BASE_URL}
+RUN pnpm --filter "holefeeder-web..." run build
+
+###################################
 # Final stage
 ###################################
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
@@ -83,4 +114,5 @@ EXPOSE 443
 
 WORKDIR /app
 COPY --from=build /app ./
+COPY --from=react /frontend/apps/holefeeder-web/dist ./wwwroot/
 ENTRYPOINT ["dotnet", "Holefeeder.Web.dll"]

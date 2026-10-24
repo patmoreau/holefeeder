@@ -117,7 +117,14 @@ Domain → Application → Infrastructure → Api / Web
 - **Application** (`src/Holefeeder.Application`): Use cases, CQRS queries/commands, application DTOs, authorization. References Domain only.
 - **Infrastructure** (`src/Holefeeder.Infrastructure`): PostgreSQL via Dapper + EF Core, DbUp migrations, Hangfire background jobs. Implements interfaces from Application.
 - **Api** (`src/Holefeeder.Api`): ASP.NET Core 10 minimal API using the **Carter** framework for route modules. Thin layer — delegates to Application.
-- **Web** (`src/Holefeeder.Web`): Blazor Server hosting an Angular SPA (`ClientApp/` built with pnpm).
+- **Web** (`src/Holefeeder.Web`): ASP.NET Core host serving two SPAs from one image —
+  the React app (`frontend/apps/holefeeder-web`) at `/`, and the legacy Angular app
+  (`ClientApp/`, base href `/angular/`) under `/angular/`. `Program.cs` has one fallback
+  per app. The image builds from the **repository root** (see `/.dockerignore`) so the
+  Dockerfile reaches `frontend/`; the React build's public Auth0 values are Dockerfile
+  `ARG`s, and its API base is the relative `/gateway`. `/ngsw-worker.js` at the root is
+  Angular's safety worker: it unregisters the service worker Angular used to install at
+  `/`. Keep the Angular app until it is explicitly retired.
 
 ### Feature Organization
 
@@ -148,7 +155,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | Authentication | Auth0 via JWT + `Microsoft.Identity.Web` |
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
-| Frontend | Angular (pnpm) inside Blazor Server |
+| Frontend | React + MUI at `/`, legacy Angular at `/angular/`, both served by `Holefeeder.Web` |
 | Unit testing | xUnit + FluentAssertions (no mocks — NSubstitute is legacy, being phased out) |
 | BDD/Functional tests | SpecFlow + Respawn + WireMock.Net |
 | Coverage | Coverlet (Cobertura) + Stryker mutation testing |
