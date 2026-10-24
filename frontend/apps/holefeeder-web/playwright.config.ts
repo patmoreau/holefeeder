@@ -17,6 +17,6 @@ export default defineConfig({
     command: `vite --port ${port} --strictPort`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
-    env: { VITE_E2E: 'true' },
+    env: { VITE_E2E: 'true', VITE_APP_VERSION: '1.2.3', VITE_APP_COMMIT: 'abcdef1234567890' },
   },
 });

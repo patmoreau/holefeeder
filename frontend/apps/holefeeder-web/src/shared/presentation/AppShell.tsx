@@ -6,6 +6,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { type ReactNode } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
+import { AppVersion } from '@/shared/core/app-version';
 import { translate } from '@/shared/i18n/translate';
 import { BrandTile } from './BrandTile';
 
@@ -23,6 +24,11 @@ const navItems: NavItem[] = [
 ];
 
 const drawerWidth = 248;
+
+const versionLabel = AppVersion.label({
+  version: import.meta.env.VITE_APP_VERSION as string | undefined,
+  commit: import.meta.env.VITE_APP_COMMIT as string | undefined,
+});
 
 export const AppShell = () => {
   const { pathname } = useLocation();
@@ -85,6 +91,9 @@ export const AppShell = () => {
           </ListItemIcon>
           <ListItemText primary={translate(tk.tabs.legacy)} slotProps={{ primary: { fontSize: 15 } }} />
         </ListItemButton>
+        <Typography data-testid="nav-version" sx={{ px: 1.5, pt: 1, fontSize: 12, color: 'text.secondary' }}>
+          {versionLabel}
+        </Typography>
       </Box>
       <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: 4, pt: 3.5 }}>
         <Outlet />

@@ -145,6 +145,10 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   `holefeeder.localtest.me`, production `holefeeder.drifterapps.app`), with the legacy
   Angular app under `/angular/` — the drawer's Legacy item opens it in a new tab. See
   `backend/CLAUDE.md` → Web.
+- Version label below Legacy: `<version> · <commit>` from `VITE_APP_VERSION` /
+  `VITE_APP_COMMIT`, set by the Dockerfile from the `BUILD_VERSION` (GitVersion in
+  ci-cd, also the image and git tag) and `GIT_COMMIT` build args. Without a version
+  it reads `dev`. Unlike mobile there is no committed version file: CI owns it.
 - Auth0 tokens are cached in localStorage with refresh tokens so sessions survive a
   reload. Moving sign-in to the backend is planned in
   `docs/plans/web-backend-for-frontend-auth.md`.

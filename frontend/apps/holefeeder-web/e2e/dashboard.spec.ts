@@ -36,6 +36,18 @@ test.describe('Dashboard', () => {
     await expect(legacy).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  test('ShouldShowBuildVersionBelowLegacy', async ({ page }) => {
+    await signedIn(page);
+
+    await page.goto('/');
+
+    const nav = page.getByRole('navigation');
+    await expect(nav.getByTestId('nav-version')).toHaveText('1.2.3 · abcdef12');
+    const legacy = await nav.getByTestId('nav-legacy').boundingBox();
+    const version = await nav.getByTestId('nav-version').boundingBox();
+    expect(version!.y).toBeGreaterThan(legacy!.y + legacy!.height - 1);
+  });
+
   test('ShouldShowSkeletonOfEachSection', async ({ page }) => {
     await signedIn(page);
 

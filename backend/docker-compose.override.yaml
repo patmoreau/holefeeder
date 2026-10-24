@@ -74,6 +74,9 @@ services:
     build:
       context: ..
       dockerfile: ./backend/src/Holefeeder.Web/Dockerfile
+      args:
+        BUILD_VERSION: ${VERSION:-}
+        GIT_COMMIT: ${GIT_COMMIT:-}
       tags:
         - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-web:${VERSION:-latest}'
     labels:

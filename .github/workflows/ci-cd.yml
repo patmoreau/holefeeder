@@ -119,7 +119,9 @@ jobs:
           load: true
           context: ${{ matrix.target == 'web' && '.' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
-          build-args: BUILD_VERSION=${{ env.VERSION }}
+          build-args: |
+            BUILD_VERSION=${{ env.VERSION }}
+            GIT_COMMIT=${{ github.sha }}
           push: false
           tags: holefeeder/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-${{ matrix.target }}-cache
@@ -342,7 +344,9 @@ jobs:
           context: ${{ matrix.target == 'web' && '.' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
           target: final
-          build-args: BUILD_VERSION=${{ env.VERSION }}
+          build-args: |
+            BUILD_VERSION=${{ env.VERSION }}
+            GIT_COMMIT=${{ github.sha }}
           push: true
           tags: |
             ${{ env.DOCKER_REGISTRY }}/holefeeder-${{ matrix.target }}:${{ env.VERSION }}
