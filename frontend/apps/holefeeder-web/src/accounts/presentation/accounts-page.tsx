@@ -3,9 +3,9 @@ import { Alert, Box, Card, CardContent, CircularProgress, Chip, List, ListItem, 
 import { useAccounts } from '../api/use-accounts';
 
 export const AccountsPage = () => {
-  const { data: accounts, isLoading, error } = useAccounts();
+  const accounts = useAccounts();
 
-  if (isLoading) {
+  if (accounts.isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
         <CircularProgress />
@@ -13,10 +13,10 @@ export const AccountsPage = () => {
     );
   }
 
-  if (error) {
+  if (accounts.isFailure) {
     return (
       <Box sx={{ p: 2 }}>
-        <Alert severity="error">{error.message}</Alert>
+        <Alert severity="error">{accounts.errors.join(', ')}</Alert>
       </Box>
     );
   }
@@ -29,7 +29,7 @@ export const AccountsPage = () => {
       <Card>
         <CardContent sx={{ p: 0 }}>
           <List disablePadding>
-            {accounts?.map((account) => (
+            {accounts.value.map((account) => (
               <ListItem key={account.id} divider>
                 <ListItemIcon>
                   <AccountBalanceIcon color={account.inactive ? 'disabled' : 'primary'} />
@@ -39,7 +39,7 @@ export const AccountsPage = () => {
                 {account.inactive && <Chip label="Inactive" size="small" variant="outlined" />}
               </ListItem>
             ))}
-            {accounts?.length === 0 && (
+            {accounts.value.length === 0 && (
               <ListItem>
                 <ListItemText primary="No accounts found." />
               </ListItem>
