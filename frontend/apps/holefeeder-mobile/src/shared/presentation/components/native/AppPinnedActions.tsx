@@ -23,7 +23,7 @@ export type AppPinnedActionsProps = {
   disabled?: boolean;
 };
 
-export const AppPinnedActions = ({ primary, secondary, secondaryStyle = 'link', disabled }: AppPinnedActionsProps) => {
+export const AppPinnedActions = ({ primary, secondary, secondaryStyle = 'button', disabled }: AppPinnedActionsProps) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();

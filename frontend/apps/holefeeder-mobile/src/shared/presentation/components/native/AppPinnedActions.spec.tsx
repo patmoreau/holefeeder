@@ -26,8 +26,16 @@ describe('AppPinnedActions', () => {
     jest.mocked(frame).mockClear();
   });
 
-  it('draws the secondary action as a plain link by default', async () => {
+  it('draws the secondary action as a full-width glass button by default', async () => {
     await renderActions();
+
+    expect(buttonStyle).toHaveBeenCalledWith('glass');
+    expect(buttonStyle).not.toHaveBeenCalledWith('plain');
+    expect(frame).toHaveBeenCalledTimes(2);
+  });
+
+  it('draws the secondary action as a plain link when asked', async () => {
+    await renderActions('link');
 
     expect(buttonStyle).toHaveBeenCalledWith('plain');
     expect(buttonStyle).not.toHaveBeenCalledWith('glass');
