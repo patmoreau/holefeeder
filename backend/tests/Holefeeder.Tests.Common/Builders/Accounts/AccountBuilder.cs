@@ -15,7 +15,7 @@ internal class AccountBuilder : FakerBuilder<Account>
     protected override Faker<Account> Faker { get; } = CreatePrivateFaker<Account>()
         .RuleFor(x => x.Id, faker => (AccountId)faker.RandomGuid())
         .RuleFor(x => x.Type, faker => faker.PickRandom<AccountType>(AccountType.List))
-        .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
+        .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.UniqueIndex}")
         .RuleFor(x => x.Favorite, false)
         .RuleFor(x => x.OpenBalance, MoneyBuilder.Create().Build())
         .RuleFor(x => x.OpenDate, faker => faker.Date.PastDateOnly())

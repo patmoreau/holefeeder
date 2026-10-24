@@ -11,7 +11,7 @@ internal class CategoryBuilder : FakerBuilder<Category>
     protected override Faker<Category> Faker { get; } = CreatePrivateFaker<Category>()
             .RuleFor(x => x.Id, faker => (CategoryId)faker.RandomGuid())
             .RuleFor(x => x.Type, faker => faker.PickRandom<CategoryType>(CategoryType.List))
-            .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.IndexFaker}")
+            .RuleFor(x => x.Name, faker => faker.Lorem.Word() + $" #{faker.UniqueIndex}")
             .RuleFor(x => x.Color, _ => CategoryColorBuilder.Create().Build())
             .RuleFor(x => x.Favorite, faker => faker.Random.Bool())
             .RuleFor(x => x.System, false)
