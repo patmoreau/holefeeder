@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../shared/api/api-client';
-import { useAuthentication } from '../../shared/auth/authentication-provider';
+import { useAuthentication } from '../../shared/auth/authentication-context';
 import { Account } from '../domain/account';
 
 export const useAccounts = () => {

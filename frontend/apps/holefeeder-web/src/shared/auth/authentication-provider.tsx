@@ -1,8 +1,7 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { type AuthenticationState, type TokenInfo } from '@holefeeder/shared/core';
-import { createContext, useContext, type ReactNode } from 'react';
-
-const AuthContext = createContext<AuthenticationState | null>(null);
+import { type ReactNode } from 'react';
+import { AuthenticationContext } from './authentication-context';
 
 const AuthStateProvider = ({ children }: { children: ReactNode }) => {
   const { user, isLoading, getAccessTokenSilently, loginWithRedirect, logout } = useAuth0();
@@ -34,7 +33,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
     logout: () => void logout({ logoutParams: { returnTo: window.location.origin } }),
   };
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  return <AuthenticationContext.Provider value={state}>{children}</AuthenticationContext.Provider>;
 };
 
 export const AuthenticationProvider = ({ children }: { children: ReactNode }) => (
@@ -49,9 +48,3 @@ export const AuthenticationProvider = ({ children }: { children: ReactNode }) =>
     <AuthStateProvider>{children}</AuthStateProvider>
   </Auth0Provider>
 );
-
-export const useAuthentication = (): AuthenticationState => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuthentication must be used within AuthenticationProvider');
-  return ctx;
-};
