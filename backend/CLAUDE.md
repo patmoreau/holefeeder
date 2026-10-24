@@ -124,7 +124,8 @@ Domain → Application → Infrastructure → Api / Web
   Dockerfile reaches `frontend/`; the React build's public Auth0 values are Dockerfile
   `ARG`s, and its API base is the relative `/gateway`. `/ngsw-worker.js` at the root is
   Angular's safety worker: it unregisters the service worker Angular used to install at
-  `/`. Keep the Angular app until it is explicitly retired.
+  `/`. Keep the Angular app until it is explicitly retired; the retirement steps
+  (including dropping .NET from this image) are in `docs/plans/angular-decommission.md`.
 
 ### Feature Organization
 
