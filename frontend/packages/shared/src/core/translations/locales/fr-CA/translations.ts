@@ -432,6 +432,7 @@ export const fr: TranslationStructure = {
     insights: 'Aperçus',
     settings: 'Configuration',
     test: 'Examen',
+    legacy: 'Ancienne version',
   },
   tagList: {
     placeHolder: 'Filtrer les étiquettes…',

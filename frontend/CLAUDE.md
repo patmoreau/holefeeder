@@ -141,6 +141,10 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   `window.__E2E_AUTH__` and read `window.__E2E_LOGIN_CALLS__` (helpers in
   `e2e/support/auth.ts`). `E2eConfig.isEnabled()` also requires a non-production build,
   so the bypass never ships. Vitest (`pnpm test`) only scans `src/`.
+- Deployment: the `Holefeeder.Web` image builds and serves this app at `/` (staging
+  `holefeeder.localtest.me`, production `holefeeder.drifterapps.app`), with the legacy
+  Angular app under `/angular/` — the drawer's Legacy item opens it in a new tab. See
+  `backend/CLAUDE.md` → Web.
 - Auth0 tokens are cached in localStorage with refresh tokens so sessions survive a
   reload. Moving sign-in to the backend is planned in
   `docs/plans/web-backend-for-frontend-auth.md`.

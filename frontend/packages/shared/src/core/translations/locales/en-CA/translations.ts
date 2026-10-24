@@ -429,6 +429,7 @@ export const en = {
     insights: 'Insights',
     settings: 'Settings',
     test: 'Test',
+    legacy: 'Legacy',
   },
   tagList: {
     placeHolder: 'Filter tags…',

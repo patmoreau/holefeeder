@@ -24,6 +24,18 @@ test.describe('Dashboard', () => {
     await expect(nav.getByTestId('nav-settings')).toHaveText('Settings');
   });
 
+  test('ShouldOpenLegacyAppInNewTab', async ({ page }) => {
+    await signedIn(page);
+
+    await page.goto('/');
+
+    const legacy = page.getByRole('navigation').getByTestId('nav-legacy');
+    await expect(legacy).toHaveText('Legacy');
+    await expect(legacy).toHaveAttribute('href', '/angular/');
+    await expect(legacy).toHaveAttribute('target', '_blank');
+    await expect(legacy).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
   test('ShouldShowSkeletonOfEachSection', async ({ page }) => {
     await signedIn(page);
 
