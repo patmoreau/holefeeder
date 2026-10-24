@@ -45,7 +45,7 @@ This is a **pnpm + Turborepo** monorepo.
 holefeeder-ui/
 ├── apps/
 │   ├── holefeeder-mobile/   ← Expo / React Native app  →  CLAUDE.md inside
-│   └── holefeeder-web/      ← React 19 + Vite + MUI web app (planned)
+│   └── holefeeder-web/      ← React 19 + Vite + MUI web app
 └── packages/
     └── shared/              ← @holefeeder/shared — shared platform-agnostic library
 ```
@@ -64,6 +64,8 @@ pnpm --filter @holefeeder/shared build
 pnpm --filter @holefeeder/shared test
 pnpm --filter holefeeder-mobile test
 pnpm --filter holefeeder-mobile ios
+pnpm --filter holefeeder-web dev
+pnpm --filter holefeeder-web test:e2e   # Playwright
 ```
 
 End-to-end tests (Maestro) live in `apps/holefeeder-mobile/.maestro/` and need a booted
@@ -120,11 +122,34 @@ Locale strings live in `packages/shared/src/core/translations/locales/`. Add key
 
 The mobile app re-exports everything from `@holefeeder/shared/core` via stubs in `src/i18n/locales/*/`.
 
+## `apps/holefeeder-web`
+
+Thin React + MUI client. It holds **no business logic**: every computed value (spending,
+net flow, projections, balances) comes ready-made from the backend API. When a screen
+needs a value the API lacks, add it to the backend; never derive it in the web app.
+
+- Designs live in the Penpot "Web" file, one Penpot page per app page (`Welcome`,
+  `Dashboard`), each with Light and Dark desktop boards.
+- Theme (`src/shared/theme/theme-provider.tsx`) mirrors the mobile tokens — purple
+  primary, Inter Tight, light/dark following the system.
+- Strings come from the shared `en` locale through `src/shared/i18n/translate.ts`.
+- Routes: `/welcome` is for signed-out users (`RequireAnonymous`); everything else sits
+  behind `RequireAuthenticated` inside `AppShell` (navigation drawer).
+- UI tests are Playwright specs in `e2e/` (`pnpm test:e2e`), selecting by `data-testid`
+  named `<screen>-<element>`. They run against the Vite dev server with
+  `VITE_E2E=true`, which swaps Auth0 for `E2eAuthenticationProvider`: specs arrange
+  `window.__E2E_AUTH__` and read `window.__E2E_LOGIN_CALLS__` (helpers in
+  `e2e/support/auth.ts`). `E2eConfig.isEnabled()` also requires a non-production build,
+  so the bypass never ships. Vitest (`pnpm test`) only scans `src/`.
+- Auth0 tokens are cached in localStorage with refresh tokens so sessions survive a
+  reload. Moving sign-in to the backend is planned in
+  `docs/plans/web-backend-for-frontend-auth.md`.
+
 ## Dependency Graph
 
 ```text
 apps/holefeeder-mobile  ──→  packages/shared
-apps/holefeeder-web     ──→  packages/shared  (planned)
+apps/holefeeder-web     ──→  packages/shared
 ```
 
 Turbo enforces `dependsOn: ["^build"]` so `packages/shared` is always built before apps.
@@ -184,14 +209,14 @@ export const AccountErrors = {
 - Export named constants: This allows better navigation with the IDE. The left side provides access to usage and the right side to implementation. It's also easier for the IDE to rename one of these constants.
 
 ```typescript
-✅ export const WatchAccountsUseCase = {
+export const WatchAccountsUseCase = {
   watch: watch,
 };
 ```
 instead of:
 
 ```typescript
-❌ export const WatchAccountsUseCase = {
+export const WatchAccountsUseCase = {
   watch,
 };
 ```

@@ -29,7 +29,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
       : undefined,
     isLoading,
     getToken,
-    login: () => void loginWithRedirect(),
+    login: (options) => void loginWithRedirect(options?.signUp ? { authorizationParams: { screen_hint: 'signup' } } : undefined),
     logout: () => void logout({ logoutParams: { returnTo: window.location.origin } }),
   };
 
@@ -40,6 +40,8 @@ export const AuthenticationProvider = ({ children }: { children: ReactNode }) =>
   <Auth0Provider
     domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
     clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
+    useRefreshTokens
+    cacheLocation="localstorage"
     authorizationParams={{
       redirect_uri: window.location.origin,
       audience: import.meta.env.VITE_AUTH0_AUDIENCE as string,
