@@ -3,7 +3,7 @@
 Core sits in the center. Every other folder is a ring around it. Dependencies point INWARD only.
 
 ## Hard rules
-- `core` MUST NOT reference `api`, `events`, `persistence`, `ui`, or any other ring. Not even for types or DTOs.
+- `core` MUST NOT reference `api`, `events`, `jobs`, `persistence`, `ui`, or any other ring. Not even for types or DTOs.
 - Rings call core use cases. Rings never call each other (api never calls persistence directly).
 - Core defines interfaces (ports). Rings implement them.
 - Never persist core entities directly. Map to a persistence model in `persistence`.
@@ -16,6 +16,7 @@ Core sits in the center. Every other folder is a ring around it. Dependencies po
         api/<endpoint-name>/       endpoint, request/response DTOs, validation, mapping to use-case input
         core/<use-case-name>/      use case, domain entities, value objects, port interfaces
         events/<event-name>/       consumers (map, then call use case) and producers (implement core port)
+        jobs/<job-name>/           scheduled and background jobs; schedule, then call use case
         persistence/<repository>/  implements core repository ports; DB/S3/other-service models + mappers
         ui/                        (mobile only) screens and components; calls core use cases 
     shared/<ring>/                 code used by 2+ features ONLY
@@ -27,6 +28,7 @@ Core sits in the center. Every other folder is a ring around it. Dependencies po
 | Request validation, DTO                 | x/api/<endpoint>                         |
 | Repository interface                    | x/core/<use-case>                        |
 | Repository implementation, DB model     | x/persistence/<repo>                     |
+| Scheduled or background job             | x/jobs/<job>                             |
 | Client for an external API              | new ring: ASK before naming it           |
 | Type needed by a second feature         | move to shared/<ring> in the same change |
 

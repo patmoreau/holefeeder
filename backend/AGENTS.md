@@ -20,6 +20,43 @@ A good test arranges realistic, varied data with builders, covers the happy path
 edge cases (empty/zero values, exclusions, error handling), and asserts precise expected
 values rather than merely checking that a result exists.
 
+## Target architecture — Holefeeder.Service
+
+Most of the backend predates agent-assisted work and is **legacy** (see *Legacy
+architecture* below). New code follows the target here. Legacy code is not refactored
+until a first feature built this way is complete and approved; the steps are in
+`../docs/plans/backend-service.md`.
+
+- **One project.** `src/Holefeeder.Service` (today's `Holefeeder.Api`, renamed) and
+  `tests/Holefeeder.Service.Tests`. No new class libraries. `Holefeeder.Web` stays a
+  separate host for the SPAs.
+- **Feature/ring layout** from `../docs/contributing/architecture-principles.md`, in
+  PascalCase so folders match namespaces:
+  ```
+  src/Holefeeder.Service/
+    Features/<FeaturePlural>/
+      Api/<EndpointName>/
+      Core/<UseCaseName>/
+      Jobs/<JobName>/
+      Persistence/<RepositoryName>/
+    Shared/<Ring>/
+  ```
+  `Jobs` is implemented with Hangfire: Hangfire is the tool, the ring is named for what
+  it does. The same goes for every ring — name it for its role, not its library.
+- **No legacy from new code.** Code under `Features/` and `Shared/` never uses
+  `Holefeeder.Domain`, `Holefeeder.Application`, `Holefeeder.Infrastructure` or the
+  `DrifterApps.Seeds.Application`/`.Domain`/`.Infrastructure`/`.Testing` packages. Only
+  host wiring in `Program.cs` touches both. When new code needs something legacy has,
+  write it again in the feature.
+- **Dapper with hand-written SQL.** No EF Core in new code. The persistence ring owns
+  the SQL and its row models and maps them to core types. Schema changes stay DbUp
+  scripts in `Holefeeder.Infrastructure/Scripts/` for now (see *Decisions* in the plan).
+- **Seed libraries.** Keep using `DrifterApps.Seeds.FluentResult` and
+  `DrifterApps.Seeds.FluentScenario`, with their `.FluentAssertions` companions, as
+  packages. Anything else from the `holefeeder-seed.work` repository is copied into the
+  core, ring or test project that needs it, only when it is needed, and owned from then
+  on.
+
 ## Commands
 
 ### Build
@@ -105,7 +142,10 @@ docker compose -f docker-compose-tests.yaml run api-unit-tests
 docker compose -f docker-compose-tests.yaml run api-functional-tests
 ```
 
-## Architecture
+## Legacy architecture
+
+Describes the existing projects. Do not extend this layout: new code goes in
+`Holefeeder.Service` (see *Target architecture*).
 
 ### Layer Structure
 
@@ -151,7 +191,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | Runtime | .NET 10 |
 | API routing | Carter (Minimal APIs) |
 | Database | PostgreSQL 18 |
-| ORM | Dapper (queries) + EF Core (migrations support) |
+| ORM | Dapper; EF Core in legacy code only, not for new code |
 | DB migrations | DbUp |
 | Authentication | Auth0 via JWT + `Microsoft.Identity.Web` |
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |

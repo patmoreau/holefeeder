@@ -9,6 +9,11 @@ description: Add a REST endpoint to the Holefeeder API as a Carter vertical slic
 
 > **Audience:** contributors *working on* this repository. Not a published document — see `AGENTS.md` at the repository root.
 
+> **Legacy layout.** This playbook adds endpoints to the legacy projects. New features
+> target `Holefeeder.Service` (*Target architecture* in `backend/AGENTS.md`); until the
+> first one lands and this playbook is rewritten (`docs/plans/backend-service.md`, step
+> 6), ask which layout to use before starting.
+
 Endpoints are vertical slices: **one file holds the route, the request, the validator and
 the handler**, and it lives in `backend/src/Holefeeder.Application/Features/<Feature>/`
 under `Commands/` or `Queries/` — not in `Holefeeder.Api`. Carter discovers every
