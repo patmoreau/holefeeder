@@ -3,6 +3,9 @@
 ## Engineering principles
 @docs/contributing/engineering-principles.md
 
+## Architecture principles
+@docs/contributing/architecture-principles.md
+
 ## Git workflow
 @docs/contributing/git-instructions.md
 
