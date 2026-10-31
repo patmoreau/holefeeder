@@ -25,6 +25,24 @@ services:
       - --coverage-output-format
       - cobertura
 
+  api-service-tests:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:80
+      LOCAL_CONNECTION_STRING: Host=postgres-data-test;Port=5432;Username=budgeting_tests;Password=mypass;Database=budgeting_tests;
+    entrypoint:
+      - dotnet
+      - test
+      - --no-restore
+      - --configuration
+      - Release
+      - --report-trx
+      - --results-directory
+      - /TestResults
+      - --coverage
+      - --coverage-output-format
+      - cobertura
+
   api-unit-tests:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

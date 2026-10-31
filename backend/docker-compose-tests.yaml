@@ -15,6 +15,18 @@ services:
     volumes:
       - ./tests-results:/TestResults
 
+  api-service-tests:
+    image: api-service-tests
+    container_name: api-service-tests
+    build:
+      context: .
+      dockerfile: ./src/Holefeeder.Service/Dockerfile
+      target: servicetests
+    depends_on:
+      - postgres-data-test
+    volumes:
+      - ./tests-results:/TestResults
+
   api-unit-tests:
     image: api-unit-tests
     container_name: api-unit-tests

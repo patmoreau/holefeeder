@@ -149,7 +149,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api-unit-tests, api-functional-tests]
+        target: [api-unit-tests, api-functional-tests, api-service-tests]
 
     env:
       VERSION: ${{ needs.set-version.outputs.version }}

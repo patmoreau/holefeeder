@@ -72,6 +72,10 @@ dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 # Functional tests
 dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 
+# Service tests (Holefeeder.Service, real PostgreSQL via Testcontainers
+# unless LOCAL_CONNECTION_STRING is set)
+dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj
+
 # Single test class (VSTest's --filter is not available; the test platform
 # takes its own arguments after --)
 dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-class "*MyTestClass"
@@ -138,8 +142,12 @@ docker compose up -d
 
 ### Run tests in Docker (as CI does)
 ```bash
-docker compose -f docker-compose-tests.yaml run api-unit-tests
-docker compose -f docker-compose-tests.yaml run api-functional-tests
+# -p keeps the run out of the Staging project named in .env
+compose="docker compose -p holefeeder-tests -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml"
+$compose run --rm --build api-unit-tests
+$compose run --rm --build api-functional-tests
+$compose run --rm --build api-service-tests
+$compose down
 ```
 
 ## Legacy architecture

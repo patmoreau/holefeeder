@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **step 2 done** (`Holefeeder.Api` renamed), recorded 2026-10-31.
+Status: **step 3 done** (`Holefeeder.Service.Tests` added), recorded 2026-10-31.
 
 ## Context
 
@@ -64,8 +64,11 @@ is approved. Every step leaves `main` deployable.
   `Holefeeder.Infrastructure/Scripts/` (next number, plus an `EmbeddedResource` entry in
   the `.csproj`) until step 7 moves them. This is the one legacy location new work
   writes to.
-
-## Open questions
-
-- **Seed.work source**: copy from the `holefeeder-seed.work` repository at the version
-  currently referenced (1.0.179), so copied code matches what runs today.
+- **Seed.work source.** Code is copied from the seed.work repository at tag `v1.0.179`,
+  the version the legacy projects reference, so copied code matches what runs today.
+  `Holefeeder.Service.Tests` holds the first copies: `PostgreDatabaseServer` and
+  `LocalDatabaseServer`, trimmed to what the smoke test uses.
+- **Test database.** `Holefeeder.Service.Tests` starts PostgreSQL with Testcontainers
+  (`Testcontainers.PostgreSql`, approved as a direct reference) unless
+  `LOCAL_CONNECTION_STRING` is set, which is how CI runs it against the
+  `postgres-data-test` compose service (`api-service-tests` in the ci-cd matrix).

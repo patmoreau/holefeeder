@@ -49,6 +49,11 @@
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
+    <Project Path="backend/tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
     <Project Path="backend/tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
