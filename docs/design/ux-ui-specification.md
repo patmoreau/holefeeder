@@ -13,8 +13,8 @@ The web app's data layer is **plain REST against `api/v2`** — no PowerSync web
 TanStack Query. That decision and its full design are §11.
 
 Derived from code as of `main` @ `d48239f9` (2026-08-29). Companion docs:
-`docs/business-rules/` (domain rules, language-agnostic), `frontend/CLAUDE.md`,
-`frontend/apps/holefeeder-mobile/CLAUDE.md`.
+`docs/business-rules/` (domain rules, language-agnostic), `frontend/AGENTS.md`,
+`frontend/apps/holefeeder-mobile/AGENTS.md`.
 
 ---
 
@@ -847,7 +847,7 @@ Listed so the cost is visible when those screens come up in the build order.
 Sequencing note: **1 is the only one with a dependency outside its own screen** — the
 onboarding categories step also needs it, so it lands whenever onboarding or Manage
 Categories is built, whichever comes first. 2 and 3 are self-contained and can wait for
-their screens. Each follows the backend's normal TDD cycle (`backend/CLAUDE.md`); the
+their screens. Each follows the backend's normal TDD cycle (`backend/AGENTS.md`); the
 business rules they must honour are in `docs/business-rules/category.md` and the tag rules
 in `docs/business-rules/index.md`.
 

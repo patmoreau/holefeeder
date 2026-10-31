@@ -1,5 +1,8 @@
 # Holefeeder — Agent Instructions
 
+- Verify against the source, not from memory of these files. When a guide disagrees with
+  the code, the code wins and the guide is a bug to fix.
+
 ## Engineering principles
 @docs/contributing/engineering-principles.md
 
@@ -37,9 +40,9 @@ Monorepo with two independent sub-projects, each with its own authoritative agen
 
 | Path | Contents | Guide |
 |---|---|---|
-| `backend/` | .NET 10 solution — `Holefeeder.Api`, `.Application`, `.Domain`, `.Infrastructure`, plus the Angular SPA in `src/Holefeeder.Web/ClientApp` | `backend/CLAUDE.md` |
-| `frontend/` | pnpm + Turborepo workspace — Expo/React Native mobile app, React web app, shared `@holefeeder/shared` | `frontend/CLAUDE.md`, and `frontend/apps/holefeeder-mobile/CLAUDE.md` for the mobile app |
-| `docs/business-rules/` | Language-agnostic business rules shared by both sub-projects — consult when implementing or validating domain logic in either | — |
+| `backend/` | .NET 10 solution — `Holefeeder.Api`, `.Application`, `.Domain`, `.Infrastructure`, plus the Angular SPA in `src/Holefeeder.Web/ClientApp` | `backend/AGENTS.md` |
+| `frontend/` | pnpm + Turborepo workspace — Expo/React Native mobile app, React web app, shared `@holefeeder/shared` | `frontend/AGENTS.md`, and `frontend/apps/holefeeder-mobile/AGENTS.md` for the mobile app |
+| `docs/business-rules/` | Language-agnostic business rules shared by both sub-projects — consult when implementing or validating domain logic in either; a change to domain logic usually belongs there too. | — |
 | `docs/design/`, `docs/plans/` | Design notes and work plans | — |
 | `docs/contributing/` | Process docs and task playbooks, for people working on this repo | — |
 

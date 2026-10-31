@@ -1,0 +1,333 @@
+# Holefeeder - Mobile frontend instructions
+
+This file provides guidance when working with the mobile app.
+
+> Mobile-only guidance. Builds on the frontend `../../AGENTS.md` and the repo root
+> `../../../AGENTS.md`; don't repeat their rules here.
+
+> [!IMPORTANT]
+> **Documentation Maintenance Rules:** Whenever structural or architectural changes are made to the codebase, you **must** update this `AGENTS.md` file and the frontend `../../AGENTS.md` to reflect the changes. Keep these instructions accurate so they remain a reliable single source of truth!
+
+## Tech Stack
+
+- React Native (Expo SDK 58)
+- expo-router (file-based routing)
+- PowerSync v2 (offline-first sync). `@powersync/react-native` bundles the OP-SQLite
+  adapter, so there is no `@powersync/op-sqlite` package and no `OPSqliteOpenFactory` —
+  pass the open options straight through as `database: { dbFilename }`.
+  `@op-engineering/op-sqlite` is a direct peer dependency.
+- Auth0 (react-native-auth0)
+- i18next
+- pnpm
+- TypeScript strict
+- **@holefeeder/shared** (shared domain library)
+
+## Key Commands
+
+Run from **repo root** using `pnpm --filter holefeeder-mobile <cmd>`, or directly from this directory:
+
+```bash
+pnpm start                  # dev server (APP_ENV=development)
+pnpm ios                    # run on iOS simulator
+pnpm android                # run on Android emulator
+pnpm test                   # Jest (jest-expo preset)
+pnpm test -- --coverage     # with 70% threshold enforcement
+pnpm lint                   # expo lint
+pnpm prebuild:dev           # iOS prebuild (development)
+pnpm ios:deploy             # production build to physical device
+```
+
+Phone deploys are versioned by date. `pnpm ios:deploy` runs
+`scripts/bump-deploy-version.mjs`, which writes `deploy-version.json`: the version
+`YYYY.M.D`, that day's build number from 1, and the commit built from. `app.config.ts`
+reads it for `version`, `ios.buildNumber` and `extra.deployCommit`, and Settings → About
+shows `2026.10.20 (2) · 650039e9`. The file is committed after each successful install
+(`chore(mobile): Deploy …`); the next number comes from the committed copy. See
+`docs/contributing/tasks/frontend/deploy-mobile.md`.
+
+E2E tests use Maestro, and the two tags need different builds:
+`pnpm ios:e2e && pnpm test:e2e:ios` (tag `regression`, session injected by link) and
+`pnpm ios:e2e:auth && pnpm test:e2e:auth` (tag `auth`, real Auth0 pages). Both need a
+booted simulator, the local Docker stack, and credentials in `.maestro/.env.e2e.local`
+(gitignored — copy `.maestro/.env.e2e.template`). They live under `.maestro/` and not
+in the app root because Metro treats any `.env*.local` there as a source file and
+fails to bundle in dev. See `.maestro/README.md`.
+
+## Architecture: Feature-Based Vertical Slices
+
+The app relies on feature-based modules to isolate domain logic and UI alongside shared cross-cutting layers:
+
+```text
+src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, summary/, user-registration/)
+  core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
+  persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
+  presentation/ ← Feature-specific UI and presentation hooks
+src/shared/               ← Cross-cutting shared modules
+  api/          ← API service layer
+  auth/         ← Auth state and logic
+  core/         ← Shared domain primitives + kernel value objects shared by 3+ slices
+                  (Money, Id, Result; plus CategoryType, Settings, inactive, system)
+  hooks/        ← Cross-cutting React hooks
+  language/     ← Language selection state and provider
+  persistence/  ← App-wide PowerSync db schema and utilities
+  presentation/ ← Shared global UI components
+  repositories/ ← Shared repository providers and contexts
+  theme/        ← Design system styling and tokens
+src/app/                  ← expo-router route files only
+src/config/config.ts      ← All env-var config (never read process.env directly elsewhere)
+src/i18n/                 ← i18next, en-CA and fr-CA locales
+src/types/icons.ts        ← AppIcons (SF Symbols) + AppIconsMapping (→ Material Icons)
+```
+
+**Slice boundaries.** A feature slice must not import another feature slice. Code shared by
+3+ slices (or a genuine domain value object / read-model) moves to a neutral home:
+`shared/*` for kernel + generic UI (e.g. `shared/presentation/components/fields` for generic
+form inputs like `AmountField`, `DescriptionField`), or its own read-model slice. `summary/`
+is one such read-model slice (current-period spending) consumed one-way by both the
+`dashboard` and `statistics` view slices. Composition/read slices (`dashboard`, `statistics`,
+`summary`) may depend on source slices' public API; a single documented one-directional
+`accounts → flows` edge remains for account-detail projection. See
+`docs/vertical-slice-refactor.md`.
+
+## Shared Domain Library (`@holefeeder/shared`)
+
+Branded value objects, Result pattern, logger, auth types, and locale strings live in
+`packages/shared` and are published as `@holefeeder/shared`. The package has no root export —
+import from `@holefeeder/shared/core` (or `@holefeeder/shared/testkit` in tests). App-local
+modules under `src/shared/core/` and the stubs in `src/i18n/` build on it while preserving the
+`@/shared/core/...` import paths.
+
+At app bootstrap (`src/app/_layout.tsx`) the UUID generator and logger factory must be injected:
+
+```typescript
+import * as Crypto from 'expo-crypto';
+import { Id } from '@holefeeder/shared/core';
+Id.setGenerator(Crypto.randomUUID);
+```
+
+## Branded Value Objects
+
+Domain primitives use nominal typing via brand: `Money`, `Variation`, `Id`, `DateOnly`.
+
+- **`create(value)`** — validates and returns `Result<T>` (use when input is untrusted)
+- **`valid(value)`** — bypasses validation (use only for already-trusted DB rows)
+- Monetary values are stored as **integer cents** in PowerSync; convert with `Variation.fromCents()` /
+  `Money.fromCents()`
+
+## Result / AsyncResult Pattern
+
+All domain operations return `Result<T>` (`Success<T> | Failure`) or `AsyncResult<T>` (adds `Loading`).
+
+```typescript
+if (result.isSuccess) result.value; // T
+if (result.isFailure) result.errors; // string[]
+if (result.isLoading)
+  /* show spinner */
+
+  Result.combine({ a: resultA, b: resultB }); // merges multiple results
+Result.combineArray(resultArray);
+```
+
+## Repository + Use-Case Pattern
+
+1. **Interface** in `src/<feature>/core/<entity>/<entity>-repository.ts`
+2. **Implementation** in `src/<feature>/persistence/<entity>/<entity>-repository-in-powersync.ts` — uses PowerSync
+   `.query().watch()` listener pattern
+3. **Use case** in `src/<feature>/core/<entity>/<action>/` — either `Command` (`.execute()`) or `Query` (`.query(onChange)`
+   returns unsubscribe fn)
+4. **Presentation hook** in `src/<feature>/presentation/hooks/` — calls `useRepositories()`, manages
+   `useState<AsyncResult<T>>` + `useEffect` cleanup
+
+Example flow: `useAccounts` → `WatchAccountsUseCase` → `AccountsRepository` → `AccountsRepositoryInPowersync`
+
+## Reactive Query Hook Pattern
+
+```typescript
+const useAccounts = (): AsyncResult<Account[]> => {
+  const { accountRepository } = useRepositories();
+  const [accounts, setAccounts] = useState<AsyncResult<Account[]>>(
+    Result.loading(),
+  );
+  const useCase = useMemo(
+    () => WatchAccountsUseCase(accountRepository),
+    [accountRepository],
+  );
+  useEffect(() => {
+    const unsubscribe = useCase.query(setAccounts);
+    return () => unsubscribe();
+  }, [useCase]);
+  return accounts;
+};
+```
+
+For multiple concurrent watches, use `useMultipleWatches` from `src/shared/presentation/core/use-multiple-watches.ts`.
+
+## Form Pattern
+
+Use `createFormDataContext<FormData, ErrorEnum>(displayName, saveFn)` from
+`src/shared/presentation/core/use-form-context.tsx` to get a typed context factory with built-in: dirty tracking,
+field-level + general errors, validation, save, and an `ErrorSheet` component.
+
+Forms built around an amount (purchase, transaction, cashflow, pay upcoming, account opening
+balance, category budget) use `AmountHeroForm` from `src/shared/presentation/components/fields/`
+instead of `AppForm`: the amount sits pinned at the top with a caption (`AmountHero`), tinted by
+`tone`, and the fields scroll beneath it in an `AppFieldGroup`. An optional `header` renders
+above the amount (e.g. the purchase type selector). The input logic — locale formatting, digits
+shifting in as cents, selecting the whole amount on focus — lives in `useAmountInput`.
+The amount itself is a React Native `TextInput` hosted through `AppReact`, not an
+`@expo/ui` text field: on iOS 27 SwiftUI stops reporting focus for every field after the
+first form closes, so select-all on focus and `autoFocus` only worked once per launch.
+On iOS the number pad has no return key: `AppFieldGroup` puts the keyboard away when the
+form is dragged (`scrollDismissesKeyboard`), the platform convention. Do not add a Done bar.
+That modifier only reaches SwiftUI fields, so `AppFieldGroup` also calls
+`Keyboard.dismiss()` when a drag starts, for React Native inputs such as the amount.
+
+## Provider Nesting (root `_layout.tsx`)
+
+`LanguageProvider` → `ThemeProvider` → `CombinedInsightProvider` → `InsightsRangeProvider` → `AuthenticationProvider` → `PowerSyncAuthProvider` → `RepositoryProvider`  
+(the auth layer becomes `E2eAuthenticationProvider` in E2E builds — see Config / Environments)  
+Route protection uses `<Stack.Protected guard={...} redirectTo={entry}>` inside `HolefeederContent` — no manual redirects.
+Since SDK 58 a guarded screen renders as a redirect rather than disappearing, so every guard
+needs `redirectTo` (`/Welcome`, `/Registering` or `/`); without it the root stack, which has no
+anchor, falls through to `+not-found`.
+
+## Config / Environments
+
+- `APP_ENV=development|production` selects `.env.development` / `.env.production`
+- All config read through `src/config/config.ts`; never access `process.env` directly in components
+- Local services: `powersync.localtest.me` and `holefeeder.localtest.me` via Traefik + mkcert TLS  
+  (iOS Simulator requires `/etc/hosts` override and `xcrun simctl keychain <UDID> add-root-cert`)
+- `pnpm ios:e2e` builds the **E2E variant**: development endpoints plus `EXPO_PUBLIC_E2E=true`.
+  There is no `.env.e2e` — the flag is passed on the command line, and dotenv does not
+  override variables already set in the environment.
+
+### E2E authentication
+
+When `EXPO_PUBLIC_E2E=true`, `_layout.tsx` mounts `E2eAuthenticationProvider` instead of
+`AuthenticationProvider`. It never opens a browser: it waits for a
+`holefeeder://?e2e-auth-token=<jwt>` deep link and serves that token through the same
+`AuthenticationContext`, so everything downstream (`useAuth`, `PowerSyncAuthProvider`,
+`ApiClient`) is unchanged. Subject and expiry are read from the token, not from the link.
+
+The link targets the **root** path on purpose. expo-router turns any other host into a
+route, and an unknown route fails the render with "Element type is invalid".
+
+This is an authentication bypass and must never ship. Two guards, both required:
+
+1. `app.config.ts` sets `EXPO_PUBLIC_E2E` to `undefined` whenever `APP_ENV=production`, so a
+   production build cannot carry the flag regardless of what any env file contains.
+2. `E2eConfig.isEnabled()` accepts only the exact string `'true'`.
+
+## Path Aliases
+
+`@/` → `src/` (primary alias for all app code)  
+`@tests/` → `tests/` (test utilities only)
+
+## Icons
+
+Always use `AppIcons.<key>` (SF Symbol name) rather than raw strings. Add new icons to both `AppIcons` and
+`AppIconsMapping` in `src/types/icons.ts`.
+
+## Native UI Wrappers (`@expo/ui` boundary)
+
+`@expo/ui` must **never** be imported outside `src/shared/presentation/components/native/`
+(the `modules/` SwiftUI glue is the only other exception). An ESLint `no-restricted-imports`
+rule fails the build on any violation. Feature code always consumes the `App*` wrappers, never
+`@expo/ui` directly.
+
+Two-layer wrapper pattern inside `native/`:
+
+- `expo/Expo<Name>.tsx` — thin passthrough over the raw `@expo/ui` component
+  (`@expo/ui/swift-ui` for iOS-native primitives).
+- `App<Name>.tsx` — the app-facing component built on its `Expo<Name>`, adding theme-aware
+  props and defaults. Feature code imports this.
+
+When feature code needs an `@expo/ui` component, hook, or modifier that has no wrapper yet,
+**add one** rather than importing `@expo/ui` directly:
+
+- **Component** → new `Expo<Name>` + `App<Name>` pair (e.g. `AppDivider`, `AppSection`,
+  `AppProgressView`).
+- **Modifier** → expose it on `AppModifiers` (e.g. `AppModifiers.frame`, `.onAppear`), or add
+  a prop to the relevant `App*` component (e.g. `AppList`'s `inset` wraps `listStyle('inset')`).
+- **Icon name for a native prop** (toolbar/tab `icon=`) → `AppIcon.select(AppIconMap.x)`.
+- **Hook** → re-export from `native/` (e.g. `use-native-state.ts` re-exports `useNativeState`).
+
+Types that would couple a non-`native/` module to `@expo/ui` are redefined locally when
+structurally safe (e.g. `ButtonRole` in `AppButtonVariant.ts`).
+
+**`testID` forwarding.** Every `App*` wrapper must accept `testID` and pass it to its native
+view — `@expo/ui` maps it to `accessibilityIdentifier`, which is how Maestro selects elements.
+Wrappers that spread props (`{...props}`) get this for free; wrappers that enumerate their
+props must declare `testID?: string` and forward it on every return branch. Composite wrappers
+(e.g. `AppField`) put it on their outermost native view. Naming convention:
+`<screen>-<element>` in kebab-case, e.g. `welcome-signup-button`.
+
+## Platform Workarounds
+
+Each entry below works around a bug in iOS, SwiftUI or `@expo/ui`, not in the app. Last
+checked against the release notes of `@expo/ui` 58.0.22, `expo-router` 58.0.25 and
+`expo` 58.0.17: none of them is fixed upstream. On every Expo bump, read the release notes
+for these entries, and remove a workaround only after the bug stops reproducing on a device.
+
+- **SwiftUI focus stops working after the first form.** On iOS 27, `@FocusState` stops
+  reporting focus for every `@expo/ui` text field once the first form closes, so select-all
+  on focus and `autoFocus` only work once per launch. The amount is a React Native
+  `TextInput` hosted through `AppReact` instead (see Form Pattern). Any new field that needs
+  focus events has the same problem.
+- **Leaving a form with a field focused aborts the app.** When a SwiftUI `List` deletes its
+  rows while a text field inside them is first responder, UIKit fails the assertion
+  `_resignOrRebaseFirstResponderViewWithIndexPathMapping`. The crash is intermittent and has
+  only been seen on a device. `useFormActions` calls `endEditing()`
+  (`src/shared/presentation/core/end-editing.ts`, backed by `modules/expo-end-editing`)
+  before every exit: save, cancel and discard. A screen that leaves a form any other way
+  must call it too. Maestro flow: `flows/forms/leave-form-while-focused.yaml`.
+- **Styled buttons don't render in swipe actions.** SwiftUI's `.swipeActions` only renders
+  plain `Button`s reliably: with `buttonStyle`, `foregroundStyle` or `labelStyle` applied,
+  non-destructive actions show up blank. `AppSwipeActions.Actions` provides
+  `SwipeActionContext`, and inside it `AppButton` drops those modifiers.
+- **`transparentModal` breaks text field focus.** Inside a `transparentModal` route,
+  `@expo/ui` text fields change their selection but never report focus. A screen with text
+  inputs must use `card` or `modal`. `accounts/[id]` stays `transparentModal` because it has
+  no inputs and needs it for the shared card transition.
+- **`matchContents` hosts keep their first size.** A host measures its children once, when
+  it mounts, so changing the text size while the app runs leaves its content at the old
+  size. `AppNative` and `AppReact` key every `matchContents` host on `fontScale` to remount
+  it, and `AccountCardList` resets its measured card height when `fontScale` changes. A
+  remount loses transient native state inside the host. `@expo/ui` 58.0.22 fixes a stale
+  size after a host's child remounts, which is a different case.
+
+## i18n
+
+All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files
+in **`packages/shared/src/core/translations/locales/`** (en-CA and fr-CA) — the files in `src/i18n/locales/`
+are thin re-export stubs that point to `@holefeeder/shared/core`.
+
+## Database Schema (PowerSync)
+
+The app syncs offline-first via PowerSync (SQLite). All tables use a `user_id` column to isolate multi-tenant data. Monetary values (`amount`, `open_balance`, `budget_amount`) are stored strictly as **positive integer cents**. In other words, all amounts and balances are strictly positive in the database. When calculating a balance: if the associated category type or account type is an expense/liability, a multiplier of `-1` is applied. If the category or account type is a gain/asset, a multiplier of `1` is applied. Convert via `Money.fromCents()` or `Variation.fromCents()`.
+
+- **`accounts`**: User financial accounts. Includes `type`, `name`, `favorite`, `open_balance`, `open_date`, `description`, `inactive`, `user_id`.
+- **`categories`**: Transaction categories. Includes `type`, `name`, `color`, `budget_amount`, `favorite`, `system`, `inactive`, `user_id`. Soft deleted via the `inactive` flag (never hard deleted, so existing transactions keep resolving).
+- **`cashflows`**: Recurring transactions/bills. Includes `effective_date`, `amount`, `interval_type`, `frequency`, `recurrence`, `description`, `account_id`, `category_id`, `inactive`, `tags`, `user_id`.
+- **`transactions`**: Individual ledger transactions. Includes `date`, `amount`, `description`, `account_id`, `category_id`, `cashflow_id`, `cashflow_date`, `tags`, `user_id`.
+- **`store_items`**: Key-value pairs for arbitrary user data. Includes `code`, `data`, `user_id`.
+
+## Testing Strategy
+
+This application enforces a testing strategy focused on high domain reliability and E2E core flows.
+
+- **Unit & Integration Tests (Jest)**:
+  - Uses `jest` with `jest-expo` preset. Run tests using `pnpm test`.
+  - Test files are named `*.spec.ts(x)` or `*.test.ts(x)`. Files within `__tests__/` are counted towards coverage.
+  - Do not test react-native UI components as they are untestable. Hooks must be tested.
+  - Focus on **fakes** instead of mocks for state and persistence. For example, use in-memory repository fakes (`repositories-in-memory`) instead of creating real database instances or heavily mocking methods. Global mocks/fakes are located in `__mocks__/` at root, context helpers in `tests/setup/`.
+  - **Coverage Threshold**: Strictly enforced at 70% for branches, functions, lines, and statements (`pnpm test -- --coverage`).
+- **E2E Tests (Maestro)**:
+  - User flows are verified using Maestro. Flows live in `.maestro/flows/`, reusable fragments in `.maestro/subflows/`.
+  - Every flow must carry a tag or it never runs: `regression` for fast deterministic flows (`pnpm test:e2e:ios`, needs the `ios:e2e` build), `auth` for flows that drive the real Auth0 hosted pages (`pnpm test:e2e:auth`, needs the `ios:e2e:auth` build), `onboarding` for the new-user journey (`pnpm test:e2e:onboarding`, needs the `ios:e2e` build and the local stack). `run.sh` refuses to run a tag against the wrong build.
+  - Every `regression` flow also carries a feature tag (`dashboard`, `insights`, `forms`), and the core happy paths carry `smoke`. A commit that touches this app runs `smoke` plus the tags of the features it touches in one pass (`pnpm test:e2e smoke,insights`); a new flow gets the tag of its feature.
+  - Before a push, all of `regression`, `onboarding` and `auth` run — they are outside `pnpm test` and CI, so a flow resting on behaviour that has since changed goes unnoticed until someone runs it.
+  - Boot exactly one simulator. `run.sh` reads the installed build's E2E flag off the first booted device while Maestro picks its own, so a second booted simulator lets the guard pass on one and the flow run on the other.
+  - `onboarding` flows use a second Auth0 user (`E2E_NEW_EMAIL`) and are run one at a time, each preceded by `reset-new-user.sh`, which wipes that user's backend rows so the journey starts from nothing every time.
+  - Select elements by `id:` (the `testID` prop), not by visible text — text is translated. Text selectors are only unavoidable inside the Auth0 pages.
+  - Credentials load from `.maestro/.env.e2e.local` via `.maestro/run.sh`; see `.maestro/README.md`.

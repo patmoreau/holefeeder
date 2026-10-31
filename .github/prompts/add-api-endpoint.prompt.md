@@ -15,7 +15,7 @@ under `Commands/` or `Queries/` — not in `Holefeeder.Api`. Carter discovers ev
 `ICarterModule` in the Application assembly (`AddCarter` / `MapCarter` in
 `src/Holefeeder.Api/Program.cs`), so a new slice needs no registration.
 
-Read `backend/CLAUDE.md` first: TDD is required here, which means stating the test plan
+Read `backend/AGENTS.md` first: TDD is required here, which means stating the test plan
 before writing implementation code.
 
 ## 1. Decide the shape
@@ -232,7 +232,7 @@ internal class OpenAccountRequestBuilder : FakerBuilder<Request>
 
 ## 6. Write the tests first
 
-Per `backend/CLAUDE.md`: no mocks, real test database, test plan stated before
+Per `backend/AGENTS.md`: no mocks, real test database, test plan stated before
 implementation. Two suites, both required for a new endpoint:
 
 **Validator unit tests** —
@@ -301,14 +301,14 @@ dotnet format DrifterApps.Holefeeder.slnx --severity error
 Functional tests start Testcontainers. On rootless podman/macOS, Ryuk fails with
 `making volume mountpoint … operation not supported` — run them with
 `TESTCONTAINERS_RYUK_DISABLED=true` and a `DOCKER_HOST` pointing at the podman machine
-socket (see `backend/CLAUDE.md`). `--settings .runsettings` reports "Zero tests ran";
+socket (see `backend/AGENTS.md`). `--settings .runsettings` reports "Zero tests ran";
 pass the project path instead.
 
 ## 8. Then the clients
 
 A new endpoint is not shipped until something calls it. Check whether the Angular SPA
 (`backend/src/Holefeeder.Web/ClientApp`) or the frontend workspace (`frontend/`, see
-`frontend/CLAUDE.md`) needs the corresponding client call, and whether
+`frontend/AGENTS.md`) needs the corresponding client call, and whether
 `docs/business-rules/` describes behavior this endpoint now implements.
 
 ## Never

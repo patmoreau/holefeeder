@@ -26,7 +26,7 @@ plain static files.
   holding Angular's service worker unregister it.
 - **Remove** `ClientApp/`, the Angular parts of `Holefeeder.Web.csproj` and
   `Program.cs`, the `/angular` fallback, the Legacy drawer item (and its
-  `tabs.legacy` string), and the Angular lint command in `backend/CLAUDE.md`.
+  `tabs.legacy` string), and the Angular lint command in `backend/AGENTS.md`.
 - **Build context.** The image builds from the repository root only to reach both
   `backend/` and `frontend/`; with no backend code left it can build from `frontend/`,
   and `/.dockerignore` plus `CICD_CODE_FILE_PATTERNS` shrink accordingly.
