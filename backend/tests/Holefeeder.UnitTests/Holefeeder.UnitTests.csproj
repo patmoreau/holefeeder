@@ -36,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Holefeeder.Api\Holefeeder.Api.csproj"/>
+        <ProjectReference Include="..\..\src\Holefeeder.Service\Holefeeder.Service.csproj"/>
         <ProjectReference Include="..\Holefeeder.Tests.Common\Holefeeder.Tests.Common.csproj"/>
     </ItemGroup>
 

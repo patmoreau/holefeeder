@@ -5,12 +5,12 @@ using Carter;
 using DrifterApps.Seeds.Application.Converters;
 using DrifterApps.Seeds.Infrastructure;
 
-using Holefeeder.Api;
-using Holefeeder.Api.ErrorHandling;
-using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Converters;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
+using Holefeeder.Service;
+using Holefeeder.Service.ErrorHandling;
+using Holefeeder.Service.Extensions;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;

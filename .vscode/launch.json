@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C#: Holefeeder.Api Debug",
+            "name": "C#: Holefeeder.Service Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/backend/src/Holefeeder.Api/Holefeeder.Api.csproj"
+            "projectPath": "${workspaceFolder}/backend/src/Holefeeder.Service/Holefeeder.Service.csproj"
         },
         {
             "type": "expo",

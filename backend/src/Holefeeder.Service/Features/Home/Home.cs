@@ -4,7 +4,7 @@ using Carter;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Holefeeder.Api.Features.Home;
+namespace Holefeeder.Service.Features.Home;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [SuppressMessage("Maintainability", "CA1515:Consider making public types internal")]

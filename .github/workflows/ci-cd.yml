@@ -103,7 +103,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Service' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6
@@ -173,7 +173,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./backend/src/Holefeeder.Api/Dockerfile') }}
+          key: ${{ runner.os }}-api-${{ hashFiles('./backend/src/Holefeeder.Service/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-api-
 
@@ -328,7 +328,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Api' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Service' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6

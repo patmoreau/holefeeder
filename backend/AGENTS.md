@@ -27,7 +27,7 @@ architecture* below). New code follows the target here. Legacy code is not refac
 until a first feature built this way is complete and approved; the steps are in
 `../docs/plans/backend-service.md`.
 
-- **One project.** `src/Holefeeder.Service` (today's `Holefeeder.Api`, renamed) and
+- **One project.** `src/Holefeeder.Service` (the API host, formerly `Holefeeder.Api`) and
   `tests/Holefeeder.Service.Tests`. No new class libraries. `Holefeeder.Web` stays a
   separate host for the SPAs.
 - **Feature/ring layout** from `../docs/contributing/architecture-principles.md`, in
@@ -150,13 +150,13 @@ Describes the existing projects. Do not extend this layout: new code goes in
 ### Layer Structure
 
 ```
-Domain → Application → Infrastructure → Api / Web
+Domain → Application → Infrastructure → Service / Web
 ```
 
 - **Domain** (`src/Holefeeder.Domain`): Aggregate roots, value objects, domain events. No dependencies on outer layers.
 - **Application** (`src/Holefeeder.Application`): Use cases, CQRS queries/commands, application DTOs, authorization. References Domain only.
 - **Infrastructure** (`src/Holefeeder.Infrastructure`): PostgreSQL via Dapper + EF Core, DbUp migrations, Hangfire background jobs. Implements interfaces from Application.
-- **Api** (`src/Holefeeder.Api`): ASP.NET Core 10 minimal API using the **Carter** framework for route modules. Thin layer — delegates to Application.
+- **Service** (`src/Holefeeder.Service`, formerly `Holefeeder.Api`): ASP.NET Core 10 minimal API using the **Carter** framework for route modules. Thin layer — delegates to Application.
 - **Web** (`src/Holefeeder.Web`): ASP.NET Core host serving two SPAs from one image —
   the React app (`frontend/apps/holefeeder-web`) at `/`, and the legacy Angular app
   (`ClientApp/`, base href `/angular/`) under `/angular/`. `Program.cs` has one fallback

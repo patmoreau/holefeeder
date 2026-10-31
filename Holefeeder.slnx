@@ -12,7 +12,7 @@
     <File Path="backend/global.json" />
   </Folder>
   <Folder Name="/src/Api/">
-    <Project Path="backend/src/Holefeeder.Api/Holefeeder.Api.csproj">
+    <Project Path="backend/src/Holefeeder.Service/Holefeeder.Service.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />

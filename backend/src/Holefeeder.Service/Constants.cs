@@ -1,4 +1,4 @@
-namespace Holefeeder.Api;
+namespace Holefeeder.Service;
 
 internal static class Constants
 {

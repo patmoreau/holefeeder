@@ -8,7 +8,7 @@ services:
     container_name: api-functional-tests
     build:
       context: .
-      dockerfile: ./src/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Service/Dockerfile
       target: functionaltests
     depends_on:
       - postgres-data-test
@@ -20,7 +20,7 @@ services:
     container_name: api-unit-tests
     build:
       context: .
-      dockerfile: ./src/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Service/Dockerfile
       target: unittests
     volumes:
       - ./tests-results/:/TestResults

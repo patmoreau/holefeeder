@@ -81,10 +81,10 @@ jobs:
           global-json-file: ./backend/global.json
 
       - name: Restore Api dependencies
-        run: dotnet restore backend/src/Holefeeder.Api/Holefeeder.Api.csproj
+        run: dotnet restore backend/src/Holefeeder.Service/Holefeeder.Service.csproj
 
       - name: Build Api
-        run: dotnet build backend/src/Holefeeder.Api/Holefeeder.Api.csproj --no-restore
+        run: dotnet build backend/src/Holefeeder.Service/Holefeeder.Service.csproj --no-restore
 
       - name: Restore Web dependencies
         run: dotnet restore backend/src/Holefeeder.Web/Holefeeder.Web.csproj

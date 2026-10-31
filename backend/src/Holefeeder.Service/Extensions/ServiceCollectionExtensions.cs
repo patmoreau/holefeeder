@@ -6,7 +6,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 using static Holefeeder.Application.Authorization.Configuration;
 
-namespace Holefeeder.Api.Extensions;
+namespace Holefeeder.Service.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions

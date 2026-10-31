@@ -14,9 +14,9 @@ description: Add a REST endpoint to the Holefeeder API as a Carter vertical slic
 
 Endpoints are vertical slices: **one file holds the route, the request, the validator and
 the handler**, and it lives in `backend/src/Holefeeder.Application/Features/<Feature>/`
-under `Commands/` or `Queries/` — not in `Holefeeder.Api`. Carter discovers every
+under `Commands/` or `Queries/` — not in `Holefeeder.Service`. Carter discovers every
 `ICarterModule` in the Application assembly (`AddCarter` / `MapCarter` in
-`src/Holefeeder.Api/Program.cs`), so a new slice needs no registration.
+`src/Holefeeder.Service/Program.cs`), so a new slice needs no registration.
 
 Read `backend/AGENTS.md` first: TDD is required here, which means stating the test plan
 before writing implementation code.
@@ -316,7 +316,7 @@ A new endpoint is not shipped until something calls it. Check whether the Angula
 
 ## Never
 
-- Put the route in `Holefeeder.Api` — slices live in `Holefeeder.Application/Features/`.
+- Put the route in `Holefeeder.Service` — slices live in `Holefeeder.Application/Features/`.
 - Throw for an expected failure, or return `IResult` from `Handle`.
 - Skip `UnitOfWorkFilter` on a mutating endpoint, or place it before `ValidationFilter<Request>`.
 - Query without filtering on `userContext.Id`.

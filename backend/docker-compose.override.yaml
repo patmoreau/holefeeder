@@ -55,7 +55,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./src/Holefeeder.Api/Dockerfile
+      dockerfile: ./src/Holefeeder.Service/Dockerfile
       tags:
         - '${DOCKER_REGISTRY:-holefeeder}/holefeeder-api:${VERSION:-latest}'
     ports:

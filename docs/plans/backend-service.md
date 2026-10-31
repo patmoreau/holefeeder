@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **step 1 done** (guidance documented), recorded 2026-10-31.
+Status: **step 2 done** (`Holefeeder.Api` renamed), recorded 2026-10-31.
 
 ## Context
 

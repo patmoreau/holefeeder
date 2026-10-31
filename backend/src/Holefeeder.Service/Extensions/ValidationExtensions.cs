@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Holefeeder.Api.Extensions;
+namespace Holefeeder.Service.Extensions;
 
 internal static class ValidationExtensions
 {

@@ -13,7 +13,7 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/Api/">
-    <Project Path="src/Holefeeder.Api/Holefeeder.Api.csproj">
+    <Project Path="src/Holefeeder.Service/Holefeeder.Service.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />

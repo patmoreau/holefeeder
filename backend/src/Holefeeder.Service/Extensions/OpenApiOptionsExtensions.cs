@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Holefeeder.Api.Extensions;
+namespace Holefeeder.Service.Extensions;
 
 internal static class OpenApiOptionsExtensions
 {

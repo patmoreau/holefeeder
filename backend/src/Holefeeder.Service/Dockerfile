@@ -17,7 +17,7 @@ COPY tests/coverlet.runsettings tests/
 COPY tests/Directory.Build.props tests/
 COPY tests/Directory.Packages.props tests/
 
-COPY src/Holefeeder.Api/*.csproj src/Holefeeder.Api/
+COPY src/Holefeeder.Service/*.csproj src/Holefeeder.Service/
 COPY src/Holefeeder.Application/*.csproj src/Holefeeder.Application/
 COPY src/Holefeeder.Domain/*.csproj src/Holefeeder.Domain/
 COPY src/Holefeeder.Infrastructure/*.csproj src/Holefeeder.Infrastructure/
@@ -26,7 +26,7 @@ COPY tests/Holefeeder.UnitTests/*.csproj tests/Holefeeder.UnitTests/
 COPY tests/Holefeeder.Tests.Common/*.csproj tests/Holefeeder.Tests.Common/
 COPY tests/Holefeeder.FunctionalTests/*.csproj tests/Holefeeder.FunctionalTests/
 
-RUN dotnet restore src/Holefeeder.Api/Holefeeder.Api.csproj
+RUN dotnet restore src/Holefeeder.Service/Holefeeder.Service.csproj
 
 RUN dotnet restore tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 RUN dotnet restore tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj
@@ -39,14 +39,14 @@ FROM restore AS build
 ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /source
-COPY src/Holefeeder.Api/. src/Holefeeder.Api/.
+COPY src/Holefeeder.Service/. src/Holefeeder.Service/.
 COPY src/Holefeeder.Application/. src/Holefeeder.Application/.
 COPY src/Holefeeder.Domain/. src/Holefeeder.Domain/.
 COPY src/Holefeeder.Infrastructure/. src/Holefeeder.Infrastructure/.
 COPY tests/Holefeeder.UnitTests/. tests/Holefeeder.UnitTests/.
 COPY tests/Holefeeder.Tests.Common/. tests/Holefeeder.Tests.Common/.
 COPY tests/Holefeeder.FunctionalTests/. tests/Holefeeder.FunctionalTests/.
-WORKDIR /source/src/Holefeeder.Api
+WORKDIR /source/src/Holefeeder.Service
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 
@@ -81,4 +81,4 @@ EXPOSE 443
 
 WORKDIR /app
 COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "Holefeeder.Api.dll"]
+ENTRYPOINT ["dotnet", "Holefeeder.Service.dll"]

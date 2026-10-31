@@ -5,7 +5,7 @@ using Hangfire.Dashboard;
 
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Holefeeder.Api.Extensions;
+namespace Holefeeder.Service.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class WebApplicationExtensions

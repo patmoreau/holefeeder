@@ -6,13 +6,13 @@ using DrifterApps.Seeds.Domain;
 
 using FluentValidation;
 
-using Holefeeder.Api.Extensions;
 using Holefeeder.Application.Exceptions;
+using Holefeeder.Service.Extensions;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Holefeeder.Api.ErrorHandling;
+namespace Holefeeder.Service.ErrorHandling;
 
 [ExcludeFromCodeCoverage]
 internal static class CustomErrorHandler

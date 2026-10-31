@@ -29,7 +29,7 @@ using Refit;
 namespace Holefeeder.FunctionalTests.Drivers;
 
 [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
-public class ApiApplicationDriver : WebApplicationFactory<Api.Api>, IApplicationDriver, IAsyncLifetime
+public class ApiApplicationDriver : WebApplicationFactory<Service.Api>, IApplicationDriver, IAsyncLifetime
 {
     [MemberNotNullWhen(true, nameof(_databaseDriver))]
     private bool UseDatabaseDriver { get; }

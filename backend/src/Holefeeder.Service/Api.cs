@@ -1,4 +1,4 @@
-namespace Holefeeder.Api;
+namespace Holefeeder.Service;
 
 #pragma warning disable CA1515
 public sealed class Api;

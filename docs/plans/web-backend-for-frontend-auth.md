@@ -34,5 +34,5 @@ Move sign-in to the backend (backend-for-frontend pattern):
 ## Open questions
 
 - Session storage on the backend (in-memory, PostgreSQL, distributed cache).
-- Whether the BFF lives in `Holefeeder.Api` or a separate host behind Traefik.
+- Whether the BFF lives in `Holefeeder.Service` or a separate host behind Traefik.
 - How Playwright E2E authenticates once the SPA SDK is gone.
