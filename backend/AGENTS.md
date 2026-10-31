@@ -211,8 +211,11 @@ Use `.Value` to access the underlying primitive when needed.
 
 ### Resilience
 
-This project showcases resiliency patterns (timeouts, circuit breakers, retries). Favor
-standard .NET practices for resilience and the built-in time abstractions where appropriate.
+When code calls an external service, add timeouts, retries and circuit breakers with the
+standard .NET resilience stack (`Microsoft.Extensions.Http.Resilience`) rather than
+hand-rolled loops; like any new library, propose it before adding it. Inject
+`TimeProvider` instead of reading `DateTime.Now`/`UtcNow` so time-dependent code stays
+testable.
 
 ### Developer experience
 
