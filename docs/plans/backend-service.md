@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **steps 1–3 done**, step 4 next, recorded 2026-10-31.
+Status: **steps 1–4 done**, step 5 next, recorded 2026-10-31.
 
 ## Context
 
@@ -39,11 +39,11 @@ is approved. Every step leaves `main` deployable.
    `DrifterApps.Seeds.Testing` only what that test needs. Done in `86ca70e5`: the
    scenario asks a freshly started service for `/healthz` against an empty database,
    and runs in CI as `api-service-tests`.
-4. **Enforce the rules with architecture tests.** In `Holefeeder.Service.Tests`: code
+4. ✅ **Enforce the rules with architecture tests.** In `Holefeeder.Service.Tests`: code
    under `Features/` and `Shared/` does not use legacy namespaces, rings depend inward
-   only, features do not reference each other. Choose between a library (needs approval)
-   and plain reflection, then replace `<arch test command>` in
-   `docs/contributing/architecture-principles.md`.
+   only, features do not reference each other. Done in `cdc596a5` with ArchUnitNET
+   (`Architecture/ArchitectureRules.cs`), which also checks that `Shared` does not
+   depend on `Features`.
 5. **Build the first feature the new way**, end to end — `Api`, `Core`, `Persistence`,
    Dapper SQL, tests. Feature to be chosen. Ships hidden until complete.
 6. **Review and settle the pattern.** Adjust `backend/AGENTS.md` to what the feature
@@ -76,3 +76,8 @@ is approved. Every step leaves `main` deployable.
   (`Testcontainers.PostgreSql`, approved as a direct reference) unless
   `LOCAL_CONNECTION_STRING` is set, which is how CI runs it against the
   `postgres-data-test` compose service (`api-service-tests` in the ci-cd matrix).
+- **Architecture tests.** `TngTech.ArchUnitNET` and `TngTech.ArchUnitNET.xUnitV3` are
+  approved as test-only references. NetArchTest was rejected: no release since 2021.
+  ArchUnitNET reads IL, so a legacy type used only inside a method body still fails a
+  rule. The rules match namespaces (`Holefeeder.Service.Features.<Feature>.<Ring>`,
+  `Holefeeder.Service.Shared.<Ring>`), so folders and namespaces must stay in step.
