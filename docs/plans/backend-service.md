@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **step 3 done** (`Holefeeder.Service.Tests` added), recorded 2026-10-31.
+Status: **steps 1–3 done**, step 4 next, recorded 2026-10-31.
 
 ## Context
 
@@ -24,17 +24,21 @@ is approved. Every step leaves `main` deployable.
 
 ## Steps
 
-1. **Document the target.** `backend/AGENTS.md`, this plan, and a legacy notice on the
-   `add-api-endpoint` playbook.
-2. **Rename `Holefeeder.Api` to `Holefeeder.Service`.** Structural commit: folder,
+1. ✅ **Document the target.** `backend/AGENTS.md`, this plan, and a legacy notice on the
+   `add-api-endpoint` playbook. Done in `230c6866`.
+2. ✅ **Rename `Holefeeder.Api` to `Holefeeder.Service`.** Structural commit: folder,
    `.csproj`, `Holefeeder.Api` namespaces, both `.slnx` files, test project references,
    `Dockerfile` path in `ci-cd.yml`, `codeql-analysis.yml`, `docker-compose.override.yaml`,
    `docker-compose-tests.yaml`, `.vscode/launch.json`, and the docs that name it. Keep the
    published image name and the `api` matrix target and compose service unchanged, so the
    production Quadlet units keep pulling the same image. Deploy to Staging to confirm.
-3. **Add `Holefeeder.Service.Tests`.** One sociable smoke test written with
+   Done in `cd0f6a38` and deployed to Staging. The Scalar Auth0 `ClientId` and the
+   Serilog `ApplicationName` also kept their `Holefeeder.Api` values.
+3. ✅ **Add `Holefeeder.Service.Tests`.** One sociable smoke test written with
    FluentScenario against the running service and a real database. Copy from
-   `DrifterApps.Seeds.Testing` only what that test needs.
+   `DrifterApps.Seeds.Testing` only what that test needs. Done in `86ca70e5`: the
+   scenario asks a freshly started service for `/healthz` against an empty database,
+   and runs in CI as `api-service-tests`.
 4. **Enforce the rules with architecture tests.** In `Holefeeder.Service.Tests`: code
    under `Features/` and `Shared/` does not use legacy namespaces, rings depend inward
    only, features do not reference each other. Choose between a library (needs approval)
