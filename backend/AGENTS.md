@@ -76,6 +76,9 @@ dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 # unless LOCAL_CONNECTION_STRING is set)
 dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj
 
+# Architecture rules only (ArchUnitNET, no database needed)
+dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj -- --filter-class "*ArchitectureRules"
+
 # Single test class (VSTest's --filter is not available; the test platform
 # takes its own arguments after --)
 dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-class "*MyTestClass"

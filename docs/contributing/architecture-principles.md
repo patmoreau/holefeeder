@@ -47,4 +47,8 @@ If something fits no existing ring, stop and propose a name instead of inventing
 3. transactions/api/get-transaction/: endpoint, validates id, calls handler, maps entity to response DTO
 
 ## Verify
-Run `<arch test command>`. Architecture tests enforce the dependency rules above.
+Architecture tests enforce the dependency rules above. Backend, from `backend/`:
+
+```bash
+dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj -- --filter-class "*ArchitectureRules"
+```

@@ -14,6 +14,8 @@
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage"/>
         <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
         <PackageReference Include="Testcontainers.PostgreSql"/>
+        <PackageReference Include="TngTech.ArchUnitNET"/>
+        <PackageReference Include="TngTech.ArchUnitNET.xUnitV3"/>
         <PackageReference Include="xunit.analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
