@@ -20,11 +20,11 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "date-fns": "4.1.0"
+    "date-fns": "4.4.0"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
-    "@types/node": "22.15.21",
+    "@types/node": "22.20.5",
     "jest": "30.5.2",
     "ts-jest": "29.4.15",
     "typescript": "5.9.3"
