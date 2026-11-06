@@ -12,13 +12,31 @@ namespace Holefeeder.ServiceTests.Shared;
 public class ArchitectureRules
 {
     private const string Root = @"^Holefeeder\.Service\.";
-    private const string RingOwner = @"(Features\.[^.]+|Shared)\.";
     private const string NamespaceEnd = @"(\.|$)";
 
     private static readonly string[] OuterRings = ["Api", "Events", "Jobs", "Persistence", "Ui"];
 
     private static readonly ArchUnitNET.Domain.Architecture Service =
         new ArchLoader().LoadAssemblies(typeof(Holefeeder.Service.Api).Assembly).Build();
+
+    private static readonly string[] CrossCutting = ["Shared", "Support"];
+
+    private static readonly string[] Features = Service.Types
+        .Select(type => Regex.Match(type.Namespace.FullName,
+            $@"{Root}(?<feature>[^.]+)\.(Core|{string.Join('|', OuterRings)}){NamespaceEnd}"))
+        .Where(match => match.Success && !CrossCutting.Contains(match.Groups["feature"].Value))
+        .Select(match => match.Groups["feature"].Value)
+        .Distinct(StringComparer.Ordinal)
+        .Order(StringComparer.Ordinal)
+        .ToArray();
+
+    private static readonly string FeatureOwner = $"({string.Join('|', Features)})";
+
+    private static readonly string CrossCuttingOwner = $"({string.Join('|', CrossCutting)})";
+
+    private static readonly string NewCodeOwner = $"({string.Join('|', [.. Features, .. CrossCutting])})";
+
+    private static readonly string RingOwner = $@"{NewCodeOwner}\.";
 
     public static TheoryData<string> LegacyNamespaces =>
     [
@@ -33,10 +51,14 @@ public class ArchitectureRules
 
     public static TheoryData<string> Rings => [.. OuterRings];
 
+    [Fact]
+    public void FeaturesAreDiscovered() =>
+        Features.Should().Contain(["Home", "StoreItems"]).And.NotContain(CrossCutting);
+
     [Theory]
     [MemberData(nameof(LegacyNamespaces))]
     public void NewCodeDoesNotUseLegacyNamespaces(string legacyNamespace) =>
-        Types().That().ResideInNamespaceMatching($"{Root}(Features|Shared){NamespaceEnd}")
+        Types().That().ResideInNamespaceMatching($"{Root}{NewCodeOwner}{NamespaceEnd}")
             .Should().NotDependOnAnyTypesThat()
             .ResideInNamespaceMatching($"^{Regex.Escape(legacyNamespace)}{NamespaceEnd}")
             .WithoutRequiringPositiveResults()
@@ -61,27 +83,22 @@ public class ArchitectureRules
             .Check(Service);
 
     [Fact]
-    public void SharedDoesNotDependOnFeatures() =>
-        Types().That().ResideInNamespaceMatching($"{Root}Shared{NamespaceEnd}")
+    public void CrossCuttingDoesNotDependOnFeatures() =>
+        Types().That().ResideInNamespaceMatching($"{Root}{CrossCuttingOwner}{NamespaceEnd}")
             .Should().NotDependOnAnyTypesThat()
-            .ResideInNamespaceMatching($"{Root}Features{NamespaceEnd}")
+            .ResideInNamespaceMatching($"{Root}{FeatureOwner}{NamespaceEnd}")
             .WithoutRequiringPositiveResults()
             .Check(Service);
 
     [Fact]
     public void FeatureDoesNotDependOnAnotherFeature()
     {
-        var features = Service.Types
-            .Select(type => Regex.Match(type.Namespace.FullName, $@"{Root}Features\.([^.]+)"))
-            .Where(match => match.Success)
-            .Select(match => match.Groups[1].Value)
-            .Distinct();
-
-        foreach (var feature in features)
+        foreach (var feature in Features)
         {
-            Types().That().ResideInNamespaceMatching($@"{Root}Features\.{feature}{NamespaceEnd}")
+            var otherFeatures = string.Join('|', Features.Where(other => other != feature));
+            Types().That().ResideInNamespaceMatching($"{Root}{feature}{NamespaceEnd}")
                 .Should().NotDependOnAnyTypesThat()
-                .ResideInNamespaceMatching($@"{Root}Features\.(?!{feature}{NamespaceEnd})")
+                .ResideInNamespaceMatching($"{Root}({otherFeatures}){NamespaceEnd}")
                 .Check(Service);
         }
     }

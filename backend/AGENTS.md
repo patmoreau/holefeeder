@@ -28,22 +28,30 @@ until a first feature built this way is complete and approved; the steps are in
 `../docs/plans/backend-service.md`.
 
 - **One project.** `src/Holefeeder.Service` (the API host, formerly `Holefeeder.Api`) and
-  `tests/Holefeeder.Service.Tests`. No new class libraries. `Holefeeder.Web` stays a
+  `tests/Holefeeder.ServiceTests`. No new class libraries. `Holefeeder.Web` stays a
   separate host for the SPAs.
 - **Feature/ring layout** from `../docs/contributing/architecture-principles.md`, in
-  PascalCase so folders match namespaces:
+  PascalCase so folders match namespaces. Features sit directly under the project root,
+  next to the legacy host folders (`Extensions/`, `ErrorHandling/`):
   ```
   src/Holefeeder.Service/
-    Features/<FeaturePlural>/
+    <FeaturePlural>/
       Api/<EndpointName>/
       Core/<UseCaseName>/
       Jobs/<JobName>/
       Persistence/<RepositoryName>/
+      <FeaturePlural>.cs           service registration and endpoint mapping
     Shared/<Ring>/
+    Support/<Ring>/
   ```
-  `Jobs` is implemented with Hangfire: Hangfire is the tool, the ring is named for what
-  it does. The same goes for every ring — name it for its role, not its library.
-- **No legacy from new code.** Code under `Features/` and `Shared/` never uses
+  A root folder counts as a feature as soon as it has a ring folder. `Jobs` is
+  implemented with Hangfire: Hangfire is the tool, the ring is named for what it does.
+  The same goes for every ring — name it for its role, not its library.
+- **Cross-cutting modules.** `Shared` and `Support` are not features. Any feature may
+  depend on them; they never depend on a feature. `Support` holds the request's user
+  (`User`, `IdentityObjectId`, `UserContextAccessor`) and the middleware that resolves
+  it.
+- **No legacy from new code.** Code in features, `Shared/` and `Support/` never uses
   `Holefeeder.Domain`, `Holefeeder.Application`, `Holefeeder.Infrastructure` or the
   `DrifterApps.Seeds.Application`/`.Domain`/`.Infrastructure`/`.Testing` packages. Only
   host wiring in `Program.cs` touches both. When new code needs something legacy has,
@@ -74,10 +82,10 @@ dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 
 # Service tests (Holefeeder.Service, real PostgreSQL via Testcontainers
 # unless LOCAL_CONNECTION_STRING is set)
-dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj
+dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
 # Architecture rules only (ArchUnitNET, no database needed)
-dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj -- --filter-class "*ArchitectureRules"
+dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj -- --filter-class "*ArchitectureRules"
 
 # Single test class (VSTest's --filter is not available; the test platform
 # takes its own arguments after --)

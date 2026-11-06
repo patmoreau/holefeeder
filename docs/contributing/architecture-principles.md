@@ -50,5 +50,5 @@ If something fits no existing ring, stop and propose a name instead of inventing
 Architecture tests enforce the dependency rules above. Backend, from `backend/`:
 
 ```bash
-dotnet test tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj -- --filter-class "*ArchitectureRules"
+dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj -- --filter-class "*ArchitectureRules"
 ```

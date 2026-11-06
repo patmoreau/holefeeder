@@ -11,7 +11,7 @@ Core alongside Dapper, and the `DrifterApps.Seeds.*` packages from the
 
 The target is described in `backend/AGENTS.md` under *Target architecture*:
 
-- one project, `Holefeeder.Service`, with one test project, `Holefeeder.Service.Tests`
+- one project, `Holefeeder.Service`, with one test project, `Holefeeder.ServiceTests`
 - the feature/ring layout from `docs/contributing/architecture-principles.md`, in
   PascalCase
 - Dapper with hand-written SQL, no EF Core
@@ -79,5 +79,8 @@ is approved. Every step leaves `main` deployable.
 - **Architecture tests.** `TngTech.ArchUnitNET` and `TngTech.ArchUnitNET.xUnitV3` are
   approved as test-only references. NetArchTest was rejected: no release since 2021.
   ArchUnitNET reads IL, so a legacy type used only inside a method body still fails a
-  rule. The rules match namespaces (`Holefeeder.Service.Features.<Feature>.<Ring>`,
-  `Holefeeder.Service.Shared.<Ring>`), so folders and namespaces must stay in step.
+  rule. The rules match namespaces (`Holefeeder.Service.<Feature>.<Ring>`,
+  `Holefeeder.Service.Shared.<Ring>`, `Holefeeder.Service.Support.<Ring>`), so folders
+  and namespaces must stay in step. Features live at the project root, not under
+  `Features/`: the rules treat any root namespace with a ring under it as a feature, and
+  `Shared` and `Support` as cross-cutting modules every feature may use.
