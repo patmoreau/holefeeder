@@ -36,4 +36,11 @@ public class SearchStoreItemsRequestSortByTests
 
         sortBy.Should().BeFailure().And.WithError(SearchStoreItemsRequestSortByErrors.Invalid);
     }
+
+    [Fact]
+    public void Invalid_IsNamedAfterTheSortParameter()
+    {
+        SearchStoreItemsRequestSortByErrors.Invalid.Code.Should().Be("search-store-items-request-sort-by-invalid");
+        SearchStoreItemsRequestSortByErrors.Invalid.Description.Should().Be("Sort is invalid.");
+    }
 }

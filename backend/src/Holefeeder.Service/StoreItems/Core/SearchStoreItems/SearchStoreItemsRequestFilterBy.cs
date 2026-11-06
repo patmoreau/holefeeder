@@ -58,7 +58,7 @@ internal static class SearchStoreItemsRequestFilterByErrors
 
     public static ResultError Invalid => new(CodeInvalid, "Filter is invalid.");
 
-    public static ResultError OperatorNotSupported => new(CodeOperatorNotSupported, "Operator not supported.");
+    public static ResultError OperatorNotSupported => new(CodeOperatorNotSupported, "Filter operator is not supported.");
 
-    public static ResultError FieldNotSupported => new(CodeFieldNotSupported, "Filter field not supported.");
+    public static ResultError FieldNotSupported => new(CodeFieldNotSupported, "Filter field is not supported.");
 }

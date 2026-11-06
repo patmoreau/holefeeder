@@ -20,7 +20,7 @@ internal sealed record Code
 
 internal static class CodeErrors
 {
-    public const string CodeInvalid = $"{nameof(Code)}.{nameof(Invalid)}";
+    public const string CodeInvalid = "code-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Invalid Code");
+    public static ResultError Invalid => new(CodeInvalid, "Code must be between 1 and 100 characters.");
 }

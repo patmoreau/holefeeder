@@ -62,7 +62,7 @@ internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, 
 
 internal static class StoreItemsErrors
 {
-    public const string CodeReadFailed = "store-items-database-failed";
+    public const string CodeReadFailed = "store-items-read-failed";
 
-    public static ResultError ReadFailed => new(CodeReadFailed, "Store items database failed.");
+    public static ResultError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
 }

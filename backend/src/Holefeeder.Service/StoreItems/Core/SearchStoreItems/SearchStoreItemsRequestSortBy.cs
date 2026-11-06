@@ -32,7 +32,7 @@ internal sealed record SearchStoreItemsRequestSortBy
 
 internal static class SearchStoreItemsRequestSortByErrors
 {
-    public const string CodeInvalid = "search-store-items-request-field-invalid";
+    public const string CodeInvalid = "search-store-items-request-sort-by-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Invalid sort field.");
+    public static ResultError Invalid => new(CodeInvalid, "Sort is invalid.");
 }
