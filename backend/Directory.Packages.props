@@ -47,6 +47,7 @@
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.23.0" />
     <PackageVersion Include="Microsoft.JSInterop" Version="10.0.14" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
+    <PackageVersion Include="Npgsql" Version="10.0.3" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageVersion Include="Refit" Version="16.4.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.7" />

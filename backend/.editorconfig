@@ -65,6 +65,7 @@ dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1812.severity = none # this is not needed because using IoC
 dotnet_diagnostic.CA1819.severity = none
 dotnet_diagnostic.CA2007.severity = none # this is not relevant when in ASP.NET Core application
+dotnet_diagnostic.DAP005.severity = none # Dapper.AOT is not used
 dotnet_diagnostic.S125.severity = suggestion
 dotnet_diagnostic.S2094.severity = none
 dotnet_diagnostic.S2699.severity = none

@@ -2,6 +2,7 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
   <ItemGroup>
+    <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="DrifterApps.Seeds.FluentResult.FluentAssertions" Version="1.1.36" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario" Version="1.0.33" />
     <PackageVersion Include="DrifterApps.Seeds.FluentScenario.FluentAssertions" Version="1.0.33" />

@@ -11,6 +11,7 @@
     <File Path="backend/Directory.Packages.props" />
     <File Path="backend/global.json" />
   </Folder>
+  <Folder Name="/src/" />
   <Folder Name="/src/Api/">
     <Project Path="backend/src/Holefeeder.Service/Holefeeder.Service.csproj">
       <BuildType Solution="Staging|*" Project="?" />
@@ -49,17 +50,17 @@
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
-    <Project Path="backend/tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
     <Project Path="backend/tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
     <Project Path="backend/tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj">
+      <BuildType Solution="Staging|*" Project="?" />
+      <Platform Solution="Staging|*" Project="?" />
+      <Build Solution="Staging|*" Project="false" />
+    </Project>
+    <Project Path="backend\tests\Holefeeder.ServiceTests\Holefeeder.ServiceTests.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />

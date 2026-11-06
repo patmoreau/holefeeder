@@ -15,10 +15,13 @@
 
     <ItemGroup>
         <PackageReference Include="Carter"/>
+        <PackageReference Include="Dapper"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
         <PackageReference Include="DrifterApps.Seeds.Infrastructure"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.Identity.Web"/>
+        <PackageReference Include="Npgsql"/>
         <PackageReference Include="Scalar.AspNetCore"/>
         <PackageReference Include="Serilog.AspNetCore"/>
     </ItemGroup>
@@ -46,10 +49,6 @@
         <Content Update="appsettings.Production.json">
           <DependentUpon>appsettings.json</DependentUpon>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Features\"/>
     </ItemGroup>
 
 </Project>

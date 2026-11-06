@@ -47,8 +47,10 @@ public static class WebApplicationExtensions
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
-    private static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
+    public static void MigrateDb(BudgetingConnectionStringBuilder connectionStringBuilder, ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(connectionStringBuilder);
+
         var completed = false;
         var tryCount = 0;
 

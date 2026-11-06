@@ -2,19 +2,27 @@ using System.Text.Json;
 
 using Carter;
 
+using Dapper;
+
 using DrifterApps.Seeds.Application.Converters;
 using DrifterApps.Seeds.Infrastructure;
 
 using Holefeeder.Application.Converters;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
+using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Service;
 using Holefeeder.Service.ErrorHandling;
 using Holefeeder.Service.Extensions;
+using Holefeeder.Service.Home;
+using Holefeeder.Service.StoreItems;
+using Holefeeder.Service.Support;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi;
+
+using Npgsql;
 
 using Scalar.AspNetCore;
 
@@ -32,7 +40,7 @@ builder.Services
     .AddOpenApi("v2", options =>
     {
         options.AddBearerTokenAuthentication();
-        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        options.AddDocumentTransformer((document, _, _) =>
         {
             document.Info.Contact = new OpenApiContact
             {
@@ -62,6 +70,12 @@ builder.Services
         return options;
     });
 
+builder.Services
+    .AddSingleton(provider =>
+        NpgsqlDataSource.Create(provider.GetRequiredService<BudgetingConnectionStringBuilder>().ConnectionString))
+    .AddStoreItemsServices()
+    .AddSupportServices();
+
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -69,6 +83,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new MoneyJsonConverterFactory());
     options.SerializerOptions.Converters.Add(new CategoryColorJsonConverterFactory());
 });
+
+DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 var app = builder.Build();
 
@@ -79,8 +95,8 @@ if (!string.IsNullOrEmpty(proxyPrefix))
     app.UseForwardedHeaders(new ForwardedHeadersOptions
     {
         ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
-            | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
-            | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+                           | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
+                           | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
     });
     app.UsePathBase(proxyPrefix);
 }
@@ -108,14 +124,16 @@ app.MapScalarApiReference(options =>
 });
 
 app
-    .UseRouting();
-
-app.UseCors()
+    .UseRouting()
+    .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseUserContext();
+    .UseUserContext()
+    .UseSupportMiddleware();
 
-app.MapCarter();
+app.MapCarter()
+    .MapStoreItemsEndpoints()
+    .MapHomeEndpoints();
 
 if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
 {
