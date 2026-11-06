@@ -52,7 +52,7 @@ internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, 
         catch (NpgsqlException exception)
         {
             LogReadFailed(logger, exception);
-            return StoreItemsErrors.DatabaseFailed;
+            return StoreItemsErrors.ReadFailed;
         }
     }
 
@@ -62,7 +62,7 @@ internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, 
 
 internal static class StoreItemsErrors
 {
-    public const string CodeDatabaseFailed = "store-items-database-failed";
+    public const string CodeReadFailed = "store-items-database-failed";
 
-    public static ResultError DatabaseFailed => new(CodeDatabaseFailed, "Store items database failed.");
+    public static ResultError ReadFailed => new(CodeReadFailed, "Store items database failed.");
 }

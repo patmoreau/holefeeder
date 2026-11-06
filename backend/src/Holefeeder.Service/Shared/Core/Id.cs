@@ -27,5 +27,5 @@ internal static class IdErrors
 {
     public const string CodeInvalid = "id-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, $"Id cannot be empty.");
+    public static ResultError Invalid => new(CodeInvalid, "Id cannot be empty.");
 }

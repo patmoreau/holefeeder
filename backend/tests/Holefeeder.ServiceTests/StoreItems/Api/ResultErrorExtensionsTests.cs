@@ -26,13 +26,13 @@ public class ResultErrorExtensionsTests
     }
 
     [Fact]
-    public void ToProblem_ReturnsServerError_WhenDatabaseFailed()
+    public void ToProblem_ReturnsServerError_WhenReadFailed()
     {
-        var result = StoreItemsErrors.DatabaseFailed.ToProblem();
+        var result = StoreItemsErrors.ReadFailed.ToProblem();
 
         var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
         problem.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
-        problem.ProblemDetails.Detail.Should().Be(StoreItemsErrors.DatabaseFailed.Description);
+        problem.ProblemDetails.Detail.Should().Be(StoreItemsErrors.ReadFailed.Description);
     }
 
     [Fact]

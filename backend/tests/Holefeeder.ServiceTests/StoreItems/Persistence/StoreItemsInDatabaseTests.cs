@@ -78,6 +78,6 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
 
         var result = await repo.SearchAsync(ASearchStoreItemsRequest(), CancellationToken.None);
 
-        result.Should().BeFailure().And.WithError(StoreItemsErrors.DatabaseFailed);
+        result.Should().BeFailure().And.WithError(StoreItemsErrors.ReadFailed);
     }
 }
