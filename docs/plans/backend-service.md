@@ -16,7 +16,7 @@ The target is described in `backend/AGENTS.md` under *Target architecture*:
   PascalCase
 - Dapper with hand-written SQL, no EF Core
 - seed.work code copied in only when a feature needs it; `DrifterApps.Seeds.FluentResult`
-  and `DrifterApps.Seeds.FluentScenario` (with their `.FluentAssertions` companions) kept
+  and `DrifterApps.Seeds.FluentScenario` (with their `.AwesomeAssertions` companions) kept
   as packages
 
 Legacy code is **not** refactored until one complete feature built the new way exists and

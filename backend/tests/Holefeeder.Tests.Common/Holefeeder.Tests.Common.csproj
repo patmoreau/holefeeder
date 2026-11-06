@@ -14,10 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentResult.AwesomeAssertions"/>
         <PackageReference Include="DrifterApps.Seeds.Testing"/>
-        <PackageReference Include="FluentAssertions"/>
-        <PackageReference Include="FluentAssertions.Analyzers"/>
+        <PackageReference Include="AwesomeAssertions"/>
+        <PackageReference Include="AwesomeAssertions.Analyzers"/>
         <PackageReference Include="Nito.AsyncEx.Coordination"/>
         <PackageReference Include="Respawn"/>
         <PackageReference Include="WireMock.Net"/>

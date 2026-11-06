@@ -2,13 +2,13 @@
 
 global using System;
 
+global using AwesomeAssertions;
+global using AwesomeAssertions.Execution;
+
 global using Bogus;
 global using Bogus.Extensions;
 
 global using DrifterApps.Seeds.Testing.Attributes;
-
-global using FluentAssertions;
-global using FluentAssertions.Execution;
 
 global using FluentValidation.TestHelper;
 

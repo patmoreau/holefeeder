@@ -60,7 +60,7 @@ until a first feature built this way is complete and approved; the steps are in
   the SQL and its row models and maps them to core types. Schema changes stay DbUp
   scripts in `Holefeeder.Infrastructure/Scripts/` for now (see *Decisions* in the plan).
 - **Seed libraries.** Keep using `DrifterApps.Seeds.FluentResult` and
-  `DrifterApps.Seeds.FluentScenario`, with their `.FluentAssertions` companions, as
+  `DrifterApps.Seeds.FluentScenario`, with their `.AwesomeAssertions` companions, as
   packages. Anything else from the `holefeeder-seed.work` repository is copied into the
   core, ring or test project that needs it, only when it is needed, and owned from then
   on.
@@ -216,7 +216,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | React + MUI at `/`, legacy Angular at `/angular/`, both served by `Holefeeder.Web` |
-| Unit testing | xUnit + FluentAssertions (no mocks — NSubstitute is legacy, being phased out) |
+| Unit testing | xUnit + AwesomeAssertions (no mocks — NSubstitute is legacy, being phased out) |
 | BDD/Functional tests | SpecFlow + Respawn + WireMock.Net |
 | Coverage | Coverlet (Cobertura) + Stryker mutation testing |
 
@@ -246,7 +246,7 @@ The local dev stack (profile `local`) includes: **Traefik** (reverse proxy with 
   without mocks" / Nullables approach: https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks
 - Sociable tests are preferred; narrow-focus integration tests are also welcome.
 - Test against a real test database.
-- Use FluentAssertions as much as possible. Multiple assertions for the same concept are
+- Use AwesomeAssertions as much as possible. Multiple assertions for the same concept are
   welcome; use assertion scopes where appropriate.
 
 ### Strongly typed primitives

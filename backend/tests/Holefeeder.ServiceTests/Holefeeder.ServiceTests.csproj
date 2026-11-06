@@ -8,11 +8,11 @@
     <ItemGroup>
         <PackageReference Include="Bogus" />
         <PackageReference Include="Dapper"/>
-        <PackageReference Include="DrifterApps.Seeds.FluentResult.FluentAssertions" />
+        <PackageReference Include="DrifterApps.Seeds.FluentResult.AwesomeAssertions" />
         <PackageReference Include="DrifterApps.Seeds.FluentScenario"/>
-        <PackageReference Include="DrifterApps.Seeds.FluentScenario.FluentAssertions"/>
-        <PackageReference Include="FluentAssertions"/>
-        <PackageReference Include="FluentAssertions.Analyzers"/>
+        <PackageReference Include="DrifterApps.Seeds.FluentScenario.AwesomeAssertions"/>
+        <PackageReference Include="AwesomeAssertions"/>
+        <PackageReference Include="AwesomeAssertions.Analyzers"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage"/>
         <PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
