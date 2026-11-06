@@ -50,7 +50,7 @@
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
-    <Project Path="tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj">
+    <Project Path="tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
