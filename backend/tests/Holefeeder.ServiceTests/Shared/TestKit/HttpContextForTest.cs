@@ -31,5 +31,5 @@ internal static class HttpContextForTest
         };
     }
 
-    public static HttpContext AnEmptyHttpContext() => new DefaultHttpContext {User = new ClaimsPrincipal(new ClaimsIdentity())};
+    public static HttpContext AnEmptyHttpContext() => new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity()) };
 }

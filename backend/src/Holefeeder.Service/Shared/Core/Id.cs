@@ -13,7 +13,7 @@ internal record Id
             return IdErrors.Invalid;
         }
 
-        return  new Id(value);
+        return new Id(value);
     }
 
     public static Id Valid(Guid value) => new(value);

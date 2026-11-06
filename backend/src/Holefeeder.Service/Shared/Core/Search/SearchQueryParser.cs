@@ -54,7 +54,7 @@ internal static partial class SearchQueryParser
         }
 
         var field = match.Groups["field"].Value;
-        if(!Operators.TryGetValue(match.Groups["operator"].Value, out var op))
+        if (!Operators.TryGetValue(match.Groups["operator"].Value, out var op))
         {
             return error;
         }
@@ -65,14 +65,14 @@ internal static partial class SearchQueryParser
     }
 
     private static readonly Dictionary<string, FilterByOperator> Operators = new(StringComparer.Ordinal)
-     {
-         ["eq"] = FilterByOperator.Equal,
-         ["ne"] = FilterByOperator.NotEqual,
-         ["lt"] = FilterByOperator.LessThan,
-         ["le"] = FilterByOperator.LessThanOrEqual,
-         ["gt"] = FilterByOperator.GreaterThan,
-         ["ge"] = FilterByOperator.GreaterThanOrEqual
-     };
+    {
+        ["eq"] = FilterByOperator.Equal,
+        ["ne"] = FilterByOperator.NotEqual,
+        ["lt"] = FilterByOperator.LessThan,
+        ["le"] = FilterByOperator.LessThanOrEqual,
+        ["gt"] = FilterByOperator.GreaterThan,
+        ["ge"] = FilterByOperator.GreaterThanOrEqual
+    };
 
     [GeneratedRegex(@"^(?<desc>-)?(?<field>\w+)$")]
     private static partial Regex SortPattern();

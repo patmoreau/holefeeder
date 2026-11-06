@@ -22,7 +22,7 @@ internal sealed record SearchStoreItemsRequestRaw(
         var offset = SearchQueryParser.ParseOrDefault(raw.OffsetRaw, Offset.Default, Offset.Create, OffsetErrors.Invalid);
         var limit = SearchQueryParser.ParseOrDefault(raw.LimitRaw, Limit.Default, Limit.Create, LimitErrors.Invalid);
         var filter = SearchQueryParser.ParseFilterBy(raw.FilterRaw, SearchStoreItemsRequestFilterBy.None, SearchStoreItemsRequestFilterBy.Create, SearchStoreItemsRequestFilterByErrors.Invalid);
-        var sort = SearchQueryParser.ParseSortBy(raw.SortRaw,SearchStoreItemsRequestSortBy.Default, SearchStoreItemsRequestSortBy.Create, SearchStoreItemsRequestSortByErrors.Invalid);
+        var sort = SearchQueryParser.ParseSortBy(raw.SortRaw, SearchStoreItemsRequestSortBy.Default, SearchStoreItemsRequestSortBy.Create, SearchStoreItemsRequestSortByErrors.Invalid);
 
         var validation = ResultAggregate.Create();
         if (offset.IsFailure)
