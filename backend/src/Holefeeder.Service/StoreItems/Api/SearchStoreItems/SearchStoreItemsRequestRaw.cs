@@ -5,7 +5,6 @@ using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 
 using Microsoft.AspNetCore.Mvc;
 
-using SearchQueryParser = Holefeeder.Service.Shared.Core.Search.SearchQueryParser;
 using User = Holefeeder.Service.Support.Core.User;
 
 namespace Holefeeder.Service.StoreItems.Api.SearchStoreItems;
@@ -19,10 +18,10 @@ internal sealed record SearchStoreItemsRequestRaw(
 {
     public static Result<SearchStoreItemsRequest> ToSearchStoreItemsRequest(SearchStoreItemsRequestRaw raw, User user)
     {
-        var offset = SearchQueryParser.ParseOrDefault(raw.OffsetRaw, Offset.Default, Offset.Create, OffsetErrors.Invalid);
-        var limit = SearchQueryParser.ParseOrDefault(raw.LimitRaw, Limit.Default, Limit.Create, LimitErrors.Invalid);
-        var filter = SearchQueryParser.ParseFilterBy(raw.FilterRaw, SearchStoreItemsRequestFilterBy.None, SearchStoreItemsRequestFilterBy.Create, SearchStoreItemsRequestFilterByErrors.Invalid);
-        var sort = SearchQueryParser.ParseSortBy(raw.SortRaw, SearchStoreItemsRequestSortBy.Default, SearchStoreItemsRequestSortBy.Create, SearchStoreItemsRequestSortByErrors.Invalid);
+        var offset = Offset.Create(raw.OffsetRaw);
+        var limit = Limit.Create(raw.LimitRaw);
+        var filter = SearchStoreItemsRequestFilterBy.Create(raw.FilterRaw);
+        var sort = SearchStoreItemsRequestSortBy.Create(raw.SortRaw);
 
         var validation = ResultAggregate.Create();
         if (offset.IsFailure)

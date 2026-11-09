@@ -6,65 +6,10 @@ namespace Holefeeder.ServiceTests.Shared.Core.Search;
 
 public class SearchQueryParserTests
 {
-    private static readonly ResultError NotANumber = new("not-a-number", "Value is not a number.");
     private static readonly ResultError Malformed = new("malformed", "Value is malformed.");
     private static readonly ResultError Rejected = new("rejected", "Value is rejected.");
     private static readonly (string, SortByDirection) DefaultSort = ("default", SortByDirection.Ascending);
     private static readonly (string, FilterByOperator, string) DefaultFilter = ("default", FilterByOperator.Equal, "default");
-
-    [Fact]
-    public void ParseOrDefault_ReturnsDefault_WhenRawIsNull()
-    {
-        var result = SearchQueryParser.ParseOrDefault(null, Limit.Default, Limit.Create, NotANumber);
-
-        result.Should().BeSuccessful().And.WithValue(Limit.Default);
-    }
-
-    [Theory]
-    [InlineData("1", 1)]
-    [InlineData("100", 100)]
-    [InlineData(" 42 ", 42)]
-    [InlineData("+7", 7)]
-    public void ParseOrDefault_ReturnsCreatedValue_WhenRawIsValidNumber(string raw, int expected)
-    {
-        var result = SearchQueryParser.ParseOrDefault(raw, Limit.Default, Limit.Create, NotANumber);
-
-        result.Should().BeSuccessful().And.WithValue(Limit.Valid(expected));
-    }
-
-    [Theory]
-    [InlineData("0")]
-    [InlineData("101")]
-    [InlineData("-1")]
-    public void ParseOrDefault_ReturnsCreateError_WhenNumberIsRejectedByCreate(string raw)
-    {
-        var result = SearchQueryParser.ParseOrDefault(raw, Limit.Default, Limit.Create, NotANumber);
-
-        result.Should().BeFailure().And.WithError(LimitErrors.Invalid);
-    }
-
-    [Fact]
-    public void ParseOrDefault_UsesGivenCreate_WhenParsingOffset()
-    {
-        var result = SearchQueryParser.ParseOrDefault("-1", Offset.Default, Offset.Create, NotANumber);
-
-        result.Should().BeFailure().And.WithError(OffsetErrors.Invalid);
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData("abc")]
-    [InlineData("1.5")]
-    [InlineData("1,000")]
-    [InlineData("0x10")]
-    [InlineData("99999999999")]
-    public void ParseOrDefault_ReturnsNotANumberError_WhenRawIsNotAnInteger(string raw)
-    {
-        var result = SearchQueryParser.ParseOrDefault(raw, Limit.Default, Limit.Create, NotANumber);
-
-        result.Should().BeFailure().And.WithError(NotANumber);
-    }
 
     [Fact]
     public void ParseSortBy_ReturnsDefault_WhenSortIsNull()

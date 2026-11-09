@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 using DrifterApps.Seeds.FluentResult;
@@ -7,18 +6,6 @@ namespace Holefeeder.Service.Shared.Core.Search;
 
 internal static partial class SearchQueryParser
 {
-    public static Result<T> ParseOrDefault<T>(string? raw, T defaultValue, Func<int, Result<T>> create, ResultError notANumber)
-    {
-        if (raw is null)
-        {
-            return defaultValue;
-        }
-
-        return int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
-            ? create(value)
-            : notANumber;
-    }
-
     public static Result<T> ParseSortBy<T>(string? sort, T defaultValue, Func<string, SortByDirection, Result<T>> create, ResultError error)
     {
         if (sort is null)
