@@ -1,3 +1,4 @@
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Persistence;
 using Holefeeder.ServiceTests.Support.TestKit;
 using Holefeeder.ServiceTests.TestKit;
@@ -36,4 +37,8 @@ public class UsersInDatabaseTests(DatabaseForTest database, ITestOutputHelper te
 
         result.Should().BeFailure().And.WithError(UsersErrors.ReadFailed);
     }
+
+    [Fact]
+    public void ReadFailed_IsAPersistenceError() =>
+        UsersErrors.ReadFailed.Should().BeOfType<PersistenceError>();
 }

@@ -2,6 +2,7 @@ using Dapper;
 
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Persistence;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 
@@ -64,5 +65,5 @@ internal static class StoreItemsErrors
 {
     public const string CodeReadFailed = "store-items-read-failed";
 
-    public static ResultError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
+    public static PersistenceError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
 }

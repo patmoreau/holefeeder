@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Api;
+using Holefeeder.Service.Shared.Core;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -83,14 +84,26 @@ public class ApiResultTests
     }
 
     [Fact]
-    public void ToProblem_ReturnsServerError_WhenErrorIsAnyOtherError()
+    public void ToProblem_ReturnsServerError_WhenErrorIsAPersistenceError()
+    {
+        var error = new PersistenceError("things-read-failed", "Things could not be read from the database.");
+
+        var result = ApiResult.ToProblem(error);
+
+        var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
+        problem.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        problem.ProblemDetails.Detail.Should().Be("Things could not be read from the database.");
+    }
+
+    [Fact]
+    public void ToProblem_ReturnsBadRequest_WhenErrorIsAnyOtherError()
     {
         var error = new ResultError("thing-invalid", "Thing is invalid.");
 
         var result = ApiResult.ToProblem(error);
 
         var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
-        problem.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+        problem.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         problem.ProblemDetails.Detail.Should().Be("Thing is invalid.");
     }
 }

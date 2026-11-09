@@ -2,6 +2,8 @@ using System.Globalization;
 
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Shared.Core;
+
 namespace Holefeeder.Service.Shared.Api;
 
 internal static class ApiResult
@@ -16,7 +18,8 @@ internal static class ApiResult
         error switch
         {
             ResultErrorAggregate validationError => ToValidationProblemDetails(validationError),
-            _ => ToProblemDetails(error, StatusCodes.Status500InternalServerError)
+            PersistenceError persistenceError => ToProblemDetails(persistenceError, StatusCodes.Status500InternalServerError),
+            _ => ToProblemDetails(error, StatusCodes.Status400BadRequest)
         };
 
     private static IResult ToProblemDetails(ResultError error, int statusCode) => Results.Problem(statusCode: statusCode, detail: error.Description);

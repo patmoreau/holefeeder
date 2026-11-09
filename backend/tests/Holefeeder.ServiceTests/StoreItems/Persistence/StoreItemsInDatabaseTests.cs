@@ -1,3 +1,4 @@
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Core.Search;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.StoreItems.Persistence;
@@ -80,6 +81,10 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
 
         result.Should().BeFailure().And.WithError(StoreItemsErrors.ReadFailed);
     }
+
+    [Fact]
+    public void ReadFailed_IsAPersistenceError() =>
+        StoreItemsErrors.ReadFailed.Should().BeOfType<PersistenceError>();
 
     [Fact]
     public void ReadFailed_MatchesUsersReadFailed()
