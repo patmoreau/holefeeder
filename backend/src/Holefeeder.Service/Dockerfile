@@ -25,14 +25,14 @@ COPY src/Holefeeder.Infrastructure/*.csproj src/Holefeeder.Infrastructure/
 COPY tests/Holefeeder.UnitTests/*.csproj tests/Holefeeder.UnitTests/
 COPY tests/Holefeeder.Tests.Common/*.csproj tests/Holefeeder.Tests.Common/
 COPY tests/Holefeeder.FunctionalTests/*.csproj tests/Holefeeder.FunctionalTests/
-COPY tests/Holefeeder.Service.Tests/*.csproj tests/Holefeeder.Service.Tests/
+COPY tests/Holefeeder.ServiceTests/*.csproj tests/Holefeeder.ServiceTests/
 
 RUN dotnet restore src/Holefeeder.Service/Holefeeder.Service.csproj
 
 RUN dotnet restore tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 RUN dotnet restore tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj
 RUN dotnet restore tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
-RUN dotnet restore tests/Holefeeder.Service.Tests/Holefeeder.Service.Tests.csproj
+RUN dotnet restore tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
 ###################################
 # Build stage
@@ -48,7 +48,7 @@ COPY src/Holefeeder.Infrastructure/. src/Holefeeder.Infrastructure/.
 COPY tests/Holefeeder.UnitTests/. tests/Holefeeder.UnitTests/.
 COPY tests/Holefeeder.Tests.Common/. tests/Holefeeder.Tests.Common/.
 COPY tests/Holefeeder.FunctionalTests/. tests/Holefeeder.FunctionalTests/.
-COPY tests/Holefeeder.Service.Tests/. tests/Holefeeder.Service.Tests/.
+COPY tests/Holefeeder.ServiceTests/. tests/Holefeeder.ServiceTests/.
 WORKDIR /source/src/Holefeeder.Service
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
@@ -78,7 +78,7 @@ RUN mkdir -p /usr/local/share/ca-certificates/aspnet && \
 # Service tests stage
 ###################################
 FROM build AS servicetests
-WORKDIR /source/tests/Holefeeder.Service.Tests
+WORKDIR /source/tests/Holefeeder.ServiceTests
 RUN dotnet build -c Release --no-restore
 
 ###################################
