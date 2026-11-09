@@ -26,6 +26,16 @@ public class CodeTests
         code.Should().BeFailure().And.WithError(CodeErrors.Invalid);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void Create_Fails_WhenValueIsEmpty(string? value)
+    {
+        var code = Code.Create(value);
+
+        code.Should().BeFailure().And.WithError(CodeErrors.Invalid);
+    }
+
     [Fact]
     public void Invalid_DescribesTheLengthRule()
     {

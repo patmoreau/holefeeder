@@ -8,10 +8,10 @@ internal sealed record Code
 
     public string Value { get; }
 
-    public static Result<Code> Create(string value) =>
-        value.Length switch
+    public static Result<Code> Create(string? value) =>
+        value?.Length switch
         {
-            0 or > 100 => CodeErrors.Invalid,
+            null or 0 or > 100 => CodeErrors.Invalid,
             _ => new Code(value)
         };
 

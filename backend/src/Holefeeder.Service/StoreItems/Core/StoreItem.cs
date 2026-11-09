@@ -14,6 +14,12 @@ internal sealed record StoreItem(Id Id, Code Code, string Data)
 internal static class StoreItemErrors
 {
     public const string CodeNotFound = "store-item-not-found";
+    public const string CodeCodeAlreadyExists = "store-item-code-already-exists";
+    public const string CodeUserNotRegistered = "user-not-registered";
 
     public static NotFoundError NotFound => new(CodeNotFound, "Store item was not found.");
+
+    public static ResultError CodeAlreadyExists => new(CodeCodeAlreadyExists, "Store item code already exists.");
+
+    public static ResultError UserNotRegistered => new(CodeUserNotRegistered, "User is not registered.");
 }

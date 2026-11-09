@@ -19,6 +19,8 @@ internal record Id
     public static Result<Id> Create(string? value) =>
         Guid.TryParse(value, out var guid) ? Create(guid) : IdErrors.Invalid;
 
+    public static Id New() => new(Guid.NewGuid());
+
     public static Id Valid(Guid value) => new(value);
 
     public static Id Empty => new(Guid.Empty);

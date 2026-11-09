@@ -23,6 +23,16 @@ public class IdTests
     }
 
     [Fact]
+    public void New_ReturnsADistinctNonEmptyId()
+    {
+        var first = Id.New();
+        var second = Id.New();
+
+        first.Should().NotBe(Id.Empty);
+        second.Should().NotBe(first);
+    }
+
+    [Fact]
     public void Create_Succeeds_WhenTextIsAGuid()
     {
         var value = Guid.NewGuid();

@@ -17,6 +17,8 @@ namespace Holefeeder.Service.StoreItems.Persistence;
 internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, ILogger<StoreItemsInDatabase> logger)
     : IStoreItems
 {
+    private const string UniqueCodePerUserIndex = "user_id_code_idx";
+
     public async Task<Result<StoreItemsPage>> SearchAsync(SearchStoreItemsRequest request, CancellationToken cancellationToken)
     {
         var parameters = new DynamicParameters(new
@@ -115,6 +117,11 @@ internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, 
                 new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
             return saved == 0 ? StoreItemErrors.NotFound : Nothing.Value;
+        }
+        catch (PostgresException exception) when (exception.SqlState == PostgresErrorCodes.UniqueViolation &&
+                                                  exception.ConstraintName == UniqueCodePerUserIndex)
+        {
+            return StoreItemErrors.CodeAlreadyExists;
         }
         catch (NpgsqlException exception)
         {

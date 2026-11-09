@@ -56,6 +56,11 @@ internal sealed class StoreItemsInMemory : IStoreItems
             return Task.FromResult<Result<Nothing>>(_failure);
         }
 
+        if (_storeItems.Exists(entry => entry.UserId == user.Id && entry.Item.Code == item.Code && entry.Item.Id != item.Id))
+        {
+            return Task.FromResult<Result<Nothing>>(StoreItemErrors.CodeAlreadyExists);
+        }
+
         var index = _storeItems.FindIndex(entry => entry.Item.Id == item.Id);
         if (index < 0)
         {

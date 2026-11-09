@@ -162,6 +162,32 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
     }
 
     [Fact]
+    public async Task SaveAsync_FailsWithCodeAlreadyExists_WhenTheUserHasTheCode()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var existing = await AStoreItem().SavedInDbAsync(user, database);
+
+        var result = await _repository.SaveAsync(user, AStoreItem(existing.Code), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemErrors.CodeAlreadyExists);
+    }
+
+    [Fact]
+    public async Task SaveAsync_InsertsTheItem_WhenAnotherUserHasTheCode()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var existing = await AStoreItem().SavedInDbAsync(owner, database);
+        var user = await AUser().SavedInDbAsync(database);
+        var item = AStoreItem(existing.Code);
+
+        var result = await _repository.SaveAsync(user, item, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.GetAsync(AGetStoreItemRequest(user, item.Id), CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(item);
+    }
+
+    [Fact]
     public async Task SaveAsync_Fails_WhenDatabaseError()
     {
         var repo = new StoreItemsInDatabase(database.BadDataSource, new LoggerForTest<StoreItemsInDatabase>(testOutputHelper));

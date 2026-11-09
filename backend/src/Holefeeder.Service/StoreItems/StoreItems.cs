@@ -1,7 +1,9 @@
+using Holefeeder.Service.StoreItems.Api.CreateStoreItem;
 using Holefeeder.Service.StoreItems.Api.GetStoreItem;
 using Holefeeder.Service.StoreItems.Api.ModifyStoreItem;
 using Holefeeder.Service.StoreItems.Api.SearchStoreItems;
 using Holefeeder.Service.StoreItems.Core;
+using Holefeeder.Service.StoreItems.Core.CreateStoreItem;
 using Holefeeder.Service.StoreItems.Core.GetStoreItem;
 using Holefeeder.Service.StoreItems.Core.ModifyStoreItem;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
@@ -16,10 +18,12 @@ internal static class StoreItems
             .AddScoped<IStoreItems, StoreItemsInDatabase>()
             .AddScoped<SearchStoreItemsUseCase>()
             .AddScoped<GetStoreItemUseCase>()
-            .AddScoped<ModifyStoreItemUseCase>();
+            .AddScoped<ModifyStoreItemUseCase>()
+            .AddScoped<CreateStoreItemUseCase>();
 
     public static IEndpointRouteBuilder MapStoreItemsEndpoints(this IEndpointRouteBuilder app) =>
         app.MapSearchStoreItems()
             .MapGetStoreItem()
-            .MapModifyStoreItem();
+            .MapModifyStoreItem()
+            .MapCreateStoreItem();
 }
