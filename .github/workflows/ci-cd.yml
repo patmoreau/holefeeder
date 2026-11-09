@@ -149,51 +149,46 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api-unit-tests, api-functional-tests, api-service-tests]
+        include:
+          - target: api-unit-tests
+            project: tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
+          - target: api-functional-tests
+            project: tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
+          - target: api-service-tests
+            project: tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
     env:
-      VERSION: ${{ needs.set-version.outputs.version }}
-      ASSEMBLY_VERSION: ${{ needs.set-version.outputs.assembly-version }}
+      ASPNETCORE_ENVIRONMENT: Development
+      DOTNET_NOLOGO: true
+
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+      - name: Ensure .NET Installed
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: ./backend/global.json
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Setup docker compose .env
-        run: |
-          printf "COMPOSE_DOCKER_CLI_BUILD=1
-          DOCKER_BUILDKIT=1" > backend/.env
-
-      - name: Restore Docker cache for api
+      - name: Restore NuGet cache
         uses: actions/cache@v6
         with:
-          path: /tmp/.buildx-api-cache
-          key: ${{ runner.os }}-api-${{ hashFiles('./backend/src/Holefeeder.Service/Dockerfile') }}
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('backend/Directory.Packages.props', 'backend/**/*.csproj') }}
           restore-keys: |
-            ${{ runner.os }}-api-
-
-      - name: Restore Docker cache for web
-        uses: actions/cache@v6
-        with:
-          path: /tmp/.buildx-web-cache
-          key: ${{ runner.os }}-web-${{ hashFiles('./backend/src/Holefeeder.Web/Dockerfile') }}
-          restore-keys: |
-            ${{ runner.os }}-web-
+            ${{ runner.os }}-nuget-
 
       - name: Running ${{ matrix.target }}
-        run: |
-          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml run ${{ matrix.target }}
-
-      - name: Tests cleanup
-        if: always()
-        run: |
-          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml down
-          docker compose --env-file backend/.env -f backend/docker-compose-tests.yaml -f backend/docker-compose-tests.override.yaml rm --force --all
+        run: >-
+          dotnet test --project ${{ matrix.project }}
+          --configuration Release
+          --report-trx
+          --results-directory ${{ github.workspace }}/backend/tests-results
+          --coverage
+          --coverage-output-format cobertura
 
       - name: Upload test results
         if: always()
