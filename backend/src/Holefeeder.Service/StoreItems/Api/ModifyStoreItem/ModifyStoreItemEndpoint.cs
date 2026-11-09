@@ -2,8 +2,6 @@ using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.StoreItems.Core.ModifyStoreItem;
 using Holefeeder.Service.Support.Core;
 
-using Microsoft.AspNetCore.Mvc;
-
 namespace Holefeeder.Service.StoreItems.Api.ModifyStoreItem;
 
 internal static class ModifyStoreItemEndpoint
@@ -25,7 +23,7 @@ internal static class ModifyStoreItemEndpoint
     }
 
     private static async Task<IResult> HandlerAsync(
-        [FromBody] ModifyStoreItemRequestRaw rawRequest,
+        [AsParameters] ModifyStoreItemRequestRaw rawRequest,
         UserContextAccessor userContextAccessor,
         ModifyStoreItemUseCase useCase,
         CancellationToken cancellationToken)

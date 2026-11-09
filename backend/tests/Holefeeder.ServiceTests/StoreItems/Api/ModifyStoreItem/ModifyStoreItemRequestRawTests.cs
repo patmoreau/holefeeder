@@ -15,7 +15,7 @@ public class ModifyStoreItemRequestRawTests
         var user = AUser();
         var id = AnId();
 
-        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(id.Value.ToString(), "new-data"), user);
+        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(new ModifyStoreItemBody(id.Value.ToString(), "new-data")), user);
 
         result.Should().BeSuccessful().And.WithValue(new ModifyStoreItemRequest(user, id, Data.Valid("new-data")));
     }
@@ -26,7 +26,7 @@ public class ModifyStoreItemRequestRawTests
     [InlineData("00000000-0000-0000-0000-000000000000")]
     public void ToModifyStoreItemRequest_FailsValidation_WhenIdIsInvalid(string? idRaw)
     {
-        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(idRaw, "new-data"), AUser());
+        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(new ModifyStoreItemBody(idRaw, "new-data")), AUser());
 
         ValidationErrorsOf(result).Should().ContainKey(IdErrors.CodeInvalid);
     }
@@ -37,7 +37,7 @@ public class ModifyStoreItemRequestRawTests
     [InlineData("   ")]
     public void ToModifyStoreItemRequest_FailsValidation_WhenDataIsEmpty(string? dataRaw)
     {
-        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(AnId().Value.ToString(), dataRaw), AUser());
+        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(new ModifyStoreItemBody(AnId().Value.ToString(), dataRaw)), AUser());
 
         ValidationErrorsOf(result).Should().ContainKey(DataErrors.CodeInvalid);
     }
@@ -45,7 +45,7 @@ public class ModifyStoreItemRequestRawTests
     [Fact]
     public void ToModifyStoreItemRequest_ReportsEveryError_WhenIdAndDataAreInvalid()
     {
-        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(null, null), AUser());
+        var result = ModifyStoreItemRequestRaw.ToModifyStoreItemRequest(new(new ModifyStoreItemBody(null, null)), AUser());
 
         ValidationErrorsOf(result).Should().ContainKeys(IdErrors.CodeInvalid, DataErrors.CodeInvalid);
     }
