@@ -2,8 +2,6 @@ using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.StoreItems.Core.CreateStoreItem;
 using Holefeeder.Service.Support.Core;
 
-using Microsoft.AspNetCore.Mvc;
-
 namespace Holefeeder.Service.StoreItems.Api.CreateStoreItem;
 
 internal static class CreateStoreItemEndpoint
@@ -26,7 +24,7 @@ internal static class CreateStoreItemEndpoint
     }
 
     private static async Task<IResult> HandlerAsync(
-        [FromBody] CreateStoreItemRequestRaw rawRequest,
+        [AsParameters] CreateStoreItemRequestRaw rawRequest,
         UserContextAccessor userContextAccessor,
         CreateStoreItemUseCase useCase,
         CancellationToken cancellationToken)

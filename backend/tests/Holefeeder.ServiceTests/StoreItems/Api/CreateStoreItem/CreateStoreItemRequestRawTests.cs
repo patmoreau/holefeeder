@@ -13,7 +13,7 @@ public class CreateStoreItemRequestRawTests
     {
         var user = AUser();
 
-        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new("settings", "new-data"), user);
+        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(new CreateStoreItemBody("settings", "new-data")), user);
 
         result.Should().BeSuccessful()
             .And.WithValue(new CreateStoreItemRequest(user, Code.Valid("settings"), Data.Valid("new-data")));
@@ -24,7 +24,7 @@ public class CreateStoreItemRequestRawTests
     [InlineData("")]
     public void ToCreateStoreItemRequest_FailsValidation_WhenCodeIsEmpty(string? codeRaw)
     {
-        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(codeRaw, "new-data"), AUser());
+        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(new CreateStoreItemBody(codeRaw, "new-data")), AUser());
 
         ValidationErrorsOf(result).Should().ContainKey(CodeErrors.CodeInvalid);
     }
@@ -35,7 +35,7 @@ public class CreateStoreItemRequestRawTests
     [InlineData("   ")]
     public void ToCreateStoreItemRequest_FailsValidation_WhenDataIsEmpty(string? dataRaw)
     {
-        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new("settings", dataRaw), AUser());
+        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(new CreateStoreItemBody("settings", dataRaw)), AUser());
 
         ValidationErrorsOf(result).Should().ContainKey(DataErrors.CodeInvalid);
     }
@@ -43,7 +43,7 @@ public class CreateStoreItemRequestRawTests
     [Fact]
     public void ToCreateStoreItemRequest_ReportsEveryError_WhenCodeAndDataAreInvalid()
     {
-        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(null, null), AUser());
+        var result = CreateStoreItemRequestRaw.ToCreateStoreItemRequest(new(new CreateStoreItemBody(null, null)), AUser());
 
         ValidationErrorsOf(result).Should().ContainKeys(CodeErrors.CodeInvalid, DataErrors.CodeInvalid);
     }

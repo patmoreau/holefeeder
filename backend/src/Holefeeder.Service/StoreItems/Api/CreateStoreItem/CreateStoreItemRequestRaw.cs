@@ -1,22 +1,20 @@
-using System.Text.Json.Serialization;
-
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.CreateStoreItem;
 
+using Microsoft.AspNetCore.Mvc;
+
 using User = Holefeeder.Service.Support.Core.User;
 
 namespace Holefeeder.Service.StoreItems.Api.CreateStoreItem;
 
-internal sealed record CreateStoreItemRequestRaw(
-    [property: JsonPropertyName("code")] string? CodeRaw,
-    [property: JsonPropertyName("data")] string? DataRaw)
+internal sealed record CreateStoreItemRequestRaw([FromBody] CreateStoreItemBody Body)
 {
     public static Result<CreateStoreItemRequest> ToCreateStoreItemRequest(CreateStoreItemRequestRaw raw, User user)
     {
-        var code = Code.Create(raw.CodeRaw);
-        var data = Data.Create(raw.DataRaw);
+        var code = Code.Create(raw.Body.Code);
+        var data = Data.Create(raw.Body.Data);
 
         var validation = ResultAggregate.Create();
         if (code.IsFailure)
