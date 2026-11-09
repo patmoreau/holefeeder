@@ -142,7 +142,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles(env.DOCKERFILE_PATH) }}
 
   tests:
-    name: Tests
+    name: Tests ${{ matrix.target }}
     needs: [set-version, build]
     runs-on: ubuntu-latest
 
