@@ -68,10 +68,10 @@ is approved. Every step leaves `main` deployable.
   `Holefeeder.Infrastructure/Scripts/` (next number, plus an `EmbeddedResource` entry in
   the `.csproj`) until step 7 moves them. This is the one legacy location new work
   writes to.
-- **Seed.work source.** Code is copied from the seed.work repository at tag `v1.0.179`,
+- **Seed.work source.** Code is copied from the seed.work repository at tag `v2.0.2`,
   the version the legacy projects reference, so copied code matches what runs today.
-  `Holefeeder.Service.Tests` holds the first copies: `PostgreDatabaseServer` and
-  `LocalDatabaseServer`, trimmed to what the smoke test uses.
+  No copies are in use: the first ones, `PostgreDatabaseServer` and
+  `LocalDatabaseServer`, gave way to `DatabaseForTest` in `Holefeeder.ServiceTests`.
 - **Test database.** `Holefeeder.ServiceTests` starts PostgreSQL with Testcontainers
   (`Testcontainers.PostgreSql`, approved as a direct reference), locally and in CI.
   CI runs the test projects with `dotnet test` on the runner rather than in compose
