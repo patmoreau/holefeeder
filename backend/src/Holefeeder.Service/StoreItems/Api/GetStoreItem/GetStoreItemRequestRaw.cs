@@ -13,7 +13,7 @@ internal sealed record GetStoreItemRequestRaw([FromRoute(Name = "id")] string? I
 {
     public static Result<GetStoreItemRequest> ToGetStoreItemRequest(GetStoreItemRequestRaw raw, User user)
     {
-        Result<Id> id = Guid.TryParse(raw.IdRaw, out var value) ? Id.Create(value) : IdErrors.Invalid;
+        var id = Id.Create(raw.IdRaw);
 
         var validation = ResultAggregate.Create();
         if (id.IsFailure)
