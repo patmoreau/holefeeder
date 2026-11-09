@@ -96,6 +96,18 @@ public class ApiResultTests
     }
 
     [Fact]
+    public void ToProblem_ReturnsNotFound_WhenErrorIsANotFoundError()
+    {
+        var error = new NotFoundError("thing-not-found", "Thing was not found.");
+
+        var result = ApiResult.ToProblem(error);
+
+        var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
+        problem.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+        problem.ProblemDetails.Detail.Should().Be("Thing was not found.");
+    }
+
+    [Fact]
     public void ToProblem_ReturnsBadRequest_WhenErrorIsAnyOtherError()
     {
         var error = new ResultError("thing-invalid", "Thing is invalid.");

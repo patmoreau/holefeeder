@@ -19,6 +19,7 @@ internal static class ApiResult
         {
             ResultErrorAggregate validationError => ToValidationProblemDetails(validationError),
             UnexpectedError unexpectedError => ToProblemDetails(unexpectedError, StatusCodes.Status500InternalServerError),
+            NotFoundError notFoundError => ToProblemDetails(notFoundError, StatusCodes.Status404NotFound),
             _ => ToProblemDetails(error, StatusCodes.Status400BadRequest)
         };
 
