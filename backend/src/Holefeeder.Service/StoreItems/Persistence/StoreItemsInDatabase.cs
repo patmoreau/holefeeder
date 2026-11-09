@@ -5,6 +5,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Persistence;
 using Holefeeder.Service.StoreItems.Core;
+using Holefeeder.Service.StoreItems.Core.GetStoreItem;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 
 using Npgsql;
@@ -50,6 +51,35 @@ internal sealed partial class StoreItemsInDatabase(NpgsqlDataSource dataSource, 
                 new CommandDefinition(itemsSql, parameters, cancellationToken: cancellationToken));
 
             return new StoreItemsPage(total, [.. rows.Select(row => row.ToStoreItem())]);
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return StoreItemsErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<StoreItem>> GetAsync(GetStoreItemRequest request, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT s.id, s.code, s.data
+                           FROM store_items s
+                           WHERE s.id = @Id AND s.user_id = @UserId;
+                           """;
+        var parameters = new DynamicParameters(new
+        {
+            Id = request.Id.Value,
+            UserId = request.User.Id.Value
+        });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var row = await connection.QuerySingleOrDefaultAsync<StoreItemRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return row is null ? StoreItemErrors.NotFound : row.ToStoreItem();
         }
         catch (NpgsqlException exception)
         {

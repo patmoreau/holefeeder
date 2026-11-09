@@ -3,6 +3,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Core.Search;
 using Holefeeder.Service.StoreItems.Core;
+using Holefeeder.Service.StoreItems.Core.GetStoreItem;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.Support.Core;
 
@@ -31,6 +32,21 @@ internal sealed class StoreItemsInMemory : IStoreItems
         var page = sorted.Skip(request.Offset.Value).Take(request.Limit.Value).ToList();
 
         return Task.FromResult<Result<StoreItemsPage>>(new StoreItemsPage(matching.Count, page));
+    }
+
+    public Task<Result<StoreItem>> GetAsync(GetStoreItemRequest request, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<StoreItem>>(_failure);
+        }
+
+        var item = _storeItems
+            .Where(entry => entry.UserId == request.User.Id && entry.Item.Id == request.Id)
+            .Select(entry => entry.Item)
+            .SingleOrDefault();
+
+        return Task.FromResult<Result<StoreItem>>(item is null ? StoreItemErrors.NotFound : item);
     }
 
     public void Add(User user, StoreItem storeItem) => _storeItems.Add((user.Id, storeItem));

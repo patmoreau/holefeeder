@@ -1,5 +1,6 @@
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Core.Search;
+using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.StoreItems.Persistence;
 using Holefeeder.ServiceTests.StoreItems.TestKit;
@@ -70,6 +71,50 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
 
         result.Should().BeSuccessful();
         result.Value.Should().BeEquivalentTo(new StoreItemsPage(3, [item3, item2, item1]));
+    }
+
+    [Fact]
+    public async Task GetAsync_Succeed_WhenTheUserOwnsTheItem()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var item = await AStoreItem().SavedInDbAsync(user, database);
+        await AStoreItem().SavedInDbAsync(user, database);
+
+        var result = await _repository.GetAsync(AGetStoreItemRequest(user, item.Id), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(item);
+    }
+
+    [Fact]
+    public async Task GetAsync_FailsWithNotFound_WhenTheItemBelongsToAnotherUser()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var item = await AStoreItem().SavedInDbAsync(owner, database);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.GetAsync(AGetStoreItemRequest(user, item.Id), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetAsync_FailsWithNotFound_WhenTheItemDoesNotExist()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.GetAsync(AGetStoreItemRequest(user, AnId()), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetAsync_Fails_WhenDatabaseError()
+    {
+        var repo = new StoreItemsInDatabase(database.BadDataSource, new LoggerForTest<StoreItemsInDatabase>(testOutputHelper));
+
+        var result = await repo.GetAsync(AGetStoreItemRequest(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemsErrors.ReadFailed);
     }
 
     [Fact]
