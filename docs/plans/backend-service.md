@@ -72,10 +72,10 @@ is approved. Every step leaves `main` deployable.
   the version the legacy projects reference, so copied code matches what runs today.
   `Holefeeder.Service.Tests` holds the first copies: `PostgreDatabaseServer` and
   `LocalDatabaseServer`, trimmed to what the smoke test uses.
-- **Test database.** `Holefeeder.Service.Tests` starts PostgreSQL with Testcontainers
-  (`Testcontainers.PostgreSql`, approved as a direct reference) unless
-  `LOCAL_CONNECTION_STRING` is set, which is how CI runs it against the
-  `postgres-data-test` compose service (`api-service-tests` in the ci-cd matrix).
+- **Test database.** `Holefeeder.ServiceTests` starts PostgreSQL with Testcontainers
+  (`Testcontainers.PostgreSql`, approved as a direct reference), locally and in CI.
+  CI runs the test projects with `dotnet test` on the runner rather than in compose
+  containers, which have no Docker socket.
 - **Architecture tests.** `TngTech.ArchUnitNET` and `TngTech.ArchUnitNET.xUnitV3` are
   approved as test-only references. NetArchTest was rejected: no release since 2021.
   ArchUnitNET reads IL, so a legacy type used only inside a method body still fails a

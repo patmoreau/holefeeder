@@ -80,8 +80,7 @@ dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 # Functional tests
 dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 
-# Service tests (Holefeeder.Service, real PostgreSQL via Testcontainers
-# unless LOCAL_CONNECTION_STRING is set)
+# Service tests (Holefeeder.Service, real PostgreSQL via Testcontainers)
 dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
 # Architecture rules only (ArchUnitNET, no database needed)
@@ -151,15 +150,12 @@ docker compose up -d
 > images: `sudo podman auto-update` pulls the newest `:latest` (published by the
 > `publish-docker-images` job) and restarts changed units, gated on manual approval.
 
-### Run tests in Docker (as CI does)
-```bash
-# -p keeps the run out of the Staging project named in .env
-compose="docker compose -p holefeeder-tests -f docker-compose-tests.yaml -f docker-compose-tests.override.yaml"
-$compose run --rm --build api-unit-tests
-$compose run --rm --build api-functional-tests
-$compose run --rm --build api-service-tests
-$compose down
-```
+### Tests in CI
+The `tests` job in `.github/workflows/ci-cd.yml` runs `dotnet test` for each test
+project directly on the runner, not in Docker, so Testcontainers can reach the
+runner's Docker. It first trusts the ASP.NET Core development certificate: the
+functional tests' fake identity server (`AuthorityDriver`) serves it over HTTPS.
+The Dockerfile only builds the published image.
 
 ## Legacy architecture
 

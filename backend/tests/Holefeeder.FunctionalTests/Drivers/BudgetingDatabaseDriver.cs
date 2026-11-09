@@ -7,8 +7,6 @@ using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.EntityFrameworkCore;
 
-using Npgsql;
-
 using Respawn;
 
 namespace Holefeeder.FunctionalTests.Drivers;
@@ -31,20 +29,7 @@ public sealed class BudgetingDatabaseDriver : DatabaseDriver<BudgetingContext>
         WithReseed = true
     };
 
-    public BudgetingDatabaseDriver()
-    {
-        var connectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            DatabaseServer = PostgreDatabaseServer.CreateServer(Schema);
-        }
-        else
-        {
-            DatabaseServer = LocalDatabaseServer.CreateServer(connectionString, ConnectionFactory);
-        }
-    }
-
-    private static NpgsqlConnection ConnectionFactory(string connectionString) => new(connectionString);
+    public BudgetingDatabaseDriver() => DatabaseServer = PostgreDatabaseServer.CreateServer(Schema);
 
     public override async ValueTask InitializeAsync()
     {

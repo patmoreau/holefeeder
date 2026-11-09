@@ -12,27 +12,13 @@ COPY Directory.Build.targets .
 COPY Directory.Packages.props .
 COPY nuget.config .
 COPY src/Directory.Build.props src/
-COPY tests/.editorconfig tests/
-COPY tests/coverlet.runsettings tests/
-COPY tests/Directory.Build.props tests/
-COPY tests/Directory.Packages.props tests/
 
 COPY src/Holefeeder.Service/*.csproj src/Holefeeder.Service/
 COPY src/Holefeeder.Application/*.csproj src/Holefeeder.Application/
 COPY src/Holefeeder.Domain/*.csproj src/Holefeeder.Domain/
 COPY src/Holefeeder.Infrastructure/*.csproj src/Holefeeder.Infrastructure/
 
-COPY tests/Holefeeder.UnitTests/*.csproj tests/Holefeeder.UnitTests/
-COPY tests/Holefeeder.Tests.Common/*.csproj tests/Holefeeder.Tests.Common/
-COPY tests/Holefeeder.FunctionalTests/*.csproj tests/Holefeeder.FunctionalTests/
-COPY tests/Holefeeder.ServiceTests/*.csproj tests/Holefeeder.ServiceTests/
-
 RUN dotnet restore src/Holefeeder.Service/Holefeeder.Service.csproj
-
-RUN dotnet restore tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
-RUN dotnet restore tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj
-RUN dotnet restore tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
-RUN dotnet restore tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
 ###################################
 # Build stage
@@ -45,41 +31,9 @@ COPY src/Holefeeder.Service/. src/Holefeeder.Service/.
 COPY src/Holefeeder.Application/. src/Holefeeder.Application/.
 COPY src/Holefeeder.Domain/. src/Holefeeder.Domain/.
 COPY src/Holefeeder.Infrastructure/. src/Holefeeder.Infrastructure/.
-COPY tests/Holefeeder.UnitTests/. tests/Holefeeder.UnitTests/.
-COPY tests/Holefeeder.Tests.Common/. tests/Holefeeder.Tests.Common/.
-COPY tests/Holefeeder.FunctionalTests/. tests/Holefeeder.FunctionalTests/.
-COPY tests/Holefeeder.ServiceTests/. tests/Holefeeder.ServiceTests/.
 WORKDIR /source/src/Holefeeder.Service
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
-
-###################################
-# Unit tests stage
-###################################
-FROM build AS unittests
-WORKDIR /source/tests/Holefeeder.UnitTests
-RUN dotnet build -c Release --no-restore
-
-###################################
-# Functional tests stage
-###################################
-FROM build AS functionaltests
-WORKDIR /source/tests/Holefeeder.FunctionalTests
-RUN dotnet build -c Release --no-restore
-
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https
-# Export and trust the certificate for Linux container
-RUN mkdir -p /usr/local/share/ca-certificates/aspnet && \
-    dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM && \
-    update-ca-certificates
-
-###################################
-# Service tests stage
-###################################
-FROM build AS servicetests
-WORKDIR /source/tests/Holefeeder.ServiceTests
-RUN dotnet build -c Release --no-restore
 
 ###################################
 # Final stage
