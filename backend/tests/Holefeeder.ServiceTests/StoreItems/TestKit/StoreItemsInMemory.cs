@@ -49,6 +49,29 @@ internal sealed class StoreItemsInMemory : IStoreItems
         return Task.FromResult<Result<StoreItem>>(item is null ? StoreItemErrors.NotFound : item);
     }
 
+    public Task<Result<Nothing>> SaveAsync(User user, StoreItem item, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Nothing>>(_failure);
+        }
+
+        var index = _storeItems.FindIndex(entry => entry.Item.Id == item.Id);
+        if (index < 0)
+        {
+            _storeItems.Add((user.Id, item));
+            return Task.FromResult<Result<Nothing>>(Nothing.Value);
+        }
+
+        if (_storeItems[index].UserId != user.Id)
+        {
+            return Task.FromResult<Result<Nothing>>(StoreItemErrors.NotFound);
+        }
+
+        _storeItems[index] = (user.Id, item);
+        return Task.FromResult<Result<Nothing>>(Nothing.Value);
+    }
+
     public void Add(User user, StoreItem storeItem) => _storeItems.Add((user.Id, storeItem));
 
     public void FailWith(ResultError error) => _failure = error;

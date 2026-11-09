@@ -8,6 +8,7 @@ global using static Holefeeder.ServiceTests.Shared.TestKit.HttpContextForTest;
 global using static Holefeeder.ServiceTests.Shared.TestKit.IdForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.CodeForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.GetStoreItemRequestForTest;
+global using static Holefeeder.ServiceTests.StoreItems.TestKit.ModifyStoreItemRequestForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.SearchStoreItemsRequestFilterByForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.SearchStoreItemsRequestForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.SearchStoreItemsRequestSortByForTest;

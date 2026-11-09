@@ -118,6 +118,64 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
     }
 
     [Fact]
+    public async Task SaveAsync_InsertsTheItem_WhenItDoesNotExist()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var item = AStoreItem();
+
+        var result = await _repository.SaveAsync(user, item, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.GetAsync(AGetStoreItemRequest(user, item.Id), CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(item);
+    }
+
+    [Fact]
+    public async Task SaveAsync_ReplacesTheItem_WhenTheUserOwnsIt()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var item = await AStoreItem().SavedInDbAsync(user, database);
+        var other = await AStoreItem().SavedInDbAsync(user, database);
+        var modified = item with { Code = ACode(), Data = "new-data" };
+
+        var result = await _repository.SaveAsync(user, modified, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.GetAsync(AGetStoreItemRequest(user, item.Id), CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(modified);
+        (await _repository.GetAsync(AGetStoreItemRequest(user, other.Id), CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(other);
+    }
+
+    [Fact]
+    public async Task SaveAsync_FailsWithNotFound_WhenTheItemBelongsToAnotherUser()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var item = await AStoreItem().SavedInDbAsync(owner, database);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.SaveAsync(user, item with { Data = "new-data" }, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemErrors.NotFound);
+        (await _repository.GetAsync(AGetStoreItemRequest(owner, item.Id), CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(item);
+    }
+
+    [Fact]
+    public async Task SaveAsync_Fails_WhenDatabaseError()
+    {
+        var repo = new StoreItemsInDatabase(database.BadDataSource, new LoggerForTest<StoreItemsInDatabase>(testOutputHelper));
+
+        var result = await repo.SaveAsync(AUser(), AStoreItem(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(StoreItemsErrors.WriteFailed);
+    }
+
+    [Fact]
+    public void WriteFailed_IsAnUnexpectedError() =>
+        StoreItemsErrors.WriteFailed.Should().BeOfType<UnexpectedError>();
+
+    [Fact]
     public async Task GetByIdentityObjectId_Fails_WhenDatabaseError()
     {
         var repo = new StoreItemsInDatabase(database.BadDataSource, new LoggerForTest<StoreItemsInDatabase>(testOutputHelper));
