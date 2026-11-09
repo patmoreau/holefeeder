@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **steps 1–4 done**, step 5 next, recorded 2026-10-31.
+Status: **steps 1–6 done**, step 7 next, recorded 2026-11-09.
 
 ## Context
 
@@ -44,12 +44,20 @@ is approved. Every step leaves `main` deployable.
    only, features do not reference each other. Done in `cdc596a5` with ArchUnitNET
    (`Architecture/ArchitectureRules.cs`), which also checks that `Shared` does not
    depend on `Features`.
-5. **Build the first feature the new way**, end to end — `Api`, `Core`, `Persistence`,
-   Dapper SQL, tests. Feature to be chosen. Ships hidden until complete.
-6. **Review and settle the pattern.** Adjust `backend/AGENTS.md` to what the feature
-   taught, and rewrite the `add-api-endpoint` playbook for the new layout.
-7. **Migrate legacy features one at a time** (separate plan). Each move deletes the
-   legacy code it replaces. When the last user is gone: drop EF Core, the remaining
+5. ✅ **Build the first feature the new way**, end to end — `Api`, `Core`, `Persistence`,
+   Dapper SQL, tests. Done in `e5369388`: the store items search,
+   `GET api/v2/store-items`, now served by `Holefeeder.Service/StoreItems` with the
+   same contract, and the legacy route removed. Both the legacy scenario and the new
+   component test pass.
+6. ✅ **Review and settle the pattern.** Adjust `backend/AGENTS.md` to what the feature
+   taught, and rewrite the `add-api-endpoint` playbook for the new layout. Done after a
+   review pass over the feature (error codes, naming, `ApiResult`, `UnexpectedError`):
+   `add-api-endpoint` rewritten in `bd2de714`, `migrate-api-endpoint` added in
+   `2111e6cb` for step 7, and `backend/AGENTS.md` updated with the settled conventions.
+7. **Migrate legacy features one at a time** (separate plan), following the
+   `migrate-api-endpoint` playbook. Each move deletes the legacy route and handler it
+   replaces, keeps the request types the legacy tests build on, and leaves those tests
+   unchanged and passing. When the last user is gone: drop EF Core, the remaining
    `DrifterApps.Seeds.*` packages, `Holefeeder.Domain`, `.Application`, `.Infrastructure`,
    `Holefeeder.UnitTests`, `Holefeeder.FunctionalTests` and `Holefeeder.Tests.Common`.
    Before `Holefeeder.Infrastructure` goes, move the DbUp runner and its scripts into

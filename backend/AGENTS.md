@@ -23,9 +23,14 @@ values rather than merely checking that a result exists.
 ## Target architecture — Holefeeder.Service
 
 Most of the backend predates agent-assisted work and is **legacy** (see *Legacy
-architecture* below). New code follows the target here. Legacy code is not refactored
-until a first feature built this way is complete and approved; the steps are in
+architecture* below). New code follows the target here. The first feature built this
+way, the store items search (`src/Holefeeder.Service/StoreItems/`), is the reference
+implementation; legacy endpoints now move over one at a time. The steps are in
 `../docs/plans/backend-service.md`.
+
+Two playbooks carry the procedure: `/backend:add-api-endpoint` for a new endpoint and
+`/backend:migrate-api-endpoint` for moving a legacy one
+(`../docs/contributing/tasks/backend/`).
 
 - **One project.** `src/Holefeeder.Service` (the API host, formerly `Holefeeder.Api`) and
   `tests/Holefeeder.ServiceTests`. No new class libraries. `Holefeeder.Web` stays a
@@ -36,13 +41,19 @@ until a first feature built this way is complete and approved; the steps are in
   ```
   src/Holefeeder.Service/
     <FeaturePlural>/
-      Api/<EndpointName>/
-      Core/<UseCaseName>/
+      Api/<UseCase>/               endpoint, raw request, response
+      Core/                        value objects used by several of the feature's use cases
+      Core/<UseCase>/              use case, request, port, returned types
       Jobs/<JobName>/
-      Persistence/<RepositoryName>/
+      Persistence/                 <FeaturePlural>InDatabase, rows, SQL clause builders
       <FeaturePlural>.cs           service registration and endpoint mapping
     Shared/<Ring>/
     Support/<Ring>/
+
+  tests/Holefeeder.ServiceTests/
+    <FeaturePlural>/               same folders as the source, plus TestKit/
+    Shared/                        ArchitectureRules, ErrorConventions, shared code's tests
+    TestKit/                       ServerForTest, DatabaseForTest, test markers
   ```
   A root folder counts as a feature as soon as it has a ring folder. `Jobs` is
   implemented with Hangfire: Hangfire is the tool, the ring is named for what it does.
@@ -59,6 +70,19 @@ until a first feature built this way is complete and approved; the steps are in
 - **Dapper with hand-written SQL.** No EF Core in new code. The persistence ring owns
   the SQL and its row models and maps them to core types. Schema changes stay DbUp
   scripts in `Holefeeder.Infrastructure/Scripts/` for now (see *Decisions* in the plan).
+- **Always-valid core types.** Value objects have a private constructor, a `Create`
+  that validates and returns `Result<T>`, and a `Valid` used only by test values and
+  database reads.
+- **Results end to end.** New code never throws for an expected failure. Each error is
+  a static member of an `*Errors` class with a kebab-case code constant and a
+  one-sentence message; `ErrorConventions` checks codes are kebab-case and unique.
+  Persistence catches database exceptions and returns an `UnexpectedError`.
+  `Shared/Api/ApiResult` alone turns errors into HTTP: validation aggregates are 400
+  validation problems, `UnexpectedError` is 500, any other error is 400.
+- **Tests without mocks.** Core is tested against an in-memory port
+  (`<FeaturePlural>InMemory` in the feature's `TestKit/`), persistence against
+  PostgreSQL from `DatabaseForTest`, and each endpoint by a component test over HTTP
+  with `ServerForTest` and FluentScenario. Builders are named `A<Thing>()`.
 - **Seed libraries.** Keep using `DrifterApps.Seeds.FluentResult` and
   `DrifterApps.Seeds.FluentScenario`, with their `.AwesomeAssertions` companions, as
   packages. Anything else from the `holefeeder-seed.work` repository is copied into the
@@ -95,7 +119,7 @@ dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-c
 > Microsoft.Testing.Platform, which ignores `.runsettings`. Pass the project path
 > instead.
 
-> **Podman (rootless, macOS):** the functional tests start Testcontainers, and Ryuk
+> **Podman (rootless, macOS):** the functional and service tests start Testcontainers, and Ryuk
 > fails with `making volume mountpoint … operation not supported`. Run them with
 > `TESTCONTAINERS_RYUK_DISABLED=true`, and make sure `DOCKER_HOST` points at the
 > podman machine socket (see the Docker section below).
@@ -247,17 +271,17 @@ The local dev stack (profile `local`) includes: **Traefik** (reverse proxy with 
 
 ### Strongly typed primitives
 
-Wrap primitive IDs in typed wrappers so a `UserId` can only be used as a `UserId`:
-
-```csharp
-public record UserId(int Value);
-```
-
-Use `.Value` to access the underlying primitive when needed.
+Wrap primitives in typed value objects so a `Code` can only be used as a `Code`. In new
+code they follow the always-valid pattern (*Target architecture*); `Code` in
+`src/Holefeeder.Service/StoreItems/Core/Code.cs` is the example. Use `.Value` to reach
+the underlying primitive.
 
 ### SQL safety
 
-- Never build SQL using string interpolation or concatenation — parameters only.
+- Never put a value into SQL through string interpolation or concatenation — parameters
+  only. The one exception is clause fragments built from fixed values: a column name
+  from a fixed map or an operator from an enum, as in
+  `SearchStoreItemsRequestWhereClause` and `SearchStoreItemsRequestOrderByClause`.
 
 ### Code style
 
