@@ -1,6 +1,8 @@
 using DrifterApps.Seeds.FluentResult;
 
-namespace Holefeeder.Service.StoreItems.Core.SearchStoreItems;
+using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
+
+namespace Holefeeder.Service.StoreItems.Core;
 
 internal interface IStoreItems
 {

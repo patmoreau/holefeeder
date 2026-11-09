@@ -1,4 +1,5 @@
 using Holefeeder.Service.StoreItems.Api.SearchStoreItems;
+using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.StoreItems.Persistence;
 

@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Persistence;
+using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 
 using Npgsql;

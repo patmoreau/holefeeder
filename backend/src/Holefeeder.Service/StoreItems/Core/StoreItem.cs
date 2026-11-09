@@ -2,7 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.Service.StoreItems.Core.SearchStoreItems;
+namespace Holefeeder.Service.StoreItems.Core;
 
 internal sealed record StoreItem(Id Id, Code Code, string Data)
 {

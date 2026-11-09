@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Service.Shared.Core.Search;
+using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.TestKit;

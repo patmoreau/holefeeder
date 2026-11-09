@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Shared.Core.Search;
+using Holefeeder.Service.StoreItems.Core;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.Support.Core;
 

@@ -1,4 +1,4 @@
-using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
+using Holefeeder.Service.StoreItems.Core;
 
 namespace Holefeeder.Service.StoreItems.Persistence;
 
