@@ -65,5 +65,5 @@ internal static class StoreItemsErrors
 {
     public const string CodeReadFailed = "store-items-read-failed";
 
-    public static PersistenceError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
 }

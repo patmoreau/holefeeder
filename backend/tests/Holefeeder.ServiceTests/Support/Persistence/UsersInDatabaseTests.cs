@@ -39,6 +39,6 @@ public class UsersInDatabaseTests(DatabaseForTest database, ITestOutputHelper te
     }
 
     [Fact]
-    public void ReadFailed_IsAPersistenceError() =>
-        UsersErrors.ReadFailed.Should().BeOfType<PersistenceError>();
+    public void ReadFailed_IsAnUnexpectedError() =>
+        UsersErrors.ReadFailed.Should().BeOfType<UnexpectedError>();
 }

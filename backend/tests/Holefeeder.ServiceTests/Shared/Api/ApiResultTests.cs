@@ -84,9 +84,9 @@ public class ApiResultTests
     }
 
     [Fact]
-    public void ToProblem_ReturnsServerError_WhenErrorIsAPersistenceError()
+    public void ToProblem_ReturnsServerError_WhenErrorIsAnUnexpectedError()
     {
-        var error = new PersistenceError("things-read-failed", "Things could not be read from the database.");
+        var error = new UnexpectedError("things-read-failed", "Things could not be read from the database.");
 
         var result = ApiResult.ToProblem(error);
 

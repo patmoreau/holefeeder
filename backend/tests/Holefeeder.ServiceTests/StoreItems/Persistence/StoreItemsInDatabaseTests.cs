@@ -83,8 +83,8 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
     }
 
     [Fact]
-    public void ReadFailed_IsAPersistenceError() =>
-        StoreItemsErrors.ReadFailed.Should().BeOfType<PersistenceError>();
+    public void ReadFailed_IsAnUnexpectedError() =>
+        StoreItemsErrors.ReadFailed.Should().BeOfType<UnexpectedError>();
 
     [Fact]
     public void ReadFailed_MatchesUsersReadFailed()

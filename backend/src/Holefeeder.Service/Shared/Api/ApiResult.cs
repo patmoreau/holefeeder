@@ -18,7 +18,7 @@ internal static class ApiResult
         error switch
         {
             ResultErrorAggregate validationError => ToValidationProblemDetails(validationError),
-            PersistenceError persistenceError => ToProblemDetails(persistenceError, StatusCodes.Status500InternalServerError),
+            UnexpectedError unexpectedError => ToProblemDetails(unexpectedError, StatusCodes.Status500InternalServerError),
             _ => ToProblemDetails(error, StatusCodes.Status400BadRequest)
         };
 

@@ -56,6 +56,6 @@ internal static class UsersErrors
     public const string CodeReadFailed = "users-read-failed";
     public const string CodeNotFound = "users-not-found";
 
-    public static PersistenceError ReadFailed => new(CodeReadFailed, "User could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed, "User could not be read from the database.");
     public static ResultError NotFound => new(CodeNotFound, "User was not found.");
 }
