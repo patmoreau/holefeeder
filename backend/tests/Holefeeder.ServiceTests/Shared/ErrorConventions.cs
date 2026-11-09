@@ -42,7 +42,7 @@ public partial class ErrorConventions
 
     private static IEnumerable<ResultError> ErrorsOf(Type errorClass) =>
         errorClass.GetProperties(BindingFlags.Public | BindingFlags.Static)
-            .Where(property => property.PropertyType == typeof(ResultError))
+            .Where(property => property.PropertyType.IsAssignableTo(typeof(ResultError)))
             .Select(property => (ResultError)property.GetValue(null)!);
 
     [GeneratedRegex(@"^Holefeeder\.Service\.[^.]+\.(Api|Core|Events|Jobs|Persistence|Ui)(\.|$)")]
