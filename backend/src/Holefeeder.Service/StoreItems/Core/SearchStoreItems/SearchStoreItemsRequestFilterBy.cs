@@ -26,6 +26,9 @@ internal abstract record SearchStoreItemsRequestFilterBy
         return ByCode.Create(code, filterByOperator);
     }
 
+    public static Result<SearchStoreItemsRequestFilterBy> Create(string? value) =>
+        SearchQueryParser.ParseFilterBy(value, None, Create, SearchStoreItemsRequestFilterByErrors.Invalid);
+
     internal sealed record NoFilter : SearchStoreItemsRequestFilterBy;
 
     internal sealed record ByCode : SearchStoreItemsRequestFilterBy

@@ -25,6 +25,9 @@ internal sealed record SearchStoreItemsRequestSortBy
         return new SearchStoreItemsRequestSortBy(normalizedField, direction);
     }
 
+    public static Result<SearchStoreItemsRequestSortBy> Create(string? value) =>
+        SearchQueryParser.ParseSortBy(value, Default, Create, SearchStoreItemsRequestSortByErrors.Invalid);
+
     public static SearchStoreItemsRequestSortBy Valid(string field, SortByDirection direction) => new(field, direction);
 
     private SearchStoreItemsRequestSortBy(string field, SortByDirection direction) => (Field, Direction) = (field, direction);

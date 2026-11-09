@@ -43,4 +43,36 @@ public class SearchStoreItemsRequestSortByTests
         SearchStoreItemsRequestSortByErrors.Invalid.Code.Should().Be("search-store-items-request-sort-by-invalid");
         SearchStoreItemsRequestSortByErrors.Invalid.Description.Should().Be("Sort is invalid.");
     }
+
+    [Fact]
+    public void Create_ReturnsDefault_WhenTextIsMissing()
+    {
+        var result = SearchStoreItemsRequestSortBy.Create(null);
+
+        result.Should().BeSuccessful().And.WithValue(SearchStoreItemsRequestSortBy.Default);
+    }
+
+    [Theory]
+    [InlineData("code", "Ascending")]
+    [InlineData("-code", "Descending")]
+    [InlineData("CODE", "Ascending")]
+    public void Create_Succeeds_WhenTextSortsOnAKnownField(string value, string direction)
+    {
+        var result = SearchStoreItemsRequestSortBy.Create(value);
+
+        result.Should().BeSuccessful().And.WithValue(
+            SearchStoreItemsRequestSortBy.Valid("code", Enum.Parse<SortByDirection>(direction)));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("--code")]
+    [InlineData("code:asc")]
+    [InlineData("name")]
+    public void Create_Fails_WhenTextIsNotAValidSort(string value)
+    {
+        var result = SearchStoreItemsRequestSortBy.Create(value);
+
+        result.Should().BeFailure().And.WithError(SearchStoreItemsRequestSortByErrors.Invalid);
+    }
 }

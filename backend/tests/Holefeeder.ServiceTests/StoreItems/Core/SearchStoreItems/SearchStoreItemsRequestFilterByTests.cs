@@ -58,4 +58,51 @@ public class SearchStoreItemsRequestFilterByTests
         SearchStoreItemsRequestFilterByErrors.OperatorNotSupported.Description.Should().Be("Filter operator is not supported.");
         SearchStoreItemsRequestFilterByErrors.FieldNotSupported.Description.Should().Be("Filter field is not supported.");
     }
+
+    [Fact]
+    public void Create_ReturnsNone_WhenTextIsMissing()
+    {
+        var result = SearchStoreItemsRequestFilterBy.Create(null);
+
+        result.Should().BeSuccessful().And.WithValue(SearchStoreItemsRequestFilterBy.None);
+    }
+
+    [Theory]
+    [InlineData("code:eq:settings", "Equal")]
+    [InlineData("code:ne:settings", "NotEqual")]
+    public void Create_FiltersByCode_WhenTextFiltersOnCode(string value, string filterByOperator)
+    {
+        var result = SearchStoreItemsRequestFilterBy.Create(value);
+
+        result.Should().BeSuccessful().And.WithValue(SearchStoreItemsRequestFilterBy.ByCode.Valid(
+            Code.Valid("settings"), Enum.Parse<FilterByOperator>(filterByOperator)));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("code")]
+    [InlineData("code:eq:")]
+    [InlineData("code:xx:settings")]
+    public void Create_Fails_WhenTextIsMalformed(string value)
+    {
+        var result = SearchStoreItemsRequestFilterBy.Create(value);
+
+        result.Should().BeFailure().And.WithError(SearchStoreItemsRequestFilterByErrors.Invalid);
+    }
+
+    [Fact]
+    public void Create_Fails_WhenTextUsesAnUnsupportedOperator()
+    {
+        var result = SearchStoreItemsRequestFilterBy.Create("code:lt:settings");
+
+        result.Should().BeFailure().And.WithError(SearchStoreItemsRequestFilterByErrors.OperatorNotSupported);
+    }
+
+    [Fact]
+    public void Create_Fails_WhenTextUsesAnUnsupportedField()
+    {
+        var result = SearchStoreItemsRequestFilterBy.Create("name:eq:settings");
+
+        result.Should().BeFailure().And.WithError(SearchStoreItemsRequestFilterByErrors.FieldNotSupported);
+    }
 }
