@@ -1,9 +1,9 @@
 # Bills due badge
 
-App icon badge on the mobile app showing how many bills are due today.
+App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** draft, not started. Open questions below need answers
-before step 1.
+**Status (2026-11-09):** not started. Questions 1–3 answered and `expo-notifications`
+approved on 2026-11-09; questions 4 and 5 still open.
 
 ## Context
 
@@ -25,12 +25,17 @@ the count has to reach the icon while the app is not running.
 
 Scheduled local notifications, no backend.
 
+The badge counts unpaid bills due today or earlier. It is a badge only: no title, body
+or sound, and permission is requested for badges only.
+
 Every time the upcoming flows change, and when the app comes to the foreground:
 
-1. Set the badge to the count for today.
+1. Set the badge to the count for today, overdue included.
 2. Cancel every pending badge notification.
 3. Schedule one local notification per future day that has bills due, triggered at
-   the start of that day, with `badge` set to that day's count.
+   00:00 local on that day, with `badge` set to that day's count plus the bills
+   already overdue at scheduling time (they stay overdue until paid, and paying one
+   reschedules).
 
 iOS applies the badge when the notification fires, even if the app is killed. Paying
 or deactivating a bill changes the upcoming flows, which reschedules everything, so
@@ -69,21 +74,20 @@ Each step leaves `main` deployable. The feature stays off until the user turns i
 on in Settings, so nothing prompts for permission before step 5.
 
 1. **Add `expo-notifications`.** Dependency, config plugin in `app.config.ts`,
-   prebuild, mock under `__mocks__/`. No behaviour change. Needs approval (new
-   library).
+   prebuild, mock under `__mocks__/`. No behaviour change. Approved 2026-11-09.
 2. **Spike on device.** Confirm a local notification with only `badge` set (no
    title, body or sound) is delivered silently and updates the badge on iOS 27, and
    that a badge-only permission request works. Throwaway branch; findings recorded
-   here. The answer decides open question 2.
-3. **Core use case, TDD.** Group upcoming flows by date, count today (plus past due
-   per open question 1), build the schedule capped at 64 entries. Covers: no bills,
+   here. If badge-only notifications are not silent, revisit before step 4.
+3. **Core use case, TDD.** Group upcoming flows by date, count today plus overdue,
+   build the schedule capped at 64 entries. Covers: no bills,
    several bills same day, paid bill excluded, past-due handling, date rollover,
    cap.
 4. **Notifications adapter.** Implements `BadgeScheduler` with `setBadgeCountAsync`,
    `cancelAllScheduledNotificationsAsync` (or only ours, by identifier prefix) and
    `scheduleNotificationAsync` with a date trigger. Unit-tested against the mock.
 5. **Settings toggle and permission.** "Badge for bills due" switch in Settings. Turning
-   it on requests permission; denied leaves it off with a pointer to iOS Settings.
+   it on requests badge permission; denied leaves it off with a pointer to iOS Settings.
    Turning it off cancels everything and clears the badge. Stored with the other
    settings.
 6. **Wire it up.** Hook that runs the use case on upcoming-flow changes and app
@@ -92,14 +96,13 @@ on in Settings, so nothing prompts for permission before step 5.
 7. **Clear on sign-out.** Logout cancels scheduled notifications and resets the
    badge to 0.
 
+## Decisions
+
+1. **What counts** — bills due today and overdue unpaid ones. Decided 2026-11-09.
+2. **Badge only** — no banner or sound; badge permission only. Decided 2026-11-09.
+3. **Trigger time** — 00:00 local, since there is no banner to time. Follows from 2.
+
 ## Open questions
 
-1. **What counts** — only bills due today, or also past-due unpaid ones? The
-   upcoming list already includes past-due dates, so "due today or earlier" is the
-   cheaper rule and probably the more useful one.
-2. **Badge only, or also a banner** — "2 bills due today" as an alert at a chosen
-   time would need alert permission too. Badge only is the smaller ask.
-3. **Trigger time** — 00:00 local, or a morning hour? Only matters if a banner is
-   added.
 4. **Ring name** for the `expo-notifications` adapter: `notifications/`?
 5. **Android** — badges depend on the launcher. In scope, or iOS only for now?
