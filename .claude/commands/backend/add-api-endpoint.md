@@ -107,12 +107,18 @@ internal record SearchStoreItemsRequest(User User, Offset Offset, Limit Limit,
     SearchStoreItemsRequestFilterBy FilterBy, SearchStoreItemsRequestSortBy SortBy);
 ```
 
-**The port** sits in the use case folder and returns `Result<T>`:
+**The port** is one per feature, in the feature's `Core/`, and returns `Result<T>`.
+Writes go through a single upsert, `SaveAsync`, never separate create and modify
+methods: a use case that changes an item loads it, changes it, and saves it.
 
 ```csharp
 internal interface IStoreItems
 {
     Task<Result<StoreItemsPage>> SearchAsync(SearchStoreItemsRequest request, CancellationToken cancellationToken);
+
+    Task<Result<StoreItem>> GetAsync(GetStoreItemRequest request, CancellationToken cancellationToken);
+
+    Task<Result<Nothing>> SaveAsync(User user, StoreItem item, CancellationToken cancellationToken);
 }
 ```
 
@@ -157,14 +163,23 @@ catch (NpgsqlException exception)
   Core entities are never persisted directly.
 - Database exceptions are caught here, logged with a `[LoggerMessage]`, and returned
   as an `UnexpectedError` (`StoreItemsErrors.ReadFailed`). Nothing throws past the ring.
+- `SaveAsync` is `INSERT ... ON CONFLICT (id) DO UPDATE ... WHERE <owner matches>`,
+  which stays atomic under concurrent writes where PostgreSQL's `MERGE` can still
+  raise a unique violation. No row affected means another user owns the id: return
+  `NotFound`. A constraint that encodes a business rule (the unique `(user_id, code)`
+  index) is caught by `SqlState` and constraint name and returned as that rule's Core
+  error (`StoreItemErrors.CodeAlreadyExists`), so no separate existence query is
+  needed.
 - Schema changes are DbUp scripts in `Holefeeder.Infrastructure/Scripts/` (see
   *Schema migrations* in `docs/plans/backend-service.md`).
 
 ## 5. Api
 
-**The raw request** takes every input as a nullable string, so a malformed value
-becomes a validation error rather than a binding failure. It validates every field,
-collects all failures, and only then builds the Core request:
+**The raw request** takes every input as a string, so a malformed value becomes a
+validation error rather than a binding failure. Each value object parses its own text
+with `Create(string?)` (`Id`, `Offset`, `Code`, ...). The raw request validates every
+field, collects all failures, and only then builds the Core request. Route values are
+non-nullable `string`; query values are `string?`, where null means "use the default":
 
 ```csharp
 internal sealed record SearchStoreItemsRequestRaw(
@@ -175,7 +190,7 @@ internal sealed record SearchStoreItemsRequestRaw(
 {
     public static Result<SearchStoreItemsRequest> ToSearchStoreItemsRequest(SearchStoreItemsRequestRaw raw, User user)
     {
-        var offset = SearchQueryParser.ParseOrDefault(raw.OffsetRaw, Offset.Default, Offset.Create, OffsetErrors.Invalid);
+        var offset = Offset.Create(raw.OffsetRaw);
         // limit, filter and sort the same way
 
         var validation = ResultAggregate.Create();
@@ -187,6 +202,25 @@ internal sealed record SearchStoreItemsRequestRaw(
 
         return validation.OnSuccess<SearchStoreItemsRequest>(() =>
             new SearchStoreItemsRequest(user, offset.Value, limit.Value, filter.Value, sort.Value));
+    }
+}
+```
+
+A request body is a typed `<UseCase>Body` record of `string?` properties named after
+the JSON fields, held by the raw request as `[FromBody]`; no `JsonPropertyName`
+attributes. The endpoint binds the raw request with `[AsParameters]`, as for route
+and query values:
+
+```csharp
+internal sealed record CreateStoreItemBody(string? Code, string? Data);
+
+internal sealed record CreateStoreItemRequestRaw([FromBody] CreateStoreItemBody Body)
+{
+    public static Result<CreateStoreItemRequest> ToCreateStoreItemRequest(CreateStoreItemRequestRaw raw, User user)
+    {
+        var code = Code.Create(raw.Body.Code);
+        var data = Data.Create(raw.Body.Data);
+        // collect failures, then build the request
     }
 }
 ```
@@ -244,6 +278,7 @@ internal static class SearchStoreItemsEndpoint
 |---|---|
 | `ResultErrorAggregate` (from the raw request) | 400 validation problem, errors keyed by error code |
 | `UnexpectedError` (database and other failures not caused by the caller) | 500, the error's description as detail |
+| `NotFoundError` (`StoreItemErrors.NotFound`) | 404, the error's description as detail |
 | any other `ResultError` | 400, the error's description as detail |
 
 A paged read answers with `ApiResult.ToPagedOk`, which writes `X-Total-Count`. The

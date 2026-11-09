@@ -70,15 +70,23 @@ Two playbooks carry the procedure: `/backend:add-api-endpoint` for a new endpoin
 - **Dapper with hand-written SQL.** No EF Core in new code. The persistence ring owns
   the SQL and its row models and maps them to core types. Schema changes stay DbUp
   scripts in `Holefeeder.Infrastructure/Scripts/` for now (see *Decisions* in the plan).
+- **One upsert per port.** Writes go through a single `SaveAsync` (`INSERT ... ON
+  CONFLICT (id) DO UPDATE` guarded on the owner), never separate create and modify
+  methods; use cases load, change, then save.
 - **Always-valid core types.** Value objects have a private constructor, a `Create`
   that validates and returns `Result<T>`, and a `Valid` used only by test values and
-  database reads.
+  database reads. Each also parses its own text with `Create(string?)`.
+- **Raw requests take strings.** Route values are `string`, query values `string?`
+  (null means the default), and a body is a typed `<UseCase>Body` record of `string?`
+  named after the JSON, held as `[FromBody]`; the endpoint binds the raw request with
+  `[AsParameters]`.
 - **Results end to end.** New code never throws for an expected failure. Each error is
   a static member of an `*Errors` class with a kebab-case code constant and a
   one-sentence message; `ErrorConventions` checks codes are kebab-case and unique.
   Persistence catches database exceptions and returns an `UnexpectedError`.
   `Shared/Api/ApiResult` alone turns errors into HTTP: validation aggregates are 400
-  validation problems, `UnexpectedError` is 500, any other error is 400.
+  validation problems, `UnexpectedError` is 500, `NotFoundError` is 404, any other
+  error is 400.
 - **Tests without mocks.** Core is tested against an in-memory port
   (`<FeaturePlural>InMemory` in the feature's `TestKit/`), persistence against
   PostgreSQL from `DatabaseForTest`, and each endpoint by a component test over HTTP
