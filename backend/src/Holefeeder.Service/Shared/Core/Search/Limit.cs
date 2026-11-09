@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using DrifterApps.Seeds.FluentResult;
 
 namespace Holefeeder.Service.Shared.Core.Search;
@@ -16,6 +18,11 @@ internal sealed record Limit
             < 1 or > Max => LimitErrors.Invalid,
             _ => new Limit(value)
         };
+
+    public static Result<Limit> Create(string? value) =>
+        value is null ? Default
+        : int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) ? Create(number)
+        : LimitErrors.Invalid;
 
     public static Limit Valid(int value) => new(value);
 

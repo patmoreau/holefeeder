@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using DrifterApps.Seeds.FluentResult;
 
 namespace Holefeeder.Service.Shared.Core.Search;
@@ -14,6 +16,11 @@ internal sealed record Offset
             < 0 => OffsetErrors.Invalid,
             _ => new Offset(value)
         };
+
+    public static Result<Offset> Create(string? value) =>
+        value is null ? Default
+        : int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) ? Create(number)
+        : OffsetErrors.Invalid;
 
     public static Offset Valid(int value) => new(value);
 
