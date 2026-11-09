@@ -28,10 +28,9 @@ public class GetStoreItemRequestRawTests
     }
 
     [Theory]
-    [InlineData(null)]
     [InlineData("")]
     [InlineData("not-a-guid")]
-    public void ToGetStoreItemRequest_FailsValidation_WhenIdIsNotAGuid(string? idRaw)
+    public void ToGetStoreItemRequest_FailsValidation_WhenIdIsNotAGuid(string idRaw)
     {
         var result = GetStoreItemRequestRaw.ToGetStoreItemRequest(new(idRaw), AUser());
 

@@ -9,7 +9,7 @@ using User = Holefeeder.Service.Support.Core.User;
 
 namespace Holefeeder.Service.StoreItems.Api.GetStoreItem;
 
-internal sealed record GetStoreItemRequestRaw([FromRoute(Name = "id")] string? IdRaw)
+internal sealed record GetStoreItemRequestRaw([FromRoute(Name = "id")] string IdRaw)
 {
     public static Result<GetStoreItemRequest> ToGetStoreItemRequest(GetStoreItemRequestRaw raw, User user)
     {
