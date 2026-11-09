@@ -15,21 +15,11 @@ namespace Holefeeder.ServiceTests.TestKit.Persistence;
 
 public sealed class DatabaseForTest : IAsyncLifetime
 {
-    private readonly string? _localConnectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
+    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder("postgres:18")
+        .WithWaitStrategy(Wait.ForUnixContainer())
+        .Build();
 
-    private readonly PostgreSqlContainer? _container;
-
-    public DatabaseForTest()
-    {
-        if (string.IsNullOrWhiteSpace(_localConnectionString))
-        {
-            _container = new PostgreSqlBuilder("postgres:18")
-                .WithWaitStrategy(Wait.ForUnixContainer())
-                .Build();
-        }
-    }
-
-    public string ConnectionString => _container?.GetConnectionString() ?? _localConnectionString!;
+    public string ConnectionString => _container.GetConnectionString();
 
     public NpgsqlDataSource DataSource => field ??= NpgsqlDataSource.Create(ConnectionString);
 
@@ -39,10 +29,7 @@ public sealed class DatabaseForTest : IAsyncLifetime
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        if (_container is not null)
-        {
-            await _container.StartAsync().ConfigureAwait(false);
-        }
+        await _container.StartAsync().ConfigureAwait(false);
 
         WebApplicationExtensions.MigrateDb(
             new BudgetingConnectionStringBuilder { ConnectionString = ConnectionString },
@@ -53,9 +40,6 @@ public sealed class DatabaseForTest : IAsyncLifetime
     {
         await DataSource.DisposeAsync().ConfigureAwait(false);
         await BadDataSource.DisposeAsync().ConfigureAwait(false);
-        if (_container is not null)
-        {
-            await _container.DisposeAsync().ConfigureAwait(false);
-        }
+        await _container.DisposeAsync().ConfigureAwait(false);
     }
 }
