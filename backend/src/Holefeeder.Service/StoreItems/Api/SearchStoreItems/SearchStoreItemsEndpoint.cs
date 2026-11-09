@@ -1,5 +1,4 @@
-using System.Globalization;
-
+using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.StoreItems.Core.SearchStoreItems;
 using Holefeeder.Service.Support.Core;
 
@@ -16,29 +15,33 @@ internal static class SearchStoreItemsEndpoint
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesValidationProblem()
             .WithTags("StoreItems")
-            .WithName("GetStoreItems")
+            .WithName("SearchStoreItems")
             .RequireAuthorization(ReadUserPolicy);
 
         return app;
     }
 
     private static async Task<IResult> HandlerAsync(
-        [AsParameters] SearchStoreItemsRequestRaw request,
+        [AsParameters] SearchStoreItemsRequestRaw rawRequest,
         HttpContext context,
         UserContextAccessor userContextAccessor,
         SearchStoreItemsUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var pagedResult = await SearchStoreItemsRequestRaw.ToSearchStoreItemsRequest(request, userContextAccessor.Current)
-            .OnSuccess(r => useCase.HandleAsync(r, cancellationToken));
+        var requestResult = SearchStoreItemsRequestRaw.ToSearchStoreItemsRequest(rawRequest, userContextAccessor.Current);
+        if (requestResult.IsFailure)
+        {
+            return ApiResult.ToProblem(requestResult.Error);
+        }
+        var request = requestResult.Value;
 
+        var pagedResult = await useCase.HandleAsync(request, cancellationToken);
         if (pagedResult.IsFailure)
         {
-            return pagedResult.Error.ToProblem();
+            return ApiResult.ToProblem(pagedResult.Error);
         }
-
         var paged = pagedResult.Value;
-        context.Response.Headers.Append("X-Total-Count", paged.Total.ToString(CultureInfo.InvariantCulture));
-        return Results.Ok(paged.Items.Select(item => new StoreItemResponse(item.Id.Value, item.Code.Value, item.Data)));
+
+        return ApiResult.ToPagedOk(paged.Total, paged.Items.Select(item => new StoreItemResponse(item.Id.Value, item.Code.Value, item.Data)), context);
     }
 }
