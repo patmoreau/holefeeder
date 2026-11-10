@@ -53,6 +53,7 @@
     "expo-image": "58.0.16",
     "expo-linking": "58.0.14",
     "expo-localization": "58.0.5",
+    "expo-notifications": "58.1.8",
     "expo-router": "58.0.25",
     "expo-sharing": "58.0.20",
     "expo-splash-screen": "58.0.11",

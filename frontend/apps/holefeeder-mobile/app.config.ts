@@ -162,6 +162,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
       'expo-font',
       'expo-localization',
+      [
+        'expo-notifications',
+        {
+          enableRemoteNotifications: false,
+        },
+      ],
       'expo-web-browser',
       [
         'expo-file-system',

@@ -2,8 +2,8 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** not started. Questions 1–3 answered and `expo-notifications`
-approved on 2026-11-09; questions 4 and 5 still open.
+**Status (2026-11-09):** step 1 done, step 2 next. All questions answered and
+`expo-notifications` approved on 2026-11-09.
 
 ## Context
 
@@ -60,7 +60,7 @@ Following `docs/contributing/architecture-principles.md`, in the `flows` feature
 |---|---|
 | Count per day, schedule computation | `flows/core/flows/schedule-due-badges/` |
 | `BadgeScheduler` port | `flows/core/flows/schedule-due-badges/` |
-| `expo-notifications` adapter | new ring, name to agree (open question 4) |
+| `expo-notifications` adapter | `flows/notifications/` |
 | Trigger on upcoming changes and foreground | `flows/presentation/` hook, mounted in `src/app/(app)/_layout.tsx` |
 | Permission prompt and toggle | `settings/` |
 
@@ -73,8 +73,10 @@ plain TypeScript, tested with Jest, no native code.
 Each step leaves `main` deployable. The feature stays off until the user turns it
 on in Settings, so nothing prompts for permission before step 5.
 
-1. **Add `expo-notifications`.** Dependency, config plugin in `app.config.ts`,
-   prebuild, mock under `__mocks__/`. No behaviour change. Approved 2026-11-09.
+1. ✅ **Add `expo-notifications`.** Dependency and config plugin in `app.config.ts`
+   with `enableRemoteNotifications: false`, so the build carries no `aps-environment`
+   entitlement and signing needs no Push Notifications capability. No behaviour
+   change. The Jest mock waits for step 4, the first code that imports it.
 2. **Spike on device.** Confirm a local notification with only `badge` set (no
    title, body or sound) is delivered silently and updates the badge on iOS 27, and
    that a badge-only permission request works. Throwaway branch; findings recorded
@@ -85,7 +87,8 @@ on in Settings, so nothing prompts for permission before step 5.
    cap.
 4. **Notifications adapter.** Implements `BadgeScheduler` with `setBadgeCountAsync`,
    `cancelAllScheduledNotificationsAsync` (or only ours, by identifier prefix) and
-   `scheduleNotificationAsync` with a date trigger. Unit-tested against the mock.
+   `scheduleNotificationAsync` with a date trigger. Adds the `expo-notifications`
+   mock under `__mocks__/`; unit-tested against it.
 5. **Settings toggle and permission.** "Badge for bills due" switch in Settings. Turning
    it on requests badge permission; denied leaves it off with a pointer to iOS Settings.
    Turning it off cancels everything and clears the badge. Stored with the other
@@ -101,8 +104,5 @@ on in Settings, so nothing prompts for permission before step 5.
 1. **What counts** — bills due today and overdue unpaid ones. Decided 2026-11-09.
 2. **Badge only** — no banner or sound; badge permission only. Decided 2026-11-09.
 3. **Trigger time** — 00:00 local, since there is no banner to time. Follows from 2.
-
-## Open questions
-
-4. **Ring name** for the `expo-notifications` adapter: `notifications/`?
-5. **Android** — badges depend on the launcher. In scope, or iOS only for now?
+4. **Ring name** — `notifications/`, inside the `flows` feature. Decided 2026-11-09.
+5. **Platform** — iOS only for now. Decided 2026-11-09.
