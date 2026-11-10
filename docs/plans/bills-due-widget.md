@@ -39,9 +39,13 @@ switches entries on its own, so the widget stays right while the app is not runn
    so `installWidgetLogo` copies `assets/images/widget-tile.png` (exported from the
    Penpot asset board, no glow) into the shared `widgetsDirectory` at launch and the
    props carry its file URI. Without it the widget simply shows no tile.
-8. **Amounts split by direction (medium).** Each column shows `↓` expenses and `↑`
-   gains, each only when non-zero; when both are zero it shows the zero amount with
-   no arrow. The counts still include both, like the badge.
+8. **Amounts split by direction (medium, Penpot proposal 22D).** Each column shows
+   expenses with `↓` and gains with `↑`, each only when non-zero; when both are zero
+   it shows the zero amount with no arrow. The counts still include both, like the
+   badge. The label sits above the amounts, the count is centred on the amounts
+   only, and the amounts are right-aligned with the arrow after the value so
+   decimals and arrows line up. Labels stay on one line so French and English take
+   the same height, and the content is centred vertically in the widget.
 9. **`widgets/` ring.** Holds the widget component and the adapter implementing
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
 

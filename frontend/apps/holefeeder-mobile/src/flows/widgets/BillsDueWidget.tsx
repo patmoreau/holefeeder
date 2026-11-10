@@ -4,6 +4,7 @@ import {
   font,
   foregroundStyle,
   frame,
+  hidden,
   lineLimit,
   minimumScaleFactor,
   monospacedDigit,
@@ -54,41 +55,52 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
     <Text modifiers={[font({ size: size, weight: 'bold', design: 'rounded' }), monospacedDigit(), foregroundStyle(color)]}>{value.count}</Text>
   );
   const label = (value: BillsDueTotalProps) => (
-    <Text modifiers={[font({ textStyle: 'caption' }), foregroundStyle(secondary)]}>{value.label}</Text>
+    <Text modifiers={[font({ textStyle: 'caption' }), foregroundStyle(secondary), lineLimit(1), minimumScaleFactor(0.7)]}>{value.label}</Text>
   );
 
   if (environment.widgetFamily === 'systemMedium') {
     const column = (value: BillsDueTotalProps, color: string | ReturnType<typeof PlatformColor>) => (
       <VStack alignment="leading" spacing={2} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
-        {count(value, color, 40)}
-        {label(value)}
-        <HStack spacing={6}>
-          {value.amounts.map((amount) => (
-            <HStack key={amount.direction} spacing={2}>
-              {amount.direction !== 'none' ? (
-                <Image
-                  systemName={amount.direction === 'down' ? 'arrow.down' : 'arrow.up'}
-                  modifiers={[font({ textStyle: 'caption', weight: 'bold' }), foregroundStyle(secondary)]}
-                />
-              ) : null}
-              <Text
-                modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' }), monospacedDigit(), lineLimit(1), minimumScaleFactor(0.6)]}
-              >
-                {amount.text}
-              </Text>
-            </HStack>
-          ))}
+        <HStack spacing={10}>
+          <Text modifiers={[font({ size: 40, weight: 'bold', design: 'rounded' }), monospacedDigit(), hidden(), frame({ height: 0 })]}>
+            {value.count}
+          </Text>
+          {label(value)}
+        </HStack>
+        <HStack spacing={10}>
+          {count(value, color, 40)}
+          <VStack alignment="trailing" spacing={6}>
+            {value.amounts.map((amount) => (
+              <HStack key={amount.direction} spacing={3}>
+                <Text
+                  modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' }), monospacedDigit(), lineLimit(1), minimumScaleFactor(0.6)]}
+                >
+                  {amount.text}
+                </Text>
+                {amount.direction !== 'none' ? (
+                  <Image
+                    systemName={amount.direction === 'down' ? 'arrow.down' : 'arrow.up'}
+                    modifiers={[font({ textStyle: 'caption', weight: 'bold' }), foregroundStyle(secondary)]}
+                  />
+                ) : null}
+              </HStack>
+            ))}
+          </VStack>
         </HStack>
       </VStack>
     );
 
     return (
-      <VStack alignment="leading" spacing={10} modifiers={[background, link, fill]}>
+      <VStack
+        alignment="leading"
+        spacing={10}
+        modifiers={[background, link, frame({ maxWidth: 10000, maxHeight: 10000, alignment: 'leading' })]}
+      >
         <HStack spacing={8}>
           {tile(24)}
           <Text modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' })]}>{props.title}</Text>
         </HStack>
-        <HStack alignment="top" spacing={16}>
+        <HStack alignment="center" spacing={16}>
           {column(props.pastDue, pastDueColor)}
           <Divider />
           {column(props.dueToday, orange)}
@@ -98,17 +110,17 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
   }
 
   return (
-    <HStack alignment="top" modifiers={[background, link, fill]}>
-      <VStack alignment="leading" spacing={0}>
+    <VStack alignment="leading" spacing={0} modifiers={[background, link, fill]}>
+      <HStack alignment="top">
         {count(props.pastDue, pastDueColor, 34)}
-        {label(props.pastDue)}
         <Spacer />
-        {count(props.dueToday, orange, 34)}
-        {label(props.dueToday)}
-      </VStack>
+        {tile(32)}
+      </HStack>
+      {label(props.pastDue)}
       <Spacer />
-      {tile(32)}
-    </HStack>
+      {count(props.dueToday, orange, 34)}
+      {label(props.dueToday)}
+    </VStack>
   );
 };
 
