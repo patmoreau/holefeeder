@@ -61,6 +61,7 @@ The app relies on feature-based modules to isolate domain logic and UI alongside
 src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, summary/, user-registration/)
   core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
   persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
+  notifications/ ← expo-notifications implementations of core ports (only flows/: the bills due badge)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer

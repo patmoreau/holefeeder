@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** steps 1–3 done, step 4 next. All questions answered and
+**Status (2026-11-09):** steps 1–4 done, step 5 next. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -98,10 +98,15 @@ on in Settings, so nothing prompts for permission before step 5.
    it, so overdue bills need no separate count. Covers: no bills,
    several bills same day, paid bill excluded, past-due handling, date rollover,
    cap.
-4. **Notifications adapter.** Implements `BadgeScheduler` with `setBadgeCountAsync`,
+4. ✅ **Notifications adapter.** Implements `BadgeScheduler` with `setBadgeCountAsync`,
    `cancelAllScheduledNotificationsAsync` (or only ours, by identifier prefix) and
    `scheduleNotificationAsync` with a date trigger. Adds the `expo-notifications`
-   mock under `__mocks__/`; unit-tested against it.
+   mock under `__mocks__/`; unit-tested against it. Done as
+   `BadgeSchedulerWithExpoNotifications` in `flows/notifications/`: it cancels only
+   pending notifications whose identifier starts with `due-badge-`, schedules each
+   day at 00:00 local, and turns any exception into `schedule-badges-failed`. A
+   `false` from `setBadgeCountAsync` (badges not allowed) is not a failure; step 5
+   owns permission.
 5. **Settings toggle and permission.** "Badge for bills due" switch in Settings. Turning
    it on requests badge permission; denied leaves it off with a pointer to iOS Settings.
    Turning it off cancels everything and clears the badge. Stored with the other
