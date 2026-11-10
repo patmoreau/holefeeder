@@ -23,6 +23,30 @@ const withDevLauncherBuildPhaseFix: ConfigPlugin = (config) =>
     return modConfig;
   });
 
+const withUniqueGroupFileReferences: ConfigPlugin = (config) =>
+  withXcodeProject(config, (modConfig) => {
+    const project = modConfig.modResults;
+    const objects = project.hash.project.objects;
+    const fileReferences = objects['PBXFileReference'];
+    const groups = objects['PBXGroup'];
+    const grouped = new Set<string>();
+    for (const key of Object.keys(groups)) {
+      if (key.endsWith('_comment')) continue;
+      for (const child of groups[key].children ?? []) {
+        if (!fileReferences[child.value]) continue;
+        if (!grouped.has(child.value)) {
+          grouped.add(child.value);
+          continue;
+        }
+        const uuid = project.generateUuid();
+        fileReferences[uuid] = { ...fileReferences[child.value] };
+        fileReferences[`${uuid}_comment`] = fileReferences[`${child.value}_comment`];
+        child.value = uuid;
+      }
+    }
+    return modConfig;
+  });
+
 const SCENE_DELEGATE_FILENAME = 'SceneDelegate.swift';
 
 const sceneDelegateSource = `internal import Expo
@@ -235,5 +259,5 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       reactCompiler: true,
     },
   };
-  return withQuickActionsSceneDelegate(withDevLauncherBuildPhaseFix(appConfig));
+  return withQuickActionsSceneDelegate(withUniqueGroupFileReferences(withDevLauncherBuildPhaseFix(appConfig)));
 };
