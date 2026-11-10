@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** steps 1–2 done, step 3 next. All questions answered and
+**Status (2026-11-09):** steps 1–3 done, step 4 next. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -92,8 +92,10 @@ on in Settings, so nothing prompts for permission before step 5.
      and Notification Center checked, and no Sounds switch. Those placements are
      the system defaults; with no title or body there is nothing to show in them.
    The approach holds; step 4 proceeds as written.
-3. **Core use case, TDD.** Group upcoming flows by date, count today plus overdue,
-   build the schedule capped at 64 entries. Covers: no bills,
+3. ✅ **Core use case, TDD.** Group upcoming flows by date, count today plus overdue,
+   build the schedule capped at 64 entries. Done as `ScheduleDueBadgesUseCase` with
+   the `BadgeScheduler` port: a day's badge is every unpaid bill dated on or before
+   it, so overdue bills need no separate count. Covers: no bills,
    several bills same day, paid bill excluded, past-due handling, date rollover,
    cap.
 4. **Notifications adapter.** Implements `BadgeScheduler` with `setBadgeCountAsync`,
