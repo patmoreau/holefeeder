@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** step 1 done, step 2 next. All questions answered and
+**Status (2026-11-09):** steps 1–2 done, step 3 next. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -77,10 +77,21 @@ on in Settings, so nothing prompts for permission before step 5.
    with `enableRemoteNotifications: false`, so the build carries no `aps-environment`
    entitlement and signing needs no Push Notifications capability. No behaviour
    change. The Jest mock waits for step 4, the first code that imports it.
-2. **Spike on device.** Confirm a local notification with only `badge` set (no
+2. ✅ **Spike on device.** Confirm a local notification with only `badge` set (no
    title, body or sound) is delivered silently and updates the badge on iOS 27, and
-   that a badge-only permission request works. Throwaway branch; findings recorded
-   here. If badge-only notifications are not silent, revisit before step 4.
+   that a badge-only permission request works. Done 2026-11-09 on an iPhone, iOS 27,
+   from a throwaway branch (deleted):
+   - `requestPermissionsAsync({ ios: { allowAlert: false, allowBadge: true,
+     allowSound: false } })` showed the system prompt; the prompt's wording was not
+     recorded.
+   - `setBadgeCountAsync(3)` showed 3 at once.
+   - A `TIME_INTERVAL` notification with `content: { badge: 7 }` changed the badge
+     to 7 with the app in the background, and one with `badge: 11` changed it to 11
+     after the app was force-quit. No banner and no sound either time.
+   - Afterwards, Settings → Notifications → Holefeeder had Badges on, Lock Screen
+     and Notification Center checked, and no Sounds switch. Those placements are
+     the system defaults; with no title or body there is nothing to show in them.
+   The approach holds; step 4 proceeds as written.
 3. **Core use case, TDD.** Group upcoming flows by date, count today plus overdue,
    build the schedule capped at 64 entries. Covers: no bills,
    several bills same day, paid bill excluded, past-due handling, date rollover,
