@@ -61,7 +61,7 @@ The app relies on feature-based modules to isolate domain logic and UI alongside
 src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/, statistics/, dashboard/, summary/, user-registration/)
   core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
   persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
-  notifications/ ← expo-notifications implementations of core ports (flows/: badge scheduler; settings/: permission)
+  notifications/ ← expo-notifications implementations of core ports (flows/: the badge scheduler)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
@@ -69,6 +69,7 @@ src/shared/               ← Cross-cutting shared modules
   core/         ← Shared domain primitives + kernel value objects shared by 3+ slices
                   (Money, Id, Result; plus CategoryType, Settings, inactive, system)
   hooks/        ← Cross-cutting React hooks
+  bills-due-badge/ ← Bills due badge switch state, provider and notification permission (settings + flows)
   language/     ← Language selection state and provider
   persistence/  ← App-wide PowerSync db schema and utilities
   presentation/ ← Shared global UI components

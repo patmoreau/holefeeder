@@ -1,8 +1,12 @@
 import { Logger } from '@holefeeder/shared/core';
 import React, { createContext, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import { NotificationPermission, NotificationPermissionStatus, NotificationPermissionStatuses } from '@/settings/core/notification-permission';
-import { BillsDueBadgeState } from '@/settings/presentation/core/bills-due-badge-state';
+import { BillsDueBadgeState } from '@/shared/bills-due-badge/core/bills-due-badge-state';
+import {
+  NotificationPermission,
+  NotificationPermissionStatus,
+  NotificationPermissionStatuses,
+} from '@/shared/bills-due-badge/core/notification-permission';
 import { AppStorage } from '@/shared/persistence/app-storage';
 
 const logger = Logger.create('BillsDueBadgeProvider');

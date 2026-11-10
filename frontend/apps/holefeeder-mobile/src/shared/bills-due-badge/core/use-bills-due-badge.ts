@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { BillsDueBadgeContext } from '@/settings/presentation/BillsDueBadgeProvider';
-import { BillsDueBadgeState } from '@/settings/presentation/core/bills-due-badge-state';
+import { BillsDueBadgeState } from '@/shared/bills-due-badge/core/bills-due-badge-state';
+import { BillsDueBadgeContext } from '@/shared/bills-due-badge/presentation/BillsDueBadgeProvider';
 
 export function useBillsDueBadge(): BillsDueBadgeState {
   const state = useContext(BillsDueBadgeContext);

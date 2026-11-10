@@ -1,12 +1,12 @@
 import { act, renderHook, RenderHookResult, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { NotificationPermissionInMemory } from '@/settings/core/__tests__/notification-permission-in-memory';
-import { NotificationPermissionStatuses } from '@/settings/core/notification-permission';
-import { BillsDueBadgeProvider } from '@/settings/presentation/BillsDueBadgeProvider';
-import { BillsDueBadgeState } from '@/settings/presentation/core/bills-due-badge-state';
-import { useBillsDueBadge } from '@/settings/presentation/core/use-bills-due-badge';
 import { AppStorageInMemory } from '@/shared/__tests__/app-storage-in-memory';
+import { NotificationPermissionInMemory } from '@/shared/bills-due-badge/__tests__/notification-permission-in-memory';
+import { BillsDueBadgeState } from '@/shared/bills-due-badge/core/bills-due-badge-state';
+import { NotificationPermissionStatuses } from '@/shared/bills-due-badge/core/notification-permission';
+import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';
+import { BillsDueBadgeProvider } from '@/shared/bills-due-badge/presentation/BillsDueBadgeProvider';
 
 const BILLS_DUE_BADGE_KEY = 'app_settings_bills_due_badge';
 

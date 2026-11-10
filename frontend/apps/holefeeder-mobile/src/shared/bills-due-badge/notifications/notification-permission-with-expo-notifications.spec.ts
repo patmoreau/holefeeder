@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Linking } from 'react-native';
-import { NotificationPermissionErrors, NotificationPermissionStatuses } from '@/settings/core/notification-permission';
-import { NotificationPermissionWithExpoNotifications } from '@/settings/notifications/notification-permission-with-expo-notifications';
+import { NotificationPermissionErrors, NotificationPermissionStatuses } from '@/shared/bills-due-badge/core/notification-permission';
+import { NotificationPermissionWithExpoNotifications } from '@/shared/bills-due-badge/notifications/notification-permission-with-expo-notifications';
 
 const getPermissionsAsync = jest.mocked(Notifications.getPermissionsAsync);
 const requestPermissionsAsync = jest.mocked(Notifications.requestPermissionsAsync);

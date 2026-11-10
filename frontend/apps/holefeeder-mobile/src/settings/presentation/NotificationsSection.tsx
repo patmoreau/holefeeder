@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { useBillsDueBadge } from '@/settings/presentation/core/use-bills-due-badge';
+import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';
 import { AppButtonVariant } from '@/shared/presentation/components/AppButtonVariant';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';

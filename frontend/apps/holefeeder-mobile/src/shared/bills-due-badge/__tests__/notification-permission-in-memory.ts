@@ -4,7 +4,7 @@ import {
   NotificationPermissionErrors,
   NotificationPermissionStatus,
   NotificationPermissionStatuses,
-} from '@/settings/core/notification-permission';
+} from '@/shared/bills-due-badge/core/notification-permission';
 
 export type NotificationPermissionInMemory = NotificationPermission & {
   withStatus: (status: NotificationPermissionStatus) => void;

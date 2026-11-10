@@ -6,7 +6,7 @@ import {
   NotificationPermissionErrors,
   NotificationPermissionStatus,
   NotificationPermissionStatuses,
-} from '@/settings/core/notification-permission';
+} from '@/shared/bills-due-badge/core/notification-permission';
 
 const logger = Logger.create('NotificationPermissionWithExpoNotifications');
 
