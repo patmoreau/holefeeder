@@ -1,7 +1,13 @@
-import { Id, today } from '@holefeeder/shared/core';
+import { Id, Result, today } from '@holefeeder/shared/core';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
+import { CategoryTypes } from '@/shared/core/category-type';
+
+export const PurchaseFormDefaultsErrors = {
+  missingAccount: 'missing-account',
+  missingCategory: 'missing-category',
+};
 
 export type PurchaseFormDefaultsParams = {
   accounts: Account[];
@@ -10,25 +16,34 @@ export type PurchaseFormDefaultsParams = {
   accountId?: Id;
 };
 
-const create = ({ accounts, categories, accountId }: PurchaseFormDefaultsParams): PurchaseFormData => {
+const create = ({ accounts, categories, accountId }: PurchaseFormDefaultsParams): Result<PurchaseFormData> => {
   const sourceAccount = accounts.find((account) => account.id === accountId) ?? accounts[0];
-  // A transfer to itself fails validation, so pick anything else when there is anything else.
-  const targetAccount = accounts.find((account) => account.id !== sourceAccount?.id) ?? sourceAccount;
+  const category = categories.find((category) => category.type === CategoryTypes.expense && !category.system);
 
-  return {
+  if (!sourceAccount || !category) {
+    return Result.failure([
+      ...(sourceAccount ? [] : [PurchaseFormDefaultsErrors.missingAccount]),
+      ...(category ? [] : [PurchaseFormDefaultsErrors.missingCategory]),
+    ]);
+  }
+
+  // A transfer to itself fails validation, so pick anything else when there is anything else.
+  const targetAccount = accounts.find((account) => account.id !== sourceAccount.id) ?? sourceAccount;
+
+  return Result.success({
     purchaseType: PurchaseType.expense,
     date: today(),
     amount: 0,
     description: '',
     sourceAccount: sourceAccount,
     targetAccount: targetAccount,
-    category: categories[0],
+    category: category,
     tags: [],
     hasCashflow: false,
     cashflowEffectiveDate: today(),
     cashflowIntervalType: 'monthly',
     cashflowFrequency: 1,
-  };
+  });
 };
 
 export const PurchaseFormDefaults = {

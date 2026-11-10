@@ -167,6 +167,16 @@ export const fr: TranslationStructure = {
       title: 'Aucun flux de trésorerie',
       hint: 'Activez Flux de trésorerie en ajoutant une dépense ou un revenu, et il se répétera selon son propre calendrier.',
     },
+    purchaseMissingAccount: {
+      title: 'Ajoutez d’abord un compte',
+      hint: 'Chaque dépense sort d’un compte. Ajoutez-en un, puis enregistrez votre dépense.',
+      action: 'Ajouter un compte',
+    },
+    purchaseMissingCategory: {
+      title: 'Ajoutez d’abord une catégorie',
+      hint: 'Chaque dépense va dans une catégorie. Ajoutez-en une, puis enregistrez votre dépense.',
+      action: 'Ajouter une catégorie',
+    },
     tags: {
       hint: 'Les étiquettes ajoutées à vos dépenses apparaissent ici, prêtes à être renommées ou retirées.',
     },

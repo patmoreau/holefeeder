@@ -165,6 +165,16 @@ export const en = {
       title: 'No cashflows yet',
       hint: 'Turn on Cashflow when you add an expense or income, and it will repeat on its own schedule.',
     },
+    purchaseMissingAccount: {
+      title: 'Add an account first',
+      hint: 'Every expense comes out of an account. Add one, then record your expense.',
+      action: 'Add an account',
+    },
+    purchaseMissingCategory: {
+      title: 'Add a category first',
+      hint: 'Every expense goes in a category. Add one, then record your expense.',
+      action: 'Add a category',
+    },
     tags: {
       hint: 'Tags you add to expenses show up here, ready to rename or remove.',
     },
