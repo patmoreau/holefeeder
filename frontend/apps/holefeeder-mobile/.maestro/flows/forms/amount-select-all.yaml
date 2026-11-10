@@ -18,6 +18,8 @@ tags:
     visible:
       id: 'dashboard-screen'
     timeout: 60000
+- runFlow: ../../subflows/ensure-account.yaml
+- runFlow: ../../subflows/ensure-category.yaml
 
 # A form whose amount takes focus as it opens: focus elsewhere, then come back to it.
 - openLink: holefeeder:///Purchase

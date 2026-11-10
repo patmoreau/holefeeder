@@ -1,0 +1,39 @@
+appId: com.drifterapps.holefeeder
+---
+# Run from the dashboard; ends back on it. Forms need a category of the user's own to
+# open, and the E2E user's data on the server is not reset between runs, so add one
+# only when it is missing. By text because the list rows carry no id: names are user
+# data, not translated text.
+- openLink: holefeeder:///ManageCategories
+- extendedWaitUntil:
+    visible: 'Groceries'
+    timeout: 10000
+    optional: true
+
+- runFlow:
+    when:
+      notVisible: 'Groceries'
+    commands:
+      - openLink: holefeeder:///AddCategory
+      - extendedWaitUntil:
+          visible:
+            id: 'add-category-screen'
+          timeout: 20000
+      - tapOn:
+          id: 'category-name-input'
+      - inputText: 'Groceries'
+      - pressKey: Enter
+      - tapOn:
+          id: 'category-save-button'
+      - extendedWaitUntil:
+          visible: 'Groceries'
+          timeout: 30000
+
+# Categories open as a modal: pull it down to get back to the dashboard.
+- swipe:
+    start: '50%,15%'
+    end: '50%,90%'
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 20000

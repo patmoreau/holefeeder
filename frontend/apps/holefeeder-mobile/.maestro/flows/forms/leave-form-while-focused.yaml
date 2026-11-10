@@ -15,6 +15,8 @@ tags:
     visible:
       id: 'dashboard-screen'
     timeout: 60000
+- runFlow: ../../subflows/ensure-account.yaml
+- runFlow: ../../subflows/ensure-category.yaml
 
 - openLink: holefeeder:///Purchase
 - extendedWaitUntil:

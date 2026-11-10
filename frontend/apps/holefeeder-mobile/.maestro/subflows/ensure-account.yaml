@@ -1,0 +1,34 @@
+appId: com.drifterapps.holefeeder
+---
+# Run from the dashboard. Forms need an account to open, and the E2E user's data on the
+# server is not reset between runs, so add one only when the user has none. The first
+# sync can land after the dashboard shows, so give an existing account time to appear.
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-account-card'
+    timeout: 10000
+    optional: true
+
+- runFlow:
+    when:
+      notVisible:
+        id: 'dashboard-account-card'
+    commands:
+      - tapOn:
+          id: 'dashboard-add-account-card'
+      - extendedWaitUntil:
+          visible:
+            id: 'add-account-screen'
+          timeout: 20000
+      - tapOn:
+          id: 'account-name-input'
+      - inputText: 'Chequing'
+      # The save button sits in the header, but the keyboard still has to go before the
+      # next tap lands where Maestro thinks it does.
+      - pressKey: Enter
+      - tapOn:
+          id: 'edit-account-save-button'
+      - extendedWaitUntil:
+          visible:
+            id: 'dashboard-account-card'
+          timeout: 30000

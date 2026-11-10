@@ -34,7 +34,12 @@ export const CategoryFormContent = () => {
           label={t(tk.categoryEdit.name)}
           error={errors.name ? t(tk.categoryEdit.errors.nameRequired) : undefined}
         >
-          <AppTextInput placeholder={t(tk.categoryEdit.name)} value={formData.name} onChangeText={(value) => updateFormField('name', value)} />
+          <AppTextInput
+            placeholder={t(tk.categoryEdit.name)}
+            value={formData.name}
+            onChangeText={(value) => updateFormField('name', value)}
+            testID="category-name-input"
+          />
         </AppField>
         <AppField icon={AppIconMap.type} label={t(tk.categoryEdit.type)}>
           <AppPicker

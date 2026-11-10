@@ -16,7 +16,7 @@ export const AddCategoryScreen = () => {
   };
 
   return (
-    <AppScreen>
+    <AppScreen testID="add-category-screen">
       <CategoryFormProvider initialValue={initialData} validate={validateCategoryForm} validateOnChange>
         <CategoryForm />
       </CategoryFormProvider>
