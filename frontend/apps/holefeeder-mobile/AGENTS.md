@@ -62,6 +62,7 @@ src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/
   core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
   persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
   notifications/ ← expo-notifications implementations of core ports (flows/: the badge scheduler)
+  widgets/      ← expo-widgets home screen widgets and their core port adapters (flows/: the bills due widget)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
@@ -233,8 +234,9 @@ Always use `AppIcons.<key>` (SF Symbol name) rather than raw strings. Add new ic
 ## Native UI Wrappers (`@expo/ui` boundary)
 
 `@expo/ui` must **never** be imported outside `src/shared/presentation/components/native/`
-(the `modules/` SwiftUI glue is the only other exception). An ESLint `no-restricted-imports`
-rule fails the build on any violation. Feature code always consumes the `App*` wrappers, never
+(the `modules/` SwiftUI glue and `widgets/` folders are the only other exceptions: a
+`'widget'` component runs in the widget extension, where only raw `@expo/ui` exists).
+An ESLint `no-restricted-imports` rule fails the build on any violation. Feature code always consumes the `App*` wrappers, never
 `@expo/ui` directly.
 
 Two-layer wrapper pattern inside `native/`:

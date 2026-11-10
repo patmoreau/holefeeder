@@ -9,8 +9,9 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     // native/ holds the App*/Expo* wrappers; modules/ holds native SwiftUI
-    // module glue — both may import @expo/ui directly.
-    ignores: ['**/native/**', 'modules/**'],
+    // module glue; widgets/ holds 'widget' components that run in the widget
+    // extension, where only raw @expo/ui exists — all may import @expo/ui directly.
+    ignores: ['**/native/**', 'modules/**', '**/widgets/**'],
     rules: {
       'no-restricted-imports': [
         'error',

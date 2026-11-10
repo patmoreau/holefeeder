@@ -217,6 +217,11 @@ export const fr: TranslationStructure = {
     billsDueBadgeDenied: 'Les pastilles sont désactivées pour Holefeeder dans les Réglages iOS.',
     openSettings: 'Ouvrir les Réglages',
   },
+  billsDueWidget: {
+    pastDue: 'En retard',
+    dueToday: "Dues aujourd'hui",
+    openApp: 'Ouvrez Holefeeder pour voir vos factures',
+  },
   errors: {
     noInternetConnection: {
       title: 'Pas de connexion Internet',

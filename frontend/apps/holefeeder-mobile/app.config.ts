@@ -212,6 +212,23 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       [
+        'expo-widgets',
+        {
+          groupIdentifier: 'group.com.drifterapps.holefeeder',
+          widgets: [
+            {
+              name: 'BillsDueWidget',
+              displayName: 'Bills Due',
+              description: 'Bills past due and due today.',
+              ios: {
+                supportedFamilies: ['systemSmall', 'systemMedium'],
+                initialLayout: './src/flows/widgets/BillsDueWidget.tsx',
+              },
+            },
+          ],
+        },
+      ],
+      [
         'expo-router',
         {
           root: './src/app',

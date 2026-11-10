@@ -215,6 +215,11 @@ export const en = {
     billsDueBadgeDenied: 'Badges are turned off for Holefeeder in iOS Settings.',
     openSettings: 'Open Settings',
   },
+  billsDueWidget: {
+    pastDue: 'Past due',
+    dueToday: 'Due today',
+    openApp: 'Open Holefeeder to see your bills',
+  },
   errors: {
     noInternetConnection: {
       title: 'No internet connection',
