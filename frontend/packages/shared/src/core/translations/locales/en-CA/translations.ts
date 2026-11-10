@@ -216,6 +216,7 @@ export const en = {
     openSettings: 'Open Settings',
   },
   billsDueWidget: {
+    title: 'Bills',
     pastDue: 'Past due',
     dueToday: 'Due today',
     openApp: 'Open Holefeeder to see your bills',

@@ -218,6 +218,7 @@ export const fr: TranslationStructure = {
     openSettings: 'Ouvrir les Réglages',
   },
   billsDueWidget: {
+    title: 'Factures',
     pastDue: 'En retard',
     dueToday: "Dues aujourd'hui",
     openApp: 'Ouvrez Holefeeder pour voir vos factures',

@@ -33,7 +33,13 @@ switches entries on its own, so the widget stays right while the app is not runn
 5. **Strings are prepared in the app.** The widget runtime can't import i18n or
    formatters, so labels and formatted amounts travel in the timeline props.
 6. **At most 64 entries**, matching the badge's cap.
-7. **`widgets/` ring.** Holds the widget component and the adapter implementing
+7. **Safe logo (Penpot proposal 21B/C/D, 2026-11-10).** Small: counts on the left,
+   a 32pt logo tile top-right. Medium: 24pt tile and "Bills" header over the two
+   columns. Signed out: 44pt tile. The widget can't read the app's bundled assets,
+   so `installWidgetLogo` copies `assets/images/widget-tile.png` (exported from the
+   Penpot asset board, no glow) into the shared `widgetsDirectory` at launch and the
+   props carry its file URI. Without it the widget simply shows no tile.
+8. **`widgets/` ring.** Holds the widget component and the adapter implementing
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
 
 ## Limitations

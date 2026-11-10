@@ -8,7 +8,8 @@ const updateSnapshot = jest.mocked(BillsDueWidget.updateSnapshot);
 
 const display = {
   formatAmount: (amount: Money) => `$${amount}`,
-  labels: { pastDue: 'Past due', dueToday: 'Due today', openApp: 'Open the app' },
+  labels: { title: 'Bills', pastDue: 'Past due', dueToday: 'Due today', openApp: 'Open the app' },
+  logo: 'file:///group/widgets/widget-tile.png',
 };
 const total = (count: number, amount: number) => ({ count: count, amount: Money.valid(amount) });
 
@@ -32,6 +33,8 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
         date: new Date(2026, 10, 10),
         props: {
           state: 'ready',
+          logo: 'file:///group/widgets/widget-tile.png',
+          title: 'Bills',
           pastDue: { count: 1, amount: '$20', label: 'Past due' },
           dueToday: { count: 2, amount: '$12.5', label: 'Due today' },
         },
@@ -40,6 +43,8 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
         date: new Date(2026, 10, 11),
         props: {
           state: 'ready',
+          logo: 'file:///group/widgets/widget-tile.png',
+          title: 'Bills',
           pastDue: { count: 3, amount: '$32.5', label: 'Past due' },
           dueToday: { count: 0, amount: '$0', label: 'Due today' },
         },
@@ -51,7 +56,11 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
     const result = await publisher.clear();
 
     expect(result).toBeSuccessWithValue(undefined);
-    expect(updateSnapshot).toHaveBeenCalledWith({ state: 'signed-out', message: 'Open the app' });
+    expect(updateSnapshot).toHaveBeenCalledWith({
+      state: 'signed-out',
+      logo: 'file:///group/widgets/widget-tile.png',
+      message: 'Open the app',
+    });
   });
 
   it('should fail when the timeline cannot be published', async () => {

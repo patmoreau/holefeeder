@@ -5,7 +5,8 @@ import BillsDueWidget, { BillsDueTotalProps, BillsDueWidgetProps } from '@/flows
 
 export type BillsDueWidgetDisplay = {
   formatAmount: (amount: Money) => string;
-  labels: { pastDue: string; dueToday: string; openApp: string };
+  labels: { title: string; pastDue: string; dueToday: string; openApp: string };
+  logo?: string;
 };
 
 const logger = Logger.create('BillsDueWidgetPublisherWithExpoWidgets');
@@ -19,6 +20,8 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
 
   const entryProps = (entry: BillsDueEntry): BillsDueWidgetProps => ({
     state: 'ready',
+    logo: display.logo,
+    title: display.labels.title,
     pastDue: totalProps(entry.summary.pastDue, display.labels.pastDue),
     dueToday: totalProps(entry.summary.dueToday, display.labels.dueToday),
   });
@@ -39,7 +42,7 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
     update(() => BillsDueWidget.updateTimeline(entries.map((entry) => ({ date: withDate(entry.date).toDate(), props: entryProps(entry) }))));
 
   const clear = async (): Promise<Result<void>> =>
-    update(() => BillsDueWidget.updateSnapshot({ state: 'signed-out', message: display.labels.openApp }));
+    update(() => BillsDueWidget.updateSnapshot({ state: 'signed-out', logo: display.logo, message: display.labels.openApp }));
 
   return {
     publish: publish,
