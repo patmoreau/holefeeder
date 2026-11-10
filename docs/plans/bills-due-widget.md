@@ -39,7 +39,10 @@ switches entries on its own, so the widget stays right while the app is not runn
    so `installWidgetLogo` copies `assets/images/widget-tile.png` (exported from the
    Penpot asset board, no glow) into the shared `widgetsDirectory` at launch and the
    props carry its file URI. Without it the widget simply shows no tile.
-8. **`widgets/` ring.** Holds the widget component and the adapter implementing
+8. **Amounts split by direction (medium).** Each column shows `↓` expenses and `↑`
+   gains, each only when non-zero; when both are zero it shows the zero amount with
+   no arrow. The counts still include both, like the badge.
+9. **`widgets/` ring.** Holds the widget component and the adapter implementing
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
 
 ## Limitations

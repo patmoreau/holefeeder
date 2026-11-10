@@ -2,10 +2,11 @@ import { DateOnly, Money, withDate } from '@holefeeder/shared/core';
 import { BillsDueWidgetPublisherInMemory } from '@/flows/core/flows/__tests__/bills-due-widget-publisher-in-memory';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
 import { PublishBillsDueWidgetUseCase } from '@/flows/core/flows/publish-bills-due-widget/publish-bills-due-widget-use-case';
+import { CategoryTypes } from '@/shared/core/category-type';
 
 const today = DateOnly.valid('2026-11-10');
 const inDays = (days: number) => withDate(today).addDays(days).toDateOnly();
-const total = (count: number, amount: number) => ({ count: count, amount: Money.valid(amount) });
+const total = (count: number, expenses: number, gains = 0) => ({ count: count, expenses: Money.valid(expenses), gains: Money.valid(gains) });
 
 describe('PublishBillsDueWidgetUseCase', () => {
   let publisher: BillsDueWidgetPublisherInMemory;
@@ -85,5 +86,18 @@ describe('PublishBillsDueWidgetUseCase', () => {
 
     expect(result).toBeSuccessWithValue(undefined);
     expect(publisher.clears()).toBe(1);
+  });
+
+  it('should total gains apart from expenses', async () => {
+    await useCase.execute(
+      [
+        aUpcomingFlow({ date: inDays(-1), amount: Money.valid(30), categoryType: CategoryTypes.gain }),
+        aUpcomingFlow({ date: inDays(-1), amount: Money.valid(12), categoryType: CategoryTypes.expense }),
+        aUpcomingFlow({ date: today, amount: Money.valid(100), categoryType: CategoryTypes.gain }),
+      ],
+      today
+    );
+
+    expect(publisher.published()[0][0]).toEqual({ date: today, summary: { pastDue: total(2, 12, 30), dueToday: total(1, 0, 100) } });
   });
 });

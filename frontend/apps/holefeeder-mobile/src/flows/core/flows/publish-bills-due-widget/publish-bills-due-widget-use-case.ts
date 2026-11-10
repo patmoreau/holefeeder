@@ -1,13 +1,18 @@
 import { DateOnly, Money, Result, withDate } from '@holefeeder/shared/core';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
+import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { BillsDueEntry, BillsDueTotal } from './bills-due-summary';
 import { BillsDueWidgetPublisher } from './bills-due-widget-publisher';
 
 const MAX_ENTRIES = 64;
 
+const sumOf = (flows: UpcomingFlow[], type: CategoryType): Money =>
+  Money.sum(...flows.filter((flow) => flow.categoryType === type).map((flow) => flow.amount));
+
 const totalOf = (flows: UpcomingFlow[]): BillsDueTotal => ({
   count: flows.length,
-  amount: Money.sum(...flows.map((flow) => flow.amount)),
+  expenses: sumOf(flows, CategoryTypes.expense),
+  gains: sumOf(flows, CategoryTypes.gain),
 });
 
 export const PublishBillsDueWidgetUseCase = (publisher: BillsDueWidgetPublisher) => {

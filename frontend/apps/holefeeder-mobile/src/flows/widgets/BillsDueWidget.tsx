@@ -4,6 +4,7 @@ import {
   font,
   foregroundStyle,
   frame,
+  lineLimit,
   minimumScaleFactor,
   monospacedDigit,
   resizable,
@@ -12,10 +13,15 @@ import {
 import { createWidget, type WidgetEnvironment } from 'expo-widgets';
 import { PlatformColor } from 'react-native';
 
+export type BillsDueAmountProps = {
+  direction: 'down' | 'up' | 'none';
+  text: string;
+};
+
 export type BillsDueTotalProps = {
   count: number;
-  amount: string;
   label: string;
+  amounts: BillsDueAmountProps[];
 };
 
 export type BillsDueWidgetProps =
@@ -56,9 +62,23 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
       <VStack alignment="leading" spacing={2} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
         {count(value, color, 40)}
         {label(value)}
-        <Text modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' }), monospacedDigit(), minimumScaleFactor(0.6)]}>
-          {value.amount}
-        </Text>
+        <HStack spacing={6}>
+          {value.amounts.map((amount) => (
+            <HStack key={amount.direction} spacing={2}>
+              {amount.direction !== 'none' ? (
+                <Image
+                  systemName={amount.direction === 'down' ? 'arrow.down' : 'arrow.up'}
+                  modifiers={[font({ textStyle: 'caption', weight: 'bold' }), foregroundStyle(secondary)]}
+                />
+              ) : null}
+              <Text
+                modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' }), monospacedDigit(), lineLimit(1), minimumScaleFactor(0.6)]}
+              >
+                {amount.text}
+              </Text>
+            </HStack>
+          ))}
+        </HStack>
       </VStack>
     );
 

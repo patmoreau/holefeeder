@@ -2,7 +2,8 @@ import { DateOnly, Money } from '@holefeeder/shared/core';
 
 export type BillsDueTotal = {
   count: number;
-  amount: Money;
+  expenses: Money;
+  gains: Money;
 };
 
 export type BillsDueSummary = {

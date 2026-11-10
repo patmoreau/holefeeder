@@ -25,11 +25,12 @@ describe('usePublishBillsDueWidget', () => {
   let signedInUser: User | undefined;
   const account = anAccount();
   const category = aCategory({ type: CategoryTypes.expense });
+  const gainCategory = aCategory({ type: CategoryTypes.gain });
 
-  const aBill = (effectiveDate: DateOnly, amount = 10) =>
+  const aBill = (effectiveDate: DateOnly, amount = 10, categoryId = category.id) =>
     aCashflow({
       accountId: account.id,
-      categoryId: category.id,
+      categoryId: categoryId,
       effectiveDate: effectiveDate,
       amount: Money.valid(amount),
       intervalType: DateIntervalTypes.oneTime,
@@ -59,6 +60,7 @@ describe('usePublishBillsDueWidget', () => {
     await aStoreItem({ code: SETTINGS_CODE, data: JSON.stringify(settings) }).store(db);
     await account.store(db);
     await category.store(db);
+    await gainCategory.store(db);
   });
 
   afterEach(async () => {
@@ -75,8 +77,20 @@ describe('usePublishBillsDueWidget', () => {
     await createHook();
 
     await waitFor(() =>
-      expect(lastSummary()).toEqual({ pastDue: { count: 1, amount: Money.valid(20) }, dueToday: { count: 2, amount: Money.valid(20) } })
+      expect(lastSummary()).toEqual({
+        pastDue: { count: 1, expenses: Money.valid(20), gains: Money.ZERO },
+        dueToday: { count: 2, expenses: Money.valid(20), gains: Money.ZERO },
+      })
     );
+  });
+
+  it('should total income apart from bills', async () => {
+    await aBill(today(), 25).store(db);
+    await aBill(today(), 1500, gainCategory.id).store(db);
+
+    await createHook();
+
+    await waitFor(() => expect(lastSummary()?.dueToday).toEqual({ count: 2, expenses: Money.valid(25), gains: Money.valid(1500) }));
   });
 
   it('should not count a bill already paid', async () => {

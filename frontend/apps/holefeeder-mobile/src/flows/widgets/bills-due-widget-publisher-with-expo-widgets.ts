@@ -1,7 +1,7 @@
 import { Logger, Money, Result, withDate } from '@holefeeder/shared/core';
 import { BillsDueEntry, BillsDueTotal } from '@/flows/core/flows/publish-bills-due-widget/bills-due-summary';
 import { BillsDueWidgetPublisher, BillsDueWidgetPublisherErrors } from '@/flows/core/flows/publish-bills-due-widget/bills-due-widget-publisher';
-import BillsDueWidget, { BillsDueTotalProps, BillsDueWidgetProps } from '@/flows/widgets/BillsDueWidget';
+import BillsDueWidget, { BillsDueAmountProps, BillsDueTotalProps, BillsDueWidgetProps } from '@/flows/widgets/BillsDueWidget';
 
 export type BillsDueWidgetDisplay = {
   formatAmount: (amount: Money) => string;
@@ -12,10 +12,17 @@ export type BillsDueWidgetDisplay = {
 const logger = Logger.create('BillsDueWidgetPublisherWithExpoWidgets');
 
 export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDisplay): BillsDueWidgetPublisher => {
+  const amountsProps = (total: BillsDueTotal): BillsDueAmountProps[] => {
+    const amounts: BillsDueAmountProps[] = [];
+    if (total.expenses > 0) amounts.push({ direction: 'down', text: display.formatAmount(total.expenses) });
+    if (total.gains > 0) amounts.push({ direction: 'up', text: display.formatAmount(total.gains) });
+    return amounts.length > 0 ? amounts : [{ direction: 'none', text: display.formatAmount(Money.ZERO) }];
+  };
+
   const totalProps = (total: BillsDueTotal, label: string): BillsDueTotalProps => ({
     count: total.count,
-    amount: display.formatAmount(total.amount),
     label: label,
+    amounts: amountsProps(total),
   });
 
   const entryProps = (entry: BillsDueEntry): BillsDueWidgetProps => ({
