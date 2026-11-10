@@ -7,8 +7,8 @@ import { AccountCardList } from '@/dashboard/presentation/components/AccountCard
 import { LatestTransactionList } from '@/dashboard/presentation/components/LatestTransactionList';
 import { UpcomingCardList } from '@/dashboard/presentation/components/UpcomingCardList';
 import { useAccountDetails } from '@/dashboard/presentation/core/use-account-details';
-import { useUpcomingFlows } from '@/dashboard/presentation/core/use-upcoming-flows';
 import { DashboardHeaderLargeCard } from '@/dashboard/presentation/DashboardHeaderLargeCard';
+import { useUpcomingFlows } from '@/flows/presentation/upcoming/use-upcoming-flows';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppErrorSheet } from '@/shared/presentation/components/native/AppErrorSheet';
 import { AppList } from '@/shared/presentation/components/native/AppList';
