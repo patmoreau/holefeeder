@@ -4,13 +4,16 @@ import { AppState } from 'react-native';
 import { BadgeScheduler } from '@/flows/core/flows/schedule-due-badges/badge-scheduler';
 import { ScheduleDueBadgesUseCase } from '@/flows/core/flows/schedule-due-badges/schedule-due-badges-use-case';
 import { useUpcomingFlows } from '@/flows/presentation/upcoming/use-upcoming-flows';
+import { useAuth } from '@/shared/auth/core/use-auth';
 import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';
 
 const logger = Logger.create('useScheduleBillsDueBadge');
 
 export const useScheduleBillsDueBadge = (scheduler: BadgeScheduler) => {
   const upcomingFlows = useUpcomingFlows();
-  const { enabled, isLoading } = useBillsDueBadge();
+  const { user } = useAuth();
+  const { enabled: switchedOn, isLoading } = useBillsDueBadge();
+  const enabled = switchedOn && !!user;
   const useCase = useMemo(() => ScheduleDueBadgesUseCase(scheduler), [scheduler]);
   const [activations, setActivations] = useState(0);
 
@@ -20,6 +23,8 @@ export const useScheduleBillsDueBadge = (scheduler: BadgeScheduler) => {
     });
     return () => subscription.remove();
   }, []);
+
+  useEffect(() => () => void useCase.execute([], today()), [useCase]);
 
   useEffect(() => {
     if (isLoading || (enabled && !upcomingFlows.isSuccess)) return;

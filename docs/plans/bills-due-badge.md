@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** steps 1–6 done, step 7 next. All questions answered and
+**Status (2026-11-09):** done, all seven steps shipped. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -127,8 +127,11 @@ on in Settings, so nothing prompts for permission before step 5.
    before setting it. Rescheduling after a bill is added is not covered by a test:
    the test database adapter emits no table changes, so PowerSync watches never fire
    again in tests.
-7. **Clear on sign-out.** Logout cancels scheduled notifications and resets the
-   badge to 0.
+7. ✅ **Clear on sign-out.** Logout cancels scheduled notifications and resets the
+   badge to 0. Done in `useScheduleBillsDueBadge`: with no signed-in user it schedules
+   an empty badge, and it does the same when it stops running, whichever happens
+   first when the signed-in screens go away. The switch itself is kept, since it
+   belongs to the device like the permission.
 
 ## Decisions
 

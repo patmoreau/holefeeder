@@ -1,4 +1,4 @@
-import { DateIntervalTypes, DateOnly, Logger, loggerFactoryForNoop, today, withDate } from '@holefeeder/shared/core';
+import { DateIntervalTypes, DateOnly, Logger, loggerFactoryForNoop, today, User, withDate } from '@holefeeder/shared/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { AppState, AppStateStatus } from 'react-native';
@@ -10,6 +10,8 @@ import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test'
 import { useScheduleBillsDueBadge } from '@/flows/presentation/bills-due-badge/use-schedule-bills-due-badge';
 import { AppStorageInMemory } from '@/shared/__tests__/app-storage-in-memory';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
+import { AuthenticationContextForTest } from '@/shared/auth/__tests__/AuthenticationContextForTest';
+import { aUser } from '@/shared/auth/__tests__/user-for-test';
 import { NotificationPermissionInMemory } from '@/shared/bills-due-badge/__tests__/notification-permission-in-memory';
 import { NotificationPermissionStatuses } from '@/shared/bills-due-badge/core/notification-permission';
 import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';
@@ -29,22 +31,24 @@ describe('useScheduleBillsDueBadge', () => {
   let storage: AppStorageInMemory;
   let permission: NotificationPermissionInMemory;
   let scheduler: BadgeSchedulerInMemory;
+  let signedInUser: User | undefined;
   const account = anAccount();
   const category = aCategory({ type: CategoryTypes.expense });
 
   const aBill = (effectiveDate: DateOnly, intervalType = DateIntervalTypes.oneTime) =>
     aCashflow({ accountId: account.id, categoryId: category.id, effectiveDate: effectiveDate, intervalType: intervalType, frequency: 1 });
 
-  const createHook = async () =>
-    await renderHook(() => useScheduleBillsDueBadge(scheduler), {
-      wrapper: ({ children }: { children: React.ReactNode }) => (
-        <PowerSyncProviderForTest database={db}>
-          <BillsDueBadgeProvider storage={storage} permission={permission}>
-            {children}
-          </BillsDueBadgeProvider>
-        </PowerSyncProviderForTest>
-      ),
-    });
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <AuthenticationContextForTest overrides={{ user: signedInUser }}>
+      <PowerSyncProviderForTest database={db}>
+        <BillsDueBadgeProvider storage={storage} permission={permission}>
+          {children}
+        </BillsDueBadgeProvider>
+      </PowerSyncProviderForTest>
+    </AuthenticationContextForTest>
+  );
+
+  const createHook = async () => await renderHook(() => useScheduleBillsDueBadge(scheduler), { wrapper: wrapper });
 
   const lastScheduled = () => scheduler.scheduled().at(-1);
 
@@ -54,6 +58,7 @@ describe('useScheduleBillsDueBadge', () => {
     permission = NotificationPermissionInMemory();
     permission.withStatus(NotificationPermissionStatuses.granted);
     scheduler = BadgeSchedulerInMemory();
+    signedInUser = aUser();
 
     const settings = aSettings({ effectiveDate: today(), intervalType: DateIntervalTypes.monthly, frequency: 1 });
     await aStoreItem({ code: SETTINGS_CODE, data: JSON.stringify(settings) }).store(db);
@@ -123,15 +128,7 @@ describe('useScheduleBillsDueBadge', () => {
         useScheduleBillsDueBadge(scheduler);
         return useBillsDueBadge();
       },
-      {
-        wrapper: ({ children }: { children: React.ReactNode }) => (
-          <PowerSyncProviderForTest database={db}>
-            <BillsDueBadgeProvider storage={storage} permission={permission}>
-              {children}
-            </BillsDueBadgeProvider>
-          </PowerSyncProviderForTest>
-        ),
-      }
+      { wrapper: wrapper }
     );
     await waitFor(() => expect(lastScheduled()).toEqual({ today: 0, days: [] }));
 
@@ -169,5 +166,43 @@ describe('useScheduleBillsDueBadge', () => {
 
     await waitFor(() => expect(errors).toContainEqual([expect.any(String), ['schedule-badges-failed']]));
     Logger.setLoggerFactory(loggerFactoryForNoop);
+  });
+
+  it('should clear the badge when the user signs out', async () => {
+    storage.setString(BILLS_DUE_BADGE_KEY, 'true');
+    await aBill(today()).store(db);
+    const hook = await createHook();
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 1, days: [] }));
+
+    signedInUser = undefined;
+    await act(async () => hook.rerender({}));
+
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 0, days: [] }));
+  });
+
+  it('should clear the badge when it stops running', async () => {
+    storage.setString(BILLS_DUE_BADGE_KEY, 'true');
+    await aBill(today()).store(db);
+    const hook = await createHook();
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 1, days: [] }));
+
+    await act(async () => hook.unmount());
+
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 0, days: [] }));
+  });
+
+  it('should schedule the bills again when the user signs back in', async () => {
+    storage.setString(BILLS_DUE_BADGE_KEY, 'true');
+    await aBill(today()).store(db);
+    const hook = await createHook();
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 1, days: [] }));
+    signedInUser = undefined;
+    await act(async () => hook.rerender({}));
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 0, days: [] }));
+
+    signedInUser = aUser();
+    await act(async () => hook.rerender({}));
+
+    await waitFor(() => expect(lastScheduled()).toEqual({ today: 1, days: [] }));
   });
 });
