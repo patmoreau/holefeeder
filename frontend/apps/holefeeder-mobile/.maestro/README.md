@@ -74,7 +74,7 @@ onboarding runs.
 | `onboarding` | `ios:e2e`       | New-user journey. Wipes and reuses `E2E_NEW_EMAIL`.       |
 
 Every `regression` flow also carries the tag of the feature it exercises — today
-`dashboard`, `insights` and `forms`. A commit runs `smoke` plus the tags of the
+`dashboard`, `insights`, `forms` and `notifications`. A commit runs `smoke` plus the tags of the
 features it touches, in one pass:
 
 ```sh

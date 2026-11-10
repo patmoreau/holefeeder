@@ -27,6 +27,7 @@ import Layers from '@expo/material-symbols/layers.xml';
 import LockClock from '@expo/material-symbols/lock_clock.xml';
 import MoreVertical from '@expo/material-symbols/more_vert.xml';
 import NetworkCheck from '@expo/material-symbols/network_check.xml';
+import Notifications from '@expo/material-symbols/notifications.xml';
 import Palette from '@expo/material-symbols/palette.xml';
 import Payments from '@expo/material-symbols/payments.xml';
 import Settings from '@expo/material-symbols/settings.xml';
@@ -54,6 +55,7 @@ const universalIconMapping = {
   add: { ios: 'plus', android: Add },
   addCircle: { ios: 'plus.circle', android: AddCircle },
   back: { ios: 'chevron.backward', android: ChevronLeft },
+  billsDueBadge: { ios: 'app.badge', android: Notifications },
   calendar: { ios: 'calendar', android: CalendarToday },
   cancel: { ios: 'xmark.circle', android: Cancel },
   cashflow: { ios: 'chart.line.uptrend.xyaxis', android: TrendingUp },

@@ -8,6 +8,8 @@ import { ActivityIndicator } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import { HolefeederContent } from '@/app/HolefeederContent';
 import { HolefeederConfig } from '@/config/holefeeder-config';
+import { NotificationPermissionWithExpoNotifications } from '@/settings/notifications/notification-permission-with-expo-notifications';
+import { BillsDueBadgeProvider } from '@/settings/presentation/BillsDueBadgeProvider';
 import { E2eConfig } from '@/shared/auth/core/e2e-config';
 import { AuthenticationProvider } from '@/shared/auth/presentation/AuthenticationProvider';
 import { E2eAuthenticationProvider } from '@/shared/auth/presentation/E2eAuthenticationProvider';
@@ -30,6 +32,8 @@ const logger = Logger.create('RootLayout');
 // stripped from production builds in app.config.ts, so this can only ever pick
 // the Auth0 provider there.
 const AuthProvider = E2eConfig.isEnabled() ? E2eAuthenticationProvider : AuthenticationProvider;
+
+const notificationPermission = NotificationPermissionWithExpoNotifications();
 
 const RootLayout = () => {
   const [loading, setLoading] = useState(true);
@@ -89,15 +93,17 @@ const RootLayout = () => {
         <ThemeProvider storage={appStorage}>
           <CombinedInsightProvider storage={appStorage}>
             <InsightsRangeProvider storage={appStorage}>
-              <AuthProvider config={config.value.authConfig}>
-                <PowerSyncAuthProvider database={database} config={config.value}>
-                  <RepositoryProvider database={database}>
-                    <RegistrationProvider apiConfig={config.value.apiConfig}>
-                      <HolefeederContent />
-                    </RegistrationProvider>
-                  </RepositoryProvider>
-                </PowerSyncAuthProvider>
-              </AuthProvider>
+              <BillsDueBadgeProvider storage={appStorage} permission={notificationPermission}>
+                <AuthProvider config={config.value.authConfig}>
+                  <PowerSyncAuthProvider database={database} config={config.value}>
+                    <RepositoryProvider database={database}>
+                      <RegistrationProvider apiConfig={config.value.apiConfig}>
+                        <HolefeederContent />
+                      </RegistrationProvider>
+                    </RepositoryProvider>
+                  </PowerSyncAuthProvider>
+                </AuthProvider>
+              </BillsDueBadgeProvider>
             </InsightsRangeProvider>
           </CombinedInsightProvider>
         </ThemeProvider>

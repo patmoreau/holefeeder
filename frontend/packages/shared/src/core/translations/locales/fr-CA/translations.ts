@@ -200,6 +200,13 @@ export const fr: TranslationStructure = {
     light: 'Clair',
     system: 'Système',
   },
+  notificationsSection: {
+    title: 'Notifications',
+    billsDueBadge: 'Pastille des factures dues',
+    billsDueBadgeFooter: "Affiche sur l'icône de l'app le nombre de factures dues aujourd'hui ou en retard.",
+    billsDueBadgeDenied: 'Les pastilles sont désactivées pour Holefeeder dans les Réglages iOS.',
+    openSettings: 'Ouvrir les Réglages',
+  },
   errors: {
     noInternetConnection: {
       title: 'Pas de connexion Internet',

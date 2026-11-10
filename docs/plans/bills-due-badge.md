@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** steps 1–4 done, step 5 next. All questions answered and
+**Status (2026-11-09):** steps 1–5 done, step 6 next. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -107,10 +107,16 @@ on in Settings, so nothing prompts for permission before step 5.
    day at 00:00 local, and turns any exception into `schedule-badges-failed`. A
    `false` from `setBadgeCountAsync` (badges not allowed) is not a failure; step 5
    owns permission.
-5. **Settings toggle and permission.** "Badge for bills due" switch in Settings. Turning
+5. ✅ **Settings toggle and permission.** "Badge for bills due" switch in Settings. Turning
    it on requests badge permission; denied leaves it off with a pointer to iOS Settings.
    Turning it off cancels everything and clears the badge. Stored with the other
-   settings.
+   settings. Done as designed in Penpot proposal 20A/20B: a Notifications section
+   after Display, with a footer that switches to "Open Settings" when denied. The
+   choice is kept on the device (MMKV, `app_settings_bills_due_badge`), since
+   permission is per device; `BillsDueBadgeProvider` exposes it and re-checks the
+   permission whenever the app becomes active. Turning it off only saves `false`:
+   step 6 clears the badge when it sees the switch off. The provider lives in the
+   settings feature and moves to `shared/` in step 6, when `flows` needs it.
 6. **Wire it up.** Hook that runs the use case on upcoming-flow changes and app
    foreground when the setting is on. Maestro flow under a new tag for the toggle;
    badge itself verified on device (simulator badge behaviour is not trustworthy).

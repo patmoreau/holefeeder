@@ -3,6 +3,7 @@ import { AboutSection } from '@/settings/presentation/AboutSection';
 import { DisplaySection } from '@/settings/presentation/DisplaySection';
 import { HolefeederSection } from '@/settings/presentation/HolefeederSection';
 import { LogoutSection } from '@/settings/presentation/LogoutSection';
+import { NotificationsSection } from '@/settings/presentation/NotificationsSection';
 import { ProfileSection } from '@/settings/presentation/ProfileSection';
 import { SyncSection } from '@/settings/presentation/SyncSection';
 import TestComponentsScreen from '@/settings/presentation/test/TestComponentsScreen';
@@ -17,6 +18,7 @@ export const SettingsContent = () => {
         <ProfileSection />
         <HolefeederSection />
         <DisplaySection />
+        <NotificationsSection />
         {__DEV__ && <TestSection show={show} setShow={setShow} />}
         <SyncSection />
         <AboutSection />

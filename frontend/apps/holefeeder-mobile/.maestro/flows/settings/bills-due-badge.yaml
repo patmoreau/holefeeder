@@ -1,0 +1,34 @@
+appId: com.drifterapps.holefeeder
+name: Turning on the bills due badge in Settings
+tags:
+  - regression
+  - notifications
+---
+- clearState
+- clearKeychain
+- launchApp:
+    permissions:
+      notifications: allow
+- runFlow: ../../subflows/login-injected.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'dashboard-screen'
+    timeout: 60000
+
+- tapOn:
+    id: 'tabs-settings'
+- scrollUntilVisible:
+    element:
+      id: 'settings-bills-due-badge-toggle'
+    direction: DOWN
+    timeout: 20000
+- assertVisible:
+    id: 'settings-bills-due-badge-toggle'
+    checked: false
+
+- tapOn:
+    id: 'settings-bills-due-badge-toggle'
+
+- assertVisible:
+    id: 'settings-bills-due-badge-toggle'
+    checked: true

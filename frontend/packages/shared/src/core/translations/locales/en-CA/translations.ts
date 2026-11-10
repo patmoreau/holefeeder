@@ -198,6 +198,13 @@ export const en = {
     light: 'Light',
     system: 'System',
   },
+  notificationsSection: {
+    title: 'Notifications',
+    billsDueBadge: 'Badge for bills due',
+    billsDueBadgeFooter: 'Shows on the app icon how many bills are due today or overdue.',
+    billsDueBadgeDenied: 'Badges are turned off for Holefeeder in iOS Settings.',
+    openSettings: 'Open Settings',
+  },
   errors: {
     noInternetConnection: {
       title: 'No internet connection',
