@@ -37,6 +37,12 @@ describe('useBillsDueBadge', () => {
     expect(hook.result.current.denied).toBe(false);
   });
 
+  it('should be loading until the permission is checked', async () => {
+    const hook = await createHook();
+
+    await waitFor(() => expect(hook.result.current.isLoading).toBe(false));
+  });
+
   it('should be on when saved on and badges are allowed', async () => {
     storage.setString(BILLS_DUE_BADGE_KEY, 'true');
     permission.withStatus(NotificationPermissionStatuses.granted);

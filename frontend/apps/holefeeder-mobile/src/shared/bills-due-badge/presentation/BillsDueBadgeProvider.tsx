@@ -24,12 +24,14 @@ type BillsDueBadgeProviderProps = {
 export const BillsDueBadgeProvider = ({ children, storage, permission }: BillsDueBadgeProviderProps) => {
   const [saved, setSaved] = useState<boolean>(() => storage.getString(APP_SETTINGS_BILLS_DUE_BADGE_KEY) === 'true');
   const [status, setStatus] = useState<NotificationPermissionStatus>(NotificationPermissionStatuses.undetermined);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const refresh = () =>
       permission.status().then((result) => {
         if (result.isSuccess) setStatus(result.value);
         else logger.error('Error checking notification permission:', result.errors);
+        setIsLoading(false);
       });
     refresh();
     const subscription = AppState.addEventListener('change', (appState) => {
@@ -63,6 +65,7 @@ export const BillsDueBadgeProvider = ({ children, storage, permission }: BillsDu
 
   const state: BillsDueBadgeState = {
     enabled: saved && status === NotificationPermissionStatuses.granted,
+    isLoading: isLoading,
     denied: status === NotificationPermissionStatuses.denied,
     setEnabled: setEnabled,
     openSettings: async () => {

@@ -2,7 +2,7 @@
 
 App icon badge on the mobile app showing how many bills are due today or overdue.
 
-**Status (2026-11-09):** steps 1–5 done, step 6 next. All questions answered and
+**Status (2026-11-09):** steps 1–6 done, step 7 next. All questions answered and
 `expo-notifications` approved on 2026-11-09.
 
 ## Context
@@ -117,9 +117,16 @@ on in Settings, so nothing prompts for permission before step 5.
    permission whenever the app becomes active. Turning it off only saves `false`:
    step 6 clears the badge when it sees the switch off. The provider lives in the
    settings feature and moves to `shared/` in step 6, when `flows` needs it.
-6. **Wire it up.** Hook that runs the use case on upcoming-flow changes and app
+6. ✅ **Wire it up.** Hook that runs the use case on upcoming-flow changes and app
    foreground when the setting is on. Maestro flow under a new tag for the toggle;
    badge itself verified on device (simulator badge behaviour is not trustworthy).
+   Done as `useScheduleBillsDueBadge`, mounted by `BillsDueBadgeScheduler` in the
+   signed-in layout. With the switch off it schedules an empty badge, which clears
+   the icon and the pending notifications. It waits until the permission check has
+   finished (`isLoading` on the switch state), so startup does not clear the badge
+   before setting it. Rescheduling after a bill is added is not covered by a test:
+   the test database adapter emits no table changes, so PowerSync watches never fire
+   again in tests.
 7. **Clear on sign-out.** Logout cancels scheduled notifications and resets the
    badge to 0.
 
