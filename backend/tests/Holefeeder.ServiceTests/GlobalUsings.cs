@@ -4,6 +4,7 @@ global using AwesomeAssertions;
 
 global using Xunit;
 
+global using static Holefeeder.ServiceTests.Cashflows.TestKit.CashflowForTest;
 global using static Holefeeder.ServiceTests.Shared.TestKit.HttpContextForTest;
 global using static Holefeeder.ServiceTests.Shared.TestKit.IdForTest;
 global using static Holefeeder.ServiceTests.StoreItems.TestKit.CodeForTest;

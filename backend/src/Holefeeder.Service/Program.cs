@@ -12,6 +12,7 @@ using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Service;
+using Holefeeder.Service.Cashflows;
 using Holefeeder.Service.Dashboard;
 using Holefeeder.Service.ErrorHandling;
 using Holefeeder.Service.Extensions;
@@ -76,6 +77,7 @@ builder.Services
         NpgsqlDataSource.Create(provider.GetRequiredService<BudgetingConnectionStringBuilder>().ConnectionString))
     .AddStoreItemsServices()
     .AddDashboardServices()
+    .AddCashflowsServices()
     .AddSupportServices();
 
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
@@ -136,6 +138,7 @@ app
 app.MapCarter()
     .MapStoreItemsEndpoints()
     .MapDashboardEndpoints()
+    .MapCashflowsEndpoints()
     .MapHomeEndpoints();
 
 if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
