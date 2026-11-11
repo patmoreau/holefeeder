@@ -70,6 +70,22 @@ Records a payment against a scheduled cashflow occurrence by creating a linked t
 - Cashflow exists and belongs to the current user
 - A transaction is created using the cashflow's account, category, description, and tags
 - The transaction records both the actual payment date and the scheduled cashflow date it covers
+- The amount is the one paid, which may differ from the cashflow's amount
+- When asked to update the recurring amount, the cashflow's amount also becomes the amount
+  paid, so every later occurrence uses it
+
+**Ways to settle an upcoming occurrence:**
+
+| Action           | Payment date                   | Amount                              | Recurring amount                       |
+|------------------|--------------------------------|-------------------------------------|----------------------------------------|
+| Pay              | the scheduled date             | the cashflow amount                 | unchanged                              |
+| Pay with changes | chosen; the scheduled date by default | chosen; the cashflow amount by default | updated when asked, if the amount differs |
+| Clear            | the scheduled date             | 0                                   | unchanged                              |
+
+Clearing skips one occurrence without paying it: the zero-amount transaction marks the
+occurrence as settled, so it leaves the upcoming list and the next one follows. Deleting a
+cashflow from the upcoming list cancels it (see [Cancel Cashflow](#cancel-cashflow)) after the
+user confirms, removing every future occurrence; transactions already recorded stay.
 
 **Errors:**
 
