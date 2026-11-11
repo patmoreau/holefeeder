@@ -1,9 +1,11 @@
 using Holefeeder.Service.Accounts.Api.GetAccountDetail;
 using Holefeeder.Service.Accounts.Api.GetAccountTransactions;
+using Holefeeder.Service.Accounts.Api.ModifyAccount;
 using Holefeeder.Service.Accounts.Api.OpenAccount;
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
 using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
+using Holefeeder.Service.Accounts.Core.ModifyAccount;
 using Holefeeder.Service.Accounts.Core.OpenAccount;
 using Holefeeder.Service.Accounts.Persistence;
 
@@ -20,11 +22,13 @@ internal static class Accounts
             .AddScoped<IAccounts, AccountsInDatabase>()
             .AddScoped<GetAccountDetailUseCase>()
             .AddScoped<GetAccountTransactionsUseCase>()
-            .AddScoped<OpenAccountUseCase>();
+            .AddScoped<OpenAccountUseCase>()
+            .AddScoped<ModifyAccountUseCase>();
     }
 
     public static IEndpointRouteBuilder MapAccountsEndpoints(this IEndpointRouteBuilder app) =>
         app.MapGetAccountDetail()
             .MapGetAccountTransactions()
-            .MapOpenAccount();
+            .MapOpenAccount()
+            .MapModifyAccount();
 }

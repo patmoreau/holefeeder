@@ -75,6 +75,20 @@ internal sealed class AccountsInMemory : IAccounts
             new PagedData<RecordedTransaction>(transactions.Count, [.. transactions.Skip(offset.Value).Take(limit.Value)]));
     }
 
+    public Task<Result<Account>> GetAsync(User user, Id accountId, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Account>>(_failure);
+        }
+
+        var account = _accounts.Where(entry => entry.UserId == user.Id && entry.Account.Id == accountId).Select(entry => entry.Account).FirstOrDefault();
+        return Task.FromResult<Result<Account>>(account is null
+            ? AccountErrors.NotFound
+            : new Account(account.Id, account.Type, AccountName.Valid(account.Name), account.OpenDate, Money.Valid(account.OpenBalance),
+                account.Description, account.Favorite, account.Inactive));
+    }
+
     public Task<Result<Nothing>> SaveAsync(User user, Account account, CancellationToken cancellationToken)
     {
         if (_failure is not null)

@@ -150,6 +150,31 @@ internal sealed partial class AccountsInDatabase(NpgsqlDataSource dataSource, IL
         }
     }
 
+    public async Task<Result<Account>> GetAsync(User user, Id accountId, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT a.id, a.type, a.name, a.open_date, a.open_balance, a.description, a.favorite, a.inactive
+                           FROM accounts a
+                           WHERE a.user_id = @UserId AND a.id = @AccountId;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value, AccountId = accountId.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var row = await connection.QuerySingleOrDefaultAsync<AccountRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return row is null ? AccountErrors.NotFound : row.ToAccount();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return AccountsErrors.ReadFailed;
+        }
+    }
+
     public async Task<Result<Nothing>> SaveAsync(User user, Account account, CancellationToken cancellationToken)
     {
         const string sql = """

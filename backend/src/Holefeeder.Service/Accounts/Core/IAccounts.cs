@@ -19,5 +19,7 @@ internal interface IAccounts
 
     Task<Result<PagedData<RecordedTransaction>>> GetTransactionsAsync(User user, Id accountId, Offset offset, Limit limit, CancellationToken cancellationToken);
 
+    Task<Result<Account>> GetAsync(User user, Id accountId, CancellationToken cancellationToken);
+
     Task<Result<Nothing>> SaveAsync(User user, Account account, CancellationToken cancellationToken);
 }

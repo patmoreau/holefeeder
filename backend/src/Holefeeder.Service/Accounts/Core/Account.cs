@@ -14,4 +14,7 @@ internal sealed record Account(
 {
     public static Account Open(Id id, AccountType type, AccountName name, DateOnly openDate, Money openBalance, string description) =>
         new(id, type, name, openDate, openBalance, description, Favorite: false, Inactive: false);
+
+    public Account Modify(AccountName name, Money? openBalance, string? description) =>
+        this with { Name = name, OpenBalance = openBalance ?? OpenBalance, Description = description ?? Description };
 }

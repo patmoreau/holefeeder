@@ -141,6 +141,7 @@ Updates an existing account's name, opening balance, or description.
 | Account ID is empty                                      | rejected            |
 | Name is empty, whitespace, or longer than 100 characters | rejected            |
 | Account does not exist or belongs to another user        | `Account not found` |
+| Name belongs to another account of this user             | `Name already exists` |
 
 ---
 

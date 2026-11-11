@@ -345,6 +345,46 @@ public class AccountsInDatabaseTests(DatabaseForTest database, ITestOutputHelper
         result.Should().BeFailure().And.WithError(AccountsErrors.WriteFailed);
     }
 
+    [Fact]
+    public async Task GetAsync_ReturnsTheAccountOfTheUser()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var account = AnAccount("Amex") with
+        {
+            Type = AccountType.CreditCard,
+            OpenBalance = Money.Valid(250.75m),
+            Description = "Travel card",
+            Favorite = true,
+            Inactive = true
+        };
+        await _repository.SaveAsync(user, account, CancellationToken.None);
+
+        var result = await _repository.GetAsync(user, account.Id, CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(account);
+    }
+
+    [Fact]
+    public async Task GetAsync_ReturnsNotFound_WhenTheAccountBelongsToAnotherUser()
+    {
+        var account = AnAccount("Amex");
+        await _repository.SaveAsync(await AUser().SavedInDbAsync(database), account, CancellationToken.None);
+
+        var result = await _repository.GetAsync(await AUser().SavedInDbAsync(database), account.Id, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new AccountsInDatabase(database.BadDataSource, new LoggerForTest<AccountsInDatabase>(testOutputHelper));
+
+        var result = await repository.GetAsync(AUser(), AnId(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountsErrors.ReadFailed);
+    }
+
     private static Account AnAccount(string name) =>
         Account.Open(AnId(), AccountType.Checking, AccountName.Valid(name), new DateOnly(2025, 3, 1), Money.Zero, string.Empty);
 }
