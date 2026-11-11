@@ -62,6 +62,19 @@ test.describe('Dashboard accounts', () => {
     expect(authorization).toBe('Bearer e2e-token');
   });
 
+  test('ShouldOpenTheAccountFromItsCard', async ({ page }) => {
+    await signedIn(page);
+    const amex = anAccount({ name: 'Amex' });
+    await withAccounts(page, [anAccount(), amex]);
+    await page.route(`**/gateway/api/v2/accounts/${amex.id}/**`, (route) => route.fulfill({ status: 404 }));
+
+    await page.goto('/');
+    await page.getByTestId('dashboard-account-card').nth(1).click();
+
+    await expect(page).toHaveURL(new RegExp(`/accounts/${amex.id}$`));
+    await expect(page.getByTestId('account-page')).toBeVisible();
+  });
+
   for (const [updated, shown] of [
     ['2026-11-11', 'Today'],
     ['2026-11-10', 'Yesterday'],

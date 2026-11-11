@@ -62,9 +62,9 @@ const AccountSelect = ({ label, testID, accounts, value, onChange }: AccountSele
   </TextField>
 );
 
-type NewTransactionFormProps = { options: NewTransactionOptions; onClose: () => void; notify: Notify };
+type NewTransactionFormProps = { options: NewTransactionOptions; accountId?: string; onClose: () => void; notify: Notify };
 
-const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProps) => {
+const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose, notify }: NewTransactionFormProps) => {
   const actions = useNewTransactionActions();
   const { refresh } = useApiRefresh();
   const categoriesOf = (type: CategoryType) => options.categories.filter((category) => category.type === type);
@@ -72,8 +72,10 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
   const [type, setType] = useState<TransactionType>('expense');
   const [amount, setAmount] = useState('0.00');
   const [date, setDate] = useState(today);
-  const [accountId, setAccountId] = useState(options.accounts[0]?.id ?? '');
-  const [toAccountId, setToAccountId] = useState(options.accounts[1]?.id ?? options.accounts[0]?.id ?? '');
+  const preselected = options.accounts.find((account) => account.id === preselectedAccountId);
+  const initialAccountId = preselected?.id ?? options.accounts[0]?.id ?? '';
+  const [accountId, setAccountId] = useState(initialAccountId);
+  const [toAccountId, setToAccountId] = useState(options.accounts.find((account) => account.id !== initialAccountId)?.id ?? initialAccountId);
   const [categoryId, setCategoryId] = useState(categoriesOf('expense')[0]?.id ?? '');
   const [tags, setTags] = useState<string[]>([]);
   const [description, setDescription] = useState('');
@@ -279,7 +281,7 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
   );
 };
 
-const NewTransactionContent = ({ onClose, notify }: { onClose: () => void; notify: Notify }) => {
+const NewTransactionContent = ({ accountId, onClose, notify }: { accountId?: string; onClose: () => void; notify: Notify }) => {
   const options = useNewTransactionOptions();
 
   if (options.isLoading)
@@ -298,12 +300,12 @@ const NewTransactionContent = ({ onClose, notify }: { onClose: () => void; notif
       </Box>
     );
 
-  return <NewTransactionForm options={options.value} onClose={onClose} notify={notify} />;
+  return <NewTransactionForm options={options.value} accountId={accountId} onClose={onClose} notify={notify} />;
 };
 
-type NewTransactionFlyoutProps = { open: boolean; onClose: () => void; notify: Notify };
+type NewTransactionFlyoutProps = { open: boolean; accountId?: string; onClose: () => void; notify: Notify };
 
-export const NewTransactionFlyout = ({ open, onClose, notify }: NewTransactionFlyoutProps) => (
+export const NewTransactionFlyout = ({ open, accountId, onClose, notify }: NewTransactionFlyoutProps) => (
   <Drawer
     anchor="right"
     open={open}
@@ -320,7 +322,7 @@ export const NewTransactionFlyout = ({ open, onClose, notify }: NewTransactionFl
             <CloseIcon />
           </IconButton>
         </Stack>
-        <NewTransactionContent onClose={onClose} notify={notify} />
+        <NewTransactionContent accountId={accountId} onClose={onClose} notify={notify} />
       </Stack>
     )}
   </Drawer>

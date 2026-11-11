@@ -16,10 +16,11 @@ type NavItem = {
   label: string;
   icon: ReactNode;
   to?: string;
+  matches?: string[];
 };
 
 const navItems: NavItem[] = [
-  { id: 'dashboard', label: translate(tk.tabs.dashboard), icon: <DashboardOutlinedIcon />, to: '/' },
+  { id: 'dashboard', label: translate(tk.tabs.dashboard), icon: <DashboardOutlinedIcon />, to: '/', matches: ['/accounts/'] },
   { id: 'insights', label: translate(tk.tabs.insights), icon: <InsightsOutlinedIcon /> },
   { id: 'settings', label: translate(tk.tabs.settings), icon: <SettingsOutlinedIcon /> },
 ];
@@ -43,7 +44,7 @@ const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
       </Stack>
       <List disablePadding sx={{ display: 'grid', gap: 0.5 }}>
         {navItems.map((item) => {
-          const selected = item.to === pathname;
+          const selected = item.to === pathname || !!item.matches?.some((prefix) => pathname.startsWith(prefix));
           return (
             <ListItemButton
               key={item.id}

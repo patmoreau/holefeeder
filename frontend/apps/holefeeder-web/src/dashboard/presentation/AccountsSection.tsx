@@ -3,6 +3,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { translate } from '@/shared/i18n/translate';
 import { toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
@@ -127,8 +128,14 @@ const RowArrows = ({ rowRef, overflow }: { rowRef: RefObject<HTMLDivElement | nu
 const AccountCard = ({ account }: { account: DashboardAccount }) => (
   <Paper
     elevation={0}
+    component={Link}
+    to={`/accounts/${account.id}`}
     data-testid="dashboard-account-card"
     sx={{
+      color: 'inherit',
+      textDecoration: 'none',
+      transition: 'box-shadow 150ms',
+      '&:hover, &:focus-visible': { boxShadow: '0 4px 14px rgba(0, 0, 0, 0.14)' },
       p: 2,
       height: cardHeight,
       display: 'flex',
