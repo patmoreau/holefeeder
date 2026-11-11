@@ -27,3 +27,6 @@ export const authLoading = (page: Page) => arrange(page, { isLoading: true });
 
 export const loginCalls = (page: Page) =>
   page.evaluate(() => (window as unknown as { __E2E_LOGIN_CALLS__?: LoginOptions[] }).__E2E_LOGIN_CALLS__ ?? []);
+
+export const logoutCalls = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __E2E_LOGOUT_CALLS__?: number }).__E2E_LOGOUT_CALLS__ ?? 0);
