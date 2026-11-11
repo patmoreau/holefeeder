@@ -31,6 +31,16 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
             """,
             user, row => row.ToCategory(), cancellationToken);
 
+    public Task<Result<IReadOnlyList<TagUsage>>> GetTagUsagesAsync(User user, CancellationToken cancellationToken) =>
+        QueryAsync<TagUsageRow, TagUsage>(
+            """
+            SELECT LOWER(TRIM(tag)) AS tag, t.category_id, COUNT(*)::INT AS count
+            FROM transactions t, UNNEST(STRING_TO_ARRAY(t.tags, ',')) AS tag
+            WHERE t.user_id = @UserId AND TRIM(tag) <> ''
+            GROUP BY LOWER(TRIM(tag)), t.category_id;
+            """,
+            user, row => row.ToTagUsage(), cancellationToken);
+
     private async Task<Result<IReadOnlyList<T>>> QueryAsync<TRow, T>(
         string sql, User user, Func<TRow, T> map, CancellationToken cancellationToken)
     {

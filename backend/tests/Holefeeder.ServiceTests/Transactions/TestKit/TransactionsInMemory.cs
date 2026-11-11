@@ -10,11 +10,14 @@ internal sealed class TransactionsInMemory : ITransactions
 {
     private readonly List<(Id UserId, TransactionAccount Account)> _accounts = [];
     private readonly List<(Id UserId, TransactionCategory Category)> _categories = [];
+    private readonly List<(Id UserId, TagUsage Usage)> _tagUsages = [];
     private ResultError? _failure;
 
     public void Add(User user, TransactionAccount account) => _accounts.Add((user.Id, account));
 
     public void Add(User user, TransactionCategory category) => _categories.Add((user.Id, category));
+
+    public void Add(User user, TagUsage usage) => _tagUsages.Add((user.Id, usage));
 
     public void FailWith(ResultError error) => _failure = error;
 
@@ -23,6 +26,9 @@ internal sealed class TransactionsInMemory : ITransactions
 
     public Task<Result<IReadOnlyList<TransactionCategory>>> GetActiveCategoriesAsync(User user, CancellationToken cancellationToken) =>
         Task.FromResult(Of(_categories.Where(entry => entry.UserId == user.Id).Select(entry => entry.Category).ToList()));
+
+    public Task<Result<IReadOnlyList<TagUsage>>> GetTagUsagesAsync(User user, CancellationToken cancellationToken) =>
+        Task.FromResult(Of(_tagUsages.Where(entry => entry.UserId == user.Id).Select(entry => entry.Usage).ToList()));
 
     private Result<IReadOnlyList<T>> Of<T>(List<T> items)
     {

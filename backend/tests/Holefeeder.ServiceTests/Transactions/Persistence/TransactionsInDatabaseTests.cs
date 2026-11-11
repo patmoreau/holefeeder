@@ -73,4 +73,41 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
 
         result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
     }
+
+    [Fact]
+    public async Task GetTagUsagesAsync_CountsEachTagPerCategory()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var groceries = await budget.ACategoryAsync(CategoryType.Expense);
+        var dining = await budget.ACategoryAsync(CategoryType.Expense);
+        var day = new DateOnly(2026, 11, 1);
+        await budget.ATransactionAsync(groceries, day, 10m, tags: "weekly,costco");
+        await budget.ATransactionAsync(groceries, day, 10m, tags: "Weekly, ,family");
+        await budget.ATransactionAsync(dining, day, 10m, tags: "family");
+        await budget.ATransactionAsync(dining, day, 10m, tags: null);
+        var otherUser = await AUser().SavedInDbAsync(database);
+        var otherBudget = new BudgetForTest(otherUser, database);
+        await otherBudget.ATransactionAsync(await otherBudget.ACategoryAsync(CategoryType.Expense), day, 10m, tags: "weekly");
+
+        var result = await _repository.GetTagUsagesAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new TagUsage("weekly", Id.Valid(groceries), 2),
+            new TagUsage("costco", Id.Valid(groceries), 1),
+            new TagUsage("family", Id.Valid(groceries), 1),
+            new TagUsage("family", Id.Valid(dining), 1)
+        ]);
+    }
+
+    [Fact]
+    public async Task GetTagUsagesAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new TransactionsInDatabase(database.BadDataSource, new LoggerForTest<TransactionsInDatabase>(testOutputHelper));
+
+        var result = await repository.GetTagUsagesAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
+    }
 }
