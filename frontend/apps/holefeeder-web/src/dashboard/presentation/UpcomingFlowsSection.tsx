@@ -1,11 +1,12 @@
 import { tk } from '@holefeeder/shared/core';
-import { Alert, Button, Paper, Snackbar, SnackbarContent, Stack, Typography } from '@mui/material';
+import { Alert, Button, Paper, Stack, Typography } from '@mui/material';
 import { type ReactNode, useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
 import { type PayChanges, useUpcomingActions } from '../api/use-upcoming-actions';
 import { useUpcomingFlows } from '../api/use-upcoming-flows';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
+import type { Notify } from './DashboardToast';
 import { DeleteCashflowDialog } from './DeleteCashflowDialog';
 import { EmptyList } from './EmptyList';
 import { FlowRow } from './FlowRow';
@@ -36,19 +37,6 @@ const PayButton = ({ disabled, onClick }: { disabled: boolean; onClick: () => vo
     {translate(tk.swipeableActions.pay)}
   </Button>
 );
-
-const Toast = ({ message, onClose }: { message: string | null; onClose: () => void }) => (
-  <Snackbar
-    open={message !== null}
-    autoHideDuration={4000}
-    onClose={(_, reason) => reason !== 'clickaway' && onClose()}
-    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-  >
-    <SnackbarContent data-testid="dashboard-toast" message={message} sx={{ borderRadius: 2.5, fontSize: 15 }} />
-  </Snackbar>
-);
-
-type Notify = (message: string) => void;
 
 const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notify: Notify }) => {
   const actions = useUpcomingActions();
@@ -136,14 +124,9 @@ const UpcomingContent = ({ notify }: { notify: Notify }) => {
   return <UpcomingList flows={flows.value} notify={notify} />;
 };
 
-export const UpcomingFlowsSection = () => {
-  const [toast, setToast] = useState<string | null>(null);
-
-  return (
-    <Stack useFlexGap sx={{ gap: 1.5 }}>
-      <Typography sx={{ fontSize: 15, color: 'text.secondary' }}>{translate(tk.upcomingList.title)}</Typography>
-      <UpcomingContent notify={setToast} />
-      <Toast message={toast} onClose={() => setToast(null)} />
-    </Stack>
-  );
-};
+export const UpcomingFlowsSection = ({ notify }: { notify: Notify }) => (
+  <Stack useFlexGap sx={{ gap: 1.5 }}>
+    <Typography sx={{ fontSize: 15, color: 'text.secondary' }}>{translate(tk.upcomingList.title)}</Typography>
+    <UpcomingContent notify={notify} />
+  </Stack>
+);
