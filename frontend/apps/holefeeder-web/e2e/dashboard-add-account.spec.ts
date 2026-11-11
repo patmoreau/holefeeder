@@ -158,8 +158,8 @@ test.describe('Dashboard add account on a phone', () => {
     await page.route(accountsRoute, (route) => route.fulfill({ json: [] }));
     const flyout = await openAddAccount(page);
 
-    const box = await flyout.boundingBox();
-    expect(box!.width).toBe(390);
+    await expect.poll(async () => Math.round((await flyout.boundingBox())!.x)).toBe(0);
+    expect(Math.round((await flyout.boundingBox())!.width)).toBe(390);
     const overflow = await flyout.evaluate((element) => element.scrollWidth - element.clientWidth);
     expect(overflow).toBe(0);
   });
