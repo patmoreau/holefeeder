@@ -1,6 +1,7 @@
 import { tk } from '@holefeeder/shared/core';
 import { Box, Button, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
+import { AccountsSection } from './AccountsSection';
 import { SpendingHero } from './SpendingHero';
 
 const sectionLabel = { fontSize: 15, color: 'text.secondary' };
@@ -53,14 +54,7 @@ export const DashboardPage = () => (
 
     <SpendingHero />
 
-    <Stack spacing={1.5}>
-      <Skeleton width={80} sx={sectionLabel} />
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 2 }}>
-        {Array.from({ length: 4 }, (_, i) => (
-          <Skeleton key={i} variant="rounded" height={171} data-testid="dashboard-account-skeleton" sx={{ borderRadius: 3 }} />
-        ))}
-      </Box>
-    </Stack>
+    <AccountsSection />
 
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start' }}>
       <Stack spacing={1.5}>
