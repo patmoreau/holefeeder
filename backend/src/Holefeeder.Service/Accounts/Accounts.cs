@@ -1,8 +1,10 @@
 using Holefeeder.Service.Accounts.Api.GetAccountDetail;
 using Holefeeder.Service.Accounts.Api.GetAccountTransactions;
+using Holefeeder.Service.Accounts.Api.OpenAccount;
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
 using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
+using Holefeeder.Service.Accounts.Core.OpenAccount;
 using Holefeeder.Service.Accounts.Persistence;
 
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,10 +19,12 @@ internal static class Accounts
         return services
             .AddScoped<IAccounts, AccountsInDatabase>()
             .AddScoped<GetAccountDetailUseCase>()
-            .AddScoped<GetAccountTransactionsUseCase>();
+            .AddScoped<GetAccountTransactionsUseCase>()
+            .AddScoped<OpenAccountUseCase>();
     }
 
     public static IEndpointRouteBuilder MapAccountsEndpoints(this IEndpointRouteBuilder app) =>
         app.MapGetAccountDetail()
-            .MapGetAccountTransactions();
+            .MapGetAccountTransactions()
+            .MapOpenAccount();
 }

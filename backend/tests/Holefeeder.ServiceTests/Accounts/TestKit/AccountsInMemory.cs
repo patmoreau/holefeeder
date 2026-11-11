@@ -75,6 +75,34 @@ internal sealed class AccountsInMemory : IAccounts
             new PagedData<RecordedTransaction>(transactions.Count, [.. transactions.Skip(offset.Value).Take(limit.Value)]));
     }
 
+    public Task<Result<Nothing>> SaveAsync(User user, Account account, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Nothing>>(_failure);
+        }
+
+        if (_accounts.Exists(entry => entry.UserId == user.Id && entry.Account.Name == account.Name.Value && entry.Account.Id != account.Id))
+        {
+            return Task.FromResult<Result<Nothing>>(AccountNameErrors.AlreadyExists);
+        }
+
+        var index = _accounts.FindIndex(entry => entry.Account.Id == account.Id);
+        if (index < 0)
+        {
+            _accounts.Add((user.Id, ToAccountTotals(account, null)));
+            return Task.FromResult<Result<Nothing>>(Nothing.Value);
+        }
+
+        if (_accounts[index].UserId != user.Id)
+        {
+            return Task.FromResult<Result<Nothing>>(AccountErrors.NotFound);
+        }
+
+        _accounts[index] = (user.Id, ToAccountTotals(account, _accounts[index].Account));
+        return Task.FromResult<Result<Nothing>>(Nothing.Value);
+    }
+
     public void Add(User user, Id accountId, params RecordedTransaction[] transactions)
     {
         _accountIds.Add((user.Id, accountId));
@@ -88,4 +116,8 @@ internal sealed class AccountsInMemory : IAccounts
     public void Add(User user, CashflowSchedule cashflow) => _cashflows.Add((user.Id, cashflow));
 
     public void FailWith(ResultError error) => _failure = error;
+
+    private static AccountTotals ToAccountTotals(Account account, AccountTotals? totals) =>
+        new(account.Id, account.Name.Value, account.Type, account.Description, account.OpenBalance.Value, account.OpenDate,
+            account.Favorite, account.Inactive, totals?.Gains ?? 0m, totals?.Expenses ?? 0m, totals?.LastTransactionDate);
 }

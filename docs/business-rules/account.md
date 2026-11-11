@@ -118,7 +118,7 @@ Creates a new account for the current user.
 | Condition                                                | Error                 |
 |----------------------------------------------------------|-----------------------|
 | Type is missing                                          | rejected              |
-| Name is empty, whitespace, or longer than 255 characters | rejected              |
+| Name is empty, whitespace, or longer than 100 characters | rejected              |
 | Opening date is missing                                  | rejected              |
 | Name already exists for this user                        | `Name already exists` |
 
@@ -139,7 +139,7 @@ Updates an existing account's name, opening balance, or description.
 | Condition                                                | Error               |
 |----------------------------------------------------------|---------------------|
 | Account ID is empty                                      | rejected            |
-| Name is empty, whitespace, or longer than 255 characters | rejected            |
+| Name is empty, whitespace, or longer than 100 characters | rejected            |
 | Account does not exist or belongs to another user        | `Account not found` |
 
 ---

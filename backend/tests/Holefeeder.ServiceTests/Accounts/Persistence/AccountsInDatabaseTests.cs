@@ -1,3 +1,4 @@
+using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
 using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Persistence;
@@ -256,4 +257,94 @@ public class AccountsInDatabaseTests(DatabaseForTest database, ITestOutputHelper
 
         result.Should().BeFailure().And.WithError(AccountsErrors.ReadFailed);
     }
+    [Fact]
+    public async Task SaveAsync_InsertsTheAccount_WhenItDoesNotExist()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var account = AnAccount("Amex") with { Type = AccountType.CreditCard, OpenBalance = Money.Valid(250.75m), Description = "Travel card" };
+
+        var result = await _repository.SaveAsync(user, account, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.GetAccountTotalsAsync(user, account.Id, CancellationToken.None)).Should().BeSuccessful().And.WithValue(
+            new AccountTotals(account.Id, "Amex", AccountType.CreditCard, "Travel card", 250.75m, new DateOnly(2025, 3, 1),
+                Favorite: false, Inactive: false, Gains: 0m, Expenses: 0m, LastTransactionDate: null));
+    }
+
+    [Fact]
+    public async Task SaveAsync_ReplacesTheAccount_WhenTheUserOwnsIt()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var account = AnAccount("Chequing");
+        var other = AnAccount("Savings");
+        await _repository.SaveAsync(user, account, CancellationToken.None);
+        await _repository.SaveAsync(user, other, CancellationToken.None);
+        var modified = account with
+        {
+            Name = AccountName.Valid("Main chequing"),
+            OpenBalance = Money.Valid(10m),
+            OpenDate = new DateOnly(2024, 1, 1),
+            Description = "Renamed",
+            Favorite = true,
+            Inactive = true
+        };
+
+        var result = await _repository.SaveAsync(user, modified, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.GetAccountTotalsAsync(user, account.Id, CancellationToken.None)).Should().BeSuccessful().And.WithValue(
+            new AccountTotals(account.Id, "Main chequing", AccountType.Checking, "Renamed", 10m, new DateOnly(2024, 1, 1),
+                Favorite: true, Inactive: true, Gains: 0m, Expenses: 0m, LastTransactionDate: null));
+        (await _repository.GetAccountTotalsAsync(user, other.Id, CancellationToken.None)).Should().BeSuccessful();
+        (await _repository.GetAccountTotalsAsync(user, other.Id, CancellationToken.None)).Value.Name.Should().Be("Savings");
+    }
+
+    [Fact]
+    public async Task SaveAsync_FailsWithNotFound_WhenTheAccountBelongsToAnotherUser()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var account = AnAccount("Chequing");
+        await _repository.SaveAsync(owner, account, CancellationToken.None);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.SaveAsync(user, account with { Name = AccountName.Valid("Taken over") }, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
+        (await _repository.GetAccountTotalsAsync(owner, account.Id, CancellationToken.None)).Value.Name.Should().Be("Chequing");
+    }
+
+    [Fact]
+    public async Task SaveAsync_FailsWithNameAlreadyExists_WhenTheUserHasTheName()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        await new BudgetForTest(user, database).AnAccountAsync("Chequing", AccountType.Checking);
+
+        var result = await _repository.SaveAsync(user, AnAccount("Chequing"), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountNameErrors.AlreadyExists);
+    }
+
+    [Fact]
+    public async Task SaveAsync_InsertsTheAccount_WhenAnotherUserHasTheName()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        await new BudgetForTest(await AUser().SavedInDbAsync(database), database).AnAccountAsync("Chequing", AccountType.Checking);
+
+        var result = await _repository.SaveAsync(user, AnAccount("Chequing"), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+    }
+
+    [Fact]
+    public async Task SaveAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new AccountsInDatabase(database.BadDataSource, new LoggerForTest<AccountsInDatabase>(testOutputHelper));
+
+        var result = await repository.SaveAsync(AUser(), AnAccount("Chequing"), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountsErrors.WriteFailed);
+    }
+
+    private static Account AnAccount(string name) =>
+        Account.Open(AnId(), AccountType.Checking, AccountName.Valid(name), new DateOnly(2025, 3, 1), Money.Zero, string.Empty);
 }

@@ -17,6 +17,8 @@ namespace Holefeeder.Service.Accounts.Persistence;
 
 internal sealed partial class AccountsInDatabase(NpgsqlDataSource dataSource, ILogger<AccountsInDatabase> logger) : IAccounts
 {
+    private const string UniqueNamePerUserIndex = "user_id_name_idx";
+
     public async Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
     {
         const string sql = """
@@ -148,16 +150,67 @@ internal sealed partial class AccountsInDatabase(NpgsqlDataSource dataSource, IL
         }
     }
 
+    public async Task<Result<Nothing>> SaveAsync(User user, Account account, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           INSERT INTO accounts (id, type, name, favorite, open_balance, open_date, description, inactive, user_id)
+                           VALUES (@Id, @Type, @Name, @Favorite, @OpenBalance, @OpenDate, @Description, @Inactive, @UserId)
+                           ON CONFLICT (id) DO UPDATE
+                           SET type = EXCLUDED.type, name = EXCLUDED.name, favorite = EXCLUDED.favorite,
+                               open_balance = EXCLUDED.open_balance, open_date = EXCLUDED.open_date,
+                               description = EXCLUDED.description, inactive = EXCLUDED.inactive
+                           WHERE accounts.user_id = EXCLUDED.user_id;
+                           """;
+        var parameters = new DynamicParameters(new
+        {
+            Id = account.Id.Value,
+            Type = account.Type.Name,
+            Name = account.Name.Value,
+            account.Favorite,
+            OpenBalance = account.OpenBalance.Value,
+            OpenDate = account.OpenDate.ToDateTime(TimeOnly.MinValue),
+            account.Description,
+            account.Inactive,
+            UserId = user.Id.Value
+        });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var saved = await connection.ExecuteAsync(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return saved == 0 ? AccountErrors.NotFound : Nothing.Value;
+        }
+        catch (PostgresException exception) when (exception.SqlState == PostgresErrorCodes.UniqueViolation &&
+                                                  exception.ConstraintName == UniqueNamePerUserIndex)
+        {
+            return AccountNameErrors.AlreadyExists;
+        }
+        catch (NpgsqlException exception)
+        {
+            LogWriteFailed(logger, exception);
+            return AccountsErrors.WriteFailed;
+        }
+    }
+
     [LoggerMessage(Level = LogLevel.Error, Message = "Accounts could not be read from the database")]
     private static partial void LogReadFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Accounts could not be written to the database")]
+    private static partial void LogWriteFailed(ILogger logger, Exception exception);
 }
 
 internal static class AccountsErrors
 {
     public const string CodeReadFailed = "accounts-read-failed";
     public const string CodeSettingsInvalid = "accounts-settings-invalid";
+    public const string CodeWriteFailed = "accounts-write-failed";
 
     public static UnexpectedError ReadFailed => new(CodeReadFailed, "Accounts could not be read from the database.");
 
     public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid, "User settings could not be read.");
+
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Accounts could not be written to the database.");
 }
