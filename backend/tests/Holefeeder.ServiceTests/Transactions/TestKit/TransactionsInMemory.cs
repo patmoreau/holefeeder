@@ -55,6 +55,17 @@ internal sealed class TransactionsInMemory : ITransactions
             _transactions.Where(entry => entry.UserId == user.Id && entry.Transaction.Id == id).Select(entry => DetailOf(entry.Transaction)),
             TransactionErrors.NotFound));
 
+    public Task<Result<Transaction>> LoadTransactionAsync(User user, Id id, CancellationToken cancellationToken) =>
+        Task.FromResult(One(
+            _transactions.Where(entry => entry.UserId == user.Id && entry.Transaction.Id == id).Select(entry => entry.Transaction),
+            TransactionErrors.NotFound));
+
+    public Task<Result<bool>> HasAccountAsync(User user, Id id, CancellationToken cancellationToken) =>
+        Task.FromResult(Any(_accounts.Any(entry => entry.UserId == user.Id && entry.Account.Id == id)));
+
+    public Task<Result<bool>> HasCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
+        Task.FromResult(Any(_categories.Any(entry => entry.UserId == user.Id && entry.Category.Id == id)));
+
     public Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken) =>
         Task.FromResult(One(_transferCategories.TryGetValue(user.Id, out var categories) ? [categories] : Array.Empty<TransferCategories>(),
             TransactionErrors.TransferCategoriesNotFound));
@@ -70,6 +81,7 @@ internal sealed class TransactionsInMemory : ITransactions
         {
             _cashflows.Add((user.Id, cashflow));
         }
+        _transactions.RemoveAll(entry => entry.UserId == user.Id && transactions.Any(transaction => transaction.Id == entry.Transaction.Id));
         _transactions.AddRange(transactions.Select(transaction => (user.Id, transaction)));
         return Task.FromResult<Result<Nothing>>(Nothing.Value);
     }
@@ -78,6 +90,16 @@ internal sealed class TransactionsInMemory : ITransactions
         new(transaction.Id, transaction.Date, transaction.Amount, transaction.Description, transaction.Tags,
             _accounts.Select(entry => entry.Account).Single(account => account.Id == transaction.AccountId),
             _categories.Select(entry => entry.Category).Single(category => category.Id == transaction.CategoryId));
+
+    private Result<bool> Any(bool found)
+    {
+        if (_failure is not null)
+        {
+            return _failure;
+        }
+
+        return found;
+    }
 
     private Result<T> One<T>(IEnumerable<T> items, ResultError notFound)
     {

@@ -20,6 +20,12 @@ internal interface ITransactions
 
     Task<Result<TransactionDetail>> GetTransactionAsync(User user, Id id, CancellationToken cancellationToken);
 
+    Task<Result<Transaction>> LoadTransactionAsync(User user, Id id, CancellationToken cancellationToken);
+
+    Task<Result<bool>> HasAccountAsync(User user, Id id, CancellationToken cancellationToken);
+
+    Task<Result<bool>> HasCategoryAsync(User user, Id id, CancellationToken cancellationToken);
+
     Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken);
 
     Task<Result<Nothing>> SaveAsync(User user, IReadOnlyList<Transaction> transactions, Cashflow? cashflow, CancellationToken cancellationToken);

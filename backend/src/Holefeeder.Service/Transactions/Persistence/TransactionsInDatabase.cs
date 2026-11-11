@@ -77,6 +77,21 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
             """,
             user, id, row => row.ToTransactionDetail(), TransactionErrors.NotFound, cancellationToken);
 
+    public Task<Result<Transaction>> LoadTransactionAsync(User user, Id id, CancellationToken cancellationToken) =>
+        QuerySingleAsync<TransactionRow, Transaction>(
+            """
+            SELECT id, date, amount, description, account_id, category_id, tags, cashflow_id, cashflow_date
+            FROM transactions
+            WHERE id = @Id AND user_id = @UserId;
+            """,
+            user, id, row => row.ToTransaction(), TransactionErrors.NotFound, cancellationToken);
+
+    public Task<Result<bool>> HasAccountAsync(User user, Id id, CancellationToken cancellationToken) =>
+        ExistsAsync("SELECT EXISTS (SELECT 1 FROM accounts WHERE id = @Id AND user_id = @UserId);", user, id, cancellationToken);
+
+    public Task<Result<bool>> HasCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
+        ExistsAsync("SELECT EXISTS (SELECT 1 FROM categories WHERE id = @Id AND user_id = @UserId);", user, id, cancellationToken);
+
     public async Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken)
     {
         const string sql = """
@@ -180,6 +195,22 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
         {
             LogWriteFailed(logger, exception);
             return TransactionsErrors.WriteFailed;
+        }
+    }
+
+    private async Task<Result<bool>> ExistsAsync(string sql, User user, Id id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            return await connection.ExecuteScalarAsync<bool>(
+                new CommandDefinition(sql, new DynamicParameters(new { Id = id.Value, UserId = user.Id.Value }), cancellationToken: cancellationToken));
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return TransactionsErrors.ReadFailed;
         }
     }
 

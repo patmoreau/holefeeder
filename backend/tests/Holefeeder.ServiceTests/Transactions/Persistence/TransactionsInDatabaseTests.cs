@@ -280,4 +280,94 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
 
         result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
     }
+
+    [Fact]
+    public async Task LoadTransactionAsync_ReturnsTheUsersTransactionWithItsCashflowPayment()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.TheAccountAsync();
+        var hydro = await budget.ACategoryAsync(CategoryType.Expense, name: "Hydro");
+        var cashflow = await budget.ACashflowAsync(hydro, new DateOnly(2026, 8, 20), IntervalType.Monthly, 1, 88.40m, accountId: chequing);
+        await budget.APaymentAsync(cashflow, hydro, new DateOnly(2026, 8, 21), new DateOnly(2026, 8, 20), 88.40m);
+        var payment = (await database.TransactionsInDbAsync(chequing)).Should().ContainSingle().Subject;
+
+        var result = await _repository.LoadTransactionAsync(user, Id.Valid(payment.Id), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new Transaction(
+            Id.Valid(payment.Id), new DateOnly(2026, 8, 21), Money.Valid(88.40m), payment.Description ?? string.Empty, Id.Valid(chequing),
+            Id.Valid(hydro), Tags.Create((payment.Tags ?? string.Empty).Split(',')), Id.Valid(cashflow), new DateOnly(2026, 8, 20)));
+    }
+
+    [Fact]
+    public async Task LoadTransactionAsync_Fails_WhenTheTransactionIsSomeoneElses()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(owner, database);
+        var id = await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense), new DateOnly(2026, 8, 28), 10m);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.LoadTransactionAsync(user, Id.Valid(id), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task HasAccountAsync_FindsAnyOfTheUsersAccountsIncludingClosedOnes()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var closed = await new BudgetForTest(user, database).AnAccountAsync("Closed", AccountType.Checking, inactive: true);
+        var otherUser = await AUser().SavedInDbAsync(database);
+        var others = await new BudgetForTest(otherUser, database).AnAccountAsync("Other", AccountType.Checking);
+
+        var closedResult = await _repository.HasAccountAsync(user, Id.Valid(closed), CancellationToken.None);
+        var othersResult = await _repository.HasAccountAsync(user, Id.Valid(others), CancellationToken.None);
+
+        closedResult.Should().BeSuccessful().And.WithValue(true);
+        othersResult.Should().BeSuccessful().And.WithValue(false);
+    }
+
+    [Fact]
+    public async Task HasCategoryAsync_FindsAnyOfTheUsersCategoriesIncludingSystemOnes()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var transferIn = await new BudgetForTest(user, database).ACategoryAsync(CategoryType.Gain, system: true, name: "Transfer In");
+        var otherUser = await AUser().SavedInDbAsync(database);
+        var others = await new BudgetForTest(otherUser, database).ACategoryAsync(CategoryType.Expense);
+
+        var transferInResult = await _repository.HasCategoryAsync(user, Id.Valid(transferIn), CancellationToken.None);
+        var othersResult = await _repository.HasCategoryAsync(user, Id.Valid(others), CancellationToken.None);
+
+        transferInResult.Should().BeSuccessful().And.WithValue(true);
+        othersResult.Should().BeSuccessful().And.WithValue(false);
+    }
+
+    [Fact]
+    public async Task HasAccountAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new TransactionsInDatabase(database.BadDataSource, new LoggerForTest<TransactionsInDatabase>(testOutputHelper));
+
+        var result = await repository.HasAccountAsync(AUser(), AnId(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task SaveAsync_ReplacesAnExistingTransaction()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking);
+        var groceries = await budget.ACategoryAsync(CategoryType.Expense);
+        var dining = await budget.ACategoryAsync(CategoryType.Expense);
+        var id = await budget.ATransactionAsync(groceries, new DateOnly(2026, 8, 28), 10m, chequing, description: "Market", tags: "weekly");
+
+        var result = await _repository.SaveAsync(user, [new Transaction(
+            Id.Valid(id), new DateOnly(2026, 9, 1), Money.Valid(25m), "Bistro", Id.Valid(chequing), Id.Valid(dining),
+            Tags.Create(["family"]), null, null)], null, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await database.TransactionsInDbAsync(chequing)).Should().Equal(new TransactionInDb(
+            id, new DateOnly(2026, 9, 1), 25m, "Bistro", chequing, dining, null, null, "family", user.Id.Value));
+    }
 }
