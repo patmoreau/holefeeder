@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 
 using User = Holefeeder.Service.Support.Core.User;
 
@@ -16,4 +17,6 @@ internal interface IDashboard
     Task<Result<IReadOnlyList<AccountTotals>>> GetActiveAccountsAsync(User user, CancellationToken cancellationToken);
 
     Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken);
+
+    Task<Result<IReadOnlyList<RecentTransaction>>> GetRecentTransactionsAsync(User user, int count, CancellationToken cancellationToken);
 }

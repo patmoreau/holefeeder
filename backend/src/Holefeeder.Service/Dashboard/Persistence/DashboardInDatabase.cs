@@ -5,6 +5,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 using Holefeeder.Service.Shared.Core;
 
 using Npgsql;
@@ -127,6 +128,34 @@ internal sealed partial class DashboardInDatabase(NpgsqlDataSource dataSource, I
                 new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
             return rows.Select(row => row.ToCashflow()).ToList();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return DashboardErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<IReadOnlyList<RecentTransaction>>> GetRecentTransactionsAsync(User user, int count, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT t.id, t.date, t.amount, t.description, c.name AS category_name, c.color AS category_color, t.tags
+                           FROM transactions t
+                           INNER JOIN categories c ON c.id = t.category_id
+                           WHERE t.user_id = @UserId
+                           ORDER BY t.date DESC, t.id DESC
+                           LIMIT @Count;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value, Count = count });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var rows = await connection.QueryAsync<RecentTransactionRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return rows.Select(row => row.ToRecentTransaction()).ToList();
         }
         catch (NpgsqlException exception)
         {

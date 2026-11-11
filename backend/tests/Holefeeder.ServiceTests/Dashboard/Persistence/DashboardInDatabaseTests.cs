@@ -1,6 +1,7 @@
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 using Holefeeder.Service.Dashboard.Persistence;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
@@ -166,6 +167,91 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
 
         var result = await repository.GetActiveAccountsAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task GetRecentTransactionsAsync_ReturnsTheMostRecentTransactionsWithTheirCategory()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var food = await budget.ACategoryAsync(CategoryType.Expense, name: "Food", color: "#FF8D28");
+        var pay = await budget.ACategoryAsync(CategoryType.Gain, name: "Pay check", color: "#34C759");
+        await budget.ATransactionAsync(food, new DateOnly(2026, 8, 26), 54.2m, description: "Gas");
+        var lunch = await budget.ATransactionAsync(food, new DateOnly(2026, 9, 13), 1.25m, description: "Lunch", tags: "restaurant,work");
+        var payCheck = await budget.ATransactionAsync(pay, new DateOnly(2026, 9, 12), 1000m);
+
+        var result = await _repository.GetRecentTransactionsAsync(user, 2, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new RecentTransaction(Id.Valid(lunch), new DateOnly(2026, 9, 13), 1.25m, "Lunch", "Food", "#FF8D28", ["restaurant", "work"]),
+            new RecentTransaction(Id.Valid(payCheck), new DateOnly(2026, 9, 12), 1000m, "", "Pay check", "#34C759", [])
+        ], options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" , ")]
+    public async Task GetRecentTransactionsAsync_ReturnsNoTags_WhenTransactionHasNone(string? tags)
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense), Today, 1m, tags: tags);
+
+        var result = await _repository.GetRecentTransactionsAsync(user, 4, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().ContainSingle().Which.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRecentTransactionsAsync_TrimsTags()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense), Today, 1m, tags: " car , gas ");
+
+        var result = await _repository.GetRecentTransactionsAsync(user, 4, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().ContainSingle().Which.Tags.Should().Equal("car", "gas");
+    }
+
+    [Fact]
+    public async Task GetRecentTransactionsAsync_IncludesTransfers()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense, system: true, name: "Transfer Out"), Today, 250m);
+
+        var result = await _repository.GetRecentTransactionsAsync(user, 4, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().ContainSingle().Which.CategoryName.Should().Be("Transfer Out");
+    }
+
+    [Fact]
+    public async Task GetRecentTransactionsAsync_LeavesOutOtherUsersTransactions()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var otherBudget = new BudgetForTest(await AUser().SavedInDbAsync(database), database);
+        await otherBudget.ATransactionAsync(await otherBudget.ACategoryAsync(CategoryType.Expense), Today, 42m);
+
+        var result = await _repository.GetRecentTransactionsAsync(user, 4, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRecentTransactionsAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
+
+        var result = await repository.GetRecentTransactionsAsync(AUser(), 4, CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
     }

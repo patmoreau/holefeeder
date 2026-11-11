@@ -3,6 +3,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 
@@ -14,6 +15,7 @@ internal sealed class DashboardInMemory : IDashboard
     private readonly List<(Id UserId, DailyTotal Total)> _totals = [];
     private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
     private readonly List<(Id UserId, AccountTotals Account)> _accounts = [];
+    private readonly List<(Id UserId, RecentTransaction Transaction)> _transactions = [];
     private ResultError? _failure;
 
     public Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
@@ -65,6 +67,26 @@ internal sealed class DashboardInMemory : IDashboard
     public void Add(User user, DailyTotal total) => _totals.Add((user.Id, total));
 
     public void Add(User user, Cashflow cashflow) => _cashflows.Add((user.Id, cashflow));
+
+    public Task<Result<IReadOnlyList<RecentTransaction>>> GetRecentTransactionsAsync(User user, int count, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<IReadOnlyList<RecentTransaction>>>(_failure);
+        }
+
+        IReadOnlyList<RecentTransaction> transactions =
+        [
+            .. _transactions
+                .Where(entry => entry.UserId == user.Id)
+                .Select(entry => entry.Transaction)
+                .OrderByDescending(transaction => transaction.Date)
+                .Take(count)
+        ];
+        return Task.FromResult<Result<IReadOnlyList<RecentTransaction>>>(transactions.ToList());
+    }
+
+    public void Add(User user, RecentTransaction transaction) => _transactions.Add((user.Id, transaction));
 
     public void Add(User user, AccountTotals account) => _accounts.Add((user.Id, account));
 

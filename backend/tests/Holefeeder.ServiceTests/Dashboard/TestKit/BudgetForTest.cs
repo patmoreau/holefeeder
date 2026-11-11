@@ -18,13 +18,13 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     private const string InsertCategory =
         """
         INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, user_id)
-        VALUES (@Id, @Type, @Name, '#000000', 0, FALSE, @System, @UserId);
+        VALUES (@Id, @Type, @Name, @Color, 0, FALSE, @System, @UserId);
         """;
 
     private const string InsertTransaction =
         """
         INSERT INTO transactions (id, date, amount, description, account_id, category_id, tags, user_id)
-        VALUES (@Id, @Date, @Amount, '', @AccountId, @CategoryId, '', @UserId);
+        VALUES (@Id, @Date, @Amount, @Description, @AccountId, @CategoryId, @Tags, @UserId);
         """;
 
     private const string InsertCashflow =
@@ -44,10 +44,10 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
 
     private Guid? _accountId;
 
-    public async Task<Guid> ACategoryAsync(CategoryType type, bool system = false)
+    public async Task<Guid> ACategoryAsync(CategoryType type, bool system = false, string? name = null, string color = "#000000")
     {
         var id = Guid.NewGuid();
-        await ExecuteAsync(InsertCategory, new { Id = id, Type = type.ToString(), Name = $"category-{id}", System = system, UserId = user.Id.Value });
+        await ExecuteAsync(InsertCategory, new { Id = id, Type = type.ToString(), Name = name ?? $"category-{id}", Color = color, System = system, UserId = user.Id.Value });
         return id;
     }
 
@@ -69,18 +69,23 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
         return id;
     }
 
-    public async Task ATransactionAsync(Guid categoryId, DateOnly date, decimal amount, Guid? accountId = null)
+    public async Task<Guid> ATransactionAsync(
+        Guid categoryId, DateOnly date, decimal amount, Guid? accountId = null, string description = "", string? tags = "")
     {
+        var id = Guid.NewGuid();
         accountId ??= await TheAccountAsync();
         await ExecuteAsync(InsertTransaction, new
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             Date = date.ToDateTime(TimeOnly.MinValue),
             Amount = amount,
+            Description = description,
             AccountId = accountId,
             CategoryId = categoryId,
+            Tags = tags,
             UserId = user.Id.Value
         });
+        return id;
     }
 
     public async Task<Guid> ACashflowAsync(
