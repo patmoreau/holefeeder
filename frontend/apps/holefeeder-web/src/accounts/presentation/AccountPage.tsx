@@ -7,6 +7,7 @@ import type {} from '@mui/material/themeCssVarsAugmentation';
 import { type ReactNode, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
+import { accountTypeKey } from '@/shared/domain/account-type';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
@@ -18,7 +19,6 @@ import { type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/present
 import { useAccountDetail } from '../api/use-account-detail';
 import { useAccountTransactions } from '../api/use-account-transactions';
 import type { AccountDetail } from '../domain/account-detail';
-import { accountTypeKey } from '../domain/account-type';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
