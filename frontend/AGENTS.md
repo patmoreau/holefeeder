@@ -130,6 +130,11 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
 
 - Designs live in the Penpot "Web" file, one Penpot page per app page (`Welcome`,
   `Dashboard`), each with Light and Dark desktop boards.
+- Every screen is responsive and must work on a phone (360px wide and up), not only on
+  the desktop the boards show. Below the MUI `md` breakpoint the navigation drawer
+  becomes a hamburger button in the top bar opening a temporary (flyout) drawer;
+  multi-column grids stack into one column; nothing scrolls horizontally except
+  deliberate scroll rows. Playwright specs cover the phone layout as well as desktop.
 - Theme (`src/shared/theme/theme-provider.tsx`) mirrors the mobile tokens — purple
   primary, Inter Tight, light/dark following the system.
 - Strings come from the shared `en` locale through `src/shared/i18n/translate.ts`.
