@@ -27,6 +27,16 @@ When the commits being pushed touch the mobile app, run every Maestro tag first 
 `regression`, `onboarding` and `auth`, each against the build its tag requires. They
 live outside `pnpm test` and CI, so nothing else will catch a flow that has gone stale.
 
+When the commits being pushed touch the web app, run the whole Playwright suite again
+right before the push, even if it passed when each commit was made. Repeat it to
+surface flaky tests:
+
+```bash
+cd frontend/apps/holefeeder-web && pnpm exec playwright test --repeat-each=3
+```
+
+Push only when every run passes.
+
 ## Commit Message Rules
 
 - Use Conventional Commits specification
