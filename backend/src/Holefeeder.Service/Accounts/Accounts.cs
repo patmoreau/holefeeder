@@ -1,6 +1,8 @@
 using Holefeeder.Service.Accounts.Api.GetAccountDetail;
+using Holefeeder.Service.Accounts.Api.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
+using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Persistence;
 
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -14,9 +16,11 @@ internal static class Accounts
         services.TryAddSingleton(TimeProvider.System);
         return services
             .AddScoped<IAccounts, AccountsInDatabase>()
-            .AddScoped<GetAccountDetailUseCase>();
+            .AddScoped<GetAccountDetailUseCase>()
+            .AddScoped<GetAccountTransactionsUseCase>();
     }
 
     public static IEndpointRouteBuilder MapAccountsEndpoints(this IEndpointRouteBuilder app) =>
-        app.MapGetAccountDetail();
+        app.MapGetAccountDetail()
+            .MapGetAccountTransactions();
 }

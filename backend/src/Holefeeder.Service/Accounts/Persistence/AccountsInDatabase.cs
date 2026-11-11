@@ -4,7 +4,9 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
+using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Shared.Core.Search;
 using Holefeeder.Service.Shared.Persistence;
 
 using Npgsql;
@@ -98,6 +100,46 @@ internal sealed partial class AccountsInDatabase(NpgsqlDataSource dataSource, IL
                 new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
             return rows.Select(row => row.ToCashflowSchedule()).ToList();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return AccountsErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<PagedData<RecordedTransaction>>> GetTransactionsAsync(
+        User user, Id accountId, Offset offset, Limit limit, CancellationToken cancellationToken)
+    {
+        const string accountSql = "SELECT COUNT(*) FROM accounts WHERE user_id = @UserId AND id = @AccountId;";
+        const string countSql = "SELECT COUNT(*) FROM transactions WHERE user_id = @UserId AND account_id = @AccountId;";
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value, AccountId = accountId.Value });
+        var transactionsSql = $"""
+                               SELECT t.id, t.account_id, t.date, t.amount, t.description, c.name AS category_name, c.color AS category_color, t.tags
+                               FROM transactions t
+                               INNER JOIN categories c ON c.id = t.category_id
+                               WHERE t.user_id = @UserId AND t.account_id = @AccountId
+                               ORDER BY t.date DESC, t.id DESC
+                               {PagingClause.Create(offset, limit, parameters)};
+                               """;
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var accounts = await connection.ExecuteScalarAsync<int>(
+                new CommandDefinition(accountSql, parameters, cancellationToken: cancellationToken));
+            if (accounts == 0)
+            {
+                return AccountErrors.NotFound;
+            }
+
+            var total = await connection.ExecuteScalarAsync<int>(
+                new CommandDefinition(countSql, parameters, cancellationToken: cancellationToken));
+            var rows = await connection.QueryAsync<RecordedTransactionRow>(
+                new CommandDefinition(transactionsSql, parameters, cancellationToken: cancellationToken));
+
+            return new PagedData<RecordedTransaction>(total, [.. rows.Select(row => row.ToRecordedTransaction())]);
         }
         catch (NpgsqlException exception)
         {

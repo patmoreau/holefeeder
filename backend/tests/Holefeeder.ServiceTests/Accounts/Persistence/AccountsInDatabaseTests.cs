@@ -1,6 +1,8 @@
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
+using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Persistence;
 using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Shared.Core.Search;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
 
@@ -171,6 +173,86 @@ public class AccountsInDatabaseTests(DatabaseForTest database, ITestOutputHelper
         var repository = new AccountsInDatabase(database.BadDataSource, new LoggerForTest<AccountsInDatabase>(testOutputHelper));
 
         var result = await repository.GetPeriodSettingsAsync(AUser(), Today, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountsErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task GetTransactionsAsync_ReturnsTheAccountsTransactionsNewestFirst()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking);
+        var amex = await budget.AnAccountAsync("Amex", AccountType.CreditCard);
+        var food = await budget.ACategoryAsync(CategoryType.Expense, name: "Food", color: "#FF8D28");
+        var pay = await budget.ACategoryAsync(CategoryType.Gain, name: "Pay check", color: "#34C759");
+        var gas = await budget.ATransactionAsync(food, new DateOnly(2026, 8, 26), 54.2m, chequing, description: "Gas", tags: null);
+        var lunch = await budget.ATransactionAsync(food, new DateOnly(2026, 9, 13), 1.25m, chequing, description: "Lunch", tags: "restaurant, work");
+        var payCheck = await budget.ATransactionAsync(pay, new DateOnly(2026, 9, 12), 1000m, chequing);
+        await budget.ATransactionAsync(food, new DateOnly(2026, 9, 14), 9.99m, amex);
+
+        var result = await _repository.GetTransactionsAsync(user, Id.Valid(chequing), Offset.Default, Limit.Default, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Total.Should().Be(3);
+        result.Value.Items.Should().BeEquivalentTo([
+            new RecordedTransaction(Id.Valid(lunch), Id.Valid(chequing), new DateOnly(2026, 9, 13), 1.25m, "Lunch", "Food", "#FF8D28", ["restaurant", "work"]),
+            new RecordedTransaction(Id.Valid(payCheck), Id.Valid(chequing), new DateOnly(2026, 9, 12), 1000m, "", "Pay check", "#34C759", []),
+            new RecordedTransaction(Id.Valid(gas), Id.Valid(chequing), new DateOnly(2026, 8, 26), 54.2m, "Gas", "Food", "#FF8D28", [])
+        ], options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task GetTransactionsAsync_ReturnsTheRequestedPageWithTheTotal()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.TheAccountAsync();
+        var food = await budget.ACategoryAsync(CategoryType.Expense);
+        for (var day = 1; day <= 5; day++)
+        {
+            await budget.ATransactionAsync(food, new DateOnly(2026, 9, day), day, chequing);
+        }
+
+        var result = await _repository.GetTransactionsAsync(user, Id.Valid(chequing), Offset.Valid(2), Limit.Valid(2), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Total.Should().Be(5);
+        result.Value.Items.Select(transaction => transaction.Amount).Should().Equal(3m, 2m);
+    }
+
+    [Fact]
+    public async Task GetTransactionsAsync_ReturnsNoTransaction_WhenTheAccountHasNone()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var savings = await new BudgetForTest(user, database).AnAccountAsync("Savings", AccountType.Savings);
+
+        var result = await _repository.GetTransactionsAsync(user, Id.Valid(savings), Offset.Default, Limit.Default, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Total.Should().Be(0);
+        result.Value.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetTransactionsAsync_ReturnsNotFound_WhenTheAccountBelongsToAnotherUser()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var otherBudget = new BudgetForTest(await AUser().SavedInDbAsync(database), database);
+        var otherAccount = await otherBudget.TheAccountAsync();
+        await otherBudget.ATransactionAsync(await otherBudget.ACategoryAsync(CategoryType.Expense), Today, 10m, otherAccount);
+
+        var result = await _repository.GetTransactionsAsync(user, Id.Valid(otherAccount), Offset.Default, Limit.Default, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetTransactionsAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new AccountsInDatabase(database.BadDataSource, new LoggerForTest<AccountsInDatabase>(testOutputHelper));
+
+        var result = await repository.GetTransactionsAsync(AUser(), AnId(), Offset.Default, Limit.Default, CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(AccountsErrors.ReadFailed);
     }

@@ -2,7 +2,9 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
+using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Shared.Core.Search;
 using Holefeeder.Service.Support.Core;
 
 namespace Holefeeder.ServiceTests.Accounts.TestKit;
@@ -12,6 +14,8 @@ internal sealed class AccountsInMemory : IAccounts
     private readonly Dictionary<Id, PeriodSettings> _settings = [];
     private readonly List<(Id UserId, AccountTotals Account)> _accounts = [];
     private readonly List<(Id UserId, CashflowSchedule Cashflow)> _cashflows = [];
+    private readonly List<(Id UserId, Id AccountId)> _accountIds = [];
+    private readonly List<RecordedTransaction> _transactions = [];
     private ResultError? _failure;
 
     public Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
@@ -46,6 +50,35 @@ internal sealed class AccountsInMemory : IAccounts
         IReadOnlyList<CashflowSchedule> cashflows =
             [.. _cashflows.Where(entry => entry.UserId == user.Id && entry.Cashflow.AccountId == accountId).Select(entry => entry.Cashflow)];
         return Task.FromResult<Result<IReadOnlyList<CashflowSchedule>>>(cashflows.ToList());
+    }
+
+    public Task<Result<PagedData<RecordedTransaction>>> GetTransactionsAsync(
+        User user, Id accountId, Offset offset, Limit limit, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<PagedData<RecordedTransaction>>>(_failure);
+        }
+
+        var owned = _accountIds.Contains((user.Id, accountId)) || _accounts.Any(entry => entry.UserId == user.Id && entry.Account.Id == accountId);
+        if (!owned)
+        {
+            return Task.FromResult<Result<PagedData<RecordedTransaction>>>(AccountErrors.NotFound);
+        }
+
+        var transactions = _transactions
+            .Where(transaction => transaction.AccountId == accountId)
+            .OrderByDescending(transaction => transaction.Date)
+            .ThenByDescending(transaction => transaction.Id.Value)
+            .ToList();
+        return Task.FromResult<Result<PagedData<RecordedTransaction>>>(
+            new PagedData<RecordedTransaction>(transactions.Count, [.. transactions.Skip(offset.Value).Take(limit.Value)]));
+    }
+
+    public void Add(User user, Id accountId, params RecordedTransaction[] transactions)
+    {
+        _accountIds.Add((user.Id, accountId));
+        _transactions.AddRange(transactions);
     }
 
     public void Add(User user, PeriodSettings settings) => _settings[user.Id] = settings;
