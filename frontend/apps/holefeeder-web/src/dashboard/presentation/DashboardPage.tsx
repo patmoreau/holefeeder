@@ -3,6 +3,7 @@ import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
 import { AccountsSection } from './AccountsSection';
 import { ListSkeleton } from './ListSkeleton';
+import { RecentTransactionsSection } from './RecentTransactionsSection';
 import { SpendingHero } from './SpendingHero';
 
 const sectionLabel = { fontSize: 15, color: 'text.secondary' };
@@ -40,10 +41,7 @@ export const DashboardPage = () => (
     <AccountsSection />
 
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start' }}>
-      <Stack spacing={1.5}>
-        <Skeleton width={140} sx={sectionLabel} />
-        <ListSkeleton testID="dashboard-transactions-skeleton" rows={4} />
-      </Stack>
+      <RecentTransactionsSection />
       <Stack spacing={1.5}>
         <Skeleton width={120} sx={sectionLabel} />
         <ListSkeleton testID="dashboard-upcoming-skeleton" rows={3} />
