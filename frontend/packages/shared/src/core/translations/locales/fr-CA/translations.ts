@@ -466,6 +466,7 @@ export const fr: TranslationStructure = {
     settings: 'Configuration',
     test: 'Examen',
     legacy: 'Ancienne version',
+    openMenu: 'Ouvrir le menu',
   },
   tagList: {
     placeHolder: 'Filtrer les étiquettes…',

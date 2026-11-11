@@ -60,27 +60,35 @@ const TotalPill = ({ label, value, testID }: { label: string; value: number; tes
 
 const Hero = ({ summary }: { summary: DashboardSummary }) => (
   <Stack
-    direction="row"
-    alignItems="center"
+    direction={{ xs: 'column', md: 'row' }}
+    alignItems={{ xs: 'stretch', md: 'center' }}
     justifyContent="space-between"
     useFlexGap
     data-testid="dashboard-spending-hero"
-    sx={{ p: 4, gap: 5, flexWrap: 'wrap', borderRadius: 4, bgcolor: 'primary.main' }}
+    sx={{ p: { xs: 3, md: 4 }, gap: { xs: 2.5, md: 5 }, flexWrap: { md: 'wrap' }, borderRadius: 4, bgcolor: 'primary.main' }}
   >
     <Stack spacing={1} alignItems="flex-start">
       <Typography sx={heroText}>{translate(tk.dashboard.largeHeader.spendingTitle)}</Typography>
       <Typography
         data-testid="dashboard-current-spending"
-        sx={{ fontSize: 48, fontWeight: 700, lineHeight: 1.2, color: 'primary.contrastText' }}
+        sx={{ fontSize: { xs: 40, md: 48 }, fontWeight: 700, lineHeight: 1.2, color: 'primary.contrastText' }}
       >
         {currency(summary.currentExpenses)}
       </Typography>
       {!roundsToZero(summary.averageExpenses) && <TrendBadge summary={summary} />}
     </Stack>
-    <Stack direction="row" alignItems="center" spacing={5}>
-      <Box sx={{ width: '1px', height: 72, bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.contrastTextChannel} / 0.6)` }} />
-      <TotalPill label={translate(tk.dashboard.largeHeader.netFlow)} value={summary.netFlow} testID="dashboard-net-flow" />
-      <TotalPill label={translate(tk.accountCard.projected)} value={summary.projectedNetFlow} testID="dashboard-projected" />
+    <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} useFlexGap sx={{ gap: { xs: 2.5, md: 5 } }}>
+      <Box
+        sx={{
+          width: { md: '1px' },
+          height: { xs: '1px', md: 72 },
+          bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.contrastTextChannel} / 0.6)`,
+        }}
+      />
+      <Stack direction="row" alignItems="center" justifyContent="space-around" spacing={5}>
+        <TotalPill label={translate(tk.dashboard.largeHeader.netFlow)} value={summary.netFlow} testID="dashboard-net-flow" />
+        <TotalPill label={translate(tk.accountCard.projected)} value={summary.projectedNetFlow} testID="dashboard-projected" />
+      </Stack>
     </Stack>
   </Stack>
 );

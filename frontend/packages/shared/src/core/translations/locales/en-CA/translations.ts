@@ -463,6 +463,7 @@ export const en = {
     settings: 'Settings',
     test: 'Test',
     legacy: 'Legacy',
+    openMenu: 'Open menu',
   },
   tagList: {
     placeHolder: 'Filter tags…',

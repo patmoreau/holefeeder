@@ -106,7 +106,7 @@ const RowArrows = ({ rowRef, overflow }: { rowRef: RefObject<HTMLDivElement | nu
   };
 
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack direction="row" spacing={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
       <IconButton
         size="small"
         disabled={!overflow.before}

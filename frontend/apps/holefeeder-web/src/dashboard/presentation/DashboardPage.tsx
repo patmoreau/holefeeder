@@ -8,7 +8,7 @@ import { UpcomingFlowsSection } from './UpcomingFlowsSection';
 
 export const DashboardPage = () => (
   <Stack spacing={3.5} data-testid="dashboard-page">
-    <Stack direction="row" alignItems="center" justifyContent="space-between">
+    <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
       <Typography variant="h1" sx={{ fontSize: 28, fontWeight: 700 }}>
         {translate(tk.tabs.dashboard)}
       </Typography>
@@ -23,6 +23,8 @@ export const DashboardPage = () => (
           </Box>
         }
         sx={{
+          flexShrink: 0,
+          whiteSpace: 'nowrap',
           fontSize: 15,
           py: 1.25,
           pl: 2,
@@ -38,7 +40,7 @@ export const DashboardPage = () => (
 
     <AccountsSection />
 
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start' }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3, alignItems: 'start' }}>
       <RecentTransactionsSection />
       <UpcomingFlowsSection />
     </Box>
