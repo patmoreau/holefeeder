@@ -1,10 +1,11 @@
-import { tk } from '@holefeeder/shared/core';
+import { LanguageType, tk } from '@holefeeder/shared/core';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import RepeatOutlinedIcon from '@mui/icons-material/RepeatOutlined';
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import {
   Avatar,
   Box,
@@ -25,6 +26,7 @@ import {
 import { Children, Fragment, type ReactNode } from 'react';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 import { buildVersionLabel } from '@/shared/core/build-version';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 
 const Section = ({ title, testID, children }: { title: string; testID: string; children: ReactNode }) => (
@@ -111,12 +113,30 @@ const themeOptions: SelectOption<ThemeMode>[] = [
   { value: 'dark', label: translate(tk.displaySection.dark) },
 ];
 
+const languageOptions: SelectOption<LanguageType>[] = [
+  { value: LanguageType.en, label: translate(tk.displaySection.english) },
+  { value: LanguageType.fr, label: translate(tk.displaySection.french) },
+];
+
+const chooseLanguage = (language: LanguageType) => {
+  Language.choose(language);
+  window.location.reload();
+};
+
 const DisplaySection = () => {
   const { mode, setMode } = useColorScheme();
 
   return (
     <Section title={translate(tk.displaySection.title)} testID="settings-display">
       <Rows>
+        <SelectRow
+          testID="settings-language"
+          icon={<TranslateOutlinedIcon />}
+          label={translate(tk.displaySection.language)}
+          value={Language.current()}
+          options={languageOptions}
+          onChange={chooseLanguage}
+        />
         <SelectRow
           testID="settings-theme"
           icon={<ContrastOutlinedIcon />}

@@ -4,7 +4,10 @@ import { Router } from './router';
 import { AuthenticationProvider } from './shared/auth/authentication-provider';
 import { E2eConfig } from './shared/auth/e2e-config';
 import { E2eAuthenticationProvider } from './shared/auth/E2eAuthenticationProvider';
+import { Language } from './shared/i18n/language';
 import { AppThemeProvider } from './shared/theme/theme-provider';
+
+document.documentElement.lang = Language.current();
 
 const AuthProvider = E2eConfig.isEnabled() ? E2eAuthenticationProvider : AuthenticationProvider;
 

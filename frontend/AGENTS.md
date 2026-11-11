@@ -139,7 +139,10 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
 - Theme (`src/shared/theme/theme-provider.tsx`) mirrors the mobile tokens — purple
   primary, Inter Tight, light/dark following the system unless Settings picks one (MUI
   `setMode`, kept in the browser's localStorage).
-- Strings come from the shared `en` locale through `src/shared/i18n/translate.ts`.
+- Strings come from the shared `en` / `fr` locales through `src/shared/i18n/translate.ts`;
+  `src/shared/i18n/language.ts` picks the language (the Settings choice kept in
+  localStorage, else the browser's languages, else English) and its `en-CA` / `fr-CA`
+  locale for dates and amounts. Changing it reloads the page.
 - Routes: `/welcome` is for signed-out users (`RequireAnonymous`); everything else sits
   behind `RequireAuthenticated` inside `AppShell` (navigation drawer): `/` (dashboard),
   `/accounts/:id` (an account, opened from its dashboard card) and `/settings`.
