@@ -20,6 +20,8 @@ internal sealed record Account(
     public Account Modify(AccountName name, Money? openBalance, string? description) =>
         this with { Name = name, OpenBalance = openBalance ?? OpenBalance, Description = description ?? Description };
 
+    public Account SetFavorite(bool isFavorite) => this with { Favorite = isFavorite };
+
     public Result<Account> Close() =>
         Inactive ? AccountClosingErrors.AlreadyClosed : this with { Inactive = true };
 }

@@ -1,10 +1,12 @@
 using Holefeeder.Service.Accounts.Api.CloseAccount;
+using Holefeeder.Service.Accounts.Api.FavoriteAccount;
 using Holefeeder.Service.Accounts.Api.GetAccountDetail;
 using Holefeeder.Service.Accounts.Api.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Api.ModifyAccount;
 using Holefeeder.Service.Accounts.Api.OpenAccount;
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.CloseAccount;
+using Holefeeder.Service.Accounts.Core.FavoriteAccount;
 using Holefeeder.Service.Accounts.Core.GetAccountDetail;
 using Holefeeder.Service.Accounts.Core.GetAccountTransactions;
 using Holefeeder.Service.Accounts.Core.ModifyAccount;
@@ -26,7 +28,8 @@ internal static class Accounts
             .AddScoped<GetAccountTransactionsUseCase>()
             .AddScoped<OpenAccountUseCase>()
             .AddScoped<ModifyAccountUseCase>()
-            .AddScoped<CloseAccountUseCase>();
+            .AddScoped<CloseAccountUseCase>()
+            .AddScoped<FavoriteAccountUseCase>();
     }
 
     public static IEndpointRouteBuilder MapAccountsEndpoints(this IEndpointRouteBuilder app) =>
@@ -34,5 +37,6 @@ internal static class Accounts
             .MapGetAccountTransactions()
             .MapOpenAccount()
             .MapModifyAccount()
-            .MapCloseAccount();
+            .MapCloseAccount()
+            .MapFavoriteAccount();
 }
