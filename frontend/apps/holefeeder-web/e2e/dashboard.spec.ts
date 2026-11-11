@@ -65,6 +65,7 @@ test.describe('Dashboard', () => {
 
   test('ShouldShowSkeletonOfEachSection', async ({ page }) => {
     await signedIn(page);
+    await page.route('**/gateway/api/v2/dashboard/summary', () => new Promise<void>(() => {}));
 
     await page.goto('/');
 

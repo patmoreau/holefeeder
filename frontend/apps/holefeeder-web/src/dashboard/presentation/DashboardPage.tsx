@@ -1,6 +1,7 @@
 import { tk } from '@holefeeder/shared/core';
 import { Box, Button, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
+import { SpendingHero } from './SpendingHero';
 
 const sectionLabel = { fontSize: 15, color: 'text.secondary' };
 
@@ -50,7 +51,7 @@ export const DashboardPage = () => (
       </Button>
     </Stack>
 
-    <Skeleton variant="rounded" height={189} data-testid="dashboard-spending-skeleton" sx={{ borderRadius: 4 }} />
+    <SpendingHero />
 
     <Stack spacing={1.5}>
       <Skeleton width={80} sx={sectionLabel} />
