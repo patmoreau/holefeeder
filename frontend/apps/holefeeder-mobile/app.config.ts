@@ -222,7 +222,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
               description: 'Bills past due and due today.',
               ios: {
                 supportedFamilies: ['systemSmall', 'systemMedium'],
-                initialLayout: './src/flows/widgets/BillsDueWidget.tsx',
+                initialLayout: './src/dashboard/widgets/BillsDueWidget.tsx',
               },
             },
           ],

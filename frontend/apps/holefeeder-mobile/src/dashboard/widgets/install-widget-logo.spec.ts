@@ -1,6 +1,6 @@
 import { File } from 'expo-file-system';
 import { Image } from 'react-native';
-import { installWidgetLogo, WidgetLogoErrors } from '@/flows/widgets/install-widget-logo';
+import { installWidgetLogo, WidgetLogoErrors } from '@/dashboard/widgets/install-widget-logo';
 
 const files: { uri: string; exists: boolean; copy: jest.Mock; delete: jest.Mock }[] = [];
 

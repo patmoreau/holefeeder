@@ -1,6 +1,6 @@
 import { Result } from '@holefeeder/shared/core';
-import { BillsDueEntry } from '@/flows/core/flows/publish-bills-due-widget/bills-due-summary';
-import { BillsDueWidgetPublisher } from '@/flows/core/flows/publish-bills-due-widget/bills-due-widget-publisher';
+import { BillsDueEntry } from '@/dashboard/core/publish-bills-due-widget/bills-due-summary';
+import { BillsDueWidgetPublisher } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
 
 export type BillsDueWidgetPublisherInMemory = BillsDueWidgetPublisher & {
   isFailing: (errors: string[]) => void;

@@ -46,7 +46,7 @@ switches entries on its own, so the widget stays right while the app is not runn
    only, and the amounts are right-aligned with the arrow after the value so
    decimals and arrows line up. Labels stay on one line so French and English take
    the same height, and the content is centred vertically in the widget.
-9. **`widgets/` ring.** Holds the widget component and the adapter implementing
+9. **`dashboard/widgets/` ring.** Holds the widget component and the adapter implementing
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
 
 ## Limitations

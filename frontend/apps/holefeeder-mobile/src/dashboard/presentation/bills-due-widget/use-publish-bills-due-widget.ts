@@ -1,8 +1,8 @@
 import { Logger, Result, today } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { AppState } from 'react-native';
-import { BillsDueWidgetPublisher } from '@/flows/core/flows/publish-bills-due-widget/bills-due-widget-publisher';
-import { PublishBillsDueWidgetUseCase } from '@/flows/core/flows/publish-bills-due-widget/publish-bills-due-widget-use-case';
+import { BillsDueWidgetPublisher } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
+import { PublishBillsDueWidgetUseCase } from '@/dashboard/core/publish-bills-due-widget/publish-bills-due-widget-use-case';
 import { useUpcomingFlows } from '@/flows/presentation/upcoming/use-upcoming-flows';
 import { useAuth } from '@/shared/auth/core/use-auth';
 

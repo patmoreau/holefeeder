@@ -1,7 +1,7 @@
 import { DateOnly, Money } from '@holefeeder/shared/core';
-import { BillsDueWidgetPublisherErrors } from '@/flows/core/flows/publish-bills-due-widget/bills-due-widget-publisher';
-import { BillsDueWidgetPublisherWithExpoWidgets } from '@/flows/widgets/bills-due-widget-publisher-with-expo-widgets';
-import BillsDueWidget from '@/flows/widgets/BillsDueWidget';
+import { BillsDueWidgetPublisherErrors } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
+import { BillsDueWidgetPublisherWithExpoWidgets } from '@/dashboard/widgets/bills-due-widget-publisher-with-expo-widgets';
+import BillsDueWidget from '@/dashboard/widgets/BillsDueWidget';
 
 const updateTimeline = jest.mocked(BillsDueWidget.updateTimeline);
 const updateSnapshot = jest.mocked(BillsDueWidget.updateSnapshot);

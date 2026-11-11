@@ -1,7 +1,7 @@
 import { Logger, Money, Result, withDate } from '@holefeeder/shared/core';
-import { BillsDueEntry, BillsDueTotal } from '@/flows/core/flows/publish-bills-due-widget/bills-due-summary';
-import { BillsDueWidgetPublisher, BillsDueWidgetPublisherErrors } from '@/flows/core/flows/publish-bills-due-widget/bills-due-widget-publisher';
-import BillsDueWidget, { BillsDueAmountProps, BillsDueTotalProps, BillsDueWidgetProps } from '@/flows/widgets/BillsDueWidget';
+import { BillsDueEntry, BillsDueTotal } from '@/dashboard/core/publish-bills-due-widget/bills-due-summary';
+import { BillsDueWidgetPublisher, BillsDueWidgetPublisherErrors } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
+import BillsDueWidget, { BillsDueAmountProps, BillsDueTotalProps, BillsDueWidgetProps } from '@/dashboard/widgets/BillsDueWidget';
 
 export type BillsDueWidgetDisplay = {
   formatAmount: (amount: Money) => string;
