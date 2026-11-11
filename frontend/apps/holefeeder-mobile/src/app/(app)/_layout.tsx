@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
-import { BillsDueWidgetPublisher } from '@/dashboard/presentation/bills-due-widget/BillsDueWidgetPublisher';
+import { HomeScreenWidgets } from '@/dashboard/presentation/HomeScreenWidgets';
 import { BillsDueBadgeScheduler } from '@/flows/presentation/bills-due-badge/BillsDueBadgeScheduler';
 import { tk } from '@/i18n/translations';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -17,7 +17,7 @@ const AppLayout = () => {
   return (
     <>
       <BillsDueBadgeScheduler />
-      {Platform.OS === 'ios' && <BillsDueWidgetPublisher />}
+      {Platform.OS === 'ios' && <HomeScreenWidgets />}
       <Stack>
         <Stack.Screen
           name="(tabs)"
