@@ -29,4 +29,6 @@ internal interface ITransactions
     Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken);
 
     Task<Result<Nothing>> SaveAsync(User user, IReadOnlyList<Transaction> transactions, Cashflow? cashflow, CancellationToken cancellationToken);
+
+    Task<Result<Nothing>> DeleteAsync(User user, Id id, CancellationToken cancellationToken);
 }

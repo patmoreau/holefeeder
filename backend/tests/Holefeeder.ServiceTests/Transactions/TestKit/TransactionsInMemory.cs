@@ -86,6 +86,17 @@ internal sealed class TransactionsInMemory : ITransactions
         return Task.FromResult<Result<Nothing>>(Nothing.Value);
     }
 
+    public Task<Result<Nothing>> DeleteAsync(User user, Id id, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Nothing>>(_failure);
+        }
+
+        var deleted = _transactions.RemoveAll(entry => entry.UserId == user.Id && entry.Transaction.Id == id);
+        return Task.FromResult<Result<Nothing>>(deleted == 0 ? TransactionErrors.NotFound : Nothing.Value);
+    }
+
     private TransactionDetail DetailOf(Transaction transaction) =>
         new(transaction.Id, transaction.Date, transaction.Amount, transaction.Description, transaction.Tags,
             _accounts.Select(entry => entry.Account).Single(account => account.Id == transaction.AccountId),

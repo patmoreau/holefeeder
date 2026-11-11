@@ -1,3 +1,4 @@
+using Holefeeder.Service.Transactions.Api.DeleteTransaction;
 using Holefeeder.Service.Transactions.Api.GetNewTransactionOptions;
 using Holefeeder.Service.Transactions.Api.GetTagSuggestions;
 using Holefeeder.Service.Transactions.Api.GetTransaction;
@@ -5,6 +6,7 @@ using Holefeeder.Service.Transactions.Api.ModifyTransaction;
 using Holefeeder.Service.Transactions.Api.RecordPurchase;
 using Holefeeder.Service.Transactions.Api.RecordTransfer;
 using Holefeeder.Service.Transactions.Core;
+using Holefeeder.Service.Transactions.Core.DeleteTransaction;
 using Holefeeder.Service.Transactions.Core.GetNewTransactionOptions;
 using Holefeeder.Service.Transactions.Core.GetTagSuggestions;
 using Holefeeder.Service.Transactions.Core.GetTransaction;
@@ -24,6 +26,7 @@ internal static class Transactions
             .AddScoped<GetTagSuggestionsUseCase>()
             .AddScoped<GetTransactionUseCase>()
             .AddScoped<ModifyTransactionUseCase>()
+            .AddScoped<DeleteTransactionUseCase>()
             .AddScoped<RecordPurchaseUseCase>()
             .AddScoped<RecordTransferUseCase>();
 
@@ -32,6 +35,7 @@ internal static class Transactions
             .MapGetTagSuggestions()
             .MapGetTransaction()
             .MapModifyTransaction()
+            .MapDeleteTransaction()
             .MapRecordPurchase()
             .MapRecordTransfer();
 }

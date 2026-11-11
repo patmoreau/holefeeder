@@ -198,6 +198,26 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
         }
     }
 
+    public async Task<Result<Nothing>> DeleteAsync(User user, Id id, CancellationToken cancellationToken)
+    {
+        const string sql = "DELETE FROM transactions WHERE id = @Id AND user_id = @UserId;";
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var deleted = await connection.ExecuteAsync(
+                new CommandDefinition(sql, new { Id = id.Value, UserId = user.Id.Value }, cancellationToken: cancellationToken));
+
+            return deleted == 0 ? TransactionErrors.NotFound : Nothing.Value;
+        }
+        catch (NpgsqlException exception)
+        {
+            LogWriteFailed(logger, exception);
+            return TransactionsErrors.WriteFailed;
+        }
+    }
+
     private async Task<Result<bool>> ExistsAsync(string sql, User user, Id id, CancellationToken cancellationToken)
     {
         try

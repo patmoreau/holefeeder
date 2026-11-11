@@ -370,4 +370,45 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         (await database.TransactionsInDbAsync(chequing)).Should().Equal(new TransactionInDb(
             id, new DateOnly(2026, 9, 1), 25m, "Bistro", chequing, dining, null, null, "family", user.Id.Value));
     }
+
+    [Fact]
+    public async Task DeleteAsync_DeletesOnlyTheUsersTransaction()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking);
+        var groceries = await budget.ACategoryAsync(CategoryType.Expense);
+        var market = await budget.ATransactionAsync(groceries, new DateOnly(2026, 8, 28), 10m, chequing);
+        var bakery = await budget.ATransactionAsync(groceries, new DateOnly(2026, 8, 29), 20m, chequing);
+
+        var result = await _repository.DeleteAsync(user, Id.Valid(market), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await database.TransactionsInDbAsync(chequing)).Select(transaction => transaction.Id).Should().Equal(bakery);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Fails_WhenTheTransactionIsSomeoneElses()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(owner, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking);
+        var id = await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense), new DateOnly(2026, 8, 28), 10m, chequing);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.DeleteAsync(user, Id.Valid(id), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionErrors.NotFound);
+        (await database.TransactionsInDbAsync(chequing)).Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new TransactionsInDatabase(database.BadDataSource, new LoggerForTest<TransactionsInDatabase>(testOutputHelper));
+
+        var result = await repository.DeleteAsync(AUser(), AnId(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionsErrors.WriteFailed);
+    }
 }
