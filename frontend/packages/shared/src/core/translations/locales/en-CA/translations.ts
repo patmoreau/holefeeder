@@ -87,6 +87,11 @@ export const en = {
     title: 'Holefeeder',
     section: 'Budget Settings',
     date: 'Effective Date',
+    summary: '{{period}} · from {{date}}',
+    every: 'Every {{count}} {{unit}}',
+    hint: 'Each budget period starts on the effective date and repeats at the chosen interval.',
+    saved: 'Budget settings saved',
+    failed: 'Budget settings could not be saved. Try again.',
   },
   cardList: {
     viewAll: 'View All',

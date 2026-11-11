@@ -89,6 +89,11 @@ export const fr: TranslationStructure = {
     title: 'Holefeeder',
     section: 'Paramètres du budget',
     date: 'Date effective',
+    summary: '{{period}} · depuis le {{date}}',
+    every: 'Aux {{count}} {{unit}}',
+    hint: "Chaque période budgétaire commence à la date effective et se répète selon l'intervalle choisi.",
+    saved: 'Paramètres du budget enregistrés',
+    failed: "Les paramètres du budget n'ont pas pu être enregistrés. Réessayez.",
   },
   cardList: {
     viewAll: 'Voir tout',

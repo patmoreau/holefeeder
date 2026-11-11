@@ -1,4 +1,5 @@
-import { LanguageType, tk } from '@holefeeder/shared/core';
+import { type AsyncResult, LanguageType, tk } from '@holefeeder/shared/core';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
@@ -19,15 +20,22 @@ import {
   MenuItem,
   Paper,
   Select,
+  Skeleton,
   Stack,
   Typography,
   useColorScheme,
 } from '@mui/material';
-import { Children, Fragment, type ReactNode } from 'react';
+import { Children, Fragment, type ReactNode, useState } from 'react';
+import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 import { buildVersionLabel } from '@/shared/core/build-version';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
+import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
+import { useBudgetSettings } from '../api/use-budget-settings';
+import type { BudgetSettings } from '../domain/budget-settings';
+import { budgetSummary } from './budget-summary';
+import { BudgetSettingsFlyout } from './BudgetSettingsFlyout';
 
 const Section = ({ title, testID, children }: { title: string; testID: string; children: ReactNode }) => (
   <Stack spacing={1.5} data-testid={testID}>
@@ -52,12 +60,20 @@ const Rows = ({ children }: { children: ReactNode }) => (
 const rowIcon = { minWidth: 32, color: 'text.secondary' };
 const rowLabel = { primary: { fontSize: 17 } };
 
-const LinkRow = ({ testID, icon, label }: { testID: string; icon: ReactNode; label: string }) => (
+type LinkRowProps = { testID: string; icon: ReactNode; label: string; value?: ReactNode; onClick?: () => void };
+
+const LinkRow = ({ testID, icon, label, value, onClick }: LinkRowProps) => (
   <ListItem disablePadding>
-    <ListItemButton disabled data-testid={testID} sx={{ px: 0, py: 1.5, '&:hover': { bgcolor: 'transparent' } }}>
+    <ListItemButton
+      disabled={!onClick}
+      data-testid={testID}
+      onClick={onClick}
+      sx={{ px: 0, py: 1.5, gap: 1, '&:hover': { bgcolor: 'transparent' } }}
+    >
       <ListItemIcon sx={rowIcon}>{icon}</ListItemIcon>
-      <ListItemText primary={label} slotProps={rowLabel} />
-      <ChevronRightIcon sx={{ color: 'text.secondary' }} />
+      <ListItemText primary={label} slotProps={rowLabel} sx={{ flexShrink: 0 }} />
+      {value}
+      <ChevronRightIcon sx={{ color: 'text.secondary', flexShrink: 0 }} />
     </ListItemButton>
   </ListItem>
 );
@@ -187,20 +203,51 @@ const ProfileSection = () => {
   );
 };
 
-export const SettingsPage = () => (
+const budgetValueSx = { fontSize: 15, color: 'text.secondary', textAlign: 'right' };
+
+const BudgetValue = ({ settings }: { settings: AsyncResult<BudgetSettings> }) => {
+  if (settings.isLoading) return <Skeleton data-testid="settings-budget-summary" width={160} />;
+
+  return (
+    <Typography data-testid="settings-budget-summary" sx={budgetValueSx}>
+      {settings.isSuccess ? budgetSummary(settings.value) : translate(tk.common.error)}
+    </Typography>
+  );
+};
+
+const HolefeederSection = ({ notify }: { notify: Notify }) => {
+  const settings = useBudgetSettings();
+  const [editing, setEditing] = useState(false);
+
+  return (
+    <Section title={translate(tk.budgetSection.title)} testID="settings-holefeeder">
+      <Rows>
+        <LinkRow
+          testID="settings-budget"
+          icon={<AccountBalanceWalletOutlinedIcon />}
+          label={translate(tk.budgetSection.budget)}
+          value={<BudgetValue settings={settings} />}
+          onClick={settings.isSuccess ? () => setEditing(true) : undefined}
+        />
+        <LinkRow testID="settings-categories" icon={<CategoryOutlinedIcon />} label={translate(tk.categoriesSection.title)} />
+        <LinkRow testID="settings-cashflows" icon={<RepeatOutlinedIcon />} label={translate(tk.cashflowsSection.title)} />
+        <LinkRow testID="settings-tags" icon={<LocalOfferOutlinedIcon />} label={translate(tk.tagsSection.title)} />
+      </Rows>
+      {settings.isSuccess && (
+        <BudgetSettingsFlyout open={editing} settings={settings.value} onClose={() => setEditing(false)} notify={notify} />
+      )}
+    </Section>
+  );
+};
+
+const SettingsContent = ({ notify }: { notify: Notify }) => (
   <Stack spacing={3.5} data-testid="settings-page">
     <Typography variant="h1" sx={{ fontSize: 28, fontWeight: 700 }}>
       {translate(tk.tabs.settings)}
     </Typography>
     <Stack spacing={3.5} sx={{ maxWidth: 720 }}>
       <ProfileSection />
-      <Section title={translate(tk.budgetSection.title)} testID="settings-holefeeder">
-        <Rows>
-          <LinkRow testID="settings-categories" icon={<CategoryOutlinedIcon />} label={translate(tk.categoriesSection.title)} />
-          <LinkRow testID="settings-cashflows" icon={<RepeatOutlinedIcon />} label={translate(tk.cashflowsSection.title)} />
-          <LinkRow testID="settings-tags" icon={<LocalOfferOutlinedIcon />} label={translate(tk.tagsSection.title)} />
-        </Rows>
-      </Section>
+      <HolefeederSection notify={notify} />
       <DisplaySection />
       <Section title={translate(tk.settings.aboutSection.title)} testID="settings-about">
         <Rows>
@@ -214,3 +261,14 @@ export const SettingsPage = () => (
     </Stack>
   </Stack>
 );
+
+export const SettingsPage = () => {
+  const [toast, setToast] = useState<string | null>(null);
+
+  return (
+    <ApiRefreshProvider>
+      <SettingsContent notify={setToast} />
+      <DashboardToast message={toast} onClose={() => setToast(null)} />
+    </ApiRefreshProvider>
+  );
+};
