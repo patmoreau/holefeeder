@@ -3,6 +3,7 @@ using Dapper;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Shared.Core;
 
@@ -60,6 +61,41 @@ internal sealed partial class DashboardInDatabase(NpgsqlDataSource dataSource, I
                 new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
             return rows.Select(row => row.ToDailyTotal()).ToList();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return DashboardErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<IReadOnlyList<AccountTotals>>> GetActiveAccountsAsync(User user, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT a.id, a.name, a.type, a.open_balance, a.open_date,
+                                  COALESCE(t.gains, 0) AS gains, COALESCE(t.expenses, 0) AS expenses, t.last_transaction_date
+                           FROM accounts a
+                           LEFT JOIN (SELECT tr.account_id,
+                                             SUM(CASE WHEN c.type = 'Gain' THEN tr.amount ELSE 0 END) AS gains,
+                                             SUM(CASE WHEN c.type = 'Expense' THEN tr.amount ELSE 0 END) AS expenses,
+                                             MAX(tr.date) AS last_transaction_date
+                                      FROM transactions tr
+                                      INNER JOIN categories c ON c.id = tr.category_id
+                                      WHERE tr.user_id = @UserId
+                                      GROUP BY tr.account_id) t ON t.account_id = a.id
+                           WHERE a.user_id = @UserId AND NOT a.inactive
+                           ORDER BY a.favorite DESC, a.name;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var rows = await connection.QueryAsync<AccountTotalsRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return rows.Select(row => row.ToAccountTotals()).ToList();
         }
         catch (NpgsqlException exception)
         {

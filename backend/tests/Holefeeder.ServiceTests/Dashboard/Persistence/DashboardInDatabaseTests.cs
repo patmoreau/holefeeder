@@ -1,4 +1,5 @@
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Persistence;
 using Holefeeder.Service.Shared.Core;
@@ -74,6 +75,97 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
 
         var result = await repository.GetDailyTotalsAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_TotalsTransactionsOfEachAccount()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking, openBalance: 100m, openDate: new DateOnly(2025, 3, 1));
+        var amex = await budget.AnAccountAsync("Amex", AccountType.CreditCard, openBalance: 25m, openDate: new DateOnly(2024, 6, 15));
+        var food = await budget.ACategoryAsync(CategoryType.Expense);
+        var salary = await budget.ACategoryAsync(CategoryType.Gain);
+        var transferIn = await budget.ACategoryAsync(CategoryType.Gain, system: true);
+        await budget.ATransactionAsync(salary, new DateOnly(2026, 11, 1), 2500m, chequing);
+        await budget.ATransactionAsync(food, new DateOnly(2026, 11, 8), 613.59m, chequing);
+        await budget.ATransactionAsync(food, new DateOnly(2026, 11, 3), 223.45m, amex);
+        await budget.ATransactionAsync(transferIn, new DateOnly(2026, 11, 5), 100m, amex);
+
+        var result = await _repository.GetActiveAccountsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new AccountTotals(Id.Valid(amex), "Amex", AccountType.CreditCard, 25m, new DateOnly(2024, 6, 15), 100m, 223.45m, new DateOnly(2026, 11, 5)),
+            new AccountTotals(Id.Valid(chequing), "Chequing", AccountType.Checking, 100m, new DateOnly(2025, 3, 1), 2500m, 613.59m, new DateOnly(2026, 11, 8))
+        ], options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_ReturnsZeroTotals_WhenAccountHasNoTransactions()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var savings = await budget.AnAccountAsync("Savings", AccountType.Savings, openBalance: 12450m, openDate: new DateOnly(2025, 3, 1));
+
+        var result = await _repository.GetActiveAccountsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new AccountTotals(Id.Valid(savings), "Savings", AccountType.Savings, 12450m, new DateOnly(2025, 3, 1), 0m, 0m, null)
+        ]);
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_ListsFavoritesFirstThenByName()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.AnAccountAsync("Savings", AccountType.Savings);
+        await budget.AnAccountAsync("Visa", AccountType.CreditCard, favorite: true);
+        await budget.AnAccountAsync("Amex", AccountType.CreditCard);
+        await budget.AnAccountAsync("Chequing", AccountType.Checking, favorite: true);
+
+        var result = await _repository.GetActiveAccountsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Select(account => account.Name).Should().Equal("Chequing", "Visa", "Amex", "Savings");
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_LeavesOutInactiveAccounts()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.AnAccountAsync("Closed", AccountType.Checking, inactive: true);
+
+        var result = await _repository.GetActiveAccountsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_LeavesOutOtherUsersAccounts()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var otherUser = await AUser().SavedInDbAsync(database);
+        await new BudgetForTest(otherUser, database).AnAccountAsync("Chequing", AccountType.Checking);
+
+        var result = await _repository.GetActiveAccountsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetActiveAccountsAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
+
+        var result = await repository.GetActiveAccountsAsync(AUser(), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
     }

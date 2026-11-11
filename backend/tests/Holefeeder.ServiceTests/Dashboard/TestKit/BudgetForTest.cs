@@ -1,6 +1,7 @@
 using Dapper;
 
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.TestKit.Persistence;
 
@@ -11,7 +12,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     private const string InsertAccount =
         """
         INSERT INTO accounts (id, type, name, favorite, open_balance, open_date, description, inactive, user_id)
-        VALUES (@Id, 'Checking', @Name, FALSE, 0, '2020-01-01', '', FALSE, @UserId);
+        VALUES (@Id, @Type, @Name, @Favorite, @OpenBalance, @OpenDate, '', @Inactive, @UserId);
         """;
 
     private const string InsertCategory =
@@ -50,9 +51,27 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
         return id;
     }
 
-    public async Task ATransactionAsync(Guid categoryId, DateOnly date, decimal amount)
+    public async Task<Guid> AnAccountAsync(
+        string name, AccountType type, decimal openBalance = 0m, DateOnly? openDate = null, bool favorite = false, bool inactive = false)
     {
-        var accountId = await TheAccountAsync();
+        var id = Guid.NewGuid();
+        await ExecuteAsync(InsertAccount, new
+        {
+            Id = id,
+            Type = type.Name,
+            Name = name,
+            Favorite = favorite,
+            OpenBalance = openBalance,
+            OpenDate = (openDate ?? new DateOnly(2020, 1, 1)).ToDateTime(TimeOnly.MinValue),
+            Inactive = inactive,
+            UserId = user.Id.Value
+        });
+        return id;
+    }
+
+    public async Task ATransactionAsync(Guid categoryId, DateOnly date, decimal amount, Guid? accountId = null)
+    {
+        accountId ??= await TheAccountAsync();
         await ExecuteAsync(InsertTransaction, new
         {
             Id = Guid.NewGuid(),
@@ -65,7 +84,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     }
 
     public async Task<Guid> ACashflowAsync(
-        Guid categoryId, DateOnly effectiveDate, IntervalType intervalType, int frequency, decimal amount, bool inactive = false)
+        Guid categoryId, DateOnly effectiveDate, IntervalType intervalType, int frequency, decimal amount, bool inactive = false, Guid? accountId = null)
     {
         var id = Guid.NewGuid();
         await ExecuteAsync(InsertCashflow, new
@@ -75,7 +94,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             Amount = amount,
             IntervalType = intervalType.Name,
             Frequency = frequency,
-            AccountId = await TheAccountAsync(),
+            AccountId = accountId ?? await TheAccountAsync(),
             CategoryId = categoryId,
             Inactive = inactive,
             UserId = user.Id.Value
@@ -106,8 +125,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             return accountId;
         }
 
-        var id = Guid.NewGuid();
-        await ExecuteAsync(InsertAccount, new { Id = id, Name = $"account-{id}", UserId = user.Id.Value });
+        var id = await AnAccountAsync($"account-{Guid.NewGuid()}", AccountType.Checking);
         _accountId = id;
         return id;
     }

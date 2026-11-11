@@ -69,6 +69,26 @@ for a liability; zero follows the account's normal state.
 The caption names the current balance. The projected balance keeps its "Projected" label and
 relies on colour, with the current balance's caption right beside it.
 
+### Projected balance
+
+The projected balance is the current balance plus every unpaid occurrence of the account's
+active cashflows up to the end of the current period (see the user's period settings):
+
+> **Projected displayed value = displayed value + Σ upcoming gains − Σ upcoming expenses**
+
+Gains raise it and expenses lower it whatever the account type, so an expense still to pay
+on a credit card deepens the amount due.
+
+| Account     | Displayed | Upcoming this period        | Projected |
+|-------------|-----------|-----------------------------|-----------|
+| Checking    | 2,000.00  | −1,450 rent, +1,000 × 2 pay | 2,550.00  |
+| Credit card | −123.45   | −66.67 one-time expense     | −190.12   |
+
+### Last updated
+
+An account was last updated on the date of its latest transaction, or on its opening date
+when it has none.
+
 ---
 
 ## Open Account

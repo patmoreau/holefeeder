@@ -1,5 +1,7 @@
+using Holefeeder.Service.Dashboard.Api.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Api.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Persistence;
 
@@ -14,9 +16,11 @@ internal static class Dashboard
         services.TryAddSingleton(TimeProvider.System);
         return services
             .AddScoped<IDashboard, DashboardInDatabase>()
-            .AddScoped<GetDashboardSummaryUseCase>();
+            .AddScoped<GetDashboardSummaryUseCase>()
+            .AddScoped<GetDashboardAccountsUseCase>();
     }
 
     public static IEndpointRouteBuilder MapDashboardEndpoints(this IEndpointRouteBuilder app) =>
-        app.MapGetDashboardSummary();
+        app.MapGetDashboardSummary()
+            .MapGetDashboardAccounts();
 }

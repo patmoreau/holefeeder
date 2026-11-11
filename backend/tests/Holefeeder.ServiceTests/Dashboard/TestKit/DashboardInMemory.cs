@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
@@ -12,6 +13,7 @@ internal sealed class DashboardInMemory : IDashboard
     private readonly Dictionary<Id, PeriodSettings> _settings = [];
     private readonly List<(Id UserId, DailyTotal Total)> _totals = [];
     private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
+    private readonly List<(Id UserId, AccountTotals Account)> _accounts = [];
     private ResultError? _failure;
 
     public Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
@@ -36,6 +38,17 @@ internal sealed class DashboardInMemory : IDashboard
         return Task.FromResult<Result<IReadOnlyList<DailyTotal>>>(totals.ToList());
     }
 
+    public Task<Result<IReadOnlyList<AccountTotals>>> GetActiveAccountsAsync(User user, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<IReadOnlyList<AccountTotals>>>(_failure);
+        }
+
+        IReadOnlyList<AccountTotals> accounts = [.. _accounts.Where(entry => entry.UserId == user.Id).Select(entry => entry.Account)];
+        return Task.FromResult<Result<IReadOnlyList<AccountTotals>>>(accounts.ToList());
+    }
+
     public Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken)
     {
         if (_failure is not null)
@@ -52,6 +65,8 @@ internal sealed class DashboardInMemory : IDashboard
     public void Add(User user, DailyTotal total) => _totals.Add((user.Id, total));
 
     public void Add(User user, Cashflow cashflow) => _cashflows.Add((user.Id, cashflow));
+
+    public void Add(User user, AccountTotals account) => _accounts.Add((user.Id, account));
 
     public void FailWith(ResultError error) => _failure = error;
 }
