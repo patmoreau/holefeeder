@@ -1,5 +1,6 @@
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Accounts.Api;
 using Holefeeder.Service.Accounts.Api.OpenAccount;
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.OpenAccount;
@@ -45,7 +46,7 @@ public class OpenAccountRequestRawTests
 
         result.Should().BeFailure();
         result.Error.Should().BeOfType<ResultErrorAggregate>().Subject.Errors.Keys.Should().BeEquivalentTo(
-            OpenAccountRequestErrors.CodeOpenDateInvalid);
+            OpenDateErrors.CodeInvalid);
     }
 
     [Fact]
@@ -57,14 +58,7 @@ public class OpenAccountRequestRawTests
         result.Error.Should().BeOfType<ResultErrorAggregate>().Subject.Errors.Keys.Should().BeEquivalentTo(
             AccountTypeErrors.CodeInvalid,
             AccountNameErrors.CodeInvalid,
-            OpenAccountRequestErrors.CodeOpenDateInvalid,
+            OpenDateErrors.CodeInvalid,
             MoneyErrors.CodeInvalid);
-    }
-
-    [Fact]
-    public void OpenDateInvalid_DescribesTheDateRule()
-    {
-        OpenAccountRequestErrors.OpenDateInvalid.Code.Should().Be("open-date-invalid");
-        OpenAccountRequestErrors.OpenDateInvalid.Description.Should().Be("Open date must be a date as YYYY-MM-DD.");
     }
 }

@@ -2,7 +2,6 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Accounts.Core;
 using Holefeeder.Service.Accounts.Core.OpenAccount;
-using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Shared.Core;
 
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ internal sealed record OpenAccountRequestRaw([FromBody] OpenAccountBody Body)
         var body = raw.Body;
         var type = AccountType.Create(body.Type);
         var name = AccountName.Create(body.Name);
-        var openDate = ParseOpenDate(body.OpenDate);
+        var openDate = OpenDate.Parse(body.OpenDate);
         Result<Money> openBalance = body.OpenBalance is null ? Money.Zero : Money.Create(body.OpenBalance);
 
         var validation = ResultAggregate.Create();
@@ -31,12 +30,6 @@ internal sealed record OpenAccountRequestRaw([FromBody] OpenAccountBody Body)
             user, type.Value, name.Value, openDate.Value, openBalance.Value, body.Description ?? string.Empty));
     }
 
-    private static Result<DateOnly> ParseOpenDate(string? value)
-    {
-        var date = IsoDate.Parse(value, OpenAccountRequestErrors.OpenDateInvalid);
-        return date.IsSuccess && date.Value == DateOnly.MinValue ? OpenAccountRequestErrors.OpenDateInvalid : date;
-    }
-
     private static void AddFailure<T>(ResultAggregate validation, Result<T> result)
     {
         if (result.IsFailure)
@@ -44,11 +37,4 @@ internal sealed record OpenAccountRequestRaw([FromBody] OpenAccountBody Body)
             validation.AddResult(result.Error);
         }
     }
-}
-
-internal static class OpenAccountRequestErrors
-{
-    public const string CodeOpenDateInvalid = "open-date-invalid";
-
-    public static ResultError OpenDateInvalid => new(CodeOpenDateInvalid, "Open date must be a date as YYYY-MM-DD.");
 }
