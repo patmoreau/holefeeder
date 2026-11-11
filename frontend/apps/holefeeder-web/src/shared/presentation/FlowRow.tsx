@@ -1,6 +1,6 @@
 import { type DateOnly, LocalFormatter, today } from '@holefeeder/shared/core';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, ButtonBase, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
@@ -35,14 +35,8 @@ const TagChip = ({ tag, testID }: { tag: string; testID: string }) => (
   </Box>
 );
 
-export const FlowRow = ({ flow, testID, action }: { flow: Flow; testID: string; action?: ReactNode }) => (
-  <Stack
-    direction="row"
-    alignItems="center"
-    spacing={1.5}
-    data-testid={`${testID}-row`}
-    sx={{ py: 1.5, '& + &': { borderTop: 1, borderColor: 'divider' } }}
-  >
+const FlowContent = ({ flow, testID }: { flow: Flow; testID: string }) => (
+  <>
     <LabelOutlinedIcon data-testid={`${testID}-icon`} sx={{ fontSize: 20, color: flow.categoryColor }} />
     <Stack spacing={0.5} sx={{ flexGrow: 1, minWidth: 0 }}>
       <Typography data-testid={`${testID}-title`} noWrap sx={{ fontSize: 17, fontWeight: 600, lineHeight: lineHeight }}>
@@ -69,6 +63,31 @@ export const FlowRow = ({ flow, testID, action }: { flow: Flow; testID: string; 
         {LocalFormatter.date(flow.date, today(), Language.locale(), translate)}
       </Typography>
     </Stack>
+  </>
+);
+
+type FlowRowProps = { flow: Flow; testID: string; action?: ReactNode; onOpen?: () => void };
+
+export const FlowRow = ({ flow, testID, action, onOpen }: FlowRowProps) => (
+  <Stack
+    direction="row"
+    alignItems="center"
+    spacing={1.5}
+    data-testid={`${testID}-row`}
+    sx={{ py: onOpen ? 0.5 : 1.5, '& + &': { borderTop: 1, borderColor: 'divider' } }}
+  >
+    {onOpen ? (
+      <ButtonBase
+        data-testid={`${testID}-open`}
+        aria-label={flow.title}
+        onClick={onOpen}
+        sx={{ flexGrow: 1, minWidth: 0, py: 1, gap: 1.5, justifyContent: 'flex-start', textAlign: 'left', borderRadius: 2 }}
+      >
+        <FlowContent flow={flow} testID={testID} />
+      </ButtonBase>
+    ) : (
+      <FlowContent flow={flow} testID={testID} />
+    )}
     {action}
   </Stack>
 );

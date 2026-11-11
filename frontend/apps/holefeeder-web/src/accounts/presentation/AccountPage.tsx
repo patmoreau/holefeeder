@@ -180,10 +180,12 @@ const AccountSummary = ({ account }: { account: AsyncResult<AccountDetail> }) =>
 const TransactionsContent = ({
   accountId,
   accountName,
+  notify,
   onAddExpense,
 }: {
   accountId: string;
   accountName: string;
+  notify: Notify;
   onAddExpense: () => void;
 }) => {
   const { transactions, hasMore, loadingMore, loadMore } = useAccountTransactions(accountId);
@@ -219,7 +221,7 @@ const TransactionsContent = ({
     );
 
   return (
-    <TransactionList transactions={transactions.value} testID="account-transaction">
+    <TransactionList transactions={transactions.value} testID="account-transaction" notify={notify}>
       {hasMore && (
         <Box sx={{ borderTop: 1, borderColor: 'divider', py: 1, textAlign: 'center' }}>
           <Button data-testid="account-load-more" disabled={loadingMore} onClick={loadMore} sx={{ fontSize: 15, fontWeight: 600 }}>
@@ -248,7 +250,7 @@ const AccountContent = ({ accountId, notify }: { accountId: string; notify: Noti
         <AccountSummary account={account} />
         <Stack useFlexGap sx={{ gap: 1.5 }}>
           <Typography sx={{ fontSize: 15, color: 'text.secondary' }}>{translate(tk.transactionList.title)}</Typography>
-          <TransactionsContent accountId={accountId} accountName={accountName} onAddExpense={() => setCreating(true)} />
+          <TransactionsContent accountId={accountId} accountName={accountName} notify={notify} onAddExpense={() => setCreating(true)} />
         </Stack>
       </Stack>
       <NewTransactionFlyout open={creating} accountId={accountId} onClose={() => setCreating(false)} notify={notify} />

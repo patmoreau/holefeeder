@@ -53,7 +53,7 @@ export const DashboardPage = () => {
         <Box
           sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3, alignItems: 'start' }}
         >
-          <RecentTransactionsSection />
+          <RecentTransactionsSection notify={setToast} />
           <UpcomingFlowsSection notify={setToast} />
         </Box>
       </Stack>

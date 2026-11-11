@@ -210,6 +210,11 @@ export const fr: TranslationStructure = {
       spendingTitle: 'Dépenses:',
     },
   },
+  editTransaction: {
+    title: 'Modifier la transaction',
+    failed: "La transaction n'a pas pu être enregistrée. Réessayez.",
+    loadFailed: "La transaction n'a pas pu être chargée.",
+  },
   newTransaction: {
     title: 'Nouvelle transaction',
     close: 'Fermer',

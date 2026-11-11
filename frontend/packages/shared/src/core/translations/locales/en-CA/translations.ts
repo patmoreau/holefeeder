@@ -208,6 +208,11 @@ export const en = {
       spendingTitle: 'Spending:',
     },
   },
+  editTransaction: {
+    title: 'Edit transaction',
+    failed: 'The transaction could not be saved. Try again.',
+    loadFailed: 'The transaction could not be loaded.',
+  },
   newTransaction: {
     title: 'New transaction',
     close: 'Close',

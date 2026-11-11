@@ -148,7 +148,8 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   `/accounts/:id` (an account, opened from its dashboard card) and `/settings`.
 - Code a second feature needs moves to `src/shared/<ring>` (`api`, `domain`,
   `presentation`) in the same change, e.g. `NewTransactionFlyout`, which the dashboard
-  and the account page both open.
+  and the account page both open, and `TransactionList`, whose rows open
+  `EditTransactionFlyout` on both.
 - UI tests are Playwright specs in `e2e/` (`pnpm test:e2e`), selecting by `data-testid`
   named `<screen>-<element>`. They run against the Vite dev server with
   `VITE_E2E=true`, which swaps Auth0 for `E2eAuthenticationProvider`: specs arrange
