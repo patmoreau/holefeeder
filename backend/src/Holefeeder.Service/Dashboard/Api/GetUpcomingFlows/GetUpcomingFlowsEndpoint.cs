@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Holefeeder.Service.Dashboard.Core.GetUpcomingFlows;
 using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Support.Core;
@@ -42,6 +44,7 @@ internal static class GetUpcomingFlowsEndpoint
             flow.Category,
             flow.CategoryColor,
             flow.Tags,
-            flow.Amount)).ToList());
+            flow.Amount,
+            JsonNamingPolicy.CamelCase.ConvertName(flow.CategoryType.ToString()))).ToList());
     }
 }

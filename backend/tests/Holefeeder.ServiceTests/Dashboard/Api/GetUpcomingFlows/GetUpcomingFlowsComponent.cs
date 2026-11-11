@@ -76,8 +76,8 @@ public class GetUpcomingFlowsComponent(ServerForTest server, ITestOutputHelper t
 
     private Task TheFlowsDueThisPeriodAreReturned(Ensure<HttpResponseMessage> response) =>
         TheFlowsAre(response,
-            new FlowJson(_rent, CurrentMonth, "Rent", "Housing", "#007AFF", ["housing"], 1450m),
-            new FlowJson(_phone, Today, "Utilities", null, "#34C759", ["phone"], 65m));
+            new FlowJson(_rent, CurrentMonth, "Rent", "Housing", "#007AFF", ["housing"], 1450m, "expense"),
+            new FlowJson(_phone, Today, "Utilities", null, "#34C759", ["phone"], 65m, "expense"));
 
     private static Task NoFlowIsReturned(Ensure<HttpResponseMessage> response) => TheFlowsAre(response);
 
@@ -90,5 +90,5 @@ public class GetUpcomingFlowsComponent(ServerForTest server, ITestOutputHelper t
     }
 
     private sealed record FlowJson(
-        Guid CashflowId, DateOnly Date, string Title, string? Category, string CategoryColor, string[] Tags, decimal Amount);
+        Guid CashflowId, DateOnly Date, string Title, string? Category, string CategoryColor, string[] Tags, decimal Amount, string CategoryType);
 }

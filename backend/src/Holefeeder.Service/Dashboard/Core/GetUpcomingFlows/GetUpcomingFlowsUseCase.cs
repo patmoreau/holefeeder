@@ -38,6 +38,7 @@ internal sealed class GetUpcomingFlowsUseCase(IDashboard dashboard)
             title.Category,
             cashflow.CategoryColor,
             cashflow.Tags,
-            cashflow.Schedule.Amount);
+            cashflow.Schedule.Amount,
+            cashflow.Schedule.CategoryType);
     }
 }

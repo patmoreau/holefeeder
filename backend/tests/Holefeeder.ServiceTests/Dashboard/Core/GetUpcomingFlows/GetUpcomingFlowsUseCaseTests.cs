@@ -26,7 +26,19 @@ public class GetUpcomingFlowsUseCaseTests
 
         result.Should().BeSuccessful();
         result.Value.Should().ContainSingle().Which.Should().BeEquivalentTo(
-            new DashboardUpcomingFlow(rent.Id, new DateOnly(2026, 11, 15), "Rent", "Housing", "#007AFF", ["housing"], 1450m));
+            new DashboardUpcomingFlow(rent.Id, new DateOnly(2026, 11, 15), "Rent", "Housing", "#007AFF", ["housing"], 1450m, CategoryType.Expense));
+    }
+
+    [Fact]
+    public async Task HandleAsync_TellsWhetherTheFlowIsAGainOrAnExpense()
+    {
+        var user = AMonthlyUser();
+        _dashboard.Add(user, ACashflow(new DateOnly(2026, 11, 15), IntervalType.OneTime, 1, 1000m, "Salary", "Pay check", "#34C759", [], categoryType: CategoryType.Gain));
+
+        var result = await _useCase.HandleAsync(new GetUpcomingFlowsRequest(user, Today), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().ContainSingle().Which.CategoryType.Should().Be(CategoryType.Gain);
     }
 
     [Fact]
@@ -126,10 +138,10 @@ public class GetUpcomingFlowsUseCaseTests
     private static UpcomingCashflow ACashflow(
         DateOnly effectiveDate, IntervalType intervalType, int frequency, decimal amount,
         string description, string categoryName, string categoryColor, string[] tags,
-        DateOnly? lastPaidDate = null, DateOnly? lastCashflowDate = null) =>
+        DateOnly? lastPaidDate = null, DateOnly? lastCashflowDate = null, CategoryType categoryType = CategoryType.Expense) =>
         new(
             AnId(),
-            new Cashflow(AnId(), effectiveDate, intervalType, frequency, amount, CategoryType.Expense, lastPaidDate, lastCashflowDate),
+            new Cashflow(AnId(), effectiveDate, intervalType, frequency, amount, categoryType, lastPaidDate, lastCashflowDate),
             description,
             categoryName,
             categoryColor,

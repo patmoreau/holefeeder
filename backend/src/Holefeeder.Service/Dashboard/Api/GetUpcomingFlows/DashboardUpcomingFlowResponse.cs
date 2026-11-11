@@ -7,4 +7,5 @@ internal sealed record DashboardUpcomingFlowResponse(
     string? Category,
     string CategoryColor,
     IReadOnlyList<string> Tags,
-    decimal Amount);
+    decimal Amount,
+    string CategoryType);
