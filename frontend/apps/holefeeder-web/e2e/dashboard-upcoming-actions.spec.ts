@@ -146,4 +146,132 @@ test.describe('Dashboard upcoming actions', () => {
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-upcoming-row')).toHaveCount(0);
   });
+
+  test('ShouldPrefillTheFlyoutWithTheScheduledPayment', async ({ page }) => {
+    await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+    await page.goto('/');
+
+    await page.getByTestId('dashboard-upcoming-more').click();
+    await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+    const flyout = page.getByTestId('pay-flyout');
+    await expect(flyout.getByRole('heading')).toHaveText('Pay Rent');
+    await expect(flyout.getByTestId('pay-flyout-subtitle')).toHaveText('Housing · Due Nov 15, 2026');
+    await expect(flyout.getByTestId('pay-flyout-amount')).toHaveValue('1450.00');
+    await expect(flyout.getByTestId('pay-flyout-date')).toHaveValue('2026-11-15');
+    await expect(flyout.getByTestId('pay-flyout-scheduled')).toHaveCount(0);
+    await expect(flyout.getByTestId('pay-flyout-update-recurring')).toHaveCount(0);
+  });
+
+  test('ShouldPayWithChangedAmountAndDate', async ({ page }) => {
+    const bodies = await capture(page, payRoute, 201, { id: crypto.randomUUID() });
+    await withUpcomingUntilActedOn(page, bodies);
+    await page.goto('/');
+    await page.getByTestId('dashboard-upcoming-more').click();
+    await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+    const flyout = page.getByTestId('pay-flyout');
+    await flyout.getByTestId('pay-flyout-amount').fill('1500');
+    await flyout.getByTestId('pay-flyout-date').fill('2026-11-14');
+    await expect(flyout.getByTestId('pay-flyout-scheduled')).toHaveText('Scheduled $1,450.00');
+    const updateRecurring = flyout.getByRole('checkbox', { name: 'Update recurring amount to $1,500.00 going forward' });
+    await expect(updateRecurring).not.toBeChecked();
+    await updateRecurring.check();
+    await flyout.getByTestId('pay-flyout-pay').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Rent paid');
+    expect(bodies).toEqual([
+      { cashflowId: rent.cashflowId, date: '2026-11-14', amount: '1500.00', cashflowDate: '2026-11-15', updateRecurringAmount: 'true' },
+    ]);
+    await expect(flyout).toHaveCount(0);
+    await expect(page.getByTestId('dashboard-upcoming-row')).toHaveCount(0);
+  });
+
+  test('ShouldNotUpdateRecurringAmount_WhenAmountIsBackToScheduled', async ({ page }) => {
+    const bodies = await capture(page, payRoute, 201, { id: crypto.randomUUID() });
+    await withUpcomingUntilActedOn(page, bodies);
+    await page.goto('/');
+    await page.getByTestId('dashboard-upcoming-more').click();
+    await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+    const flyout = page.getByTestId('pay-flyout');
+    await flyout.getByTestId('pay-flyout-amount').fill('1500');
+    await flyout.getByRole('checkbox').check();
+    await flyout.getByTestId('pay-flyout-amount').fill('1450');
+    await flyout.getByTestId('pay-flyout-pay').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Rent paid');
+    expect(bodies).toEqual([
+      { cashflowId: rent.cashflowId, date: '2026-11-15', amount: '1450.00', cashflowDate: '2026-11-15', updateRecurringAmount: 'false' },
+    ]);
+  });
+
+  for (const amount of ['', 'abc', '-5', '12.345']) {
+    test(`ShouldNotPay_WhenAmountIs_${amount || 'empty'}`, async ({ page }) => {
+      await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+      await page.goto('/');
+      await page.getByTestId('dashboard-upcoming-more').click();
+      await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+      await page.getByTestId('pay-flyout-amount').fill(amount);
+
+      await expect(page.getByTestId('pay-flyout-pay')).toBeDisabled();
+    });
+  }
+
+  test('ShouldNotPay_WhenDateIsEmpty', async ({ page }) => {
+    await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+    await page.goto('/');
+    await page.getByTestId('dashboard-upcoming-more').click();
+    await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+    await page.getByTestId('pay-flyout-date').fill('');
+
+    await expect(page.getByTestId('pay-flyout-pay')).toBeDisabled();
+  });
+
+  test('ShouldCloseTheFlyoutWithoutPaying', async ({ page }) => {
+    const bodies = await capture(page, payRoute, 201, { id: crypto.randomUUID() });
+    await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+    await page.goto('/');
+
+    for (const close of ['pay-flyout-cancel', 'pay-flyout-close']) {
+      await page.getByTestId('dashboard-upcoming-more').click();
+      await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+      await page.getByTestId(close).click();
+      await expect(page.getByTestId('pay-flyout')).toHaveCount(0);
+    }
+    expect(bodies).toEqual([]);
+  });
+
+  test('ShouldKeepTheFlyoutOpenAndSayItFailed_WhenPayingFails', async ({ page }) => {
+    await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+    await capture(page, payRoute, 500);
+    await page.goto('/');
+    await page.getByTestId('dashboard-upcoming-more').click();
+    await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+    await page.getByTestId('pay-flyout-pay').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Something went wrong. Try again.');
+    await expect(page.getByTestId('pay-flyout')).toBeVisible();
+  });
+
+  test.describe('on a phone', () => {
+    test.use({ viewport: { width: 360, height: 780 } });
+
+    test('ShouldFillTheScreenWidth', async ({ page }) => {
+      await page.route(upcomingRoute, (route) => route.fulfill({ json: [rent] }));
+      await page.goto('/');
+      await page.getByTestId('dashboard-upcoming-more').click();
+      await page.getByTestId('dashboard-upcoming-pay-with-changes').click();
+
+      const flyout = await page.getByTestId('pay-flyout').boundingBox();
+      const pay = await page.getByTestId('pay-flyout-pay').boundingBox();
+      const cancel = await page.getByTestId('pay-flyout-cancel').boundingBox();
+      expect(flyout!.width).toBeCloseTo(360, 0);
+      expect(pay!.width).toBeGreaterThan(280);
+      expect(cancel!.width).toBe(pay!.width);
+    });
+  });
 });

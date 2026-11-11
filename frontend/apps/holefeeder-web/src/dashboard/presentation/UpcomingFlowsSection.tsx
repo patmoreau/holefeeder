@@ -3,13 +3,14 @@ import { Alert, Button, Paper, Snackbar, SnackbarContent, Stack, Typography } fr
 import { type ReactNode, useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
-import { useUpcomingActions } from '../api/use-upcoming-actions';
+import { type PayChanges, useUpcomingActions } from '../api/use-upcoming-actions';
 import { useUpcomingFlows } from '../api/use-upcoming-flows';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
 import { DeleteCashflowDialog } from './DeleteCashflowDialog';
 import { EmptyList } from './EmptyList';
 import { FlowRow } from './FlowRow';
 import { ListSkeleton } from './ListSkeleton';
+import { PayFlyout } from './PayFlyout';
 import { mediumDate } from './tone';
 import { UpcomingActionsMenu } from './UpcomingActionsMenu';
 
@@ -54,6 +55,7 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
   const { refresh } = useApiRefresh();
   const [busy, setBusy] = useState(false);
   const [deleting, setDeleting] = useState<DashboardUpcomingFlow | null>(null);
+  const [paying, setPaying] = useState<DashboardUpcomingFlow | null>(null);
 
   const run = async (action: Promise<{ isSuccess: boolean }>, success: string) => {
     setBusy(true);
@@ -61,9 +63,15 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
     setBusy(false);
     notify(result.isSuccess ? success : translate(tk.payUpcoming.failed));
     if (result.isSuccess) refresh();
+    return result.isSuccess;
   };
 
-  const pay = (flow: DashboardUpcomingFlow) => run(actions.pay(flow), translate(tk.payUpcoming.paid, { title: flow.title }));
+  const pay = (flow: DashboardUpcomingFlow, changes?: PayChanges) =>
+    run(actions.pay(flow, changes), translate(tk.payUpcoming.paid, { title: flow.title }));
+
+  const payWithChanges = async (flow: DashboardUpcomingFlow, changes: PayChanges) => {
+    if (await pay(flow, changes)) setPaying(null);
+  };
 
   const clear = (flow: DashboardUpcomingFlow) =>
     run(actions.clear(flow), translate(tk.payUpcoming.cleared, { title: flow.title, date: mediumDate(flow.date) }));
@@ -78,7 +86,12 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
   const rowActions = (flow: DashboardUpcomingFlow): ReactNode => (
     <Stack direction="row" alignItems="center" spacing={0.5} sx={{ flexShrink: 0 }}>
       <PayButton disabled={busy} onClick={() => void pay(flow)} />
-      <UpcomingActionsMenu disabled={busy} onClear={() => void clear(flow)} onDelete={() => setDeleting(flow)} />
+      <UpcomingActionsMenu
+        disabled={busy}
+        onPayWithChanges={() => setPaying(flow)}
+        onClear={() => void clear(flow)}
+        onDelete={() => setDeleting(flow)}
+      />
     </Stack>
   );
 
@@ -89,6 +102,7 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
           <FlowRow key={flow.cashflowId + flow.date} flow={flow} testID="dashboard-upcoming" action={rowActions(flow)} />
         ))}
       </Paper>
+      <PayFlyout flow={paying} busy={busy} onClose={() => setPaying(null)} onPay={(flow, changes) => void payWithChanges(flow, changes)} />
       <DeleteCashflowDialog title={deleting?.title ?? null} onCancel={() => setDeleting(null)} onConfirm={confirmDelete} />
     </>
   );
