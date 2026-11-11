@@ -2,14 +2,12 @@ import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useState } from 'react';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 import { ApiClient } from './api-client';
-
-const apiConfig = {
-  url: import.meta.env.VITE_API_BASE_URL as string,
-  timeout: 10_000,
-};
+import { apiConfig } from './api-config';
+import { useApiRefresh } from './api-refresh';
 
 export const useApiQuery = <TRaw, T>(endpoint: string, map: (raw: TRaw) => T): AsyncResult<T> => {
   const auth = useAuthentication();
+  const { version } = useApiRefresh();
   const [result, setResult] = useState<AsyncResult<T>>(Result.loading());
   const signedIn = !!auth.user && !auth.isLoading;
 
@@ -17,7 +15,7 @@ export const useApiQuery = <TRaw, T>(endpoint: string, map: (raw: TRaw) => T): A
     if (!signedIn) return;
 
     let current = true;
-    setResult(Result.loading());
+    setResult((previous) => (previous.isSuccess ? previous : Result.loading()));
     void ApiClient(auth, apiConfig)
       .get<TRaw>(endpoint)
       .then((response) => {
@@ -27,7 +25,7 @@ export const useApiQuery = <TRaw, T>(endpoint: string, map: (raw: TRaw) => T): A
     return () => {
       current = false;
     };
-  }, [endpoint, signedIn]);
+  }, [endpoint, signedIn, version]);
 
   return result;
 };

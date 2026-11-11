@@ -11,6 +11,7 @@ type FlowJson = {
   categoryColor: string;
   tags: string[];
   amount: number;
+  categoryType: string;
 };
 
 const aFlow = (overrides: Partial<FlowJson> = {}): FlowJson => ({
@@ -21,6 +22,7 @@ const aFlow = (overrides: Partial<FlowJson> = {}): FlowJson => ({
   categoryColor: '#007AFF',
   tags: [],
   amount: 1450,
+  categoryType: 'expense',
   ...overrides,
 });
 
@@ -91,7 +93,7 @@ test.describe('Dashboard upcoming', () => {
     await expect(page.getByTestId('dashboard-upcoming-icon')).toHaveCSS('color', 'rgb(0, 122, 255)');
   });
 
-  test('ShouldShowDisabledPayButtonOnEachRow', async ({ page }) => {
+  test('ShouldShowPayButtonOnEachRow', async ({ page }) => {
     await signedIn(page);
     await withFlows(page, [aFlow(), aFlow({ title: 'Hydro' })]);
 
@@ -100,7 +102,7 @@ test.describe('Dashboard upcoming', () => {
     const pay = page.getByTestId('dashboard-upcoming-pay');
     await expect(pay).toHaveCount(2);
     await expect(pay.first()).toHaveAccessibleName('Pay');
-    await expect(pay.first()).toBeDisabled();
+    await expect(pay.first()).toBeEnabled();
   });
 
   test('ShouldListEveryUpcomingFlow', async ({ page }) => {

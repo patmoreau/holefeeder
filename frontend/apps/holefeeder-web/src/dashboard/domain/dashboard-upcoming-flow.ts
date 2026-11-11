@@ -8,6 +8,7 @@ export type DashboardUpcomingFlow = {
   categoryColor: string;
   tags: string[];
   amount: number;
+  categoryType: 'expense' | 'gain';
 };
 
 const valid = (value: Record<string, unknown>): DashboardUpcomingFlow => ({
@@ -18,6 +19,7 @@ const valid = (value: Record<string, unknown>): DashboardUpcomingFlow => ({
   categoryColor: value.categoryColor as string,
   tags: value.tags as string[],
   amount: value.amount as number,
+  categoryType: value.categoryType as 'expense' | 'gain',
 });
 
 const validList = (values: Record<string, unknown>[]): DashboardUpcomingFlow[] => values.map(valid);
