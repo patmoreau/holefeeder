@@ -1,4 +1,4 @@
-namespace Holefeeder.Service.Dashboard.Core;
+namespace Holefeeder.Service.Shared.Core;
 
 internal sealed record FlowTitle(string Title, string? Category)
 {

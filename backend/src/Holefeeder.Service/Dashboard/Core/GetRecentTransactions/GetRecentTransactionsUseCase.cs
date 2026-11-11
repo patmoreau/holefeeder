@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Shared.Core;
+
 namespace Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 
 internal sealed class GetRecentTransactionsUseCase(IDashboard dashboard)
