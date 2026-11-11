@@ -45,6 +45,14 @@ internal static class SettingsData
         }
     }
 
+    public static string FromPeriodSettings(PeriodSettings settings) =>
+        JsonSerializer.Serialize(new
+        {
+            effectiveDate = settings.EffectiveDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            intervalType = JsonNamingPolicy.CamelCase.ConvertName(settings.IntervalType.Name),
+            frequency = settings.Frequency
+        });
+
     private static JsonElement? Property(JsonElement element, string name) =>
         element.ValueKind == JsonValueKind.Object
             ? element.EnumerateObject()

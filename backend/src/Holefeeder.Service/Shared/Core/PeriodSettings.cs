@@ -14,10 +14,16 @@ internal sealed record PeriodSettings
 
     public int Frequency { get; }
 
-    public static Result<PeriodSettings> Create(DateOnly effectiveDate, IntervalType intervalType, int frequency) =>
-        frequency < 1
-            ? PeriodSettingsErrors.FrequencyInvalid
-            : new PeriodSettings(effectiveDate, intervalType, frequency);
+    public static Result<PeriodSettings> Create(DateOnly effectiveDate, IntervalType intervalType, int frequency)
+    {
+        var validFrequency = CreateFrequency(frequency);
+        return validFrequency.IsFailure
+            ? validFrequency.Error
+            : new PeriodSettings(effectiveDate, intervalType, validFrequency.Value);
+    }
+
+    public static Result<int> CreateFrequency(int frequency) =>
+        frequency < 1 ? PeriodSettingsErrors.FrequencyInvalid : frequency;
 
     public static PeriodSettings Valid(DateOnly effectiveDate, IntervalType intervalType, int frequency) =>
         new(effectiveDate, intervalType, frequency);

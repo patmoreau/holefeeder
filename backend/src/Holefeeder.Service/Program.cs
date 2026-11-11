@@ -18,6 +18,7 @@ using Holefeeder.Service.Dashboard;
 using Holefeeder.Service.ErrorHandling;
 using Holefeeder.Service.Extensions;
 using Holefeeder.Service.Home;
+using Holefeeder.Service.Settings;
 using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
 using Holefeeder.Service.Transactions;
@@ -82,6 +83,7 @@ builder.Services
     .AddDashboardServices()
     .AddCashflowsServices()
     .AddTransactionsServices()
+    .AddSettingsServices()
     .AddSupportServices();
 
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
@@ -145,6 +147,7 @@ app.MapCarter()
     .MapDashboardEndpoints()
     .MapCashflowsEndpoints()
     .MapTransactionsEndpoints()
+    .MapSettingsEndpoints()
     .MapHomeEndpoints();
 
 if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
