@@ -163,7 +163,7 @@ const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose,
         ) : (
           <CategorySelect testID="new-transaction-category" categories={categories} value={categoryId} onChange={setCategoryId} />
         )}
-        {!transfer && categoryId !== '' && <TagsField categoryId={categoryId} tags={tags} onChange={setTags} />}
+        {!transfer && categoryId !== '' && <TagsField testID="new-transaction" categoryId={categoryId} tags={tags} onChange={setTags} />}
         <TextField
           label={translate(tk.newTransaction.description)}
           placeholder={

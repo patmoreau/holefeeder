@@ -7,11 +7,11 @@ import { translate } from '@/shared/i18n/translate';
 
 const shownSuggestions = 8;
 
-type TagsFieldProps = { categoryId: string; tags: string[]; onChange: (tags: string[]) => void };
+type TagsFieldProps = { testID: string; categoryId: string; tags: string[]; onChange: (tags: string[]) => void };
 
 const chipSx = { px: 1.25, py: 0.5, borderRadius: 9999, fontSize: 13, fontWeight: 500, lineHeight: 1.2 };
 
-export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
+export const TagsField = ({ testID, categoryId, tags, onChange }: TagsFieldProps) => {
   const [draft, setDraft] = useState('');
   const suggestions = useTagSuggestions(categoryId);
 
@@ -31,7 +31,7 @@ export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
 
   return (
     <Stack spacing={0.75}>
-      <Typography component="label" htmlFor="new-transaction-tag-input" sx={{ fontSize: 13, color: 'text.secondary' }}>
+      <Typography component="label" htmlFor={`${testID}-tag-input`} sx={{ fontSize: 13, color: 'text.secondary' }}>
         {translate(tk.purchase.basicSection.tags)}
       </Typography>
       <Stack
@@ -48,7 +48,7 @@ export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
             spacing={0.5}
             sx={{ ...chipSx, color: 'primary.main', bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.mainChannel} / 0.15)` }}
           >
-            <Box component="span" data-testid="new-transaction-tag">
+            <Box component="span" data-testid={`${testID}-tag`}>
               {tag}
             </Box>
             <ButtonBase
@@ -61,7 +61,7 @@ export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
           </Stack>
         ))}
         <InputBase
-          id="new-transaction-tag-input"
+          id={`${testID}-tag-input`}
           value={draft}
           placeholder={translate(tk.newTransaction.tagsPlaceholder)}
           onChange={(event) => setDraft(event.target.value)}
@@ -72,7 +72,7 @@ export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
               commitDraft();
             }
           }}
-          inputProps={{ 'data-testid': 'new-transaction-tag-input' }}
+          inputProps={{ 'data-testid': `${testID}-tag-input` }}
           sx={{ flex: 1, minWidth: 96, fontSize: 15 }}
         />
       </Stack>
@@ -88,7 +88,7 @@ export const TagsField = ({ categoryId, tags, onChange }: TagsFieldProps) => {
               <Box component="span" aria-hidden>
                 +&nbsp;
               </Box>
-              <Box component="span" data-testid="new-transaction-suggestion">
+              <Box component="span" data-testid={`${testID}-suggestion`}>
                 {tag}
               </Box>
             </ButtonBase>
