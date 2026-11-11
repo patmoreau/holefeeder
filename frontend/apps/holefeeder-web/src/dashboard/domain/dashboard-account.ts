@@ -1,3 +1,5 @@
+import { DateOnly } from '@holefeeder/shared/core';
+
 export const BalanceCaptions = {
   availableBalance: 'availableBalance',
   amountDue: 'amountDue',
@@ -12,7 +14,7 @@ export type DashboardAccount = {
   caption: BalanceCaption;
   balance: number;
   projectedBalance: number;
-  updated: string;
+  updated: DateOnly;
 };
 
 const valid = (value: Record<string, unknown>): DashboardAccount => ({
@@ -21,7 +23,7 @@ const valid = (value: Record<string, unknown>): DashboardAccount => ({
   caption: value.caption as BalanceCaption,
   balance: value.balance as number,
   projectedBalance: value.projectedBalance as number,
-  updated: value.updated as string,
+  updated: DateOnly.valid(value.updated),
 });
 
 const validList = (values: Record<string, unknown>[]): DashboardAccount[] => values.map(valid);

@@ -30,6 +30,7 @@ const withAccounts = (page: Page, accounts: AccountJson[]) => page.route(account
 
 test.describe('Dashboard accounts', () => {
   test('ShouldShowAccountCardsFromApiWithBearerToken', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-11-11T10:00:00'));
     await signedIn(page);
     let authorization: string | undefined;
     await page.route(accountsRoute, async (route) => {
@@ -58,6 +59,24 @@ test.describe('Dashboard accounts', () => {
     await expect(cards.nth(1).getByTestId('dashboard-account-projected')).toHaveText('Projected$190.12');
     expect(authorization).toBe('Bearer e2e-token');
   });
+
+  for (const [updated, shown] of [
+    ['2026-11-11', 'Today'],
+    ['2026-11-10', 'Yesterday'],
+    ['2026-11-08', '3 days ago'],
+    ['2026-11-04', '7 days ago'],
+    ['2026-11-03', 'Nov 3, 2026'],
+  ]) {
+    test(`ShouldShowUpdated_${updated}_As_${shown}`, async ({ page }) => {
+      await page.clock.setFixedTime(new Date('2026-11-11T10:00:00'));
+      await signedIn(page);
+      await withAccounts(page, [anAccount({ updated: updated })]);
+
+      await page.goto('/');
+
+      await expect(page.getByTestId('dashboard-account-updated')).toHaveText(`Updated${shown}`);
+    });
+  }
 
   test('ShouldShowCreditBalanceCaption', async ({ page }) => {
     await signedIn(page);

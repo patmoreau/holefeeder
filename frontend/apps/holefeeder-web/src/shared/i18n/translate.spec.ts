@@ -11,6 +11,10 @@ describe('translate', () => {
     expect(translate(tk.dashboard.largeHeader.variation, { variation: '$212.40' })).toBe('$212.40 vs Average');
   });
 
+  it('ShouldReplacePlaceholdersWithNumbers', () => {
+    expect(translate(tk.common.last7Days, { count: 3 })).toBe('3 days ago');
+  });
+
   it('ShouldLeavePlaceholdersWithoutValues', () => {
     expect(translate(tk.dashboard.largeHeader.variation)).toBe('{{variation}} vs Average');
   });

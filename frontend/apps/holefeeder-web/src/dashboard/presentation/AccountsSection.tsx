@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { LocalFormatter, tk, today } from '@holefeeder/shared/core';
 import { Alert, Box, Button, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 import { translate } from '@/shared/i18n/translate';
@@ -13,8 +13,6 @@ const captionKey: Record<BalanceCaption, string> = {
   amountDue: tk.accountCard.amountDue,
   creditBalance: tk.accountCard.creditBalance,
 };
-
-const updatedFormat = new Intl.DateTimeFormat('en-CA', { dateStyle: 'medium', timeZone: 'UTC' });
 
 const lineHeight = 1.2;
 
@@ -58,7 +56,9 @@ const AccountCard = ({ account }: { account: DashboardAccount }) => (
     <Stack direction="row" alignItems="flex-end" justifyContent="space-between">
       <Stack data-testid="dashboard-account-updated">
         <Typography sx={smallLabel}>{translate(tk.accountCard.updated)}</Typography>
-        <Typography sx={{ fontSize: 17, lineHeight: lineHeight }}>{updatedFormat.format(new Date(account.updated))}</Typography>
+        <Typography sx={{ fontSize: 17, lineHeight: lineHeight }}>
+          {LocalFormatter.date(account.updated, today(), 'en-CA', translate)}
+        </Typography>
       </Stack>
       <Stack data-testid="dashboard-account-projected" alignItems="flex-end">
         <Typography sx={smallLabel}>{translate(tk.accountCard.projected)}</Typography>
