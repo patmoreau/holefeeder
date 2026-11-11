@@ -4,6 +4,7 @@ import { signedIn } from './support/auth';
 const optionsRoute = '**/gateway/api/v2/transactions/new-transaction-options';
 const tagsRoute = '**/gateway/api/v2/transactions/tag-suggestions**';
 const purchaseRoute = '**/gateway/api/v2/transactions/record-purchase';
+const transferRoute = '**/gateway/api/v2/transactions/record-transfer';
 
 const chequing = { id: '3f2504e0-4f89-11d3-9a0c-0305e82c3301', name: 'Chequing' };
 const savings = { id: '3f2504e0-4f89-11d3-9a0c-0305e82c3302', name: 'Savings' };
@@ -229,6 +230,51 @@ test.describe('Dashboard new transaction', () => {
     await flyout.getByTestId('new-transaction-repeat').click();
     await flyout.getByTestId('new-transaction-repeat-starts').fill('');
 
+    await expect(flyout.getByTestId('new-transaction-save')).toBeDisabled();
+  });
+
+  test('ShouldRecordATransferToTheNextAccount', async ({ page }) => {
+    await withOptions(page);
+    const bodies = await capture(page, transferRoute, 201, { fromTransactionId: crypto.randomUUID(), toTransactionId: crypto.randomUUID() });
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByRole('button', { name: 'Transfer' }).click();
+
+    await expect(flyout.getByTestId('new-transaction-from')).toHaveText('Chequing');
+    await expect(flyout.getByTestId('new-transaction-to')).toHaveText('Savings');
+    await expect(flyout.getByTestId('new-transaction-category')).toHaveCount(0);
+    await expect(flyout.getByTestId('new-transaction-tag-input')).toHaveCount(0);
+    await expect(flyout.getByTestId('new-transaction-repeat')).toHaveCount(0);
+    await flyout.getByTestId('new-transaction-amount').fill('100');
+    await flyout.getByTestId('new-transaction-save').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Transfer saved');
+    expect(bodies).toEqual([{ date: '2026-11-11', amount: '100.00', description: '', fromAccountId: chequing.id, toAccountId: savings.id }]);
+    await expect(page.getByTestId('new-transaction')).toHaveCount(0);
+  });
+
+  test('ShouldSuggestTheTransferDescriptionFromTheAccounts', async ({ page }) => {
+    await withOptions(page);
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByRole('button', { name: 'Transfer' }).click();
+
+    const description = flyout.getByTestId('new-transaction-description');
+    await expect(description).toHaveAttribute('placeholder', "Transfer from 'Chequing' to 'Savings'");
+    await choose(page, 'new-transaction-from', 'Savings');
+    await choose(page, 'new-transaction-to', 'Chequing');
+    await expect(description).toHaveAttribute('placeholder', "Transfer from 'Savings' to 'Chequing'");
+  });
+
+  test('ShouldNotTransfer_WhenBothAccountsAreTheSame', async ({ page }) => {
+    await withOptions(page);
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByRole('button', { name: 'Transfer' }).click();
+    await flyout.getByTestId('new-transaction-amount').fill('100');
+    await choose(page, 'new-transaction-to', 'Chequing');
+
+    await expect(flyout.getByTestId('new-transaction-same-account')).toHaveText('Pick two different accounts');
     await expect(flyout.getByTestId('new-transaction-save')).toBeDisabled();
   });
 

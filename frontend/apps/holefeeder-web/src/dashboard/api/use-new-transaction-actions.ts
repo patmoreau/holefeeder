@@ -14,6 +14,8 @@ export type PurchaseInput = {
   repeat: RepeatInput | null;
 };
 
+export type TransferInput = { date: string; amount: number; description: string; fromAccountId: string; toAccountId: string };
+
 export const useNewTransactionActions = () => {
   const command = useApiCommand();
 
@@ -34,5 +36,14 @@ export const useNewTransactionActions = () => {
       }),
     });
 
-  return { recordPurchase: recordPurchase };
+  const recordTransfer = (transfer: TransferInput) =>
+    command('/api/v2/transactions/record-transfer', {
+      date: transfer.date,
+      amount: transfer.amount.toFixed(2),
+      description: transfer.description,
+      fromAccountId: transfer.fromAccountId,
+      toAccountId: transfer.toAccountId,
+    });
+
+  return { recordPurchase: recordPurchase, recordTransfer: recordTransfer };
 };
