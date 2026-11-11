@@ -5,6 +5,7 @@ using Holefeeder.Service.Transactions.Persistence;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
+using Holefeeder.ServiceTests.Transactions.TestKit;
 
 namespace Holefeeder.ServiceTests.Transactions.Persistence;
 
@@ -109,5 +110,108 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         var result = await repository.GetTagUsagesAsync(AUser(), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task GetOpenAccountAsync_ReturnsTheUsersOpenAccount()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var chequing = await new BudgetForTest(user, database).AnAccountAsync("Chequing", AccountType.Checking, favorite: true);
+
+        var result = await _repository.GetOpenAccountAsync(user, Id.Valid(chequing), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new TransactionAccount(Id.Valid(chequing), "Chequing", true));
+    }
+
+    [Fact]
+    public async Task GetOpenAccountAsync_Fails_WhenTheAccountIsClosedOrSomeoneElses()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var closed = await new BudgetForTest(user, database).AnAccountAsync("Closed", AccountType.Checking, inactive: true);
+        var otherUser = await AUser().SavedInDbAsync(database);
+        var others = await new BudgetForTest(otherUser, database).AnAccountAsync("Other", AccountType.Checking);
+
+        var closedResult = await _repository.GetOpenAccountAsync(user, Id.Valid(closed), CancellationToken.None);
+        var othersResult = await _repository.GetOpenAccountAsync(user, Id.Valid(others), CancellationToken.None);
+
+        closedResult.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+        othersResult.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+    }
+
+    [Fact]
+    public async Task GetActiveCategoryAsync_ReturnsTheUsersCategory()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var salary = await new BudgetForTest(user, database).ACategoryAsync(CategoryType.Gain, name: "Salary", color: "#007AFF");
+
+        var result = await _repository.GetActiveCategoryAsync(user, Id.Valid(salary), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new TransactionCategory(Id.Valid(salary), "Salary", "#007AFF", CategoryType.Gain, false));
+    }
+
+    [Fact]
+    public async Task GetActiveCategoryAsync_Fails_WhenTheCategoryIsSystemInactiveOrSomeoneElses()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var system = await budget.ACategoryAsync(CategoryType.Expense, system: true);
+        var inactive = await budget.ACategoryAsync(CategoryType.Expense, inactive: true);
+        var otherUser = await AUser().SavedInDbAsync(database);
+        var others = await new BudgetForTest(otherUser, database).ACategoryAsync(CategoryType.Expense);
+
+        foreach (var id in new[] { system, inactive, others })
+        {
+            var result = await _repository.GetActiveCategoryAsync(user, Id.Valid(id), CancellationToken.None);
+
+            result.Should().BeFailure().And.WithError(TransactionErrors.CategoryNotFound);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAsync_RecordsTheTransactionsAndTheCashflow()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var account = Id.Valid(await budget.AnAccountAsync("Chequing", AccountType.Checking));
+        var category = Id.Valid(await budget.ACategoryAsync(CategoryType.Expense));
+        var tags = Tags.Create(["weekly", "costco"]);
+        var cashflow = new Cashflow(AnId(), new DateOnly(2026, 11, 15), Money.Valid(42.50m), IntervalType.Monthly, Frequency.Valid(2),
+            "Market", account, category, tags);
+        var purchase = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(42.50m), "Market", account, category, tags,
+            cashflow.Id, new DateOnly(2026, 11, 11));
+        var other = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(500m), "", account, category, Tags.Create([]),
+            null, null);
+
+        var result = await _repository.SaveAsync(user, [purchase, other], cashflow, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await database.CashflowsInDbAsync(account.Value)).Should().Equal(new CashflowInDb(
+            cashflow.Id.Value, new DateOnly(2026, 11, 15), 42.50m, "Monthly", 2, 0, "Market", account.Value, category.Value, false,
+            "weekly,costco", user.Id.Value));
+        (await database.TransactionsInDbAsync(account.Value)).Should().Equal(
+            new TransactionInDb(purchase.Id.Value, new DateOnly(2026, 11, 11), 42.50m, "Market", account.Value, category.Value,
+                cashflow.Id.Value, new DateOnly(2026, 11, 11), "weekly,costco", user.Id.Value),
+            new TransactionInDb(other.Id.Value, new DateOnly(2026, 11, 11), 500m, "", account.Value, category.Value, null, null, "",
+                user.Id.Value));
+    }
+
+    [Fact]
+    public async Task SaveAsync_SavesNothing_WhenAnyPartFails()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var account = Id.Valid(await budget.AnAccountAsync("Chequing", AccountType.Checking));
+        var category = Id.Valid(await budget.ACategoryAsync(CategoryType.Expense));
+        var cashflow = new Cashflow(AnId(), new DateOnly(2026, 11, 15), Money.Valid(42.50m), IntervalType.Monthly, Frequency.Valid(1),
+            "", account, category, Tags.Create([]));
+        var valid = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(42.50m), "", account, category, Tags.Create([]),
+            cashflow.Id, new DateOnly(2026, 11, 11));
+        var unknownCategory = valid with { Id = AnId(), CategoryId = AnId(), CashflowId = null, CashflowDate = null };
+
+        var result = await _repository.SaveAsync(user, [valid, unknownCategory], cashflow, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionsErrors.WriteFailed);
+        (await database.CashflowsInDbAsync(account.Value)).Should().BeEmpty();
+        (await database.TransactionsInDbAsync(account.Value)).Should().BeEmpty();
     }
 }

@@ -38,7 +38,8 @@ Records a one-off purchase or expense on an account.
 **Happy path:**
 
 - Date, account, and category are provided
-- Account and category exist and belong to the current user
+- Account and category exist and belong to the current user; the account is open, and the
+  category is active and not a system category
 - A transaction is created; tags are normalized (lowercase, deduplicated, blanks removed)
 - A recurring cashflow schedule can optionally be created at the same time and linked to the transaction (see [Cashflow Rules](cashflow.md))
 
@@ -49,8 +50,8 @@ Records a one-off purchase or expense on an account.
 | Date is missing                                    | rejected             |
 | AccountId is empty                                 | rejected             |
 | CategoryId is empty                                | rejected             |
-| Account does not exist or belongs to another user  | `Account not found`  |
-| Category does not exist or belongs to another user | `Category not found` |
+| Account does not exist, is closed, or belongs to another user | `Account not found` |
+| Category does not exist, is inactive or system, or belongs to another user | `Category not found` |
 | Amount is negative or has more than two decimals   | rejected             |
 | Repeat frequency is 0 or less                      | rejected             |
 | Repeat interval type is unknown                    | rejected             |
