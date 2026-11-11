@@ -17,6 +17,7 @@ export const WelcomePage = () => {
         display: 'grid',
         placeItems: 'center',
         px: 2,
+        py: 4,
         bgcolor: 'background.paper',
         backgroundImage: wash(0.12),
         ...theme.applyStyles('dark', { backgroundImage: wash(0.18) }),

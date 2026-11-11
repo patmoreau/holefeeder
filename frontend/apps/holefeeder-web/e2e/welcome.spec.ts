@@ -71,3 +71,36 @@ test.describe('Welcome', () => {
     await expect(page.getByTestId('welcome-signup-button')).toHaveCSS('background-color', 'rgb(157, 109, 230)');
   });
 });
+
+test.describe('Welcome on a phone', () => {
+  for (const viewport of [
+    { width: 360, height: 640 },
+    { width: 844, height: 390 },
+  ]) {
+    test(`ShouldFitWithoutSidewaysScroll_${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await signedOut(page);
+
+      await page.goto('/welcome');
+      await expect(page.getByTestId('welcome-signin-button')).toBeVisible();
+
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBe(0);
+    });
+
+    test(`ShouldKeepBreathingRoomAroundContent_${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await signedOut(page);
+
+      await page.goto('/welcome');
+
+      const tile = await page.getByTestId('welcome-brand-tile').boundingBox();
+      expect(tile!.y).toBeGreaterThanOrEqual(24);
+      await page.getByTestId('welcome-signin-button').scrollIntoViewIfNeeded();
+      const signIn = await page.getByTestId('welcome-signin-button').boundingBox();
+      const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+      const scrollY = await page.evaluate(() => window.scrollY);
+      expect(pageHeight - (scrollY + signIn!.y + signIn!.height)).toBeGreaterThanOrEqual(24);
+    });
+  }
+});

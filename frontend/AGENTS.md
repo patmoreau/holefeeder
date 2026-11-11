@@ -129,8 +129,8 @@ net flow, projections, balances) comes ready-made from the backend API. When a s
 needs a value the API lacks, add it to the backend; never derive it in the web app.
 
 - Designs live in the Penpot "Web" file, one Penpot page per app page (`Welcome`,
-  `Dashboard`), each with Light and Dark desktop boards; `Dashboard` also has 390px
-  phone boards, with and without the menu open.
+  `Dashboard`), each with Light and Dark boards for desktop and for a 390px phone;
+  `Dashboard` also shows the phone menu open.
 - Every screen is responsive and must work on a phone (360px wide and up), not only on
   the desktop the boards show. Below the MUI `md` breakpoint the navigation drawer
   becomes a hamburger button in the top bar opening a temporary (flyout) drawer;
