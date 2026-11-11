@@ -1,9 +1,9 @@
-import { LocalFormatter, Money } from '@holefeeder/shared/core';
+import { LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import { projectedNetFlow } from '@/dashboard/core/projected-net-flow/projected-net-flow';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
-import { CategoryType } from '@/shared/core/category-type';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
 import { AmountTone } from '@/shared/presentation/components/fields/AmountField';
@@ -79,12 +79,7 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
   const baseNetFlow = summary.netFlow.isOver ? summary.netFlow.amount : -summary.netFlow.amount;
   const netFlow = displayAmount(baseNetFlow);
 
-  const upcomingVariation = upcomingFlows.reduce((acc, flow) => {
-    return acc + (Money.toCents(flow.amount) / 100) * CategoryType.multiplier[flow.categoryType];
-  }, 0);
-
-  const projectedNetFlowTotal = baseNetFlow + upcomingVariation;
-  const projected = displayAmount(projectedNetFlowTotal);
+  const projected = displayAmount(projectedNetFlow(summary, upcomingFlows));
 
   const pillBackground: Record<AmountTone, { backgroundColor: string }> = {
     positive: { backgroundColor: theme.colors.positiveBackground },
