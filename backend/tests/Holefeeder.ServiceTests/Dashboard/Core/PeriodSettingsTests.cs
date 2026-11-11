@@ -1,4 +1,5 @@
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.ServiceTests.Dashboard.Core;
 

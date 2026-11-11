@@ -4,6 +4,7 @@ using System.Text.Json;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.Service.Dashboard.Persistence;
 

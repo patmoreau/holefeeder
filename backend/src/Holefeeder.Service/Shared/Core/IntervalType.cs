@@ -1,6 +1,6 @@
 using DrifterApps.Seeds.FluentResult;
 
-namespace Holefeeder.Service.Dashboard.Core;
+namespace Holefeeder.Service.Shared.Core;
 
 internal sealed record IntervalType
 {

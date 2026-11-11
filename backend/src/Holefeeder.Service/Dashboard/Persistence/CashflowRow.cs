@@ -23,7 +23,7 @@ internal sealed record CashflowRow(
         new(
             Shared.Core.Id.Valid(AccountId),
             EffectiveDate,
-            Core.IntervalType.Valid(IntervalType),
+            Shared.Core.IntervalType.Valid(IntervalType),
             Frequency,
             Amount,
             Enum.Parse<CategoryType>(CategoryType, ignoreCase: true),

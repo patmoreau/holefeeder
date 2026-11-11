@@ -1,6 +1,6 @@
-using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.ServiceTests.Dashboard.Core;
+namespace Holefeeder.ServiceTests.Shared.Core;
 
 public class IntervalTypeTests
 {

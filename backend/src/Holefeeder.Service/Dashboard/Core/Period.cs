@@ -1,3 +1,4 @@
+using Holefeeder.Service.Shared.Core;
 namespace Holefeeder.Service.Dashboard.Core;
 
 internal sealed record Period(DateOnly Start, DateOnly End)
