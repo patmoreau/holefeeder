@@ -1,12 +1,5 @@
 import { DateOnly } from '@holefeeder/shared/core';
-
-export const BalanceCaptions = {
-  availableBalance: 'availableBalance',
-  amountDue: 'amountDue',
-  creditBalance: 'creditBalance',
-} as const;
-
-export type BalanceCaption = (typeof BalanceCaptions)[keyof typeof BalanceCaptions];
+import type { BalanceCaption } from '@/shared/domain/balance-caption';
 
 export type DashboardAccount = {
   id: string;

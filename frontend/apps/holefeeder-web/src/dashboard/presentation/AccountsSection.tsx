@@ -3,19 +3,14 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { translate } from '@/shared/i18n/translate';
 import { toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardAccounts } from '../api/use-dashboard-accounts';
-import type { BalanceCaption, DashboardAccount } from '../domain/dashboard-account';
+import type { DashboardAccount } from '../domain/dashboard-account';
 
 const cardHeight = 171;
 const cardWidth = 264;
-
-const captionKey: Record<BalanceCaption, string> = {
-  availableBalance: tk.accountCard.availableBalance,
-  amountDue: tk.accountCard.amountDue,
-  creditBalance: tk.accountCard.creditBalance,
-};
 
 const lineHeight = 1.2;
 
@@ -151,7 +146,7 @@ const AccountCard = ({ account }: { account: DashboardAccount }) => (
         data-testid="dashboard-account-caption"
         sx={{ fontSize: 12, fontWeight: 600, lineHeight: lineHeight, color: 'text.secondary' }}
       >
-        {translate(captionKey[account.caption])}
+        {translate(balanceCaptionKey[account.caption])}
       </Typography>
       <Typography data-testid="dashboard-account-balance" sx={amountText(account.balance)}>
         {unsignedCurrency(account.balance)}
