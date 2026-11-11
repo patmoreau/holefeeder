@@ -127,7 +127,7 @@ test.describe('Dashboard accounts', () => {
 
     const add = page.getByTestId('dashboard-add-account');
     await expect(add).toHaveAccessibleName('Add an account');
-    await expect(add).toBeDisabled();
+    await expect(add).toBeEnabled();
     const lastCard = await page.getByTestId('dashboard-account-card').nth(1).boundingBox();
     const addBox = await add.boundingBox();
     expect(addBox!.x).toBeGreaterThan(lastCard!.x + lastCard!.width - 1);

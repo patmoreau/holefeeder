@@ -6,6 +6,7 @@ import { translate } from '@/shared/i18n/translate';
 import { DashboardToast } from '@/shared/presentation/DashboardToast';
 import { NewTransactionFlyout } from '@/shared/presentation/NewTransactionFlyout';
 import { AccountsSection } from './AccountsSection';
+import { AddAccountFlyout } from './AddAccountFlyout';
 import { RecentTransactionsSection } from './RecentTransactionsSection';
 import { SpendingHero } from './SpendingHero';
 import { UpcomingFlowsSection } from './UpcomingFlowsSection';
@@ -13,6 +14,7 @@ import { UpcomingFlowsSection } from './UpcomingFlowsSection';
 export const DashboardPage = () => {
   const [toast, setToast] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [addingAccount, setAddingAccount] = useState(false);
 
   return (
     <ApiRefreshProvider>
@@ -46,7 +48,7 @@ export const DashboardPage = () => {
 
         <SpendingHero />
 
-        <AccountsSection />
+        <AccountsSection onAddAccount={() => setAddingAccount(true)} />
 
         <Box
           sx={{ display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3, alignItems: 'start' }}
@@ -56,6 +58,7 @@ export const DashboardPage = () => {
         </Box>
       </Stack>
       <NewTransactionFlyout open={creating} onClose={() => setCreating(false)} notify={setToast} />
+      <AddAccountFlyout open={addingAccount} onClose={() => setAddingAccount(false)} notify={setToast} />
       <DashboardToast message={toast} onClose={() => setToast(null)} />
     </ApiRefreshProvider>
   );

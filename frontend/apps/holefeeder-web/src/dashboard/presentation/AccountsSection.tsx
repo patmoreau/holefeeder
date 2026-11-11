@@ -177,10 +177,10 @@ const AccountCard = ({ account }: { account: DashboardAccount }) => (
   </Paper>
 );
 
-const AddAccountTile = () => (
+const AddAccountTile = ({ onClick }: { onClick: () => void }) => (
   <Button
-    disabled
     data-testid="dashboard-add-account"
+    onClick={onClick}
     sx={{
       height: cardHeight,
       flexDirection: 'column',
@@ -190,7 +190,8 @@ const AddAccountTile = () => (
       borderStyle: 'dashed',
       borderColor: 'divider',
       textTransform: 'none',
-      '&.Mui-disabled': { color: 'text.secondary', borderColor: 'divider' },
+      color: 'text.secondary',
+      '&:hover': { borderColor: 'primary.main', color: 'primary.main' },
     }}
   >
     <Box component="span" aria-hidden sx={{ fontSize: 28, lineHeight: 1 }}>
@@ -211,7 +212,7 @@ const SectionHeader = ({ arrows }: { arrows?: ReactNode }) => (
   </Stack>
 );
 
-const AccountCards = ({ accounts }: { accounts: DashboardAccount[] }) => {
+const AccountCards = ({ accounts, onAddAccount }: { accounts: DashboardAccount[]; onAddAccount: () => void }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const overflow = useRowOverflow(rowRef, accounts.length);
 
@@ -222,13 +223,13 @@ const AccountCards = ({ accounts }: { accounts: DashboardAccount[] }) => {
         {accounts.map((account) => (
           <AccountCard key={account.id} account={account} />
         ))}
-        <AddAccountTile />
+        <AddAccountTile onClick={onAddAccount} />
       </AccountRow>
     </>
   );
 };
 
-const AccountsContent = () => {
+const AccountsContent = ({ onAddAccount }: { onAddAccount: () => void }) => {
   const accounts = useDashboardAccounts();
 
   if (accounts.isLoading) {
@@ -255,11 +256,11 @@ const AccountsContent = () => {
     );
   }
 
-  return <AccountCards accounts={accounts.value} />;
+  return <AccountCards accounts={accounts.value} onAddAccount={onAddAccount} />;
 };
 
-export const AccountsSection = () => (
+export const AccountsSection = ({ onAddAccount }: { onAddAccount: () => void }) => (
   <Stack useFlexGap sx={{ gap: 1.5 }}>
-    <AccountsContent />
+    <AccountsContent onAddAccount={onAddAccount} />
   </Stack>
 );
