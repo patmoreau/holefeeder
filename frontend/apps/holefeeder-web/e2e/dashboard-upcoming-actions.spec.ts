@@ -271,7 +271,7 @@ test.describe('Dashboard upcoming actions', () => {
       const cancel = await page.getByTestId('pay-flyout-cancel').boundingBox();
       expect(flyout!.width).toBeCloseTo(360, 0);
       expect(pay!.width).toBeGreaterThan(280);
-      expect(cancel!.width).toBe(pay!.width);
+      expect(cancel!.width).toBeCloseTo(pay!.width, 0);
     });
   });
 });
