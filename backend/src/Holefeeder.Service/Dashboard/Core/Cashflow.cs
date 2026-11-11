@@ -1,6 +1,9 @@
-namespace Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Shared.Core;
+
+namespace Holefeeder.Service.Dashboard.Core;
 
 internal sealed record Cashflow(
+    Id AccountId,
     DateOnly EffectiveDate,
     IntervalType IntervalType,
     int Frequency,

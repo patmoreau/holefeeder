@@ -71,7 +71,7 @@ internal sealed partial class DashboardInDatabase(NpgsqlDataSource dataSource, I
     public async Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken)
     {
         const string sql = """
-                           SELECT c.effective_date, c.interval_type, c.frequency, c.amount, cc.type AS category_type,
+                           SELECT c.account_id, c.effective_date, c.interval_type, c.frequency, c.amount, cc.type AS category_type,
                                   p.last_paid_date, p.last_cashflow_date
                            FROM cashflows c
                            INNER JOIN categories cc ON cc.id = c.category_id

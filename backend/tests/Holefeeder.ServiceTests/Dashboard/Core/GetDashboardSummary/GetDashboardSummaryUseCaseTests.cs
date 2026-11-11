@@ -126,14 +126,14 @@ public class GetDashboardSummaryUseCaseTests
         _dashboard.Add(user, new DailyTotal(CategoryType.Expense, new DateOnly(2026, 11, 2), 150m));
         _dashboard.Add(user, new DailyTotal(CategoryType.Gain, new DateOnly(2026, 11, 1), 1000m));
         _dashboard.Add(user, new Cashflow(
-            new DateOnly(2026, 1, 15), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+            AnId(), new DateOnly(2026, 1, 15), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
             LastPaidDate: new DateOnly(2026, 10, 14), LastCashflowDate: new DateOnly(2026, 10, 15)));
         _dashboard.Add(user, new Cashflow(
-            new DateOnly(2026, 11, 6), IntervalType.Weekly, 1, 25m, CategoryType.Expense, null, null));
+            AnId(), new DateOnly(2026, 11, 6), IntervalType.Weekly, 1, 25m, CategoryType.Expense, null, null));
         _dashboard.Add(user, new Cashflow(
-            new DateOnly(2026, 11, 13), IntervalType.Weekly, 2, 1000m, CategoryType.Gain, null, null));
+            AnId(), new DateOnly(2026, 11, 13), IntervalType.Weekly, 2, 1000m, CategoryType.Gain, null, null));
         _dashboard.Add(user, new Cashflow(
-            new DateOnly(2026, 12, 1), IntervalType.Monthly, 1, 500m, CategoryType.Expense, null, null));
+            AnId(), new DateOnly(2026, 12, 1), IntervalType.Monthly, 1, 500m, CategoryType.Expense, null, null));
 
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
@@ -146,7 +146,7 @@ public class GetDashboardSummaryUseCaseTests
     public async Task HandleAsync_IgnoresOtherUsersCashflows()
     {
         var user = AUser();
-        _dashboard.Add(AUser(), new Cashflow(Today, IntervalType.OneTime, 1, 300m, CategoryType.Expense, null, null));
+        _dashboard.Add(AUser(), new Cashflow(AnId(), Today, IntervalType.OneTime, 1, 300m, CategoryType.Expense, null, null));
 
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 

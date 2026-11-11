@@ -1,9 +1,9 @@
 using Holefeeder.Service.Dashboard.Core;
-using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 
 namespace Holefeeder.Service.Dashboard.Persistence;
 
 internal sealed record CashflowRow(
+    Guid AccountId,
     DateOnly EffectiveDate,
     string IntervalType,
     int Frequency,
@@ -14,6 +14,7 @@ internal sealed record CashflowRow(
 {
     public Cashflow ToCashflow() =>
         new(
+            Shared.Core.Id.Valid(AccountId),
             EffectiveDate,
             Core.IntervalType.Valid(IntervalType),
             Frequency,

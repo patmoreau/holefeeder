@@ -52,7 +52,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
 
     public async Task ATransactionAsync(Guid categoryId, DateOnly date, decimal amount)
     {
-        var accountId = await AccountAsync();
+        var accountId = await TheAccountAsync();
         await ExecuteAsync(InsertTransaction, new
         {
             Id = Guid.NewGuid(),
@@ -75,7 +75,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             Amount = amount,
             IntervalType = intervalType.Name,
             Frequency = frequency,
-            AccountId = await AccountAsync(),
+            AccountId = await TheAccountAsync(),
             CategoryId = categoryId,
             Inactive = inactive,
             UserId = user.Id.Value
@@ -89,7 +89,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             Id = Guid.NewGuid(),
             Date = date.ToDateTime(TimeOnly.MinValue),
             Amount = amount,
-            AccountId = await AccountAsync(),
+            AccountId = await TheAccountAsync(),
             CategoryId = categoryId,
             CashflowId = cashflowId,
             CashflowDate = cashflowDate.ToDateTime(TimeOnly.MinValue),
@@ -99,7 +99,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     public Task SettingsAsync(string data) =>
         ExecuteAsync(InsertSettings, new { Id = Guid.NewGuid(), Data = data, UserId = user.Id.Value });
 
-    private async Task<Guid> AccountAsync()
+    public async Task<Guid> TheAccountAsync()
     {
         if (_accountId is { } accountId)
         {

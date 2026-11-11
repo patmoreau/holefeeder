@@ -1,9 +1,8 @@
 using System.Globalization;
 
 using Holefeeder.Service.Dashboard.Core;
-using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 
-namespace Holefeeder.ServiceTests.Dashboard.Core.GetDashboardSummary;
+namespace Holefeeder.ServiceTests.Dashboard.Core;
 
 public class CashflowTests
 {
@@ -21,6 +20,7 @@ public class CashflowTests
         string effectiveDate, string intervalType, int frequency, string? lastPaidDate, string? lastCashflowDate, string to, string expected)
     {
         var cashflow = new Cashflow(
+            AnId(),
             Day(effectiveDate),
             IntervalType.Create(intervalType).Value,
             frequency,
@@ -40,7 +40,7 @@ public class CashflowTests
     public void UpcomingVariation_SignsTheAmountByCategoryType(string categoryType, decimal expected)
     {
         var cashflow = new Cashflow(
-            new DateOnly(2026, 11, 1), IntervalType.Weekly, 1, 100m, Enum.Parse<CategoryType>(categoryType), null, null);
+            AnId(), new DateOnly(2026, 11, 1), IntervalType.Weekly, 1, 100m, Enum.Parse<CategoryType>(categoryType), null, null);
 
         cashflow.UpcomingVariation(new DateOnly(2026, 11, 20)).Should().Be(expected);
     }

@@ -1,6 +1,7 @@
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Persistence;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
@@ -88,14 +89,15 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         await budget.ACashflowAsync(salary, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m);
         await budget.APaymentAsync(rentFlow, rent, new DateOnly(2026, 9, 30), new DateOnly(2026, 10, 1), 1450m);
         await budget.APaymentAsync(rentFlow, rent, new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1), 1450m);
+        var accountId = Id.Valid(await budget.TheAccountAsync());
 
         var result = await _repository.GetActiveCashflowsAsync(user, CancellationToken.None);
 
         result.Should().BeSuccessful();
         result.Value.Should().BeEquivalentTo([
-            new Cashflow(new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+            new Cashflow(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
                 new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1)),
-            new Cashflow(new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null)
+            new Cashflow(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null)
         ]);
     }
 
