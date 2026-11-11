@@ -174,7 +174,7 @@ Turbo enforces `dependsOn: ["^build"]` so `packages/shared` is always built befo
 
 ## Git
 
-- Do not commit
+- Follow the root git workflow in `../docs/contributing/git-instructions.md`.
 
 ## Code
 
