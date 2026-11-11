@@ -26,6 +26,8 @@ const anAccount = (overrides: Partial<AccountJson> = {}): AccountJson => ({
   ...overrides,
 });
 
+const manyAccounts = (count: number) => Array.from({ length: count }, (_, i) => anAccount({ name: `Account ${i + 1}` }));
+
 const withAccounts = (page: Page, accounts: AccountJson[]) => page.route(accountsRoute, (route) => route.fulfill({ json: accounts }));
 
 test.describe('Dashboard accounts', () => {
@@ -127,6 +129,61 @@ test.describe('Dashboard accounts', () => {
     await expect(page.getByTestId('dashboard-add-account')).toBeVisible();
     await expect(page.getByTestId('dashboard-account-card')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-account-skeleton')).toHaveCount(0);
+  });
+
+  test('ShouldListAccountsOnASingleScrollableRow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await signedIn(page);
+    await withAccounts(page, manyAccounts(8));
+
+    await page.goto('/');
+
+    const cards = page.getByTestId('dashboard-account-card');
+    await expect(cards).toHaveCount(8);
+    const first = await cards.first().boundingBox();
+    const last = await cards.last().boundingBox();
+    expect(last!.y).toBe(first!.y);
+    const row = page.getByTestId('dashboard-accounts-row');
+    expect(await row.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
+  test('ShouldHideArrowsWhenAllAccountsFit', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await signedIn(page);
+    await withAccounts(page, manyAccounts(2));
+
+    await page.goto('/');
+
+    await expect(page.getByTestId('dashboard-account-card')).toHaveCount(2);
+    await expect(page.getByTestId('dashboard-accounts-previous')).toHaveCount(0);
+    await expect(page.getByTestId('dashboard-accounts-next')).toHaveCount(0);
+  });
+
+  test('ShouldScrollAccountsWithArrows', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await signedIn(page);
+    await withAccounts(page, manyAccounts(8));
+
+    await page.goto('/');
+
+    const row = page.getByTestId('dashboard-accounts-row');
+    const previous = page.getByTestId('dashboard-accounts-previous');
+    const next = page.getByTestId('dashboard-accounts-next');
+    await expect(previous).toHaveAccessibleName('Previous accounts');
+    await expect(next).toHaveAccessibleName('Next accounts');
+    await expect(previous).toBeDisabled();
+    await expect(next).toBeEnabled();
+
+    await next.click();
+    await expect.poll(() => row.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+    await expect(previous).toBeEnabled();
+
+    await row.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
+    await expect(next).toBeDisabled();
+
+    await previous.click();
+    await expect(next).toBeEnabled();
   });
 
   test('ShouldShowAccountSkeletonsUntilApiResponds', async ({ page }) => {

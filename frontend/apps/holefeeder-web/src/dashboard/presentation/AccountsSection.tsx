@@ -1,12 +1,15 @@
 import { LocalFormatter, tk, today } from '@holefeeder/shared/core';
-import { Alert, Box, Button, Divider, Paper, Skeleton, Stack, Typography } from '@mui/material';
-import type { ReactNode } from 'react';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
 import { useDashboardAccounts } from '../api/use-dashboard-accounts';
 import type { BalanceCaption, DashboardAccount } from '../domain/dashboard-account';
 import { toneColor, toneOf, unsignedCurrency } from './tone';
 
 const cardHeight = 171;
+const cardWidth = 264;
 
 const captionKey: Record<BalanceCaption, string> = {
   availableBalance: tk.accountCard.availableBalance,
@@ -20,9 +23,111 @@ const smallLabel = { fontSize: 11, lineHeight: lineHeight, color: 'text.secondar
 
 const amountText = (value: number) => ({ fontSize: 20, fontWeight: 600, lineHeight: lineHeight, color: toneColor[toneOf(value)] });
 
-const AccountGrid = ({ children }: { children: ReactNode }) => (
-  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 2 }}>{children}</Box>
-);
+type Overflow = { before: boolean; after: boolean };
+
+const noOverflow: Overflow = { before: false, after: false };
+
+const fade = (overflow: Overflow) => {
+  if (!overflow.before && !overflow.after) return undefined;
+  const start = overflow.before ? 'transparent, black 32px' : 'black';
+  const end = overflow.after ? 'black calc(100% - 32px), transparent' : 'black';
+  return `linear-gradient(to right, ${start}, ${end})`;
+};
+
+const useRowOverflow = (row: RefObject<HTMLDivElement | null>, itemCount: number) => {
+  const [overflow, setOverflow] = useState<Overflow>(noOverflow);
+
+  const measure = useCallback(() => {
+    const element = row.current;
+    if (!element) return;
+    setOverflow({
+      before: element.scrollLeft > 1,
+      after: element.scrollLeft + element.clientWidth < element.scrollWidth - 1,
+    });
+  }, [row]);
+
+  useEffect(() => {
+    const element = row.current;
+    if (!element) return;
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    element.addEventListener('scroll', measure, { passive: true });
+    return () => {
+      observer.disconnect();
+      element.removeEventListener('scroll', measure);
+    };
+  }, [row, measure, itemCount]);
+
+  return overflow;
+};
+
+const AccountRow = ({
+  rowRef,
+  overflow,
+  children,
+}: {
+  rowRef?: RefObject<HTMLDivElement | null>;
+  overflow?: Overflow;
+  children: ReactNode;
+}) => {
+  const mask = overflow && fade(overflow);
+  return (
+    <Box
+      ref={rowRef}
+      data-testid="dashboard-accounts-row"
+      sx={{
+        display: 'flex',
+        gap: 2,
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollBehavior: 'smooth',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': { display: 'none' },
+        mx: -1,
+        px: 1,
+        py: 1,
+        my: -1,
+        maskImage: mask,
+        '& > *': { flex: `0 0 ${cardWidth}px`, scrollSnapAlign: 'start', scrollMarginLeft: 8 },
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
+const RowArrows = ({ rowRef, overflow }: { rowRef: RefObject<HTMLDivElement | null>; overflow: Overflow }) => {
+  if (!overflow.before && !overflow.after) return null;
+
+  const scrollByPage = (direction: 1 | -1) => {
+    const element = rowRef.current;
+    if (element) element.scrollBy({ left: direction * element.clientWidth });
+  };
+
+  return (
+    <Stack direction="row" spacing={0.5}>
+      <IconButton
+        size="small"
+        disabled={!overflow.before}
+        onClick={() => scrollByPage(-1)}
+        aria-label={translate(tk.dashboard.previousAccounts)}
+        data-testid="dashboard-accounts-previous"
+      >
+        <ChevronLeftIcon fontSize="small" />
+      </IconButton>
+      <IconButton
+        size="small"
+        disabled={!overflow.after}
+        onClick={() => scrollByPage(1)}
+        aria-label={translate(tk.dashboard.nextAccounts)}
+        data-testid="dashboard-accounts-next"
+      >
+        <ChevronRightIcon fontSize="small" />
+      </IconButton>
+    </Stack>
+  );
+};
 
 const AccountCard = ({ account }: { account: DashboardAccount }) => (
   <Paper
@@ -95,40 +200,64 @@ const AddAccountTile = () => (
   </Button>
 );
 
+const sectionLabel = { fontSize: 15, color: 'text.secondary' };
+
+const SectionHeader = ({ arrows }: { arrows?: ReactNode }) => (
+  <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minHeight: 30 }}>
+    <Typography sx={sectionLabel}>{translate(tk.tabs.accounts)}</Typography>
+    {arrows}
+  </Stack>
+);
+
+const AccountCards = ({ accounts }: { accounts: DashboardAccount[] }) => {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const overflow = useRowOverflow(rowRef, accounts.length);
+
+  return (
+    <>
+      <SectionHeader arrows={<RowArrows rowRef={rowRef} overflow={overflow} />} />
+      <AccountRow rowRef={rowRef} overflow={overflow}>
+        {accounts.map((account) => (
+          <AccountCard key={account.id} account={account} />
+        ))}
+        <AddAccountTile />
+      </AccountRow>
+    </>
+  );
+};
+
 const AccountsContent = () => {
   const accounts = useDashboardAccounts();
 
   if (accounts.isLoading) {
     return (
-      <AccountGrid>
-        {Array.from({ length: 4 }, (_, i) => (
-          <Skeleton key={i} variant="rounded" height={cardHeight} data-testid="dashboard-account-skeleton" sx={{ borderRadius: 3 }} />
-        ))}
-      </AccountGrid>
+      <>
+        <SectionHeader />
+        <AccountRow>
+          {Array.from({ length: 4 }, (_, i) => (
+            <Skeleton key={i} variant="rounded" height={cardHeight} data-testid="dashboard-account-skeleton" sx={{ borderRadius: 3 }} />
+          ))}
+        </AccountRow>
+      </>
     );
   }
 
   if (accounts.isFailure) {
     return (
-      <Alert severity="error" data-testid="dashboard-accounts-error">
-        {accounts.errors.join(', ')}
-      </Alert>
+      <>
+        <SectionHeader />
+        <Alert severity="error" data-testid="dashboard-accounts-error">
+          {accounts.errors.join(', ')}
+        </Alert>
+      </>
     );
   }
 
-  return (
-    <AccountGrid>
-      {accounts.value.map((account) => (
-        <AccountCard key={account.id} account={account} />
-      ))}
-      <AddAccountTile />
-    </AccountGrid>
-  );
+  return <AccountCards accounts={accounts.value} />;
 };
 
 export const AccountsSection = () => (
-  <Stack spacing={1.5}>
-    <Typography sx={{ fontSize: 15, color: 'text.secondary' }}>{translate(tk.tabs.accounts)}</Typography>
+  <Stack useFlexGap sx={{ gap: 1.5 }}>
     <AccountsContent />
   </Stack>
 );

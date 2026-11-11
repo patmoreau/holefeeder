@@ -183,6 +183,8 @@ export const fr: TranslationStructure = {
   },
   dashboard: {
     newTransaction: 'Nouvelle transaction',
+    previousAccounts: 'Comptes précédents',
+    nextAccounts: 'Comptes suivants',
     largeHeader: {
       avgSpending: 'Dép. moy.',
       netFlow: 'Flux net',

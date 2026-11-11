@@ -181,6 +181,8 @@ export const en = {
   },
   dashboard: {
     newTransaction: 'New transaction',
+    previousAccounts: 'Previous accounts',
+    nextAccounts: 'Next accounts',
     largeHeader: {
       avgSpending: 'Avg. Spending',
       netFlow: 'Net Flow',
