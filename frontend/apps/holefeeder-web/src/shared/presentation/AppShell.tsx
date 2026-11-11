@@ -7,7 +7,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { Box, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { type ReactNode, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
-import { AppVersion } from '@/shared/core/app-version';
+import { buildVersionLabel } from '@/shared/core/build-version';
 import { translate } from '@/shared/i18n/translate';
 import { BrandTile } from './BrandTile';
 
@@ -27,11 +27,6 @@ const navItems: NavItem[] = [
 
 const drawerWidth = 248;
 const flyoutWidth = 280;
-
-const versionLabel = AppVersion.label({
-  version: import.meta.env.VITE_APP_VERSION as string | undefined,
-  commit: import.meta.env.VITE_APP_COMMIT as string | undefined,
-});
 
 const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
   const { pathname } = useLocation();
@@ -81,7 +76,7 @@ const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
         <ListItemText primary={translate(tk.tabs.legacy)} slotProps={{ primary: { fontSize: 15 } }} />
       </ListItemButton>
       <Typography data-testid="nav-version" sx={{ pt: 1, fontSize: 12, color: 'text.secondary', textAlign: 'center' }}>
-        {versionLabel}
+        {buildVersionLabel}
       </Typography>
     </>
   );
