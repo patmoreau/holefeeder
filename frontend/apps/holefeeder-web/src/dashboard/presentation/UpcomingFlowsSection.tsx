@@ -4,6 +4,7 @@ import { type ReactNode, useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
 import type { Notify } from '@/shared/presentation/DashboardToast';
+import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { FlowRow } from '@/shared/presentation/FlowRow';
 import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
@@ -11,7 +12,6 @@ import { mediumDate } from '@/shared/presentation/tone';
 import { type PayChanges, useUpcomingActions } from '../api/use-upcoming-actions';
 import { useUpcomingFlows } from '../api/use-upcoming-flows';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
-import { DeleteCashflowDialog } from './DeleteCashflowDialog';
 import { PayFlyout } from './PayFlyout';
 import { UpcomingActionsMenu } from './UpcomingActionsMenu';
 
@@ -91,7 +91,14 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
         ))}
       </Paper>
       <PayFlyout flow={paying} busy={busy} onClose={() => setPaying(null)} onPay={(flow, changes) => void payWithChanges(flow, changes)} />
-      <DeleteCashflowDialog title={deleting?.title ?? null} onCancel={() => setDeleting(null)} onConfirm={confirmDelete} />
+      <DeleteDialog
+        open={deleting !== null}
+        testID="dashboard-delete"
+        title={translate(tk.payUpcoming.deleteTitle, { title: deleting?.title ?? '' })}
+        message={translate(tk.payUpcoming.deleteMessage, { title: deleting?.title ?? '' })}
+        onCancel={() => setDeleting(null)}
+        onConfirm={confirmDelete}
+      />
     </>
   );
 };

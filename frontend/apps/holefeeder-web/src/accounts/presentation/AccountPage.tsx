@@ -2,7 +2,7 @@ import { type AsyncResult, type DateOnly, LocalFormatter, tk, today } from '@hol
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Alert, Box, Button, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, IconButton, Skeleton, Stack, Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { type ReactNode, useState } from 'react';
@@ -14,10 +14,10 @@ import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
 import { EmptyList } from '@/shared/presentation/EmptyList';
-import { FlowRow } from '@/shared/presentation/FlowRow';
 import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
 import { NewTransactionFlyout } from '@/shared/presentation/NewTransactionFlyout';
 import { type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
+import { TransactionList } from '@/shared/presentation/TransactionList';
 import { useAccountDetail } from '../api/use-account-detail';
 import { useAccountTransactions } from '../api/use-account-transactions';
 import type { AccountDetail } from '../domain/account-detail';
@@ -219,10 +219,7 @@ const TransactionsContent = ({
     );
 
   return (
-    <Paper elevation={0} sx={{ px: 2, borderRadius: 3 }}>
-      {transactions.value.map((transaction) => (
-        <FlowRow key={transaction.id} flow={transaction} testID="account-transaction" />
-      ))}
+    <TransactionList transactions={transactions.value} testID="account-transaction">
       {hasMore && (
         <Box sx={{ borderTop: 1, borderColor: 'divider', py: 1, textAlign: 'center' }}>
           <Button data-testid="account-load-more" disabled={loadingMore} onClick={loadMore} sx={{ fontSize: 15, fontWeight: 600 }}>
@@ -230,7 +227,7 @@ const TransactionsContent = ({
           </Button>
         </Box>
       )}
-    </Paper>
+    </TransactionList>
   );
 };
 

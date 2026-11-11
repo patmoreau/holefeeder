@@ -1,9 +1,9 @@
 import { tk } from '@holefeeder/shared/core';
-import { Alert, Paper, Stack, Typography } from '@mui/material';
+import { Alert, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
 import { EmptyList } from '@/shared/presentation/EmptyList';
-import { FlowRow } from '@/shared/presentation/FlowRow';
 import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
+import { TransactionList } from '@/shared/presentation/TransactionList';
 import { useRecentTransactions } from '../api/use-recent-transactions';
 
 const TransactionsContent = () => {
@@ -31,13 +31,7 @@ const TransactionsContent = () => {
     );
   }
 
-  return (
-    <Paper elevation={0} sx={{ px: 2, borderRadius: 3 }}>
-      {transactions.value.map((transaction) => (
-        <FlowRow key={transaction.id} flow={transaction} testID="dashboard-transaction" />
-      ))}
-    </Paper>
-  );
+  return <TransactionList transactions={transactions.value} testID="dashboard-transaction" />;
 };
 
 export const RecentTransactionsSection = () => (

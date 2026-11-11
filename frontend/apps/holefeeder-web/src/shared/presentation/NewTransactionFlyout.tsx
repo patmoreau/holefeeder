@@ -1,25 +1,11 @@
 import { tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Alert,
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  InputBase,
-  MenuItem,
-  Stack,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Drawer, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { useNewTransactionActions } from '@/shared/api/use-new-transaction-actions';
 import { useNewTransactionOptions } from '@/shared/api/use-new-transaction-options';
-import type { NewTransactionOptions, TransactionAccountOption, TransactionCategoryOption } from '@/shared/domain/new-transaction-options';
+import type { NewTransactionOptions } from '@/shared/domain/new-transaction-options';
 import { translate } from '@/shared/i18n/translate';
 import { isAmountInput } from './amount-input';
 import type { Notify } from './DashboardToast';
@@ -27,40 +13,17 @@ import { EmptyList } from './EmptyList';
 import { ListSkeleton } from './ListSkeleton';
 import { isRepeatDraftValid, type RepeatDraft, RepeatField } from './RepeatField';
 import { TagsField } from './TagsField';
-
-const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
-
-type CategoryType = TransactionCategoryOption['type'];
-
-type TransactionType = CategoryType | 'transfer';
+import {
+  AccountSelect,
+  AmountField,
+  CategorySelect,
+  type CategoryType,
+  FlyoutFooter,
+  type TransactionType,
+  TransactionTypeToggle,
+} from './TransactionFields';
 
 const today = () => new Date().toLocaleDateString('en-CA');
-
-const typeButton = { textTransform: 'none', fontSize: 15 };
-
-type AccountSelectProps = {
-  label: string;
-  testID: string;
-  accounts: TransactionAccountOption[];
-  value: string;
-  onChange: (id: string) => void;
-};
-
-const AccountSelect = ({ label, testID, accounts, value, onChange }: AccountSelectProps) => (
-  <TextField
-    select
-    label={label}
-    value={value}
-    onChange={(event) => onChange(event.target.value)}
-    slotProps={{ select: { SelectDisplayProps: { 'data-testid': testID } as object } }}
-  >
-    {accounts.map((account) => (
-      <MenuItem key={account.id} value={account.id}>
-        {account.name}
-      </MenuItem>
-    ))}
-  </TextField>
-);
 
 type NewTransactionFormProps = { options: NewTransactionOptions; accountId?: string; onClose: () => void; notify: Notify };
 
@@ -91,8 +54,7 @@ const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose,
   const amountColor = { expense: 'error.main', gain: 'success.main', transfer: 'primary.main' }[type];
   const accountName = (id: string) => options.accounts.find((account) => account.id === id)?.name ?? '';
 
-  const changeType = (next: TransactionType | null) => {
-    if (next === null) return;
+  const changeType = (next: TransactionType) => {
     setType(next);
     if (next !== 'transfer') setCategoryId(categoriesOf(next)[0]?.id ?? '');
   };
@@ -154,31 +116,8 @@ const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose,
   return (
     <>
       <Stack spacing={2.5} sx={{ px: 3, pb: 3, flexGrow: 1, overflowY: 'auto' }}>
-        <ToggleButtonGroup exclusive fullWidth size="small" value={type} onChange={(_, next: TransactionType | null) => changeType(next)}>
-          <ToggleButton value="expense" sx={typeButton}>
-            {translate(tk.purchase.transactionTypeSection.expense)}
-          </ToggleButton>
-          <ToggleButton value="gain" sx={typeButton}>
-            {translate(tk.purchase.transactionTypeSection.income)}
-          </ToggleButton>
-          <ToggleButton value="transfer" sx={typeButton}>
-            {translate(tk.purchase.transactionTypeSection.transfer)}
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <Box sx={{ p: 2.5, borderRadius: 3, border: 2, borderColor: 'primary.main', bgcolor: 'background.default' }}>
-          <Typography component="label" htmlFor="new-transaction-amount" sx={{ fontSize: 13, color: 'text.secondary' }}>
-            {translate(tk.purchase.basicSection.amount)}
-          </Typography>
-          <InputBase
-            id="new-transaction-amount"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            onFocus={(event) => event.target.select()}
-            fullWidth
-            inputProps={{ inputMode: 'decimal', 'data-testid': 'new-transaction-amount' }}
-            sx={{ fontSize: 40, fontWeight: 700, color: amountColor }}
-          />
-        </Box>
+        <TransactionTypeToggle value={type} withTransfer onChange={changeType} />
+        <AmountField testID="new-transaction-amount" value={amount} color={amountColor} onChange={setAmount} />
         <TextField
           type="date"
           label={translate(tk.purchase.basicSection.date)}
@@ -222,22 +161,7 @@ const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose,
             {translate(tk.emptyStates.purchaseMissingCategory.title)}
           </Alert>
         ) : (
-          <TextField
-            select
-            label={translate(tk.purchase.basicSection.category)}
-            value={categoryId}
-            onChange={(event) => setCategoryId(event.target.value)}
-            slotProps={{ select: { SelectDisplayProps: { 'data-testid': 'new-transaction-category' } as object } }}
-          >
-            {categories.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
-                <Stack direction="row" alignItems="center" spacing={1.25}>
-                  <Box aria-hidden sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: category.color, flexShrink: 0 }} />
-                  <span>{category.name}</span>
-                </Stack>
-              </MenuItem>
-            ))}
-          </TextField>
+          <CategorySelect testID="new-transaction-category" categories={categories} value={categoryId} onChange={setCategoryId} />
         )}
         {!transfer && categoryId !== '' && <TagsField categoryId={categoryId} tags={tags} onChange={setTags} />}
         <TextField
@@ -253,30 +177,13 @@ const NewTransactionForm = ({ options, accountId: preselectedAccountId, onClose,
         />
         {!transfer && <RepeatField draft={repeat} startDate={date} onChange={setRepeat} />}
       </Stack>
-      <Divider />
-      <Stack spacing={1.5} sx={{ p: 3 }}>
-        <Button
-          variant="contained"
-          disableElevation
-          fullWidth
-          disabled={busy || !valid}
-          data-testid="new-transaction-save"
-          onClick={() => void save()}
-          sx={footerButton}
-        >
-          {translate(tk.newTransaction.save)}
-        </Button>
-        <Button
-          variant="outlined"
-          color="inherit"
-          fullWidth
-          data-testid="new-transaction-cancel"
-          onClick={onClose}
-          sx={{ ...footerButton, borderColor: 'divider' }}
-        >
-          {translate(tk.common.cancel)}
-        </Button>
-      </Stack>
+      <FlyoutFooter
+        testID="new-transaction"
+        saveLabel={translate(tk.newTransaction.save)}
+        disabled={busy || !valid}
+        onSave={() => void save()}
+        onCancel={onClose}
+      />
     </>
   );
 };
