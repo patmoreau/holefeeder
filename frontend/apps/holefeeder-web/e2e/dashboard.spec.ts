@@ -48,7 +48,7 @@ test.describe('Dashboard', () => {
     expect(version!.y).toBeGreaterThan(legacy!.y + legacy!.height - 1);
   });
 
-  test('ShouldShowDisabledNewTransactionButtonInTopBar', async ({ page }) => {
+  test('ShouldShowNewTransactionButtonInTopBar', async ({ page }) => {
     await signedIn(page);
 
     await page.goto('/');
@@ -56,7 +56,7 @@ test.describe('Dashboard', () => {
     const heading = page.getByRole('heading', { name: 'Dashboard' });
     const button = page.getByTestId('dashboard-new-transaction');
     await expect(button).toHaveAccessibleName('New transaction');
-    await expect(button).toBeDisabled();
+    await expect(button).toBeEnabled();
     const headingBox = await heading.boundingBox();
     const buttonBox = await button.boundingBox();
     expect(buttonBox!.x).toBeGreaterThan(headingBox!.x + headingBox!.width);

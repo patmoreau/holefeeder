@@ -5,12 +5,14 @@ import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
 import { AccountsSection } from './AccountsSection';
 import { DashboardToast } from './DashboardToast';
+import { NewTransactionFlyout } from './NewTransactionFlyout';
 import { RecentTransactionsSection } from './RecentTransactionsSection';
 import { SpendingHero } from './SpendingHero';
 import { UpcomingFlowsSection } from './UpcomingFlowsSection';
 
 export const DashboardPage = () => {
   const [toast, setToast] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
 
   return (
     <ApiRefreshProvider>
@@ -22,8 +24,8 @@ export const DashboardPage = () => {
           <Button
             variant="contained"
             disableElevation
-            disabled
             data-testid="dashboard-new-transaction"
+            onClick={() => setCreating(true)}
             startIcon={
               <Box component="span" aria-hidden sx={{ fontSize: 18, lineHeight: 1 }}>
                 +
@@ -36,7 +38,6 @@ export const DashboardPage = () => {
               py: 1.25,
               pl: 2,
               pr: 2.25,
-              '&.Mui-disabled': { bgcolor: 'primary.main', color: 'primary.contrastText', opacity: 0.6 },
             }}
           >
             {translate(tk.dashboard.newTransaction)}
@@ -54,6 +55,7 @@ export const DashboardPage = () => {
           <UpcomingFlowsSection notify={setToast} />
         </Box>
       </Stack>
+      <NewTransactionFlyout open={creating} onClose={() => setCreating(false)} notify={setToast} />
       <DashboardToast message={toast} onClose={() => setToast(null)} />
     </ApiRefreshProvider>
   );
