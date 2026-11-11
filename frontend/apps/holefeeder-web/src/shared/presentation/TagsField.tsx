@@ -2,8 +2,8 @@ import { tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, ButtonBase, InputBase, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useTagSuggestions } from '@/shared/api/use-tag-suggestions';
 import { translate } from '@/shared/i18n/translate';
-import { useTagSuggestions } from '../api/use-tag-suggestions';
 
 const shownSuggestions = 8;
 

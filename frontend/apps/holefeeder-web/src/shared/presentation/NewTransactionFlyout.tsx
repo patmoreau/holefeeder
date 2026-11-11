@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
+import { useNewTransactionActions } from '@/shared/api/use-new-transaction-actions';
+import { useNewTransactionOptions } from '@/shared/api/use-new-transaction-options';
+import type { NewTransactionOptions, TransactionAccountOption, TransactionCategoryOption } from '@/shared/domain/new-transaction-options';
 import { translate } from '@/shared/i18n/translate';
-import { useNewTransactionActions } from '../api/use-new-transaction-actions';
-import { useNewTransactionOptions } from '../api/use-new-transaction-options';
-import type { NewTransactionOptions, TransactionAccountOption, TransactionCategoryOption } from '../domain/new-transaction-options';
 import { isAmountInput } from './amount-input';
 import type { Notify } from './DashboardToast';
 import { EmptyList } from './EmptyList';

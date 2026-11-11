@@ -4,9 +4,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
+import { toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardAccounts } from '../api/use-dashboard-accounts';
 import type { BalanceCaption, DashboardAccount } from '../domain/dashboard-account';
-import { toneColor, toneOf, unsignedCurrency } from './tone';
 
 const cardHeight = 171;
 const cardWidth = 264;

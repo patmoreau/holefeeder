@@ -3,16 +3,16 @@ import { Alert, Button, Paper, Stack, Typography } from '@mui/material';
 import { type ReactNode, useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
+import type { Notify } from '@/shared/presentation/DashboardToast';
+import { EmptyList } from '@/shared/presentation/EmptyList';
+import { FlowRow } from '@/shared/presentation/FlowRow';
+import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
+import { mediumDate } from '@/shared/presentation/tone';
 import { type PayChanges, useUpcomingActions } from '../api/use-upcoming-actions';
 import { useUpcomingFlows } from '../api/use-upcoming-flows';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
-import type { Notify } from './DashboardToast';
 import { DeleteCashflowDialog } from './DeleteCashflowDialog';
-import { EmptyList } from './EmptyList';
-import { FlowRow } from './FlowRow';
-import { ListSkeleton } from './ListSkeleton';
 import { PayFlyout } from './PayFlyout';
-import { mediumDate } from './tone';
 import { UpcomingActionsMenu } from './UpcomingActionsMenu';
 
 const PayButton = ({ disabled, onClick }: { disabled: boolean; onClick: () => void }) => (

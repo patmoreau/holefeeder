@@ -3,10 +3,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Divider, Drawer, FormControlLabel, IconButton, InputBase, Stack, Switch, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
+import { isAmountInput } from '@/shared/presentation/amount-input';
+import { currency, mediumDate } from '@/shared/presentation/tone';
 import type { PayChanges } from '../api/use-upcoming-actions';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
-import { isAmountInput } from './amount-input';
-import { currency, mediumDate } from './tone';
 
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
 

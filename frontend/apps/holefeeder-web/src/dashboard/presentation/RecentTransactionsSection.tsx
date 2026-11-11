@@ -1,10 +1,10 @@
 import { tk } from '@holefeeder/shared/core';
 import { Alert, Paper, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
+import { EmptyList } from '@/shared/presentation/EmptyList';
+import { FlowRow } from '@/shared/presentation/FlowRow';
+import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
 import { useRecentTransactions } from '../api/use-recent-transactions';
-import { EmptyList } from './EmptyList';
-import { FlowRow } from './FlowRow';
-import { ListSkeleton } from './ListSkeleton';
 
 const TransactionsContent = () => {
   const transactions = useRecentTransactions();

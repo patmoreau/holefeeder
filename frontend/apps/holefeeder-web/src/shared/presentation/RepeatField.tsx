@@ -1,7 +1,7 @@
 import { tk } from '@holefeeder/shared/core';
 import { FormControlLabel, MenuItem, Stack, Switch, TextField, Typography } from '@mui/material';
+import type { RepeatIntervalType } from '@/shared/api/use-new-transaction-actions';
 import { translate } from '@/shared/i18n/translate';
-import type { RepeatIntervalType } from '../api/use-new-transaction-actions';
 
 export type RepeatDraft = { startDate: string; intervalType: RepeatIntervalType; frequency: string };
 

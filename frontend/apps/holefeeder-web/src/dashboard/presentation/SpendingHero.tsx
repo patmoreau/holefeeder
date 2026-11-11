@@ -3,9 +3,9 @@ import { Alert, Box, Skeleton, Stack, Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { translate } from '@/shared/i18n/translate';
+import { currency, roundsToZero, type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardSummary } from '../api/use-dashboard-summary';
 import type { DashboardSummary } from '../domain/dashboard-summary';
-import { currency, roundsToZero, type Tone, toneColor, toneOf, unsignedCurrency } from './tone';
 
 const toneBackground: Record<Tone, string> = { positive: 'success.light', negative: 'error.light', neutral: 'background.paper' };
 
