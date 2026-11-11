@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Transactions.Api;
 using Holefeeder.Service.Transactions.Api.RecordPurchase;
 using Holefeeder.Service.Transactions.Core;
 using Holefeeder.Service.Transactions.Core.RecordPurchase;
@@ -63,8 +64,8 @@ public class RecordPurchaseRequestRawTests
         result.Error.Should().BeOfType<ResultErrorAggregate>().Subject.Errors.Keys.Should().BeEquivalentTo(
             IsoDateErrors.CodeDateInvalid,
             MoneyErrors.CodeInvalid,
-            RecordPurchaseRequestErrors.CodeAccountIdInvalid,
-            RecordPurchaseRequestErrors.CodeCategoryIdInvalid,
+            TransactionRequestErrors.CodeAccountIdInvalid,
+            TransactionRequestErrors.CodeCategoryIdInvalid,
             RecordPurchaseRequestErrors.CodeRepeatStartDateInvalid,
             IntervalTypeErrors.CodeInvalid,
             FrequencyErrors.CodeInvalid);

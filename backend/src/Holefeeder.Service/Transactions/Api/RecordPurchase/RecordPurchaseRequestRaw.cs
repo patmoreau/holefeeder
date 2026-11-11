@@ -18,8 +18,8 @@ internal sealed record RecordPurchaseRequestRaw([FromBody] RecordPurchaseBody Bo
         var body = raw.Body;
         var date = IsoDate.Parse(body.Date, IsoDateErrors.DateInvalid);
         var amount = Money.Create(body.Amount);
-        var accountId = ParseId(body.AccountId, RecordPurchaseRequestErrors.AccountIdInvalid);
-        var categoryId = ParseId(body.CategoryId, RecordPurchaseRequestErrors.CategoryIdInvalid);
+        var accountId = ParseId(body.AccountId, TransactionRequestErrors.AccountIdInvalid);
+        var categoryId = ParseId(body.CategoryId, TransactionRequestErrors.CategoryIdInvalid);
 
         var validation = ResultAggregate.Create();
         AddFailure(validation, date);
@@ -64,13 +64,7 @@ internal sealed record RecordPurchaseRequestRaw([FromBody] RecordPurchaseBody Bo
 
 internal static class RecordPurchaseRequestErrors
 {
-    public const string CodeAccountIdInvalid = "account-id-invalid";
-    public const string CodeCategoryIdInvalid = "category-id-invalid";
     public const string CodeRepeatStartDateInvalid = "repeat-start-date-invalid";
-
-    public static ResultError AccountIdInvalid => new(CodeAccountIdInvalid, "Account id must be an id.");
-
-    public static ResultError CategoryIdInvalid => new(CodeCategoryIdInvalid, "Category id must be an id.");
 
     public static ResultError RepeatStartDateInvalid => new(CodeRepeatStartDateInvalid, "Repeat start date must be a date as YYYY-MM-DD.");
 }
