@@ -37,6 +37,10 @@ Given a target end date, the cashflow computes which scheduled dates are still u
 - If payments have been recorded: only scheduled dates after the most-recently paid cashflow date are listed
 - A one-time cashflow that has already been paid produces no upcoming dates
 
+The upcoming list on the dashboard uses the end of the current period (see the user's period
+settings) as the target date. It shows one row per unpaid occurrence, so an unpaid date before
+today stays listed as overdue, sorted by date and then by title.
+
 ---
 
 ## Create

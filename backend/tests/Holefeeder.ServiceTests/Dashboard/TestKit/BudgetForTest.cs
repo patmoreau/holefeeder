@@ -30,7 +30,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     private const string InsertCashflow =
         """
         INSERT INTO cashflows (id, effective_date, amount, interval_type, frequency, recurrence, description, account_id, category_id, inactive, tags, user_id)
-        VALUES (@Id, @EffectiveDate, @Amount, @IntervalType, @Frequency, 0, '', @AccountId, @CategoryId, @Inactive, '', @UserId);
+        VALUES (@Id, @EffectiveDate, @Amount, @IntervalType, @Frequency, 0, @Description, @AccountId, @CategoryId, @Inactive, @Tags, @UserId);
         """;
 
     private const string InsertPayment =
@@ -89,7 +89,15 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     }
 
     public async Task<Guid> ACashflowAsync(
-        Guid categoryId, DateOnly effectiveDate, IntervalType intervalType, int frequency, decimal amount, bool inactive = false, Guid? accountId = null)
+        Guid categoryId,
+        DateOnly effectiveDate,
+        IntervalType intervalType,
+        int frequency,
+        decimal amount,
+        bool inactive = false,
+        Guid? accountId = null,
+        string description = "",
+        string? tags = "")
     {
         var id = Guid.NewGuid();
         await ExecuteAsync(InsertCashflow, new
@@ -99,9 +107,11 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             Amount = amount,
             IntervalType = intervalType.Name,
             Frequency = frequency,
+            Description = description,
             AccountId = accountId ?? await TheAccountAsync(),
             CategoryId = categoryId,
             Inactive = inactive,
+            Tags = tags,
             UserId = user.Id.Value
         });
         return id;

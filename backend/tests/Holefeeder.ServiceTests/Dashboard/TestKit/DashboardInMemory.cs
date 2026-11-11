@@ -4,6 +4,7 @@ using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
+using Holefeeder.Service.Dashboard.Core.GetUpcomingFlows;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 
@@ -16,6 +17,7 @@ internal sealed class DashboardInMemory : IDashboard
     private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
     private readonly List<(Id UserId, AccountTotals Account)> _accounts = [];
     private readonly List<(Id UserId, RecentTransaction Transaction)> _transactions = [];
+    private readonly List<(Id UserId, UpcomingCashflow Cashflow)> _upcomingCashflows = [];
     private ResultError? _failure;
 
     public Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
@@ -85,6 +87,19 @@ internal sealed class DashboardInMemory : IDashboard
         ];
         return Task.FromResult<Result<IReadOnlyList<RecentTransaction>>>(transactions.ToList());
     }
+
+    public Task<Result<IReadOnlyList<UpcomingCashflow>>> GetUpcomingCashflowsAsync(User user, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<IReadOnlyList<UpcomingCashflow>>>(_failure);
+        }
+
+        IReadOnlyList<UpcomingCashflow> cashflows = [.. _upcomingCashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
+        return Task.FromResult<Result<IReadOnlyList<UpcomingCashflow>>>(cashflows.ToList());
+    }
+
+    public void Add(User user, UpcomingCashflow cashflow) => _upcomingCashflows.Add((user.Id, cashflow));
 
     public void Add(User user, RecentTransaction transaction) => _transactions.Add((user.Id, transaction));
 

@@ -1,10 +1,12 @@
 using Holefeeder.Service.Dashboard.Api.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Api.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Api.GetRecentTransactions;
+using Holefeeder.Service.Dashboard.Api.GetUpcomingFlows;
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
+using Holefeeder.Service.Dashboard.Core.GetUpcomingFlows;
 using Holefeeder.Service.Dashboard.Persistence;
 
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,11 +22,13 @@ internal static class Dashboard
             .AddScoped<IDashboard, DashboardInDatabase>()
             .AddScoped<GetDashboardSummaryUseCase>()
             .AddScoped<GetDashboardAccountsUseCase>()
-            .AddScoped<GetRecentTransactionsUseCase>();
+            .AddScoped<GetRecentTransactionsUseCase>()
+            .AddScoped<GetUpcomingFlowsUseCase>();
     }
 
     public static IEndpointRouteBuilder MapDashboardEndpoints(this IEndpointRouteBuilder app) =>
         app.MapGetDashboardSummary()
             .MapGetDashboardAccounts()
-            .MapGetRecentTransactions();
+            .MapGetRecentTransactions()
+            .MapGetUpcomingFlows();
 }

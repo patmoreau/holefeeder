@@ -2,6 +2,7 @@ using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
+using Holefeeder.Service.Dashboard.Core.GetUpcomingFlows;
 using Holefeeder.Service.Dashboard.Persistence;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
@@ -252,6 +253,70 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
 
         var result = await repository.GetRecentTransactionsAsync(AUser(), 4, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
+    }
+
+    [Fact]
+    public async Task GetUpcomingCashflowsAsync_ReturnsCashflowsWithTheirDetailsAndLastPayment()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var housing = await budget.ACategoryAsync(CategoryType.Expense, name: "Housing", color: "#007AFF");
+        var pay = await budget.ACategoryAsync(CategoryType.Gain, name: "Pay check", color: "#34C759");
+        var rent = await budget.ACashflowAsync(housing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, description: "Rent", tags: " housing , home ");
+        var salary = await budget.ACashflowAsync(pay, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, tags: null);
+        await budget.APaymentAsync(rent, housing, new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1), 1450m);
+        var accountId = Id.Valid(await budget.TheAccountAsync());
+
+        var result = await _repository.GetUpcomingCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new UpcomingCashflow(
+                Id.Valid(rent),
+                new Cashflow(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+                    new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1)),
+                "Rent", "Housing", "#007AFF", ["housing", "home"]),
+            new UpcomingCashflow(
+                Id.Valid(salary),
+                new Cashflow(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null),
+                "", "Pay check", "#34C759", [])
+        ]);
+    }
+
+    [Fact]
+    public async Task GetUpcomingCashflowsAsync_LeavesOutInactiveCashflows()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.ACashflowAsync(await budget.ACategoryAsync(CategoryType.Expense), Today, IntervalType.Monthly, 1, 10m, inactive: true);
+
+        var result = await _repository.GetUpcomingCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetUpcomingCashflowsAsync_LeavesOutOtherUsersCashflows()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var otherBudget = new BudgetForTest(await AUser().SavedInDbAsync(database), database);
+        await otherBudget.ACashflowAsync(await otherBudget.ACategoryAsync(CategoryType.Expense), Today, IntervalType.Monthly, 1, 10m);
+
+        var result = await _repository.GetUpcomingCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetUpcomingCashflowsAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
+
+        var result = await repository.GetUpcomingCashflowsAsync(AUser(), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
     }
