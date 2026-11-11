@@ -275,12 +275,12 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         result.Value.Should().BeEquivalentTo([
             new UpcomingCashflow(
                 Id.Valid(rent),
-                new Cashflow(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+                new CashflowSchedule(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
                     new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1)),
                 "Rent", "Housing", "#007AFF", ["housing", "home"]),
             new UpcomingCashflow(
                 Id.Valid(salary),
-                new Cashflow(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null),
+                new CashflowSchedule(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null),
                 "", "Pay check", "#34C759", [])
         ]);
     }
@@ -338,9 +338,9 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
 
         result.Should().BeSuccessful();
         result.Value.Should().BeEquivalentTo([
-            new Cashflow(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+            new CashflowSchedule(accountId, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
                 new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1)),
-            new Cashflow(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null)
+            new CashflowSchedule(accountId, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null)
         ]);
     }
 

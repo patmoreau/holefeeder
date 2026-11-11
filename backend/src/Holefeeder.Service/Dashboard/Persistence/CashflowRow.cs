@@ -19,7 +19,7 @@ internal sealed record CashflowRow(
     string CategoryColor,
     string? Tags)
 {
-    public Cashflow ToCashflow() =>
+    public CashflowSchedule ToCashflow() =>
         new(
             Shared.Core.Id.Valid(AccountId),
             EffectiveDate,

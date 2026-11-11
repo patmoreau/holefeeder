@@ -1,4 +1,4 @@
-namespace Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
+namespace Holefeeder.Service.Shared.Core;
 
 internal enum BalanceCaption
 {

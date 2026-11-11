@@ -14,7 +14,7 @@ internal sealed class DashboardInMemory : IDashboard
 {
     private readonly Dictionary<Id, PeriodSettings> _settings = [];
     private readonly List<(Id UserId, DailyTotal Total)> _totals = [];
-    private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
+    private readonly List<(Id UserId, CashflowSchedule Cashflow)> _cashflows = [];
     private readonly List<(Id UserId, AccountTotals Account)> _accounts = [];
     private readonly List<(Id UserId, RecentTransaction Transaction)> _transactions = [];
     private readonly List<(Id UserId, UpcomingCashflow Cashflow)> _upcomingCashflows = [];
@@ -53,22 +53,22 @@ internal sealed class DashboardInMemory : IDashboard
         return Task.FromResult<Result<IReadOnlyList<AccountTotals>>>(accounts.ToList());
     }
 
-    public Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken)
+    public Task<Result<IReadOnlyList<CashflowSchedule>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken)
     {
         if (_failure is not null)
         {
-            return Task.FromResult<Result<IReadOnlyList<Cashflow>>>(_failure);
+            return Task.FromResult<Result<IReadOnlyList<CashflowSchedule>>>(_failure);
         }
 
-        IReadOnlyList<Cashflow> cashflows = [.. _cashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
-        return Task.FromResult<Result<IReadOnlyList<Cashflow>>>(cashflows.ToList());
+        IReadOnlyList<CashflowSchedule> cashflows = [.. _cashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
+        return Task.FromResult<Result<IReadOnlyList<CashflowSchedule>>>(cashflows.ToList());
     }
 
     public void Add(User user, PeriodSettings settings) => _settings[user.Id] = settings;
 
     public void Add(User user, DailyTotal total) => _totals.Add((user.Id, total));
 
-    public void Add(User user, Cashflow cashflow) => _cashflows.Add((user.Id, cashflow));
+    public void Add(User user, CashflowSchedule cashflow) => _cashflows.Add((user.Id, cashflow));
 
     public Task<Result<IReadOnlyList<RecentTransaction>>> GetRecentTransactionsAsync(User user, int count, CancellationToken cancellationToken)
     {

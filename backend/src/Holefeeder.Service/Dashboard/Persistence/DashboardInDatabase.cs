@@ -8,6 +8,7 @@ using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 using Holefeeder.Service.Dashboard.Core.GetRecentTransactions;
 using Holefeeder.Service.Dashboard.Core.GetUpcomingFlows;
 using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Shared.Persistence;
 
 using Npgsql;
 
@@ -35,7 +36,7 @@ internal sealed partial class DashboardInDatabase(NpgsqlDataSource dataSource, I
             var data = await connection.QuerySingleOrDefaultAsync<string>(
                 new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
-            return data is null ? PeriodSettings.Default(today) : SettingsData.ToPeriodSettings(data);
+            return data is null ? PeriodSettings.Default(today) : SettingsData.ToPeriodSettings(data, DashboardErrors.SettingsInvalid);
         }
         catch (NpgsqlException exception)
         {
@@ -106,7 +107,7 @@ internal sealed partial class DashboardInDatabase(NpgsqlDataSource dataSource, I
         }
     }
 
-    public Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken) =>
+    public Task<Result<IReadOnlyList<CashflowSchedule>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken) =>
         QueryActiveCashflowsAsync(user, row => row.ToCashflow(), cancellationToken);
 
     public Task<Result<IReadOnlyList<UpcomingCashflow>>> GetUpcomingCashflowsAsync(User user, CancellationToken cancellationToken) =>

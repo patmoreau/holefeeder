@@ -1,8 +1,7 @@
-using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.Service.Dashboard.Core;
+namespace Holefeeder.Service.Shared.Core;
 
-internal sealed record Cashflow(
+internal sealed record CashflowSchedule(
     Id AccountId,
     DateOnly EffectiveDate,
     IntervalType IntervalType,

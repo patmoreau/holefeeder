@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Shared.Core;
+
 namespace Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 
 internal sealed class GetDashboardAccountsUseCase(IDashboard dashboard)
@@ -31,25 +33,17 @@ internal sealed class GetDashboardAccountsUseCase(IDashboard dashboard)
             .ToList();
     }
 
-    private static DashboardAccount ToDashboardAccount(AccountTotals account, IEnumerable<Cashflow> cashflows, DateOnly periodEnd)
+    private static DashboardAccount ToDashboardAccount(AccountTotals account, IEnumerable<CashflowSchedule> cashflows, DateOnly periodEnd)
     {
-        var balance = account.Type.Sign * account.OpenBalance + account.Gains - account.Expenses;
+        var balance = AccountBalance.Of(account.Type, account.OpenBalance, account.Gains, account.Expenses);
         var projectedBalance = balance + cashflows.Sum(cashflow => cashflow.UpcomingVariation(periodEnd));
 
         return new DashboardAccount(
             account.Id,
             account.Name,
-            CaptionOf(account.Type, balance),
+            AccountBalance.CaptionOf(account.Type, balance),
             balance,
             projectedBalance,
             account.LastTransactionDate ?? account.OpenDate);
     }
-
-    private static BalanceCaption CaptionOf(AccountType type, decimal balance) =>
-        Math.Round(balance, 2) switch
-        {
-            < 0 => BalanceCaption.AmountDue,
-            > 0 => type.IsAsset ? BalanceCaption.AvailableBalance : BalanceCaption.CreditBalance,
-            _ => type.IsAsset ? BalanceCaption.AvailableBalance : BalanceCaption.AmountDue
-        };
 }

@@ -3,14 +3,13 @@ using System.Text.Json;
 
 using DrifterApps.Seeds.FluentResult;
 
-using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.Service.Dashboard.Persistence;
+namespace Holefeeder.Service.Shared.Persistence;
 
 internal static class SettingsData
 {
-    public static Result<PeriodSettings> ToPeriodSettings(string data)
+    public static Result<PeriodSettings> ToPeriodSettings(string data, UnexpectedError invalid)
     {
         try
         {
@@ -20,7 +19,7 @@ internal static class SettingsData
             if (Property(root, "effectiveDate") is not { ValueKind: JsonValueKind.String } effectiveDateValue ||
                 !DateTime.TryParse(effectiveDateValue.GetString(), CultureInfo.InvariantCulture, out var effectiveDate))
             {
-                return DashboardErrors.SettingsInvalid;
+                return invalid;
             }
 
             Result<IntervalType> intervalType = Property(root, "intervalType") is { ValueKind: JsonValueKind.String } intervalTypeValue
@@ -28,21 +27,21 @@ internal static class SettingsData
                 : IntervalType.Monthly;
             if (intervalType.IsFailure)
             {
-                return DashboardErrors.SettingsInvalid;
+                return invalid;
             }
 
             if (Property(root, "frequency") is not { ValueKind: JsonValueKind.Number } frequencyValue ||
                 !frequencyValue.TryGetInt32(out var frequency))
             {
-                return DashboardErrors.SettingsInvalid;
+                return invalid;
             }
 
             var settings = PeriodSettings.Create(DateOnly.FromDateTime(effectiveDate), intervalType.Value, frequency);
-            return settings.IsFailure ? DashboardErrors.SettingsInvalid : settings;
+            return settings.IsFailure ? invalid : settings;
         }
         catch (JsonException)
         {
-            return DashboardErrors.SettingsInvalid;
+            return invalid;
         }
     }
 

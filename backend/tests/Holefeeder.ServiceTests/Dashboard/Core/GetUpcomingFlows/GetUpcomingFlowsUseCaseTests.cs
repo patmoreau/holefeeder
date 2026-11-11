@@ -142,7 +142,7 @@ public class GetUpcomingFlowsUseCaseTests
         DateOnly? lastPaidDate = null, DateOnly? lastCashflowDate = null, CategoryType categoryType = CategoryType.Expense) =>
         new(
             AnId(),
-            new Cashflow(AnId(), effectiveDate, intervalType, frequency, amount, categoryType, lastPaidDate, lastCashflowDate),
+            new CashflowSchedule(AnId(), effectiveDate, intervalType, frequency, amount, categoryType, lastPaidDate, lastCashflowDate),
             description,
             categoryName,
             categoryColor,

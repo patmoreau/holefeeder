@@ -1,4 +1,5 @@
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
+using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.Service.Dashboard.Persistence;
 

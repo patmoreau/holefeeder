@@ -1,6 +1,7 @@
-using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
+using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.ServiceTests.Dashboard.Core.GetDashboardAccounts;
+
+namespace Holefeeder.ServiceTests.Shared.Core;
 
 public class AccountTypeTests
 {

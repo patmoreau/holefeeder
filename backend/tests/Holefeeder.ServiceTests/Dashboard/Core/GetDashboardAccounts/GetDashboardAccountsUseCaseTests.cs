@@ -93,10 +93,10 @@ public class GetDashboardAccountsUseCaseTests
         var amex = AnAccount("Amex", AccountType.CreditCard, openBalance: 0m, gains: 0m, expenses: 123.45m);
         _dashboard.Add(user, chequing);
         _dashboard.Add(user, amex);
-        _dashboard.Add(user, new Cashflow(chequing.Id, new DateOnly(2026, 11, 15), IntervalType.Monthly, 1, 1450m, CategoryType.Expense, null, null));
-        _dashboard.Add(user, new Cashflow(chequing.Id, new DateOnly(2026, 11, 13), IntervalType.Weekly, 2, 1000m, CategoryType.Gain, null, null));
-        _dashboard.Add(user, new Cashflow(chequing.Id, new DateOnly(2026, 12, 1), IntervalType.Monthly, 1, 500m, CategoryType.Expense, null, null));
-        _dashboard.Add(user, new Cashflow(amex.Id, new DateOnly(2026, 11, 20), IntervalType.OneTime, 1, 66.67m, CategoryType.Expense, null, null));
+        _dashboard.Add(user, new CashflowSchedule(chequing.Id, new DateOnly(2026, 11, 15), IntervalType.Monthly, 1, 1450m, CategoryType.Expense, null, null));
+        _dashboard.Add(user, new CashflowSchedule(chequing.Id, new DateOnly(2026, 11, 13), IntervalType.Weekly, 2, 1000m, CategoryType.Gain, null, null));
+        _dashboard.Add(user, new CashflowSchedule(chequing.Id, new DateOnly(2026, 12, 1), IntervalType.Monthly, 1, 500m, CategoryType.Expense, null, null));
+        _dashboard.Add(user, new CashflowSchedule(amex.Id, new DateOnly(2026, 11, 20), IntervalType.OneTime, 1, 66.67m, CategoryType.Expense, null, null));
 
         var result = await _useCase.HandleAsync(new GetDashboardAccountsRequest(user, Today), CancellationToken.None);
 
