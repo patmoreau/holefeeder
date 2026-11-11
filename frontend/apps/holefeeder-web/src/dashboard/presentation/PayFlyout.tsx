@@ -5,9 +5,8 @@ import { useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
 import type { PayChanges } from '../api/use-upcoming-actions';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
+import { isAmountInput } from './amount-input';
 import { currency, mediumDate } from './tone';
-
-const amountPattern = /^\d+(\.\d{1,2})?$/;
 
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
 
@@ -23,7 +22,7 @@ const PayForm = ({ flow, busy, onClose, onPay }: PayFormProps) => {
   const [date, setDate] = useState<string>(flow.date);
   const [updateRecurring, setUpdateRecurring] = useState(false);
 
-  const validAmount = amountPattern.test(amount);
+  const validAmount = isAmountInput(amount);
   const paid = validAmount ? Number(amount) : flow.amount;
   const changed = validAmount && paid !== flow.amount;
   const amountColor = flow.categoryType === 'gain' ? 'success.main' : 'error.main';
