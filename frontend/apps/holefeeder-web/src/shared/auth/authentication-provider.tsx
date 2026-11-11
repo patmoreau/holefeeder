@@ -2,6 +2,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { type AuthenticationState, type TokenInfo } from '@holefeeder/shared/core';
 import { type ReactNode } from 'react';
 import { AuthenticationContext } from './authentication-context';
+import { AuthorizationParams } from './authorization-params';
 
 const AuthStateProvider = ({ children }: { children: ReactNode }) => {
   const { user, isLoading, getAccessTokenSilently, loginWithRedirect, logout } = useAuth0();
@@ -42,10 +43,7 @@ export const AuthenticationProvider = ({ children }: { children: ReactNode }) =>
     clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
     useRefreshTokens
     cacheLocation="localstorage"
-    authorizationParams={{
-      redirect_uri: window.location.origin,
-      audience: import.meta.env.VITE_AUTH0_AUDIENCE as string,
-    }}
+    authorizationParams={AuthorizationParams.create(window.location.origin, import.meta.env.VITE_AUTH0_AUDIENCE as string)}
   >
     <AuthStateProvider>{children}</AuthStateProvider>
   </Auth0Provider>
