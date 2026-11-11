@@ -1,28 +1,11 @@
 import { tk } from '@holefeeder/shared/core';
-import { Box, Button, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { translate } from '@/shared/i18n/translate';
 import { AccountsSection } from './AccountsSection';
+import { ListSkeleton } from './ListSkeleton';
 import { SpendingHero } from './SpendingHero';
 
 const sectionLabel = { fontSize: 15, color: 'text.secondary' };
-
-const ListSkeleton = ({ testID, rows }: { testID: string; rows: number }) => (
-  <Paper elevation={0} data-testid={testID} sx={{ px: 2, borderRadius: 3 }}>
-    {Array.from({ length: rows }, (_, i) => (
-      <Stack key={i} direction="row" spacing={1.5} alignItems="center" sx={{ py: 1.5, borderTop: i ? 1 : 0, borderColor: 'divider' }}>
-        <Skeleton variant="rounded" width={20} height={18} />
-        <Stack sx={{ flexGrow: 1 }}>
-          <Skeleton width="30%" />
-          <Skeleton width="15%" />
-        </Stack>
-        <Stack alignItems="flex-end">
-          <Skeleton width={72} />
-          <Skeleton width={88} />
-        </Stack>
-      </Stack>
-    ))}
-  </Paper>
-);
 
 export const DashboardPage = () => (
   <Stack spacing={3.5} data-testid="dashboard-page">
