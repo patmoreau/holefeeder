@@ -78,6 +78,64 @@ public class DashboardInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
     }
 
     [Fact]
+    public async Task GetActiveCashflowsAsync_ReturnsCashflowsWithTheirLastPayment()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var rent = await budget.ACategoryAsync(CategoryType.Expense);
+        var salary = await budget.ACategoryAsync(CategoryType.Gain);
+        var rentFlow = await budget.ACashflowAsync(rent, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m);
+        await budget.ACashflowAsync(salary, new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m);
+        await budget.APaymentAsync(rentFlow, rent, new DateOnly(2026, 9, 30), new DateOnly(2026, 10, 1), 1450m);
+        await budget.APaymentAsync(rentFlow, rent, new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1), 1450m);
+
+        var result = await _repository.GetActiveCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo([
+            new Cashflow(new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+                new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 1)),
+            new Cashflow(new DateOnly(2026, 1, 2), IntervalType.Weekly, 2, 2000m, CategoryType.Gain, null, null)
+        ]);
+    }
+
+    [Fact]
+    public async Task GetActiveCashflowsAsync_LeavesOutInactiveCashflows()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        await budget.ACashflowAsync(await budget.ACategoryAsync(CategoryType.Expense), Today, IntervalType.Monthly, 1, 50m, inactive: true);
+
+        var result = await _repository.GetActiveCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetActiveCashflowsAsync_LeavesOutOtherUsersCashflows()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var otherBudget = new BudgetForTest(await AUser().SavedInDbAsync(database), database);
+        await otherBudget.ACashflowAsync(await otherBudget.ACategoryAsync(CategoryType.Expense), Today, IntervalType.Monthly, 1, 50m);
+
+        var result = await _repository.GetActiveCashflowsAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetActiveCashflowsAsync_Fails_WhenDatabaseIsUnreachable()
+    {
+        var repository = new DashboardInDatabase(database.BadDataSource, new LoggerForTest<DashboardInDatabase>(testOutputHelper));
+
+        var result = await repository.GetActiveCashflowsAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(DashboardErrors.ReadFailed);
+    }
+
+    [Fact]
     public async Task GetPeriodSettingsAsync_ReturnsDefault_WhenUserHasNoSettings()
     {
         var user = await AUser().SavedInDbAsync(database);

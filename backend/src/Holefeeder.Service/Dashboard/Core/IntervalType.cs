@@ -21,6 +21,9 @@ internal sealed record IntervalType
             ? intervalType
             : IntervalTypeErrors.Invalid;
 
+    public static IntervalType Valid(string value) =>
+        All.First(type => string.Equals(type.Name, value, StringComparison.OrdinalIgnoreCase));
+
     public DateOnly AddIteration(DateOnly date, int iteration) =>
         Name switch
         {

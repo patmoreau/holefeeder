@@ -37,7 +37,8 @@ public class GetDashboardSummaryUseCaseTests
                 ExpenseVariationPercentage: 140m,
                 NetFlow: 1799.1m,
                 CurrentGains: 3000.3m,
-                AverageExpenses: 500.5m));
+                AverageExpenses: 500.5m,
+                ProjectedNetFlow: 1799.1m));
     }
 
     [Fact]
@@ -45,7 +46,7 @@ public class GetDashboardSummaryUseCaseTests
     {
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(AUser(), Today), CancellationToken.None);
 
-        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 0, 0, 0));
+        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 0, 0, 0, 0));
     }
 
     [Fact]
@@ -56,7 +57,7 @@ public class GetDashboardSummaryUseCaseTests
 
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
-        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 1500m, 1500m, 0));
+        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 1500m, 1500m, 0, 1500m));
     }
 
     [Fact]
@@ -72,7 +73,7 @@ public class GetDashboardSummaryUseCaseTests
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
         result.Should().BeSuccessful()
-            .And.WithValue(new DashboardSummary(100m, -100m, -50m, -100m, 0, 200m));
+            .And.WithValue(new DashboardSummary(100m, -100m, -50m, -100m, 0, 200m, -100m));
     }
 
     [Fact]
@@ -88,7 +89,7 @@ public class GetDashboardSummaryUseCaseTests
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
         result.Should().BeSuccessful()
-            .And.WithValue(new DashboardSummary(30m, -20m, -40m, -30m, 0, 50m));
+            .And.WithValue(new DashboardSummary(30m, -20m, -40m, -30m, 0, 50m, -30m));
     }
 
     [Fact]
@@ -103,7 +104,7 @@ public class GetDashboardSummaryUseCaseTests
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
         result.Should().BeSuccessful()
-            .And.WithValue(new DashboardSummary(10.01m, 0.01m, 0.1m, -10.01m, 0, 10m));
+            .And.WithValue(new DashboardSummary(10.01m, 0.01m, 0.1m, -10.01m, 0, 10m, -10.01m));
     }
 
     [Fact]
@@ -114,7 +115,42 @@ public class GetDashboardSummaryUseCaseTests
 
         var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
 
-        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 0, 0, 0));
+        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 0, 0, 0, 0));
+    }
+
+    [Fact]
+    public async Task HandleAsync_ProjectsNetFlowWithUnpaidCashflowsUntilTheEndOfThePeriod()
+    {
+        var user = AUser();
+        _dashboard.Add(user, PeriodSettings.Valid(new DateOnly(2025, 1, 1), IntervalType.Monthly, 1));
+        _dashboard.Add(user, new DailyTotal(CategoryType.Expense, new DateOnly(2026, 11, 2), 150m));
+        _dashboard.Add(user, new DailyTotal(CategoryType.Gain, new DateOnly(2026, 11, 1), 1000m));
+        _dashboard.Add(user, new Cashflow(
+            new DateOnly(2026, 1, 15), IntervalType.Monthly, 1, 1450m, CategoryType.Expense,
+            LastPaidDate: new DateOnly(2026, 10, 14), LastCashflowDate: new DateOnly(2026, 10, 15)));
+        _dashboard.Add(user, new Cashflow(
+            new DateOnly(2026, 11, 6), IntervalType.Weekly, 1, 25m, CategoryType.Expense, null, null));
+        _dashboard.Add(user, new Cashflow(
+            new DateOnly(2026, 11, 13), IntervalType.Weekly, 2, 1000m, CategoryType.Gain, null, null));
+        _dashboard.Add(user, new Cashflow(
+            new DateOnly(2026, 12, 1), IntervalType.Monthly, 1, 500m, CategoryType.Expense, null, null));
+
+        var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.NetFlow.Should().Be(850m);
+        result.Value.ProjectedNetFlow.Should().Be(850m - 1450m - 4 * 25m + 2 * 1000m);
+    }
+
+    [Fact]
+    public async Task HandleAsync_IgnoresOtherUsersCashflows()
+    {
+        var user = AUser();
+        _dashboard.Add(AUser(), new Cashflow(Today, IntervalType.OneTime, 1, 300m, CategoryType.Expense, null, null));
+
+        var result = await _useCase.HandleAsync(new GetDashboardSummaryRequest(user, Today), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new DashboardSummary(0, 0, 0, 0, 0, 0, 0));
     }
 
     [Fact]

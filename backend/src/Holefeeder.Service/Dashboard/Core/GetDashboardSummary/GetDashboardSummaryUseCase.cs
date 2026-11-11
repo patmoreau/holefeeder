@@ -18,6 +18,12 @@ internal sealed class GetDashboardSummaryUseCase(IDashboard dashboard)
             return totalsResult.Error;
         }
 
+        var cashflowsResult = await dashboard.GetActiveCashflowsAsync(request.User, cancellationToken);
+        if (cashflowsResult.IsFailure)
+        {
+            return cashflowsResult.Error;
+        }
+
         var current = Period.Containing(request.Today, settingsResult.Value);
         var periods = PeriodsAnchoredOn(current, settingsResult.Value);
         var expenses = TotalsByPeriod(totalsResult.Value, CategoryType.Expense, periods);
@@ -28,14 +34,17 @@ internal sealed class GetDashboardSummaryUseCase(IDashboard dashboard)
         var averageExpenses = expenses.Count == 0 ? 0 : Math.Round(expenses.Values.Sum() / expenses.Count, 2);
         var expenseVariation = currentExpenses - averageExpenses;
         var expenseVariationPercentage = averageExpenses == 0 ? 0 : Math.Round(expenseVariation / averageExpenses * 100, 2);
+        var netFlow = currentGains - currentExpenses;
+        var projectedNetFlow = netFlow + cashflowsResult.Value.Sum(cashflow => cashflow.UpcomingVariation(current.End));
 
         return new DashboardSummary(
             currentExpenses,
             expenseVariation,
             expenseVariationPercentage,
-            currentGains - currentExpenses,
+            netFlow,
             currentGains,
-            averageExpenses);
+            averageExpenses,
+            projectedNetFlow);
     }
 
     private static PeriodSettings PeriodsAnchoredOn(Period current, PeriodSettings settings) =>

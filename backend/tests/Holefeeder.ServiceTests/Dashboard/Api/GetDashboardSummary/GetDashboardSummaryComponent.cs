@@ -31,6 +31,15 @@ public class GetDashboardSummaryComponent(ServerForTest server, ITestOutputHelpe
             .PlayAsync();
 
     [Fact]
+    public Task WhenTheUserHasAnUnpaidCashflow() =>
+        ScenarioRunner.Create("Getting the dashboard summary with a cashflow still to pay this period", _scenarioOutput)
+            .Given("a registered user with monthly settings", ARegisteredUserWithMonthlySettings)
+            .And("the user paid last month's rent but not this month's", TheUserPaidLastMonthsRentButNotThisMonths)
+            .When("the user gets the dashboard summary", GettingTheDashboardSummary)
+            .Then<HttpResponseMessage>("the rent is projected into the net flow", TheRentIsProjectedIntoTheNetFlow)
+            .PlayAsync();
+
+    [Fact]
     public Task WhenAnotherUserHasTransactions() =>
         ScenarioRunner.Create("Getting the dashboard summary while another user has transactions", _scenarioOutput)
             .Given("a registered user with monthly settings", ARegisteredUserWithMonthlySettings)
@@ -78,6 +87,15 @@ public class GetDashboardSummaryComponent(ServerForTest server, ITestOutputHelpe
         await budget.ATransactionAsync(transferIn, CurrentMonth, 7000.7m);
     }
 
+    private async Task TheUserPaidLastMonthsRentButNotThisMonths()
+    {
+        var budget = new BudgetForTest(_user, server.Database);
+        var rent = await budget.ACategoryAsync(CategoryType.Expense);
+        var lastMonth = CurrentMonth.AddMonths(-1);
+        var rentFlow = await budget.ACashflowAsync(rent, lastMonth, IntervalType.Monthly, 1, 1000m);
+        await budget.APaymentAsync(rentFlow, rent, lastMonth, lastMonth, 1000m);
+    }
+
     private async Task AnotherUserSpentThisMonth()
     {
         var otherUser = await AUser().SavedInDbAsync(server.Database);
@@ -92,10 +110,13 @@ public class GetDashboardSummaryComponent(ServerForTest server, ITestOutputHelpe
     }
 
     private static Task TheCurrentPeriodIsComparedWithTheAverage(Ensure<HttpResponseMessage> response) =>
-        TheSummaryIs(response, new SummaryJson(1201.2m, 700.7m, 140m, 1799.1m, 3000.3m, 500.5m));
+        TheSummaryIs(response, new SummaryJson(1201.2m, 700.7m, 140m, 1799.1m, 3000.3m, 500.5m, 1799.1m));
+
+    private static Task TheRentIsProjectedIntoTheNetFlow(Ensure<HttpResponseMessage> response) =>
+        TheSummaryIs(response, new SummaryJson(0, -1000m, -100m, 0, 0, 1000m, -1000m));
 
     private static Task AnEmptySummaryIsReturned(Ensure<HttpResponseMessage> response) =>
-        TheSummaryIs(response, new SummaryJson(0, 0, 0, 0, 0, 0));
+        TheSummaryIs(response, new SummaryJson(0, 0, 0, 0, 0, 0, 0));
 
     private static async Task TheSummaryIs(Ensure<HttpResponseMessage> response, SummaryJson expected)
     {
@@ -111,5 +132,6 @@ public class GetDashboardSummaryComponent(ServerForTest server, ITestOutputHelpe
         decimal ExpenseVariationPercentage,
         decimal NetFlow,
         decimal CurrentGains,
-        decimal AverageExpenses);
+        decimal AverageExpenses,
+        decimal ProjectedNetFlow);
 }

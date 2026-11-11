@@ -11,6 +11,7 @@ internal sealed class DashboardInMemory : IDashboard
 {
     private readonly Dictionary<Id, PeriodSettings> _settings = [];
     private readonly List<(Id UserId, DailyTotal Total)> _totals = [];
+    private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
     private ResultError? _failure;
 
     public Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
@@ -35,9 +36,22 @@ internal sealed class DashboardInMemory : IDashboard
         return Task.FromResult<Result<IReadOnlyList<DailyTotal>>>(totals.ToList());
     }
 
+    public Task<Result<IReadOnlyList<Cashflow>>> GetActiveCashflowsAsync(User user, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<IReadOnlyList<Cashflow>>>(_failure);
+        }
+
+        IReadOnlyList<Cashflow> cashflows = [.. _cashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
+        return Task.FromResult<Result<IReadOnlyList<Cashflow>>>(cashflows.ToList());
+    }
+
     public void Add(User user, PeriodSettings settings) => _settings[user.Id] = settings;
 
     public void Add(User user, DailyTotal total) => _totals.Add((user.Id, total));
+
+    public void Add(User user, Cashflow cashflow) => _cashflows.Add((user.Id, cashflow));
 
     public void FailWith(ResultError error) => _failure = error;
 }

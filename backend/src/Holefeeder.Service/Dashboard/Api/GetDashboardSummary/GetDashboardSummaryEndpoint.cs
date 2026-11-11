@@ -42,6 +42,7 @@ internal static class GetDashboardSummaryEndpoint
             summary.ExpenseVariationPercentage,
             summary.NetFlow,
             summary.CurrentGains,
-            summary.AverageExpenses));
+            summary.AverageExpenses,
+            summary.ProjectedNetFlow));
     }
 }

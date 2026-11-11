@@ -67,6 +67,29 @@ requested date range, reported as three data points.
 - Unlike the category/tag views, the summary includes **system categories** (e.g.
   transfers contribute to gains/expenses).
 
+## Dashboard Summary (backend — current period)
+
+`GET api/v2/dashboard/summary` — the current period's spending, net flow and projected
+net flow, for the dashboard header.
+
+**Rules:**
+
+- The current period is the one containing today, from the user's settings (effective
+  date, interval type, frequency); monthly from today when the user has none.
+- Only **non-system** categories are included.
+- Transactions are summed per category type per period, the periods stepping from the
+  start of the current one.
+- **`currentExpenses`** / **`currentGains`** — totals of the current period.
+- **`averageExpenses`** — mean of every period that has expenses, current and future
+  ones included, rounded to 2 decimals; **0** when there are none.
+- **`expenseVariation`** = current − average; **`expenseVariationPercentage`** = its
+  share of the average (2 decimals; **0** when the average is 0).
+- **`netFlow`** = current gains − current expenses.
+- **`projectedNetFlow`** = net flow + every unpaid occurrence of every active cashflow
+  up to the end of the period, gains added and expenses subtracted. Unpaid follows
+  [Cashflow — Upcoming Occurrences](cashflow.md#upcoming-occurrences), so overdue
+  occurrences count too. The mobile app computes the same figure locally.
+
 ---
 
 ## Category Spending (mobile insight)

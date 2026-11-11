@@ -6,4 +6,5 @@ internal sealed record DashboardSummaryResponse(
     decimal ExpenseVariationPercentage,
     decimal NetFlow,
     decimal CurrentGains,
-    decimal AverageExpenses);
+    decimal AverageExpenses,
+    decimal ProjectedNetFlow);

@@ -26,6 +26,18 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
         VALUES (@Id, @Date, @Amount, '', @AccountId, @CategoryId, '', @UserId);
         """;
 
+    private const string InsertCashflow =
+        """
+        INSERT INTO cashflows (id, effective_date, amount, interval_type, frequency, recurrence, description, account_id, category_id, inactive, tags, user_id)
+        VALUES (@Id, @EffectiveDate, @Amount, @IntervalType, @Frequency, 0, '', @AccountId, @CategoryId, @Inactive, '', @UserId);
+        """;
+
+    private const string InsertPayment =
+        """
+        INSERT INTO transactions (id, date, amount, description, account_id, category_id, cashflow_id, cashflow_date, tags, user_id)
+        VALUES (@Id, @Date, @Amount, '', @AccountId, @CategoryId, @CashflowId, @CashflowDate, '', @UserId);
+        """;
+
     private const string InsertSettings =
         "INSERT INTO store_items (id, code, data, user_id) VALUES (@Id, 'settings', @Data, @UserId);";
 
@@ -51,6 +63,38 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             UserId = user.Id.Value
         });
     }
+
+    public async Task<Guid> ACashflowAsync(
+        Guid categoryId, DateOnly effectiveDate, IntervalType intervalType, int frequency, decimal amount, bool inactive = false)
+    {
+        var id = Guid.NewGuid();
+        await ExecuteAsync(InsertCashflow, new
+        {
+            Id = id,
+            EffectiveDate = effectiveDate.ToDateTime(TimeOnly.MinValue),
+            Amount = amount,
+            IntervalType = intervalType.Name,
+            Frequency = frequency,
+            AccountId = await AccountAsync(),
+            CategoryId = categoryId,
+            Inactive = inactive,
+            UserId = user.Id.Value
+        });
+        return id;
+    }
+
+    public async Task APaymentAsync(Guid cashflowId, Guid categoryId, DateOnly date, DateOnly cashflowDate, decimal amount) =>
+        await ExecuteAsync(InsertPayment, new
+        {
+            Id = Guid.NewGuid(),
+            Date = date.ToDateTime(TimeOnly.MinValue),
+            Amount = amount,
+            AccountId = await AccountAsync(),
+            CategoryId = categoryId,
+            CashflowId = cashflowId,
+            CashflowDate = cashflowDate.ToDateTime(TimeOnly.MinValue),
+            UserId = user.Id.Value
+        });
 
     public Task SettingsAsync(string data) =>
         ExecuteAsync(InsertSettings, new { Id = Guid.NewGuid(), Data = data, UserId = user.Id.Value });
