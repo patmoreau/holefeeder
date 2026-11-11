@@ -1,6 +1,7 @@
 import { tk } from '@holefeeder/shared/core';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ContrastOutlinedIcon from '@mui/icons-material/ContrastOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import RepeatOutlinedIcon from '@mui/icons-material/RepeatOutlined';
@@ -14,9 +15,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  MenuItem,
   Paper,
+  Select,
   Stack,
   Typography,
+  useColorScheme,
 } from '@mui/material';
 import { Children, Fragment, type ReactNode } from 'react';
 import { useAuthentication } from '@/shared/auth/authentication-context';
@@ -63,6 +67,68 @@ const ValueRow = ({ icon, label, children }: { icon: ReactNode; label: string; c
     {children}
   </ListItem>
 );
+
+type SelectOption<T extends string> = { value: T; label: string };
+
+const SelectRow = <T extends string>({
+  testID,
+  icon,
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  testID: string;
+  icon: ReactNode;
+  label: string;
+  value: T;
+  options: SelectOption<T>[];
+  onChange: (value: T) => void;
+}) => (
+  <ValueRow icon={icon} label={label}>
+    <Select
+      size="small"
+      value={value}
+      onChange={(event) => onChange(event.target.value as T)}
+      inputProps={{ 'aria-label': label }}
+      SelectDisplayProps={{ 'data-testid': testID } as object}
+      sx={{ flexShrink: 0, fontSize: 15, bgcolor: 'background.default' }}
+    >
+      {options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </Select>
+  </ValueRow>
+);
+
+type ThemeMode = 'system' | 'light' | 'dark';
+
+const themeOptions: SelectOption<ThemeMode>[] = [
+  { value: 'system', label: translate(tk.displaySection.system) },
+  { value: 'light', label: translate(tk.displaySection.light) },
+  { value: 'dark', label: translate(tk.displaySection.dark) },
+];
+
+const DisplaySection = () => {
+  const { mode, setMode } = useColorScheme();
+
+  return (
+    <Section title={translate(tk.displaySection.title)} testID="settings-display">
+      <Rows>
+        <SelectRow
+          testID="settings-theme"
+          icon={<ContrastOutlinedIcon />}
+          label={translate(tk.displaySection.theme)}
+          value={mode ?? 'system'}
+          options={themeOptions}
+          onChange={setMode}
+        />
+      </Rows>
+    </Section>
+  );
+};
 
 const initialsOf = (name: string | undefined) =>
   (name ?? '')
@@ -115,6 +181,7 @@ export const SettingsPage = () => (
           <LinkRow testID="settings-tags" icon={<LocalOfferOutlinedIcon />} label={translate(tk.tagsSection.title)} />
         </Rows>
       </Section>
+      <DisplaySection />
       <Section title={translate(tk.settings.aboutSection.title)} testID="settings-about">
         <Rows>
           <ValueRow icon={<InfoOutlinedIcon />} label={translate(tk.settings.aboutSection.version)}>

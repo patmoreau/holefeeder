@@ -137,7 +137,8 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   multi-column grids stack into one column; nothing scrolls horizontally except
   deliberate scroll rows. Playwright specs cover the phone layout as well as desktop.
 - Theme (`src/shared/theme/theme-provider.tsx`) mirrors the mobile tokens — purple
-  primary, Inter Tight, light/dark following the system.
+  primary, Inter Tight, light/dark following the system unless Settings picks one (MUI
+  `setMode`, kept in the browser's localStorage).
 - Strings come from the shared `en` locale through `src/shared/i18n/translate.ts`.
 - Routes: `/welcome` is for signed-out users (`RequireAnonymous`); everything else sits
   behind `RequireAuthenticated` inside `AppShell` (navigation drawer): `/` (dashboard),

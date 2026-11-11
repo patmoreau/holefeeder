@@ -61,6 +61,30 @@ test.describe('Settings', () => {
     await expect(page.getByTestId('settings-version')).toHaveText('1.2.3 · abcdef12');
   });
 
+  test('ShouldFollowSystemThemeByDefault', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await signedIn(page);
+
+    await page.goto('/settings');
+
+    await expect(page.getByTestId('settings-theme')).toHaveText('System');
+    await expect(page.locator('html')).toHaveClass(/dark/);
+  });
+
+  test('ShouldKeepChosenThemeInTheBrowser', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await signedIn(page);
+    await page.goto('/settings');
+
+    await page.getByTestId('settings-theme').click();
+    await page.getByRole('option', { name: 'Dark' }).click();
+
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    await page.reload();
+    await expect(page.getByTestId('settings-theme')).toHaveText('Dark');
+    await expect(page.locator('html')).toHaveClass(/dark/);
+  });
+
   test.describe('on a phone', () => {
     test.use({ viewport: { width: 360, height: 780 } });
 
