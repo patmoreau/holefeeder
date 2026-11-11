@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
 
 namespace Holefeeder.ServiceTests.Dashboard.Core.GetDashboardSummary;

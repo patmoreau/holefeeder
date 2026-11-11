@@ -1,5 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
+using Holefeeder.Service.Shared.Core;
+
 namespace Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
 
 internal sealed class GetDashboardSummaryUseCase(IDashboard dashboard)

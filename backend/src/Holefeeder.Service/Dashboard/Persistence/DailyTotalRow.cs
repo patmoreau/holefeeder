@@ -1,5 +1,6 @@
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardSummary;
+using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.Service.Dashboard.Persistence;
 

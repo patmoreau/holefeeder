@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Service.Dashboard.Core;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
 using Holefeeder.ServiceTests.TestKit;

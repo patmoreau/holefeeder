@@ -2,6 +2,7 @@ using Dapper;
 
 using Holefeeder.Service.Dashboard.Core;
 using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.TestKit.Persistence;
 
