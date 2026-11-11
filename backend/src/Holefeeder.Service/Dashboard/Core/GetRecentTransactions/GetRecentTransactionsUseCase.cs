@@ -17,13 +17,12 @@ internal sealed class GetRecentTransactionsUseCase(IDashboard dashboard)
 
     private static DashboardTransaction ToDashboardTransaction(RecentTransaction transaction)
     {
-        var description = transaction.Description.Trim();
-        var hasDescription = description.Length > 0;
+        var title = FlowTitle.Of(transaction.Description, transaction.CategoryName);
 
         return new DashboardTransaction(
             transaction.Id,
-            hasDescription ? description : transaction.CategoryName,
-            hasDescription ? transaction.CategoryName : null,
+            title.Title,
+            title.Category,
             transaction.CategoryColor,
             transaction.Tags,
             transaction.Amount,
