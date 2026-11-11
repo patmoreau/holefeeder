@@ -1,23 +1,11 @@
-import { LocalFormatter, tk } from '@holefeeder/shared/core';
+import { tk } from '@holefeeder/shared/core';
 import { Alert, Box, Skeleton, Stack, Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { translate } from '@/shared/i18n/translate';
 import { useDashboardSummary } from '../api/use-dashboard-summary';
 import type { DashboardSummary } from '../domain/dashboard-summary';
-
-type Tone = 'positive' | 'negative' | 'neutral';
-
-const currency = (amount: number) => LocalFormatter.currency(amount, 'en-CA', 'CAD');
-
-const roundsToZero = (value: number) => Math.round(Math.abs(value) * 100) === 0;
-
-const toneOf = (value: number): Tone => {
-  if (roundsToZero(value)) return 'neutral';
-  return value > 0 ? 'positive' : 'negative';
-};
-
-const toneColor: Record<Tone, string> = { positive: 'success.main', negative: 'error.main', neutral: 'text.primary' };
+import { currency, roundsToZero, type Tone, toneColor, toneOf, unsignedCurrency } from './tone';
 
 const toneBackground: Record<Tone, string> = { positive: 'success.light', negative: 'error.light', neutral: 'background.paper' };
 
@@ -64,7 +52,7 @@ const TotalPill = ({ label, value, testID }: { label: string; value: number; tes
         data-testid={testID}
         sx={{ px: 1.25, py: 0.5, borderRadius: 9999, fontSize: 17, fontWeight: 600, color: toneColor[tone], bgcolor: toneBackground[tone] }}
       >
-        {currency(roundsToZero(value) ? 0 : Math.abs(value))}
+        {unsignedCurrency(value)}
       </Typography>
     </Stack>
   );
