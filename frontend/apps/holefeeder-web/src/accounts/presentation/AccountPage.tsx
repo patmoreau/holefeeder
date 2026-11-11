@@ -10,6 +10,7 @@ import { Link, useParams } from 'react-router';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { accountTypeKey } from '@/shared/domain/account-type';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
 import { EmptyList } from '@/shared/presentation/EmptyList';
@@ -50,7 +51,7 @@ const HeroPill = ({ label, testID, tone, children }: { label: string; testID: st
   </Stack>
 );
 
-const formatDate = (date: DateOnly) => LocalFormatter.date(date, today(), 'en-CA', translate);
+const formatDate = (date: DateOnly) => LocalFormatter.date(date, today(), Language.locale(), translate);
 
 const subtitleOf = (account: AccountDetail) =>
   [account.description, translate(accountTypeKey[account.type])].filter((part) => part.trim() !== '').join(' · ');

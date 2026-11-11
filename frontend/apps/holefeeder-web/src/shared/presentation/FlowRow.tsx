@@ -2,6 +2,7 @@ import { type DateOnly, LocalFormatter, today } from '@holefeeder/shared/core';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { Box, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { currency } from './tone';
 
@@ -65,7 +66,7 @@ export const FlowRow = ({ flow, testID, action }: { flow: Flow; testID: string; 
         {currency(flow.amount)}
       </Typography>
       <Typography data-testid={`${testID}-date`} sx={{ fontSize: 13, lineHeight: lineHeight, color: 'text.secondary' }}>
-        {LocalFormatter.date(flow.date, today(), 'en-CA', translate)}
+        {LocalFormatter.date(flow.date, today(), Language.locale(), translate)}
       </Typography>
     </Stack>
     {action}

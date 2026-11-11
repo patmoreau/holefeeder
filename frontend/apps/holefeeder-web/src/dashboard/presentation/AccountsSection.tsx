@@ -5,6 +5,7 @@ import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typogr
 import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardAccounts } from '../api/use-dashboard-accounts';
@@ -164,7 +165,7 @@ const AccountCard = ({ account }: { account: DashboardAccount }) => (
       <Stack data-testid="dashboard-account-updated">
         <Typography sx={smallLabel}>{translate(tk.accountCard.updated)}</Typography>
         <Typography sx={{ fontSize: 17, lineHeight: lineHeight }}>
-          {LocalFormatter.date(account.updated, today(), 'en-CA', translate)}
+          {LocalFormatter.date(account.updated, today(), Language.locale(), translate)}
         </Typography>
       </Stack>
       <Stack data-testid="dashboard-account-projected" alignItems="flex-end">
