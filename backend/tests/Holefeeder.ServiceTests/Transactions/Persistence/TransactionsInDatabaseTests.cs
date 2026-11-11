@@ -2,7 +2,6 @@ using Holefeeder.Service.Dashboard.Core.GetDashboardAccounts;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Transactions.Core;
 using Holefeeder.Service.Transactions.Persistence;
-using Holefeeder.ServiceTests.Dashboard.TestKit;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
 using Holefeeder.ServiceTests.Transactions.TestKit;

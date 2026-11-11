@@ -9,6 +9,7 @@ using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.Dashboard.TestKit;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Api;
+using Holefeeder.ServiceTests.TestKit.Persistence;
 
 namespace Holefeeder.ServiceTests.Dashboard.Api.GetDashboardSummary;
 
