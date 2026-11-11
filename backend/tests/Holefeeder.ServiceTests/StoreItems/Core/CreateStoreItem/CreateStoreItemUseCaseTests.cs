@@ -57,7 +57,7 @@ public class CreateStoreItemUseCaseTests
     {
         var result = await _useCase.HandleAsync(ACreateStoreItemRequest(User.NoUser), CancellationToken.None);
 
-        result.Should().BeFailure().And.WithError(StoreItemErrors.UserNotRegistered);
+        result.Should().BeFailure().And.WithError(UserErrors.NotRegistered);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class CreateStoreItemUseCaseTests
     [Fact]
     public void UserNotRegistered_DescribesTheRegistrationRule()
     {
-        StoreItemErrors.UserNotRegistered.Code.Should().Be("user-not-registered");
-        StoreItemErrors.UserNotRegistered.Description.Should().Be("User is not registered.");
+        UserErrors.NotRegistered.Code.Should().Be("user-not-registered");
+        UserErrors.NotRegistered.Description.Should().Be("User is not registered.");
     }
 }

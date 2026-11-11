@@ -77,7 +77,7 @@ public class CreateStoreItemComponent(ServerForTest server, ITestOutputHelper te
             .Given("an authenticated user who is not registered", AnUnregisteredUser)
             .When("the user creates a store item", () => CreatingTheStoreItem(ACode().Value, NewData))
             .Then<HttpResponseMessage>("the user is reported as not registered",
-                response => AProblemIsReturned(response, StoreItemErrors.UserNotRegistered.Description))
+                response => AProblemIsReturned(response, UserErrors.NotRegistered.Description))
             .PlayAsync();
 
     private async Task ARegisteredUser() =>

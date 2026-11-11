@@ -3,6 +3,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Shared.Core;
 
 using User = Holefeeder.Service.Support.Core.User;
+using UserErrors = Holefeeder.Service.Support.Core.UserErrors;
 
 namespace Holefeeder.Service.StoreItems.Core.CreateStoreItem;
 
@@ -12,7 +13,7 @@ internal sealed class CreateStoreItemUseCase(IStoreItems storeItems)
     {
         if (request.User == User.NoUser)
         {
-            return StoreItemErrors.UserNotRegistered;
+            return UserErrors.NotRegistered;
         }
 
         var itemResult = StoreItem.Create(Id.New(), request.Code, request.Data.Value);
