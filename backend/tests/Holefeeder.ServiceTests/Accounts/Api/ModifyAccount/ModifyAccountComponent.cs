@@ -62,6 +62,15 @@ public class ModifyAccountComponent(ServerForTest server, ITestOutputHelper test
             .Then<HttpResponseMessage>("the account is modified", TheAccountIsModified)
             .PlayAsync();
 
+    [Fact]
+    public Task WhenTheTypeAndOpenDateChange() =>
+        ScenarioRunner.Create("Changing the type and open date of an account", _scenarioOutput)
+            .Given("a registered user", ARegisteredUser)
+            .And("the user has a credit card", TheUserHasACreditCard)
+            .When("the user makes the credit card a credit line opened earlier", () => ChangingTheTypeAndOpenDate(_amex))
+            .Then<HttpResponseMessage>("the account has the new type and open date", TheAccountHasTheNewTypeAndOpenDate)
+            .PlayAsync();
+
     private async Task ARegisteredUser() =>
         _user = await AUser().SavedInDbAsync(server.Database);
 
@@ -84,6 +93,14 @@ public class ModifyAccountComponent(ServerForTest server, ITestOutputHelper test
         return await client.PostAsJsonAsync(
             new Uri("/api/v2/accounts/modify-account", UriKind.Relative),
             new { Id = id, Name = name, OpenBalance = 99.5m, Description = "Travel card" });
+    }
+
+    private async Task<HttpResponseMessage> ChangingTheTypeAndOpenDate(Guid id)
+    {
+        using var client = server.CreateClientFor(_user.IdentityObjectId);
+        return await client.PostAsJsonAsync(
+            new Uri("/api/v2/accounts/modify-account", UriKind.Relative),
+            new { Id = id, Name = "Amex", Type = "creditLine", OpenDate = "2024-06-15" });
     }
 
     private static async Task AValidationErrorIsReturnedOnTheId(Ensure<HttpResponseMessage> response)
@@ -122,6 +139,17 @@ public class ModifyAccountComponent(ServerForTest server, ITestOutputHelper test
         using var client = server.CreateClientFor(_user.IdentityObjectId);
         var account = await client.GetFromJsonAsync<ModifiedAccountJson>(new Uri($"/api/v2/accounts/{_amex}/detail", UriKind.Relative));
         account.Should().Be(new ModifiedAccountJson(_amex, "Amex Gold", "CreditCard", "Travel card", 99.5m, OpenDate, Favorite: true,
+            Inactive: false));
+    }
+
+    private async Task TheAccountHasTheNewTypeAndOpenDate(Ensure<HttpResponseMessage> response)
+    {
+        response.Should().BeValid();
+        response.Value.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        using var client = server.CreateClientFor(_user.IdentityObjectId);
+        var account = await client.GetFromJsonAsync<ModifiedAccountJson>(new Uri($"/api/v2/accounts/{_amex}/detail", UriKind.Relative));
+        account.Should().Be(new ModifiedAccountJson(_amex, "Amex", "CreditLine", string.Empty, 0m, new DateOnly(2024, 6, 15), Favorite: true,
             Inactive: false));
     }
 

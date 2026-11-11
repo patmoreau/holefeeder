@@ -126,21 +126,24 @@ Creates a new account for the current user.
 
 ## Modify Account
 
-Updates an existing account's name, opening balance, or description.
+Updates an existing account's name, type, opening date, opening balance, or description.
 
 **Happy path:**
 
 - Account ID and name are provided
 - Account exists and belongs to the current user
-- Name, opening balance, and description can be changed
+- Name, type, opening date, opening balance, and description can be changed; any of the
+  last four left out stays unchanged
 
 **Errors:**
 
-| Condition                                                | Error               |
-|----------------------------------------------------------|---------------------|
-| Account ID is empty                                      | rejected            |
-| Name is empty, whitespace, or longer than 100 characters | rejected            |
-| Account does not exist or belongs to another user        | `Account not found` |
+| Condition                                                | Error                 |
+|----------------------------------------------------------|-----------------------|
+| Account ID is empty                                      | rejected              |
+| Name is empty, whitespace, or longer than 100 characters | rejected              |
+| Type is not an account type                              | rejected              |
+| Opening date is not a date                               | rejected              |
+| Account does not exist or belongs to another user        | `Account not found`   |
 | Name belongs to another account of this user             | `Name already exists` |
 
 ---
@@ -192,4 +195,3 @@ Marks an account as inactive. Closed accounts are excluded from active workflows
 - A closed account cannot be reopened
 - An account with active cashflows cannot be closed — cancel or complete all cashflows first
 - Account names must be unique per user
-- Account type cannot be changed after opening

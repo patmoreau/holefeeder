@@ -13,6 +13,6 @@ internal sealed class ModifyAccountUseCase(IAccounts accounts)
         }
 
         return await accounts.SaveAsync(
-            request.User, account.Value.Modify(request.Name, request.OpenBalance, request.Description), cancellationToken);
+            request.User, account.Value.Modify(request.Name, request.Type, request.OpenDate, request.OpenBalance, request.Description), cancellationToken);
     }
 }

@@ -17,18 +17,19 @@ internal sealed record ModifyAccountRequestRaw([FromBody] ModifyAccountBody Body
         var body = raw.Body;
         var id = Id.Create(body.Id);
         var name = AccountName.Create(body.Name);
+        var type = body.Type is null ? null : (Result<AccountType>?)AccountType.Create(body.Type);
+        var openDate = body.OpenDate is null ? null : (Result<DateOnly>?)OpenDate.Parse(body.OpenDate);
         var openBalance = body.OpenBalance is null ? null : (Result<Money>?)Money.Create(body.OpenBalance);
 
         var validation = ResultAggregate.Create();
         AddFailure(validation, id);
         AddFailure(validation, name);
-        if (openBalance is { IsFailure: true } invalidOpenBalance)
-        {
-            validation.AddResult(invalidOpenBalance.Error);
-        }
+        AddFailure(validation, type);
+        AddFailure(validation, openDate);
+        AddFailure(validation, openBalance);
 
         return validation.OnSuccess<ModifyAccountRequest>(() => new ModifyAccountRequest(
-            user, id.Value, name.Value, openBalance?.Value, body.Description));
+            user, id.Value, name.Value, type?.Value, openDate?.Value, openBalance?.Value, body.Description));
     }
 
     private static void AddFailure<T>(ResultAggregate validation, Result<T> result)
@@ -36,6 +37,14 @@ internal sealed record ModifyAccountRequestRaw([FromBody] ModifyAccountBody Body
         if (result.IsFailure)
         {
             validation.AddResult(result.Error);
+        }
+    }
+
+    private static void AddFailure<T>(ResultAggregate validation, Result<T>? result)
+    {
+        if (result is { IsFailure: true } failure)
+        {
+            validation.AddResult(failure.Error);
         }
     }
 }

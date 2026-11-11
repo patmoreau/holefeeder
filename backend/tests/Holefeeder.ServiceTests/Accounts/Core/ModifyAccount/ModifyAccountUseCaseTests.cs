@@ -26,7 +26,7 @@ public class ModifyAccountUseCaseTests
         _accounts.Add(user, amex);
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), Money.Valid(99.5m), "Travel card"),
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), null, null, Money.Valid(99.5m), "Travel card"),
             CancellationToken.None);
 
         result.Should().BeSuccessful();
@@ -35,14 +35,30 @@ public class ModifyAccountUseCaseTests
     }
 
     [Fact]
-    public async Task HandleAsync_KeepsTheOpenBalanceAndDescription_WhenTheyAreMissing()
+    public async Task HandleAsync_ChangesTheTypeAndOpenDate()
     {
         var user = AUser();
         var amex = AnAccount("Amex") with { OpenBalance = 12m, Description = "Travel card" };
         _accounts.Add(user, amex);
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), null, null), CancellationToken.None);
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex"), AccountType.CreditLine, new DateOnly(2024, 6, 15), null, null),
+            CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _accounts.GetAccountTotalsAsync(user, amex.Id, CancellationToken.None)).Should().BeSuccessful().And.WithValue(
+            amex with { Type = AccountType.CreditLine, OpenDate = new DateOnly(2024, 6, 15) });
+    }
+
+    [Fact]
+    public async Task HandleAsync_KeepsTheTypeOpenDateOpenBalanceAndDescription_WhenTheyAreMissing()
+    {
+        var user = AUser();
+        var amex = AnAccount("Amex") with { OpenBalance = 12m, Description = "Travel card" };
+        _accounts.Add(user, amex);
+
+        var result = await _useCase.HandleAsync(
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), null, null, null, null), CancellationToken.None);
 
         result.Should().BeSuccessful();
         (await _accounts.GetAccountTotalsAsync(user, amex.Id, CancellationToken.None)).Should().BeSuccessful().And.WithValue(
@@ -57,7 +73,7 @@ public class ModifyAccountUseCaseTests
         _accounts.Add(user, amex);
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex"), Money.Valid(5m), null), CancellationToken.None);
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex"), null, null, Money.Valid(5m), null), CancellationToken.None);
 
         result.Should().BeSuccessful();
     }
@@ -71,7 +87,7 @@ public class ModifyAccountUseCaseTests
         _accounts.Add(user, AnAccount("Visa"));
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Visa"), null, null), CancellationToken.None);
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Visa"), null, null, null, null), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(AccountNameErrors.AlreadyExists);
     }
@@ -83,7 +99,7 @@ public class ModifyAccountUseCaseTests
         _accounts.Add(AUser(), amex);
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(AUser(), amex.Id, AccountName.Valid("Mine now"), null, null), CancellationToken.None);
+            new ModifyAccountRequest(AUser(), amex.Id, AccountName.Valid("Mine now"), null, null, null, null), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
     }
@@ -98,7 +114,7 @@ public class ModifyAccountUseCaseTests
         _accounts.FailWith(error);
 
         var result = await _useCase.HandleAsync(
-            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), null, null), CancellationToken.None);
+            new ModifyAccountRequest(user, amex.Id, AccountName.Valid("Amex Gold"), null, null, null, null), CancellationToken.None);
 
         result.Should().BeFailure().And.WithError(error);
     }
