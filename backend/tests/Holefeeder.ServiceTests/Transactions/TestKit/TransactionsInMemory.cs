@@ -13,6 +13,7 @@ internal sealed class TransactionsInMemory : ITransactions
     private readonly List<(Id UserId, TagUsage Usage)> _tagUsages = [];
     private readonly List<(Id UserId, Transaction Transaction)> _transactions = [];
     private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
+    private readonly Dictionary<Id, TransferCategories> _transferCategories = [];
     private ResultError? _failure;
 
     public void Add(User user, TransactionAccount account) => _accounts.Add((user.Id, account));
@@ -26,6 +27,8 @@ internal sealed class TransactionsInMemory : ITransactions
 
     public IReadOnlyList<Cashflow> CashflowsOf(User user) =>
         [.. _cashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
+
+    public void Add(User user, TransferCategories categories) => _transferCategories[user.Id] = categories;
 
     public void FailWith(ResultError error) => _failure = error;
 
@@ -43,6 +46,10 @@ internal sealed class TransactionsInMemory : ITransactions
 
     public Task<Result<TransactionCategory>> GetActiveCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
         Task.FromResult(One(_categories.Where(entry => entry.UserId == user.Id && entry.Category.Id == id).Select(entry => entry.Category), TransactionErrors.CategoryNotFound));
+
+    public Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken) =>
+        Task.FromResult(One(_transferCategories.TryGetValue(user.Id, out var categories) ? [categories] : Array.Empty<TransferCategories>(),
+            TransactionErrors.TransferCategoriesNotFound));
 
     public Task<Result<Nothing>> SaveAsync(User user, IReadOnlyList<Transaction> transactions, Cashflow? cashflow, CancellationToken cancellationToken)
     {

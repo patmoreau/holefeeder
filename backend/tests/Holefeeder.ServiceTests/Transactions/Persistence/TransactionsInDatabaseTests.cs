@@ -214,4 +214,30 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         (await database.CashflowsInDbAsync(account.Value)).Should().BeEmpty();
         (await database.TransactionsInDbAsync(account.Value)).Should().BeEmpty();
     }
+
+    [Fact]
+    public async Task GetTransferCategoriesAsync_FindsTheUsersTransferCategories()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var transferOut = await budget.ACategoryAsync(CategoryType.Expense, system: true, name: "Transfer Out");
+        var transferIn = await budget.ACategoryAsync(CategoryType.Gain, system: true, name: "Transfer In");
+        var otherUser = await AUser().SavedInDbAsync(database);
+        await new BudgetForTest(otherUser, database).ACategoryAsync(CategoryType.Expense, system: true, name: "Transfer Out");
+
+        var result = await _repository.GetTransferCategoriesAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new TransferCategories(Id.Valid(transferOut), Id.Valid(transferIn)));
+    }
+
+    [Fact]
+    public async Task GetTransferCategoriesAsync_Fails_WhenOneIsMissing()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        await new BudgetForTest(user, database).ACategoryAsync(CategoryType.Expense, system: true, name: "Transfer Out");
+
+        var result = await _repository.GetTransferCategoriesAsync(user, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionErrors.TransferCategoriesNotFound);
+    }
 }

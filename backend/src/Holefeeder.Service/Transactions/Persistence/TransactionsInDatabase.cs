@@ -13,6 +13,9 @@ namespace Holefeeder.Service.Transactions.Persistence;
 
 internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource, ILogger<TransactionsInDatabase> logger) : ITransactions
 {
+    private const string TransferOutName = "Transfer Out";
+    private const string TransferInName = "Transfer In";
+
     public Task<Result<IReadOnlyList<TransactionAccount>>> GetOpenAccountsAsync(User user, CancellationToken cancellationToken) =>
         QueryAsync<AccountRow, TransactionAccount>(
             """
@@ -58,6 +61,35 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
             WHERE id = @Id AND user_id = @UserId AND NOT system AND NOT inactive;
             """,
             user, id, row => row.ToCategory(), TransactionErrors.CategoryNotFound, cancellationToken);
+
+    public async Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT id, name
+                           FROM categories
+                           WHERE user_id = @UserId AND system AND name IN (@TransferOut, @TransferIn);
+                           """;
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var rows = (await connection.QueryAsync<(Guid Id, string Name)>(new CommandDefinition(sql,
+                new DynamicParameters(new { UserId = user.Id.Value, TransferOut = TransferOutName, TransferIn = TransferInName }),
+                cancellationToken: cancellationToken))).ToList();
+
+            var transferOut = rows.Where(row => row.Name == TransferOutName).Select(row => (Guid?)row.Id).FirstOrDefault();
+            var transferIn = rows.Where(row => row.Name == TransferInName).Select(row => (Guid?)row.Id).FirstOrDefault();
+            return transferOut is { } outId && transferIn is { } inId
+                ? new TransferCategories(Id.Valid(outId), Id.Valid(inId))
+                : TransactionErrors.TransferCategoriesNotFound;
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return TransactionsErrors.ReadFailed;
+        }
+    }
 
     public async Task<Result<Nothing>> SaveAsync(
         User user, IReadOnlyList<Transaction> transactions, Cashflow? cashflow, CancellationToken cancellationToken)
