@@ -25,9 +25,26 @@ export type BillsDueTotalProps = {
   amounts: BillsDueAmountProps[];
 };
 
+export type BillsDueFigureProps = {
+  label: string;
+  text: string;
+};
+
+export type BillsDueProjectedProps = BillsDueFigureProps & {
+  tone: 'positive' | 'negative' | 'neutral';
+};
+
 export type BillsDueWidgetProps =
   | { state: 'signed-out'; logo?: string; message: string }
-  | { state: 'ready'; logo?: string; title: string; pastDue: BillsDueTotalProps; dueToday: BillsDueTotalProps };
+  | {
+      state: 'ready';
+      logo?: string;
+      title: string;
+      pastDue: BillsDueTotalProps;
+      dueToday: BillsDueTotalProps;
+      spending: BillsDueFigureProps;
+      projected: BillsDueProjectedProps;
+    };
 
 const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironment) => {
   'widget';
@@ -90,10 +107,30 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
       </VStack>
     );
 
+    const toneColor = { positive: PlatformColor('systemGreen'), negative: PlatformColor('systemRed'), neutral: PlatformColor('label') };
+    const figure = (value: BillsDueFigureProps, color: ReturnType<typeof PlatformColor>) => (
+      <HStack alignment="firstTextBaseline" spacing={6} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
+        <Text modifiers={[font({ textStyle: 'caption' }), foregroundStyle(secondary), lineLimit(1), minimumScaleFactor(0.7)]}>
+          {value.label}
+        </Text>
+        <Text
+          modifiers={[
+            font({ textStyle: 'subheadline', weight: 'semibold' }),
+            monospacedDigit(),
+            foregroundStyle(color),
+            lineLimit(1),
+            minimumScaleFactor(0.6),
+          ]}
+        >
+          {value.text}
+        </Text>
+      </HStack>
+    );
+
     return (
       <VStack
         alignment="leading"
-        spacing={10}
+        spacing={8}
         modifiers={[background, link, frame({ maxWidth: 10000, maxHeight: 10000, alignment: 'leading' })]}
       >
         <HStack spacing={8}>
@@ -104,6 +141,11 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
           {column(props.pastDue, pastDueColor)}
           <Divider />
           {column(props.dueToday, orange)}
+        </HStack>
+        <Divider />
+        <HStack alignment="top" spacing={33}>
+          {figure(props.spending, PlatformColor('label'))}
+          {figure(props.projected, toneColor[props.projected.tone])}
         </HStack>
       </VStack>
     );

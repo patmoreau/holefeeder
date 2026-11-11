@@ -15,3 +15,8 @@ export type BillsDueEntry = {
   date: DateOnly;
   summary: BillsDueSummary;
 };
+
+export type BillsDuePeriod = {
+  spending: number;
+  projected: number;
+};

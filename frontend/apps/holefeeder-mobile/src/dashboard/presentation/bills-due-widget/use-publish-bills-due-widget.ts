@@ -5,6 +5,7 @@ import { BillsDueWidgetPublisher } from '@/dashboard/core/publish-bills-due-widg
 import { PublishBillsDueWidgetUseCase } from '@/dashboard/core/publish-bills-due-widget/publish-bills-due-widget-use-case';
 import { useUpcomingFlows } from '@/flows/presentation/upcoming/use-upcoming-flows';
 import { useAuth } from '@/shared/auth/core/use-auth';
+import { useSummary } from '@/summary/presentation/core/use-summary';
 
 const logger = Logger.create('usePublishBillsDueWidget');
 
@@ -14,6 +15,7 @@ const logFailure = (result: Result<void>) => {
 
 export const usePublishBillsDueWidget = (publisher: BillsDueWidgetPublisher) => {
   const upcomingFlows = useUpcomingFlows();
+  const summary = useSummary();
   const { user } = useAuth();
   const useCase = useMemo(() => PublishBillsDueWidgetUseCase(publisher), [publisher]);
   const [activations, setActivations] = useState(0);
@@ -32,8 +34,8 @@ export const usePublishBillsDueWidget = (publisher: BillsDueWidgetPublisher) => 
       useCase.clear().then(logFailure);
       return;
     }
-    if (!upcomingFlows.isSuccess) return;
+    if (!upcomingFlows.isSuccess || !summary.isSuccess) return;
 
-    useCase.execute(upcomingFlows.value, today()).then(logFailure);
-  }, [user, upcomingFlows, useCase, activations]);
+    useCase.execute(upcomingFlows.value, summary.value, today()).then(logFailure);
+  }, [user, upcomingFlows, summary, useCase, activations]);
 };

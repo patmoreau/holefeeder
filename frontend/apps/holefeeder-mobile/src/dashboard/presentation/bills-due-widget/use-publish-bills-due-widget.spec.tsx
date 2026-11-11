@@ -93,6 +93,15 @@ describe('usePublishBillsDueWidget', () => {
     await waitFor(() => expect(lastSummary()?.dueToday).toEqual({ count: 2, expenses: Money.valid(25), gains: Money.valid(1500) }));
   });
 
+  it('should publish the spending and the projected net flow for the period', async () => {
+    await aTransaction({ accountId: account.id, categoryId: category.id, date: today(), amount: Money.valid(40) }).store(db);
+    await aBill(today(), 10).store(db);
+
+    await createHook();
+
+    await waitFor(() => expect(publisher.periods().at(-1)).toEqual({ spending: 40, projected: -50 }));
+  });
+
   it('should not count a bill already paid', async () => {
     const paid = aBill(today());
     await paid.store(db);

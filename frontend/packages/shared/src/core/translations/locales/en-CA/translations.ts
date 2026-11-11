@@ -219,6 +219,8 @@ export const en = {
     title: 'Bills',
     pastDue: 'Past due',
     dueToday: 'Due today',
+    spending: 'Spending',
+    projected: 'Projected',
     openApp: 'Open Holefeeder to see your bills',
   },
   errors: {

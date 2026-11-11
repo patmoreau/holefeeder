@@ -1,4 +1,4 @@
-import { LocalFormatter, Money } from '@holefeeder/shared/core';
+import { LocalFormatter } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePublishBillsDueWidget } from '@/dashboard/presentation/bills-due-widget/use-publish-bills-due-widget';
@@ -21,11 +21,13 @@ export const BillsDueWidgetPublisher = () => {
   const publisher = useMemo(
     () =>
       BillsDueWidgetPublisherWithExpoWidgets({
-        formatAmount: (amount: Money) => LocalFormatter.currency(amount, currentLocale, currencyCode),
+        formatAmount: (amount: number) => LocalFormatter.currency(amount, currentLocale, currencyCode),
         labels: {
           title: t(tk.billsDueWidget.title),
           pastDue: t(tk.billsDueWidget.pastDue),
           dueToday: t(tk.billsDueWidget.dueToday),
+          spending: t(tk.billsDueWidget.spending),
+          projected: t(tk.billsDueWidget.projected),
           openApp: t(tk.billsDueWidget.openApp),
         },
         logo: logo,

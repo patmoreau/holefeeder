@@ -1,11 +1,12 @@
 import { Logger, Money, Result, withDate } from '@holefeeder/shared/core';
-import { BillsDueEntry, BillsDueTotal } from '@/dashboard/core/publish-bills-due-widget/bills-due-summary';
+import { BillsDueEntry, BillsDuePeriod, BillsDueTotal } from '@/dashboard/core/publish-bills-due-widget/bills-due-summary';
 import { BillsDueWidgetPublisher, BillsDueWidgetPublisherErrors } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
 import BillsDueWidget, { BillsDueAmountProps, BillsDueTotalProps, BillsDueWidgetProps } from '@/dashboard/widgets/BillsDueWidget';
+import { displayAmount } from '@/shared/presentation/core/display-amount';
 
 export type BillsDueWidgetDisplay = {
-  formatAmount: (amount: Money) => string;
-  labels: { title: string; pastDue: string; dueToday: string; openApp: string };
+  formatAmount: (amount: number) => string;
+  labels: { title: string; pastDue: string; dueToday: string; spending: string; projected: string; openApp: string };
   logo?: string;
 };
 
@@ -25,13 +26,18 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
     amounts: amountsProps(total),
   });
 
-  const entryProps = (entry: BillsDueEntry): BillsDueWidgetProps => ({
-    state: 'ready',
-    logo: display.logo,
-    title: display.labels.title,
-    pastDue: totalProps(entry.summary.pastDue, display.labels.pastDue),
-    dueToday: totalProps(entry.summary.dueToday, display.labels.dueToday),
-  });
+  const entryProps = (entry: BillsDueEntry, period: BillsDuePeriod): BillsDueWidgetProps => {
+    const projected = displayAmount(period.projected);
+    return {
+      state: 'ready',
+      logo: display.logo,
+      title: display.labels.title,
+      pastDue: totalProps(entry.summary.pastDue, display.labels.pastDue),
+      dueToday: totalProps(entry.summary.dueToday, display.labels.dueToday),
+      spending: { label: display.labels.spending, text: display.formatAmount(period.spending) },
+      projected: { label: display.labels.projected, text: display.formatAmount(projected.amount), tone: projected.tone },
+    };
+  };
 
   const update = (apply: () => void): Result<void> => {
     try {
@@ -45,8 +51,10 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
     }
   };
 
-  const publish = async (entries: BillsDueEntry[]): Promise<Result<void>> =>
-    update(() => BillsDueWidget.updateTimeline(entries.map((entry) => ({ date: withDate(entry.date).toDate(), props: entryProps(entry) }))));
+  const publish = async (entries: BillsDueEntry[], period: BillsDuePeriod): Promise<Result<void>> =>
+    update(() =>
+      BillsDueWidget.updateTimeline(entries.map((entry) => ({ date: withDate(entry.date).toDate(), props: entryProps(entry, period) })))
+    );
 
   const clear = async (): Promise<Result<void>> =>
     update(() => BillsDueWidget.updateSnapshot({ state: 'signed-out', logo: display.logo, message: display.labels.openApp }));

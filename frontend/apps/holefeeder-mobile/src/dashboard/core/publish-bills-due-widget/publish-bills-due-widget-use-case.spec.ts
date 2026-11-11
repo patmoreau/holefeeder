@@ -3,6 +3,7 @@ import { BillsDueWidgetPublisherInMemory } from '@/dashboard/core/__tests__/bill
 import { PublishBillsDueWidgetUseCase } from '@/dashboard/core/publish-bills-due-widget/publish-bills-due-widget-use-case';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
 import { CategoryTypes } from '@/shared/core/category-type';
+import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 const today = DateOnly.valid('2026-11-10');
 const inDays = (days: number) => withDate(today).addDays(days).toDateOnly();
@@ -18,26 +19,26 @@ describe('PublishBillsDueWidgetUseCase', () => {
   });
 
   it('should publish an empty summary for today when no bills are upcoming', async () => {
-    const result = await useCase.execute([], today);
+    const result = await useCase.execute([], NO_SUMMARY, today);
 
     expect(result).toBeSuccessWithValue(undefined);
     expect(publisher.published()).toEqual([[{ date: today, summary: { pastDue: total(0, 0), dueToday: total(0, 0) } }]]);
   });
 
   it('should count a bill due today', async () => {
-    await useCase.execute([aUpcomingFlow({ date: today, amount: Money.valid(12.5) })], today);
+    await useCase.execute([aUpcomingFlow({ date: today, amount: Money.valid(12.5) })], NO_SUMMARY, today);
 
     expect(publisher.published()[0][0]).toEqual({ date: today, summary: { pastDue: total(0, 0), dueToday: total(1, 12.5) } });
   });
 
   it('should count an overdue bill as past due', async () => {
-    await useCase.execute([aUpcomingFlow({ date: inDays(-1), amount: Money.valid(20) })], today);
+    await useCase.execute([aUpcomingFlow({ date: inDays(-1), amount: Money.valid(20) })], NO_SUMMARY, today);
 
     expect(publisher.published()[0][0]).toEqual({ date: today, summary: { pastDue: total(1, 20), dueToday: total(0, 0) } });
   });
 
   it('should publish entries for the day a future bill is due and the day after', async () => {
-    await useCase.execute([aUpcomingFlow({ date: inDays(3), amount: Money.valid(10) })], today);
+    await useCase.execute([aUpcomingFlow({ date: inDays(3), amount: Money.valid(10) })], NO_SUMMARY, today);
 
     expect(publisher.published()).toEqual([
       [
@@ -55,6 +56,7 @@ describe('PublishBillsDueWidgetUseCase', () => {
         aUpcomingFlow({ date: inDays(1), amount: Money.valid(3) }),
         aUpcomingFlow({ date: inDays(-2), amount: Money.valid(7) }),
       ],
+      NO_SUMMARY,
       today
     );
 
@@ -65,7 +67,7 @@ describe('PublishBillsDueWidgetUseCase', () => {
   it('should keep only the earliest 64 entries', async () => {
     const flows = Array.from({ length: 70 }, (_, index) => aUpcomingFlow({ date: inDays(2 * (70 - index)) }));
 
-    await useCase.execute(flows, today);
+    await useCase.execute(flows, NO_SUMMARY, today);
 
     const entries = publisher.published()[0];
     expect(entries).toHaveLength(64);
@@ -76,7 +78,7 @@ describe('PublishBillsDueWidgetUseCase', () => {
   it('should fail when the widget cannot be published', async () => {
     publisher.isFailing(['error']);
 
-    const result = await useCase.execute([aUpcomingFlow({ date: today })], today);
+    const result = await useCase.execute([aUpcomingFlow({ date: today })], NO_SUMMARY, today);
 
     expect(result).toBeFailureWithErrors(['error']);
   });
@@ -95,9 +97,18 @@ describe('PublishBillsDueWidgetUseCase', () => {
         aUpcomingFlow({ date: inDays(-1), amount: Money.valid(12), categoryType: CategoryTypes.expense }),
         aUpcomingFlow({ date: today, amount: Money.valid(100), categoryType: CategoryTypes.gain }),
       ],
+      NO_SUMMARY,
       today
     );
 
     expect(publisher.published()[0][0]).toEqual({ date: today, summary: { pastDue: total(2, 12, 30), dueToday: total(1, 0, 100) } });
+  });
+
+  it('should publish the spending and the projected net flow for the period', async () => {
+    const summary = { ...NO_SUMMARY, currentSpending: 1847.63, netFlow: { amount: 400, isOver: true } };
+
+    await useCase.execute([aUpcomingFlow({ date: today, amount: Money.valid(82.08), categoryType: CategoryTypes.expense })], summary, today);
+
+    expect(publisher.periods()).toEqual([{ spending: 1847.63, projected: 317.92 }]);
   });
 });

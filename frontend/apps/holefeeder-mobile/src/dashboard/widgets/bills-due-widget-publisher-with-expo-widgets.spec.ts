@@ -7,8 +7,8 @@ const updateTimeline = jest.mocked(BillsDueWidget.updateTimeline);
 const updateSnapshot = jest.mocked(BillsDueWidget.updateSnapshot);
 
 const display = {
-  formatAmount: (amount: Money) => `$${amount}`,
-  labels: { title: 'Bills', pastDue: 'Past due', dueToday: 'Due today', openApp: 'Open the app' },
+  formatAmount: (amount: number) => `$${amount}`,
+  labels: { title: 'Bills', pastDue: 'Past due', dueToday: 'Due today', spending: 'Spending', projected: 'Projected', openApp: 'Open the app' },
   logo: 'file:///group/widgets/widget-tile.png',
 };
 const total = (count: number, expenses: number, gains: number) => ({
@@ -17,12 +17,13 @@ const total = (count: number, expenses: number, gains: number) => ({
   gains: Money.valid(gains),
 });
 const today = DateOnly.valid('2026-11-10');
+const period = { spending: 1847.63, projected: 317.92 };
 
 describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
   let publisher: ReturnType<typeof BillsDueWidgetPublisherWithExpoWidgets>;
 
   const publishedPastDue = async (pastDue: ReturnType<typeof total>) => {
-    await publisher.publish([{ date: today, summary: { pastDue: pastDue, dueToday: total(0, 0, 0) } }]);
+    await publisher.publish([{ date: today, summary: { pastDue: pastDue, dueToday: total(0, 0, 0) } }], period);
     const props = updateTimeline.mock.calls[0][0][0].props;
     return props.state === 'ready' ? props.pastDue : undefined;
   };
@@ -33,10 +34,13 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
   });
 
   it('should publish one timeline entry at the start of each day', async () => {
-    const result = await publisher.publish([
-      { date: DateOnly.valid('2026-11-10'), summary: { pastDue: total(1, 20, 0), dueToday: total(2, 12.5, 0) } },
-      { date: DateOnly.valid('2026-11-11'), summary: { pastDue: total(3, 32.5, 0), dueToday: total(0, 0, 0) } },
-    ]);
+    const result = await publisher.publish(
+      [
+        { date: DateOnly.valid('2026-11-10'), summary: { pastDue: total(1, 20, 0), dueToday: total(2, 12.5, 0) } },
+        { date: DateOnly.valid('2026-11-11'), summary: { pastDue: total(3, 32.5, 0), dueToday: total(0, 0, 0) } },
+      ],
+      period
+    );
 
     expect(result).toBeSuccessWithValue(undefined);
     expect(updateTimeline).toHaveBeenCalledWith([
@@ -48,6 +52,8 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
           title: 'Bills',
           pastDue: { count: 1, label: 'Past due', amounts: [{ direction: 'down', text: '$20' }] },
           dueToday: { count: 2, label: 'Due today', amounts: [{ direction: 'down', text: '$12.5' }] },
+          spending: { label: 'Spending', text: '$1847.63' },
+          projected: { label: 'Projected', text: '$317.92', tone: 'positive' },
         },
       },
       {
@@ -58,6 +64,8 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
           title: 'Bills',
           pastDue: { count: 3, label: 'Past due', amounts: [{ direction: 'down', text: '$32.5' }] },
           dueToday: { count: 0, label: 'Due today', amounts: [{ direction: 'none', text: '$0' }] },
+          spending: { label: 'Spending', text: '$1847.63' },
+          projected: { label: 'Projected', text: '$317.92', tone: 'positive' },
         },
       },
     ]);
@@ -78,6 +86,16 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
     expect((await publishedPastDue(total(0, 0, 0)))?.amounts).toEqual([{ direction: 'none', text: '$0' }]);
   });
 
+  it('should show a projected shortfall as an amount with a negative tone', async () => {
+    await publisher.publish([{ date: today, summary: { pastDue: total(0, 0, 0), dueToday: total(0, 0, 0) } }], {
+      spending: 0,
+      projected: -120.5,
+    });
+
+    const props = updateTimeline.mock.calls[0][0][0].props;
+    expect(props.state === 'ready' && props.projected).toEqual({ label: 'Projected', text: '$120.5', tone: 'negative' });
+  });
+
   it('should show the signed out message when cleared', async () => {
     const result = await publisher.clear();
 
@@ -94,7 +112,7 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
       throw new Error('no app group');
     });
 
-    const result = await publisher.publish([{ date: today, summary: { pastDue: total(0, 0, 0), dueToday: total(0, 0, 0) } }]);
+    const result = await publisher.publish([{ date: today, summary: { pastDue: total(0, 0, 0), dueToday: total(0, 0, 0) } }], period);
 
     expect(result).toBeFailureWithErrors([BillsDueWidgetPublisherErrors.publishFailed]);
   });

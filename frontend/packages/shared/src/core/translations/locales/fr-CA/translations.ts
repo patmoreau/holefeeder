@@ -221,6 +221,8 @@ export const fr: TranslationStructure = {
     title: 'Factures',
     pastDue: 'En retard',
     dueToday: "Dues aujourd'hui",
+    spending: 'Dépenses',
+    projected: 'Projeté',
     openApp: 'Ouvrez Holefeeder pour voir vos factures',
   },
   errors: {

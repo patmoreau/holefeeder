@@ -48,10 +48,20 @@ switches entries on its own, so the widget stays right while the app is not runn
    the same height, and the content is centred vertically in the widget.
 9. **`dashboard/widgets/` ring.** Holds the widget component and the adapter implementing
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
+   It sits in `dashboard/`, a composition slice, because the widget also reads the
+   `summary/` read-model (decision 10).
+10. **Spending and projected footer (medium, Penpot proposal 23A, 2026-11-10).**
+    Under the bills, one line each: current spending for the budget period and the
+    projected net flow, the same figures as the dashboard header (`projectedNetFlow`).
+    Projected is green when positive, red when negative. Both are the same in every
+    timeline entry: they change with transactions, not the calendar, so they refresh
+    when the app publishes again.
 
 ## Limitations
 
 - Upcoming flows only reach the end of the current budget period, so entries past it
   miss bills not yet listed. Opening the app refreshes the timeline. The badge has
   the same limitation.
+- Spending and projected only refresh when the app runs. A transaction synced while
+  the app is closed shows up the next time it is opened.
 - The widget itself is not covered by Maestro: it lives on the home screen.

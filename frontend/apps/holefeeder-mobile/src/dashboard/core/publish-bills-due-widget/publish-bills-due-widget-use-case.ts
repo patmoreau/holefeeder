@@ -1,6 +1,8 @@
 import { DateOnly, Money, Result, withDate } from '@holefeeder/shared/core';
+import { projectedNetFlow } from '@/dashboard/core/projected-net-flow/projected-net-flow';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
+import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { BillsDueEntry, BillsDueTotal } from './bills-due-summary';
 import { BillsDueWidgetPublisher } from './bills-due-widget-publisher';
 
@@ -16,7 +18,7 @@ const totalOf = (flows: UpcomingFlow[]): BillsDueTotal => ({
 });
 
 export const PublishBillsDueWidgetUseCase = (publisher: BillsDueWidgetPublisher) => {
-  const execute = async (flows: UpcomingFlow[], today: DateOnly): Promise<Result<void>> => {
+  const execute = async (flows: UpcomingFlow[], summary: ComputedSummary, today: DateOnly): Promise<Result<void>> => {
     const entryOn = (date: DateOnly): BillsDueEntry => ({
       date: date,
       summary: {
@@ -26,7 +28,10 @@ export const PublishBillsDueWidgetUseCase = (publisher: BillsDueWidgetPublisher)
     });
     const futureDates = flows.flatMap((flow) => [flow.date, withDate(flow.date).addDays(1).toDateOnly()]).filter((date) => date > today);
 
-    return await publisher.publish([today, ...[...new Set(futureDates)].sort()].slice(0, MAX_ENTRIES).map(entryOn));
+    return await publisher.publish([today, ...[...new Set(futureDates)].sort()].slice(0, MAX_ENTRIES).map(entryOn), {
+      spending: summary.currentSpending,
+      projected: projectedNetFlow(summary, flows),
+    });
   };
 
   const clear = async (): Promise<Result<void>> => await publisher.clear();
