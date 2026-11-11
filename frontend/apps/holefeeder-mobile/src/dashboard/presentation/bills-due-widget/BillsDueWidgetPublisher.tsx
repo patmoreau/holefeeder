@@ -14,7 +14,6 @@ export const BillsDueWidgetPublisher = ({ logo }: { logo?: string }) => {
       BillsDueWidgetPublisherWithExpoWidgets({
         formatAmount: (amount: number) => LocalFormatter.currency(amount, currentLocale, currencyCode),
         labels: {
-          title: t(tk.billsDueWidget.title),
           pastDue: t(tk.billsDueWidget.pastDue),
           dueToday: t(tk.billsDueWidget.dueToday),
           spending: t(tk.billsDueWidget.spending),

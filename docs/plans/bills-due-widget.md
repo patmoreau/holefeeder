@@ -50,10 +50,12 @@ switches entries on its own, so the widget stays right while the app is not runn
    `BillsDueWidgetPublisher`. It may import `@expo/ui` directly, like `modules/`.
    It sits in `dashboard/`, a composition slice, because the widget also reads the
    `summary/` read-model (decision 10).
-10. **Spending and projected footer (medium, Penpot proposal 23A, 2026-11-10).**
-    Under the bills, one line each: current spending for the budget period and the
-    projected net flow, the same figures as the dashboard header (`projectedNetFlow`).
-    Projected is green when positive, red when negative. Both are the same in every
+10. **Spending and projected footer (medium, Penpot proposals 23A and 24A,
+    2026-11-10).** Under the bills: current spending for the budget period and the
+    projected net flow, the same figures as the dashboard header (`projectedNetFlow`),
+    each with its label above a 17pt value. Projected is green when positive, red
+    when negative. To make room (24A), the medium widget drops the "Bills" title: the
+    logo tile sits where the past-due count's label indent is, beside "Past due". Both are the same in every
     timeline entry: they change with transactions, not the calendar, so they refresh
     when the app publishes again.
 11. **Spending widget (small, Penpot proposal 23C, 2026-11-10).** A second widget,

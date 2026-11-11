@@ -1,4 +1,4 @@
-import { Divider, HStack, Image, Spacer, Text, VStack } from '@expo/ui/swift-ui';
+import { Divider, HStack, Image, Spacer, Text, VStack, ZStack } from '@expo/ui/swift-ui';
 import {
   containerBackground,
   font,
@@ -39,7 +39,6 @@ export type BillsDueWidgetProps =
   | {
       state: 'ready';
       logo?: string;
-      title: string;
       pastDue: BillsDueTotalProps;
       dueToday: BillsDueTotalProps;
       spending: BillsDueFigureProps;
@@ -76,12 +75,15 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
   );
 
   if (environment.widgetFamily === 'systemMedium') {
-    const column = (value: BillsDueTotalProps, color: string | ReturnType<typeof PlatformColor>) => (
+    const column = (value: BillsDueTotalProps, color: string | ReturnType<typeof PlatformColor>, logo: boolean) => (
       <VStack alignment="leading" spacing={2} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
-        <HStack spacing={10}>
-          <Text modifiers={[font({ size: 40, weight: 'bold', design: 'rounded' }), monospacedDigit(), hidden(), frame({ height: 0 })]}>
-            {value.count}
-          </Text>
+        <HStack spacing={10} modifiers={[frame({ height: 24 })]}>
+          <ZStack alignment="leading">
+            <Text modifiers={[font({ size: 40, weight: 'bold', design: 'rounded' }), monospacedDigit(), hidden(), frame({ height: 0 })]}>
+              {value.count}
+            </Text>
+            {logo ? tile(24) : null}
+          </ZStack>
           {label(value)}
         </HStack>
         <HStack spacing={10}>
@@ -106,25 +108,18 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
         </HStack>
       </VStack>
     );
-
     const toneColor = { positive: PlatformColor('systemGreen'), negative: PlatformColor('systemRed'), neutral: PlatformColor('label') };
     const figure = (value: BillsDueFigureProps, color: ReturnType<typeof PlatformColor>) => (
-      <HStack alignment="firstTextBaseline" spacing={6} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
+      <VStack alignment="leading" spacing={0} modifiers={[frame({ maxWidth: 10000, alignment: 'leading' })]}>
         <Text modifiers={[font({ textStyle: 'caption' }), foregroundStyle(secondary), lineLimit(1), minimumScaleFactor(0.7)]}>
           {value.label}
         </Text>
         <Text
-          modifiers={[
-            font({ textStyle: 'subheadline', weight: 'semibold' }),
-            monospacedDigit(),
-            foregroundStyle(color),
-            lineLimit(1),
-            minimumScaleFactor(0.6),
-          ]}
+          modifiers={[font({ size: 17, weight: 'semibold' }), monospacedDigit(), foregroundStyle(color), lineLimit(1), minimumScaleFactor(0.6)]}
         >
           {value.text}
         </Text>
-      </HStack>
+      </VStack>
     );
 
     return (
@@ -133,14 +128,10 @@ const BillsDueWidget = (props: BillsDueWidgetProps, environment: WidgetEnvironme
         spacing={8}
         modifiers={[background, link, frame({ maxWidth: 10000, maxHeight: 10000, alignment: 'leading' })]}
       >
-        <HStack spacing={8}>
-          {tile(24)}
-          <Text modifiers={[font({ textStyle: 'subheadline', weight: 'semibold' })]}>{props.title}</Text>
-        </HStack>
         <HStack alignment="center" spacing={16}>
-          {column(props.pastDue, pastDueColor)}
+          {column(props.pastDue, pastDueColor, true)}
           <Divider />
-          {column(props.dueToday, orange)}
+          {column(props.dueToday, orange, false)}
         </HStack>
         <Divider />
         <HStack alignment="top" spacing={33}>

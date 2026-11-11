@@ -6,7 +6,7 @@ import { displayAmount } from '@/shared/presentation/core/display-amount';
 
 export type BillsDueWidgetDisplay = {
   formatAmount: (amount: number) => string;
-  labels: { title: string; pastDue: string; dueToday: string; spending: string; projected: string; openApp: string };
+  labels: { pastDue: string; dueToday: string; spending: string; projected: string; openApp: string };
   logo?: string;
 };
 
@@ -31,7 +31,6 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
     return {
       state: 'ready',
       logo: display.logo,
-      title: display.labels.title,
       pastDue: totalProps(entry.summary.pastDue, display.labels.pastDue),
       dueToday: totalProps(entry.summary.dueToday, display.labels.dueToday),
       spending: { label: display.labels.spending, text: display.formatAmount(period.spending) },

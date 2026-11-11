@@ -8,7 +8,7 @@ const updateSnapshot = jest.mocked(BillsDueWidget.updateSnapshot);
 
 const display = {
   formatAmount: (amount: number) => `$${amount}`,
-  labels: { title: 'Bills', pastDue: 'Past due', dueToday: 'Due today', spending: 'Spending', projected: 'Projected', openApp: 'Open the app' },
+  labels: { pastDue: 'Past due', dueToday: 'Due today', spending: 'Spending', projected: 'Projected', openApp: 'Open the app' },
   logo: 'file:///group/widgets/widget-tile.png',
 };
 const total = (count: number, expenses: number, gains: number) => ({
@@ -49,7 +49,6 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
         props: {
           state: 'ready',
           logo: 'file:///group/widgets/widget-tile.png',
-          title: 'Bills',
           pastDue: { count: 1, label: 'Past due', amounts: [{ direction: 'down', text: '$20' }] },
           dueToday: { count: 2, label: 'Due today', amounts: [{ direction: 'down', text: '$12.5' }] },
           spending: { label: 'Spending', text: '$1847.63' },
@@ -61,7 +60,6 @@ describe('BillsDueWidgetPublisherWithExpoWidgets', () => {
         props: {
           state: 'ready',
           logo: 'file:///group/widgets/widget-tile.png',
-          title: 'Bills',
           pastDue: { count: 3, label: 'Past due', amounts: [{ direction: 'down', text: '$32.5' }] },
           dueToday: { count: 0, label: 'Due today', amounts: [{ direction: 'none', text: '$0' }] },
           spending: { label: 'Spending', text: '$1847.63' },

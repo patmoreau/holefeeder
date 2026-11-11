@@ -218,7 +218,6 @@ export const fr: TranslationStructure = {
     openSettings: 'Ouvrir les Réglages',
   },
   billsDueWidget: {
-    title: 'Factures',
     pastDue: 'En retard',
     dueToday: "Dues aujourd'hui",
     spending: 'Dépenses',
