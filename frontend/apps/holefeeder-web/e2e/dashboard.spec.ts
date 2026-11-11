@@ -68,6 +68,7 @@ test.describe('Dashboard', () => {
     await page.route('**/gateway/api/v2/dashboard/summary', () => new Promise<void>(() => {}));
     await page.route('**/gateway/api/v2/dashboard/accounts', () => new Promise<void>(() => {}));
     await page.route('**/gateway/api/v2/dashboard/transactions', () => new Promise<void>(() => {}));
+    await page.route('**/gateway/api/v2/dashboard/upcoming', () => new Promise<void>(() => {}));
 
     await page.goto('/');
 
