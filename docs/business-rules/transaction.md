@@ -1,7 +1,7 @@
 ---
 path: docs/business-rules/transaction.md
 domain: transaction
-last-reviewed: 2026-10
+last-reviewed: 2026-11
 ---
 
 # Transaction Rules
@@ -51,6 +51,14 @@ Records a one-off purchase or expense on an account.
 | CategoryId is empty                                | rejected             |
 | Account does not exist or belongs to another user  | `Account not found`  |
 | Category does not exist or belongs to another user | `Category not found` |
+| Amount is negative or has more than two decimals   | rejected             |
+| Repeat frequency is 0 or less                      | rejected             |
+| Repeat interval type is unknown                    | rejected             |
+
+**Repeating a purchase** creates its cashflow in the same step: same account, category,
+amount, description and tags, with the chosen start date, interval type and frequency,
+and no limit on occurrences. The purchase is recorded as the payment of that cashflow's
+occurrence on the purchase date. Nothing is saved when any part fails.
 
 ---
 
@@ -119,8 +127,32 @@ Moves money between two accounts. Creates two transactions atomically.
 | ToAccountId is empty                                                        | rejected             |
 | Source account does not exist, is inactive, or belongs to another user      | `Account not found`  |
 | Destination account does not exist, is inactive, or belongs to another user | `Account not found`  |
+| Source and destination are the same account                                 | `Same account`       |
 | "Transfer Out" category not found for the user                              | `Category not found` |
 | "Transfer In" category not found for the user                               | `Category not found` |
+
+---
+
+## New Transaction Form
+
+The form for a new expense, income or transfer starts from these defaults:
+
+- **Type** — expense
+- **Date** — today
+- **Amount** — zero
+- **Account** — the first open account, favourites first and then by name; a transfer goes
+  to the next account in that order, when there is one
+- **Category** — the first active category of the type picked (expense or income), never a
+  system category, favourites first and then by name; switching the type switches the
+  category to the first of the new type
+- **Repeat** — off; when turned on, it starts on the transaction date, every 1 month
+
+The form cannot be used without an open account or a non-system expense category; it points
+the user to create one instead.
+
+**Tag suggestions** list every tag the user has used, most relevant first: tags used with the
+chosen category come first, by how often they were used with it, then the others by how
+often they were used overall, then alphabetically. Tags already picked are not suggested.
 
 ---
 
