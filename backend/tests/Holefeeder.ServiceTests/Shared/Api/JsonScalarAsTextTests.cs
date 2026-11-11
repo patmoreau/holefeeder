@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Holefeeder.Service.Accounts.Api;
+using Holefeeder.Service.Shared.Api;
 
-namespace Holefeeder.ServiceTests.Accounts.Api;
+namespace Holefeeder.ServiceTests.Shared.Api;
 
 public class JsonScalarAsTextTests
 {

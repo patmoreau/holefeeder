@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Holefeeder.Service.Accounts.Api;
+namespace Holefeeder.Service.Shared.Api;
 
 internal sealed class JsonScalarAsText : JsonConverter<string?>
 {
