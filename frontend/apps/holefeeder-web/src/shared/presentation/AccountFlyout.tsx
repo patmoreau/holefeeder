@@ -29,10 +29,12 @@ export type AccountDraft = {
   openBalance: number;
   description: string;
   favorite: boolean;
+  inactive: boolean;
 };
 
 type AccountFormProps = {
   testID: string;
+  showInactive?: boolean;
   submitLabel: string;
   initial: AccountDraft;
   onSubmit: (draft: AccountDraft) => Promise<Result<unknown>>;
@@ -40,13 +42,51 @@ type AccountFormProps = {
   onClose: () => void;
 };
 
-const AccountForm = ({ testID, submitLabel, initial, onSubmit, onSaved, onClose }: AccountFormProps) => {
+const ToggleRow = ({
+  testID,
+  label,
+  hint,
+  checked,
+  disabled,
+  onChange,
+}: {
+  testID: string;
+  label: string;
+  hint: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange: (checked: boolean) => void;
+}) => (
+  <Box sx={{ px: 2, py: 1, borderRadius: 3, bgcolor: 'background.default' }}>
+    <FormControlLabel
+      labelPlacement="start"
+      disabled={disabled}
+      sx={{ m: 0, width: '100%', justifyContent: 'space-between', gap: 2 }}
+      control={
+        <Switch
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          slotProps={{ input: { 'data-testid': testID } as object }}
+        />
+      }
+      label={
+        <Stack>
+          <Typography sx={{ fontSize: 15 }}>{label}</Typography>
+          <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>{hint}</Typography>
+        </Stack>
+      }
+    />
+  </Box>
+);
+
+const AccountForm = ({ testID, showInactive, submitLabel, initial, onSubmit, onSaved, onClose }: AccountFormProps) => {
   const [openBalance, setOpenBalance] = useState(initial.openBalance.toFixed(2));
   const [name, setName] = useState(initial.name);
   const [type, setType] = useState<AccountType>(initial.type);
   const [openDate, setOpenDate] = useState(initial.openDate);
   const [description, setDescription] = useState(initial.description);
   const [favorite, setFavorite] = useState(initial.favorite);
+  const [inactive, setInactive] = useState(initial.inactive);
   const [nameTouched, setNameTouched] = useState(false);
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -66,6 +106,7 @@ const AccountForm = ({ testID, submitLabel, initial, onSubmit, onSaved, onClose 
       openBalance: Number(openBalance),
       description: description,
       favorite: favorite,
+      inactive: inactive,
     });
     setBusy(false);
     if (!result.isSuccess) {
@@ -128,25 +169,23 @@ const AccountForm = ({ testID, submitLabel, initial, onSubmit, onSaved, onClose 
           onChange={(event) => setDescription(event.target.value)}
           slotProps={{ inputLabel: { shrink: true }, htmlInput: { 'data-testid': `${testID}-description` } }}
         />
-        <Box sx={{ px: 2, py: 1, borderRadius: 3, bgcolor: 'background.default' }}>
-          <FormControlLabel
-            labelPlacement="start"
-            sx={{ m: 0, width: '100%', justifyContent: 'space-between', gap: 2 }}
-            control={
-              <Switch
-                checked={favorite}
-                onChange={(event) => setFavorite(event.target.checked)}
-                slotProps={{ input: { 'data-testid': `${testID}-favorite` } as object }}
-              />
-            }
-            label={
-              <Stack>
-                <Typography sx={{ fontSize: 15 }}>{translate(tk.accountEdit.favorite)}</Typography>
-                <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>{translate(tk.accountEdit.favoriteHint)}</Typography>
-              </Stack>
-            }
+        <ToggleRow
+          testID={`${testID}-favorite`}
+          label={translate(tk.accountEdit.favorite)}
+          hint={translate(tk.accountEdit.favoriteHint)}
+          checked={favorite}
+          onChange={setFavorite}
+        />
+        {showInactive && (
+          <ToggleRow
+            testID={`${testID}-inactive`}
+            label={translate(tk.accountEdit.inactive)}
+            hint={translate(tk.accountEdit.inactiveHint)}
+            checked={inactive}
+            disabled={initial.inactive}
+            onChange={setInactive}
           />
-        </Box>
+        )}
         {failed && (
           <Alert severity="error" data-testid={`${testID}-error`}>
             {translate(tk.accountEdit.failed)}

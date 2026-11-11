@@ -1,6 +1,7 @@
 import { type AsyncResult, type DateOnly, LocalFormatter, tk, today } from '@holefeeder/shared/core';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Alert, Box, Button, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
@@ -19,6 +20,7 @@ import { type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/present
 import { useAccountDetail } from '../api/use-account-detail';
 import { useAccountTransactions } from '../api/use-account-transactions';
 import type { AccountDetail } from '../domain/account-detail';
+import { EditAccountFlyout } from './EditAccountFlyout';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
@@ -102,7 +104,28 @@ const Hero = ({ account }: { account: AccountDetail }) => (
   </Stack>
 );
 
-const Header = ({ name, onNewTransaction }: { name: ReactNode; onNewTransaction: () => void }) => (
+const actionButtonSx = {
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  fontSize: 15,
+  minWidth: { xs: 40, md: 64 },
+  width: { xs: 40, md: 'auto' },
+  height: { xs: 40, md: 'auto' },
+  borderRadius: { xs: '50%', md: 1 },
+  p: { xs: 0, md: 1.25 },
+  pl: { md: 2 },
+  pr: { md: 2.25 },
+};
+
+const ActionLabel = ({ children }: { children: ReactNode }) => (
+  <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
+    {children}
+  </Box>
+);
+
+type HeaderProps = { name: ReactNode; onEdit?: () => void; onNewTransaction: () => void };
+
+const Header = ({ name, onEdit, onNewTransaction }: HeaderProps) => (
   <Stack direction="row" alignItems="center" spacing={1.5}>
     <IconButton
       component={Link}
@@ -114,29 +137,22 @@ const Header = ({ name, onNewTransaction }: { name: ReactNode; onNewTransaction:
       <ChevronLeftIcon />
     </IconButton>
     <Box sx={{ flexGrow: 1, minWidth: 0 }}>{name}</Box>
+    {onEdit && (
+      <Button variant="outlined" data-testid="account-edit" aria-label={translate(tk.accountCard.edit)} onClick={onEdit} sx={actionButtonSx}>
+        <EditOutlinedIcon fontSize="small" sx={{ mr: { md: 1 } }} />
+        <ActionLabel>{translate(tk.accountCard.edit)}</ActionLabel>
+      </Button>
+    )}
     <Button
       variant="contained"
       disableElevation
       data-testid="account-new-transaction"
       aria-label={translate(tk.dashboard.newTransaction)}
       onClick={onNewTransaction}
-      sx={{
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        fontSize: 15,
-        minWidth: { xs: 40, md: 64 },
-        width: { xs: 40, md: 'auto' },
-        height: { xs: 40, md: 'auto' },
-        borderRadius: { xs: '50%', md: 1 },
-        p: { xs: 0, md: 1.25 },
-        pl: { md: 2 },
-        pr: { md: 2.25 },
-      }}
+      sx={actionButtonSx}
     >
       <AddIcon fontSize="small" sx={{ mr: { md: 1 } }} />
-      <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
-        {translate(tk.dashboard.newTransaction)}
-      </Box>
+      <ActionLabel>{translate(tk.dashboard.newTransaction)}</ActionLabel>
     </Button>
   </Stack>
 );
@@ -220,6 +236,7 @@ const TransactionsContent = ({
 const AccountContent = ({ accountId, notify }: { accountId: string; notify: Notify }) => {
   const account = useAccountDetail(accountId);
   const [creating, setCreating] = useState(false);
+  const [editing, setEditing] = useState(false);
   const accountName = account.isSuccess ? account.value.name : '';
 
   return (
@@ -227,6 +244,7 @@ const AccountContent = ({ accountId, notify }: { accountId: string; notify: Noti
       <Stack spacing={3.5} data-testid="account-page">
         <Header
           name={account.isLoading ? <Skeleton width="40%" height={42} /> : <AccountName name={accountName} />}
+          onEdit={account.isSuccess ? () => setEditing(true) : undefined}
           onNewTransaction={() => setCreating(true)}
         />
         <AccountSummary account={account} />
@@ -236,6 +254,7 @@ const AccountContent = ({ accountId, notify }: { accountId: string; notify: Noti
         </Stack>
       </Stack>
       <NewTransactionFlyout open={creating} accountId={accountId} onClose={() => setCreating(false)} notify={notify} />
+      {account.isSuccess && <EditAccountFlyout open={editing} account={account.value} onClose={() => setEditing(false)} notify={notify} />}
     </>
   );
 };
