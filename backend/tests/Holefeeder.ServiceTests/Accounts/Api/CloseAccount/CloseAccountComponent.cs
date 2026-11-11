@@ -52,6 +52,16 @@ public class CloseAccountComponent(ServerForTest server, ITestOutputHelper testO
             .PlayAsync();
 
     [Fact]
+    public Task WhenTheAccountHasAnActiveCashflow() =>
+        ScenarioRunner.Create("Closing an account with an active cashflow", _scenarioOutput)
+            .Given("a registered user", ARegisteredUser)
+            .And("the user has a credit card", () => TheUserHasACreditCard(inactive: false))
+            .And("the credit card has an active cashflow", TheCreditCardHasAnActiveCashflow)
+            .When("the user closes the credit card", () => ClosingTheAccount(_amex))
+            .Then<HttpResponseMessage>("the account is reported as having active cashflows", TheAccountIsReportedAsHavingActiveCashflows)
+            .PlayAsync();
+
+    [Fact]
     public Task WhenTheAccountIsOpen() =>
         ScenarioRunner.Create("Closing an account", _scenarioOutput)
             .Given("a registered user", ARegisteredUser)
@@ -65,6 +75,13 @@ public class CloseAccountComponent(ServerForTest server, ITestOutputHelper testO
 
     private async Task TheUserHasACreditCard(bool inactive) =>
         _amex = await new BudgetForTest(_user, server.Database).AnAccountAsync("Amex", AccountType.CreditCard, inactive: inactive);
+
+    private async Task TheCreditCardHasAnActiveCashflow()
+    {
+        var budget = new BudgetForTest(_user, server.Database);
+        var subscriptions = await budget.ACategoryAsync(CategoryType.Expense);
+        await budget.ACashflowAsync(subscriptions, new DateOnly(2026, 11, 20), IntervalType.Monthly, 1, 15m, accountId: _amex);
+    }
 
     private async Task AnotherUserHasACreditCard()
     {
@@ -104,6 +121,15 @@ public class CloseAccountComponent(ServerForTest server, ITestOutputHelper testO
         var problem = await response.Value.Content.ReadFromJsonAsync<ProblemDetails>();
         problem.Should().NotBeNull();
         problem.Detail.Should().Be(AccountClosingErrors.AlreadyClosed.Description);
+    }
+
+    private static async Task TheAccountIsReportedAsHavingActiveCashflows(Ensure<HttpResponseMessage> response)
+    {
+        response.Should().BeValid();
+        response.Value.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await response.Value.Content.ReadFromJsonAsync<ProblemDetails>();
+        problem.Should().NotBeNull();
+        problem.Detail.Should().Be(AccountClosingErrors.HasActiveCashflows.Description);
     }
 
     private async Task TheAccountIsClosed(Ensure<HttpResponseMessage> response)

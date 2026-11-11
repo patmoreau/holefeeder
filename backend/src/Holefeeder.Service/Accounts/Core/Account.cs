@@ -29,13 +29,23 @@ internal sealed record Account(
 
     public Account SetFavorite(bool isFavorite) => this with { Favorite = isFavorite };
 
-    public Result<Account> Close() =>
-        Inactive ? AccountClosingErrors.AlreadyClosed : this with { Inactive = true };
+    public Result<Account> Close(IReadOnlyCollection<CashflowSchedule> activeCashflows)
+    {
+        if (Inactive)
+        {
+            return AccountClosingErrors.AlreadyClosed;
+        }
+
+        return activeCashflows.Count > 0 ? AccountClosingErrors.HasActiveCashflows : this with { Inactive = true };
+    }
 }
 
 internal static class AccountClosingErrors
 {
     public const string CodeAlreadyClosed = "account-already-closed";
+    public const string CodeHasActiveCashflows = "account-has-active-cashflows";
 
     public static ResultError AlreadyClosed => new(CodeAlreadyClosed, "Account already closed.");
+
+    public static ResultError HasActiveCashflows => new(CodeHasActiveCashflows, "Account has active cashflows.");
 }

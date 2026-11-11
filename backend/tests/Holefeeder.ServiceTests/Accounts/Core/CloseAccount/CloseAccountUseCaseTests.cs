@@ -42,6 +42,37 @@ public class CloseAccountUseCaseTests
     }
 
     [Fact]
+    public async Task HandleAsync_FailsWithHasActiveCashflows_WhenTheAccountHasAnActiveCashflow()
+    {
+        var user = AUser();
+        var amex = AnAccount();
+        _accounts.Add(user, amex);
+        _accounts.Add(user, new CashflowSchedule(amex.Id, new DateOnly(2026, 11, 20), IntervalType.Monthly, 1, 66.67m, CategoryType.Expense,
+            null, null));
+
+        var result = await _useCase.HandleAsync(new CloseAccountRequest(user, amex.Id), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(AccountClosingErrors.HasActiveCashflows);
+        (await _accounts.GetAccountTotalsAsync(user, amex.Id, CancellationToken.None)).Value.Inactive.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task HandleAsync_ClosesTheAccount_WhenOnlyAnotherAccountHasAnActiveCashflow()
+    {
+        var user = AUser();
+        var amex = AnAccount();
+        var visa = AnAccount() with { Name = "Visa" };
+        _accounts.Add(user, amex);
+        _accounts.Add(user, visa);
+        _accounts.Add(user, new CashflowSchedule(visa.Id, new DateOnly(2026, 11, 20), IntervalType.Monthly, 1, 66.67m, CategoryType.Expense,
+            null, null));
+
+        var result = await _useCase.HandleAsync(new CloseAccountRequest(user, amex.Id), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+    }
+
+    [Fact]
     public async Task HandleAsync_ReturnsNotFound_WhenTheAccountBelongsToAnotherUser()
     {
         var amex = AnAccount();
@@ -71,6 +102,13 @@ public class CloseAccountUseCaseTests
     {
         AccountClosingErrors.AlreadyClosed.Code.Should().Be("account-already-closed");
         AccountClosingErrors.AlreadyClosed.Description.Should().Be("Account already closed.");
+    }
+
+    [Fact]
+    public void HasActiveCashflows_DescribesTheClosingRule()
+    {
+        AccountClosingErrors.HasActiveCashflows.Code.Should().Be("account-has-active-cashflows");
+        AccountClosingErrors.HasActiveCashflows.Description.Should().Be("Account has active cashflows.");
     }
 
     private static AccountTotals AnAccount() =>

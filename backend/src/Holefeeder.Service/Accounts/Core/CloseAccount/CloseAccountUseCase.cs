@@ -12,7 +12,13 @@ internal sealed class CloseAccountUseCase(IAccounts accounts)
             return account.Error;
         }
 
-        var closed = account.Value.Close();
+        var activeCashflows = await accounts.GetActiveCashflowsAsync(request.User, request.AccountId, cancellationToken);
+        if (activeCashflows.IsFailure)
+        {
+            return activeCashflows.Error;
+        }
+
+        var closed = account.Value.Close(activeCashflows.Value);
         if (closed.IsFailure)
         {
             return closed.Error;
