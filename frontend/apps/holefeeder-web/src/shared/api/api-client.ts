@@ -11,6 +11,7 @@ export type ApiClient = {
   get: <T>(endpoint: string) => Promise<Result<T>>;
   getPage: <T>(endpoint: string) => Promise<Result<Page<T>>>;
   post: <TInput, TOutput>(endpoint: string, data?: TInput) => Promise<Result<TOutput>>;
+  delete: (endpoint: string) => Promise<Result<void>>;
 };
 
 export const ApiClient = (auth: AuthenticationState, config: ApiConfig): ApiClient => {
@@ -61,5 +62,6 @@ export const ApiClient = (auth: AuthenticationState, config: ApiConfig): ApiClie
       })),
     post: <TInput, TOutput>(endpoint: string, data?: TInput) =>
       callApi<TOutput>(endpoint, { method: 'POST', body: data ? JSON.stringify(data) : undefined }),
+    delete: (endpoint: string) => callApi<void>(endpoint, { method: 'DELETE' }),
   };
 };

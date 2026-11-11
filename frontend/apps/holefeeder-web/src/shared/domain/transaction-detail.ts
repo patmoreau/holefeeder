@@ -1,8 +1,9 @@
+import { DateOnly } from '@holefeeder/shared/core';
 import type { TransactionAccountOption, TransactionCategoryOption } from './new-transaction-options';
 
 export type TransactionDetail = {
   id: string;
-  date: string;
+  date: DateOnly;
   amount: number;
   description: string;
   tags: string[];
@@ -15,7 +16,7 @@ const valid = (value: Record<string, unknown>): TransactionDetail => {
   const account = value.account as Record<string, unknown>;
   return {
     id: value.id as string,
-    date: value.date as string,
+    date: DateOnly.valid(value.date),
     amount: value.amount as number,
     description: value.description as string,
     tags: value.tags as string[],

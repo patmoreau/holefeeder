@@ -214,6 +214,12 @@ export const fr: TranslationStructure = {
     title: 'Modifier la transaction',
     failed: "La transaction n'a pas pu être enregistrée. Réessayez.",
     loadFailed: "La transaction n'a pas pu être chargée.",
+    edit: 'Modifier…',
+    deleteTitle: 'Supprimer {{title}}?',
+    deleteMessage: 'La transaction {{title}} de {{amount}} du {{date}} quitte {{account}} et son solde. Cette action est irréversible.',
+    deleteFallback: 'La transaction {{title}} quitte son compte et son solde. Cette action est irréversible.',
+    deleted: '{{title}} supprimée',
+    deleteFailed: "{{title}} n'a pas pu être supprimée. Réessayez.",
   },
   newTransaction: {
     title: 'Nouvelle transaction',

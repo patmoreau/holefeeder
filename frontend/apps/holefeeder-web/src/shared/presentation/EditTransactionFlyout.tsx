@@ -31,7 +31,7 @@ const EditTransactionForm = ({ transaction, options, onClose, notify }: EditTran
 
   const [type, setType] = useState<CategoryType>(transaction.category.type);
   const [amount, setAmount] = useState(transaction.amount.toFixed(2));
-  const [date, setDate] = useState(transaction.date);
+  const [date, setDate] = useState<string>(transaction.date);
   const [accountId, setAccountId] = useState(transaction.account.id);
   const [categoryId, setCategoryId] = useState(transaction.category.id);
   const [tags, setTags] = useState(transaction.tags);

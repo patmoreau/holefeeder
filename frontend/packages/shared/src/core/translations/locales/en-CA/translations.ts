@@ -212,6 +212,12 @@ export const en = {
     title: 'Edit transaction',
     failed: 'The transaction could not be saved. Try again.',
     loadFailed: 'The transaction could not be loaded.',
+    edit: 'Edit…',
+    deleteTitle: 'Delete {{title}}?',
+    deleteMessage: 'The {{amount}} {{title}} from {{date}} leaves {{account}} and its balance. This cannot be undone.',
+    deleteFallback: '{{title}} leaves its account and its balance. This cannot be undone.',
+    deleted: '{{title}} deleted',
+    deleteFailed: '{{title}} could not be deleted. Try again.',
   },
   newTransaction: {
     title: 'New transaction',
