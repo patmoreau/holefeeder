@@ -182,6 +182,7 @@ export const fr: TranslationStructure = {
     },
   },
   dashboard: {
+    newTransaction: 'Nouvelle transaction',
     largeHeader: {
       avgSpending: 'Dép. moy.',
       netFlow: 'Flux net',

@@ -48,6 +48,21 @@ test.describe('Dashboard', () => {
     expect(version!.y).toBeGreaterThan(legacy!.y + legacy!.height - 1);
   });
 
+  test('ShouldShowDisabledNewTransactionButtonInTopBar', async ({ page }) => {
+    await signedIn(page);
+
+    await page.goto('/');
+
+    const heading = page.getByRole('heading', { name: 'Dashboard' });
+    const button = page.getByTestId('dashboard-new-transaction');
+    await expect(button).toHaveAccessibleName('New transaction');
+    await expect(button).toBeDisabled();
+    const headingBox = await heading.boundingBox();
+    const buttonBox = await button.boundingBox();
+    expect(buttonBox!.x).toBeGreaterThan(headingBox!.x + headingBox!.width);
+    expect(Math.abs(buttonBox!.y + buttonBox!.height / 2 - (headingBox!.y + headingBox!.height / 2))).toBeLessThan(2);
+  });
+
   test('ShouldShowSkeletonOfEachSection', async ({ page }) => {
     await signedIn(page);
 
