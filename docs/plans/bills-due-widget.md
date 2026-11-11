@@ -56,6 +56,12 @@ switches entries on its own, so the widget stays right while the app is not runn
     Projected is green when positive, red when negative. Both are the same in every
     timeline entry: they change with transactions, not the calendar, so they refresh
     when the app publishes again.
+11. **Spending widget (small, Penpot proposal 23C, 2026-11-10).** A second widget,
+    `SpendingWidget`, `systemSmall` only: "Spending" with the logo tile, current
+    spending in large type, the trend against the average (`↘` green under it, `↗`
+    red over it, hidden until there is an average, like the dashboard), then the
+    projected net flow. Published as a single snapshot, since nothing in it changes
+    with the calendar. `HomeScreenWidgets` installs the logo once for both widgets.
 
 ## Limitations
 

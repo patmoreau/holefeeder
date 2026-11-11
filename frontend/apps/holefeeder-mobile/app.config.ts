@@ -225,6 +225,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
                 initialLayout: './src/dashboard/widgets/BillsDueWidget.tsx',
               },
             },
+            {
+              name: 'SpendingWidget',
+              displayName: 'Spending',
+              description: 'Spending and projected for the budget period.',
+              ios: {
+                supportedFamilies: ['systemSmall'],
+                initialLayout: './src/dashboard/widgets/SpendingWidget.tsx',
+              },
+            },
           ],
         },
       ],

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BillsDueWidgetPublisher } from '@/dashboard/presentation/bills-due-widget/BillsDueWidgetPublisher';
+import { SpendingWidgetPublisher } from '@/dashboard/presentation/spending-widget/SpendingWidgetPublisher';
 import { installWidgetLogo } from '@/dashboard/widgets/install-widget-logo';
 
 export const HomeScreenWidgets = () => {
@@ -11,5 +12,10 @@ export const HomeScreenWidgets = () => {
     });
   }, []);
 
-  return <BillsDueWidgetPublisher logo={logo} />;
+  return (
+    <>
+      <BillsDueWidgetPublisher logo={logo} />
+      <SpendingWidgetPublisher logo={logo} />
+    </>
+  );
 };

@@ -223,6 +223,12 @@ export const en = {
     projected: 'Projected',
     openApp: 'Open Holefeeder to see your bills',
   },
+  spendingWidget: {
+    title: 'Spending',
+    projected: 'Projected',
+    versusAverage: '{{variation}} vs avg',
+    openApp: 'Open Holefeeder to see your spending',
+  },
   errors: {
     noInternetConnection: {
       title: 'No internet connection',

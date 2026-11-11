@@ -62,7 +62,7 @@ src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/
   core/         ← Entities, value objects, repository interfaces, use cases (not all features have this)
   persistence/  ← PowerSync implementations of repository interfaces (not all features have this)
   notifications/ ← expo-notifications implementations of core ports (flows/: the badge scheduler)
-  widgets/      ← expo-widgets home screen widgets and their core port adapters (dashboard/: the bills due widget)
+  widgets/      ← expo-widgets home screen widgets and their core port adapters (dashboard/: the bills due and spending widgets)
   presentation/ ← Feature-specific UI and presentation hooks
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer

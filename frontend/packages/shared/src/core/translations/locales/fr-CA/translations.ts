@@ -225,6 +225,12 @@ export const fr: TranslationStructure = {
     projected: 'Projeté',
     openApp: 'Ouvrez Holefeeder pour voir vos factures',
   },
+  spendingWidget: {
+    title: 'Dépenses',
+    projected: 'Projeté',
+    versusAverage: '{{variation}} c. moy.',
+    openApp: 'Ouvrez Holefeeder pour voir vos dépenses',
+  },
   errors: {
     noInternetConnection: {
       title: 'Pas de connexion Internet',
