@@ -6,9 +6,12 @@ namespace Holefeeder.Service.Transactions.Core;
 
 internal static class TransactionErrors
 {
+    public const string CodeNotFound = "transaction-not-found";
     public const string CodeCategoryNotFound = "category-not-found";
     public const string CodeTransferCategoriesNotFound = "transfer-categories-not-found";
     public const string CodeSameAccount = "transfer-same-account";
+
+    public static NotFoundError NotFound => new(CodeNotFound, "Transaction was not found.");
 
     public static NotFoundError CategoryNotFound => new(CodeCategoryNotFound, "Category was not found.");
 

@@ -3,6 +3,7 @@ using DrifterApps.Seeds.FluentResult;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.Service.Transactions.Core;
+using Holefeeder.Service.Transactions.Core.GetTransaction;
 
 namespace Holefeeder.ServiceTests.Transactions.TestKit;
 
@@ -28,6 +29,8 @@ internal sealed class TransactionsInMemory : ITransactions
     public IReadOnlyList<Cashflow> CashflowsOf(User user) =>
         [.. _cashflows.Where(entry => entry.UserId == user.Id).Select(entry => entry.Cashflow)];
 
+    public void Add(User user, Transaction transaction) => _transactions.Add((user.Id, transaction));
+
     public void Add(User user, TransferCategories categories) => _transferCategories[user.Id] = categories;
 
     public void FailWith(ResultError error) => _failure = error;
@@ -47,6 +50,11 @@ internal sealed class TransactionsInMemory : ITransactions
     public Task<Result<TransactionCategory>> GetActiveCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
         Task.FromResult(One(_categories.Where(entry => entry.UserId == user.Id && entry.Category.Id == id).Select(entry => entry.Category), TransactionErrors.CategoryNotFound));
 
+    public Task<Result<TransactionDetail>> GetTransactionAsync(User user, Id id, CancellationToken cancellationToken) =>
+        Task.FromResult(One(
+            _transactions.Where(entry => entry.UserId == user.Id && entry.Transaction.Id == id).Select(entry => DetailOf(entry.Transaction)),
+            TransactionErrors.NotFound));
+
     public Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken) =>
         Task.FromResult(One(_transferCategories.TryGetValue(user.Id, out var categories) ? [categories] : Array.Empty<TransferCategories>(),
             TransactionErrors.TransferCategoriesNotFound));
@@ -65,6 +73,11 @@ internal sealed class TransactionsInMemory : ITransactions
         _transactions.AddRange(transactions.Select(transaction => (user.Id, transaction)));
         return Task.FromResult<Result<Nothing>>(Nothing.Value);
     }
+
+    private TransactionDetail DetailOf(Transaction transaction) =>
+        new(transaction.Id, transaction.Date, transaction.Amount, transaction.Description, transaction.Tags,
+            _accounts.Select(entry => entry.Account).Single(account => account.Id == transaction.AccountId),
+            _categories.Select(entry => entry.Category).Single(category => category.Id == transaction.CategoryId));
 
     private Result<T> One<T>(IEnumerable<T> items, ResultError notFound)
     {

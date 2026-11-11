@@ -239,4 +239,45 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
 
         result.Should().BeFailure().And.WithError(TransactionErrors.TransferCategoriesNotFound);
     }
+
+    [Fact]
+    public async Task GetTransactionAsync_ReturnsTheTransactionWithItsAccountAndCategory()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(user, database);
+        var chequing = await budget.AnAccountAsync("Chequing", AccountType.Checking, favorite: true);
+        var transferIn = await budget.ACategoryAsync(CategoryType.Gain, system: true, name: "Transfer In", color: "#AEAEB2");
+        var id = await budget.ATransactionAsync(
+            transferIn, new DateOnly(2026, 8, 28), 123.45m, chequing, description: "From savings", tags: "weekly,family");
+
+        var result = await _repository.GetTransactionAsync(user, Id.Valid(id), CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(new Service.Transactions.Core.GetTransaction.TransactionDetail(
+            Id.Valid(id), new DateOnly(2026, 8, 28), Money.Valid(123.45m), "From savings", Tags.Create(["weekly", "family"]),
+            new TransactionAccount(Id.Valid(chequing), "Chequing", true),
+            new TransactionCategory(Id.Valid(transferIn), "Transfer In", "#AEAEB2", CategoryType.Gain, false)));
+    }
+
+    [Fact]
+    public async Task GetTransactionAsync_Fails_WhenTheTransactionIsSomeoneElses()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var budget = new BudgetForTest(owner, database);
+        var id = await budget.ATransactionAsync(await budget.ACategoryAsync(CategoryType.Expense), new DateOnly(2026, 8, 28), 10m);
+        var user = await AUser().SavedInDbAsync(database);
+
+        var result = await _repository.GetTransactionAsync(user, Id.Valid(id), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetTransactionAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new TransactionsInDatabase(database.BadDataSource, new LoggerForTest<TransactionsInDatabase>(testOutputHelper));
+
+        var result = await repository.GetTransactionAsync(AUser(), AnId(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TransactionsErrors.ReadFailed);
+    }
 }

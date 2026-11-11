@@ -4,6 +4,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Transactions.Core;
+using Holefeeder.Service.Transactions.Core.GetTransaction;
 
 using Npgsql;
 
@@ -61,6 +62,20 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
             WHERE id = @Id AND user_id = @UserId AND NOT system AND NOT inactive;
             """,
             user, id, row => row.ToCategory(), TransactionErrors.CategoryNotFound, cancellationToken);
+
+    public Task<Result<TransactionDetail>> GetTransactionAsync(User user, Id id, CancellationToken cancellationToken) =>
+        QuerySingleAsync<TransactionDetailRow, TransactionDetail>(
+            """
+            SELECT t.id, t.date, t.amount, t.description, t.tags,
+                   a.id AS account_id, a.name AS account_name, a.favorite AS account_favorite,
+                   c.id AS category_id, c.name AS category_name, c.color AS category_color, c.type AS category_type,
+                   c.favorite AS category_favorite
+            FROM transactions t
+            INNER JOIN accounts a ON a.id = t.account_id
+            INNER JOIN categories c ON c.id = t.category_id
+            WHERE t.id = @Id AND t.user_id = @UserId;
+            """,
+            user, id, row => row.ToTransactionDetail(), TransactionErrors.NotFound, cancellationToken);
 
     public async Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken)
     {

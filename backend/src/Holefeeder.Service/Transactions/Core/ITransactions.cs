@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
+using Holefeeder.Service.Transactions.Core.GetTransaction;
 
 namespace Holefeeder.Service.Transactions.Core;
 
@@ -16,6 +17,8 @@ internal interface ITransactions
     Task<Result<TransactionAccount>> GetOpenAccountAsync(User user, Id id, CancellationToken cancellationToken);
 
     Task<Result<TransactionCategory>> GetActiveCategoryAsync(User user, Id id, CancellationToken cancellationToken);
+
+    Task<Result<TransactionDetail>> GetTransactionAsync(User user, Id id, CancellationToken cancellationToken);
 
     Task<Result<TransferCategories>> GetTransferCategoriesAsync(User user, CancellationToken cancellationToken);
 
