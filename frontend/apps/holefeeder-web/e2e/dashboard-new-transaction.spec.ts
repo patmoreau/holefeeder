@@ -157,6 +157,81 @@ test.describe('Dashboard new transaction', () => {
     await expect(flyout.getByTestId('new-transaction-save')).toBeDisabled();
   });
 
+  test('ShouldStartRepeatingOnTheTransactionDateEveryMonth', async ({ page }) => {
+    await withOptions(page);
+    const flyout = await openNewTransaction(page);
+
+    await expect(flyout.getByTestId('new-transaction-repeat-starts')).toHaveCount(0);
+    await flyout.getByTestId('new-transaction-date').fill('2026-11-10');
+    await flyout.getByTestId('new-transaction-repeat').click();
+
+    await expect(flyout.getByTestId('new-transaction-repeat-starts')).toHaveValue('2026-11-10');
+    await expect(flyout.getByTestId('new-transaction-repeat-frequency')).toHaveValue('1');
+    await expect(flyout.getByTestId('new-transaction-repeat-interval')).toHaveText('month(s)');
+  });
+
+  test('ShouldRecordARepeatingExpense', async ({ page }) => {
+    await withOptions(page);
+    const bodies = await capture(page, purchaseRoute, 201, { id: crypto.randomUUID() });
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByTestId('new-transaction-amount').fill('15');
+    await flyout.getByTestId('new-transaction-repeat').click();
+    await flyout.getByTestId('new-transaction-repeat-starts').fill('2026-11-15');
+    await flyout.getByTestId('new-transaction-repeat-frequency').fill('2');
+    await choose(page, 'new-transaction-repeat-interval', 'week(s)');
+    await flyout.getByTestId('new-transaction-save').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Transaction saved');
+    expect(bodies).toEqual([
+      {
+        date: '2026-11-11',
+        amount: '15.00',
+        description: '',
+        accountId: chequing.id,
+        categoryId: groceries.id,
+        tags: [],
+        repeat: { startDate: '2026-11-15', intervalType: 'weekly', frequency: '2' },
+      },
+    ]);
+  });
+
+  test('ShouldNotRepeat_WhenRepeatIsTurnedBackOff', async ({ page }) => {
+    await withOptions(page);
+    const bodies = await capture(page, purchaseRoute, 201, { id: crypto.randomUUID() });
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByTestId('new-transaction-amount').fill('15');
+    await flyout.getByTestId('new-transaction-repeat').click();
+    await flyout.getByTestId('new-transaction-repeat').click();
+    await flyout.getByTestId('new-transaction-save').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Transaction saved');
+    expect(bodies[0]).not.toHaveProperty('repeat');
+  });
+
+  for (const frequency of ['', '0', '1.5', 'abc']) {
+    test(`ShouldNotSave_WhenRepeatFrequencyIs_${frequency || 'empty'}`, async ({ page }) => {
+      await withOptions(page);
+      const flyout = await openNewTransaction(page);
+
+      await flyout.getByTestId('new-transaction-repeat').click();
+      await flyout.getByTestId('new-transaction-repeat-frequency').fill(frequency);
+
+      await expect(flyout.getByTestId('new-transaction-save')).toBeDisabled();
+    });
+  }
+
+  test('ShouldNotSave_WhenRepeatStartIsEmpty', async ({ page }) => {
+    await withOptions(page);
+    const flyout = await openNewTransaction(page);
+
+    await flyout.getByTestId('new-transaction-repeat').click();
+    await flyout.getByTestId('new-transaction-repeat-starts').fill('');
+
+    await expect(flyout.getByTestId('new-transaction-save')).toBeDisabled();
+  });
+
   test('ShouldKeepTheFlyoutOpenAndSayItFailed_WhenSavingFails', async ({ page }) => {
     await withOptions(page);
     await capture(page, purchaseRoute, 500);

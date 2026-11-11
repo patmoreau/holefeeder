@@ -25,6 +25,7 @@ import { isAmountInput } from './amount-input';
 import type { Notify } from './DashboardToast';
 import { EmptyList } from './EmptyList';
 import { ListSkeleton } from './ListSkeleton';
+import { isRepeatDraftValid, type RepeatDraft, RepeatField } from './RepeatField';
 import { TagsField } from './TagsField';
 
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
@@ -47,10 +48,12 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
   const [categoryId, setCategoryId] = useState(categoriesOf('expense')[0]?.id ?? '');
   const [tags, setTags] = useState<string[]>([]);
   const [description, setDescription] = useState('');
+  const [repeat, setRepeat] = useState<RepeatDraft | null>(null);
   const [busy, setBusy] = useState(false);
 
   const categories = categoriesOf(type);
   const validAmount = isAmountInput(amount);
+  const validRepeat = repeat === null || isRepeatDraftValid(repeat);
   const amountColor = type === 'gain' ? 'success.main' : 'error.main';
 
   const changeType = (next: CategoryType | null) => {
@@ -68,6 +71,7 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
       accountId: accountId,
       categoryId: categoryId,
       tags: tags,
+      repeat: repeat && { startDate: repeat.startDate, intervalType: repeat.intervalType, frequency: Number(repeat.frequency) },
     });
     setBusy(false);
     if (!result.isSuccess) {
@@ -176,6 +180,7 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
           onChange={(event) => setDescription(event.target.value)}
           slotProps={{ inputLabel: { shrink: true }, htmlInput: { 'data-testid': 'new-transaction-description' } }}
         />
+        <RepeatField draft={repeat} startDate={date} onChange={setRepeat} />
       </Stack>
       <Divider />
       <Stack spacing={1.5} sx={{ p: 3 }}>
@@ -183,7 +188,7 @@ const NewTransactionForm = ({ options, onClose, notify }: NewTransactionFormProp
           variant="contained"
           disableElevation
           fullWidth
-          disabled={busy || !validAmount || date === '' || categoryId === ''}
+          disabled={busy || !validAmount || !validRepeat || date === '' || categoryId === ''}
           data-testid="new-transaction-save"
           onClick={() => void save()}
           sx={footerButton}
