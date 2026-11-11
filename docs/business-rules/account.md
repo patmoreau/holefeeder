@@ -84,6 +84,18 @@ on a credit card deepens the amount due.
 | Checking    | 2,000.00  | −1,450 rent, +1,000 × 2 pay | 2,550.00  |
 | Credit card | −123.45   | −66.67 one-time expense     | −190.12   |
 
+### Upcoming change
+
+The account page also shows the upcoming change on its own: the difference between the
+projected and the displayed values, Σ upcoming gains − Σ upcoming expenses. A positive
+change is favourable to the owner (green), a negative one is not (red), and zero is
+neutral. Like every amount it is shown without a sign.
+
+| Account     | Upcoming change | Shown   | Colour |
+|-------------|-----------------|---------|--------|
+| Checking    | +550.00         | $550.00 | green  |
+| Credit card | −66.67          | $66.67  | red    |
+
 ### Last updated
 
 An account was last updated on the date of its latest transaction, or on its opening date

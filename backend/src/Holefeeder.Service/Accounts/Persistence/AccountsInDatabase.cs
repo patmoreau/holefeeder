@@ -1,0 +1,121 @@
+using Dapper;
+
+using DrifterApps.Seeds.FluentResult;
+
+using Holefeeder.Service.Accounts.Core;
+using Holefeeder.Service.Accounts.Core.GetAccountDetail;
+using Holefeeder.Service.Shared.Core;
+using Holefeeder.Service.Shared.Persistence;
+
+using Npgsql;
+
+using User = Holefeeder.Service.Support.Core.User;
+
+namespace Holefeeder.Service.Accounts.Persistence;
+
+internal sealed partial class AccountsInDatabase(NpgsqlDataSource dataSource, ILogger<AccountsInDatabase> logger) : IAccounts
+{
+    public async Task<Result<PeriodSettings>> GetPeriodSettingsAsync(User user, DateOnly today, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT s.data
+                           FROM store_items s
+                           WHERE s.user_id = @UserId AND s.code = 'settings'
+                           LIMIT 1;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var data = await connection.QuerySingleOrDefaultAsync<string>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return data is null ? PeriodSettings.Default(today) : SettingsData.ToPeriodSettings(data, AccountsErrors.SettingsInvalid);
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return AccountsErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<AccountTotals>> GetAccountTotalsAsync(User user, Id accountId, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT a.id, a.name, a.type, a.description, a.open_balance, a.open_date, a.favorite, a.inactive,
+                                  COALESCE(t.gains, 0) AS gains, COALESCE(t.expenses, 0) AS expenses, t.last_transaction_date
+                           FROM accounts a
+                           LEFT JOIN (SELECT tr.account_id,
+                                             SUM(CASE WHEN c.type = 'Gain' THEN tr.amount ELSE 0 END) AS gains,
+                                             SUM(CASE WHEN c.type = 'Expense' THEN tr.amount ELSE 0 END) AS expenses,
+                                             MAX(tr.date) AS last_transaction_date
+                                      FROM transactions tr
+                                      INNER JOIN categories c ON c.id = tr.category_id
+                                      WHERE tr.user_id = @UserId AND tr.account_id = @AccountId
+                                      GROUP BY tr.account_id) t ON t.account_id = a.id
+                           WHERE a.user_id = @UserId AND a.id = @AccountId;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value, AccountId = accountId.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var row = await connection.QuerySingleOrDefaultAsync<AccountTotalsRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return row is null ? AccountErrors.NotFound : row.ToAccountTotals();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return AccountsErrors.ReadFailed;
+        }
+    }
+
+    public async Task<Result<IReadOnlyList<CashflowSchedule>>> GetActiveCashflowsAsync(User user, Id accountId, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT c.account_id, c.effective_date, c.interval_type, c.frequency, c.amount, cc.type AS category_type,
+                                  p.last_paid_date, p.last_cashflow_date
+                           FROM cashflows c
+                           INNER JOIN categories cc ON cc.id = c.category_id
+                           LEFT JOIN (SELECT t.cashflow_id, MAX(t.date) AS last_paid_date, MAX(t.cashflow_date) AS last_cashflow_date
+                                      FROM transactions t
+                                      WHERE t.user_id = @UserId AND t.cashflow_id IS NOT NULL
+                                      GROUP BY t.cashflow_id) p ON p.cashflow_id = c.id
+                           WHERE c.user_id = @UserId AND c.account_id = @AccountId AND NOT c.inactive;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value, AccountId = accountId.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var rows = await connection.QueryAsync<CashflowScheduleRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return rows.Select(row => row.ToCashflowSchedule()).ToList();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return AccountsErrors.ReadFailed;
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Accounts could not be read from the database")]
+    private static partial void LogReadFailed(ILogger logger, Exception exception);
+}
+
+internal static class AccountsErrors
+{
+    public const string CodeReadFailed = "accounts-read-failed";
+    public const string CodeSettingsInvalid = "accounts-settings-invalid";
+
+    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Accounts could not be read from the database.");
+
+    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid, "User settings could not be read.");
+}

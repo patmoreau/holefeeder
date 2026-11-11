@@ -12,6 +12,7 @@ using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Service;
+using Holefeeder.Service.Accounts;
 using Holefeeder.Service.Cashflows;
 using Holefeeder.Service.Dashboard;
 using Holefeeder.Service.ErrorHandling;
@@ -77,6 +78,7 @@ builder.Services
     .AddSingleton(provider =>
         NpgsqlDataSource.Create(provider.GetRequiredService<BudgetingConnectionStringBuilder>().ConnectionString))
     .AddStoreItemsServices()
+    .AddAccountsServices()
     .AddDashboardServices()
     .AddCashflowsServices()
     .AddTransactionsServices()
@@ -139,6 +141,7 @@ app
 
 app.MapCarter()
     .MapStoreItemsEndpoints()
+    .MapAccountsEndpoints()
     .MapDashboardEndpoints()
     .MapCashflowsEndpoints()
     .MapTransactionsEndpoints()

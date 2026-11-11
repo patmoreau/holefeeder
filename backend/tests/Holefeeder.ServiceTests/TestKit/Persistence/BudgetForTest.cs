@@ -10,7 +10,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     private const string InsertAccount =
         """
         INSERT INTO accounts (id, type, name, favorite, open_balance, open_date, description, inactive, user_id)
-        VALUES (@Id, @Type, @Name, @Favorite, @OpenBalance, @OpenDate, '', @Inactive, @UserId);
+        VALUES (@Id, @Type, @Name, @Favorite, @OpenBalance, @OpenDate, @Description, @Inactive, @UserId);
         """;
 
     private const string InsertCategory =
@@ -61,7 +61,8 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
     }
 
     public async Task<Guid> AnAccountAsync(
-        string name, AccountType type, decimal openBalance = 0m, DateOnly? openDate = null, bool favorite = false, bool inactive = false)
+        string name, AccountType type, decimal openBalance = 0m, DateOnly? openDate = null, bool favorite = false, bool inactive = false,
+        string description = "")
     {
         var id = Guid.NewGuid();
         await ExecuteAsync(InsertAccount, new
@@ -72,6 +73,7 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
             Favorite = favorite,
             OpenBalance = openBalance,
             OpenDate = (openDate ?? new DateOnly(2020, 1, 1)).ToDateTime(TimeOnly.MinValue),
+            Description = description,
             Inactive = inactive,
             UserId = user.Id.Value
         });
