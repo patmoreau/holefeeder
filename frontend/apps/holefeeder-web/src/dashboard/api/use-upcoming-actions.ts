@@ -19,5 +19,10 @@ export const useUpcomingActions = () => {
       updateRecurringAmount: String(changes?.updateRecurringAmount ?? false),
     });
 
-  return { pay: pay };
+  const clear = (flow: DashboardUpcomingFlow) =>
+    command('/api/v2/cashflows/clear-cashflow', { cashflowId: flow.cashflowId, cashflowDate: flow.date });
+
+  const cancel = (flow: DashboardUpcomingFlow) => command('/api/v2/cashflows/cancel-cashflow', { cashflowId: flow.cashflowId });
+
+  return { pay: pay, clear: clear, cancel: cancel };
 };

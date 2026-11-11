@@ -1,14 +1,17 @@
 import { tk } from '@holefeeder/shared/core';
 import { Alert, Button, Paper, Snackbar, SnackbarContent, Stack, Typography } from '@mui/material';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
 import { useUpcomingActions } from '../api/use-upcoming-actions';
 import { useUpcomingFlows } from '../api/use-upcoming-flows';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
+import { DeleteCashflowDialog } from './DeleteCashflowDialog';
 import { EmptyList } from './EmptyList';
 import { FlowRow } from './FlowRow';
 import { ListSkeleton } from './ListSkeleton';
+import { mediumDate } from './tone';
+import { UpcomingActionsMenu } from './UpcomingActionsMenu';
 
 const PayButton = ({ disabled, onClick }: { disabled: boolean; onClick: () => void }) => (
   <Button
@@ -50,6 +53,7 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
   const actions = useUpcomingActions();
   const { refresh } = useApiRefresh();
   const [busy, setBusy] = useState(false);
+  const [deleting, setDeleting] = useState<DashboardUpcomingFlow | null>(null);
 
   const run = async (action: Promise<{ isSuccess: boolean }>, success: string) => {
     setBusy(true);
@@ -61,17 +65,32 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
 
   const pay = (flow: DashboardUpcomingFlow) => run(actions.pay(flow), translate(tk.payUpcoming.paid, { title: flow.title }));
 
+  const clear = (flow: DashboardUpcomingFlow) =>
+    run(actions.clear(flow), translate(tk.payUpcoming.cleared, { title: flow.title, date: mediumDate(flow.date) }));
+
+  const confirmDelete = () => {
+    if (!deleting) return;
+    const flow = deleting;
+    setDeleting(null);
+    void run(actions.cancel(flow), translate(tk.payUpcoming.deleted, { title: flow.title }));
+  };
+
+  const rowActions = (flow: DashboardUpcomingFlow): ReactNode => (
+    <Stack direction="row" alignItems="center" spacing={0.5} sx={{ flexShrink: 0 }}>
+      <PayButton disabled={busy} onClick={() => void pay(flow)} />
+      <UpcomingActionsMenu disabled={busy} onClear={() => void clear(flow)} onDelete={() => setDeleting(flow)} />
+    </Stack>
+  );
+
   return (
-    <Paper elevation={0} sx={{ px: 2, borderRadius: 3 }}>
-      {flows.map((flow) => (
-        <FlowRow
-          key={flow.cashflowId + flow.date}
-          flow={flow}
-          testID="dashboard-upcoming"
-          action={<PayButton disabled={busy} onClick={() => void pay(flow)} />}
-        />
-      ))}
-    </Paper>
+    <>
+      <Paper elevation={0} sx={{ px: 2, borderRadius: 3 }}>
+        {flows.map((flow) => (
+          <FlowRow key={flow.cashflowId + flow.date} flow={flow} testID="dashboard-upcoming" action={rowActions(flow)} />
+        ))}
+      </Paper>
+      <DeleteCashflowDialog title={deleting?.title ?? null} onCancel={() => setDeleting(null)} onConfirm={confirmDelete} />
+    </>
   );
 };
 

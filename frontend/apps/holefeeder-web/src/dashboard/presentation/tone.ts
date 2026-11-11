@@ -1,8 +1,10 @@
-import { LocalFormatter } from '@holefeeder/shared/core';
+import { type DateOnly, LocalFormatter } from '@holefeeder/shared/core';
 
 export type Tone = 'positive' | 'negative' | 'neutral';
 
 export const currency = (amount: number) => LocalFormatter.currency(amount, 'en-CA', 'CAD');
+
+export const mediumDate = (date: DateOnly) => new Intl.DateTimeFormat('en-CA', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(date));
 
 export const roundsToZero = (value: number) => Math.round(Math.abs(value) * 100) === 0;
 
