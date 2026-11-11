@@ -69,7 +69,7 @@ public class RecordTransferUseCaseTests
     {
         var result = await _useCase.HandleAsync(ATransfer(fromAccountId: AnId()), CancellationToken.None);
 
-        result.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class RecordTransferUseCaseTests
     {
         var result = await _useCase.HandleAsync(ATransfer(toAccountId: AnId()), CancellationToken.None);
 
-        result.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
     }
 
     [Fact]

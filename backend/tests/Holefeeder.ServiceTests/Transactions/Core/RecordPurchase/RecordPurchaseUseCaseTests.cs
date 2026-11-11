@@ -61,7 +61,7 @@ public class RecordPurchaseUseCaseTests
     {
         var result = await _useCase.HandleAsync(APurchase(accountId: AnId()), CancellationToken.None);
 
-        result.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+        result.Should().BeFailure().And.WithError(AccountErrors.NotFound);
         _transactions.TransactionsOf(_user).Should().BeEmpty();
     }
 

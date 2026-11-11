@@ -42,7 +42,7 @@ internal sealed class TransactionsInMemory : ITransactions
         Task.FromResult(Of(_tagUsages.Where(entry => entry.UserId == user.Id).Select(entry => entry.Usage).ToList()));
 
     public Task<Result<TransactionAccount>> GetOpenAccountAsync(User user, Id id, CancellationToken cancellationToken) =>
-        Task.FromResult(One(_accounts.Where(entry => entry.UserId == user.Id && entry.Account.Id == id).Select(entry => entry.Account), TransactionErrors.AccountNotFound));
+        Task.FromResult(One(_accounts.Where(entry => entry.UserId == user.Id && entry.Account.Id == id).Select(entry => entry.Account), AccountErrors.NotFound));
 
     public Task<Result<TransactionCategory>> GetActiveCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
         Task.FromResult(One(_categories.Where(entry => entry.UserId == user.Id && entry.Category.Id == id).Select(entry => entry.Category), TransactionErrors.CategoryNotFound));

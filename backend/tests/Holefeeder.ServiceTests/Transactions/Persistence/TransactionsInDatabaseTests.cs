@@ -133,8 +133,8 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         var closedResult = await _repository.GetOpenAccountAsync(user, Id.Valid(closed), CancellationToken.None);
         var othersResult = await _repository.GetOpenAccountAsync(user, Id.Valid(others), CancellationToken.None);
 
-        closedResult.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
-        othersResult.Should().BeFailure().And.WithError(TransactionErrors.AccountNotFound);
+        closedResult.Should().BeFailure().And.WithError(AccountErrors.NotFound);
+        othersResult.Should().BeFailure().And.WithError(AccountErrors.NotFound);
     }
 
     [Fact]

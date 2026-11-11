@@ -51,7 +51,7 @@ internal sealed partial class TransactionsInDatabase(NpgsqlDataSource dataSource
             FROM accounts
             WHERE id = @Id AND user_id = @UserId AND NOT inactive;
             """,
-            user, id, row => row.ToAccount(), TransactionErrors.AccountNotFound, cancellationToken);
+            user, id, row => row.ToAccount(), AccountErrors.NotFound, cancellationToken);
 
     public Task<Result<TransactionCategory>> GetActiveCategoryAsync(User user, Id id, CancellationToken cancellationToken) =>
         QuerySingleAsync<CategoryRow, TransactionCategory>(
