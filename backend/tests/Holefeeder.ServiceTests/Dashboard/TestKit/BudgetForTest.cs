@@ -18,8 +18,8 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
 
     private const string InsertCategory =
         """
-        INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, user_id)
-        VALUES (@Id, @Type, @Name, @Color, 0, FALSE, @System, @UserId);
+        INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, inactive, user_id)
+        VALUES (@Id, @Type, @Name, @Color, 0, @Favorite, @System, @Inactive, @UserId);
         """;
 
     private const string InsertTransaction =
@@ -45,10 +45,21 @@ internal sealed class BudgetForTest(User user, DatabaseForTest database)
 
     private Guid? _accountId;
 
-    public async Task<Guid> ACategoryAsync(CategoryType type, bool system = false, string? name = null, string color = "#000000")
+    public async Task<Guid> ACategoryAsync(
+        CategoryType type, bool system = false, string? name = null, string color = "#000000", bool favorite = false, bool inactive = false)
     {
         var id = Guid.NewGuid();
-        await ExecuteAsync(InsertCategory, new { Id = id, Type = type.ToString(), Name = name ?? $"category-{id}", Color = color, System = system, UserId = user.Id.Value });
+        await ExecuteAsync(InsertCategory, new
+        {
+            Id = id,
+            Type = type.ToString(),
+            Name = name ?? $"category-{id}",
+            Color = color,
+            Favorite = favorite,
+            System = system,
+            Inactive = inactive,
+            UserId = user.Id.Value
+        });
         return id;
     }
 
