@@ -1,6 +1,6 @@
-using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.ServiceTests.Cashflows.Core;
+namespace Holefeeder.ServiceTests.Shared.Core;
 
 public class MoneyTests
 {

@@ -1,6 +1,6 @@
-using Holefeeder.Service.Cashflows.Api;
+using Holefeeder.Service.Shared.Api;
 
-namespace Holefeeder.ServiceTests.Cashflows.Api;
+namespace Holefeeder.ServiceTests.Shared.Api;
 
 public class IsoDateTests
 {

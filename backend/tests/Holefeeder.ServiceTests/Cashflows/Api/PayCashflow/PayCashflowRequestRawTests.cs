@@ -4,6 +4,7 @@ using Holefeeder.Service.Cashflows.Api;
 using Holefeeder.Service.Cashflows.Api.PayCashflow;
 using Holefeeder.Service.Cashflows.Core;
 using Holefeeder.Service.Cashflows.Core.PayCashflow;
+using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.ServiceTests.Cashflows.Api.PayCashflow;

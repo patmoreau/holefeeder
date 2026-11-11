@@ -2,6 +2,7 @@ using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Cashflows.Core;
 using Holefeeder.Service.Cashflows.Core.PayCashflow;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Cashflows.TestKit;
 
 namespace Holefeeder.ServiceTests.Cashflows.Core.PayCashflow;

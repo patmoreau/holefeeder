@@ -2,7 +2,7 @@ using System.Globalization;
 
 using DrifterApps.Seeds.FluentResult;
 
-namespace Holefeeder.Service.Cashflows.Core;
+namespace Holefeeder.Service.Shared.Core;
 
 internal sealed record Money
 {

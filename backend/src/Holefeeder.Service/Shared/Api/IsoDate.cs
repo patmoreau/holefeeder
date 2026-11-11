@@ -2,7 +2,7 @@ using System.Globalization;
 
 using DrifterApps.Seeds.FluentResult;
 
-namespace Holefeeder.Service.Cashflows.Api;
+namespace Holefeeder.Service.Shared.Api;
 
 internal static class IsoDate
 {

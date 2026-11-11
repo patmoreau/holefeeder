@@ -5,6 +5,7 @@ using DrifterApps.Seeds.FluentScenario;
 
 using Holefeeder.Service.Cashflows.Api;
 using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.Cashflows.TestKit;

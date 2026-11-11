@@ -1,5 +1,6 @@
 using Holefeeder.Service.Cashflows.Core;
 using Holefeeder.Service.Cashflows.Persistence;
+using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Cashflows.TestKit;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
