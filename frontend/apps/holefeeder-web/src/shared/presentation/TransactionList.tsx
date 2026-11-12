@@ -8,7 +8,7 @@ import type { Notify } from './DashboardToast';
 import { type DeletedTransaction, DeleteTransactionDialog } from './DeleteTransactionDialog';
 import { EditTransactionFlyout } from './EditTransactionFlyout';
 import { type Flow, FlowRow } from './FlowRow';
-import { TransactionActionsMenu } from './TransactionActionsMenu';
+import { RowActionsMenu } from './RowActionsMenu';
 
 export type ListedTransaction = Flow & { id: string };
 
@@ -41,7 +41,7 @@ export const TransactionList = ({ transactions, testID, notify, children }: Tran
             testID={testID}
             onOpen={() => setEditing(transaction.id)}
             action={
-              <TransactionActionsMenu
+              <RowActionsMenu
                 testID={testID}
                 onEdit={() => setEditing(transaction.id)}
                 onDelete={() => setDeleting({ id: transaction.id, title: transaction.title })}

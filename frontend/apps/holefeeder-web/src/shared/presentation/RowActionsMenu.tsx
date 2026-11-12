@@ -4,9 +4,9 @@ import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
 
-type TransactionActionsMenuProps = { testID: string; onEdit: () => void; onDelete: () => void };
+type RowActionsMenuProps = { testID: string; onEdit: () => void; onDelete: () => void };
 
-export const TransactionActionsMenu = ({ testID, onEdit, onDelete }: TransactionActionsMenuProps) => {
+export const RowActionsMenu = ({ testID, onEdit, onDelete }: RowActionsMenuProps) => {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const close = () => setAnchor(null);
   const choose = (action: () => void) => () => {
