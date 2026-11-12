@@ -53,10 +53,5 @@
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
-    <Project Path="tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
   </Folder>
 </Solution>

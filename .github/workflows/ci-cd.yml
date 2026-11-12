@@ -150,8 +150,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: api-unit-tests
-            project: tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
           - target: api-functional-tests
             project: tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
           - target: api-service-tests

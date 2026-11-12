@@ -334,7 +334,6 @@ and `ErrorConventions` run with the rest of the service tests.
 cd backend
 dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
-dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
 dotnet format DrifterApps.Holefeeder.slnx --verify-no-changes --severity error
 ```
 

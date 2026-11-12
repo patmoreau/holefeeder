@@ -105,9 +105,6 @@ dotnet build DrifterApps.Holefeeder.slnx
 
 ### Test
 ```bash
-# Unit tests
-dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
-
 # Functional tests
 dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 
@@ -119,7 +116,7 @@ dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj -- --fi
 
 # Single test class (VSTest's --filter is not available; the test platform
 # takes its own arguments after --)
-dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-class "*MyTestClass"
+dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj -- --filter-class "*MyTestClass"
 ```
 
 > `--settings .runsettings` reports **"Zero tests ran"** — the projects run on
@@ -139,7 +136,7 @@ dotnet format --severity error --verbosity diagnostic
 
 ### Code Coverage
 ```bash
-dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
+dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:coverage -filefilters:-*.g.cs
 ```
 
@@ -210,8 +207,7 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 
 Application no longer maps any route: every endpoint is in `Holefeeder.Service`. Its
 feature folders keep only the `Request`/`Response` types and validators that
-`Holefeeder.FunctionalTests` and `Holefeeder.UnitTests` still build on, under
-`Commands/` and `Queries/`.
+`Holefeeder.FunctionalTests` still builds on, under `Commands/` and `Queries/`.
 
 ### Key Patterns
 

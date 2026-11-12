@@ -63,7 +63,6 @@ into the feature/ring layout of `Holefeeder.Service`
    ```bash
    dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
    dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
-   dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj
    dotnet format DrifterApps.Holefeeder.slnx --verify-no-changes --severity error
    ```
 
