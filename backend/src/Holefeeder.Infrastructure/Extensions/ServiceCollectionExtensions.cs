@@ -3,10 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using Hangfire;
 using Hangfire.PostgreSql;
 
-using Holefeeder.Application.Context;
 using Holefeeder.Infrastructure.SeedWork;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,24 +24,7 @@ public static class ServiceCollectionExtensions
                 configuration.GetConnectionString(BudgetingConnectionStringBuilder.BudgetingConnectionString)!
         });
 
-        services.AddSingleton<DbContextOptions>(OptionsBuilderOptions);
-        services.AddSingleton(OptionsBuilderOptions);
-
-        services.AddDbContextFactory<BudgetingContext>();
-        services.AddDbContext<BudgetingContext>();
-
         return services;
-
-        DbContextOptions<BudgetingContext> OptionsBuilderOptions(IServiceProvider provider)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<BudgetingContext>();
-
-            var connectionStringBuilder = provider.GetRequiredService<BudgetingConnectionStringBuilder>();
-            var connectionString = connectionStringBuilder.CreateBuilder().ConnectionString;
-            optionsBuilder.UseNpgsql(connectionString);
-
-            return optionsBuilder.Options;
-        }
     }
 
     public static void AddHangfireServices(this IServiceCollection services)

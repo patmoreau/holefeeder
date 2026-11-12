@@ -60,6 +60,15 @@ public class GetStoreItemComponent(ServerForTest server, ITestOutputHelper testO
             .PlayAsync();
 
     [Fact]
+    public Task WhenTheSettingsItemIsNotJson() =>
+        ScenarioRunner.Create("Getting a settings item whose data is not JSON", _scenarioOutput)
+            .Given("a registered user", ARegisteredUser)
+            .And("the user has a settings item that is not JSON", TheUserHasASettingsItemThatIsNotJson)
+            .When("the user gets the store item", () => GettingTheStoreItem(_item.Id.Value))
+            .Then<HttpResponseMessage>("the store item is returned", TheStoreItemIsReturned)
+            .PlayAsync();
+
+    [Fact]
     public Task WhenTheUserIsNotRegistered() =>
         ScenarioRunner.Create("Getting a store item as a user who never registered", _scenarioOutput)
             .Given("an authenticated user who is not registered", AnUnregisteredUser)
@@ -84,6 +93,9 @@ public class GetStoreItemComponent(ServerForTest server, ITestOutputHelper testO
 
     private async Task TheUserHasAnItemInTheStore() =>
         _item = await AStoreItem().SavedInDbAsync(_user, server.Database);
+
+    private async Task TheUserHasASettingsItemThatIsNotJson() =>
+        _item = await AStoreItem(Code.Valid("settings"), "not json").SavedInDbAsync(_user, server.Database);
 
     private async Task AnotherUserHasAnItemInTheStore()
     {

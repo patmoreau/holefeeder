@@ -70,11 +70,6 @@ into the feature/ring layout of `Holefeeder.Service`
 
 ## Pitfalls
 
-- **Legacy middleware still runs.** `UserContextMiddleware` from
-  `Holefeeder.Application` runs on every request, the new endpoints included, and
-  deserializes the user's settings store item. Component test data must be valid
-  for it (settings data as real JSON), or requests fail with 500 before reaching the
-  new code.
 - **Validation codes.** Legacy validators key errors by field; the new endpoint keys
   them by kebab-case error code. A scenario that checks only the status and the
   "One or more validation errors occurred." title passes either way; one that checks

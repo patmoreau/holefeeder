@@ -1,6 +1,5 @@
 using Dapper;
 
-using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Service;
@@ -60,7 +59,6 @@ if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
 }
 
 builder.Services
-    .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
 builder.Services
@@ -126,7 +124,6 @@ app
     .UseCors()
     .UseAuthentication()
     .UseAuthorization()
-    .UseUserContext()
     .UseSupportMiddleware();
 
 app
