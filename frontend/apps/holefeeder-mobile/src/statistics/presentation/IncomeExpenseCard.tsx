@@ -1,4 +1,4 @@
-import { LocalFormatter, Money } from '@holefeeder/shared/core';
+import { LocalFormatter, Money, SurplusBands } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { DefaultSettings } from '@/shared/core/settings';
@@ -15,7 +15,6 @@ import { NetBalance, NetBalanceKinds, NetBalanceResult } from '@/summary/core/ne
 import { PeriodLabel } from '@/summary/core/period-label';
 import { PeriodRange } from '@/summary/core/period-range';
 import { PeriodSeries } from '@/summary/core/period-series';
-import { SurplusBands } from '@/summary/core/surplus-bands';
 import { usePeriodSeries } from '@/summary/presentation/core/use-period-series';
 import { useInsightsRange } from './core/use-insights-range';
 import { IncomeExpenseChartView } from './IncomeExpenseChartView';

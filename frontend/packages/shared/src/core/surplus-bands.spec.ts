@@ -1,4 +1,4 @@
-import { SurplusBands } from '@/summary/core/surplus-bands';
+import { SurplusBands } from './surplus-bands';
 
 const p = (income: number, expenses: number) => ({ income, expenses });
 

@@ -11,6 +11,7 @@ export * from './date-only';
 export * from './date-interval-type';
 export * from './date-interval';
 export * from './with-date';
+export * from './surplus-bands';
 export * from './url-builder';
 export * from './store-item';
 export * from './store-items-repository';
