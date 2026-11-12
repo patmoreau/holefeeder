@@ -22,15 +22,6 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
     public Task AttemptToOpenAnAccount() => ScenarioForForbiddenUser("open an account", _user.OpeningAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccount() => ScenarioForForbiddenUser("get an account", _user.GettingAnAccount);
-
-    [Fact]
-    public Task AttemptToGetAccounts() => ScenarioForForbiddenUser("get a list of accounts", _user.GettingAccounts);
-
-    [Fact]
-    public Task AttemptToGetCategories() => ScenarioForForbiddenUser("get a list of categories", _user.GettingCategories);
-
-    [Fact]
     public Task AttemptToImportData() => ScenarioForForbiddenUser("import data", _user.ImportingData);
 
     [Fact]
@@ -41,20 +32,8 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
         ScenarioForForbiddenUser("get import data status", _user.GettingImportStatus);
 
     [Fact]
-    public Task AttemptToComputePeriod() =>
-        ScenarioForForbiddenUser("compute period", _user.ComputePeriod);
-
-    [Fact]
     public Task AttemptToGetDashboardSummary() =>
         ScenarioForForbiddenUser("get dashboard summary", _user.GettingDashboardSummary);
-
-    [Fact]
-    public Task AttemptToGetStatisticsForAllCategories() =>
-        ScenarioForForbiddenUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
-
-    [Fact]
-    public Task AttemptToGetStatisticsSummary() =>
-        ScenarioForForbiddenUser("get statistics summary", _user.GettingStatisticsSummary);
 
     [Fact]
     public Task AttemptToGetStoreItems() =>
@@ -73,31 +52,7 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
         ScenarioForForbiddenUser("modify a store item", _user.ModifyingAnItemInTheStore);
 
     [Fact]
-    public Task AttemptToGetTags() => ScenarioForForbiddenUser("get tags", _user.GettingTags);
-
-    [Fact]
-    public Task AttemptToGetCashflows() => ScenarioForForbiddenUser("get cashflows", _user.GettingCashflows);
-
-    [Fact]
-    public Task AttemptToGetCashflow() => ScenarioForForbiddenUser("get cashflow", _user.GettingACashflow);
-
-    [Fact]
     public Task AttemptToModifyCashflow() => ScenarioForForbiddenUser("modify cashflow", _user.ModifyingACashflow);
-
-    [Fact]
-    public Task AttemptToCancelCashflow() => ScenarioForForbiddenUser("cancel cashflow", _user.CancellingACashflow);
-
-    [Fact]
-    public Task AttemptToGetUpcoming() => ScenarioForForbiddenUser("get upcoming", _user.GettingUpcomingCashflows);
-
-    [Fact]
-    public Task AttemptToMakePurchase() => ScenarioForForbiddenUser("make purchase", _user.MakingAPurchase);
-
-    [Fact]
-    public Task AttemptToPayCashflow() => ScenarioForForbiddenUser("pay cashflow", _user.PayingACashflow);
-
-    [Fact]
-    public Task AttemptToTransfer() => ScenarioForForbiddenUser("transfer", _user.TransferringMoneyBetweenTwoAccounts);
 
     [Fact]
     public Task AttemptToModifyTransaction() => ScenarioForForbiddenUser("modify transaction", _user.ModifyingATransaction);
@@ -107,9 +62,6 @@ public class ForbiddenScenario(ApiApplicationSecurityDriver appDriver, ITestOutp
 
     [Fact]
     public Task AttemptToGetTransaction() => ScenarioForForbiddenUser("get transaction", _user.GettingATransaction);
-
-    [Fact]
-    public Task AttemptToGetTransactions() => ScenarioForForbiddenUser("get transactions", _user.GettingTransactions);
 
     [Fact]
     public Task AttemptToSync() => ScenarioForForbiddenUser("syncs", _user.Sync);

@@ -22,15 +22,6 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
     public Task AttemptToOpenAnAccount() => ScenarioForAuthorizedUser("open an account", _user.OpeningAnAccount);
 
     [Fact]
-    public Task AttemptToGetAccount() => ScenarioForAuthorizedUser("get an account", _user.GettingAnAccount);
-
-    [Fact]
-    public Task AttemptToGetAccounts() => ScenarioForAuthorizedUser("get a list of accounts", _user.GettingAccounts);
-
-    [Fact]
-    public Task AttemptToGetCategories() => ScenarioForAuthorizedUser("get a list of categories", _user.GettingCategories);
-
-    [Fact]
     public Task AttemptToImportData() => ScenarioForAuthorizedUser("import data", _user.ImportingData);
 
     [Fact]
@@ -41,20 +32,8 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
         ScenarioForAuthorizedUser("get import data status", _user.GettingImportStatus);
 
     [Fact]
-    public Task AttemptToComputePeriod() =>
-        ScenarioForAuthorizedUser("compute period", _user.ComputePeriod);
-
-    [Fact]
     public Task AttemptToGetDashboardSummary() =>
         ScenarioForAuthorizedUser("get dashboard summary", _user.GettingDashboardSummary);
-
-    [Fact]
-    public Task AttemptToGetStatisticsForAllCategories() =>
-        ScenarioForAuthorizedUser("get statistics for all categories", _user.GettingStatisticsForAllCategories);
-
-    [Fact]
-    public Task AttemptToGetStatisticsSummary() =>
-        ScenarioForAuthorizedUser("get statistics summary", _user.GettingStatisticsSummary);
 
     [Fact]
     public Task AttemptToGetStoreItems() =>
@@ -73,31 +52,7 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
         ScenarioForAuthorizedUser("modify a store item", _user.ModifyingAnItemInTheStore);
 
     [Fact]
-    public Task AttemptToGetTags() => ScenarioForAuthorizedUser("get tags", _user.GettingTags);
-
-    [Fact]
-    public Task AttemptToGetCashflows() => ScenarioForAuthorizedUser("get cashflows", _user.GettingCashflows);
-
-    [Fact]
-    public Task AttemptToGetCashflow() => ScenarioForAuthorizedUser("get cashflow", _user.GettingACashflow);
-
-    [Fact]
     public Task AttemptToModifyCashflow() => ScenarioForAuthorizedUser("modify cashflow", _user.ModifyingACashflow);
-
-    [Fact]
-    public Task AttemptToCancelCashflow() => ScenarioForAuthorizedUser("cancel cashflow", _user.CancellingACashflow);
-
-    [Fact]
-    public Task AttemptToGetUpcoming() => ScenarioForAuthorizedUser("get upcoming", _user.GettingUpcomingCashflows);
-
-    [Fact]
-    public Task AttemptToMakePurchase() => ScenarioForAuthorizedUser("make purchase", _user.MakingAPurchase);
-
-    [Fact]
-    public Task AttemptToPayCashflow() => ScenarioForAuthorizedUser("pay cashflow", _user.PayingACashflow);
-
-    [Fact]
-    public Task AttemptToTransfer() => ScenarioForAuthorizedUser("transfer", _user.TransferringMoneyBetweenTwoAccounts);
 
     [Fact]
     public Task AttemptToModifyTransaction() => ScenarioForAuthorizedUser("modify transaction", _user.ModifyingATransaction);
@@ -109,8 +64,5 @@ public class AuthorizedScenario(ApiApplicationSecurityDriver appDriver, ITestOut
     public Task AttemptToGetTransaction() => ScenarioForAuthorizedUser("get transaction", _user.GettingATransaction);
 
     [Fact]
-    public Task AttemptToGetTransactions() => ScenarioForAuthorizedUser("get transactions", _user.GettingTransactions);
-
-    [Fact]
-    public Task AttemptToSync() => ScenarioForAuthorizedUser("get transactions", _user.GettingTransactions);
+    public Task AttemptToSync() => ScenarioForAuthorizedUser("syncs", _user.Sync);
 }

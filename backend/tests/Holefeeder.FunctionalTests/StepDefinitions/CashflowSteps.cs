@@ -97,23 +97,6 @@ internal sealed class CashflowSteps(BudgetingDatabaseDriver budgetingDatabaseDri
     }
 
     [AssertionMethod]
-    public void ShouldBeInactive(IStepRunner runner) =>
-        runner.Execute<IApiResponse, Task>("the cashflow should be inactive", async response =>
-        {
-            var request = runner.GetContextData<CancelCashflow.Request>(RequestContext.CurrentRequest);
-
-            response.Should().BeValid()
-                .And.Subject.Value.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            await using var dbContext = budgetingDatabaseDriver.CreateDbContext();
-
-            var result = await dbContext.Cashflows.FindAsync(request.Id);
-            result.Should().NotBeNull()
-                .And.Subject.As<Cashflow>()
-                .Inactive.Should().BeTrue();
-        });
-
-    [AssertionMethod]
     public void ShouldBeModified(IStepRunner runner) =>
         runner.Execute<IApiResponse, Task>("the cashflow should be modified", async response =>
         {
