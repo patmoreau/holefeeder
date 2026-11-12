@@ -233,6 +233,13 @@ export const fr: TranslationStructure = {
     deleted: '{{name}} supprimée',
     deleteFailed: "{{name}} n'a pas pu être supprimée. Réessayez.",
   },
+  cashflows: {
+    back: 'Retour aux paramètres',
+    loadFailed: "Les flux de trésorerie n'ont pas pu être chargés.",
+    emptyTitle: 'Aucun flux de trésorerie',
+    emptyHint: 'Répétez une nouvelle transaction pour en planifier un.',
+    next: '{{period}} · prochain le {{date}}',
+  },
   editTransaction: {
     title: 'Modifier la transaction',
     failed: "La transaction n'a pas pu être enregistrée. Réessayez.",

@@ -230,6 +230,13 @@ export const en = {
     deleted: '{{name}} deleted',
     deleteFailed: '{{name}} could not be deleted. Try again.',
   },
+  cashflows: {
+    back: 'Back to settings',
+    loadFailed: 'The cashflows could not be loaded.',
+    emptyTitle: 'No cashflows yet',
+    emptyHint: 'Repeat a new transaction to schedule one.',
+    next: '{{period}} · next {{date}}',
+  },
   editTransaction: {
     title: 'Edit transaction',
     failed: 'The transaction could not be saved. Try again.',

@@ -215,7 +215,12 @@ const HolefeederSection = ({ notify }: { notify: Notify }) => {
           label={translate(tk.categoriesSection.title)}
           onClick={() => navigate('/settings/categories')}
         />
-        <LinkRow testID="settings-cashflows" icon={<RepeatOutlinedIcon />} label={translate(tk.cashflowsSection.title)} />
+        <LinkRow
+          testID="settings-cashflows"
+          icon={<RepeatOutlinedIcon />}
+          label={translate(tk.cashflowsSection.title)}
+          onClick={() => navigate('/settings/cashflows')}
+        />
         <LinkRow testID="settings-tags" icon={<LocalOfferOutlinedIcon />} label={translate(tk.tagsSection.title)} />
       </Rows>
       {settings.isSuccess && (
