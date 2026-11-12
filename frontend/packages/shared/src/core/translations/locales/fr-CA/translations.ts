@@ -395,6 +395,9 @@ export const fr: TranslationStructure = {
   },
   insights: {
     title: 'Aperçus',
+    back: 'Retour aux aperçus',
+    loadFailed: 'Les aperçus n’ont pas pu être chargés.',
+    average: 'Moyenne',
     period: '{{period}}',
     combined: 'Combiné',
     chart: {
@@ -425,6 +428,7 @@ export const fr: TranslationStructure = {
       brokeEven: 'À l’équilibre',
     },
     income: {
+      title: 'Revenus',
       link: 'Revenus de la période',
       currentTitle: 'Revenus actuels',
       smallTitle: 'Revenus :',
@@ -440,6 +444,8 @@ export const fr: TranslationStructure = {
       },
     },
     spending: {
+      title: 'Dépenses',
+      currentTitle: 'Dépenses actuelles',
       link: 'Dépenses de la période',
     },
     categoryBreakdown: {

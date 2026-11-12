@@ -392,6 +392,9 @@ export const en = {
   },
   insights: {
     title: 'Insights',
+    back: 'Back to insights',
+    loadFailed: 'Insights could not be loaded.',
+    average: 'Average',
     period: '{{period}}',
     combined: 'Combined',
     chart: {
@@ -422,6 +425,7 @@ export const en = {
       brokeEven: 'Broke even',
     },
     income: {
+      title: 'Income',
       link: 'Income this period',
       currentTitle: 'Current Income',
       smallTitle: 'Income:',
@@ -437,6 +441,8 @@ export const en = {
       },
     },
     spending: {
+      title: 'Spending',
+      currentTitle: 'Current Spending',
       link: 'Spending this period',
     },
     categoryBreakdown: {

@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { AccountPage } from './accounts/presentation/AccountPage';
 import { DashboardPage } from './dashboard/presentation/DashboardPage';
+import { SpendingPage } from './insights/presentation/SpendingPage';
 import { CashflowsPage } from './settings/presentation/CashflowsPage';
 import { CategoriesPage } from './settings/presentation/CategoriesPage';
 import { SettingsPage } from './settings/presentation/SettingsPage';
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/', element: <DashboardPage /> },
           { path: '/accounts/:id', element: <AccountPage /> },
+          { path: '/insights/spending', element: <SpendingPage /> },
           { path: '/settings', element: <SettingsPage /> },
           { path: '/settings/categories', element: <CategoriesPage /> },
           { path: '/settings/cashflows', element: <CashflowsPage /> },
