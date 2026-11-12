@@ -260,6 +260,13 @@ export const fr: TranslationStructure = {
     transactionOther: '{{count}} transactions',
     cashflowOne: '{{count}} flux actif',
     cashflowOther: '{{count}} flux actifs',
+    rename: 'Renommer',
+    renameAction: 'Renommer…',
+    renameTitle: 'Renommer {{name}}',
+    name: 'Nom',
+    renameHint: 'Le nouveau nom la remplace sur chaque transaction et chaque flux. Un nom déjà utilisé fusionne les deux étiquettes.',
+    renamed: '{{name}} renommée',
+    renameFailed: "L'étiquette n'a pas pu être renommée. Réessayez.",
   },
   editTransaction: {
     title: 'Modifier la transaction',

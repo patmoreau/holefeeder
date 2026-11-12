@@ -257,6 +257,13 @@ export const en = {
     transactionOther: '{{count}} transactions',
     cashflowOne: '{{count}} cashflow',
     cashflowOther: '{{count}} cashflows',
+    rename: 'Rename',
+    renameAction: 'Rename…',
+    renameTitle: 'Rename {{name}}',
+    name: 'Name',
+    renameHint: 'The new name replaces it on every transaction and cashflow. A name already in use merges both tags.',
+    renamed: '{{name}} renamed',
+    renameFailed: 'The tag could not be renamed. Try again.',
   },
   editTransaction: {
     title: 'Edit transaction',

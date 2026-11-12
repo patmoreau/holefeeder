@@ -22,6 +22,24 @@ const withTags = async (page: Page, tags: TagJson[] = [car, groceries, home, ren
 const rowOf = (page: Page, tag: string) =>
   page.getByTestId('tags-row').filter({ has: page.getByTestId('tags-row-name').getByText(tag, { exact: true }) });
 
+const renameRoute = '**/gateway/api/v2/tags/rename';
+
+const capture = async (page: Page, url: string, status = 204) => {
+  const bodies: unknown[] = [];
+  await page.route(url, (route) => {
+    bodies.push(route.request().postDataJSON());
+    return route.fulfill({ status: status });
+  });
+  return bodies;
+};
+
+const openRename = async (page: Page, tag: string) => {
+  await page.goto('/settings/tags');
+  await rowOf(page, tag).getByTestId('tags-row-more').click();
+  await page.getByTestId('tags-row-edit').click();
+  return page.getByTestId('tag-rename-dialog');
+};
+
 test.describe('Settings tags', () => {
   test.beforeEach(async ({ page }) => {
     await signedIn(page);
@@ -92,6 +110,79 @@ test.describe('Settings tags', () => {
     await page.goto('/settings/tags');
 
     await expect(page.getByTestId('tags-load-error')).toHaveText('The tags could not be loaded.');
+  });
+
+  test('ShouldOfferToRenameOrDeleteATag', async ({ page }) => {
+    await withTags(page);
+    await page.goto('/settings/tags');
+
+    await rowOf(page, 'groceries').getByTestId('tags-row-more').click();
+
+    await expect(page.getByTestId('tags-row-edit')).toHaveText('Rename…');
+    await expect(page.getByTestId('tags-row-delete')).toHaveText('Delete');
+  });
+
+  test('ShouldStartTheRenameFromTheCurrentName', async ({ page }) => {
+    await withTags(page);
+
+    const dialog = await openRename(page, 'groceries');
+
+    await expect(dialog.getByRole('heading')).toHaveText('Rename groceries');
+    await expect(dialog.getByTestId('tag-rename-dialog-name')).toHaveValue('groceries');
+    await expect(dialog).toContainText('The new name replaces it on every transaction and cashflow. A name already in use merges both tags.');
+  });
+
+  test('ShouldOnlyRenameToANameWithoutAComma', async ({ page }) => {
+    await withTags(page);
+    const dialog = await openRename(page, 'groceries');
+    const name = dialog.getByTestId('tag-rename-dialog-name');
+    const confirm = dialog.getByTestId('tag-rename-dialog-confirm');
+
+    await name.fill('  ');
+    await expect(confirm).toBeDisabled();
+    await name.fill('food,market');
+    await expect(confirm).toBeDisabled();
+    await name.fill('food');
+    await expect(confirm).toBeEnabled();
+  });
+
+  test('ShouldRenameTheTag', async ({ page }) => {
+    const listCalls = await withTags(page);
+    const bodies = await capture(page, renameRoute);
+    const dialog = await openRename(page, 'groceries');
+    const callsBefore = listCalls();
+
+    await dialog.getByTestId('tag-rename-dialog-name').fill(' Food ');
+    await dialog.getByTestId('tag-rename-dialog-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('groceries renamed');
+    await expect(dialog).toBeHidden();
+    expect(bodies).toEqual([{ tag: 'groceries', newTag: 'Food' }]);
+    await expect.poll(listCalls).toBeGreaterThan(callsBefore);
+  });
+
+  test('ShouldKeepTheRenameOpen_WhenItFails', async ({ page }) => {
+    await withTags(page);
+    await capture(page, renameRoute, 500);
+    const dialog = await openRename(page, 'groceries');
+
+    await dialog.getByTestId('tag-rename-dialog-name').fill('food');
+    await dialog.getByTestId('tag-rename-dialog-confirm').click();
+
+    await expect(dialog.getByTestId('tag-rename-dialog-error')).toHaveText('The tag could not be renamed. Try again.');
+    await expect(dialog.getByTestId('tag-rename-dialog-name')).toHaveValue('food');
+  });
+
+  test('ShouldCancelTheRename', async ({ page }) => {
+    await withTags(page);
+    const bodies = await capture(page, renameRoute);
+    const dialog = await openRename(page, 'groceries');
+
+    await dialog.getByTestId('tag-rename-dialog-name').fill('food');
+    await dialog.getByTestId('tag-rename-dialog-cancel').click();
+
+    await expect(dialog).toBeHidden();
+    expect(bodies).toEqual([]);
   });
 
   test.describe('on a phone', () => {

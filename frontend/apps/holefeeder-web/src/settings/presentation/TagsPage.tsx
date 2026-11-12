@@ -1,12 +1,18 @@
 import { type AsyncResult, tk } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 import { Link } from 'react-router';
+import { useApiRefresh } from '@/shared/api/api-refresh';
+import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
+import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
 import { EmptyList } from '@/shared/presentation/EmptyList';
+import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
 import { useTags } from '../api/use-tags';
 import type { Tag } from '../domain/tag';
 import { Rows, Section } from './SettingsList';
+import { TagRenameDialog } from './TagRenameDialog';
 
 const counted = (count: number, one: string, other: string) => (count === 0 ? [] : [translate(count === 1 ? one : other, { count: count })]);
 
@@ -16,8 +22,10 @@ const usageOf = (tag: Tag) =>
     ...counted(tag.activeCashflowCount, tk.tags.cashflowOne, tk.tags.cashflowOther),
   ].join(' · ');
 
-const TagRow = ({ tag }: { tag: Tag }) => (
-  <ListItem disablePadding data-testid="tags-row" sx={{ py: 1.25, minWidth: 0 }}>
+type TagActions = { onRename: (tag: Tag) => void; onDelete: (tag: Tag) => void };
+
+const TagRow = ({ tag, onRename, onDelete }: { tag: Tag } & TagActions) => (
+  <ListItem disablePadding data-testid="tags-row" sx={{ py: 1.25, gap: 1, minWidth: 0 }}>
     <Stack sx={{ minWidth: 0, flexGrow: 1 }}>
       <Typography data-testid="tags-row-name" noWrap sx={{ fontSize: 17 }}>
         {tag.tag}
@@ -26,10 +34,11 @@ const TagRow = ({ tag }: { tag: Tag }) => (
         {usageOf(tag)}
       </Typography>
     </Stack>
+    <RowActionsMenu testID="tags-row" onEdit={() => onRename(tag)} onDelete={() => onDelete(tag)} editLabel={translate(tk.tags.renameAction)} />
   </ListItem>
 );
 
-const TagList = ({ tags }: { tags: AsyncResult<Tag[]> }) => {
+const TagList = ({ tags, ...actions }: { tags: AsyncResult<Tag[]> } & TagActions) => {
   if (tags.isLoading) return <Skeleton variant="rounded" height={240} data-testid="tags-loading" sx={{ borderRadius: 3 }} />;
 
   if (tags.isFailure)
@@ -46,15 +55,23 @@ const TagList = ({ tags }: { tags: AsyncResult<Tag[]> }) => {
     <Section title={translate(tk.tagsSection.title)} testID="tags-list">
       <Rows>
         {tags.value.map((tag) => (
-          <TagRow key={tag.tag} tag={tag} />
+          <TagRow key={tag.tag} tag={tag} {...actions} />
         ))}
       </Rows>
     </Section>
   );
 };
 
-export const TagsPage = () => {
+const TagsContent = ({ notify }: { notify: Notify }) => {
   const tags = useTags();
+  const [renaming, setRenaming] = useState<Tag | null>(null);
+  const { refresh } = useApiRefresh();
+
+  const renamed = (tag: Tag) => {
+    setRenaming(null);
+    notify(translate(tk.tags.renamed, { name: tag.tag }));
+    refresh();
+  };
 
   return (
     <Stack spacing={3.5} data-testid="tags-page" sx={{ maxWidth: 720 }}>
@@ -72,7 +89,19 @@ export const TagsPage = () => {
           {translate(tk.tagsSection.title)}
         </Typography>
       </Stack>
-      <TagList tags={tags} />
+      <TagList tags={tags} onRename={setRenaming} onDelete={() => undefined} />
+      {renaming !== null && <TagRenameDialog tag={renaming} onClose={() => setRenaming(null)} onRenamed={renamed} />}
     </Stack>
+  );
+};
+
+export const TagsPage = () => {
+  const [toast, setToast] = useState<string | null>(null);
+
+  return (
+    <ApiRefreshProvider>
+      <TagsContent notify={setToast} />
+      <DashboardToast message={toast} onClose={() => setToast(null)} />
+    </ApiRefreshProvider>
   );
 };
