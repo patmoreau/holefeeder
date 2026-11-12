@@ -12,6 +12,7 @@ import { useOverview } from '../api/use-overview';
 import type { NetOutcome, Overview } from '../domain/overview';
 import { IncomeExpenseChart } from './IncomeExpenseChart';
 import { percent } from './percent';
+import { useInsightsRange } from './use-insights-range';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
@@ -124,7 +125,8 @@ const LinkRow = ({
 );
 
 const Content = () => {
-  const overview = useOverview();
+  const { periods, choose } = useInsightsRange();
+  const overview = useOverview(periods);
 
   if (overview.isLoading) return <Skeleton variant="rounded" height={189} data-testid="insights-loading" sx={{ borderRadius: 4 }} />;
 
@@ -139,7 +141,7 @@ const Content = () => {
     <>
       <Hero overview={overview.value} />
       <Section title={translate(tk.insights.chart.title)} testID="insights-chart-section">
-        <IncomeExpenseChart overview={overview.value} />
+        <IncomeExpenseChart overview={overview.value} periods={periods} onPeriodsChange={choose} />
       </Section>
       <Section title={translate(tk.insights.thisPeriod)} testID="insights-this-period">
         <Rows>

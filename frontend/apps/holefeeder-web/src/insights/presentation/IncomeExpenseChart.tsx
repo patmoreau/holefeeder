@@ -1,10 +1,10 @@
 import { type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { currency, toneColor, toneOf } from '@/shared/presentation/tone';
-import type { Overview, Period, PeriodFlow } from '../domain/overview';
+import type { Overview, Period, PeriodFlow, Range, RangeOption } from '../domain/overview';
 
 const visuallyHidden = {
   position: 'absolute',
@@ -180,6 +180,36 @@ const Tooltip = ({ flow, left, width }: { flow: PeriodFlow; left: number; width:
       {netText(flow.net)}
     </Typography>
   </Stack>
+);
+
+const rangeLabel = (range: Range) => translate(`insights.range.${range.unit}_${range.amount === 1 ? 'one' : 'other'}`, { count: range.amount });
+
+const RangeSwitch = ({ ranges, periods, onChange }: { ranges: RangeOption[]; periods: number; onChange: (periods: number) => void }) => (
+  <ToggleButtonGroup
+    exclusive
+    size="small"
+    value={periods}
+    onChange={(_, value: number | null) => {
+      if (value !== null) onChange(value);
+    }}
+    data-testid="insights-range"
+    sx={{
+      bgcolor: 'action.hover',
+      borderRadius: 2,
+      p: 0.25,
+      '& .MuiToggleButton-root': { border: 0, borderRadius: 1.5, px: 1.5, textTransform: 'none', fontSize: 13 },
+    }}
+  >
+    {ranges.map((option) => (
+      <ToggleButton
+        key={option.periods}
+        value={option.periods}
+        sx={{ '&.Mui-selected, &.Mui-selected:hover': { bgcolor: 'background.default', color: 'text.primary', fontWeight: 600 } }}
+      >
+        {rangeLabel(option.range)}
+      </ToggleButton>
+    ))}
+  </ToggleButtonGroup>
 );
 
 const Plot = ({ series }: { series: PeriodFlow[] }) => {
@@ -374,13 +404,24 @@ const Table = ({ series }: { series: PeriodFlow[] }) => (
   </Box>
 );
 
-export const IncomeExpenseChart = ({ overview }: { overview: Overview }) => (
+export const IncomeExpenseChart = ({
+  overview,
+  periods,
+  onPeriodsChange,
+}: {
+  overview: Overview;
+  periods: number;
+  onPeriodsChange: (periods: number) => void;
+}) => (
   <Stack
     spacing={2}
     data-testid="insights-chart"
     sx={(theme) => ({ py: 2.5, color: 'text.primary', ...colors, ...theme.applyStyles('dark', darkColors) })}
   >
-    <Legend />
+    <Stack direction="row" alignItems="center" justifyContent="space-between" useFlexGap sx={{ gap: 1.5, flexWrap: 'wrap' }}>
+      <Legend />
+      <RangeSwitch ranges={overview.ranges} periods={periods} onChange={onPeriodsChange} />
+    </Stack>
     <Plot series={overview.series} />
     <Stack direction="row" useFlexGap sx={{ gap: { xs: 2.5, md: 5 }, flexWrap: 'wrap' }}>
       <Total label={translate(tk.insights.chart.income)} value={overview.totalIncome} testID="insights-total-income" />

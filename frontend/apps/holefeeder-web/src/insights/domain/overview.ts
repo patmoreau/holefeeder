@@ -22,6 +22,10 @@ export type Period = { start: DateOnly; end: DateOnly };
 
 export type PeriodFlow = { period: Period; income: number; spending: number; net: number };
 
+export type Range = { unit: RangeUnit; amount: number };
+
+export type RangeOption = { periods: number; range: Range };
+
 export type Overview = {
   period: Period;
   income: number;
@@ -33,7 +37,8 @@ export type Overview = {
   totalIncome: number;
   totalSpending: number;
   totalNet: number;
-  range: { unit: RangeUnit; amount: number };
+  range: Range;
+  ranges: RangeOption[];
 };
 
 type Raw = Record<string, unknown>;
@@ -56,7 +61,8 @@ const valid = (value: Raw): Overview => ({
   totalIncome: value.totalIncome as number,
   totalSpending: value.totalSpending as number,
   totalNet: value.totalNet as number,
-  range: value.range as Overview['range'],
+  range: value.range as Range,
+  ranges: value.ranges as RangeOption[],
 });
 
 export const Overview = {

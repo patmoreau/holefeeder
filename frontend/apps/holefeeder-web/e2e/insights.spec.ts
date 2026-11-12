@@ -32,6 +32,11 @@ const anOverview = (overrides: Record<string, unknown> = {}) => ({
   totalSpending: 24859.63,
   totalNet: 3440.37,
   range: { unit: 'month', amount: 6 },
+  ranges: [
+    { periods: 3, range: { unit: 'month', amount: 3 } },
+    { periods: 6, range: { unit: 'month', amount: 6 } },
+    { periods: 12, range: { unit: 'year', amount: 1 } },
+  ],
   ...overrides,
 });
 
@@ -40,7 +45,14 @@ const pointAt = async (page: Page, index: number, count = 6) => {
   await page.mouse.move(box.x + (box.width * index) / (count - 1), box.y + box.height / 2);
 };
 
-const withOverview = (page: Page, overview: unknown = anOverview()) => page.route(overviewRoute, (route) => route.fulfill({ json: overview }));
+const withOverview = async (page: Page, overview: unknown = anOverview()) => {
+  const requested: string[] = [];
+  await page.route(overviewRoute, (route) => {
+    requested.push(new URL(route.request().url()).search);
+    return route.fulfill({ json: overview });
+  });
+  return requested;
+};
 
 test.describe('Insights', () => {
   test.beforeEach(async ({ page }) => {
@@ -262,6 +274,39 @@ test.describe('Insights', () => {
     await expect(page.getByTestId('insights-chart-tooltip')).toHaveCount(0);
   });
 
+  test('ShouldOfferThreeRanges_WithSixPeriodsByDefault', async ({ page }) => {
+    const requested = await withOverview(page);
+
+    await page.goto('/insights');
+
+    const options = page.getByTestId('insights-range').getByRole('button');
+    await expect(options).toHaveText(['3 months', '6 months', '1 year']);
+    await expect(options.nth(1)).toHaveAttribute('aria-pressed', 'true');
+    expect(new Set(requested)).toEqual(new Set(['?periods=6']));
+  });
+
+  test('ShouldSwitchTheRange', async ({ page }) => {
+    const requested = await withOverview(page);
+    await page.goto('/insights');
+
+    await page.getByTestId('insights-range').getByRole('button', { name: '1 year' }).click();
+
+    await expect(page.getByTestId('insights-range').getByRole('button', { name: '1 year' })).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => requested.at(-1)).toBe('?periods=12');
+  });
+
+  test('ShouldRememberTheRange', async ({ page }) => {
+    const requested = await withOverview(page);
+    await page.goto('/insights');
+    await page.getByTestId('insights-range').getByRole('button', { name: '3 months' }).click();
+    await expect.poll(() => requested).toContain('?periods=3');
+
+    await page.reload();
+
+    await expect(page.getByTestId('insights-range').getByRole('button', { name: '3 months' })).toHaveAttribute('aria-pressed', 'true');
+    expect(requested.at(-1)).toBe('?periods=3');
+  });
+
   test('ShouldShowLoading', async ({ page }) => {
     await page.route(overviewRoute, () => undefined);
 
@@ -288,6 +333,7 @@ test.describe('Insights', () => {
 
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Aperçus');
       await expect(page.getByTestId('insights-outcome')).toHaveText('Épargné 26 % du revenu');
+      await expect(page.getByTestId('insights-range').getByRole('button')).toHaveText(['3 mois', '6 mois', '1 an']);
     });
   });
 
@@ -298,6 +344,7 @@ test.describe('Insights', () => {
       await withOverview(page);
       await page.goto('/insights');
 
+      await page.getByTestId('insights-chart-hit').scrollIntoViewIfNeeded();
       const box = (await page.getByTestId('insights-chart-hit').boundingBox())!;
       await page.touchscreen.tap(box.x + box.width / 5, box.y + box.height / 2);
 
