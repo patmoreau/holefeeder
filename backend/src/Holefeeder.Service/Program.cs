@@ -52,11 +52,8 @@ builder.Services
         });
     });
 
-if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
-{
-    builder.Services.AddHangfireServices();
-    builder.Services.AddHealthChecks(builder.Configuration);
-}
+builder.Services.AddHangfireServices();
+builder.Services.AddHealthChecks(builder.Configuration);
 
 builder.Services
     .AddInfrastructure(builder.Configuration);
@@ -141,11 +138,8 @@ app
     .MapMyDataEndpoints()
     .MapHomeEndpoints();
 
-if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
-{
-    app.UseHangfire(builder.Configuration);
-    app.UseHealthChecks();
-    app.MigrateDb();
-}
+app.UseHangfire(builder.Configuration);
+app.UseHealthChecks();
+app.MigrateDb();
 
 await app.RunAsync();

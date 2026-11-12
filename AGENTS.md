@@ -20,7 +20,6 @@ Read the matching playbook before starting that work:
 | Task | When |
 |---|---|
 | `backend/add-api-endpoint.md` | Adding a REST endpoint to the Holefeeder API |
-| `backend/migrate-api-endpoint.md` | Moving a legacy endpoint into `Holefeeder.Service` |
 | `backend/deploy-staging.md` | Deploying the backend to Staging |
 | `frontend/deploy-mobile.md` | Installing the production mobile build on a physical iPhone |
 | `frontend/trust-simulator-cert.md` | Making an iOS Simulator trust the local mkcert root CA |

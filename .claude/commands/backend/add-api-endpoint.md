@@ -10,8 +10,7 @@ description: Add a REST endpoint to Holefeeder.Service as a Pokeball feature (Co
 
 New endpoints live in `backend/src/Holefeeder.Service`, in the feature/ring layout of
 `docs/contributing/architecture-principles.md`. Never add one to the legacy slices in
-`Holefeeder.Application/Features/`. To move an existing legacy endpoint, follow
-`migrate-api-endpoint.md` instead; it builds on this playbook.
+`Holefeeder.Application/Features/`.
 
 **The reference is the store items search**, `GET api/v2/store-items`
 (`src/Holefeeder.Service/StoreItems/`). When this playbook and that code disagree, the
@@ -332,7 +331,6 @@ and `ErrorConventions` run with the rest of the service tests.
 ```bash
 cd backend
 dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
-dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
 dotnet format DrifterApps.Holefeeder.slnx --verify-no-changes --severity error
 ```
 

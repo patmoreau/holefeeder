@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **step 1 done**, step 2 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–2 done**, step 3 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -57,6 +57,10 @@ Each step leaves `main` deployable and every suite green.
    `tests/Directory.Packages.props`, and `Refit` from `Directory.Packages.props`.
    Check each against `Holefeeder.ServiceTests`, which still references `Bogus` and
    `NSubstitute`, first.
+   Done. The `migrate-api-endpoint` playbook went with them: it took the functional
+   scenarios as its specification and no legacy route is left to migrate. So did the
+   `SECURITY_TESTS` environment checks in `Program.cs` and the CI step that trusted the
+   development certificate for the functional tests' identity server.
 3. **Move the auth constants.** Structural. `Authorization/Configuration` becomes a
    `Support/Api` type, and `AddSecurity` uses it. The endpoints keep their own
    `ReadUserPolicy`/`WriteUserPolicy` constants.

@@ -38,17 +38,7 @@
     <File Path="tests/.editorconfig" />
     <File Path="tests/Directory.Build.props" />
     <File Path="tests/Directory.Packages.props" />
-    <Project Path="tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
     <Project Path="tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
-    <Project Path="tests/Holefeeder.Tests.Common/Holefeeder.Tests.Common.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />

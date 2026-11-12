@@ -48,9 +48,7 @@
             "args": [
                 "test",
                 "--settings",
-                ".runsettings",
-                "--filter",
-                "FullyQualifiedName!~Holefeeder.Tests.Common"
+                ".runsettings"
             ],
             "problemMatcher": "$msCompile"
         },

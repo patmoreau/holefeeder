@@ -30,9 +30,6 @@
         <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="Holefeeder.FunctionalTests"/>
-    </ItemGroup>
 
     <ItemGroup>
         <None Update="appsettings.Development.json">

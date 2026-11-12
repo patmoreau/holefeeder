@@ -150,8 +150,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: api-functional-tests
-            project: tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
           - target: api-service-tests
             project: tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
@@ -178,13 +176,6 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('backend/Directory.Packages.props', 'backend/**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      - name: Trust the ASP.NET Core development certificate
-        run: |
-          dotnet dev-certs https
-          dotnet dev-certs https -ep ${{ runner.temp }}/aspnet-https.crt --format PEM
-          sudo cp ${{ runner.temp }}/aspnet-https.crt /usr/local/share/ca-certificates/aspnet-https.crt
-          sudo update-ca-certificates
 
       - name: Running ${{ matrix.target }}
         run: >-

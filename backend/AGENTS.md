@@ -25,11 +25,10 @@ values rather than merely checking that a result exists.
 Most of the backend predates agent-assisted work and is **legacy** (see *Legacy
 architecture* below). New code follows the target here. The first feature built this
 way, the store items search (`src/Holefeeder.Service/StoreItems/`), is the reference
-implementation; legacy endpoints now move over one at a time. The steps are in
-`../docs/plans/backend-service.md`.
+implementation; every legacy endpoint has since moved over. The steps are in
+`../docs/plans/backend-service.md` and `../docs/plans/backend-legacy-removal.md`.
 
-Two playbooks carry the procedure: `/backend:add-api-endpoint` for a new endpoint and
-`/backend:migrate-api-endpoint` for moving a legacy one
+The `/backend:add-api-endpoint` playbook carries the procedure for a new endpoint
 (`../docs/contributing/tasks/backend/`).
 
 - **One project.** `src/Holefeeder.Service` (the API host, formerly `Holefeeder.Api`) and
@@ -105,9 +104,6 @@ dotnet build DrifterApps.Holefeeder.slnx
 
 ### Test
 ```bash
-# Functional tests
-dotnet test tests/Holefeeder.FunctionalTests/Holefeeder.FunctionalTests.csproj
-
 # Service tests (Holefeeder.Service, real PostgreSQL via Testcontainers)
 dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
 
@@ -123,7 +119,7 @@ dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj -- --fi
 > Microsoft.Testing.Platform, which ignores `.runsettings`. Pass the project path
 > instead.
 
-> **Podman (rootless, macOS):** the functional and service tests start Testcontainers, and Ryuk
+> **Podman (rootless, macOS):** the service tests start Testcontainers, and Ryuk
 > fails with `making volume mountpoint … operation not supported`. Run them with
 > `TESTCONTAINERS_RYUK_DISABLED=true`, and make sure `DOCKER_HOST` points at the
 > podman machine socket (see the Docker section below).
@@ -178,8 +174,7 @@ docker compose up -d
 ### Tests in CI
 The `tests` job in `.github/workflows/ci-cd.yml` runs `dotnet test` for each test
 project directly on the runner, not in Docker, so Testcontainers can reach the
-runner's Docker. It first trusts the ASP.NET Core development certificate: the
-functional tests' fake identity server (`AuthorityDriver`) serves it over HTTPS.
+runner's Docker.
 The Dockerfile only builds the published image.
 
 ## Legacy architecture
@@ -205,9 +200,10 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 - Application features: `Accounts`, `MyData`, `StoreItems`, `Transactions`, `Users`
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
-Application no longer maps any route: every endpoint is in `Holefeeder.Service`. Its
-feature folders keep only the `Request`/`Response` types that
-`Holefeeder.FunctionalTests` still builds on, under `Commands/` and `Queries/`.
+Application no longer maps any route: every endpoint is in `Holefeeder.Service`. The
+three projects stay only for what the host still wires from them (auth constants,
+connection string, Hangfire setup, DbUp migrations) until
+`../docs/plans/backend-legacy-removal.md` moves those and deletes the projects.
 
 ### Key Patterns
 
@@ -231,7 +227,6 @@ feature folders keep only the `Request`/`Response` types that
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | React + MUI in `frontend/apps/holefeeder-web`, served by nginx from its own image |
 | Unit testing | xUnit + AwesomeAssertions (no mocks — NSubstitute is legacy, being phased out) |
-| BDD/Functional tests | SpecFlow + Respawn + WireMock.Net |
 | Coverage | Coverlet (Cobertura) + Stryker mutation testing |
 
 ### Code Quality Enforcement
