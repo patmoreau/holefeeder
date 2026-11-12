@@ -11,8 +11,7 @@
     <File Path="backend/Directory.Packages.props" />
     <File Path="backend/global.json" />
   </Folder>
-  <Folder Name="/src/" />
-  <Folder Name="/src/Api/">
+  <Folder Name="/src/">
     <Project Path="backend/src/Holefeeder.Service/Holefeeder.Service.csproj">
       <BuildType Solution="Staging|*" Project="?" />
       <Platform Solution="Staging|*" Project="?" />
