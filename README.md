@@ -57,11 +57,3 @@ dotnet tool restore
 ### Generate a code coverage report
 
 Run the `holefeeder code coverage` task in VS Code, or the commands under *Code Coverage* in [`backend/AGENTS.md`](backend/AGENTS.md).
-
-## Issues
-
-When port is in use, run this command
-
-```bash
-lsof -ti :7021 | xargs kill
-```
