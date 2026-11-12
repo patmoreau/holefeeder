@@ -210,6 +210,17 @@ export const fr: TranslationStructure = {
       spendingTitle: 'Dépenses:',
     },
   },
+  categories: {
+    back: 'Retour aux paramètres',
+    newCategory: 'Nouvelle catégorie',
+    expenses: 'Dépenses',
+    income: 'Revenus',
+    system: 'Système',
+    favorite: 'Favori',
+    loadFailed: "Les catégories n'ont pas pu être chargées.",
+    emptyTitle: 'Aucune catégorie',
+    emptyHint: 'Ajoutez-en une pour commencer à classer vos dépenses.',
+  },
   editTransaction: {
     title: 'Modifier la transaction',
     failed: "La transaction n'a pas pu être enregistrée. Réessayez.",

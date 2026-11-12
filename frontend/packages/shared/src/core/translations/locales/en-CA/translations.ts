@@ -208,6 +208,17 @@ export const en = {
       spendingTitle: 'Spending:',
     },
   },
+  categories: {
+    back: 'Back to settings',
+    newCategory: 'New category',
+    expenses: 'Expenses',
+    income: 'Income',
+    system: 'System',
+    favorite: 'Favorite',
+    loadFailed: 'The categories could not be loaded.',
+    emptyTitle: 'No categories yet',
+    emptyHint: 'Add one to start sorting your spending.',
+  },
   editTransaction: {
     title: 'Edit transaction',
     failed: 'The transaction could not be saved. Try again.',

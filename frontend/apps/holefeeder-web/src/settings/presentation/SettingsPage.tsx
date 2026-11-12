@@ -23,6 +23,7 @@ import {
   useColorScheme,
 } from '@mui/material';
 import { type ReactNode, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 import { buildVersionLabel } from '@/shared/core/build-version';
@@ -194,6 +195,7 @@ const BudgetValue = ({ settings }: { settings: AsyncResult<BudgetSettings> }) =>
 };
 
 const HolefeederSection = ({ notify }: { notify: Notify }) => {
+  const navigate = useNavigate();
   const settings = useBudgetSettings();
   const [editing, setEditing] = useState(false);
 
@@ -207,7 +209,12 @@ const HolefeederSection = ({ notify }: { notify: Notify }) => {
           value={<BudgetValue settings={settings} />}
           onClick={settings.isSuccess ? () => setEditing(true) : undefined}
         />
-        <LinkRow testID="settings-categories" icon={<CategoryOutlinedIcon />} label={translate(tk.categoriesSection.title)} />
+        <LinkRow
+          testID="settings-categories"
+          icon={<CategoryOutlinedIcon />}
+          label={translate(tk.categoriesSection.title)}
+          onClick={() => navigate('/settings/categories')}
+        />
         <LinkRow testID="settings-cashflows" icon={<RepeatOutlinedIcon />} label={translate(tk.cashflowsSection.title)} />
         <LinkRow testID="settings-tags" icon={<LocalOfferOutlinedIcon />} label={translate(tk.tagsSection.title)} />
       </Rows>

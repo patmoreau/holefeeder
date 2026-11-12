@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { AccountPage } from './accounts/presentation/AccountPage';
 import { DashboardPage } from './dashboard/presentation/DashboardPage';
+import { CategoriesPage } from './settings/presentation/CategoriesPage';
 import { SettingsPage } from './settings/presentation/SettingsPage';
 import { RequireAnonymous, RequireAuthenticated } from './shared/auth/AuthenticationGuards';
 import { AppShell } from './shared/presentation/AppShell';
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
           { path: '/', element: <DashboardPage /> },
           { path: '/accounts/:id', element: <AccountPage /> },
           { path: '/settings', element: <SettingsPage /> },
+          { path: '/settings/categories', element: <CategoriesPage /> },
         ],
       },
     ],
