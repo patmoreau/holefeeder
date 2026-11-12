@@ -118,4 +118,22 @@ public class ApiResultTests
         problem.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         problem.ProblemDetails.Detail.Should().Be("Thing is invalid.");
     }
+    [Theory]
+    [InlineData("thing-invalid")]
+    [InlineData("thing-not-found")]
+    [InlineData("things-read-failed")]
+    public void ToProblem_NamesTheErrorCode_WhenErrorIsNotAValidationAggregate(string code)
+    {
+        ResultError error = code switch
+        {
+            "thing-not-found" => new NotFoundError(code, "Thing was not found."),
+            "things-read-failed" => new UnexpectedError(code, "Things could not be read from the database."),
+            _ => new ResultError(code, "Thing is invalid.")
+        };
+
+        var result = ApiResult.ToProblem(error);
+
+        result.Should().BeOfType<ProblemHttpResult>()
+            .Which.ProblemDetails.Extensions.Should().Contain("code", code);
+    }
 }

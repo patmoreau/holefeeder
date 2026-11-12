@@ -282,6 +282,9 @@ internal static class SearchStoreItemsEndpoint
 | `NotFoundError` (`StoreItemErrors.NotFound`) | 404, the error's description as detail |
 | any other `ResultError` | 400, the error's description as detail |
 
+Every problem but a validation one also carries the error's code as a `code` extension,
+so a client can react to a specific rule (`category-name-taken`) without parsing text.
+
 A paged read answers with `ApiResult.ToPagedOk`, which writes `X-Total-Count`. The
 response is a record of primitives (`StoreItemResponse`), never a Core type.
 

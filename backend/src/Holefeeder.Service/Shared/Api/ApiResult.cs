@@ -23,7 +23,8 @@ internal static class ApiResult
             _ => ToProblemDetails(error, StatusCodes.Status400BadRequest)
         };
 
-    private static IResult ToProblemDetails(ResultError error, int statusCode) => Results.Problem(statusCode: statusCode, detail: error.Description);
+    private static IResult ToProblemDetails(ResultError error, int statusCode) =>
+        Results.Problem(statusCode: statusCode, detail: error.Description, extensions: new Dictionary<string, object?> { ["code"] = error.Code });
 
     private static IResult ToValidationProblemDetails(ResultErrorAggregate error) =>
         Results.ValidationProblem(error.Errors.ToDictionary(entry => entry.Key, entry => entry.Value), error.Description);
