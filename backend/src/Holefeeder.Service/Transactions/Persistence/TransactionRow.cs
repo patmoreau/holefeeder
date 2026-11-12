@@ -22,7 +22,7 @@ internal sealed record TransactionRow(
             Description ?? string.Empty,
             Shared.Core.Id.Valid(AccountId),
             Shared.Core.Id.Valid(CategoryId),
-            Core.Tags.Create((Tags ?? string.Empty).Split(',')),
+            Shared.Core.Tags.Create((Tags ?? string.Empty).Split(',')),
             CashflowId is { } cashflowId ? Shared.Core.Id.Valid(cashflowId) : null,
             CashflowDate);
 }

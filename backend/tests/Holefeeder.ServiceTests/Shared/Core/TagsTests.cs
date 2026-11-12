@@ -1,6 +1,6 @@
-using Holefeeder.Service.Transactions.Core;
+using Holefeeder.Service.Shared.Core;
 
-namespace Holefeeder.ServiceTests.Transactions.Core;
+namespace Holefeeder.ServiceTests.Shared.Core;
 
 public class TagsTests
 {

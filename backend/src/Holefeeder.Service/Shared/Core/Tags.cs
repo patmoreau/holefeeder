@@ -1,4 +1,4 @@
-namespace Holefeeder.Service.Transactions.Core;
+namespace Holefeeder.Service.Shared.Core;
 
 internal sealed record Tags
 {
