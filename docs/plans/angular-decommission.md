@@ -1,9 +1,10 @@
 # Decommission the Angular web app
 
 Status: **done** 2026-11-12 — `Holefeeder.Web` deleted; the React app ships as
-`frontend/apps/holefeeder-web/Dockerfile`, served by nginx. Still open outside this
-repository: the Auth0 `/angular` URLs, the `CICD_CODE_FILE_PATTERNS` and
-`LINTER_CODE_FILE_PATTERNS` variables, and a check of the homelab Quadlet unit.
+`frontend/apps/holefeeder-web/Dockerfile`, served by nginx. Outside this repository the
+Auth0 `/angular` URLs are removed, the `CICD_CODE_FILE_PATTERNS` variable points at
+`frontend/.dockerignore`, and my-homelab publishes the web port as `5000:80` (nginx
+listens on 80, not the 5000 that `ASPNETCORE_URLS` used to set).
 
 ## Context
 
