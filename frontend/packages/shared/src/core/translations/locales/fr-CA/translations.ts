@@ -228,7 +228,8 @@ export const fr: TranslationStructure = {
     failed: "La catégorie n'a pas pu être enregistrée. Réessayez.",
     nameTaken: 'Ce nom est déjà utilisé.',
     deleteTitle: 'Supprimer {{name}} ?',
-    deleteMessage: '{{name}} quitte vos listes de catégories. Ses transactions gardent leur catégorie et leurs montants restent dans vos soldes.',
+    deleteMessage:
+      '{{name}} quitte vos listes de catégories. Ses transactions gardent leur catégorie et leurs montants restent dans vos soldes.',
     deleted: '{{name}} supprimée',
     deleteFailed: "{{name}} n'a pas pu être supprimée. Réessayez.",
   },
