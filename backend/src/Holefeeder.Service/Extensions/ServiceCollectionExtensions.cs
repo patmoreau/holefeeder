@@ -1,6 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
+using Hangfire;
+using Hangfire.PostgreSql;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -58,6 +61,21 @@ internal static class ServiceCollectionExtensions
         services
             .AddHealthChecks()
             .AddCheck("api", () => HealthCheckResult.Healthy(), ServiceTags);
+
+        return services;
+    }
+
+    public static IServiceCollection AddHangfireServices(this IServiceCollection services,
+        Func<IServiceProvider, string> connectionString)
+    {
+        services.AddHangfire((provider, globalConfiguration) =>
+            globalConfiguration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString(provider))));
+
+        services.AddHangfireServer(options => { options.WorkerCount = 1; });
 
         return services;
     }

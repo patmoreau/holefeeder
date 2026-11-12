@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–4 done**, step 5 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–5 done**, step 6 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -15,7 +15,7 @@ Every route is served by `Holefeeder.Service`, and the dead legacy code is gone
 |---|---|
 | ~~`Application/Authorization/Configuration`~~ | Moved in step 3 |
 | ~~`Infrastructure/SeedWork/BudgetingConnectionStringBuilder`~~ | Replaced in step 4 |
-| `Infrastructure/Extensions/ServiceCollectionExtensions` | `AddInfrastructure` (registers the builder above) and `AddHangfireServices` |
+| ~~`Infrastructure/Extensions/ServiceCollectionExtensions`~~ | `AddInfrastructure` removed in step 4, `AddHangfireServices` moved in step 5 |
 | `Infrastructure/Extensions/WebApplicationExtensions` | `MigrateDb`: DbUp over the scripts embedded in `Holefeeder.Infrastructure`, 3 tries 10 s apart; also called by `DatabaseForTest` |
 | `Infrastructure/Scripts/*.sql` | The schema, as DbUp scripts |
 | `Application/Extensions/LoggerExtensions` | The three migration log messages `MigrateDb` writes |
@@ -80,6 +80,10 @@ Each step leaves `main` deployable and every suite green.
    `Extensions/` of the host, unchanged: same storage, serializer settings and one
    worker. Jobs already enqueued keep deserializing, because `ImportDataPayload`'s type
    name does not change.
+   Done: it sits in the host's `Extensions/ServiceCollectionExtensions`, and the Service
+   references `Hangfire.AspNetCore` and `Hangfire.PostgreSql` directly. The `Hangfire`
+   meta-package went with Infrastructure's references; it only added the unused SQL
+   Server storage, and the resolved Hangfire versions stay the same.
 6. **Move the schema migrations.** Structural. The DbUp runner, its log messages and the
    `.sql` files move into `Holefeeder.Service`; `DatabaseForTest` calls the new runner.
    The location is a decision to settle first. It holds no feature, so the proposal is
