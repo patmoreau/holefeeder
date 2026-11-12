@@ -1,7 +1,6 @@
 using DrifterApps.Seeds.Application.Extensions;
 using DrifterApps.Seeds.FluentResult;
 
-using Holefeeder.Application.UseCases;
 using Holefeeder.Domain.Features.Accounts;
 using Holefeeder.Domain.Features.Categories;
 using Holefeeder.Domain.Features.StoreItem;
@@ -53,7 +52,6 @@ public static class ResultErrorExtensions
             { Code: TransactionErrors.CodeAccountNotFound } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: TransactionErrors.CodeCategoryNotFound } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: TransactionErrors.CodeCategoryNameNotFound } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
-            { Code: SyncErrors.CodeTypeInvalid } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             { Code: UserErrors.CodeNotFound } => error.ToProblemDetails(StatusCodes.Status404NotFound),
             { Code: UserErrors.CodeAlreadyRegistered } => error.ToProblemDetails(StatusCodes.Status400BadRequest),
             _ => error.ToProblemDetails(StatusCodes.Status500InternalServerError)
