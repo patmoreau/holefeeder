@@ -10,7 +10,7 @@
 | Statistics  | [statistics.md](statistics.md)   | Always computed, never stored; averages exclude leading empty periods                    |
 | Settings    | [settings.md](settings.md)       | One budget period per user; defaults to monthly from today; frequency is at least 1      |
 | Store Item  | [store-item.md](store-item.md)   | Code is immutable after creation; codes are unique per user                              |
-| Tag         | [tag.md](tag.md)                 | A tag exists only while a transaction or cashflow carries it                             |
+| Tag         | [tag.md](tag.md)                 | A tag exists only while a transaction or cashflow carries it; renamed tags are lowercase |
 | Transaction | [transaction.md](transaction.md) | Transfers always create exactly two transactions; atomically or not at all               |
 
 ---

@@ -26,3 +26,19 @@ Lists every tag the user has, with how much each one is used.
 - Blank tags are ignored
 - Tags are sorted by name
 - Only the user's own transactions and cashflows are considered
+
+---
+
+## Renaming a Tag
+
+Replaces a tag with a new name on every transaction and cashflow of the user.
+
+- The tag to rename must not be empty; it is matched exactly, after trimming, so `car`
+  does not match `carwash` and `Car` does not match `car`
+- The new name is trimmed and lowercased; it must not be empty or contain a comma
+- Applies to transactions and to all cashflows, cancelled ones included
+- The renamed tag keeps its position in each list
+- When an item already carries the new name, the two merge into one, at the position of
+  the first one
+- Renaming a tag to its own name changes nothing
+- Only the user's own transactions and cashflows change
