@@ -102,7 +102,7 @@ public class OpenAccountComponent(ServerForTest server, ITestOutputHelper testOu
         var created = await response.Value.Content.ReadFromJsonAsync<CreatedResponse>();
         created.Should().NotBeNull();
         response.Value.Headers.Location.Should().NotBeNull();
-        response.Value.Headers.Location!.ToString().Should().EndWith($"/api/v2/accounts/{created.Id}");
+        response.Value.Headers.Location!.ToString().Should().EndWith($"/api/v2/accounts/{created.Id}/detail");
 
         using var client = server.CreateClientFor(_user.IdentityObjectId);
         var account = await client.GetFromJsonAsync<OpenedAccountJson>(new Uri($"/api/v2/accounts/{created.Id}/detail", UriKind.Relative));

@@ -7,7 +7,7 @@ namespace Holefeeder.Service.Accounts.Api.OpenAccount;
 internal static class OpenAccountEndpoint
 {
     private const string WriteUserPolicy = "WriteUser";
-    private const string GetAccountRoute = "GetAccount";
+    private const string GetAccountDetailRoute = "GetAccountDetail";
 
     public static IEndpointRouteBuilder MapOpenAccount(this IEndpointRouteBuilder app)
     {
@@ -42,6 +42,6 @@ internal static class OpenAccountEndpoint
         }
         var id = idResult.Value.Value;
 
-        return Results.CreatedAtRoute(GetAccountRoute, new { id }, new OpenAccountResponse(id));
+        return Results.CreatedAtRoute(GetAccountDetailRoute, new { id }, new OpenAccountResponse(id));
     }
 }
