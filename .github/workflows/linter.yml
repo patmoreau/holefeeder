@@ -67,7 +67,7 @@ jobs:
         run: scripts/sync-agent-files.sh --check
 
   create_check:
-    needs: [check_changes, csharp, typescript, agent_files]
+    needs: [check_changes, csharp, agent_files]
     uses: patmoreau/workflow-config/.github/workflows/create-check.yml@main
     if: always() && needs.check_changes.result == 'success'
     with:
