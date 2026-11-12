@@ -1,6 +1,7 @@
 using Dapper;
 
 using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Cashflows.Core.ListCashflows;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 using Holefeeder.ServiceTests.TestKit.Persistence;
@@ -12,19 +13,27 @@ internal static class CashflowForTest
     private const string InsertAccount =
         """
         INSERT INTO accounts (id, type, name, favorite, open_balance, open_date, description, inactive, user_id)
-        VALUES (@Id, 'Checking', @Name, FALSE, 0, '2020-01-01', '', FALSE, @UserId);
+        VALUES (@Id, 'Checking', @Name, FALSE, 0, '2020-01-01', '', FALSE, @UserId)
+        ON CONFLICT (id) DO NOTHING;
         """;
 
     private const string InsertCategory =
         """
         INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, user_id)
-        VALUES (@Id, 'Expense', @Name, '#000000', 0, FALSE, FALSE, @UserId);
+        VALUES (@Id, @Type, @Name, @Color, 0, FALSE, FALSE, @UserId)
+        ON CONFLICT (id) DO NOTHING;
         """;
 
     private const string InsertCashflow =
         """
         INSERT INTO cashflows (id, effective_date, amount, interval_type, frequency, recurrence, description, account_id, category_id, inactive, tags, user_id)
         VALUES (@Id, @EffectiveDate, @Amount, @IntervalType, @Frequency, @Recurrence, @Description, @AccountId, @CategoryId, @Inactive, @Tags, @UserId);
+        """;
+
+    private const string InsertPayment =
+        """
+        INSERT INTO transactions (id, date, amount, description, account_id, category_id, cashflow_id, cashflow_date, tags, user_id)
+        VALUES (@Id, @Date, @Amount, '', @AccountId, @CategoryId, @CashflowId, @CashflowDate, '', @UserId);
         """;
 
     private const string SelectCashflow =
@@ -43,16 +52,37 @@ internal static class CashflowForTest
         """;
 
     internal static Cashflow ACashflow(
-        decimal amount = 1450m, bool inactive = false, string description = "Rent", string tags = "housing", Id? accountId = null, Id? categoryId = null) =>
+        decimal amount = 1450m, bool inactive = false, string description = "Rent", string tags = "housing", Id? accountId = null, Id? categoryId = null,
+        DateOnly? effectiveDate = null, string intervalType = "Monthly", int frequency = 1) =>
         Cashflow.Valid(
-            AnId(), new DateOnly(2026, 1, 1), Money.Valid(amount), "Monthly", 1, 0, description,
+            AnId(), effectiveDate ?? new DateOnly(2026, 1, 1), Money.Valid(amount), intervalType, frequency, 0, description,
             accountId ?? AnId(), categoryId ?? AnId(), inactive, tags);
 
-    public static async Task<Cashflow> SavedInDbAsync(this Cashflow cashflow, User user, DatabaseForTest database)
+    internal static CashflowSummary ACashflowSummary(
+        string description = "Rent", string categoryName = "Housing", CategoryType categoryType = CategoryType.Expense, decimal amount = 1450m) =>
+        new(
+            AnId(),
+            description,
+            new CashflowSchedule(AnId(), new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, amount, categoryType, null, null),
+            categoryName,
+            "#5856D6",
+            "Chequing",
+            ["housing"]);
+
+    public static async Task<Cashflow> SavedInDbAsync(
+        this Cashflow cashflow, User user, DatabaseForTest database, string? categoryName = null, string categoryType = "Expense",
+        string categoryColor = "#000000", string? accountName = null)
     {
         await using var connection = database.DataSource.CreateConnection();
-        await connection.ExecuteAsync(InsertAccount, new { Id = cashflow.AccountId.Value, Name = $"account-{cashflow.AccountId.Value}", UserId = user.Id.Value });
-        await connection.ExecuteAsync(InsertCategory, new { Id = cashflow.CategoryId.Value, Name = $"category-{cashflow.CategoryId.Value}", UserId = user.Id.Value });
+        await connection.ExecuteAsync(InsertAccount, new { Id = cashflow.AccountId.Value, Name = accountName ?? $"account-{cashflow.AccountId.Value}", UserId = user.Id.Value });
+        await connection.ExecuteAsync(InsertCategory, new
+        {
+            Id = cashflow.CategoryId.Value,
+            Type = categoryType,
+            Name = categoryName ?? $"category-{cashflow.CategoryId.Value}",
+            Color = categoryColor,
+            UserId = user.Id.Value
+        });
         await connection.ExecuteAsync(InsertCashflow, new
         {
             Id = cashflow.Id.Value,
@@ -69,6 +99,22 @@ internal static class CashflowForTest
             UserId = user.Id.Value
         });
         return cashflow;
+    }
+
+    public static async Task PaidInDbAsync(this Cashflow cashflow, User user, DatabaseForTest database, DateOnly date, DateOnly cashflowDate)
+    {
+        await using var connection = database.DataSource.CreateConnection();
+        await connection.ExecuteAsync(InsertPayment, new
+        {
+            Id = AnId().Value,
+            Date = date.ToDateTime(TimeOnly.MinValue),
+            Amount = cashflow.Amount.Value,
+            AccountId = cashflow.AccountId.Value,
+            CategoryId = cashflow.CategoryId.Value,
+            CashflowId = cashflow.Id.Value,
+            CashflowDate = cashflowDate.ToDateTime(TimeOnly.MinValue),
+            UserId = user.Id.Value
+        });
     }
 
     public static async Task<Cashflow?> CashflowInDbAsync(this DatabaseForTest database, Id id)

@@ -1,6 +1,7 @@
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Cashflows.Core.ListCashflows;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Support.Core;
 
@@ -10,6 +11,7 @@ internal sealed class CashflowsInMemory : ICashflows
 {
     private readonly List<(Id UserId, Cashflow Cashflow)> _cashflows = [];
     private readonly List<(Id UserId, Payment Payment)> _payments = [];
+    private readonly List<(Id UserId, CashflowSummary Summary)> _summaries = [];
     private ResultError? _failure;
 
     public IReadOnlyList<Payment> PaymentsOf(User user) =>
@@ -17,6 +19,12 @@ internal sealed class CashflowsInMemory : ICashflows
 
     public Cashflow? CashflowOf(User user, Id id) =>
         _cashflows.Where(entry => entry.UserId == user.Id && entry.Cashflow.Id == id).Select(entry => entry.Cashflow).SingleOrDefault();
+
+    public Task<Result<IReadOnlyList<CashflowSummary>>> ListAsync(User user, CancellationToken cancellationToken) =>
+        Task.FromResult<Result<IReadOnlyList<CashflowSummary>>>(
+            _failure is not null
+                ? _failure
+                : _summaries.Where(entry => entry.UserId == user.Id).Select(entry => entry.Summary).ToList());
 
     public Task<Result<Cashflow>> GetAsync(User user, Id id, CancellationToken cancellationToken)
     {
@@ -60,6 +68,8 @@ internal sealed class CashflowsInMemory : ICashflows
     }
 
     public void Add(User user, Cashflow cashflow) => _cashflows.Add((user.Id, cashflow));
+
+    public void Add(User user, CashflowSummary summary) => _summaries.Add((user.Id, summary));
 
     public void FailWith(ResultError error) => _failure = error;
 }

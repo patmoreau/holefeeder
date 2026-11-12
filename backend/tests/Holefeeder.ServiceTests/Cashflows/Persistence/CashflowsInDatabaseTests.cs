@@ -1,4 +1,5 @@
 using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Cashflows.Core.ListCashflows;
 using Holefeeder.Service.Cashflows.Persistence;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.Cashflows.TestKit;
@@ -13,6 +14,51 @@ public class CashflowsInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
     private static readonly DateOnly Scheduled = new(2026, 11, 1);
 
     private readonly CashflowsInDatabase _repository = new(database.DataSource, new LoggerForTest<CashflowsInDatabase>(testOutputHelper));
+
+    [Fact]
+    public async Task ListAsync_ListsTheActiveCashflowsByTypeThenTitle()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var chequing = AnId();
+        var housing = AnId();
+        var rent = await ACashflow(1450m, description: "Rent", tags: "home,rent", accountId: chequing, categoryId: housing)
+            .SavedInDbAsync(user, database, "Housing", "Expense", "#5856D6", "Chequing");
+        var gym = await ACashflow(45m, description: "", tags: "", accountId: chequing, effectiveDate: new DateOnly(2026, 11, 2), intervalType: "Weekly", frequency: 2)
+            .SavedInDbAsync(user, database, "Health", "Expense", "#30B0C7", "Chequing");
+        var payroll = await ACashflow(2400m, description: "Payroll", tags: "", accountId: chequing)
+            .SavedInDbAsync(user, database, "Salary", "Gain", "#34C759", "Chequing");
+        await _repository.SaveAsync(user, rent, rent.Pay(AnId(), new DateOnly(2026, 2, 2), rent.Amount, new DateOnly(2026, 2, 1)), CancellationToken.None);
+        await ACashflow(description: "Old", inactive: true).SavedInDbAsync(user, database);
+        await ACashflow(description: "Someone else's").SavedInDbAsync(await AUser().SavedInDbAsync(database), database);
+
+        var result = await _repository.ListAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo(
+            [
+                new CashflowSummary(
+                    gym.Id, "", new CashflowSchedule(chequing, new DateOnly(2026, 11, 2), IntervalType.Weekly, 2, 45m, CategoryType.Expense, null, null),
+                    "Health", "#30B0C7", "Chequing", []),
+                new CashflowSummary(
+                    rent.Id, "Rent",
+                    new CashflowSchedule(chequing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense, new DateOnly(2026, 2, 2), new DateOnly(2026, 2, 1)),
+                    "Housing", "#5856D6", "Chequing", ["home", "rent"]),
+                new CashflowSummary(
+                    payroll.Id, "Payroll", new CashflowSchedule(chequing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 2400m, CategoryType.Gain, null, null),
+                    "Salary", "#34C759", "Chequing", [])
+            ],
+            options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task ListAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new CashflowsInDatabase(database.BadDataSource, new LoggerForTest<CashflowsInDatabase>(testOutputHelper));
+
+        var result = await repository.ListAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(CashflowsErrors.ReadFailed);
+    }
 
     [Fact]
     public async Task GetAsync_ReturnsTheUsersCashflow()

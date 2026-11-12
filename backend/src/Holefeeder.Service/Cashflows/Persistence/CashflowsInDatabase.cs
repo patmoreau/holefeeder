@@ -3,6 +3,7 @@ using Dapper;
 using DrifterApps.Seeds.FluentResult;
 
 using Holefeeder.Service.Cashflows.Core;
+using Holefeeder.Service.Cashflows.Core.ListCashflows;
 using Holefeeder.Service.Shared.Core;
 
 using Npgsql;
@@ -13,6 +14,40 @@ namespace Holefeeder.Service.Cashflows.Persistence;
 
 internal sealed partial class CashflowsInDatabase(NpgsqlDataSource dataSource, ILogger<CashflowsInDatabase> logger) : ICashflows
 {
+    public async Task<Result<IReadOnlyList<CashflowSummary>>> ListAsync(User user, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT c.id, c.description, c.account_id, c.effective_date, c.interval_type, c.frequency, c.amount,
+                                  cc.type AS category_type, p.last_paid_date, p.last_cashflow_date, cc.name AS category_name,
+                                  cc.color AS category_color, a.name AS account_name, c.tags
+                           FROM cashflows c
+                           INNER JOIN categories cc ON cc.id = c.category_id
+                           INNER JOIN accounts a ON a.id = c.account_id
+                           LEFT JOIN (SELECT t.cashflow_id, MAX(t.date) AS last_paid_date, MAX(t.cashflow_date) AS last_cashflow_date
+                                      FROM transactions t
+                                      WHERE t.user_id = @UserId AND t.cashflow_id IS NOT NULL
+                                      GROUP BY t.cashflow_id) p ON p.cashflow_id = c.id
+                           WHERE c.user_id = @UserId AND NOT c.inactive
+                           ORDER BY cc.type, LOWER(COALESCE(NULLIF(TRIM(c.description), ''), cc.name)), c.id;
+                           """;
+        var parameters = new DynamicParameters(new { UserId = user.Id.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var rows = await connection.QueryAsync<CashflowSummaryRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return rows.Select(row => row.ToCashflowSummary()).ToList();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return CashflowsErrors.ReadFailed;
+        }
+    }
+
     public async Task<Result<Cashflow>> GetAsync(User user, Id id, CancellationToken cancellationToken)
     {
         const string sql = """
