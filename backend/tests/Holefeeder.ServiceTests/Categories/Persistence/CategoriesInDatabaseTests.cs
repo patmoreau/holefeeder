@@ -195,4 +195,17 @@ public class CategoriesInDatabaseTests(DatabaseForTest database, ITestOutputHelp
 
         result.Should().BeFailure().And.WithError(CategoriesErrors.ReadFailed);
     }
+    [Fact]
+    public async Task SaveAsync_KeepsADeactivatedCategoryOutOfTheList()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var dining = await ACategory("Dining").SavedInDbAsync(user, database);
+
+        var result = await _repository.SaveAsync(user, dining with { Inactive = true }, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.ListAsync(user, CancellationToken.None)).Value.Should().BeEmpty();
+        (await _repository.GetAsync(user, dining.Id, CancellationToken.None)).Should().BeFailure().And.WithError(CategoryErrors.NotFound);
+        (await _repository.IsNameUsedAsync(user, dining.Name, AnId(), CancellationToken.None)).Value.Should().BeTrue();
+    }
 }

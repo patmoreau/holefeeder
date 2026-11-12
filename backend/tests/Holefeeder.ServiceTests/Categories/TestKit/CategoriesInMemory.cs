@@ -8,7 +8,7 @@ namespace Holefeeder.ServiceTests.Categories.TestKit;
 
 internal sealed class CategoriesInMemory : ICategories
 {
-    private readonly List<(Id UserId, Category Category, bool Inactive)> _categories = [];
+    private readonly List<(Id UserId, Category Category)> _categories = [];
     private ResultError? _failure;
 
     public Task<Result<IReadOnlyList<Category>>> ListAsync(User user, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ internal sealed class CategoriesInMemory : ICategories
         }
 
         var categories = _categories
-            .Where(entry => entry.UserId == user.Id && !entry.Inactive)
+            .Where(entry => entry.UserId == user.Id && !entry.Category.Inactive)
             .Select(entry => entry.Category)
             .OrderBy(category => category.Type)
             .ThenByDescending(category => category.Favorite)
@@ -39,7 +39,7 @@ internal sealed class CategoriesInMemory : ICategories
         var index = _categories.FindIndex(entry => entry.Category.Id == category.Id);
         if (index < 0)
         {
-            _categories.Add((user.Id, category, false));
+            _categories.Add((user.Id, category));
             return Task.FromResult<Result<Nothing>>(Nothing.Value);
         }
 
@@ -48,7 +48,7 @@ internal sealed class CategoriesInMemory : ICategories
             return Task.FromResult<Result<Nothing>>(CategoryErrors.NotFound);
         }
 
-        _categories[index] = (user.Id, category, _categories[index].Inactive);
+        _categories[index] = (user.Id, category);
         return Task.FromResult<Result<Nothing>>(Nothing.Value);
     }
 
@@ -60,7 +60,7 @@ internal sealed class CategoriesInMemory : ICategories
         }
 
         var category = _categories
-            .Where(entry => entry.UserId == user.Id && !entry.Inactive && entry.Category.Id == id)
+            .Where(entry => entry.UserId == user.Id && !entry.Category.Inactive && entry.Category.Id == id)
             .Select(entry => entry.Category)
             .SingleOrDefault();
 
@@ -79,7 +79,7 @@ internal sealed class CategoriesInMemory : ICategories
             string.Equals(entry.Category.Name.Value, name.Value, StringComparison.OrdinalIgnoreCase)));
     }
 
-    public void Add(User user, Category category, bool inactive = false) => _categories.Add((user.Id, category, inactive));
+    public void Add(User user, Category category, bool inactive = false) => _categories.Add((user.Id, category with { Inactive = inactive }));
 
     public void FailWith(ResultError error) => _failure = error;
 }

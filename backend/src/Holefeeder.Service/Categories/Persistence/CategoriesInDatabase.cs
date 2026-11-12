@@ -92,10 +92,10 @@ internal sealed partial class CategoriesInDatabase(NpgsqlDataSource dataSource, 
     {
         const string sql = """
                            INSERT INTO categories (id, type, name, color, budget_amount, favorite, system, inactive, user_id)
-                           VALUES (@Id, @Type, @Name, @Color, @Budget, @Favorite, @System, FALSE, @UserId)
+                           VALUES (@Id, @Type, @Name, @Color, @Budget, @Favorite, @System, @Inactive, @UserId)
                            ON CONFLICT (id) DO UPDATE
                            SET type = EXCLUDED.type, name = EXCLUDED.name, color = EXCLUDED.color,
-                               budget_amount = EXCLUDED.budget_amount, favorite = EXCLUDED.favorite
+                               budget_amount = EXCLUDED.budget_amount, favorite = EXCLUDED.favorite, inactive = EXCLUDED.inactive
                            WHERE categories.user_id = EXCLUDED.user_id;
                            """;
         var parameters = new DynamicParameters(new
@@ -107,6 +107,7 @@ internal sealed partial class CategoriesInDatabase(NpgsqlDataSource dataSource, 
             Budget = category.Budget.Value,
             category.Favorite,
             category.System,
+            category.Inactive,
             UserId = user.Id.Value
         });
 
