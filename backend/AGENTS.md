@@ -205,10 +205,13 @@ Domain → Application → Infrastructure → Service
 
 Both Domain and Application are organized into **vertical feature slices** by business domain:
 
-- Application features: `Accounts`, `Categories`, `Dashboard`, `Enumerations`, `MyData`, `Periods`, `Statistics`, `StoreItems`, `Tags`, `Transactions`
+- Application features: `Accounts`, `MyData`, `StoreItems`, `Transactions`, `Users`
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
-Each Application feature folder contains `Commands/` and `Queries/` subdirectories following a CQRS pattern, plus a mapper (`*Mapper.cs`). Prefer keeping a feature's controller/use-cases/repositories together in its slice rather than grouping by technical role (a `Controllers/` folder, a `Services/` folder, etc.).
+Application no longer maps any route: every endpoint is in `Holefeeder.Service`. Its
+feature folders keep only the `Request`/`Response` types and validators that
+`Holefeeder.FunctionalTests` and `Holefeeder.UnitTests` still build on, under
+`Commands/` and `Queries/`.
 
 ### Key Patterns
 

@@ -69,9 +69,10 @@ is approved. Every step leaves `main` deployable.
    Progress: every route a client still calls is migrated. The mobile app's last three,
    `GET api/v2/users/me`, `POST api/v2/users/register` (`Users/`) and
    `POST api/v2/sync/powersync` (`Sync/`), moved in `1e6634f1`, `e0a99c38` and `43b2b422`.
-   The 18 legacy routes with no caller are removed. The three `my-data` routes
-   (`export-data`, `import-data`, `import-status/{id}`) are still in use and are the
-   last ones left in `Holefeeder.Application`.
+   The 18 legacy routes with no caller are removed. The three `my-data` routes moved
+   to `MyData/` in `76c8a92a` and `564fabf6`, its import running as a Hangfire job in
+   the `Jobs` ring. `Holefeeder.Application` serves no route any more: what is left is
+   middleware, request types the legacy tests build on, and the code those use.
 
 ## Decisions
 
