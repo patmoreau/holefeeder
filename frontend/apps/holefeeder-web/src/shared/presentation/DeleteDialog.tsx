@@ -9,6 +9,8 @@ type DeleteDialogProps = {
   message: string;
   onCancel: () => void;
   onConfirm: () => void;
+  cancelLabel?: string;
+  confirmLabel?: string;
 };
 
 const actionButton = {
@@ -21,7 +23,16 @@ const actionButton = {
   textTransform: 'none',
 };
 
-export const DeleteDialog = ({ open, testID, title, message, onCancel, onConfirm }: DeleteDialogProps) => (
+export const DeleteDialog = ({
+  open,
+  testID,
+  title,
+  message,
+  onCancel,
+  onConfirm,
+  cancelLabel = translate(tk.common.cancel),
+  confirmLabel = translate(tk.swipeableActions.delete),
+}: DeleteDialogProps) => (
   <Dialog open={open} onClose={onCancel} slotProps={{ paper: { sx: { borderRadius: 4, width: 400, maxWidth: 'calc(100% - 48px)', m: 3 } } }}>
     <DialogTitle sx={{ fontSize: 20, fontWeight: 700, pt: 3, px: 3, pb: 1.5 }}>{title}</DialogTitle>
     <DialogContent sx={{ px: 3 }}>
@@ -35,10 +46,10 @@ export const DeleteDialog = ({ open, testID, title, message, onCancel, onConfirm
         onClick={onCancel}
         sx={{ ...actionButton, borderColor: 'divider' }}
       >
-        {translate(tk.common.cancel)}
+        {cancelLabel}
       </Button>
       <Button variant="contained" color="error" disableElevation data-testid={`${testID}-confirm`} onClick={onConfirm} sx={actionButton}>
-        {translate(tk.swipeableActions.delete)}
+        {confirmLabel}
       </Button>
     </DialogActions>
   </Dialog>

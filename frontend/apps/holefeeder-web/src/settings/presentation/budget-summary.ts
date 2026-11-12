@@ -18,7 +18,7 @@ const unitKey: Partial<Record<BudgetIntervalType, string>> = {
   yearly: tk.newTransaction.units.yearly,
 };
 
-const periodOf = ({ intervalType, frequency }: BudgetSettings) => {
+export const periodLabel = (intervalType: BudgetIntervalType, frequency: number) => {
   const unit = unitKey[intervalType];
   return frequency === 1 || !unit
     ? translate(intervalLabelKey[intervalType])
@@ -26,4 +26,7 @@ const periodOf = ({ intervalType, frequency }: BudgetSettings) => {
 };
 
 export const budgetSummary = (settings: BudgetSettings) =>
-  translate(tk.budgetSettings.summary, { period: periodOf(settings), date: mediumDate(settings.effectiveDate) });
+  translate(tk.budgetSettings.summary, {
+    period: periodLabel(settings.intervalType, settings.frequency),
+    date: mediumDate(settings.effectiveDate),
+  });
