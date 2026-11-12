@@ -106,7 +106,7 @@ test.describe('Insights spending', () => {
 
     await page.getByTestId('spending-back').click();
 
-    await expect(page).not.toHaveURL(/\/insights\/spending$/);
+    await expect(page).toHaveURL(/\/insights$/);
   });
 
   test('ShouldCompareTheSpendingWithItsAverage', async ({ page }) => {

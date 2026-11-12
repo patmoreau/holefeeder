@@ -397,6 +397,7 @@ export const fr: TranslationStructure = {
     title: 'Aperçus',
     back: 'Retour aux aperçus',
     loadFailed: 'Les aperçus n’ont pas pu être chargés.',
+    thisPeriod: 'Cette période',
     average: 'Moyenne',
     period: '{{period}}',
     combined: 'Combiné',

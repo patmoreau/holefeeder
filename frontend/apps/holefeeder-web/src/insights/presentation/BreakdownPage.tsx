@@ -281,7 +281,7 @@ export const BreakdownPage = ({ kind }: { kind: BreakdownKind }) => {
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <IconButton
             component={Link}
-            to="/"
+            to="/insights"
             data-testid={`${kind.testID}-back`}
             aria-label={translate(tk.insights.back)}
             sx={{ bgcolor: 'background.paper', color: 'text.primary', flexShrink: 0 }}

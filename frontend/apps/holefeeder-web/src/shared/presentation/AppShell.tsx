@@ -21,7 +21,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: 'dashboard', label: translate(tk.tabs.dashboard), icon: <DashboardOutlinedIcon />, to: '/', matches: ['/accounts/'] },
-  { id: 'insights', label: translate(tk.tabs.insights), icon: <InsightsOutlinedIcon /> },
+  { id: 'insights', label: translate(tk.tabs.insights), icon: <InsightsOutlinedIcon />, to: '/insights', matches: ['/insights/'] },
   { id: 'settings', label: translate(tk.tabs.settings), icon: <SettingsOutlinedIcon />, to: '/settings', matches: ['/settings/'] },
 ];
 

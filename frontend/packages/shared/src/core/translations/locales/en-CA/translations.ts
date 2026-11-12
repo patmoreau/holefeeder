@@ -394,6 +394,7 @@ export const en = {
     title: 'Insights',
     back: 'Back to insights',
     loadFailed: 'Insights could not be loaded.',
+    thisPeriod: 'This period',
     average: 'Average',
     period: '{{period}}',
     combined: 'Combined',

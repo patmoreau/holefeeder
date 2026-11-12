@@ -65,7 +65,7 @@ test.describe('Insights income', () => {
 
     await page.getByTestId('income-back').click();
 
-    await expect(page).not.toHaveURL(/\/insights\/income$/);
+    await expect(page).toHaveURL(/\/insights$/);
   });
 
   test('ShouldShowAGoodTrend_WhenIncomeIsAboveAverage', async ({ page }) => {
