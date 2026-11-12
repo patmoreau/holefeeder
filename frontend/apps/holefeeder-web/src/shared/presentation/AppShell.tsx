@@ -2,7 +2,6 @@ import { tk } from '@holefeeder/shared/core';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { Box, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { type ReactNode, useState } from 'react';
@@ -62,20 +61,7 @@ const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
           );
         })}
       </List>
-      <ListItemButton
-        data-testid="nav-legacy"
-        component="a"
-        href="/angular/"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{ mt: 'auto', borderRadius: 2, flexGrow: 0 }}
-      >
-        <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-          <OpenInNewOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary={translate(tk.tabs.legacy)} slotProps={{ primary: { fontSize: 15 } }} />
-      </ListItemButton>
-      <Typography data-testid="nav-version" sx={{ pt: 1, fontSize: 12, color: 'text.secondary', textAlign: 'center' }}>
+      <Typography data-testid="nav-version" sx={{ mt: 'auto', pt: 1, fontSize: 12, color: 'text.secondary', textAlign: 'center' }}>
         {buildVersionLabel}
       </Typography>
     </>

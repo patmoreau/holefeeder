@@ -601,7 +601,6 @@ export const fr: TranslationStructure = {
     insights: 'Aperçus',
     settings: 'Configuration',
     test: 'Examen',
-    legacy: 'Ancienne version',
     openMenu: 'Ouvrir le menu',
   },
   tagList: {

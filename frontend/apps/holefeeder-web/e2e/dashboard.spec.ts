@@ -24,28 +24,27 @@ test.describe('Dashboard', () => {
     await expect(nav.getByTestId('nav-settings')).toHaveText('Settings');
   });
 
-  test('ShouldOpenLegacyAppInNewTab', async ({ page }) => {
+  test('ShouldNotLinkToLegacyApp', async ({ page }) => {
     await signedIn(page);
 
     await page.goto('/');
 
-    const legacy = page.getByRole('navigation').getByTestId('nav-legacy');
-    await expect(legacy).toHaveText('Legacy');
-    await expect(legacy).toHaveAttribute('href', '/angular/');
-    await expect(legacy).toHaveAttribute('target', '_blank');
-    await expect(legacy).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(page.getByRole('navigation').getByTestId('nav-settings')).toBeVisible();
+    await expect(page.locator('a[href^="/angular"]')).toHaveCount(0);
   });
 
-  test('ShouldShowBuildVersionBelowLegacy', async ({ page }) => {
+  test('ShouldShowBuildVersionAtBottomOfNavigation', async ({ page }) => {
     await signedIn(page);
 
     await page.goto('/');
 
     const nav = page.getByRole('navigation');
     await expect(nav.getByTestId('nav-version')).toHaveText('1.2.3 · abcdef12');
-    const legacy = await nav.getByTestId('nav-legacy').boundingBox();
+    const settings = await nav.getByTestId('nav-settings').boundingBox();
     const version = await nav.getByTestId('nav-version').boundingBox();
-    expect(version!.y).toBeGreaterThan(legacy!.y + legacy!.height - 1);
+    const drawer = await nav.boundingBox();
+    expect(version!.y).toBeGreaterThan(settings!.y + settings!.height + 100);
+    expect(drawer!.y + drawer!.height - (version!.y + version!.height)).toBeLessThan(40);
   });
 
   test('ShouldShowNewTransactionButtonInTopBar', async ({ page }) => {

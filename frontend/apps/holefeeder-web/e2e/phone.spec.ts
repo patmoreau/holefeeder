@@ -69,7 +69,6 @@ test.describe('Phone', () => {
 
     const nav = page.getByRole('navigation');
     await expect(nav.getByTestId('nav-dashboard')).toHaveAttribute('aria-current', 'page');
-    await expect(nav.getByTestId('nav-legacy')).toBeVisible();
     await expect(nav.getByTestId('nav-version')).toHaveText('1.2.3 · abcdef12');
   });
 

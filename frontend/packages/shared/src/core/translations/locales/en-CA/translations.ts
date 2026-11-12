@@ -597,7 +597,6 @@ export const en = {
     insights: 'Insights',
     settings: 'Settings',
     test: 'Test',
-    legacy: 'Legacy',
     openMenu: 'Open menu',
   },
   tagList: {
