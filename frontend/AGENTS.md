@@ -147,8 +147,9 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   behind `RequireAuthenticated` inside `AppShell` (navigation drawer): `/` (dashboard),
   `/accounts/:id` (an account, opened from its dashboard card), `/settings`,
   `/settings/categories`, `/settings/cashflows` and `/settings/tags` (managing categories,
-  cashflows and tags, each opened from its Settings row), and `/insights/spending` (the
-  spending breakdown, reachable only by URL until the Insights page links to it).
+  cashflows and tags, each opened from its Settings row), and `/insights/spending` and
+  `/insights/income` (the spending and income breakdowns, reachable only by URL until the
+  Insights page links to them).
 - Code a second feature needs moves to `src/shared/<ring>` (`api`, `domain`,
   `presentation`) in the same change, e.g. `NewTransactionFlyout`, which the dashboard
   and the account page both open, and `TransactionList`, whose rows open
