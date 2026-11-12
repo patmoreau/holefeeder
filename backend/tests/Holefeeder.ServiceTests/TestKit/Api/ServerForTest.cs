@@ -38,11 +38,14 @@ public sealed class ServerForTest : WebApplicationFactory<Service.Api>, IAsyncLi
 
     public DatabaseForTest Database { get; } = new();
 
-    internal HttpClient CreateClientFor(IdentityObjectId identityObjectId)
+    internal HttpClient CreateClientFor(IdentityObjectId identityObjectId) =>
+        CreateClientFor(identityObjectId, UserScopes);
+
+    internal HttpClient CreateClientFor(IdentityObjectId identityObjectId, string scopes)
     {
         var client = CreateClient();
         client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", CreateAccessToken(identityObjectId.Value));
+            new AuthenticationHeaderValue("Bearer", CreateAccessToken(identityObjectId.Value, scopes));
         return client;
     }
 
@@ -54,7 +57,7 @@ public sealed class ServerForTest : WebApplicationFactory<Service.Api>, IAsyncLi
             services.AddSingleton(_ => NpgsqlDataSource.Create(UnreachableConnectionString));
         })).CreateClient();
         client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", CreateAccessToken(identityObjectId));
+            new AuthenticationHeaderValue("Bearer", CreateAccessToken(identityObjectId, UserScopes));
         return client;
     }
 
@@ -73,12 +76,12 @@ public sealed class ServerForTest : WebApplicationFactory<Service.Api>, IAsyncLi
             }));
     }
 
-    private string CreateAccessToken(string identityObjectId) =>
+    private string CreateAccessToken(string identityObjectId, string scopes) =>
         new JsonWebTokenHandler().CreateToken(new SecurityTokenDescriptor
         {
             Issuer = Issuer,
             Audience = Audience,
-            Subject = new ClaimsIdentity([new Claim("sub", identityObjectId), new Claim("scope", UserScopes)]),
+            Subject = new ClaimsIdentity([new Claim("sub", identityObjectId), new Claim("scope", scopes)]),
             SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256)
         });
 

@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **planned**, recorded 2026-11-12. Finishes step 7 of
+Status: **step 1 done**, step 2 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -45,6 +45,9 @@ Each step leaves `main` deployable and every suite green.
    fail when a route is neither authorized nor on that list. `ServerForTest` needs a
    client that sends no token and one whose token carries a chosen scope. Test-only
    commit.
+   Done: `Shared/Api/AuthorizationComponent` covers all 43 API routes (the functional
+   scenarios covered 17). The route's scope is read from its own policy, so the test
+   catches a missing or bypassed policy, not a route given the wrong one.
 2. **Delete `Holefeeder.FunctionalTests` and `Holefeeder.Tests.Common`.** Structural.
    Remove the projects, both `.slnx` entries, the `api-functional-tests` CI matrix entry,
    the `InternalsVisibleTo` entries in `src/Directory.Build.props`, and their mention in
