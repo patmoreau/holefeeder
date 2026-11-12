@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–3 done**, step 4 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–4 done**, step 5 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -14,7 +14,7 @@ Every route is served by `Holefeeder.Service`, and the dead legacy code is gone
 | Legacy code | Used for |
 |---|---|
 | ~~`Application/Authorization/Configuration`~~ | Moved in step 3 |
-| `Infrastructure/SeedWork/BudgetingConnectionStringBuilder` | Connection string for the `NpgsqlDataSource`, Hangfire storage and DbUp; overridden by `ServerForTest` and the functional tests |
+| ~~`Infrastructure/SeedWork/BudgetingConnectionStringBuilder`~~ | Replaced in step 4 |
 | `Infrastructure/Extensions/ServiceCollectionExtensions` | `AddInfrastructure` (registers the builder above) and `AddHangfireServices` |
 | `Infrastructure/Extensions/WebApplicationExtensions` | `MigrateDb`: DbUp over the scripts embedded in `Holefeeder.Infrastructure`, 3 tries 10 s apart; also called by `DatabaseForTest` |
 | `Infrastructure/Scripts/*.sql` | The schema, as DbUp scripts |
@@ -71,6 +71,11 @@ Each step leaves `main` deployable and every suite green.
    so neither Staging nor the production Quadlet units do). Hangfire storage and the
    migration runner take their connection string from that data source. `ServerForTest`
    keeps overriding the configuration key and stops replacing the builder.
+   Done differently: `NpgsqlDataSource.ConnectionString` drops the password, so Hangfire
+   and DbUp cannot take theirs from the data source. The host's
+   `Extensions/DatabaseConnection` reads the key once per caller instead, and passes it
+   to the data source, `AddHangfireServices` and `MigrateDb`. The dead EF Core
+   `DatabaseFacade.MigrateDb` overload went too.
 5. **Move Hangfire setup.** Structural. `AddHangfireServices` joins `UseHangfire` in
    `Extensions/` of the host, unchanged: same storage, serializer settings and one
    worker. Jobs already enqueued keep deserializing, because `ImportDataPayload`'s type

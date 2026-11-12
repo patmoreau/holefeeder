@@ -3,7 +3,6 @@ using Dapper;
 using DotNet.Testcontainers.Builders;
 
 using Holefeeder.Infrastructure.Extensions;
-using Holefeeder.Infrastructure.SeedWork;
 
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -31,9 +30,7 @@ public sealed class DatabaseForTest : IAsyncLifetime
 
         await _container.StartAsync().ConfigureAwait(false);
 
-        WebApplicationExtensions.MigrateDb(
-            new BudgetingConnectionStringBuilder { ConnectionString = ConnectionString },
-            NullLogger.Instance);
+        WebApplicationExtensions.MigrateDb(ConnectionString, NullLogger.Instance);
     }
 
     public async ValueTask DisposeAsync()

@@ -1,7 +1,6 @@
 using Dapper;
 
 using Holefeeder.Infrastructure.Extensions;
-using Holefeeder.Infrastructure.SeedWork;
 using Holefeeder.Service;
 using Holefeeder.Service.Accounts;
 using Holefeeder.Service.Cashflows;
@@ -52,15 +51,11 @@ builder.Services
         });
     });
 
-builder.Services.AddHangfireServices();
+builder.Services.AddHangfireServices(DatabaseConnection.StringFrom);
 builder.Services.AddHealthChecks(builder.Configuration);
 
 builder.Services
-    .AddInfrastructure(builder.Configuration);
-
-builder.Services
-    .AddSingleton(provider =>
-        NpgsqlDataSource.Create(provider.GetRequiredService<BudgetingConnectionStringBuilder>().ConnectionString))
+    .AddSingleton(provider => NpgsqlDataSource.Create(DatabaseConnection.StringFrom(provider)))
     .AddStoreItemsServices()
     .AddAccountsServices()
     .AddDashboardServices()
@@ -140,6 +135,6 @@ app
 
 app.UseHangfire(builder.Configuration);
 app.UseHealthChecks();
-app.MigrateDb();
+app.MigrateDb(DatabaseConnection.StringFrom(app.Services));
 
 await app.RunAsync();
