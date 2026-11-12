@@ -16,7 +16,6 @@
     <ItemGroup>
         <PackageReference Include="Dapper"/>
         <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
-        <PackageReference Include="DrifterApps.Seeds.Infrastructure"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.Identity.Web"/>
