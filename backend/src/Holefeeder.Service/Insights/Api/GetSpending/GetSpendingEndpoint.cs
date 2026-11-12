@@ -1,3 +1,4 @@
+using Holefeeder.Service.Insights.Api;
 using Holefeeder.Service.Insights.Core.GetSpending;
 using Holefeeder.Service.Shared.Api;
 using Holefeeder.Service.Support.Core;

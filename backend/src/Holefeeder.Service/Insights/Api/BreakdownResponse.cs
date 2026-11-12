@@ -1,6 +1,6 @@
 using Holefeeder.Service.Insights.Core;
 
-namespace Holefeeder.Service.Insights.Api.GetSpending;
+namespace Holefeeder.Service.Insights.Api;
 
 internal sealed record BreakdownResponse(
     PeriodResponse Period,
