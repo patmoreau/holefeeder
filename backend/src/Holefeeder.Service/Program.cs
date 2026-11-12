@@ -25,6 +25,7 @@ using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
 using Holefeeder.Service.Tags;
 using Holefeeder.Service.Transactions;
+using Holefeeder.Service.Users;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;
@@ -90,6 +91,7 @@ builder.Services
     .AddTransactionsServices()
     .AddSettingsServices()
     .AddCategoriesServices()
+    .AddUsersServices()
     .AddSupportServices();
 
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
@@ -157,6 +159,7 @@ app.MapCarter()
     .MapTransactionsEndpoints()
     .MapSettingsEndpoints()
     .MapCategoriesEndpoints()
+    .MapUsersEndpoints()
     .MapHomeEndpoints();
 
 if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
