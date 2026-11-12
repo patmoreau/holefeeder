@@ -248,6 +248,16 @@ export const en = {
     cancelled: '{{name}} cancelled',
     cancelFailed: '{{name}} could not be cancelled. Try again.',
   },
+  tags: {
+    back: 'Back to settings',
+    loadFailed: 'The tags could not be loaded.',
+    emptyTitle: 'No tags yet',
+    emptyHint: 'Tags you add to expenses show up here, ready to rename or remove.',
+    transactionOne: '{{count}} transaction',
+    transactionOther: '{{count}} transactions',
+    cashflowOne: '{{count}} cashflow',
+    cashflowOther: '{{count}} cashflows',
+  },
   editTransaction: {
     title: 'Edit transaction',
     failed: 'The transaction could not be saved. Try again.',

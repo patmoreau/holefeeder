@@ -40,13 +40,12 @@ test.describe('Settings', () => {
     expect(await logoutCalls(page)).toBe(1);
   });
 
-  test('ShouldDisableManagementRowsUntilTheirPagesExist', async ({ page }) => {
+  test('ShouldEnableEveryManagementRow', async ({ page }) => {
     await signedIn(page);
 
     await page.goto('/settings');
 
-    await expect(page.getByTestId('settings-tags')).toHaveAttribute('aria-disabled', 'true');
-    for (const row of ['categories', 'cashflows']) {
+    for (const row of ['categories', 'cashflows', 'tags']) {
       await expect(page.getByTestId(`settings-${row}`)).not.toHaveAttribute('aria-disabled', 'true');
     }
     await expect(page.getByTestId('settings-categories')).toHaveText('Categories');

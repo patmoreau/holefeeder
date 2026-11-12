@@ -251,6 +251,16 @@ export const fr: TranslationStructure = {
     cancelled: '{{name}} annulé',
     cancelFailed: "{{name}} n'a pas pu être annulé. Réessayez.",
   },
+  tags: {
+    back: 'Retour aux paramètres',
+    loadFailed: "Les étiquettes n'ont pas pu être chargées.",
+    emptyTitle: "Aucune étiquette pour l'instant",
+    emptyHint: 'Les étiquettes ajoutées à vos dépenses apparaissent ici, prêtes à être renommées ou supprimées.',
+    transactionOne: '{{count}} transaction',
+    transactionOther: '{{count}} transactions',
+    cashflowOne: '{{count}} flux actif',
+    cashflowOther: '{{count}} flux actifs',
+  },
   editTransaction: {
     title: 'Modifier la transaction',
     failed: "La transaction n'a pas pu être enregistrée. Réessayez.",

@@ -146,8 +146,8 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
 - Routes: `/welcome` is for signed-out users (`RequireAnonymous`); everything else sits
   behind `RequireAuthenticated` inside `AppShell` (navigation drawer): `/` (dashboard),
   `/accounts/:id` (an account, opened from its dashboard card), `/settings`,
-  `/settings/categories` and `/settings/cashflows` (managing categories and cashflows,
-  each opened from its Settings row).
+  `/settings/categories`, `/settings/cashflows` and `/settings/tags` (managing categories,
+  cashflows and tags, each opened from its Settings row).
 - Code a second feature needs moves to `src/shared/<ring>` (`api`, `domain`,
   `presentation`) in the same change, e.g. `NewTransactionFlyout`, which the dashboard
   and the account page both open, and `TransactionList`, whose rows open
