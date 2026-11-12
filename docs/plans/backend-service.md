@@ -66,6 +66,10 @@ is approved. Every step leaves `main` deployable.
    (`Holefeeder.Infrastructure.Scripts.001-CreateAccountsTable.sql`), so moving the
    files would rerun every script. The move must rename the journal rows in a script of
    its own, or keep the old names.
+   Progress: every route a client still calls is migrated. The mobile app's last three,
+   `GET api/v2/users/me`, `POST api/v2/users/register` (`Users/`) and
+   `POST api/v2/sync/powersync` (`Sync/`), moved in `1e6634f1`, `e0a99c38` and `43b2b422`.
+   The 21 legacy routes left in `Holefeeder.Application` have no caller in `frontend/`.
 
 ## Decisions
 

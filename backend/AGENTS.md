@@ -216,7 +216,8 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 - **Result pattern**: FluentResults is used for error handling rather than exceptions in use cases.
 - **Carter modules**: API routes are defined as Carter `ICarterModule` implementations per feature, not controller classes.
 - **SmartEnum**: Enumerations are strongly typed via the SmartEnum pattern — see `Domain/Enumerations/`.
-- **PowerSync**: Sync endpoint for offline-capable clients — `MyData` feature in Application/Infrastructure.
+- **PowerSync**: the mobile app's upload endpoint, `POST api/v2/sync/powersync`, now lives in
+  `Holefeeder.Service/Sync/`, not in the legacy projects.
 
 ### Technology Stack
 
