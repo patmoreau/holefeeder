@@ -59,6 +59,9 @@ A category cannot be hard deleted. Because transactions are always attached to a
 
 ## Constraints
 
-- Name must be between 1 and 255 characters
+- Name must be between 1 and 255 characters, ignoring surrounding spaces
+- Name must be unique per user, ignoring case, including soft-deleted categories: a deleted category keeps its name
+- Colour must be a hex colour as `#RRGGBB`
+- Budget amount must be zero or more, with at most two decimals
 - All categories are scoped to the owning user — cross-user access is rejected
 - Categories cannot be hard deleted — they must be soft deleted (set `Inactive` to `true`) because transactions are always attached to them

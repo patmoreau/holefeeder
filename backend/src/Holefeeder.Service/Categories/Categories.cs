@@ -1,5 +1,7 @@
+using Holefeeder.Service.Categories.Api.CreateCategory;
 using Holefeeder.Service.Categories.Api.ListCategories;
 using Holefeeder.Service.Categories.Core;
+using Holefeeder.Service.Categories.Core.CreateCategory;
 using Holefeeder.Service.Categories.Core.ListCategories;
 using Holefeeder.Service.Categories.Persistence;
 
@@ -10,8 +12,10 @@ internal static class Categories
     public static IServiceCollection AddCategoriesServices(this IServiceCollection services) =>
         services
             .AddScoped<ICategories, CategoriesInDatabase>()
-            .AddScoped<ListCategoriesUseCase>();
+            .AddScoped<ListCategoriesUseCase>()
+            .AddScoped<CreateCategoryUseCase>();
 
     public static IEndpointRouteBuilder MapCategoriesEndpoints(this IEndpointRouteBuilder app) =>
-        app.MapListCategories();
+        app.MapListCategories()
+            .MapCreateCategory();
 }
