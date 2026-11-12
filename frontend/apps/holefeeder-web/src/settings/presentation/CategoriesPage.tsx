@@ -5,12 +5,16 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { Alert, Box, Button, ButtonBase, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useApiRefresh } from '@/shared/api/api-refresh';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
+import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
+import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
 import { currency, roundsToZero } from '@/shared/presentation/tone';
 import { useCategories } from '../api/use-categories';
+import { useDeleteCategory } from '../api/use-delete-category';
 import type { Category } from '../domain/category';
 import { CategoryFlyout, type CategoryEditing } from './CategoryFlyout';
 import { Rows, Section } from './SettingsList';
@@ -38,9 +42,11 @@ const CategoryDetails = ({ category }: { category: Category }) => (
 
 const rowContent = { display: 'flex', alignItems: 'center', gap: 1.5, py: 1.5, minWidth: 0, flexGrow: 1 };
 
-type CategoryRowProps = { category: Category; onOpen: (category: Category) => void };
+type CategoryActions = { onOpen: (category: Category) => void; onDelete: (category: Category) => void };
 
-const CategoryRow = ({ category, onOpen }: CategoryRowProps) => (
+type CategoryRowProps = { category: Category } & CategoryActions;
+
+const CategoryRow = ({ category, onOpen, onDelete }: CategoryRowProps) => (
   <ListItem disablePadding data-testid="categories-row" sx={{ gap: 1, minWidth: 0 }}>
     {category.system ? (
       <Box sx={rowContent}>
@@ -55,23 +61,24 @@ const CategoryRow = ({ category, onOpen }: CategoryRowProps) => (
         <CategoryDetails category={category} />
       </ButtonBase>
     )}
+    {!category.system && <RowActionsMenu testID="categories-row" onEdit={() => onOpen(category)} onDelete={() => onDelete(category)} />}
   </ListItem>
 );
 
-type CategorySectionProps = { title: string; testID: string; categories: Category[]; onOpen: (category: Category) => void };
+type CategorySectionProps = { title: string; testID: string; categories: Category[] } & CategoryActions;
 
-const CategorySection = ({ title, testID, categories, onOpen }: CategorySectionProps) =>
+const CategorySection = ({ title, testID, categories, ...actions }: CategorySectionProps) =>
   categories.length === 0 ? null : (
     <Section title={title} testID={testID}>
       <Rows>
         {categories.map((category) => (
-          <CategoryRow key={category.id} category={category} onOpen={onOpen} />
+          <CategoryRow key={category.id} category={category} {...actions} />
         ))}
       </Rows>
     </Section>
   );
 
-const CategoryList = ({ categories, onOpen }: { categories: AsyncResult<Category[]>; onOpen: (category: Category) => void }) => {
+const CategoryList = ({ categories, ...actions }: { categories: AsyncResult<Category[]> } & CategoryActions) => {
   if (categories.isLoading) return <Skeleton variant="rounded" height={240} data-testid="categories-loading" sx={{ borderRadius: 3 }} />;
 
   if (categories.isFailure)
@@ -89,13 +96,13 @@ const CategoryList = ({ categories, onOpen }: { categories: AsyncResult<Category
       {userCategories.length === 0 && (
         <EmptyList testID="categories-empty" title={translate(tk.categories.emptyTitle)} hint={translate(tk.categories.emptyHint)} />
       )}
-      <CategorySection title={translate(tk.categories.expenses)} testID="categories-expenses" categories={ofType('expense')} onOpen={onOpen} />
-      <CategorySection title={translate(tk.categories.income)} testID="categories-income" categories={ofType('gain')} onOpen={onOpen} />
+      <CategorySection title={translate(tk.categories.expenses)} testID="categories-expenses" categories={ofType('expense')} {...actions} />
+      <CategorySection title={translate(tk.categories.income)} testID="categories-income" categories={ofType('gain')} {...actions} />
       <CategorySection
         title={translate(tk.categories.system)}
         testID="categories-system"
         categories={categories.value.filter((category) => category.system)}
-        onOpen={onOpen}
+        {...actions}
       />
     </Stack>
   );
@@ -115,6 +122,16 @@ const actionButtonSx = {
 const CategoriesContent = ({ notify }: { notify: Notify }) => {
   const categories = useCategories();
   const [editing, setEditing] = useState<CategoryEditing>(null);
+  const [deleting, setDeleting] = useState<Category | null>(null);
+  const deleteCategory = useDeleteCategory();
+  const { refresh } = useApiRefresh();
+
+  const confirmDelete = async (category: Category) => {
+    setDeleting(null);
+    const result = await deleteCategory(category.id);
+    notify(translate(result.isSuccess ? tk.categories.deleted : tk.categories.deleteFailed, { name: category.name }));
+    if (result.isSuccess) refresh();
+  };
 
   return (
     <Stack spacing={3.5} data-testid="categories-page" sx={{ maxWidth: 720 }}>
@@ -145,8 +162,18 @@ const CategoriesContent = ({ notify }: { notify: Notify }) => {
           </Box>
         </Button>
       </Stack>
-      <CategoryList categories={categories} onOpen={(category) => setEditing({ category: category })} />
+      <CategoryList categories={categories} onOpen={(category) => setEditing({ category: category })} onDelete={setDeleting} />
       <CategoryFlyout editing={editing} onClose={() => setEditing(null)} notify={notify} />
+      {deleting !== null && (
+        <DeleteDialog
+          open
+          testID="category-delete"
+          title={translate(tk.categories.deleteTitle, { name: deleting.name })}
+          message={translate(tk.categories.deleteMessage, { name: deleting.name })}
+          onCancel={() => setDeleting(null)}
+          onConfirm={() => void confirmDelete(deleting)}
+        />
+      )}
     </Stack>
   );
 };

@@ -225,6 +225,10 @@ export const en = {
     saved: 'Category saved',
     failed: 'The category could not be saved. Try again.',
     nameTaken: 'That name is already used.',
+    deleteTitle: 'Delete {{name}}?',
+    deleteMessage: '{{name}} leaves your category lists. Its transactions keep their category and their amounts stay in your balances.',
+    deleted: '{{name}} deleted',
+    deleteFailed: '{{name}} could not be deleted. Try again.',
   },
   editTransaction: {
     title: 'Edit transaction',

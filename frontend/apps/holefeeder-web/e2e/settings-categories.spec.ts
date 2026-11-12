@@ -70,6 +70,15 @@ const capture = async (page: Page, url: string, status = 204, json?: unknown) =>
   return bodies;
 };
 
+const withDelete = async (page: Page, status = 204) => {
+  const deletes: string[] = [];
+  await page.route(/\/gateway\/api\/v2\/categories\/[0-9a-f-]{36}$/, (route) => {
+    deletes.push(route.request().url().split('/').pop()!);
+    return route.fulfill({ status: status });
+  });
+  return deletes;
+};
+
 const createRoute = '**/gateway/api/v2/categories';
 const modifyRoute = '**/gateway/api/v2/categories/modify';
 
@@ -135,6 +144,7 @@ test.describe('Settings categories', () => {
 
     await expect(rowOf(page, 'Transfer In')).toContainText('System');
     await expect(rowOf(page, 'Transfer In').getByRole('button')).toHaveCount(0);
+    await expect(rowOf(page, 'Transfer In').getByTestId('categories-row-more')).toHaveCount(0);
   });
 
   test('ShouldLeaveOutEmptySections', async ({ page }) => {
@@ -295,6 +305,72 @@ test.describe('Settings categories', () => {
     expect(bodies).toEqual([]);
   });
 
+  test('ShouldOfferEditAndDeleteOnEachRow', async ({ page }) => {
+    await withCategories(page);
+    await page.goto('/settings/categories');
+
+    await rowOf(page, 'Dining').getByTestId('categories-row-more').click();
+
+    await expect(page.getByRole('menuitem')).toHaveText(['Edit…', 'Delete']);
+  });
+
+  test('ShouldEditFromTheMenu', async ({ page }) => {
+    await withCategories(page);
+    await page.goto('/settings/categories');
+
+    await rowOf(page, 'Dining').getByTestId('categories-row-more').click();
+    await page.getByTestId('categories-row-edit').click();
+
+    await expect(page.getByTestId('category-name')).toHaveValue('Dining');
+  });
+
+  test('ShouldAskBeforeDeleting', async ({ page }) => {
+    await withCategories(page);
+    const deletes = await withDelete(page);
+    await page.goto('/settings/categories');
+
+    await rowOf(page, 'Dining').getByTestId('categories-row-more').click();
+    await page.getByTestId('categories-row-delete').click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading')).toHaveText('Delete Dining?');
+    await expect(dialog).toContainText(
+      'Dining leaves your category lists. Its transactions keep their category and their amounts stay in your balances.'
+    );
+    await page.getByTestId('category-delete-cancel').click();
+    await expect(dialog).toHaveCount(0);
+    expect(deletes).toEqual([]);
+  });
+
+  test('ShouldDeleteTheCategory', async ({ page }) => {
+    const listCalls = await withCategories(page);
+    const deletes = await withDelete(page);
+    await page.goto('/settings/categories');
+    const callsBefore = listCalls();
+
+    await rowOf(page, 'Dining').getByTestId('categories-row-more').click();
+    await page.getByTestId('categories-row-delete').click();
+    await page.getByTestId('category-delete-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Dining deleted');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(deletes).toEqual([dining.id]);
+    await expect.poll(listCalls).toBeGreaterThan(callsBefore);
+  });
+
+  test('ShouldKeepTheCategoryWhenDeletingFails', async ({ page }) => {
+    await withCategories(page);
+    await withDelete(page, 500);
+    await page.goto('/settings/categories');
+
+    await rowOf(page, 'Dining').getByTestId('categories-row-more').click();
+    await page.getByTestId('categories-row-delete').click();
+    await page.getByTestId('category-delete-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Dining could not be deleted. Try again.');
+    await expect(rowOf(page, 'Dining')).toBeVisible();
+  });
+
   test.describe('on a phone', () => {
     test.use({ viewport: { width: 360, height: 640 } });
 
@@ -304,6 +380,8 @@ test.describe('Settings categories', () => {
       await page.goto('/settings/categories');
 
       await expect(rowOf(page, 'Groceries')).toBeVisible();
+      const more = await rowOf(page, 'Groceries').getByTestId('categories-row-more').boundingBox();
+      expect(more!.x + more!.width).toBeLessThanOrEqual(360);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBe(0);
     });
