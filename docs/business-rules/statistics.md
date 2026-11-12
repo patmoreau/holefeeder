@@ -119,6 +119,28 @@ spending against its average, by category and by tag. The backend mirror of
 the [Spending Breakdown](#spending-breakdown-backend--insights), over **non-system,
 gain** categories, so transfers in are excluded. Income above the average is good.
 
+## Insights Overview (backend — insights)
+
+`GET api/v2/insights/overview?periods=3|6|12` — the web Insights page: the net this
+period and the income vs expenses series behind the chart. The backend mirror of
+[Net This Period](#net-this-period-mobile-insight) and
+[Income vs Expenses Series](#income-vs-expenses-series-mobile-insight).
+
+**Rules:**
+
+- Only **non-system** categories count, so transfers are excluded.
+- **`income`**, **`spending`** and **`net`** = income − spending are the current
+  period's totals. **`outcome`** is `saved` (with **`savedPercentage`** = net ÷
+  income × 100, rounded to a whole number), `overspent`, `brokeEven`, or `none` when
+  the period has no activity.
+- **`periods`** is 3, 6 or 12, default 6; any other value is rejected with 400.
+- **`series`** holds the last N periods ending with the current one, oldest first;
+  a period with no transactions reports 0 income and 0 spending. A `oneTime` budget
+  steps back one day at a time.
+- **`totalIncome`**, **`totalSpending`** and **`totalNet`** sum the series.
+- **`range`** describes the N periods in the budget's unit (`day`, `week`, `month`,
+  `year`), in years when it is a whole number of them, for the client to label.
+
 ---
 
 ## Category Spending (mobile insight)
