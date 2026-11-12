@@ -30,14 +30,14 @@ public class ModifyTransactionUseCaseTests
         _transactions.Add(_user, _groceries);
         _transactions.Add(_user, _transferIn);
         _payment = new Transaction(AnId(), new DateOnly(2026, 8, 28), Money.Valid(123.45m), "Market", _chequing.Id, _groceries.Id,
-            Tags.Create(["weekly"]), _cashflowId, new DateOnly(2026, 8, 28));
+            TagList.Create(["weekly"]), _cashflowId, new DateOnly(2026, 8, 28));
         _transactions.Add(_user, _payment);
     }
 
     private ModifyTransactionRequest AModification(
         Id? id = null, Id? accountId = null, Id? categoryId = null, string? description = "From savings") =>
         new(_user, id ?? _payment.Id, Paid, Money.Valid(50m), description, accountId ?? _savings.Id, categoryId ?? _transferIn.Id,
-            Tags.Create(["family"]));
+            TagList.Create(["family"]));
 
     [Fact]
     public async Task HandleAsync_SavesEveryFieldAndKeepsTheCashflowPaid()
@@ -46,7 +46,7 @@ public class ModifyTransactionUseCaseTests
 
         result.Should().BeSuccessful();
         _transactions.TransactionsOf(_user).Should().Equal(new Transaction(
-            _payment.Id, Paid, Money.Valid(50m), "From savings", _savings.Id, _transferIn.Id, Tags.Create(["family"]), _cashflowId,
+            _payment.Id, Paid, Money.Valid(50m), "From savings", _savings.Id, _transferIn.Id, TagList.Create(["family"]), _cashflowId,
             new DateOnly(2026, 8, 28)));
     }
 

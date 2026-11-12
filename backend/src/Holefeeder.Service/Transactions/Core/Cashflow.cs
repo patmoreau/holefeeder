@@ -11,4 +11,4 @@ internal sealed record Cashflow(
     string Description,
     Id AccountId,
     Id CategoryId,
-    Tags Tags);
+    TagList Tags);

@@ -37,7 +37,7 @@ public class CashflowTests
     {
         var cashflow = ACashflow(1450m, description: "Rent", tags: "housing");
 
-        var result = cashflow.Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), "New rent", Tags.Create(["home", "rent"]));
+        var result = cashflow.Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), "New rent", TagList.Create(["home", "rent"]));
 
         result.Should().BeSuccessful().And.WithValue(cashflow with
         {
@@ -53,7 +53,7 @@ public class CashflowTests
     {
         var cashflow = ACashflow(description: "Rent");
 
-        var result = cashflow.Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), null, Tags.Create([]));
+        var result = cashflow.Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), null, TagList.Create([]));
 
         result.Should().BeSuccessful();
         result.Value.Description.Should().Be("Rent");
@@ -62,7 +62,7 @@ public class CashflowTests
 
     [Fact]
     public void Modify_Fails_WhenTheCashflowIsCancelled() =>
-        ACashflow(inactive: true).Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), "Rent", Tags.Create([]))
+        ACashflow(inactive: true).Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), "Rent", TagList.Create([]))
             .Should().BeFailure().And.WithError(CashflowErrors.Cancelled);
 
     [Fact]

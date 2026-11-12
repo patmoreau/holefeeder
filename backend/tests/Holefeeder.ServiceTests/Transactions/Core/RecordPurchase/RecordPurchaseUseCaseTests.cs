@@ -27,7 +27,7 @@ public class RecordPurchaseUseCaseTests
 
     private RecordPurchaseRequest APurchase(Id? accountId = null, Id? categoryId = null, Repeat? repeat = null) =>
         new(_user, Bought, Money.Valid(42.50m), "Market", accountId ?? _chequing.Id, categoryId ?? _groceries.Id,
-            Tags.Create(["weekly", "costco"]), repeat);
+            TagList.Create(["weekly", "costco"]), repeat);
 
     [Fact]
     public async Task HandleAsync_RecordsThePurchase()
@@ -36,7 +36,7 @@ public class RecordPurchaseUseCaseTests
 
         result.Should().BeSuccessful();
         _transactions.TransactionsOf(_user).Should().Equal(new Transaction(
-            result.Value, Bought, Money.Valid(42.50m), "Market", _chequing.Id, _groceries.Id, Tags.Create(["weekly", "costco"]), null, null));
+            result.Value, Bought, Money.Valid(42.50m), "Market", _chequing.Id, _groceries.Id, TagList.Create(["weekly", "costco"]), null, null));
         _transactions.CashflowsOf(_user).Should().BeEmpty();
     }
 
@@ -51,7 +51,7 @@ public class RecordPurchaseUseCaseTests
         var cashflow = _transactions.CashflowsOf(_user).Should().ContainSingle().Subject;
         cashflow.Should().Be(new Cashflow(
             cashflow.Id, new DateOnly(2026, 11, 15), Money.Valid(42.50m), IntervalType.Monthly, Frequency.Valid(2), "Market",
-            _chequing.Id, _groceries.Id, Tags.Create(["weekly", "costco"])));
+            _chequing.Id, _groceries.Id, TagList.Create(["weekly", "costco"])));
         _transactions.TransactionsOf(_user).Should().ContainSingle()
             .Which.Should().Match<Transaction>(transaction => transaction.CashflowId == cashflow.Id && transaction.CashflowDate == Bought);
     }

@@ -22,7 +22,7 @@ public class ModifyCashflowRequestRawTests
 
         result.Should().BeSuccessful().And.WithValue(new ModifyCashflowRequest(
             user, Id.Valid(Guid.Parse("3f2504e0-4f89-11d3-9a0c-0305e82c3301")), Money.Valid(1500m), new DateOnly(2026, 2, 1), "Rent",
-            Tags.Create(["home", "rent"])));
+            TagList.Create(["home", "rent"])));
     }
 
     [Fact]

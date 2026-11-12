@@ -43,7 +43,7 @@ internal sealed record RecordPurchaseRequestRaw([FromBody] RecordPurchaseBody Bo
         }
 
         return validation.OnSuccess<RecordPurchaseRequest>(() => new RecordPurchaseRequest(
-            user, date.Value, amount.Value, body.Description ?? string.Empty, accountId.Value, categoryId.Value, Tags.Create(body.Tags),
+            user, date.Value, amount.Value, body.Description ?? string.Empty, accountId.Value, categoryId.Value, TagList.Create(body.Tags),
             repeat));
     }
 

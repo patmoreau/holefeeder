@@ -173,12 +173,12 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         var budget = new BudgetForTest(user, database);
         var account = Id.Valid(await budget.AnAccountAsync("Chequing", AccountType.Checking));
         var category = Id.Valid(await budget.ACategoryAsync(CategoryType.Expense));
-        var tags = Tags.Create(["weekly", "costco"]);
+        var tags = TagList.Create(["weekly", "costco"]);
         var cashflow = new Cashflow(AnId(), new DateOnly(2026, 11, 15), Money.Valid(42.50m), IntervalType.Monthly, Frequency.Valid(2),
             "Market", account, category, tags);
         var purchase = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(42.50m), "Market", account, category, tags,
             cashflow.Id, new DateOnly(2026, 11, 11));
-        var other = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(500m), "", account, category, Tags.Create([]),
+        var other = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(500m), "", account, category, TagList.Create([]),
             null, null);
 
         var result = await _repository.SaveAsync(user, [purchase, other], cashflow, CancellationToken.None);
@@ -202,8 +202,8 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         var account = Id.Valid(await budget.AnAccountAsync("Chequing", AccountType.Checking));
         var category = Id.Valid(await budget.ACategoryAsync(CategoryType.Expense));
         var cashflow = new Cashflow(AnId(), new DateOnly(2026, 11, 15), Money.Valid(42.50m), IntervalType.Monthly, Frequency.Valid(1),
-            "", account, category, Tags.Create([]));
-        var valid = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(42.50m), "", account, category, Tags.Create([]),
+            "", account, category, TagList.Create([]));
+        var valid = new Transaction(AnId(), new DateOnly(2026, 11, 11), Money.Valid(42.50m), "", account, category, TagList.Create([]),
             cashflow.Id, new DateOnly(2026, 11, 11));
         var unknownCategory = valid with { Id = AnId(), CategoryId = AnId(), CashflowId = null, CashflowDate = null };
 
@@ -253,7 +253,7 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
         var result = await _repository.GetTransactionAsync(user, Id.Valid(id), CancellationToken.None);
 
         result.Should().BeSuccessful().And.WithValue(new Service.Transactions.Core.GetTransaction.TransactionDetail(
-            Id.Valid(id), new DateOnly(2026, 8, 28), Money.Valid(123.45m), "From savings", Tags.Create(["weekly", "family"]),
+            Id.Valid(id), new DateOnly(2026, 8, 28), Money.Valid(123.45m), "From savings", TagList.Create(["weekly", "family"]),
             new TransactionAccount(Id.Valid(chequing), "Chequing", true),
             new TransactionCategory(Id.Valid(transferIn), "Transfer In", "#AEAEB2", CategoryType.Gain, false)));
     }
@@ -296,7 +296,7 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
 
         result.Should().BeSuccessful().And.WithValue(new Transaction(
             Id.Valid(payment.Id), new DateOnly(2026, 8, 21), Money.Valid(88.40m), payment.Description ?? string.Empty, Id.Valid(chequing),
-            Id.Valid(hydro), Tags.Create((payment.Tags ?? string.Empty).Split(',')), Id.Valid(cashflow), new DateOnly(2026, 8, 20)));
+            Id.Valid(hydro), TagList.Create((payment.Tags ?? string.Empty).Split(',')), Id.Valid(cashflow), new DateOnly(2026, 8, 20)));
     }
 
     [Fact]
@@ -364,7 +364,7 @@ public class TransactionsInDatabaseTests(DatabaseForTest database, ITestOutputHe
 
         var result = await _repository.SaveAsync(user, [new Transaction(
             Id.Valid(id), new DateOnly(2026, 9, 1), Money.Valid(25m), "Bistro", Id.Valid(chequing), Id.Valid(dining),
-            Tags.Create(["family"]), null, null)], null, CancellationToken.None);
+            TagList.Create(["family"]), null, null)], null, CancellationToken.None);
 
         result.Should().BeSuccessful();
         (await database.TransactionsInDbAsync(chequing)).Should().Equal(new TransactionInDb(

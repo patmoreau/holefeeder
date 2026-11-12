@@ -33,7 +33,7 @@ internal sealed record ModifyCashflowRequestRaw([FromBody] ModifyCashflowBody Bo
         }
 
         return validation.OnSuccess<ModifyCashflowRequest>(() => new ModifyCashflowRequest(
-            user, id.Value, amount.Value, effectiveDate.Value, raw.Body.Description, Tags.Create(raw.Body.Tags)));
+            user, id.Value, amount.Value, effectiveDate.Value, raw.Body.Description, TagList.Create(raw.Body.Tags)));
     }
 }
 

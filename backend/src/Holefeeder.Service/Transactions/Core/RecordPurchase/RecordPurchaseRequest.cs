@@ -10,5 +10,5 @@ internal sealed record RecordPurchaseRequest(
     string Description,
     Id AccountId,
     Id CategoryId,
-    Tags Tags,
+    TagList Tags,
     Repeat? Repeat);

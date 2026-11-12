@@ -25,7 +25,7 @@ internal sealed record Cashflow(
     public Payment Pay(Id paymentId, DateOnly date, Money amount, DateOnly cashflowDate) =>
         new(paymentId, date, amount, Description, AccountId, CategoryId, Id, cashflowDate, Tags);
 
-    public Result<Cashflow> Modify(Money amount, DateOnly effectiveDate, string? description, Tags tags) =>
+    public Result<Cashflow> Modify(Money amount, DateOnly effectiveDate, string? description, TagList tags) =>
         Inactive
             ? CashflowErrors.Cancelled
             : this with { Amount = amount, EffectiveDate = effectiveDate, Description = description ?? Description, Tags = tags.Text };

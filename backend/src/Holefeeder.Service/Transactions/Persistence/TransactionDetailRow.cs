@@ -25,7 +25,7 @@ internal sealed record TransactionDetailRow(
             Date,
             Money.Valid(Amount),
             Description ?? string.Empty,
-            Shared.Core.Tags.Create((Tags ?? string.Empty).Split(',')),
+            TagList.Create((Tags ?? string.Empty).Split(',')),
             new TransactionAccount(Shared.Core.Id.Valid(AccountId), AccountName, AccountFavorite),
             new TransactionCategory(
                 Shared.Core.Id.Valid(CategoryId), CategoryName, CategoryColor,

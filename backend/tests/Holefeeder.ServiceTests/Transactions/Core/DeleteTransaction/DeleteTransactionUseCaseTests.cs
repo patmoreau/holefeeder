@@ -22,7 +22,7 @@ public class DeleteTransactionUseCaseTests
         var chequing = AnAccount();
         var groceries = ACategory();
         _market = new Transaction(AnId(), new DateOnly(2026, 8, 28), Money.Valid(10m), "Market", chequing.Id, groceries.Id,
-            Tags.Create([]), null, null);
+            TagList.Create([]), null, null);
         _bakery = _market with { Id = AnId(), Description = "Bakery" };
         _transactions.Add(_user, _market);
         _transactions.Add(_user, _bakery);

@@ -7,6 +7,6 @@ internal sealed record TransactionDetail(
     DateOnly Date,
     Money Amount,
     string Description,
-    Tags Tags,
+    TagList Tags,
     TransactionAccount Account,
     TransactionCategory Category);

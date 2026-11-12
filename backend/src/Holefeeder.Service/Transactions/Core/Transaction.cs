@@ -9,6 +9,6 @@ internal sealed record Transaction(
     string Description,
     Id AccountId,
     Id CategoryId,
-    Tags Tags,
+    TagList Tags,
     Id? CashflowId,
     DateOnly? CashflowDate);

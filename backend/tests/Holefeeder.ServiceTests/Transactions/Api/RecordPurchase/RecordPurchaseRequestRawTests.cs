@@ -28,7 +28,7 @@ public class RecordPurchaseRequestRawTests
 
         result.Should().BeSuccessful().And.WithValue(new RecordPurchaseRequest(
             user, new DateOnly(2026, 11, 11), Money.Valid(42.50m), "Market", Id.Valid(Guid.Parse(AccountId)),
-            Id.Valid(Guid.Parse(CategoryId)), Tags.Create(["weekly", "costco"]), null));
+            Id.Valid(Guid.Parse(CategoryId)), TagList.Create(["weekly", "costco"]), null));
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class RecordPurchaseRequestRawTests
 
         result.Should().BeSuccessful();
         result.Value.Description.Should().BeEmpty();
-        result.Value.Tags.Should().Be(Tags.Create([]));
+        result.Value.Tags.Should().Be(TagList.Create([]));
     }
 
     [Fact]

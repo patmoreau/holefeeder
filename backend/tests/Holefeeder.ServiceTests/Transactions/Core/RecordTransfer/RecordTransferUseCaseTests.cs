@@ -38,9 +38,9 @@ public class RecordTransferUseCaseTests
         result.Should().BeSuccessful();
         _transactions.TransactionsOf(_user).Should().Equal(
             new Transaction(result.Value.FromTransactionId, Moved, Money.Valid(500m), "Rainy day", _chequing.Id, _categories.TransferOut,
-                Tags.Create([]), null, null),
+                TagList.Create([]), null, null),
             new Transaction(result.Value.ToTransactionId, Moved, Money.Valid(500m), "Rainy day", _savings.Id, _categories.TransferIn,
-                Tags.Create([]), null, null));
+                TagList.Create([]), null, null));
     }
 
     [Theory]

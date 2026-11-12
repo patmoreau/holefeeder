@@ -24,7 +24,7 @@ public class ModifyTransactionRequestRawTests
         var result = ModifyTransactionRequestRaw.ToModifyTransactionRequest(new(body), user);
 
         result.Should().BeSuccessful().And.WithValue(new ModifyTransactionRequest(
-            user, id, new DateOnly(2026, 9, 1), Money.Valid(50.25m), "Market", accountId, categoryId, Tags.Create(["weekly", "family"])));
+            user, id, new DateOnly(2026, 9, 1), Money.Valid(50.25m), "Market", accountId, categoryId, TagList.Create(["weekly", "family"])));
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class ModifyTransactionRequestRawTests
 
         result.Should().BeSuccessful();
         result.Value.Description.Should().BeNull();
-        result.Value.Tags.Should().Be(Tags.Create([]));
+        result.Value.Tags.Should().Be(TagList.Create([]));
     }
 
     [Fact]

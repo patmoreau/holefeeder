@@ -23,7 +23,7 @@ public class GetTransactionUseCaseTests
         _transactions.Add(_user, _chequing);
         _transactions.Add(_user, _groceries);
         _market = new Transaction(AnId(), new DateOnly(2026, 8, 28), Money.Valid(123.45m), "Market", _chequing.Id, _groceries.Id,
-            Tags.Create(["weekly", "family"]), null, null);
+            TagList.Create(["weekly", "family"]), null, null);
         _transactions.Add(_user, _market);
     }
 
@@ -33,7 +33,7 @@ public class GetTransactionUseCaseTests
         var result = await _useCase.HandleAsync(new GetTransactionRequest(_user, _market.Id), CancellationToken.None);
 
         result.Should().BeSuccessful().And.WithValue(new TransactionDetail(
-            _market.Id, new DateOnly(2026, 8, 28), Money.Valid(123.45m), "Market", Tags.Create(["weekly", "family"]), _chequing, _groceries));
+            _market.Id, new DateOnly(2026, 8, 28), Money.Valid(123.45m), "Market", TagList.Create(["weekly", "family"]), _chequing, _groceries));
     }
 
     [Fact]

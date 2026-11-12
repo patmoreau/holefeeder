@@ -35,7 +35,7 @@ internal sealed class RecordTransferUseCase(ITransactions transactions)
             ? $"Transfer from '{from.Value.Name}' to '{to.Value.Name}'"
             : request.Description;
         var withdrawal = new Transaction(Id.New(), request.Date, request.Amount, description, request.FromAccountId,
-            categories.Value.TransferOut, Tags.Create([]), null, null);
+            categories.Value.TransferOut, TagList.Create([]), null, null);
         var deposit = withdrawal with { Id = Id.New(), AccountId = request.ToAccountId, CategoryId = categories.Value.TransferIn };
 
         var saved = await transactions.SaveAsync(request.User, [withdrawal, deposit], null, cancellationToken);

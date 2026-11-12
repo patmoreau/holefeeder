@@ -22,7 +22,7 @@ public class ModifyCashflowUseCaseTests
         _cashflows.Add(user, cashflow);
 
         var result = await _useCase.HandleAsync(
-            new ModifyCashflowRequest(user, cashflow.Id, Money.Valid(1500m), new DateOnly(2026, 2, 1), "New rent", Tags.Create(["Home"])),
+            new ModifyCashflowRequest(user, cashflow.Id, Money.Valid(1500m), new DateOnly(2026, 2, 1), "New rent", TagList.Create(["Home"])),
             CancellationToken.None);
 
         result.Should().BeSuccessful();
@@ -72,5 +72,5 @@ public class ModifyCashflowUseCaseTests
     }
 
     private static ModifyCashflowRequest AModification(Service.Support.Core.User user, Id id) =>
-        new(user, id, Money.Valid(1500m), new DateOnly(2026, 2, 1), "Rent", Tags.Create([]));
+        new(user, id, Money.Valid(1500m), new DateOnly(2026, 2, 1), "Rent", TagList.Create([]));
 }

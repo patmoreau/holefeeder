@@ -30,7 +30,7 @@ internal sealed record ModifyTransactionRequestRaw([FromBody] ModifyTransactionB
         AddFailure(validation, categoryId);
 
         return validation.OnSuccess<ModifyTransactionRequest>(() => new ModifyTransactionRequest(
-            user, id.Value, date.Value, amount.Value, body.Description, accountId.Value, categoryId.Value, Tags.Create(body.Tags)));
+            user, id.Value, date.Value, amount.Value, body.Description, accountId.Value, categoryId.Value, TagList.Create(body.Tags)));
     }
 
     private static Result<Id> ParseId(string? value, ResultError error)
