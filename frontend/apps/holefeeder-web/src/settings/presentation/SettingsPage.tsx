@@ -11,21 +11,18 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
-  List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   MenuItem,
-  Paper,
   Select,
   Skeleton,
   Stack,
   Typography,
   useColorScheme,
 } from '@mui/material';
-import { Children, Fragment, type ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 import { buildVersionLabel } from '@/shared/core/build-version';
@@ -36,26 +33,7 @@ import { useBudgetSettings } from '../api/use-budget-settings';
 import type { BudgetSettings } from '../domain/budget-settings';
 import { budgetSummary } from './budget-summary';
 import { BudgetSettingsFlyout } from './BudgetSettingsFlyout';
-
-const Section = ({ title, testID, children }: { title: string; testID: string; children: ReactNode }) => (
-  <Stack spacing={1.5} data-testid={testID}>
-    <Typography sx={{ fontSize: 15, color: 'text.secondary' }}>{title}</Typography>
-    <Paper elevation={0} sx={{ px: 2, borderRadius: 3 }}>
-      {children}
-    </Paper>
-  </Stack>
-);
-
-const Rows = ({ children }: { children: ReactNode }) => (
-  <List disablePadding>
-    {Children.toArray(children).map((child, index) => (
-      <Fragment key={index}>
-        {index > 0 && <Divider component="li" />}
-        {child}
-      </Fragment>
-    ))}
-  </List>
-);
+import { Rows, Section } from './SettingsList';
 
 const rowIcon = { minWidth: 32, color: 'text.secondary' };
 const rowLabel = { primary: { fontSize: 17 } };
