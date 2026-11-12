@@ -239,6 +239,10 @@ export const fr: TranslationStructure = {
     emptyTitle: 'Aucun flux de trésorerie',
     emptyHint: 'Répétez une nouvelle transaction pour en planifier un.',
     next: '{{period}} · prochain le {{date}}',
+    editTitle: 'Modifier le flux de trésorerie',
+    startsOn: 'Commence le',
+    saved: 'Flux de trésorerie enregistré',
+    failed: "Le flux de trésorerie n'a pas pu être enregistré. Réessayez.",
   },
   editTransaction: {
     title: 'Modifier la transaction',

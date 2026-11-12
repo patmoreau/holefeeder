@@ -1,27 +1,26 @@
 import { type AsyncResult, tk } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { Alert, Box, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
+import { Alert, Box, ButtonBase, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 import { Link } from 'react-router';
+import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
+import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
 import { EmptyList } from '@/shared/presentation/EmptyList';
-import { currency, mediumDate } from '@/shared/presentation/tone';
+import { currency } from '@/shared/presentation/tone';
 import { useCashflows } from '../api/use-cashflows';
 import type { Cashflow } from '../domain/cashflow';
 import type { CategoryType } from '../domain/category';
-import { periodLabel } from './budget-summary';
+import { scheduleOf } from './cashflow-schedule';
+import { CashflowFlyout } from './CashflowFlyout';
 import { Rows, Section } from './SettingsList';
-
-const scheduleOf = (cashflow: Cashflow) => {
-  const period = periodLabel(cashflow.intervalType, cashflow.frequency);
-  return cashflow.nextDate === null ? period : translate(tk.cashflows.next, { period: period, date: mediumDate(cashflow.nextDate) });
-};
 
 const amountColor: Record<CategoryType, string> = { expense: 'error.main', gain: 'success.main' };
 
 const secondaryText = { fontSize: 13, color: 'text.secondary' };
 
-const CashflowRow = ({ cashflow }: { cashflow: Cashflow }) => (
-  <ListItem disablePadding data-testid="cashflows-row" sx={{ gap: 1.5, py: 1.25, minWidth: 0 }}>
+const CashflowDetails = ({ cashflow }: { cashflow: Cashflow }) => (
+  <>
     <Box aria-hidden sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: cashflow.categoryColor, flexShrink: 0 }} />
     <Stack sx={{ minWidth: 0, flexGrow: 1 }}>
       <Typography data-testid="cashflows-row-title" noWrap sx={{ fontSize: 17 }}>
@@ -39,23 +38,46 @@ const CashflowRow = ({ cashflow }: { cashflow: Cashflow }) => (
         {scheduleOf(cashflow)}
       </Typography>
     </Stack>
+  </>
+);
+
+type CashflowActions = { onOpen: (cashflow: Cashflow) => void };
+
+const CashflowRow = ({ cashflow, onOpen }: { cashflow: Cashflow } & CashflowActions) => (
+  <ListItem disablePadding data-testid="cashflows-row" sx={{ gap: 1, minWidth: 0 }}>
+    <ButtonBase
+      data-testid="cashflows-row-open"
+      onClick={() => onOpen(cashflow)}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1.5,
+        py: 1.25,
+        minWidth: 0,
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+        textAlign: 'left',
+      }}
+    >
+      <CashflowDetails cashflow={cashflow} />
+    </ButtonBase>
   </ListItem>
 );
 
-type CashflowSectionProps = { title: string; testID: string; cashflows: Cashflow[] };
+type CashflowSectionProps = { title: string; testID: string; cashflows: Cashflow[] } & CashflowActions;
 
-const CashflowSection = ({ title, testID, cashflows }: CashflowSectionProps) =>
+const CashflowSection = ({ title, testID, cashflows, ...actions }: CashflowSectionProps) =>
   cashflows.length === 0 ? null : (
     <Section title={title} testID={testID}>
       <Rows>
         {cashflows.map((cashflow) => (
-          <CashflowRow key={cashflow.id} cashflow={cashflow} />
+          <CashflowRow key={cashflow.id} cashflow={cashflow} {...actions} />
         ))}
       </Rows>
     </Section>
   );
 
-const CashflowList = ({ cashflows }: { cashflows: AsyncResult<Cashflow[]> }) => {
+const CashflowList = ({ cashflows, ...actions }: { cashflows: AsyncResult<Cashflow[]> } & CashflowActions) => {
   if (cashflows.isLoading) return <Skeleton variant="rounded" height={240} data-testid="cashflows-loading" sx={{ borderRadius: 3 }} />;
 
   if (cashflows.isFailure)
@@ -72,14 +94,15 @@ const CashflowList = ({ cashflows }: { cashflows: AsyncResult<Cashflow[]> }) => 
       {cashflows.value.length === 0 && (
         <EmptyList testID="cashflows-empty" title={translate(tk.cashflows.emptyTitle)} hint={translate(tk.cashflows.emptyHint)} />
       )}
-      <CashflowSection title={translate(tk.categories.expenses)} testID="cashflows-expenses" cashflows={ofType('expense')} />
-      <CashflowSection title={translate(tk.categories.income)} testID="cashflows-income" cashflows={ofType('gain')} />
+      <CashflowSection title={translate(tk.categories.expenses)} testID="cashflows-expenses" cashflows={ofType('expense')} {...actions} />
+      <CashflowSection title={translate(tk.categories.income)} testID="cashflows-income" cashflows={ofType('gain')} {...actions} />
     </Stack>
   );
 };
 
-export const CashflowsPage = () => {
+const CashflowsContent = ({ notify }: { notify: Notify }) => {
   const cashflows = useCashflows();
+  const [editing, setEditing] = useState<Cashflow | null>(null);
 
   return (
     <Stack spacing={3.5} data-testid="cashflows-page" sx={{ maxWidth: 720 }}>
@@ -97,7 +120,19 @@ export const CashflowsPage = () => {
           {translate(tk.cashflowsSection.title)}
         </Typography>
       </Stack>
-      <CashflowList cashflows={cashflows} />
+      <CashflowList cashflows={cashflows} onOpen={setEditing} />
+      <CashflowFlyout cashflow={editing} onClose={() => setEditing(null)} notify={notify} />
     </Stack>
+  );
+};
+
+export const CashflowsPage = () => {
+  const [toast, setToast] = useState<string | null>(null);
+
+  return (
+    <ApiRefreshProvider>
+      <CashflowsContent notify={setToast} />
+      <DashboardToast message={toast} onClose={() => setToast(null)} />
+    </ApiRefreshProvider>
   );
 };

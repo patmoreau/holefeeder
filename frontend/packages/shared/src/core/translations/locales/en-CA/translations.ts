@@ -236,6 +236,10 @@ export const en = {
     emptyTitle: 'No cashflows yet',
     emptyHint: 'Repeat a new transaction to schedule one.',
     next: '{{period}} · next {{date}}',
+    editTitle: 'Edit cashflow',
+    startsOn: 'Starts on',
+    saved: 'Cashflow saved',
+    failed: 'The cashflow could not be saved. Try again.',
   },
   editTransaction: {
     title: 'Edit transaction',

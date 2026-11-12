@@ -91,6 +91,27 @@ const withCashflows = async (page: Page, cashflows: CashflowJson[] = [gym, rent,
 
 const rowOf = (page: Page, title: string) => page.getByTestId('cashflows-row').filter({ hasText: title });
 
+const modifyRoute = '**/gateway/api/v2/cashflows/modify';
+
+const capture = async (page: Page, url: string, status = 204) => {
+  const bodies: unknown[] = [];
+  await page.route(url, (route) => {
+    bodies.push(route.request().postDataJSON());
+    return route.fulfill({ status: status });
+  });
+  return bodies;
+};
+
+const withTagSuggestions = (page: Page) =>
+  page.route('**/gateway/api/v2/transactions/tag-suggestions*', (route) => route.fulfill({ json: ['utilities'] }));
+
+const openRent = async (page: Page) => {
+  await withTagSuggestions(page);
+  await page.goto('/settings/cashflows');
+  await rowOf(page, 'Rent').getByTestId('cashflows-row-open').click();
+  return page.getByTestId('cashflow');
+};
+
 test.describe('Settings cashflows', () => {
   test.beforeEach(async ({ page }) => {
     await signedIn(page);
@@ -188,6 +209,73 @@ test.describe('Settings cashflows', () => {
     await expect(page.getByTestId('cashflows-load-error')).toHaveText('The cashflows could not be loaded.');
   });
 
+  test('ShouldOpenTheCashflowFromItsRow', async ({ page }) => {
+    await withCashflows(page);
+
+    const flyout = await openRent(page);
+
+    await expect(flyout.getByRole('heading', { level: 2 })).toHaveText('Edit cashflow');
+    await expect(flyout.getByTestId('cashflow-summary')).toHaveText(/Housing · Chequing.*Monthly · next Dec 1, 2026/);
+    await expect(flyout.getByTestId('cashflow-amount')).toHaveValue('1450.00');
+    await expect(flyout.getByTestId('cashflow-date')).toHaveValue('2025-09-01');
+    await expect(flyout.getByTestId('cashflow-description')).toHaveValue('Rent');
+    await expect(flyout.getByTestId('cashflow-tag')).toHaveText(['home']);
+  });
+
+  test('ShouldSaveTheChanges', async ({ page }) => {
+    const listCalls = await withCashflows(page);
+    const bodies = await capture(page, modifyRoute);
+    const flyout = await openRent(page);
+    const callsBefore = listCalls();
+
+    await flyout.getByTestId('cashflow-amount').fill('1500');
+    await flyout.getByTestId('cashflow-date').fill('2026-01-01');
+    await flyout.getByTestId('cashflow-description').fill('New rent');
+    await flyout.getByTestId('cashflow-tag-input').fill('rent');
+    await flyout.getByTestId('cashflow-tag-input').press('Enter');
+    await flyout.getByTestId('cashflow-save').click();
+
+    await expect(flyout).toBeHidden();
+    expect(bodies).toEqual([{ id: rent.id, amount: '1500.00', effectiveDate: '2026-01-01', description: 'New rent', tags: ['home', 'rent'] }]);
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Cashflow saved');
+    await expect.poll(listCalls).toBeGreaterThan(callsBefore);
+  });
+
+  test('ShouldOnlySaveAValidAmountAndDate', async ({ page }) => {
+    await withCashflows(page);
+    const flyout = await openRent(page);
+
+    await flyout.getByTestId('cashflow-amount').fill('12.345');
+    await expect(flyout.getByTestId('cashflow-save')).toBeDisabled();
+    await flyout.getByTestId('cashflow-amount').fill('12.34');
+    await expect(flyout.getByTestId('cashflow-save')).toBeEnabled();
+    await flyout.getByTestId('cashflow-date').fill('');
+    await expect(flyout.getByTestId('cashflow-save')).toBeDisabled();
+  });
+
+  test('ShouldKeepTheFlyoutOpenWhenSavingFails', async ({ page }) => {
+    await withCashflows(page);
+    await capture(page, modifyRoute, 500);
+    const flyout = await openRent(page);
+
+    await flyout.getByTestId('cashflow-save').click();
+
+    await expect(flyout.getByTestId('cashflow-error')).toHaveText('The cashflow could not be saved. Try again.');
+    await expect(flyout).toBeVisible();
+  });
+
+  test('ShouldCloseWithoutSaving', async ({ page }) => {
+    await withCashflows(page);
+    const bodies = await capture(page, modifyRoute);
+    const flyout = await openRent(page);
+
+    await flyout.getByTestId('cashflow-description').fill('Changed');
+    await flyout.getByTestId('cashflow-cancel').click();
+
+    await expect(flyout).toBeHidden();
+    expect(bodies).toEqual([]);
+  });
+
   test.describe('on a phone', () => {
     test.use({ viewport: { width: 360, height: 640 } });
 
@@ -200,6 +288,17 @@ test.describe('Settings cashflows', () => {
       const schedule = await rowOf(page, 'Health').getByTestId('cashflows-row-schedule').boundingBox();
       expect(schedule!.x + schedule!.width).toBeLessThanOrEqual(360);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBe(0);
+    });
+
+    test('ShouldOpenTheFlyoutFullWidth', async ({ page }) => {
+      await withCashflows(page);
+
+      const flyout = await openRent(page);
+
+      await expect(flyout.getByTestId('cashflow-amount')).toBeVisible();
+      await expect.poll(async () => Math.round((await flyout.boundingBox())?.width ?? 0)).toBe(360);
+      const overflow = await flyout.evaluate((element) => element.scrollWidth - element.clientWidth);
       expect(overflow).toBe(0);
     });
   });

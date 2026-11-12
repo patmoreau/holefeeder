@@ -6,6 +6,7 @@ export type Cashflow = {
   id: string;
   title: string;
   description: string;
+  categoryId: string;
   categoryName: string;
   categoryColor: string;
   categoryType: CategoryType;
@@ -22,6 +23,7 @@ const valid = (value: Record<string, unknown>): Cashflow => ({
   id: value.id as string,
   title: value.title as string,
   description: value.description as string,
+  categoryId: value.categoryId as string,
   categoryName: value.categoryName as string,
   categoryColor: value.categoryColor as string,
   categoryType: value.categoryType as CategoryType,
