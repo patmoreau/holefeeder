@@ -45,9 +45,10 @@ test.describe('Settings', () => {
 
     await page.goto('/settings');
 
-    for (const row of ['categories', 'cashflows', 'tags']) {
+    for (const row of ['cashflows', 'tags']) {
       await expect(page.getByTestId(`settings-${row}`)).toHaveAttribute('aria-disabled', 'true');
     }
+    await expect(page.getByTestId('settings-categories')).not.toHaveAttribute('aria-disabled', 'true');
     await expect(page.getByTestId('settings-categories')).toHaveText('Categories');
     await expect(page.getByTestId('settings-cashflows')).toHaveText('Cashflows');
     await expect(page.getByTestId('settings-tags')).toHaveText('Tags');
