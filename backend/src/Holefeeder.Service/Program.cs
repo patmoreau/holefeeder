@@ -22,6 +22,7 @@ using Holefeeder.Service.Home;
 using Holefeeder.Service.Settings;
 using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
+using Holefeeder.Service.Tags;
 using Holefeeder.Service.Transactions;
 
 using Microsoft.AspNetCore.Identity;
@@ -83,6 +84,7 @@ builder.Services
     .AddAccountsServices()
     .AddDashboardServices()
     .AddCashflowsServices()
+    .AddTagsServices()
     .AddTransactionsServices()
     .AddSettingsServices()
     .AddCategoriesServices()
@@ -148,6 +150,7 @@ app.MapCarter()
     .MapAccountsEndpoints()
     .MapDashboardEndpoints()
     .MapCashflowsEndpoints()
+    .MapTagsEndpoints()
     .MapTransactionsEndpoints()
     .MapSettingsEndpoints()
     .MapCategoriesEndpoints()
