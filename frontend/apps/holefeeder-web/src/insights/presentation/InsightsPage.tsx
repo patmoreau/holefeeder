@@ -10,6 +10,7 @@ import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, type Tone, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useOverview } from '../api/use-overview';
 import type { NetOutcome, Overview } from '../domain/overview';
+import { IncomeExpenseChart } from './IncomeExpenseChart';
 import { percent } from './percent';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
@@ -137,6 +138,9 @@ const Content = () => {
   return (
     <>
       <Hero overview={overview.value} />
+      <Section title={translate(tk.insights.chart.title)} testID="insights-chart-section">
+        <IncomeExpenseChart overview={overview.value} />
+      </Section>
       <Section title={translate(tk.insights.thisPeriod)} testID="insights-this-period">
         <Rows>
           <LinkRow

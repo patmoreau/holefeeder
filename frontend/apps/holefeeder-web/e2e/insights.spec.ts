@@ -117,6 +117,82 @@ test.describe('Insights', () => {
     await expect(page).toHaveURL(/\/insights\/spending$/);
   });
 
+  test('ShouldDrawIncomeAndExpensesOverThePeriods', async ({ page }) => {
+    await withOverview(page);
+
+    await page.goto('/insights');
+
+    const chart = page.getByTestId('insights-chart');
+    await expect(page.getByTestId('insights-chart-section').getByText('Income vs Expenses')).toBeVisible();
+    await expect(chart.getByTestId('insights-chart-legend')).toHaveText(['Income', 'Expenses', 'Deficit']);
+    await expect(chart.getByTestId('insights-chart-income')).toHaveAttribute('d', /^M[\d.]+,[\d.]+(L[\d.]+,[\d.]+){5}$/);
+    await expect(chart.getByTestId('insights-chart-expenses')).toHaveAttribute('stroke-dasharray', '6 4');
+    await expect(chart.getByTestId('insights-chart-x-label')).toHaveText(['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']);
+    await expect(chart.getByTestId('insights-chart-y-label')).toHaveText(['$0', '$2K', '$4K', '$6K']);
+  });
+
+  test('ShouldShadeTheSurplusAndTheDeficit', async ({ page }) => {
+    await withOverview(page);
+
+    await page.goto('/insights');
+
+    const bands = page.getByTestId('insights-chart-band');
+    await expect(bands).toHaveCount(3);
+    expect(await bands.evaluateAll((elements) => elements.map((element) => element.getAttribute('data-kind')))).toEqual([
+      'surplus',
+      'deficit',
+      'surplus',
+    ]);
+  });
+
+  test('ShouldDrawFlatLines_WhenNothingHappened', async ({ page }) => {
+    await withOverview(
+      page,
+      anOverview({
+        series: [month('2026-10-01', '2026-10-31', 0, 0), month('2026-11-01', '2026-11-30', 0, 0)],
+        totalIncome: 0,
+        totalSpending: 0,
+        totalNet: 0,
+      })
+    );
+
+    await page.goto('/insights');
+
+    await expect(page.getByTestId('insights-chart-income')).toHaveAttribute('d', /^M[\d.]+,[\d.]+L[\d.]+,[\d.]+$/);
+    await expect(page.getByTestId('insights-chart-band')).toHaveCount(0);
+  });
+
+  test('ShouldTotalTheRange', async ({ page }) => {
+    await withOverview(page);
+
+    await page.goto('/insights');
+
+    await expect(page.getByTestId('insights-total-income')).toHaveText('$28,300.00');
+    await expect(page.getByTestId('insights-total-expenses')).toHaveText('$24,859.63');
+    await expect(page.getByTestId('insights-total-net')).toHaveText('$3,440.37');
+    await expect(page.getByTestId('insights-total-net')).toHaveCSS('color', positive);
+    await expect(page.getByTestId('insights-chart-footnote')).toHaveText('Excludes transfers between your accounts');
+  });
+
+  test('ShouldShowANegativeNetOverTheRange', async ({ page }) => {
+    await withOverview(page, anOverview({ totalNet: -120.5 }));
+
+    await page.goto('/insights');
+
+    await expect(page.getByTestId('insights-total-net')).toHaveText('-$120.50');
+    await expect(page.getByTestId('insights-total-net')).toHaveCSS('color', negative);
+  });
+
+  test('ShouldOfferTheChartAsATable', async ({ page }) => {
+    await withOverview(page);
+
+    await page.goto('/insights');
+
+    const rows = page.getByTestId('insights-chart-table').locator('tbody tr');
+    await expect(rows).toHaveCount(6);
+    await expect(rows.first()).toHaveText(/Jun.*\$4,800\.00.*\$3,600\.00/);
+  });
+
   test('ShouldShowLoading', async ({ page }) => {
     await page.route(overviewRoute, () => undefined);
 
