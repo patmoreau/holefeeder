@@ -1,6 +1,6 @@
 using Dapper;
 
-using Holefeeder.Infrastructure.Extensions;
+using Holefeeder.Service.Support.Persistence.Schema;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
 
@@ -36,7 +36,7 @@ public class SchemaMigrationsTests(DatabaseForTest database, ITestOutputHelper t
     [Fact]
     public async Task MigrateDb_AppliesNothing_WhenEveryScriptIsJournaled()
     {
-        WebApplicationExtensions.MigrateDb(database.ConnectionString, new LoggerForTest<SchemaMigrationsTests>(testOutputHelper));
+        SchemaMigrations.MigrateDb(database.ConnectionString, new LoggerForTest<SchemaMigrationsTests>(testOutputHelper));
 
         var scripts = await ScriptsInJournalAsync();
 

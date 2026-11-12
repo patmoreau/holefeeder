@@ -170,8 +170,8 @@ catch (NpgsqlException exception)
   index) is caught by `SqlState` and constraint name and returned as that rule's Core
   error (`StoreItemErrors.CodeAlreadyExists`), so no separate existence query is
   needed.
-- Schema changes are DbUp scripts in `Holefeeder.Infrastructure/Scripts/` (see
-  *Schema migrations* in `docs/plans/backend-service.md`).
+- Schema changes are DbUp scripts in `Support/Persistence/Schema/Scripts/`, next
+  number first (see *Schema migrations* in `docs/plans/backend-service.md`).
 
 ## 5. Api
 

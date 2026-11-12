@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="Dapper"/>
+        <PackageReference Include="dbup-postgresql"/>
         <PackageReference Include="Hangfire.AspNetCore"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
         <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
@@ -32,6 +33,11 @@
         <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj"/>
     </ItemGroup>
 
+
+    <ItemGroup>
+        <EmbeddedResource Include="Support\Persistence\Schema\Scripts\*.sql"
+                          LogicalName="Holefeeder.Infrastructure.Scripts.%(Filename)%(Extension)"/>
+    </ItemGroup>
 
     <ItemGroup>
         <None Update="appsettings.Development.json">

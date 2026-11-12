@@ -66,8 +66,9 @@ The `/backend:add-api-endpoint` playbook carries the procedure for a new endpoin
   host wiring in `Program.cs` touches both. When new code needs something legacy has,
   write it again in the feature.
 - **Dapper with hand-written SQL.** No EF Core in new code. The persistence ring owns
-  the SQL and its row models and maps them to core types. Schema changes stay DbUp
-  scripts in `Holefeeder.Infrastructure/Scripts/` for now (see *Decisions* in the plan).
+  the SQL and its row models and maps them to core types. Schema changes are DbUp
+  scripts in `src/Holefeeder.Service/Support/Persistence/Schema/Scripts/` (see
+  *Decisions* in the plan).
 - **One upsert per port.** Writes go through a single `SaveAsync` (`INSERT ... ON
   CONFLICT (id) DO UPDATE` guarded on the owner), never separate create and modify
   methods; use cases load, change, then save.
@@ -201,8 +202,8 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
 Application no longer maps any route: every endpoint is in `Holefeeder.Service`. The
-three projects stay only for the DbUp migrations the host still runs from them until
-`../docs/plans/backend-legacy-removal.md` moves those and deletes the projects.
+host no longer uses anything from the three projects; step 7 of
+`../docs/plans/backend-legacy-removal.md` deletes them.
 
 ### Key Patterns
 

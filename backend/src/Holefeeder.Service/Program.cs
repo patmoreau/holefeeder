@@ -1,6 +1,5 @@
 using Dapper;
 
-using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Service;
 using Holefeeder.Service.Accounts;
 using Holefeeder.Service.Cashflows;
@@ -14,6 +13,7 @@ using Holefeeder.Service.MyData;
 using Holefeeder.Service.Settings;
 using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
+using Holefeeder.Service.Support.Persistence.Schema;
 using Holefeeder.Service.Sync;
 using Holefeeder.Service.Tags;
 using Holefeeder.Service.Transactions;

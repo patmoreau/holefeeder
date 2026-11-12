@@ -79,12 +79,13 @@ is approved. Every step leaves `main` deployable.
 ## Decisions
 
 - **Schema migrations.** `app.MigrateDb()` in `Program.cs` runs DbUp at startup: it
-  applies the scripts embedded in `Holefeeder.Infrastructure`, in name order, one
-  transaction each, and skips those already in `schemaversions`. New and legacy code
-  share one schema, so scripts for new tables also go in
-  `Holefeeder.Infrastructure/Scripts/` (next number, plus an `EmbeddedResource` entry in
-  the `.csproj`) until step 7 moves them. This is the one legacy location new work
-  writes to.
+  applies the scripts in `Holefeeder.Service/Support/Persistence/Schema/Scripts/`, in
+  name order, one transaction each, and skips those already in `schemaversions`. A new
+  script takes the next number; the `.csproj` embeds every `.sql` file in that folder.
+  The scripts keep the resource names they had in `Holefeeder.Infrastructure`
+  (`Holefeeder.Infrastructure.Scripts.<file>`, set by `LogicalName`), because every
+  existing database journals them under those names. `SchemaMigrationsTests` pins
+  them.
 - **Seed.work source.** Code is copied from the seed.work repository at tag `v2.0.2`,
   the version the legacy projects reference, so copied code matches what runs today.
   No copies are in use: the first ones, `PostgreDatabaseServer` and

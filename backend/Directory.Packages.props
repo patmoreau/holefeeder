@@ -9,7 +9,6 @@
     <PackageVersion Include="Dapper.FluentMap" Version="3.6.1" />
     <PackageVersion Include="Dapper.SqlBuilder" Version="2.1.89" />
     <PackageVersion Include="Dapper.Transaction" Version="2.1.89" />
-    <PackageVersion Include="dbup-core" Version="6.1.1" />
     <PackageVersion Include="dbup-postgresql" Version="7.0.1" />
     <PackageVersion Include="DrifterApps.Seeds.Application" Version="2.0.2" />
     <PackageVersion Include="DrifterApps.Seeds.Domain" Version="2.0.2" />

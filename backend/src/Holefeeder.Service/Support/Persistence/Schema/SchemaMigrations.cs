@@ -4,30 +4,22 @@ using System.Reflection;
 
 using DbUp;
 
-using Holefeeder.Application.Context;
-using Holefeeder.Application.Extensions;
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
-namespace Holefeeder.Infrastructure.Extensions;
+namespace Holefeeder.Service.Support.Persistence.Schema;
 
 [ExcludeFromCodeCoverage]
-public static class WebApplicationExtensions
+internal static partial class SchemaMigrations
 {
-    private static readonly object Locker = new();
+    private const string ScriptsPrefix = "Holefeeder.Infrastructure.Scripts.";
+
+    private static readonly Lock Locker = new();
 
     public static void MigrateDb(this IApplicationBuilder app, string connectionString)
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        using var scope = app.ApplicationServices.CreateScope();
+        var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(SchemaMigrations));
 
-        var holefeederLogger =
-            scope.ServiceProvider.GetRequiredService<ILogger<BudgetingContext>>();
-
-        MigrateDb(connectionString, holefeederLogger);
+        MigrateDb(connectionString, logger);
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
@@ -40,7 +32,7 @@ public static class WebApplicationExtensions
 
         while (tryCount++ < 3 && !completed)
         {
-            logger.LogMigrationAttempt(tryCount);
+            LogMigrationAttempt(logger, tryCount);
             try
             {
                 PerformMigration(connectionString);
@@ -48,7 +40,7 @@ public static class WebApplicationExtensions
             }
             catch (Exception e)
             {
-                logger.LogMigrationError(tryCount, e);
+                LogMigrationError(logger, tryCount, e);
                 Thread.Sleep(10000);
             }
         }
@@ -58,7 +50,7 @@ public static class WebApplicationExtensions
             throw new DataException("Unable to perform database migration, no connection to server was found.");
         }
 
-        logger.LogMigrationSuccess();
+        LogMigrationSuccess(logger);
     }
 
     private static void PerformMigration(string connectionString)
@@ -67,7 +59,8 @@ public static class WebApplicationExtensions
         {
             var upgradeEngine = DeployChanges.To
                 .PostgresqlDatabase(connectionString)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
+                    name => name.StartsWith(ScriptsPrefix, StringComparison.Ordinal))
                 .LogToConsole()
                 .WithTransactionPerScript()
                 .Build();
@@ -79,4 +72,13 @@ public static class WebApplicationExtensions
             }
         }
     }
+
+    [LoggerMessage(EventId = 1007, Level = LogLevel.Information, Message = "Migration attempt #{TryCount}")]
+    private static partial void LogMigrationAttempt(ILogger logger, int tryCount);
+
+    [LoggerMessage(EventId = 1008, Level = LogLevel.Information, Message = "Migration completed successfully")]
+    private static partial void LogMigrationSuccess(ILogger logger);
+
+    [LoggerMessage(EventId = 9000, Level = LogLevel.Error, Message = "Migration attempt #{TryCount}")]
+    private static partial void LogMigrationError(ILogger logger, int tryCount, Exception exception);
 }

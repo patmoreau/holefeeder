@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–5 done**, step 6 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–6 done**, step 7 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -16,9 +16,9 @@ Every route is served by `Holefeeder.Service`, and the dead legacy code is gone
 | ~~`Application/Authorization/Configuration`~~ | Moved in step 3 |
 | ~~`Infrastructure/SeedWork/BudgetingConnectionStringBuilder`~~ | Replaced in step 4 |
 | ~~`Infrastructure/Extensions/ServiceCollectionExtensions`~~ | `AddInfrastructure` removed in step 4, `AddHangfireServices` moved in step 5 |
-| `Infrastructure/Extensions/WebApplicationExtensions` | `MigrateDb`: DbUp over the scripts embedded in `Holefeeder.Infrastructure`, 3 tries 10 s apart; also called by `DatabaseForTest` |
-| `Infrastructure/Scripts/*.sql` | The schema, as DbUp scripts |
-| `Application/Extensions/LoggerExtensions` | The three migration log messages `MigrateDb` writes |
+| ~~`Infrastructure/Extensions/WebApplicationExtensions`~~ | Moved in step 6 |
+| ~~`Infrastructure/Scripts/*.sql`~~ | Moved in step 6 |
+| ~~`Application/Extensions/LoggerExtensions`~~ | Moved in step 6 |
 
 **The legacy tests:** `Holefeeder.FunctionalTests` (115 scenarios) and
 `Holefeeder.Tests.Common` build on everything else: the `Request`/`Response` types in
@@ -96,6 +96,12 @@ Each step leaves `main` deployable and every suite green.
    on a database migrated by the old runner, the new one applies nothing. The
    `Decisions` entry on schema migrations in `backend-service.md` and the
    `add-api-endpoint` playbook then point at the new folder.
+   Done: `Support/Persistence/Schema/` holds `SchemaMigrations` (runner and log messages)
+   and `Scripts/`, embedded by a wildcard with the legacy `LogicalName`.
+   `SchemaMigrationsTests` was committed first against the old runner and passes
+   unchanged against the new one. The runner now logs under the `SchemaMigrations`
+   category instead of `BudgetingContext`, and the `dbup-core` central version went:
+   `dbup-postgresql` brings the same 6.1.1.
 7. **Delete `Holefeeder.Application`, `.Domain` and `.Infrastructure`.** Structural. Drop
    the project references from `Holefeeder.Service.csproj`, the projects from both
    `.slnx` files, their `COPY` lines from `src/Holefeeder.Service/Dockerfile`, and the
@@ -107,8 +113,8 @@ Each step leaves `main` deployable and every suite green.
 8. **Docs.** Remove *Legacy architecture* from `backend/AGENTS.md` and make *Target
    architecture* the only one; close step 7 in `backend-service.md`.
 
-## Decisions to make before step 6
+## Decisions
 
-- **Where the schema lives** in `Holefeeder.Service` (proposed `Support/Persistence/Schema/`).
-- **Journal names**: keep the `Holefeeder.Infrastructure.Scripts.` resource names
-  (proposed) or rename the `schemaversions` rows.
+- **Where the schema lives:** `Support/Persistence/Schema/`, chosen 2026-11-12.
+- **Journal names:** kept as `Holefeeder.Infrastructure.Scripts.<file>` through
+  `LogicalName`, chosen 2026-11-12, so no database needs a change.
