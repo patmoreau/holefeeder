@@ -35,12 +35,15 @@ internal sealed record Breakdown(
                     .OrderByDescending(tag => tag.Amount)
                     .ThenBy(tag => tag.Tag, StringComparer.Ordinal)
                     .ToList();
+                var amount = SumWithin(categoryEntries.Select(entry => (entry.Date, entry.Amount)), current);
                 return new CategoryBreakdown(
                     category.Id,
                     category.Name,
                     category.Color,
                     category.Budget,
-                    SumWithin(categoryEntries.Select(entry => (entry.Date, entry.Amount)), current),
+                    BudgetStatusOf(amount, category.Budget),
+                    category.Budget > 0 ? (int)Math.Round(amount / category.Budget * 100, MidpointRounding.AwayFromZero) : 0,
+                    amount,
                     AverageOver(previous, categoryEntries.Select(entry => (entry.Date, entry.Amount))),
                     tags);
             })
@@ -101,6 +104,9 @@ internal sealed record Breakdown(
         return Math.Round(inPrevious.Sum(amount => amount.Amount) / activePeriods, 2, MidpointRounding.AwayFromZero);
     }
 
+    private static BudgetStatus BudgetStatusOf(decimal amount, decimal budget) =>
+        budget <= 0 ? BudgetStatus.None : amount > budget ? BudgetStatus.Over : BudgetStatus.Under;
+
     private static decimal SumWithin(IEnumerable<(DateOnly Date, decimal Amount)> amounts, Period period) =>
         amounts.Where(amount => Within(amount.Date, period)).Sum(amount => amount.Amount);
 
@@ -110,8 +116,23 @@ internal sealed record Breakdown(
         entry.Tags.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct(StringComparer.Ordinal);
 }
 
+internal enum BudgetStatus
+{
+    None,
+    Under,
+    Over
+}
+
 internal sealed record CategoryBreakdown(
-    Id Id, string Name, string Color, decimal Budget, decimal Amount, decimal Average, IReadOnlyList<TagAmount> Tags);
+    Id Id,
+    string Name,
+    string Color,
+    decimal Budget,
+    BudgetStatus BudgetStatus,
+    int BudgetPercentage,
+    decimal Amount,
+    decimal Average,
+    IReadOnlyList<TagAmount> Tags);
 
 internal sealed record TagBreakdown(string Tag, decimal Amount, decimal Average);
 

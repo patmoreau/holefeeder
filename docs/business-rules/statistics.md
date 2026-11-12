@@ -108,6 +108,9 @@ spending against its average, by category and by tag. The backend mirror of
   this period (`amount`) and its `average` per
   [Previous-period averaging](#previous-period-averaging), rounded to cents. Ordered
   by average desc, then amount desc, then name.
+- **`budgetStatus`** is `none` when the category has no budget, `over` when its
+  amount is above the budget and `under` otherwise; **`budgetPercentage`** = amount ÷
+  budget × 100, rounded to a whole number, 0 without a budget.
 - Each category also lists its **tags this period** with their amounts, ordered by
   amount desc, then tag — the combined category and tag view.
 - **Tags** — split, trimmed and averaged as in [Tag Spending](#tag-spending-mobile-insight);

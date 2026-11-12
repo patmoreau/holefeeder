@@ -78,8 +78,8 @@ public class GetIncomeComponent(ServerForTest server, ITestOutputHelper testOutp
         TheBreakdownIs(response, new BreakdownJson(
             ThisMonth(), 3500m, 3250m, 250m, 7.69m,
             [
-                new CategoryJson(_salary, "Salary", "#34C759", 0m, 3500m, 3000m, [new TagAmountJson("job", 3500m)]),
-                new CategoryJson(_unused, "Unused", "#FF2D55", 0m, 0m, 0m, [])
+                new CategoryJson(_salary, "Salary", "#34C759", 0m, "none", 0, 3500m, 3000m, [new TagAmountJson("job", 3500m)]),
+                new CategoryJson(_unused, "Unused", "#FF2D55", 0m, "none", 0, 0m, 0m, [])
             ],
             [new TagJson("job", 3500m, 3000m)]));
 
@@ -108,7 +108,7 @@ public class GetIncomeComponent(ServerForTest server, ITestOutputHelper testOutp
     private sealed record PeriodJson(DateOnly Start, DateOnly End);
 
     private sealed record CategoryJson(
-        Guid Id, string Name, string Color, decimal Budget, decimal Amount, decimal Average, IReadOnlyList<TagAmountJson> Tags);
+        Guid Id, string Name, string Color, decimal Budget, string BudgetStatus, int BudgetPercentage, decimal Amount, decimal Average, IReadOnlyList<TagAmountJson> Tags);
 
     private sealed record TagJson(string Tag, decimal Amount, decimal Average);
 

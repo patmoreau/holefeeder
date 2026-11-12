@@ -76,8 +76,8 @@ public class GetSpendingComponent(ServerForTest server, ITestOutputHelper testOu
         TheBreakdownIs(response, new BreakdownJson(
             ThisMonth(), 40m, 70m, -30m, -42.86m,
             [
-                new CategoryJson(_groceries, "Groceries", "#34C759", 300m, 40m, 100m, [new TagAmountJson("weekly", 40m)]),
-                new CategoryJson(_unused, "Unused", "#FF2D55", 0m, 0m, 0m, [])
+                new CategoryJson(_groceries, "Groceries", "#34C759", 300m, "under", 13, 40m, 100m, [new TagAmountJson("weekly", 40m)]),
+                new CategoryJson(_unused, "Unused", "#FF2D55", 0m, "none", 0, 0m, 0m, [])
             ],
             [new TagJson("weekly", 40m, 100m)]));
 
@@ -106,7 +106,7 @@ public class GetSpendingComponent(ServerForTest server, ITestOutputHelper testOu
     private sealed record PeriodJson(DateOnly Start, DateOnly End);
 
     private sealed record CategoryJson(
-        Guid Id, string Name, string Color, decimal Budget, decimal Amount, decimal Average, IReadOnlyList<TagAmountJson> Tags);
+        Guid Id, string Name, string Color, decimal Budget, string BudgetStatus, int BudgetPercentage, decimal Amount, decimal Average, IReadOnlyList<TagAmountJson> Tags);
 
     private sealed record TagJson(string Tag, decimal Amount, decimal Average);
 

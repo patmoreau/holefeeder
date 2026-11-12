@@ -58,6 +58,33 @@ public class GetSpendingUseCaseTests
     }
 
     [Fact]
+    public async Task HandleAsync_TellsHowMuchOfItsBudgetEachCategoryUsed()
+    {
+        var rent = _insights.Add(CategoryType.Expense, "Rent", budget: 50m);
+        _insights.Spend(rent, new DateOnly(2026, 5, 3), 60m);
+
+        var result = await SpendingAsync();
+
+        result.Value.Categories.Select(category => (category.Name, category.BudgetStatus, category.BudgetPercentage)).Should().Equal(
+            ("Groceries", BudgetStatus.Under, 40),
+            ("Dining", BudgetStatus.None, 0),
+            ("Rent", BudgetStatus.Over, 120),
+            ("Unused", BudgetStatus.None, 0));
+    }
+
+    [Fact]
+    public async Task HandleAsync_IsUnderBudget_WhenSpendingMatchesTheBudget()
+    {
+        var phone = _insights.Add(CategoryType.Expense, "Phone", budget: 75.5m);
+        _insights.Spend(phone, new DateOnly(2026, 5, 3), 75.5m);
+
+        var result = await SpendingAsync();
+
+        result.Value.Categories.Single(category => category.Name == "Phone")
+            .Should().BeEquivalentTo(new { BudgetStatus = BudgetStatus.Under, BudgetPercentage = 100 });
+    }
+
+    [Fact]
     public async Task HandleAsync_OrdersCategoriesByAverageThenSpendingThenName()
     {
         var zebra = _insights.Add(CategoryType.Expense, "Zebra");
