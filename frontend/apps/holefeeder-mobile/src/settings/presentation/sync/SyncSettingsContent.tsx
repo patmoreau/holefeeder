@@ -28,8 +28,8 @@ const createStyles = (theme: Theme) => ({
     ...theme.styles.containers.center,
   },
   section: {
-    ...theme.styles.containers.section,
-    marginHorizontal: undefined,
+    paddingHorizontal: theme.styles.containers.section.paddingHorizontal,
+    borderRadius: theme.styles.containers.section.borderRadius,
   },
 });
 

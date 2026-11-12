@@ -4,7 +4,7 @@ import { ExpoDateTimePickerProps } from '@/shared/presentation/components/native
 export const ExpoDateTimePicker = ({ date, onDateChange, modifiers }: ExpoDateTimePickerProps) => {
   const datePickerProps: DateTimePickerProps = {
     initialDate: date?.toISOString(),
-    onDateSelected: onDateChange,
+    onDateSelected: (selected) => selected && onDateChange(selected),
     modifiers,
   };
 
