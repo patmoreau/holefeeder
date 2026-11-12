@@ -1,6 +1,6 @@
 import { type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
 import { Box, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { currency, toneColor, toneOf } from '@/shared/presentation/tone';
@@ -40,6 +40,13 @@ const periodLabel = (period: Period) => {
   const options: Intl.DateTimeFormatOptions =
     days >= 360 ? { year: 'numeric' } : days >= 28 ? { month: 'short' } : { month: 'short', day: 'numeric' };
   return new Intl.DateTimeFormat(Language.locale(), { ...options, timeZone: 'UTC' }).format(new Date(period.start)).replace('.', '');
+};
+
+const longPeriodLabel = (period: Period) => {
+  const days = daysIn(period);
+  const options: Intl.DateTimeFormatOptions =
+    days >= 360 ? { year: 'numeric' } : days >= 28 ? { month: 'long', year: 'numeric' } : { dateStyle: 'medium' };
+  return new Intl.DateTimeFormat(Language.locale(), { ...options, timeZone: 'UTC' }).format(new Date(period.start));
 };
 
 const compactCurrency = (value: number) =>
@@ -101,8 +108,84 @@ const Legend = () => (
   </Stack>
 );
 
+const netText = (net: number) => {
+  if (toneOf(net) === 'positive') return translate(tk.insights.chart.tooltipSaved, { amount: currency(net) });
+  if (toneOf(net) === 'negative') return translate(tk.insights.net.overspent, { amount: currency(Math.abs(net)) });
+  return translate(tk.insights.net.brokeEven);
+};
+
+const TooltipRow = ({
+  label,
+  value,
+  stroke,
+  dashed,
+  testID,
+}: {
+  label: string;
+  value: number;
+  stroke: string;
+  dashed?: boolean;
+  testID: string;
+}) => (
+  <Stack direction="row" alignItems="center" spacing={1} data-testid={testID}>
+    <svg width="12" height="8" aria-hidden>
+      <line x1="0" y1="4" x2="12" y2="4" stroke={stroke} strokeWidth="2" strokeDasharray={dashed ? '3 2' : undefined} />
+    </svg>
+    <Typography component="span" sx={{ fontSize: 13, color: 'text.secondary', flexGrow: 1 }}>
+      {label}
+    </Typography>
+    <Typography component="span" sx={{ fontSize: 13, fontWeight: 600 }}>
+      {currency(value)}
+    </Typography>
+  </Stack>
+);
+
+const tooltipWidth = 200;
+const tooltipGap = 12;
+
+const Tooltip = ({ flow, left, width }: { flow: PeriodFlow; left: number; width: number }) => (
+  <Stack
+    data-testid="insights-chart-tooltip"
+    aria-live="polite"
+    spacing={0.5}
+    sx={{
+      position: 'absolute',
+      top: padding.top,
+      left: left + tooltipGap + tooltipWidth <= width ? left + tooltipGap : Math.max(left - tooltipGap - tooltipWidth, 0),
+      width: tooltipWidth,
+      p: 1.5,
+      borderRadius: 2,
+      bgcolor: 'background.default',
+      boxShadow: 3,
+      pointerEvents: 'none',
+    }}
+  >
+    <Typography data-testid="insights-chart-tooltip-title" sx={{ fontSize: 13, fontWeight: 600 }}>
+      {longPeriodLabel(flow.period)}
+    </Typography>
+    <TooltipRow
+      label={translate(tk.insights.chart.income)}
+      value={flow.income}
+      stroke="var(--chart-income)"
+      testID="insights-chart-tooltip-income"
+    />
+    <TooltipRow
+      label={translate(tk.insights.chart.expenses)}
+      value={flow.spending}
+      stroke="var(--chart-expenses)"
+      dashed
+      testID="insights-chart-tooltip-expenses"
+    />
+    <Typography data-testid="insights-chart-tooltip-net" sx={{ fontSize: 13, fontWeight: 600, color: toneColor[toneOf(flow.net)] }}>
+      {netText(flow.net)}
+    </Typography>
+  </Stack>
+);
+
 const Plot = ({ series }: { series: PeriodFlow[] }) => {
   const { ref, width } = useWidth();
+  const [selected, setSelected] = useState<number | null>(null);
+  const last = series.length - 1;
   const ticks = ticksFor(series);
   const top = ticks[ticks.length - 1];
   const plotWidth = Math.max(0, width - padding.left - padding.right);
@@ -115,9 +198,47 @@ const Plot = ({ series }: { series: PeriodFlow[] }) => {
       ' '
     );
   const bands = SurplusBands.of(series.map((flow) => ({ income: flow.income, expenses: flow.spending })));
+  const indexAt = (event: PointerEvent<SVGRectElement>) => {
+    const bounds = event.currentTarget.ownerSVGElement!.getBoundingClientRect();
+    const position = ((event.clientX - bounds.left) * width) / bounds.width;
+    return last < 1 ? 0 : Math.min(Math.max(Math.round(((position - padding.left) / plotWidth) * last), 0), last);
+  };
+  const keys: Record<string, (index: number) => number> = {
+    ArrowLeft: (index) => Math.max(index - 1, 0),
+    ArrowRight: (index) => Math.min(index + 1, last),
+    Home: () => 0,
+    End: () => last,
+  };
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setSelected(null);
+      return;
+    }
+    const move = keys[event.key];
+    if (!move) return;
+    event.preventDefault();
+    setSelected((index) => move(index ?? last));
+  };
+  const flow = selected === null ? undefined : series[selected];
 
   return (
-    <Box ref={ref} sx={{ width: '100%', minWidth: 0, overflow: 'hidden' }}>
+    <Box
+      ref={ref}
+      tabIndex={0}
+      data-testid="insights-chart-plot"
+      onKeyDown={onKeyDown}
+      onFocus={() => setSelected((index) => index ?? last)}
+      onBlur={() => setSelected(null)}
+      sx={{
+        position: 'relative',
+        width: '100%',
+        minWidth: 0,
+        overflow: 'hidden',
+        outline: 'none',
+        borderRadius: 1,
+        '&:focus-visible': { boxShadow: (theme) => `0 0 0 2px ${theme.palette.primary.main}` },
+      }}
+    >
       <svg
         viewBox={`0 0 ${width} ${height}`}
         height={height}
@@ -183,7 +304,42 @@ const Plot = ({ series }: { series: PeriodFlow[] }) => {
             {periodLabel(flow.period)}
           </text>
         ))}
+        {flow && selected !== null && (
+          <g data-testid="insights-chart-marker" pointerEvents="none">
+            <line x1={x(selected)} x2={x(selected)} y1={padding.top} y2={padding.top + plotHeight} stroke="currentColor" strokeOpacity="0.4" />
+            <circle
+              cx={x(selected)}
+              cy={y(flow.income)}
+              r="4"
+              fill="var(--chart-income)"
+              stroke="var(--mui-palette-background-paper)"
+              strokeWidth="2"
+            />
+            <circle
+              cx={x(selected)}
+              cy={y(flow.spending)}
+              r="4"
+              fill="var(--chart-expenses)"
+              stroke="var(--mui-palette-background-paper)"
+              strokeWidth="2"
+            />
+          </g>
+        )}
+        <rect
+          data-testid="insights-chart-hit"
+          x={padding.left}
+          y={padding.top}
+          width={plotWidth}
+          height={plotHeight}
+          fill="transparent"
+          onPointerDown={(event) => setSelected(indexAt(event))}
+          onPointerMove={(event) => setSelected(indexAt(event))}
+          onPointerLeave={(event) => {
+            if (event.pointerType === 'mouse') setSelected(null);
+          }}
+        />
       </svg>
+      {flow && selected !== null && <Tooltip flow={flow} left={x(selected)} width={width} />}
     </Box>
   );
 };

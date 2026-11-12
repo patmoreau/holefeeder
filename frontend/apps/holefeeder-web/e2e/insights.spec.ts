@@ -10,6 +10,7 @@ const month = (start: string, end: string, income: number, spending: number) => 
   period: { start: start, end: end },
   income: income,
   spending: spending,
+  net: Math.round((income - spending) * 100) / 100,
 });
 
 const anOverview = (overrides: Record<string, unknown> = {}) => ({
@@ -33,6 +34,11 @@ const anOverview = (overrides: Record<string, unknown> = {}) => ({
   range: { unit: 'month', amount: 6 },
   ...overrides,
 });
+
+const pointAt = async (page: Page, index: number, count = 6) => {
+  const box = (await page.getByTestId('insights-chart-hit').boundingBox())!;
+  await page.mouse.move(box.x + (box.width * index) / (count - 1), box.y + box.height / 2);
+};
 
 const withOverview = (page: Page, overview: unknown = anOverview()) => page.route(overviewRoute, (route) => route.fulfill({ json: overview }));
 
@@ -193,6 +199,69 @@ test.describe('Insights', () => {
     await expect(rows.first()).toHaveText(/Jun.*\$4,800\.00.*\$3,600\.00/);
   });
 
+  test('ShouldShowThePeriodUnderThePointer', async ({ page }) => {
+    await withOverview(page);
+    await page.goto('/insights');
+
+    await pointAt(page, 3);
+
+    const tooltip = page.getByTestId('insights-chart-tooltip');
+    await expect(tooltip.getByTestId('insights-chart-tooltip-title')).toHaveText('September 2026');
+    await expect(tooltip.getByTestId('insights-chart-tooltip-income')).toHaveText(/Income.*\$4,800\.00/);
+    await expect(tooltip.getByTestId('insights-chart-tooltip-expenses')).toHaveText(/Expenses.*\$5,300\.00/);
+    await expect(tooltip.getByTestId('insights-chart-tooltip-net')).toHaveText('Overspent by $500.00');
+    await expect(tooltip.getByTestId('insights-chart-tooltip-net')).toHaveCSS('color', negative);
+    await expect(page.getByTestId('insights-chart-marker')).toBeVisible();
+  });
+
+  test('ShouldShowWhatWasSaved_WhenPointingAtASurplus', async ({ page }) => {
+    await withOverview(page);
+    await page.goto('/insights');
+
+    await pointAt(page, 0);
+
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('June 2026');
+    await expect(page.getByTestId('insights-chart-tooltip-net')).toHaveText('Saved $1,200.00');
+    await expect(page.getByTestId('insights-chart-tooltip-net')).toHaveCSS('color', positive);
+  });
+
+  test('ShouldHideTheTooltip_WhenThePointerLeaves', async ({ page }) => {
+    await withOverview(page);
+    await page.goto('/insights');
+    await pointAt(page, 2);
+
+    await page.getByTestId('insights-hero').hover();
+
+    await expect(page.getByTestId('insights-chart-tooltip')).toHaveCount(0);
+    await expect(page.getByTestId('insights-chart-marker')).toHaveCount(0);
+  });
+
+  test('ShouldMoveBetweenPeriodsWithTheArrowKeys', async ({ page }) => {
+    await withOverview(page);
+    await page.goto('/insights');
+
+    await page.getByTestId('insights-chart-plot').focus();
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('November 2026');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('October 2026');
+
+    await page.keyboard.press('Home');
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('June 2026');
+
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('June 2026');
+
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('July 2026');
+
+    await page.keyboard.press('End');
+    await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('November 2026');
+
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('insights-chart-tooltip')).toHaveCount(0);
+  });
+
   test('ShouldShowLoading', async ({ page }) => {
     await page.route(overviewRoute, () => undefined);
 
@@ -223,7 +292,17 @@ test.describe('Insights', () => {
   });
 
   test.describe('on a phone', () => {
-    test.use({ viewport: { width: 360, height: 640 } });
+    test.use({ viewport: { width: 360, height: 640 }, hasTouch: true });
+
+    test('ShouldShowThePeriodTapped', async ({ page }) => {
+      await withOverview(page);
+      await page.goto('/insights');
+
+      const box = (await page.getByTestId('insights-chart-hit').boundingBox())!;
+      await page.touchscreen.tap(box.x + box.width / 5, box.y + box.height / 2);
+
+      await expect(page.getByTestId('insights-chart-tooltip-title')).toHaveText('July 2026');
+    });
 
     test('ShouldNotScrollSideways', async ({ page }) => {
       await withOverview(page, anOverview({ net: 1234567.89, income: 9876543.21, spending: 8641975.32 }));

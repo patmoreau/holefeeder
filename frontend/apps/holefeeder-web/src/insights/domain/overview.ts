@@ -20,7 +20,7 @@ export type RangeUnit = (typeof RangeUnits)[keyof typeof RangeUnits];
 
 export type Period = { start: DateOnly; end: DateOnly };
 
-export type PeriodFlow = { period: Period; income: number; spending: number };
+export type PeriodFlow = { period: Period; income: number; spending: number; net: number };
 
 export type Overview = {
   period: Period;
@@ -42,6 +42,7 @@ const flowOf = (value: Raw): PeriodFlow => ({
   period: value.period as Period,
   income: value.income as number,
   spending: value.spending as number,
+  net: value.net as number,
 });
 
 const valid = (value: Raw): Overview => ({
