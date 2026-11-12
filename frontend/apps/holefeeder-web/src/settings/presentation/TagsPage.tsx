@@ -33,15 +33,20 @@ const usageSentenceOf = (tag: Tag) => {
 type TagActions = { onRename: (tag: Tag) => void; onDelete: (tag: Tag) => void };
 
 const TagRow = ({ tag, onRename, onDelete }: { tag: Tag } & TagActions) => (
-  <ListItem disablePadding data-testid="tags-row" sx={{ py: 1.25, gap: 1, minWidth: 0 }}>
-    <Stack sx={{ minWidth: 0, flexGrow: 1 }}>
-      <Typography data-testid="tags-row-name" noWrap sx={{ fontSize: 17 }}>
-        {tag.tag}
-      </Typography>
-      <Typography data-testid="tags-row-usage" noWrap sx={{ fontSize: 13, color: 'text.secondary' }}>
-        {usageOf(tag)}
-      </Typography>
-    </Stack>
+  <ListItem disablePadding data-testid="tags-row" sx={{ py: 1.25, gap: 1.5, minWidth: 0 }}>
+    <Typography aria-hidden sx={{ fontSize: 17, fontWeight: 600, color: 'text.disabled', flexShrink: 0 }}>
+      #
+    </Typography>
+    <Typography data-testid="tags-row-name" noWrap sx={{ fontSize: 17, minWidth: 0, flexShrink: 1 }}>
+      {tag.tag}
+    </Typography>
+    <Typography
+      data-testid="tags-row-usage"
+      noWrap
+      sx={{ fontSize: 15, color: 'text.secondary', textAlign: 'right', minWidth: 0, flexGrow: 1, flexShrink: 1 }}
+    >
+      {usageOf(tag)}
+    </Typography>
     <RowActionsMenu testID="tags-row" onEdit={() => onRename(tag)} onDelete={() => onDelete(tag)} editLabel={translate(tk.tags.renameAction)} />
   </ListItem>
 );
