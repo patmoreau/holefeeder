@@ -1,11 +1,8 @@
-using System.Text.Json;
-
 using Carter;
 
 using Dapper;
 
 using DrifterApps.Seeds.Application.Converters;
-using DrifterApps.Seeds.Infrastructure;
 
 using Holefeeder.Application.Converters;
 using Holefeeder.Application.Extensions;
@@ -71,15 +68,7 @@ if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
 builder.Services
     .AddValidation()
     .AddApplication(builder.Configuration)
-    .AddInfrastructure(builder.Configuration)
-    .AddHangfireRequestScheduler(() =>
-    {
-        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-        options.Converters.Add(new StronglyTypedIdJsonConverterFactory());
-        options.Converters.Add(new MoneyJsonConverterFactory());
-        options.Converters.Add(new CategoryColorJsonConverterFactory());
-        return options;
-    });
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services
     .AddSingleton(provider =>
