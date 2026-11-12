@@ -18,21 +18,6 @@
       <Platform Solution="Staging|*" Project="?" />
       <Build Solution="Staging|*" Project="false" />
     </Project>
-    <Project Path="backend/src/Holefeeder.Application/Holefeeder.Application.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
-    <Project Path="backend/src/Holefeeder.Domain/Holefeeder.Domain.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
-    <Project Path="backend/src/Holefeeder.Infrastructure/Holefeeder.Infrastructure.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
   </Folder>
   <Folder Name="/tests/">
     <File Path="backend/tests/.editorconfig" />

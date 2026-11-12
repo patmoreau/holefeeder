@@ -28,13 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Holefeeder.Application\Holefeeder.Application.csproj"/>
-        <ProjectReference Include="..\Holefeeder.Domain\Holefeeder.Domain.csproj"/>
-        <ProjectReference Include="..\Holefeeder.Infrastructure\Holefeeder.Infrastructure.csproj"/>
-    </ItemGroup>
-
-
-    <ItemGroup>
         <EmbeddedResource Include="Support\Persistence\Schema\Scripts\*.sql"
                           LogicalName="Holefeeder.Infrastructure.Scripts.%(Filename)%(Extension)"/>
     </ItemGroup>

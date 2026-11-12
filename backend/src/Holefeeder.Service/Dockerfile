@@ -14,9 +14,6 @@ COPY nuget.config .
 COPY src/Directory.Build.props src/
 
 COPY src/Holefeeder.Service/*.csproj src/Holefeeder.Service/
-COPY src/Holefeeder.Application/*.csproj src/Holefeeder.Application/
-COPY src/Holefeeder.Domain/*.csproj src/Holefeeder.Domain/
-COPY src/Holefeeder.Infrastructure/*.csproj src/Holefeeder.Infrastructure/
 
 RUN dotnet restore src/Holefeeder.Service/Holefeeder.Service.csproj
 
@@ -28,9 +25,6 @@ ARG BUILD_VERSION=99.99.99
 ARG VERSION=${BUILD_VERSION:-99.99.99}
 WORKDIR /source
 COPY src/Holefeeder.Service/. src/Holefeeder.Service/.
-COPY src/Holefeeder.Application/. src/Holefeeder.Application/.
-COPY src/Holefeeder.Domain/. src/Holefeeder.Domain/.
-COPY src/Holefeeder.Infrastructure/. src/Holefeeder.Infrastructure/.
 WORKDIR /source/src/Holefeeder.Service
 
 RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
