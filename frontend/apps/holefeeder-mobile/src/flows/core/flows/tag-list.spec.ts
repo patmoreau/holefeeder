@@ -8,6 +8,11 @@ describe('TagList', () => {
     expect(result).toBeSuccessWithValue(['tag1', 'tag2', 'tag3']);
   });
 
+  it('should lowercase tags and remove duplicates regardless of case', () => {
+    const result = TagList.create(['Car', 'car', ' CAR ', 'Home']);
+    expect(result).toBeSuccessWithValue(['car', 'home']);
+  });
+
   it('should return an empty array if the input is empty', () => {
     const tags: string[] = [];
     const result = TagList.create(tags);

@@ -8,7 +8,7 @@ export type RenameTagCommand = {
 
 const create = (value: { oldTag: string; newTag: string }): Result<RenameTagCommand> => {
   const oldTag = value.oldTag.trim();
-  const newTag = value.newTag.trim();
+  const newTag = value.newTag.trim().toLowerCase();
 
   if (oldTag.length === 0 || newTag.length === 0 || newTag.includes(',')) {
     return Result.failure([TagsRepositoryErrors.invalidTagName]);

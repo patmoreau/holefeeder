@@ -9,7 +9,7 @@ const create = (tags: unknown): Result<TagList> => {
   const tagsResult = Validate.validate<string[]>(isValidStringArray, tags);
   if (!tagsResult.isSuccess) return tagsResult;
 
-  return Result.success(TagList.valid([...new Set(tagsResult.value.map((tag) => tag.trim()).filter((tag) => tag.length > 0))]));
+  return Result.success(TagList.valid([...new Set(tagsResult.value.map((tag) => tag.trim().toLowerCase()).filter((tag) => tag.length > 0))]));
 };
 
 const valid = (tags: unknown): TagList => tags as TagList;

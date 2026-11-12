@@ -16,6 +16,13 @@ describe('RenameTagUseCase', () => {
     expect(repository.renames()).toEqual([{ oldTag: 'groceries', newTag: 'food' }]);
   });
 
+  it('lowercases the new tag and keeps the old tag as stored', async () => {
+    const result = await RenameTagUseCase(repository).execute('Groceries', ' Food ');
+
+    expect(result).toBeSuccessWithValue(undefined);
+    expect(repository.renames()).toEqual([{ oldTag: 'Groceries', newTag: 'food' }]);
+  });
+
   it('rejects an empty new tag', async () => {
     const result = await RenameTagUseCase(repository).execute('groceries', '   ');
 
