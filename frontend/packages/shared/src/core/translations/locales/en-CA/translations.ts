@@ -240,6 +240,13 @@ export const en = {
     startsOn: 'Starts on',
     saved: 'Cashflow saved',
     failed: 'The cashflow could not be saved. Try again.',
+    cancel: 'Cancel cashflow',
+    keep: 'Keep',
+    cancelTitle: 'Cancel {{name}}?',
+    cancelMessage:
+      '{{name}} stops repeating and leaves your upcoming payments. Payments already made stay in your transactions. A cancelled cashflow cannot be restored.',
+    cancelled: '{{name}} cancelled',
+    cancelFailed: '{{name}} could not be cancelled. Try again.',
   },
   editTransaction: {
     title: 'Edit transaction',

@@ -3,11 +3,15 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, Box, ButtonBase, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useApiRefresh } from '@/shared/api/api-refresh';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
+import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
+import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
 import { currency } from '@/shared/presentation/tone';
+import { useCancelCashflow } from '../api/use-cancel-cashflow';
 import { useCashflows } from '../api/use-cashflows';
 import type { Cashflow } from '../domain/cashflow';
 import type { CategoryType } from '../domain/category';
@@ -41,9 +45,9 @@ const CashflowDetails = ({ cashflow }: { cashflow: Cashflow }) => (
   </>
 );
 
-type CashflowActions = { onOpen: (cashflow: Cashflow) => void };
+type CashflowActions = { onOpen: (cashflow: Cashflow) => void; onCancel: (cashflow: Cashflow) => void };
 
-const CashflowRow = ({ cashflow, onOpen }: { cashflow: Cashflow } & CashflowActions) => (
+const CashflowRow = ({ cashflow, onOpen, onCancel }: { cashflow: Cashflow } & CashflowActions) => (
   <ListItem disablePadding data-testid="cashflows-row" sx={{ gap: 1, minWidth: 0 }}>
     <ButtonBase
       data-testid="cashflows-row-open"
@@ -61,6 +65,12 @@ const CashflowRow = ({ cashflow, onOpen }: { cashflow: Cashflow } & CashflowActi
     >
       <CashflowDetails cashflow={cashflow} />
     </ButtonBase>
+    <RowActionsMenu
+      testID="cashflows-row"
+      onEdit={() => onOpen(cashflow)}
+      onDelete={() => onCancel(cashflow)}
+      deleteLabel={translate(tk.cashflows.cancel)}
+    />
   </ListItem>
 );
 
@@ -103,6 +113,16 @@ const CashflowList = ({ cashflows, ...actions }: { cashflows: AsyncResult<Cashfl
 const CashflowsContent = ({ notify }: { notify: Notify }) => {
   const cashflows = useCashflows();
   const [editing, setEditing] = useState<Cashflow | null>(null);
+  const [cancelling, setCancelling] = useState<Cashflow | null>(null);
+  const cancelCashflow = useCancelCashflow();
+  const { refresh } = useApiRefresh();
+
+  const confirmCancel = async (cashflow: Cashflow) => {
+    setCancelling(null);
+    const result = await cancelCashflow(cashflow.id);
+    notify(translate(result.isSuccess ? tk.cashflows.cancelled : tk.cashflows.cancelFailed, { name: cashflow.title }));
+    if (result.isSuccess) refresh();
+  };
 
   return (
     <Stack spacing={3.5} data-testid="cashflows-page" sx={{ maxWidth: 720 }}>
@@ -120,8 +140,20 @@ const CashflowsContent = ({ notify }: { notify: Notify }) => {
           {translate(tk.cashflowsSection.title)}
         </Typography>
       </Stack>
-      <CashflowList cashflows={cashflows} onOpen={setEditing} />
+      <CashflowList cashflows={cashflows} onOpen={setEditing} onCancel={setCancelling} />
       <CashflowFlyout cashflow={editing} onClose={() => setEditing(null)} notify={notify} />
+      {cancelling !== null && (
+        <DeleteDialog
+          open
+          testID="cashflow-cancel-dialog"
+          title={translate(tk.cashflows.cancelTitle, { name: cancelling.title })}
+          message={translate(tk.cashflows.cancelMessage, { name: cancelling.title })}
+          cancelLabel={translate(tk.cashflows.keep)}
+          confirmLabel={translate(tk.cashflows.cancel)}
+          onCancel={() => setCancelling(null)}
+          onConfirm={() => void confirmCancel(cancelling)}
+        />
+      )}
     </Stack>
   );
 };

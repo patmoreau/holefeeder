@@ -243,6 +243,13 @@ export const fr: TranslationStructure = {
     startsOn: 'Commence le',
     saved: 'Flux de trésorerie enregistré',
     failed: "Le flux de trésorerie n'a pas pu être enregistré. Réessayez.",
+    cancel: 'Annuler le flux',
+    keep: 'Garder',
+    cancelTitle: 'Annuler {{name}} ?',
+    cancelMessage:
+      '{{name}} ne se répète plus et quitte vos paiements à venir. Les paiements déjà faits restent dans vos transactions. Un flux annulé ne peut pas être rétabli.',
+    cancelled: '{{name}} annulé',
+    cancelFailed: "{{name}} n'a pas pu être annulé. Réessayez.",
   },
   editTransaction: {
     title: 'Modifier la transaction',

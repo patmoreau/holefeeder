@@ -102,6 +102,13 @@ const capture = async (page: Page, url: string, status = 204) => {
   return bodies;
 };
 
+const cancelRoute = '**/gateway/api/v2/cashflows/cancel-cashflow';
+
+const chooseCancel = async (page: Page, title: string) => {
+  await rowOf(page, title).getByTestId('cashflows-row-more').click();
+  await page.getByTestId('cashflows-row-delete').click();
+};
+
 const withTagSuggestions = (page: Page) =>
   page.route('**/gateway/api/v2/transactions/tag-suggestions*', (route) => route.fulfill({ json: ['utilities'] }));
 
@@ -276,6 +283,71 @@ test.describe('Settings cashflows', () => {
     expect(bodies).toEqual([]);
   });
 
+  test('ShouldOpenTheCashflowFromItsMenu', async ({ page }) => {
+    await withCashflows(page);
+    await withTagSuggestions(page);
+    await page.goto('/settings/cashflows');
+
+    await rowOf(page, 'Rent').getByTestId('cashflows-row-more').click();
+    await page.getByTestId('cashflows-row-edit').click();
+
+    await expect(page.getByTestId('cashflow').getByTestId('cashflow-description')).toHaveValue('Rent');
+  });
+
+  test('ShouldAskBeforeCancellingACashflow', async ({ page }) => {
+    await withCashflows(page);
+    await page.goto('/settings/cashflows');
+
+    await rowOf(page, 'Rent').getByTestId('cashflows-row-more').click();
+    await expect(page.getByTestId('cashflows-row-delete')).toHaveText('Cancel cashflow');
+    await page.getByTestId('cashflows-row-delete').click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading')).toHaveText('Cancel Rent?');
+    await expect(dialog).toContainText('A cancelled cashflow cannot be restored.');
+    await expect(page.getByTestId('cashflow-cancel-dialog-cancel')).toHaveText('Keep');
+    await expect(page.getByTestId('cashflow-cancel-dialog-confirm')).toHaveText('Cancel cashflow');
+  });
+
+  test('ShouldKeepTheCashflow', async ({ page }) => {
+    await withCashflows(page);
+    const bodies = await capture(page, cancelRoute);
+    await page.goto('/settings/cashflows');
+
+    await chooseCancel(page, 'Rent');
+    await page.getByTestId('cashflow-cancel-dialog-cancel').click();
+
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(bodies).toEqual([]);
+  });
+
+  test('ShouldCancelTheCashflow', async ({ page }) => {
+    const listCalls = await withCashflows(page);
+    const bodies = await capture(page, cancelRoute);
+    await page.goto('/settings/cashflows');
+    await expect(rowOf(page, 'Rent')).toBeVisible();
+    const callsBefore = listCalls();
+
+    await chooseCancel(page, 'Rent');
+    await page.getByTestId('cashflow-cancel-dialog-confirm').click();
+
+    expect(bodies).toEqual([{ cashflowId: rent.id }]);
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Rent cancelled');
+    await expect.poll(listCalls).toBeGreaterThan(callsBefore);
+  });
+
+  test('ShouldReportACashflowThatFailsToCancel', async ({ page }) => {
+    await withCashflows(page);
+    await capture(page, cancelRoute, 500);
+    await page.goto('/settings/cashflows');
+
+    await chooseCancel(page, 'Rent');
+    await page.getByTestId('cashflow-cancel-dialog-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('Rent could not be cancelled. Try again.');
+    await expect(rowOf(page, 'Rent')).toBeVisible();
+  });
+
   test.describe('on a phone', () => {
     test.use({ viewport: { width: 360, height: 640 } });
 
@@ -285,8 +357,8 @@ test.describe('Settings cashflows', () => {
       await page.goto('/settings/cashflows');
 
       await expect(rowOf(page, 'Health')).toBeVisible();
-      const schedule = await rowOf(page, 'Health').getByTestId('cashflows-row-schedule').boundingBox();
-      expect(schedule!.x + schedule!.width).toBeLessThanOrEqual(360);
+      const more = await rowOf(page, 'Health').getByTestId('cashflows-row-more').boundingBox();
+      expect(more!.x + more!.width).toBeLessThanOrEqual(360);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBe(0);
     });
