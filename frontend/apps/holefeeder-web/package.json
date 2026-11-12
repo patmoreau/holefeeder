@@ -10,7 +10,8 @@
     "test": "vitest run --passWithNoTests --dir src",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
