@@ -25,6 +25,11 @@ internal sealed record Cashflow(
     public Payment Pay(Id paymentId, DateOnly date, Money amount, DateOnly cashflowDate) =>
         new(paymentId, date, amount, Description, AccountId, CategoryId, Id, cashflowDate, Tags);
 
+    public Result<Cashflow> Modify(Money amount, DateOnly effectiveDate, string? description, Tags tags) =>
+        Inactive
+            ? CashflowErrors.Cancelled
+            : this with { Amount = amount, EffectiveDate = effectiveDate, Description = description ?? Description, Tags = tags.Text };
+
     public Result<Cashflow> Cancel() => Inactive ? CashflowErrors.AlreadyInactive : this with { Inactive = true };
 }
 
@@ -32,8 +37,11 @@ internal static class CashflowErrors
 {
     public const string CodeNotFound = "cashflow-not-found";
     public const string CodeAlreadyInactive = "cashflow-already-inactive";
+    public const string CodeCancelled = "cashflow-cancelled";
 
     public static NotFoundError NotFound => new(CodeNotFound, "Cashflow was not found.");
 
     public static ResultError AlreadyInactive => new(CodeAlreadyInactive, "Cashflow is already inactive.");
+
+    public static ResultError Cancelled => new(CodeCancelled, "A cancelled cashflow cannot be changed.");
 }

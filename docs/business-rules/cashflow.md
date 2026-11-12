@@ -105,8 +105,9 @@ Updates the amount, effective date, description, or tags of an existing cashflow
 **Happy path:**
 
 - Cashflow ID and effective date are provided
-- Cashflow exists and belongs to the current user
+- Cashflow exists, belongs to the current user, and is active
 - Amount, effective date, description, and tags can be updated
+- A missing description keeps the current one; tags are normalized (see [Tags](#tags))
 
 **Errors:**
 
@@ -114,7 +115,9 @@ Updates the amount, effective date, description, or tags of an existing cashflow
 |----------------------------------------------------|----------------------|
 | CashflowId is empty                                | rejected             |
 | EffectiveDate is missing                           | rejected             |
+| Amount is negative or has more than two decimals   | rejected             |
 | Cashflow does not exist or belongs to another user | `Cashflow not found` |
+| Cashflow is cancelled (inactive)                   | `Cashflow cancelled` |
 
 ---
 

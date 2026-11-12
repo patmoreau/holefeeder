@@ -1,11 +1,13 @@
 using Holefeeder.Service.Cashflows.Api.CancelCashflow;
 using Holefeeder.Service.Cashflows.Api.ClearCashflow;
 using Holefeeder.Service.Cashflows.Api.ListCashflows;
+using Holefeeder.Service.Cashflows.Api.ModifyCashflow;
 using Holefeeder.Service.Cashflows.Api.PayCashflow;
 using Holefeeder.Service.Cashflows.Core;
 using Holefeeder.Service.Cashflows.Core.CancelCashflow;
 using Holefeeder.Service.Cashflows.Core.ClearCashflow;
 using Holefeeder.Service.Cashflows.Core.ListCashflows;
+using Holefeeder.Service.Cashflows.Core.ModifyCashflow;
 using Holefeeder.Service.Cashflows.Core.PayCashflow;
 using Holefeeder.Service.Cashflows.Persistence;
 
@@ -17,12 +19,14 @@ internal static class Cashflows
         services
             .AddScoped<ICashflows, CashflowsInDatabase>()
             .AddScoped<ListCashflowsUseCase>()
+            .AddScoped<ModifyCashflowUseCase>()
             .AddScoped<PayCashflowUseCase>()
             .AddScoped<ClearCashflowUseCase>()
             .AddScoped<CancelCashflowUseCase>();
 
     public static IEndpointRouteBuilder MapCashflowsEndpoints(this IEndpointRouteBuilder app) =>
         app.MapListCashflows()
+            .MapModifyCashflow()
             .MapPayCashflow()
             .MapClearCashflow()
             .MapCancelCashflow();
