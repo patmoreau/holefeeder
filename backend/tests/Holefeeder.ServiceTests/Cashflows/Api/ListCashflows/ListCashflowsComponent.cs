@@ -21,6 +21,9 @@ public class ListCashflowsComponent(ServerForTest server, ITestOutputHelper test
     private Guid _rent;
     private Guid _gym;
     private Guid _payroll;
+    private Guid _housing;
+    private Guid _health;
+    private Guid _salary;
 
     [Fact]
     public Task WhenTheUserHasCashflows() =>
@@ -46,13 +49,19 @@ public class ListCashflowsComponent(ServerForTest server, ITestOutputHelper test
     private async Task TheUserHasCashflows()
     {
         var chequing = AnId();
-        var rent = await ACashflow(1450m, description: "Rent", tags: "home,rent", accountId: chequing)
+        var housing = AnId();
+        var health = AnId();
+        var salary = AnId();
+        _housing = housing.Value;
+        _health = health.Value;
+        _salary = salary.Value;
+        var rent = await ACashflow(1450m, description: "Rent", tags: "home,rent", accountId: chequing, categoryId: housing)
             .SavedInDbAsync(_user, server.Database, "Housing", "Expense", "#5856D6", "Chequing");
         await rent.PaidInDbAsync(_user, server.Database, new DateOnly(2026, 2, 2), new DateOnly(2026, 2, 1));
         _rent = rent.Id.Value;
-        _gym = (await ACashflow(45m, description: "", tags: "", accountId: chequing, effectiveDate: new DateOnly(2026, 11, 2), intervalType: "Weekly", frequency: 2)
+        _gym = (await ACashflow(45m, description: "", tags: "", accountId: chequing, categoryId: health, effectiveDate: new DateOnly(2026, 11, 2), intervalType: "Weekly", frequency: 2)
             .SavedInDbAsync(_user, server.Database, "Health", "Expense", "#30B0C7", "Chequing")).Id.Value;
-        _payroll = (await ACashflow(2400m, description: "Payroll", tags: "", accountId: chequing, intervalType: "OneTime")
+        _payroll = (await ACashflow(2400m, description: "Payroll", tags: "", accountId: chequing, categoryId: salary, intervalType: "OneTime")
             .SavedInDbAsync(_user, server.Database, "Salary", "Gain", "#34C759", "Chequing")).Id.Value;
         await ACashflow(description: "Old", inactive: true).SavedInDbAsync(_user, server.Database);
     }
@@ -68,11 +77,11 @@ public class ListCashflowsComponent(ServerForTest server, ITestOutputHelper test
         var cashflows = await TheCashflowsAsync(response);
         cashflows.Should().BeEquivalentTo(
             [
-                new CashflowJson(_gym, "Health", "", "Health", "#30B0C7", "expense", "Chequing", 45m, "weekly", 2,
+                new CashflowJson(_gym, "Health", "", _health, "Health", "#30B0C7", "expense", "Chequing", 45m, "weekly", 2,
                     new DateOnly(2026, 11, 2), new DateOnly(2026, 11, 2), []),
-                new CashflowJson(_rent, "Rent", "Rent", "Housing", "#5856D6", "expense", "Chequing", 1450m, "monthly", 1,
+                new CashflowJson(_rent, "Rent", "Rent", _housing, "Housing", "#5856D6", "expense", "Chequing", 1450m, "monthly", 1,
                     new DateOnly(2026, 1, 1), new DateOnly(2026, 3, 1), ["home", "rent"]),
-                new CashflowJson(_payroll, "Payroll", "Payroll", "Salary", "#34C759", "gain", "Chequing", 2400m, "oneTime", 1,
+                new CashflowJson(_payroll, "Payroll", "Payroll", _salary, "Salary", "#34C759", "gain", "Chequing", 2400m, "oneTime", 1,
                     new DateOnly(2026, 1, 1), new DateOnly(2026, 1, 1), [])
             ],
             options => options.WithStrictOrdering());
@@ -89,6 +98,6 @@ public class ListCashflowsComponent(ServerForTest server, ITestOutputHelper test
     }
 
     private sealed record CashflowJson(
-        Guid Id, string Title, string Description, string CategoryName, string CategoryColor, string CategoryType, string AccountName,
+        Guid Id, string Title, string Description, Guid CategoryId, string CategoryName, string CategoryColor, string CategoryType, string AccountName,
         decimal Amount, string IntervalType, int Frequency, DateOnly EffectiveDate, DateOnly? NextDate, string[] Tags);
 }

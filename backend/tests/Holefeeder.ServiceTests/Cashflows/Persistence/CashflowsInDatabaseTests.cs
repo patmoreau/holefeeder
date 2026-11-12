@@ -23,7 +23,7 @@ public class CashflowsInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         var housing = AnId();
         var rent = await ACashflow(1450m, description: "Rent", tags: "home,rent", accountId: chequing, categoryId: housing)
             .SavedInDbAsync(user, database, "Housing", "Expense", "#5856D6", "Chequing");
-        var gym = await ACashflow(45m, description: "", tags: "", accountId: chequing, effectiveDate: new DateOnly(2026, 11, 2), intervalType: "Weekly", frequency: 2)
+        var gym = await ACashflow(45m, description: "", tags: "", accountId: chequing, categoryId: AnId(), effectiveDate: new DateOnly(2026, 11, 2), intervalType: "Weekly", frequency: 2)
             .SavedInDbAsync(user, database, "Health", "Expense", "#30B0C7", "Chequing");
         var payroll = await ACashflow(2400m, description: "Payroll", tags: "", accountId: chequing)
             .SavedInDbAsync(user, database, "Salary", "Gain", "#34C759", "Chequing");
@@ -37,14 +37,14 @@ public class CashflowsInDatabaseTests(DatabaseForTest database, ITestOutputHelpe
         result.Value.Should().BeEquivalentTo(
             [
                 new CashflowSummary(
-                    gym.Id, "", new CashflowSchedule(chequing, new DateOnly(2026, 11, 2), IntervalType.Weekly, 2, 45m, CategoryType.Expense, null, null),
+                    gym.Id, "", gym.CategoryId, new CashflowSchedule(chequing, new DateOnly(2026, 11, 2), IntervalType.Weekly, 2, 45m, CategoryType.Expense, null, null),
                     "Health", "#30B0C7", "Chequing", []),
                 new CashflowSummary(
-                    rent.Id, "Rent",
+                    rent.Id, "Rent", housing,
                     new CashflowSchedule(chequing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 1450m, CategoryType.Expense, new DateOnly(2026, 2, 2), new DateOnly(2026, 2, 1)),
                     "Housing", "#5856D6", "Chequing", ["home", "rent"]),
                 new CashflowSummary(
-                    payroll.Id, "Payroll", new CashflowSchedule(chequing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 2400m, CategoryType.Gain, null, null),
+                    payroll.Id, "Payroll", payroll.CategoryId, new CashflowSchedule(chequing, new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, 2400m, CategoryType.Gain, null, null),
                     "Salary", "#34C759", "Chequing", [])
             ],
             options => options.WithStrictOrdering());

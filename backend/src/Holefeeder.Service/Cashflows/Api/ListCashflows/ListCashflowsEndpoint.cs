@@ -37,6 +37,7 @@ internal static class ListCashflowsEndpoint
             cashflow.Id.Value,
             cashflow.Title.Title,
             cashflow.Description,
+            cashflow.CategoryId.Value,
             cashflow.CategoryName,
             cashflow.CategoryColor,
             JsonNamingPolicy.CamelCase.ConvertName(cashflow.Schedule.CategoryType.ToString()),

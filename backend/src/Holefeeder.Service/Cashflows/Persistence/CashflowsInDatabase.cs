@@ -17,7 +17,7 @@ internal sealed partial class CashflowsInDatabase(NpgsqlDataSource dataSource, I
     public async Task<Result<IReadOnlyList<CashflowSummary>>> ListAsync(User user, CancellationToken cancellationToken)
     {
         const string sql = """
-                           SELECT c.id, c.description, c.account_id, c.effective_date, c.interval_type, c.frequency, c.amount,
+                           SELECT c.id, c.description, c.category_id, c.account_id, c.effective_date, c.interval_type, c.frequency, c.amount,
                                   cc.type AS category_type, p.last_paid_date, p.last_cashflow_date, cc.name AS category_name,
                                   cc.color AS category_color, a.name AS account_name, c.tags
                            FROM cashflows c

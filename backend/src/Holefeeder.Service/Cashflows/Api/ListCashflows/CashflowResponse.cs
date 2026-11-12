@@ -4,6 +4,7 @@ internal sealed record CashflowResponse(
     Guid Id,
     string Title,
     string Description,
+    Guid CategoryId,
     string CategoryName,
     string CategoryColor,
     string CategoryType,

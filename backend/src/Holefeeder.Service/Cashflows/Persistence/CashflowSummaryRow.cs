@@ -6,6 +6,7 @@ namespace Holefeeder.Service.Cashflows.Persistence;
 internal sealed record CashflowSummaryRow(
     Guid Id,
     string? Description,
+    Guid CategoryId,
     Guid AccountId,
     DateOnly EffectiveDate,
     string IntervalType,
@@ -23,6 +24,7 @@ internal sealed record CashflowSummaryRow(
         new(
             Shared.Core.Id.Valid(Id),
             Description ?? string.Empty,
+            Shared.Core.Id.Valid(CategoryId),
             new CashflowSchedule(
                 Shared.Core.Id.Valid(AccountId),
                 EffectiveDate,

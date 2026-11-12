@@ -5,6 +5,7 @@ namespace Holefeeder.Service.Cashflows.Core.ListCashflows;
 internal sealed record CashflowSummary(
     Id Id,
     string Description,
+    Id CategoryId,
     CashflowSchedule Schedule,
     string CategoryName,
     string CategoryColor,

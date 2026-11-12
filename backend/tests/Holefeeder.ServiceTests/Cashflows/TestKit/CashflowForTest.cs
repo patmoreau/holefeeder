@@ -63,6 +63,7 @@ internal static class CashflowForTest
         new(
             AnId(),
             description,
+            AnId(),
             new CashflowSchedule(AnId(), new DateOnly(2026, 1, 1), IntervalType.Monthly, 1, amount, categoryType, null, null),
             categoryName,
             "#5856D6",
