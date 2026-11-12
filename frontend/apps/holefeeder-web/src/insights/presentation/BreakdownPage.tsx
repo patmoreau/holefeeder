@@ -4,11 +4,11 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, Box, FormControlLabel, IconButton, ListItem, Skeleton, Stack, Switch, Typography } from '@mui/material';
 import { createContext, type ReactNode, useContext, useState } from 'react';
 import { Link } from 'react-router';
-import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, roundsToZero, type Tone, toneColor } from '@/shared/presentation/tone';
 import { type Breakdown, type BudgetStatus, type CategoryBreakdown, type TagBreakdown } from '../domain/breakdown';
+import { percent } from './percent';
 
 export type BreakdownKind = {
   testID: string;
@@ -30,8 +30,6 @@ const useKind = () => useContext(KindContext)!;
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
 const budgetTone: Record<BudgetStatus, Tone> = { none: 'neutral', under: 'positive', over: 'negative' };
-
-const percent = (value: number) => new Intl.NumberFormat(Language.locale(), { style: 'percent', maximumFractionDigits: 0 }).format(value / 100);
 
 const TrendBadge = ({ breakdown }: { breakdown: Breakdown }) => {
   const kind = useKind();
