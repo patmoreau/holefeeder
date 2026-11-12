@@ -218,6 +218,13 @@ export const en = {
     loadFailed: 'The categories could not be loaded.',
     emptyTitle: 'No categories yet',
     emptyHint: 'Add one to start sorting your spending.',
+    newTitle: 'New category',
+    editTitle: 'Edit category',
+    budgetHint: 'Spending planned for each budget period. Leave at 0 for no budget.',
+    favoriteHint: 'Listed first when choosing a category.',
+    saved: 'Category saved',
+    failed: 'The category could not be saved. Try again.',
+    nameTaken: 'That name is already used.',
   },
   editTransaction: {
     title: 'Edit transaction',

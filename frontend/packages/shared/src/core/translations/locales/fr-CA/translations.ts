@@ -220,6 +220,13 @@ export const fr: TranslationStructure = {
     loadFailed: "Les catégories n'ont pas pu être chargées.",
     emptyTitle: 'Aucune catégorie',
     emptyHint: 'Ajoutez-en une pour commencer à classer vos dépenses.',
+    newTitle: 'Nouvelle catégorie',
+    editTitle: 'Modifier la catégorie',
+    budgetHint: 'Dépenses prévues pour chaque période du budget. Laissez 0 pour aucun budget.',
+    favoriteHint: 'Proposée en premier quand vous choisissez une catégorie.',
+    saved: 'Catégorie enregistrée',
+    failed: "La catégorie n'a pas pu être enregistrée. Réessayez.",
+    nameTaken: 'Ce nom est déjà utilisé.',
   },
   editTransaction: {
     title: 'Modifier la transaction',

@@ -14,6 +14,12 @@ export type ApiClient = {
   delete: (endpoint: string) => Promise<Result<void>>;
 };
 
+const problemCodeOf = async (response: Response): Promise<string[]> => {
+  if (!(response.headers.get('content-type') ?? '').includes('json')) return [];
+  const problem = (await response.json().catch(() => undefined)) as { code?: unknown } | undefined;
+  return typeof problem?.code === 'string' ? [problem.code] : [];
+};
+
 export const ApiClient = (auth: AuthenticationState, config: ApiConfig): ApiClient => {
   const callApi = async <T>(
     endpoint: string,
@@ -37,7 +43,7 @@ export const ApiClient = (auth: AuthenticationState, config: ApiConfig): ApiClie
       });
 
       if (!response.ok) {
-        return Result.failure([response.statusText]);
+        return Result.failure([...(await problemCodeOf(response)), response.statusText]);
       }
 
       const contentLength = response.headers.get('content-length');
