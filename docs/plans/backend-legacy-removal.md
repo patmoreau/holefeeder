@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–6 done**, step 7 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–7 done**, step 8 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -110,6 +110,11 @@ Each step leaves `main` deployable and every suite green.
    `System.Data.SqlClient`, `DrifterApps.Seeds.Application` and `DrifterApps.Seeds.Domain`. `ArchitectureRules.LegacyNamespaces` can then go too, or
    stay as a guard against the packages coming back. Build the Docker image and deploy
    to Staging before calling it done.
+   Done in `65a4f722`. Every central package version no project referenced went, the
+   stale `Microsoft.*` entries included; transitive pinning is off, so the Service
+   resolves the same packages. `ArchitectureRules.LegacyNamespaces` stays as the guard.
+   Deployed to Staging: the API started and DbUp reported no new scripts against the
+   existing journal.
 8. **Docs.** Remove *Legacy architecture* from `backend/AGENTS.md` and make *Target
    architecture* the only one; close step 7 in `backend-service.md`.
 
