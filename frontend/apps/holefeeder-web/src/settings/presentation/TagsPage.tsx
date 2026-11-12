@@ -10,10 +10,10 @@ import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToas
 import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
+import { Rows, Section } from '@/shared/presentation/Section';
 import { useDeleteTag } from '../api/use-delete-tag';
 import { useTags } from '../api/use-tags';
 import type { Tag } from '../domain/tag';
-import { Rows, Section } from './SettingsList';
 import { TagRenameDialog } from './TagRenameDialog';
 
 const counted = (count: number, one: string, other: string) => (count === 0 ? [] : [translate(count === 1 ? one : other, { count: count })]);

@@ -12,12 +12,12 @@ import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToas
 import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
+import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, roundsToZero } from '@/shared/presentation/tone';
 import { useCategories } from '../api/use-categories';
 import { useDeleteCategory } from '../api/use-delete-category';
 import type { Category } from '../domain/category';
 import { CategoryFlyout, type CategoryEditing } from './CategoryFlyout';
-import { Rows, Section } from './SettingsList';
 
 const secondaryText = { fontSize: 15, color: 'text.secondary', flexShrink: 0 };
 

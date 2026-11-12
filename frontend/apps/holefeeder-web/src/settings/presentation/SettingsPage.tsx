@@ -30,11 +30,11 @@ import { buildVersionLabel } from '@/shared/core/build-version';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
+import { Rows, Section } from '@/shared/presentation/Section';
 import { useBudgetSettings } from '../api/use-budget-settings';
 import type { BudgetSettings } from '../domain/budget-settings';
 import { budgetSummary } from './budget-summary';
 import { BudgetSettingsFlyout } from './BudgetSettingsFlyout';
-import { Rows, Section } from './SettingsList';
 
 const rowIcon = { minWidth: 32, color: 'text.secondary' };
 const rowLabel = { primary: { fontSize: 17 } };

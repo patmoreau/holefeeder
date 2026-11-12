@@ -10,6 +10,7 @@ import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToas
 import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
+import { Rows, Section } from '@/shared/presentation/Section';
 import { currency } from '@/shared/presentation/tone';
 import { useCancelCashflow } from '../api/use-cancel-cashflow';
 import { useCashflows } from '../api/use-cashflows';
@@ -17,7 +18,6 @@ import type { Cashflow } from '../domain/cashflow';
 import type { CategoryType } from '../domain/category';
 import { scheduleOf } from './cashflow-schedule';
 import { CashflowFlyout } from './CashflowFlyout';
-import { Rows, Section } from './SettingsList';
 
 const amountColor: Record<CategoryType, string> = { expense: 'error.main', gain: 'success.main' };
 
