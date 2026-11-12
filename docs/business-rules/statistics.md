@@ -1,7 +1,7 @@
 ---
 path: docs/business-rules/statistics.md
 domain: statistics
-last-reviewed: 2026-07
+last-reviewed: 2026-11
 ---
 
 # Statistics Rules
@@ -89,6 +89,29 @@ net flow, for the dashboard header.
   up to the end of the period, gains added and expenses subtracted. Unpaid follows
   [Cashflow — Upcoming Occurrences](cashflow.md#upcoming-occurrences), so overdue
   occurrences count too. The mobile app computes the same figure locally.
+
+## Spending Breakdown (backend — insights)
+
+`GET api/v2/insights/spending` — the web Insights spending page: the current period's
+spending against its average, by category and by tag. The backend mirror of
+[Category Spending](#category-spending-mobile-insight) and
+[Tag Spending](#tag-spending-mobile-insight).
+
+**Rules:**
+
+- The current period contains today, from the user's settings; monthly from today
+  when the user has none.
+- Only **non-system, expense** categories and their transactions count.
+- **`current`**, **`average`**, **`variation`** and **`variationPercentage`** follow
+  the [Dashboard Summary](#dashboard-summary-backend--current-period) expense rules.
+- **Categories** — every non-system expense category, with its budget, its spending
+  this period (`amount`) and its `average` per
+  [Previous-period averaging](#previous-period-averaging), rounded to cents. Ordered
+  by average desc, then amount desc, then name.
+- Each category also lists its **tags this period** with their amounts, ordered by
+  amount desc, then tag — the combined category and tag view.
+- **Tags** — split, trimmed and averaged as in [Tag Spending](#tag-spending-mobile-insight);
+  a tag seen only in previous periods is listed with amount 0. Same ordering.
 
 ---
 
@@ -214,7 +237,7 @@ The Insights header: what is left of the current period's income after its spend
 
 ## Previous-period averaging
 
-Shared by the category- and tag-spending mobile insights.
+Shared by the category- and tag-spending mobile insights and the backend breakdown.
 
 - **Previous periods** are the complete budget periods walked forward from the
   settings anchor up to — but **excluding** — the current period's start. A period

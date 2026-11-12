@@ -19,6 +19,7 @@ using Holefeeder.Service.Dashboard;
 using Holefeeder.Service.ErrorHandling;
 using Holefeeder.Service.Extensions;
 using Holefeeder.Service.Home;
+using Holefeeder.Service.Insights;
 using Holefeeder.Service.Settings;
 using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
@@ -85,6 +86,7 @@ builder.Services
     .AddDashboardServices()
     .AddCashflowsServices()
     .AddTagsServices()
+    .AddInsightsServices()
     .AddTransactionsServices()
     .AddSettingsServices()
     .AddCategoriesServices()
@@ -151,6 +153,7 @@ app.MapCarter()
     .MapDashboardEndpoints()
     .MapCashflowsEndpoints()
     .MapTagsEndpoints()
+    .MapInsightsEndpoints()
     .MapTransactionsEndpoints()
     .MapSettingsEndpoints()
     .MapCategoriesEndpoints()
