@@ -201,8 +201,8 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
 Application no longer maps any route: every endpoint is in `Holefeeder.Service`. The
-three projects stay only for what the host still wires from them (auth constants,
-connection string, Hangfire setup, DbUp migrations) until
+three projects stay only for what the host still wires from them (connection
+string, Hangfire setup, DbUp migrations) until
 `../docs/plans/backend-legacy-removal.md` moves those and deletes the projects.
 
 ### Key Patterns

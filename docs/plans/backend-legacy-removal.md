@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–2 done**, step 3 next, recorded 2026-11-12. Finishes step 7 of
+Status: **steps 1–3 done**, step 4 next, recorded 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -13,7 +13,7 @@ Every route is served by `Holefeeder.Service`, and the dead legacy code is gone
 
 | Legacy code | Used for |
 |---|---|
-| `Application/Authorization/Configuration` | Auth0 scheme, scope and policy names in `Extensions/ServiceCollectionExtensions.AddSecurity` |
+| ~~`Application/Authorization/Configuration`~~ | Moved in step 3 |
 | `Infrastructure/SeedWork/BudgetingConnectionStringBuilder` | Connection string for the `NpgsqlDataSource`, Hangfire storage and DbUp; overridden by `ServerForTest` and the functional tests |
 | `Infrastructure/Extensions/ServiceCollectionExtensions` | `AddInfrastructure` (registers the builder above) and `AddHangfireServices` |
 | `Infrastructure/Extensions/WebApplicationExtensions` | `MigrateDb`: DbUp over the scripts embedded in `Holefeeder.Infrastructure`, 3 tries 10 s apart; also called by `DatabaseForTest` |
@@ -64,6 +64,8 @@ Each step leaves `main` deployable and every suite green.
 3. **Move the auth constants.** Structural. `Authorization/Configuration` becomes a
    `Support/Api` type, and `AddSecurity` uses it. The endpoints keep their own
    `ReadUserPolicy`/`WriteUserPolicy` constants.
+   Done differently: `AddSecurity` is their only user, so they became private constants
+   there instead of a `Support/Api` type. The unused `Roles.Admin` was dropped.
 4. **Replace the connection string builder.** Structural. Register the `NpgsqlDataSource`
    straight from `ConnectionStrings:BudgetingConnectionString` (the key does not change,
    so neither Staging nor the production Quadlet units do). Hangfire storage and the

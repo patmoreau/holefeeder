@@ -4,13 +4,17 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-using static Holefeeder.Application.Authorization.Configuration;
-
 namespace Holefeeder.Service.Extensions;
 
 [ExcludeFromCodeCoverage]
 internal static class ServiceCollectionExtensions
 {
+    private const string Auth0Scheme = "Auth0";
+    private const string ReadUserPolicy = "ReadUser";
+    private const string WriteUserPolicy = "WriteUser";
+    private const string ReadUserScope = "read:user";
+    private const string WriteUserScope = "write:user";
+
     private static readonly string[] ServiceTags = ["holefeeder", "api", "service"];
 
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
@@ -21,9 +25,9 @@ internal static class ServiceCollectionExtensions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(Schemes.Auth0, options =>
+            .AddJwtBearer(Auth0Scheme, options =>
             {
-                configuration.Bind($"Authorization:{Schemes.Auth0}", options);
+                configuration.Bind($"Authorization:{Auth0Scheme}", options);
 
                 options.Events = new JwtBearerEvents
                 {
@@ -34,16 +38,16 @@ internal static class ServiceCollectionExtensions
         services
             .AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.ReadUser, policy =>
+                options.AddPolicy(ReadUserPolicy, policy =>
                     policy
                         .RequireAuthenticatedUser()
-                        .AddAuthenticationSchemes(Schemes.Auth0)
-                        .RequireClaim("scope", Scopes.ReadUser));
-                options.AddPolicy(Policies.WriteUser, policy =>
+                        .AddAuthenticationSchemes(Auth0Scheme)
+                        .RequireClaim("scope", ReadUserScope));
+                options.AddPolicy(WriteUserPolicy, policy =>
                     policy
                         .RequireAuthenticatedUser()
-                        .AddAuthenticationSchemes(Schemes.Auth0)
-                        .RequireClaim("scope", Scopes.WriteUser));
+                        .AddAuthenticationSchemes(Auth0Scheme)
+                        .RequireClaim("scope", WriteUserScope));
             });
 
         return services;
