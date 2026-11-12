@@ -1,3 +1,5 @@
+using Dapper;
+
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.Service.Users.Core;
 using Holefeeder.Service.Users.Persistence;
@@ -43,10 +45,59 @@ public class RegisteredUsersInDatabaseTests(DatabaseForTest database, ITestOutpu
     }
 
     [Fact]
+    public async Task SaveAsync_StoresTheUserAndTheirIdentity()
+    {
+        var user = RegisteredUser.Register(AnIdentityObjectId());
+
+        var result = await _repository.SaveAsync(user, CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await _repository.FindIdAsync(user.IdentityObjectId, CancellationToken.None))
+            .Should().BeSuccessful().And.WithValue(user.Id);
+        await using var connection = database.DataSource.CreateConnection();
+        (await connection.QuerySingleAsync<bool>(
+                "SELECT inactive FROM users WHERE id = @Id", new { Id = user.Id.Value }))
+            .Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task SaveAsync_StoresTheSystemCategories()
+    {
+        var user = RegisteredUser.Register(AnIdentityObjectId());
+
+        await _repository.SaveAsync(user, CancellationToken.None);
+
+        await using var connection = database.DataSource.CreateConnection();
+        var rows = await connection.QueryAsync<SavedCategoryRow>(
+            "SELECT id, type, name, color, budget_amount, favorite, system, inactive FROM categories WHERE user_id = @Id",
+            new { Id = user.Id.Value });
+        rows.Should().BeEquivalentTo(user.Categories.Select(category => new SavedCategoryRow(
+            category.Id.Value, category.Type.ToString(), category.Name, SystemCategory.Color, 0m, false, true, false)));
+    }
+
+    [Fact]
+    public async Task SaveAsync_FailsWithWriteFailed_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new RegisteredUsersInDatabase(
+            database.BadDataSource, new LoggerForTest<RegisteredUsersInDatabase>(testOutputHelper));
+
+        var result = await repository.SaveAsync(RegisteredUser.Register(AnIdentityObjectId()), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(RegisteredUsersDatabaseErrors.WriteFailed);
+    }
+
+    [Fact]
     public void ReadFailed_IsAnUnexpectedError() =>
         RegisteredUsersDatabaseErrors.ReadFailed.Should().BeOfType<UnexpectedError>();
 
     [Fact]
+    public void WriteFailed_IsAnUnexpectedError() =>
+        RegisteredUsersDatabaseErrors.WriteFailed.Should().BeOfType<UnexpectedError>();
+
+    [Fact]
     public void NotFound_IsANotFoundError() =>
         RegisteredUserErrors.NotFound.Should().BeOfType<NotFoundError>();
+
+    private sealed record SavedCategoryRow(
+        Guid Id, string Type, string Name, string Color, decimal BudgetAmount, bool Favorite, bool System, bool Inactive);
 }
