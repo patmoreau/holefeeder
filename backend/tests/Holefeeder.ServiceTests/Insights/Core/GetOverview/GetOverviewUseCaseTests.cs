@@ -91,9 +91,9 @@ public class GetOverviewUseCaseTests
         var result = await OverviewAsync(3);
 
         result.Value.Series.Should().Equal(
-            new PeriodFlow(new Period(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)), 100m, 40m),
-            new PeriodFlow(new Period(new DateOnly(2026, 4, 1), new DateOnly(2026, 4, 30)), 0m, 0m),
-            new PeriodFlow(new Period(new DateOnly(2026, 5, 1), new DateOnly(2026, 5, 31)), 0m, 60m));
+            new PeriodFlow(new Period(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)), 100m, 40m, 60m),
+            new PeriodFlow(new Period(new DateOnly(2026, 4, 1), new DateOnly(2026, 4, 30)), 0m, 0m, 0m),
+            new PeriodFlow(new Period(new DateOnly(2026, 5, 1), new DateOnly(2026, 5, 31)), 0m, 60m, -60m));
         result.Value.Should().BeEquivalentTo(new { TotalIncome = 100m, TotalSpending = 100m, TotalNet = 0m });
     }
 

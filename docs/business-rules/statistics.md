@@ -138,7 +138,8 @@ period and the income vs expenses series behind the chart. The backend mirror of
   the period has no activity.
 - **`periods`** is 3, 6 or 12, default 6; any other value is rejected with 400.
 - **`series`** holds the last N periods ending with the current one, oldest first;
-  a period with no transactions reports 0 income and 0 spending. A `oneTime` budget
+  a period with no transactions reports 0 income and 0 spending. Each period also
+  carries its **`net`** = income − spending. A `oneTime` budget
   steps back one day at a time.
 - **`totalIncome`**, **`totalSpending`** and **`totalNet`** sum the series.
 - **`range`** describes the N periods in the budget's unit (`day`, `week`, `month`,

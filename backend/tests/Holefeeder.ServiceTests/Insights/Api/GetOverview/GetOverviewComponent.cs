@@ -76,9 +76,9 @@ public class GetOverviewComponent(ServerForTest server, ITestOutputHelper testOu
             new OverviewJson(
                 MonthOf(CurrentMonth), 3000m, 2222.22m, 777.78m, "saved", 26,
                 [
-                    new PeriodFlowJson(MonthOf(CurrentMonth.AddMonths(-2)), 1000m, 1200m),
-                    new PeriodFlowJson(MonthOf(CurrentMonth.AddMonths(-1)), 0m, 0m),
-                    new PeriodFlowJson(MonthOf(CurrentMonth), 3000m, 2222.22m)
+                    new PeriodFlowJson(MonthOf(CurrentMonth.AddMonths(-2)), 1000m, 1200m, -200m),
+                    new PeriodFlowJson(MonthOf(CurrentMonth.AddMonths(-1)), 0m, 0m, 0m),
+                    new PeriodFlowJson(MonthOf(CurrentMonth), 3000m, 2222.22m, 777.78m)
                 ],
                 4000m, 3422.22m, 577.78m, new RangeJson("month", 3)),
             options => options.WithStrictOrdering());
@@ -107,7 +107,7 @@ public class GetOverviewComponent(ServerForTest server, ITestOutputHelper testOu
 
     private sealed record PeriodJson(DateOnly Start, DateOnly End);
 
-    private sealed record PeriodFlowJson(PeriodJson Period, decimal Income, decimal Spending);
+    private sealed record PeriodFlowJson(PeriodJson Period, decimal Income, decimal Spending, decimal Net);
 
     private sealed record RangeJson(string Unit, int Amount);
 }

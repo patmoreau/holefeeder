@@ -10,7 +10,7 @@ internal enum NetOutcome
     BrokeEven
 }
 
-internal sealed record PeriodFlow(Period Period, decimal Income, decimal Spending);
+internal sealed record PeriodFlow(Period Period, decimal Income, decimal Spending, decimal Net);
 
 internal sealed record Overview(
     Period Period,
@@ -36,7 +36,7 @@ internal sealed record Overview(
         var savedPercentage = outcome == NetOutcome.Saved ? (int)Math.Round(net / currentIncome * 100, MidpointRounding.AwayFromZero) : 0;
 
         var series = PeriodsEndingWith(current, settings, count.Value)
-            .Select(period => new PeriodFlow(period, SumWithin(income, period), SumWithin(spending, period)))
+            .Select(period => FlowOf(period, SumWithin(income, period), SumWithin(spending, period)))
             .ToList();
         var totalIncome = series.Sum(flow => flow.Income);
         var totalSpending = series.Sum(flow => flow.Spending);
@@ -54,6 +54,9 @@ internal sealed record Overview(
             totalIncome - totalSpending,
             RangeSpan.Of(count.Value, settings));
     }
+
+    private static PeriodFlow FlowOf(Period period, decimal income, decimal spending) =>
+        new(period, income, spending, income - spending);
 
     private static NetOutcome OutcomeOf(decimal income, decimal spending, decimal net) =>
         (income, spending, net) switch

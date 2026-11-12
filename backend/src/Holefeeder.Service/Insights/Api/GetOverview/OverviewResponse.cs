@@ -26,7 +26,7 @@ internal sealed record OverviewResponse(
             JsonNamingPolicy.CamelCase.ConvertName(overview.Outcome.ToString()),
             overview.SavedPercentage,
             overview.Series
-                .Select(flow => new PeriodFlowResponse(new PeriodResponse(flow.Period.Start, flow.Period.End), flow.Income, flow.Spending))
+                .Select(flow => new PeriodFlowResponse(new PeriodResponse(flow.Period.Start, flow.Period.End), flow.Income, flow.Spending, flow.Net))
                 .ToList(),
             overview.TotalIncome,
             overview.TotalSpending,
@@ -34,6 +34,6 @@ internal sealed record OverviewResponse(
             new RangeResponse(JsonNamingPolicy.CamelCase.ConvertName(overview.Range.Unit.ToString()), overview.Range.Amount));
 }
 
-internal sealed record PeriodFlowResponse(PeriodResponse Period, decimal Income, decimal Spending);
+internal sealed record PeriodFlowResponse(PeriodResponse Period, decimal Income, decimal Spending, decimal Net);
 
 internal sealed record RangeResponse(string Unit, int Amount);
