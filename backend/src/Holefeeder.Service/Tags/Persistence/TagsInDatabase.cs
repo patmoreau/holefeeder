@@ -53,6 +53,9 @@ internal sealed partial class TagsInDatabase(NpgsqlDataSource dataSource, ILogge
     public async Task<Result<Nothing>> RenameAsync(User user, TagName tag, TagName newTag, CancellationToken cancellationToken) =>
         await RewriteAsync(user, tag, text => TagText.Rename(text, tag, newTag), cancellationToken);
 
+    public async Task<Result<Nothing>> RemoveAsync(User user, TagName tag, CancellationToken cancellationToken) =>
+        await RewriteAsync(user, tag, text => TagText.Remove(text, tag), cancellationToken);
+
     private async Task<Result<Nothing>> RewriteAsync(User user, TagName tag, Func<string, string> rewrite, CancellationToken cancellationToken)
     {
         try

@@ -19,23 +19,11 @@ internal sealed class TagsInMemory : ITags
                 ? _failure
                 : _summaries.Where(entry => entry.UserId == user.Id).Select(entry => entry.Summary).ToList());
 
-    public Task<Result<Nothing>> RenameAsync(User user, TagName tag, TagName newTag, CancellationToken cancellationToken)
-    {
-        if (_failure is not null)
-        {
-            return Task.FromResult<Result<Nothing>>(_failure);
-        }
+    public Task<Result<Nothing>> RenameAsync(User user, TagName tag, TagName newTag, CancellationToken cancellationToken) =>
+        RewriteAsync(user, text => TagText.Rename(text, tag, newTag));
 
-        for (var index = 0; index < _tagged.Count; index++)
-        {
-            if (_tagged[index].UserId == user.Id)
-            {
-                _tagged[index] = _tagged[index] with { Tags = TagText.Rename(_tagged[index].Tags, tag, newTag) };
-            }
-        }
-
-        return Task.FromResult<Result<Nothing>>(Nothing.Value);
-    }
+    public Task<Result<Nothing>> RemoveAsync(User user, TagName tag, CancellationToken cancellationToken) =>
+        RewriteAsync(user, text => TagText.Remove(text, tag));
 
     public void Add(User user, TagSummary summary) => _summaries.Add((user.Id, summary));
 
@@ -48,4 +36,22 @@ internal sealed class TagsInMemory : ITags
     public string TagsOf(int item) => _tagged[item].Tags;
 
     public void FailWith(ResultError error) => _failure = error;
+
+    private Task<Result<Nothing>> RewriteAsync(User user, Func<string, string> rewrite)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Nothing>>(_failure);
+        }
+
+        for (var index = 0; index < _tagged.Count; index++)
+        {
+            if (_tagged[index].UserId == user.Id)
+            {
+                _tagged[index] = _tagged[index] with { Tags = rewrite(_tagged[index].Tags) };
+            }
+        }
+
+        return Task.FromResult<Result<Nothing>>(Nothing.Value);
+    }
 }

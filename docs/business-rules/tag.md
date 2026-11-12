@@ -42,3 +42,14 @@ Replaces a tag with a new name on every transaction and cashflow of the user.
   the first one
 - Renaming a tag to its own name changes nothing
 - Only the user's own transactions and cashflows change
+
+---
+
+## Deleting a Tag
+
+Removes a tag from every transaction and cashflow of the user.
+
+- The tag must not be empty; it is matched exactly, after trimming, as for a rename
+- Applies to transactions and to all cashflows, cancelled ones included
+- The other tags keep their order
+- Only the user's own transactions and cashflows change

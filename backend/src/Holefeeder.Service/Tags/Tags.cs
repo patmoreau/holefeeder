@@ -1,6 +1,8 @@
+using Holefeeder.Service.Tags.Api.DeleteTag;
 using Holefeeder.Service.Tags.Api.ListTags;
 using Holefeeder.Service.Tags.Api.RenameTag;
 using Holefeeder.Service.Tags.Core;
+using Holefeeder.Service.Tags.Core.DeleteTag;
 using Holefeeder.Service.Tags.Core.ListTags;
 using Holefeeder.Service.Tags.Core.RenameTag;
 using Holefeeder.Service.Tags.Persistence;
@@ -13,9 +15,11 @@ internal static class Tags
         services
             .AddScoped<ITags, TagsInDatabase>()
             .AddScoped<ListTagsUseCase>()
-            .AddScoped<RenameTagUseCase>();
+            .AddScoped<RenameTagUseCase>()
+            .AddScoped<DeleteTagUseCase>();
 
     public static IEndpointRouteBuilder MapTagsEndpoints(this IEndpointRouteBuilder app) =>
         app.MapListTags()
-            .MapRenameTag();
+            .MapRenameTag()
+            .MapDeleteTag();
 }

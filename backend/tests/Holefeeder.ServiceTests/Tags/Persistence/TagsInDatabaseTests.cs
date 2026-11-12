@@ -79,4 +79,36 @@ public class TagsInDatabaseTests(DatabaseForTest database, ITestOutputHelper tes
 
         result.Should().BeFailure().And.WithError(TagsErrors.WriteFailed);
     }
+
+    [Fact]
+    public async Task RemoveAsync_RemovesTheExactTagFromTheUsersTransactionsAndCashflows()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var transaction = await database.TaggedTransactionInDbAsync(user, "home,car,rent");
+        var onlyTag = await database.TaggedTransactionInDbAsync(user, "car");
+        var lookalike = await database.TaggedTransactionInDbAsync(user, "carwash");
+        var cashflow = await database.TaggedCashflowInDbAsync(user, "car,rent");
+        var cancelled = await database.TaggedCashflowInDbAsync(user, "old,car", inactive: true);
+        var someoneElse = await database.TaggedTransactionInDbAsync(await AUser().SavedInDbAsync(database), "car");
+
+        var result = await _repository.RemoveAsync(user, TagName.Valid("car"), CancellationToken.None);
+
+        result.Should().BeSuccessful();
+        (await database.TagsOfAsync("transactions", transaction)).Should().Be("home,rent");
+        (await database.TagsOfAsync("transactions", onlyTag)).Should().BeEmpty();
+        (await database.TagsOfAsync("transactions", lookalike)).Should().Be("carwash");
+        (await database.TagsOfAsync("cashflows", cashflow)).Should().Be("rent");
+        (await database.TagsOfAsync("cashflows", cancelled)).Should().Be("old");
+        (await database.TagsOfAsync("transactions", someoneElse)).Should().Be("car");
+    }
+
+    [Fact]
+    public async Task RemoveAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new TagsInDatabase(database.BadDataSource, new LoggerForTest<TagsInDatabase>(testOutputHelper));
+
+        var result = await repository.RemoveAsync(AUser(), TagName.Valid("car"), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(TagsErrors.WriteFailed);
+    }
 }
