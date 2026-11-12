@@ -52,6 +52,21 @@ internal sealed class CategoriesInMemory : ICategories
         return Task.FromResult<Result<Nothing>>(Nothing.Value);
     }
 
+    public Task<Result<Category>> GetAsync(User user, Id id, CancellationToken cancellationToken)
+    {
+        if (_failure is not null)
+        {
+            return Task.FromResult<Result<Category>>(_failure);
+        }
+
+        var category = _categories
+            .Where(entry => entry.UserId == user.Id && !entry.Inactive && entry.Category.Id == id)
+            .Select(entry => entry.Category)
+            .SingleOrDefault();
+
+        return Task.FromResult<Result<Category>>(category is null ? CategoryErrors.NotFound : category);
+    }
+
     public Task<Result<bool>> IsNameUsedAsync(User user, CategoryName name, Id exceptId, CancellationToken cancellationToken)
     {
         if (_failure is not null)

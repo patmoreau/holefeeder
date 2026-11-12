@@ -39,6 +39,31 @@ internal sealed partial class CategoriesInDatabase(NpgsqlDataSource dataSource, 
         }
     }
 
+    public async Task<Result<Category>> GetAsync(User user, Id id, CancellationToken cancellationToken)
+    {
+        const string sql = """
+                           SELECT id, name, type, color, budget_amount, favorite, system
+                           FROM categories
+                           WHERE id = @Id AND user_id = @UserId AND NOT inactive;
+                           """;
+        var parameters = new DynamicParameters(new { Id = id.Value, UserId = user.Id.Value });
+
+        try
+        {
+            await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+            var row = await connection.QuerySingleOrDefaultAsync<CategoryRow>(
+                new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
+
+            return row is null ? CategoryErrors.NotFound : row.ToCategory();
+        }
+        catch (NpgsqlException exception)
+        {
+            LogReadFailed(logger, exception);
+            return CategoriesErrors.ReadFailed;
+        }
+    }
+
     public async Task<Result<bool>> IsNameUsedAsync(User user, CategoryName name, Id exceptId, CancellationToken cancellationToken)
     {
         const string sql = """

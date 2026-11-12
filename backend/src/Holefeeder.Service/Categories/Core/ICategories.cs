@@ -10,6 +10,8 @@ internal interface ICategories
 {
     Task<Result<IReadOnlyList<Category>>> ListAsync(User user, CancellationToken cancellationToken);
 
+    Task<Result<Category>> GetAsync(User user, Id id, CancellationToken cancellationToken);
+
     Task<Result<bool>> IsNameUsedAsync(User user, CategoryName name, Id exceptId, CancellationToken cancellationToken);
 
     Task<Result<Nothing>> SaveAsync(User user, Category category, CancellationToken cancellationToken);

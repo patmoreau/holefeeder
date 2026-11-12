@@ -153,4 +153,46 @@ public class CategoriesInDatabaseTests(DatabaseForTest database, ITestOutputHelp
 
         result.Should().BeFailure().And.WithError(CategoriesErrors.WriteFailed);
     }
+    [Fact]
+    public async Task GetAsync_ReturnsTheUsersActiveCategory()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var dining = await ACategory("Dining", budget: 200m, favorite: true).SavedInDbAsync(user, database);
+
+        var result = await _repository.GetAsync(user, dining.Id, CancellationToken.None);
+
+        result.Should().BeSuccessful().And.WithValue(dining);
+    }
+
+    [Fact]
+    public async Task GetAsync_FailsWithNotFound_WhenTheCategoryIsDeleted()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var dining = await ACategory("Dining").SavedInDbAsync(user, database, inactive: true);
+
+        var result = await _repository.GetAsync(user, dining.Id, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(CategoryErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetAsync_FailsWithNotFound_WhenAnotherUserOwnsTheCategory()
+    {
+        var owner = await AUser().SavedInDbAsync(database);
+        var dining = await ACategory("Dining").SavedInDbAsync(owner, database);
+
+        var result = await _repository.GetAsync(await AUser().SavedInDbAsync(database), dining.Id, CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(CategoryErrors.NotFound);
+    }
+
+    [Fact]
+    public async Task GetAsync_Fails_WhenTheDatabaseIsUnreachable()
+    {
+        var repository = new CategoriesInDatabase(database.BadDataSource, new LoggerForTest<CategoriesInDatabase>(testOutputHelper));
+
+        var result = await repository.GetAsync(AUser(), AnId(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(CategoriesErrors.ReadFailed);
+    }
 }
