@@ -41,7 +41,13 @@ const anOverview = (overrides: Record<string, unknown> = {}) => ({
 });
 
 const pointAt = async (page: Page, index: number, count = 6) => {
-  const box = (await page.getByTestId('insights-chart-hit').boundingBox())!;
+  const hit = page.getByTestId('insights-chart-hit');
+  await expect
+    .poll(() =>
+      hit.evaluate((rect) => Math.abs(rect.ownerSVGElement!.viewBox.baseVal.width - rect.ownerSVGElement!.getBoundingClientRect().width))
+    )
+    .toBeLessThan(1);
+  const box = (await hit.boundingBox())!;
   await page.mouse.move(box.x + (box.width * index) / (count - 1), box.y + box.height / 2);
 };
 
