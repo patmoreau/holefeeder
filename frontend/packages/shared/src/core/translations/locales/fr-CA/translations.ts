@@ -267,6 +267,11 @@ export const fr: TranslationStructure = {
     renameHint: 'Le nouveau nom la remplace sur chaque transaction et chaque flux. Un nom déjà utilisé fusionne les deux étiquettes.',
     renamed: '{{name}} renommée',
     renameFailed: "L'étiquette n'a pas pu être renommée. Réessayez.",
+    usageAnd: '{{first}} et {{second}}',
+    deleteTitle: 'Supprimer {{name}}?',
+    deleteMessage: '{{name}} est retirée de {{usage}}. Les transactions restent, avec leurs montants et leurs autres étiquettes.',
+    deleted: '{{name}} supprimée',
+    deleteFailed: "{{name}} n'a pas pu être supprimée. Réessayez.",
   },
   editTransaction: {
     title: 'Modifier la transaction',

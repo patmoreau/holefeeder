@@ -264,6 +264,11 @@ export const en = {
     renameHint: 'The new name replaces it on every transaction and cashflow. A name already in use merges both tags.',
     renamed: '{{name}} renamed',
     renameFailed: 'The tag could not be renamed. Try again.',
+    usageAnd: '{{first}} and {{second}}',
+    deleteTitle: 'Delete {{name}}?',
+    deleteMessage: '{{name}} is removed from {{usage}}. The transactions stay, with their amounts and their other tags.',
+    deleted: '{{name}} deleted',
+    deleteFailed: '{{name}} could not be deleted. Try again.',
   },
   editTransaction: {
     title: 'Edit transaction',

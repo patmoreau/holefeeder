@@ -7,8 +7,10 @@ import { useApiRefresh } from '@/shared/api/api-refresh';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
 import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
+import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
+import { useDeleteTag } from '../api/use-delete-tag';
 import { useTags } from '../api/use-tags';
 import type { Tag } from '../domain/tag';
 import { Rows, Section } from './SettingsList';
@@ -16,11 +18,17 @@ import { TagRenameDialog } from './TagRenameDialog';
 
 const counted = (count: number, one: string, other: string) => (count === 0 ? [] : [translate(count === 1 ? one : other, { count: count })]);
 
-const usageOf = (tag: Tag) =>
-  [
-    ...counted(tag.transactionCount, tk.tags.transactionOne, tk.tags.transactionOther),
-    ...counted(tag.activeCashflowCount, tk.tags.cashflowOne, tk.tags.cashflowOther),
-  ].join(' · ');
+const usagesOf = (tag: Tag) => [
+  ...counted(tag.transactionCount, tk.tags.transactionOne, tk.tags.transactionOther),
+  ...counted(tag.activeCashflowCount, tk.tags.cashflowOne, tk.tags.cashflowOther),
+];
+
+const usageOf = (tag: Tag) => usagesOf(tag).join(' · ');
+
+const usageSentenceOf = (tag: Tag) => {
+  const [first, second] = usagesOf(tag);
+  return second === undefined ? first : translate(tk.tags.usageAnd, { first: first, second: second });
+};
 
 type TagActions = { onRename: (tag: Tag) => void; onDelete: (tag: Tag) => void };
 
@@ -65,12 +73,21 @@ const TagList = ({ tags, ...actions }: { tags: AsyncResult<Tag[]> } & TagActions
 const TagsContent = ({ notify }: { notify: Notify }) => {
   const tags = useTags();
   const [renaming, setRenaming] = useState<Tag | null>(null);
+  const [deleting, setDeleting] = useState<Tag | null>(null);
+  const deleteTag = useDeleteTag();
   const { refresh } = useApiRefresh();
 
   const renamed = (tag: Tag) => {
     setRenaming(null);
     notify(translate(tk.tags.renamed, { name: tag.tag }));
     refresh();
+  };
+
+  const confirmDelete = async (tag: Tag) => {
+    setDeleting(null);
+    const result = await deleteTag(tag.tag);
+    notify(translate(result.isSuccess ? tk.tags.deleted : tk.tags.deleteFailed, { name: tag.tag }));
+    if (result.isSuccess) refresh();
   };
 
   return (
@@ -89,8 +106,18 @@ const TagsContent = ({ notify }: { notify: Notify }) => {
           {translate(tk.tagsSection.title)}
         </Typography>
       </Stack>
-      <TagList tags={tags} onRename={setRenaming} onDelete={() => undefined} />
+      <TagList tags={tags} onRename={setRenaming} onDelete={setDeleting} />
       {renaming !== null && <TagRenameDialog tag={renaming} onClose={() => setRenaming(null)} onRenamed={renamed} />}
+      {deleting !== null && (
+        <DeleteDialog
+          open
+          testID="tag-delete-dialog"
+          title={translate(tk.tags.deleteTitle, { name: deleting.tag })}
+          message={translate(tk.tags.deleteMessage, { name: deleting.tag, usage: usageSentenceOf(deleting) })}
+          onCancel={() => setDeleting(null)}
+          onConfirm={() => void confirmDelete(deleting)}
+        />
+      )}
     </Stack>
   );
 };

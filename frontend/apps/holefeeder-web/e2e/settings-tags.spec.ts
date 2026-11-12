@@ -40,6 +40,14 @@ const openRename = async (page: Page, tag: string) => {
   return page.getByTestId('tag-rename-dialog');
 };
 
+const deleteRoute = '**/gateway/api/v2/tags/delete';
+
+const chooseDelete = async (page: Page, tag: string) => {
+  await page.goto('/settings/tags');
+  await rowOf(page, tag).getByTestId('tags-row-more').click();
+  await page.getByTestId('tags-row-delete').click();
+};
+
 test.describe('Settings tags', () => {
   test.beforeEach(async ({ page }) => {
     await signedIn(page);
@@ -183,6 +191,61 @@ test.describe('Settings tags', () => {
 
     await expect(dialog).toBeHidden();
     expect(bodies).toEqual([]);
+  });
+
+  test('ShouldAskBeforeDeletingATag', async ({ page }) => {
+    await withTags(page);
+
+    await chooseDelete(page, 'home');
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading')).toHaveText('Delete home?');
+    await expect(dialog).toContainText(
+      'home is removed from 12 transactions and 1 cashflow. The transactions stay, with their amounts and their other tags.'
+    );
+  });
+
+  test('ShouldNameOnlyWhatUsesTheTag_WhenAskingToDelete', async ({ page }) => {
+    await withTags(page);
+
+    await chooseDelete(page, 'groceries');
+
+    await expect(page.getByRole('dialog')).toContainText('groceries is removed from 1 transaction.');
+  });
+
+  test('ShouldCancelTheDelete', async ({ page }) => {
+    await withTags(page);
+    const bodies = await capture(page, deleteRoute);
+    await chooseDelete(page, 'groceries');
+
+    await page.getByTestId('tag-delete-dialog-cancel').click();
+
+    await expect(page.getByRole('dialog')).toBeHidden();
+    expect(bodies).toEqual([]);
+  });
+
+  test('ShouldDeleteTheTag', async ({ page }) => {
+    const listCalls = await withTags(page);
+    const bodies = await capture(page, deleteRoute);
+    await chooseDelete(page, 'groceries');
+    const callsBefore = listCalls();
+
+    await page.getByTestId('tag-delete-dialog-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('groceries deleted');
+    expect(bodies).toEqual([{ tag: 'groceries' }]);
+    await expect.poll(listCalls).toBeGreaterThan(callsBefore);
+  });
+
+  test('ShouldReportATagThatFailsToDelete', async ({ page }) => {
+    await withTags(page);
+    await capture(page, deleteRoute, 500);
+    await chooseDelete(page, 'groceries');
+
+    await page.getByTestId('tag-delete-dialog-confirm').click();
+
+    await expect(page.getByTestId('dashboard-toast')).toHaveText('groceries could not be deleted. Try again.');
+    await expect(rowOf(page, 'groceries')).toBeVisible();
   });
 
   test.describe('on a phone', () => {
