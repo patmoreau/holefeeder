@@ -20,6 +20,7 @@ using Holefeeder.Service.ErrorHandling;
 using Holefeeder.Service.Extensions;
 using Holefeeder.Service.Home;
 using Holefeeder.Service.Insights;
+using Holefeeder.Service.MyData;
 using Holefeeder.Service.Settings;
 using Holefeeder.Service.StoreItems;
 using Holefeeder.Service.Support;
@@ -94,6 +95,7 @@ builder.Services
     .AddCategoriesServices()
     .AddUsersServices()
     .AddSyncServices()
+    .AddMyDataServices()
     .AddSupportServices();
 
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
@@ -163,6 +165,7 @@ app.MapCarter()
     .MapCategoriesEndpoints()
     .MapUsersEndpoints()
     .MapSyncEndpoints()
+    .MapMyDataEndpoints()
     .MapHomeEndpoints();
 
 if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
