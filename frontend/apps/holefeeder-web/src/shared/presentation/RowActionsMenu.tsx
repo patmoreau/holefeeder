@@ -4,9 +4,15 @@ import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
 
-type RowActionsMenuProps = { testID: string; onEdit: () => void; onDelete: () => void; deleteLabel?: string };
+type RowActionsMenuProps = { testID: string; onEdit: () => void; onDelete: () => void; editLabel?: string; deleteLabel?: string };
 
-export const RowActionsMenu = ({ testID, onEdit, onDelete, deleteLabel = translate(tk.swipeableActions.delete) }: RowActionsMenuProps) => {
+export const RowActionsMenu = ({
+  testID,
+  onEdit,
+  onDelete,
+  editLabel = translate(tk.editTransaction.edit),
+  deleteLabel = translate(tk.swipeableActions.delete),
+}: RowActionsMenuProps) => {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const close = () => setAnchor(null);
   const choose = (action: () => void) => () => {
@@ -36,7 +42,7 @@ export const RowActionsMenu = ({ testID, onEdit, onDelete, deleteLabel = transla
         slotProps={{ paper: { sx: { minWidth: 232, borderRadius: 2.5 } } }}
       >
         <MenuItem data-testid={`${testID}-edit`} onClick={choose(onEdit)}>
-          {translate(tk.editTransaction.edit)}
+          {editLabel}
         </MenuItem>
         <Divider />
         <MenuItem data-testid={`${testID}-delete`} onClick={choose(onDelete)} sx={{ color: 'error.main' }}>
