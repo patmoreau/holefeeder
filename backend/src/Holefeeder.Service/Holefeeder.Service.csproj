@@ -14,7 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Carter"/>
         <PackageReference Include="Dapper"/>
         <PackageReference Include="DrifterApps.Seeds.FluentResult"/>
         <PackageReference Include="DrifterApps.Seeds.Infrastructure"/>

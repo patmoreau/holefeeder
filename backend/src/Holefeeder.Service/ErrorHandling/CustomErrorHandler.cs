@@ -2,13 +2,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-using DrifterApps.Seeds.Domain;
-
-using FluentValidation;
-
-using Holefeeder.Application.Exceptions;
-using Holefeeder.Service.Extensions;
-
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,18 +32,9 @@ internal static class CustomErrorHandler
 
         httpContext.Response.ContentType = "application/problem+json";
 
-        var problem = ex switch
-        {
-            ValidationException validationException => CreateValidationProblemDetails(validationException
-                .ToDictionary()),
-            NotFoundException notFoundException => CreateProblemDetails(StatusCodes.Status404NotFound,
-                $"A domain error occured: {notFoundException.Context}", notFoundException.Message),
-            DomainException domainException => CreateProblemDetails(StatusCodes.Status400BadRequest,
-                $"A domain error occured: {domainException.Context}", domainException.Message),
-            _ => CreateProblemDetails(httpContext.Response.StatusCode,
-                includeDetails ? "An error occured: " + ex.Message : "An error occured",
-                includeDetails ? ex.ToString() : null)
-        };
+        var problem = CreateProblemDetails(httpContext.Response.StatusCode,
+            includeDetails ? "An error occured: " + ex.Message : "An error occured",
+            includeDetails ? ex.ToString() : null);
 
         problem.Extensions["traceId"] = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
@@ -61,7 +45,4 @@ internal static class CustomErrorHandler
 
     private static ProblemDetails CreateProblemDetails(int statusCode, string title, string? details) =>
         new() { Status = statusCode, Title = title, Detail = details };
-
-    private static ValidationProblemDetails CreateValidationProblemDetails(IDictionary<string, string[]> errors) =>
-        new(errors) { Status = StatusCodes.Status422UnprocessableEntity };
 }

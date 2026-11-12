@@ -1,10 +1,5 @@
-using Carter;
-
 using Dapper;
 
-using DrifterApps.Seeds.Application.Converters;
-
-using Holefeeder.Application.Converters;
 using Holefeeder.Application.Extensions;
 using Holefeeder.Infrastructure.Extensions;
 using Holefeeder.Infrastructure.SeedWork;
@@ -44,7 +39,6 @@ builder.Host.UseSerilog((context, configuration) => configuration
 builder.Services
     .AddCors(builder.Configuration)
     .AddSecurity(builder.Configuration)
-    .AddCarter(configurator: configurator => configurator.WithEmptyValidators())
     .AddOpenApi("v2", options =>
     {
         options.AddBearerTokenAuthentication();
@@ -66,7 +60,6 @@ if (!builder.Environment.IsEnvironment("SECURITY_TESTS"))
 }
 
 builder.Services
-    .AddValidation()
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
@@ -88,12 +81,6 @@ builder.Services
     .AddSupportServices();
 
 builder.Services.AddOptions<ScalarOptions>().BindConfiguration("Scalar");
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Converters.Add(new StronglyTypedIdJsonConverterFactory());
-    options.SerializerOptions.Converters.Add(new MoneyJsonConverterFactory());
-    options.SerializerOptions.Converters.Add(new CategoryColorJsonConverterFactory());
-});
 
 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -142,7 +129,7 @@ app
     .UseUserContext()
     .UseSupportMiddleware();
 
-app.MapCarter()
+app
     .MapStoreItemsEndpoints()
     .MapAccountsEndpoints()
     .MapDashboardEndpoints()
