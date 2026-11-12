@@ -196,7 +196,7 @@ Domain → Application → Infrastructure → Service
 - **Domain** (`src/Holefeeder.Domain`): Aggregate roots, value objects, domain events. No dependencies on outer layers.
 - **Application** (`src/Holefeeder.Application`): Use cases, CQRS queries/commands, application DTOs, authorization. References Domain only.
 - **Infrastructure** (`src/Holefeeder.Infrastructure`): PostgreSQL via Dapper + EF Core, DbUp migrations, Hangfire background jobs. Implements interfaces from Application.
-- **Service** (`src/Holefeeder.Service`, formerly `Holefeeder.Api`): ASP.NET Core 10 minimal API using the **Carter** framework for route modules. Thin layer — delegates to Application.
+- **Service** (`src/Holefeeder.Service`, formerly `Holefeeder.Api`): ASP.NET Core 10 minimal API. It no longer delegates to Application; see *Target architecture*.
 
 ### Feature Organization
 
@@ -206,14 +206,13 @@ Both Domain and Application are organized into **vertical feature slices** by bu
 - Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
 
 Application no longer maps any route: every endpoint is in `Holefeeder.Service`. Its
-feature folders keep only the `Request`/`Response` types and validators that
+feature folders keep only the `Request`/`Response` types that
 `Holefeeder.FunctionalTests` still builds on, under `Commands/` and `Queries/`.
 
 ### Key Patterns
 
 - **Strongly typed IDs**: Entity identifiers are custom value objects (not raw `Guid`/`int`) — see `Domain/ValueObjects/`.
 - **Result pattern**: FluentResults is used for error handling rather than exceptions in use cases.
-- **Carter modules**: API routes are defined as Carter `ICarterModule` implementations per feature, not controller classes.
 - **SmartEnum**: Enumerations are strongly typed via the SmartEnum pattern — see `Domain/Enumerations/`.
 - **PowerSync**: the mobile app's upload endpoint, `POST api/v2/sync/powersync`, now lives in
   `Holefeeder.Service/Sync/`, not in the legacy projects.
@@ -223,7 +222,7 @@ feature folders keep only the `Request`/`Response` types and validators that
 | Concern | Technology |
 |---|---|
 | Runtime | .NET 10 |
-| API routing | Carter (Minimal APIs) |
+| API routing | Minimal APIs |
 | Database | PostgreSQL 18 |
 | ORM | Dapper; EF Core in legacy code only, not for new code |
 | DB migrations | DbUp |

@@ -23,15 +23,4 @@ public static class ModifyTransaction
 
         public string[] Tags { get; init; } = null!;
     }
-
-    internal class Validator : AbstractValidator<Request>
-    {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEqual(TransactionId.Empty);
-            RuleFor(command => command.AccountId).NotNull().NotEqual(AccountId.Empty);
-            RuleFor(command => command.CategoryId).NotNull().NotEqual(CategoryId.Empty);
-            RuleFor(command => command.Date).NotNull().NotEmpty();
-        }
-    }
 }

@@ -1,5 +1,3 @@
-using FluentValidation;
-
 using Holefeeder.Domain.Features.Transactions;
 using Holefeeder.Domain.ValueObjects;
 
@@ -18,14 +16,5 @@ public static class ModifyCashflow
         public string Description { get; init; } = null!;
 
         public string[] Tags { get; init; } = [];
-    }
-
-    internal class Validator : AbstractValidator<Request>
-    {
-        public Validator()
-        {
-            RuleFor(command => command.Id).NotNull().NotEqual(CashflowId.Empty);
-            RuleFor(command => command.EffectiveDate).NotEmpty();
-        }
     }
 }

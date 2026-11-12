@@ -11,14 +11,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Carter"/>
         <PackageReference Include="DrifterApps.Seeds.Application"/>
-        <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
-        <PackageReference Include="Microsoft.Identity.Web"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-        <PackageReference Include="System.Linq.Dynamic.Core"/>
     </ItemGroup>
 
     <ItemGroup>
