@@ -1,8 +1,12 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Service.MyData.Core;
 using Holefeeder.Service.MyData.Persistence;
 using Holefeeder.Service.Shared.Core;
 using Holefeeder.ServiceTests.TestKit;
 using Holefeeder.ServiceTests.TestKit.Persistence;
+
+using static Holefeeder.ServiceTests.MyData.TestKit.MyDataForTest;
 
 namespace Holefeeder.ServiceTests.MyData.Persistence;
 
@@ -66,6 +70,125 @@ public class MyDataInDatabaseTests(DatabaseForTest database, ITestOutputHelper t
     }
 
     [Fact]
-    public void DatabaseErrors_AreUnexpectedErrors() =>
+    public async Task Import_SavesEveryTable_ThatExportReadsBack()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var (account, category) = (AMyDataAccount(), AMyDataCategory());
+        var cashflow = AMyDataCashflow(account.Id, category.Id);
+        var transaction = AMyDataTransaction(account.Id, category.Id) with
+        {
+            CashflowId = cashflow.Id,
+            CashflowDate = new DateOnly(2024, 1, 15)
+        };
+
+        await using (var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value)
+        {
+            (await import.SaveAsync(account, CancellationToken.None)).Should().BeSuccessful();
+            (await import.SaveAsync(category, CancellationToken.None)).Should().BeSuccessful();
+            (await import.SaveAsync(cashflow, CancellationToken.None)).Should().BeSuccessful();
+            (await import.SaveAsync(transaction, CancellationToken.None)).Should().BeSuccessful();
+            (await import.CommitAsync(CancellationToken.None)).Should().BeSuccessful();
+        }
+
+        (await _store.ExportAsync(user, CancellationToken.None)).Value.Should()
+            .BeEquivalentTo(new MyDataSet([account], [category], [cashflow], [transaction]));
+    }
+
+    [Fact]
+    public async Task Import_ReplacesAnExistingRecord()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var account = AMyDataAccount();
+        await ImportAsync(user, account);
+        var changed = account with { Name = "Renamed", OpenBalance = Money.Valid(1m), Favorite = true, Inactive = true };
+
+        await ImportAsync(user, changed);
+
+        (await _store.ExportAsync(user, CancellationToken.None)).Value.Accounts.Should().Equal(changed);
+    }
+
+    [Fact]
+    public async Task ExistsAsync_TellsWhetherTheUserOwnsTheRecord()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var other = await AUser().SavedInDbAsync(database);
+        var account = AMyDataAccount();
+        await ImportAsync(other, account);
+
+        await using var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value;
+
+        (await import.ExistsAsync(MyDataTable.Accounts, account.Id, CancellationToken.None)).Should().BeSuccessful().And.WithValue(false);
+        (await import.SaveAsync(AMyDataAccount(account.Id), CancellationToken.None)).Should().BeFailure()
+            .And.WithError(MyDataImportErrors.IdTaken(MyDataTable.Accounts));
+    }
+
+    [Fact]
+    public async Task ExistsAsync_FindsTheUsersRecord()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var category = AMyDataCategory();
+        await ImportAsync(user, category);
+
+        await using var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value;
+
+        (await import.ExistsAsync(MyDataTable.Categories, category.Id, CancellationToken.None)).Should().BeSuccessful()
+            .And.WithValue(true);
+        (await import.ExistsAsync(MyDataTable.Cashflows, category.Id, CancellationToken.None)).Should().BeSuccessful()
+            .And.WithValue(false);
+    }
+
+    [Fact]
+    public async Task DisposeAsync_DiscardsTheImport_WhenNotCommitted()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+
+        await using (var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value)
+        {
+            (await import.SaveAsync(AMyDataAccount(), CancellationToken.None)).Should().BeSuccessful();
+        }
+
+        (await _store.ExportAsync(user, CancellationToken.None)).Value.Accounts.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task SaveAsync_FailsWithWriteFailed_WhenAReferenceIsUnknown()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+
+        await using var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value;
+        var result = await import.SaveAsync(AMyDataTransaction(AnId(), AnId()), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(MyDataDatabaseErrors.WriteFailed);
+    }
+
+    [Fact]
+    public async Task BeginImportAsync_FailsWithWriteFailed_WhenTheDatabaseIsUnreachable()
+    {
+        var store = new MyDataInDatabase(database.BadDataSource, new LoggerForTest<MyDataInDatabase>(testOutputHelper));
+
+        var result = await store.BeginImportAsync(AUser(), CancellationToken.None);
+
+        result.Should().BeFailure().And.WithError(MyDataDatabaseErrors.WriteFailed);
+    }
+
+    [Fact]
+    public void DatabaseErrors_AreUnexpectedErrors()
+    {
         MyDataDatabaseErrors.ReadFailed.Should().BeOfType<UnexpectedError>();
+        MyDataDatabaseErrors.WriteFailed.Should().BeOfType<UnexpectedError>();
+    }
+
+    private async Task ImportAsync(Service.Support.Core.User user, MyDataAccount account)
+    {
+        await using var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value;
+        (await import.SaveAsync(account, CancellationToken.None)).Should().BeSuccessful();
+        (await import.CommitAsync(CancellationToken.None)).Should().BeSuccessful();
+    }
+
+    private async Task ImportAsync(Service.Support.Core.User user, MyDataCategory category)
+    {
+        await using var import = (await _store.BeginImportAsync(user, CancellationToken.None)).Value;
+        (await import.SaveAsync(category, CancellationToken.None)).Should().BeSuccessful();
+        (await import.CommitAsync(CancellationToken.None)).Should().BeSuccessful();
+    }
 }

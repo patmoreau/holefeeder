@@ -19,7 +19,8 @@ public class ExportDataUseCaseTests
 
         var result = await useCase.HandleAsync(new ExportDataRequest(user), CancellationToken.None);
 
-        result.Should().BeSuccessful().And.WithValue(data);
+        result.Should().BeSuccessful();
+        result.Value.Should().BeEquivalentTo(data);
     }
 
     [Fact]

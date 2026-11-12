@@ -1,3 +1,5 @@
+using DrifterApps.Seeds.FluentResult;
+
 using Holefeeder.Service.Shared.Core;
 
 namespace Holefeeder.Service.MyData.Core;
@@ -11,4 +13,8 @@ internal sealed record MyDataTransaction(
     Id CategoryId,
     Id AccountId,
     Id? CashflowId,
-    DateOnly? CashflowDate);
+    DateOnly? CashflowDate)
+{
+    public Result<MyDataTransaction> Validated() =>
+        MyDataRecordErrors.Validated(this, (Date != default, MyDataRecordErrors.TransactionDateRequired));
+}

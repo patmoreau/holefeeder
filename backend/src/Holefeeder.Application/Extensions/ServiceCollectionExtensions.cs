@@ -28,7 +28,6 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IUnitOfWork>(provider => provider.GetRequiredService<BudgetingContext>());
         services.AddScoped<IUserContext, UserContext.UserContext>();
-        services.AddScoped<ImportData.Handler>();
 
         return services;
     }
