@@ -17,19 +17,21 @@ internal sealed record CashflowSchedule(
     public decimal UpcomingVariation(DateOnly to) =>
         UpcomingDates(to).Count * Amount * (CategoryType == CategoryType.Gain ? 1 : -1);
 
-    private IEnumerable<DateOnly> Occurrences(DateOnly to)
+    public DateOnly? NextDate() =>
+        Occurrences().Where(IsUnpaid).Select(date => (DateOnly?)date).FirstOrDefault();
+
+    private IEnumerable<DateOnly> Occurrences(DateOnly to) =>
+        Occurrences().TakeWhile(date => date <= to);
+
+    private IEnumerable<DateOnly> Occurrences()
     {
         if (IntervalType == IntervalType.OneTime)
         {
-            if (EffectiveDate <= to)
-            {
-                yield return EffectiveDate;
-            }
-
+            yield return EffectiveDate;
             yield break;
         }
 
-        for (var iteration = 0; IntervalType.AddIteration(EffectiveDate, Frequency * iteration) <= to; iteration++)
+        for (var iteration = 0; ; iteration++)
         {
             yield return IntervalType.AddIteration(EffectiveDate, Frequency * iteration);
         }

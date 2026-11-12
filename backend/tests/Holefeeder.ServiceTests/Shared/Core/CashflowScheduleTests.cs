@@ -35,6 +35,30 @@ public class CashflowScheduleTests
     }
 
     [Theory]
+    [InlineData("2026-09-15", "Monthly", 1, null, null, "2026-09-15")]
+    [InlineData("2026-09-15", "Monthly", 1, "2026-10-16", "2026-10-15", "2026-11-15")]
+    [InlineData("2026-11-02", "Weekly", 2, "2026-11-02", "2026-11-02", "2026-11-16")]
+    [InlineData("2026-03-03", "Yearly", 1, "2026-03-01", "2026-03-03", "2027-03-03")]
+    [InlineData("2026-11-01", "Daily", 3, "2026-11-04", "2026-11-04", "2026-11-07")]
+    [InlineData("2026-11-20", "OneTime", 1, null, null, "2026-11-20")]
+    [InlineData("2026-11-20", "OneTime", 1, "2026-11-20", "2026-11-20", null)]
+    public void NextDate_IsTheFirstUnpaidOccurrence(
+        string effectiveDate, string intervalType, int frequency, string? lastPaidDate, string? lastCashflowDate, string? expected)
+    {
+        var cashflow = new CashflowSchedule(
+            AnId(),
+            Day(effectiveDate),
+            IntervalType.Create(intervalType).Value,
+            frequency,
+            100m,
+            CategoryType.Expense,
+            lastPaidDate is null ? null : Day(lastPaidDate),
+            lastCashflowDate is null ? null : Day(lastCashflowDate));
+
+        cashflow.NextDate().Should().Be(expected is null ? null : Day(expected));
+    }
+
+    [Theory]
     [InlineData("Expense", -300)]
     [InlineData("Gain", 300)]
     public void UpcomingVariation_SignsTheAmountByCategoryType(string categoryType, decimal expected)
