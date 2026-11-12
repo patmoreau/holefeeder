@@ -144,6 +144,8 @@ period and the income vs expenses series behind the chart. The backend mirror of
 - **`totalIncome`**, **`totalSpending`** and **`totalNet`** sum the series.
 - **`range`** describes the N periods in the budget's unit (`day`, `week`, `month`,
   `year`), in years when it is a whole number of them, for the client to label.
+- **`ranges`** describes every offered count (3, 6, 12) the same way, for the
+  client's range switch.
 
 ---
 

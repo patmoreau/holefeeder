@@ -15,7 +15,8 @@ internal sealed record OverviewResponse(
     decimal TotalIncome,
     decimal TotalSpending,
     decimal TotalNet,
-    RangeResponse Range)
+    RangeResponse Range,
+    IReadOnlyList<RangeOptionResponse> Ranges)
 {
     public static OverviewResponse From(Overview overview) =>
         new(
@@ -31,9 +32,15 @@ internal sealed record OverviewResponse(
             overview.TotalIncome,
             overview.TotalSpending,
             overview.TotalNet,
-            new RangeResponse(JsonNamingPolicy.CamelCase.ConvertName(overview.Range.Unit.ToString()), overview.Range.Amount));
+            RangeOf(overview.Range),
+            overview.Ranges.Select(option => new RangeOptionResponse(option.Periods, RangeOf(option.Range))).ToList());
+
+    private static RangeResponse RangeOf(RangeSpan range) =>
+        new(JsonNamingPolicy.CamelCase.ConvertName(range.Unit.ToString()), range.Amount);
 }
 
 internal sealed record PeriodFlowResponse(PeriodResponse Period, decimal Income, decimal Spending, decimal Net);
 
 internal sealed record RangeResponse(string Unit, int Amount);
+
+internal sealed record RangeOptionResponse(int Periods, RangeResponse Range);

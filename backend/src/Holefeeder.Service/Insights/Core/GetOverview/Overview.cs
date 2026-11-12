@@ -10,6 +10,8 @@ internal enum NetOutcome
     BrokeEven
 }
 
+internal sealed record RangeOption(int Periods, RangeSpan Range);
+
 internal sealed record PeriodFlow(Period Period, decimal Income, decimal Spending, decimal Net);
 
 internal sealed record Overview(
@@ -23,7 +25,8 @@ internal sealed record Overview(
     decimal TotalIncome,
     decimal TotalSpending,
     decimal TotalNet,
-    RangeSpan Range)
+    RangeSpan Range,
+    IReadOnlyList<RangeOption> Ranges)
 {
     public static Overview Of(
         IReadOnlyList<InsightEntry> income, IReadOnlyList<InsightEntry> spending, DateOnly today, PeriodSettings settings, PeriodCount count)
@@ -52,7 +55,8 @@ internal sealed record Overview(
             totalIncome,
             totalSpending,
             totalIncome - totalSpending,
-            RangeSpan.Of(count.Value, settings));
+            RangeSpan.Of(count.Value, settings),
+            PeriodCount.Offered.Select(offered => new RangeOption(offered, RangeSpan.Of(offered, settings))).ToList());
     }
 
     private static PeriodFlow FlowOf(Period period, decimal income, decimal spending) =>

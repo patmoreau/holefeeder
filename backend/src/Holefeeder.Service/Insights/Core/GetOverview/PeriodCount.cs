@@ -6,7 +6,7 @@ namespace Holefeeder.Service.Insights.Core.GetOverview;
 
 internal sealed record PeriodCount
 {
-    private static readonly int[] Offered = [3, 6, 12];
+    public static readonly IReadOnlyList<int> Offered = [3, 6, 12];
 
     private PeriodCount(int value) => Value = value;
 

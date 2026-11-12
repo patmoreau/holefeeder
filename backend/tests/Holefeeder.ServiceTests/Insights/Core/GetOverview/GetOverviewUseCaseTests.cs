@@ -106,6 +106,17 @@ public class GetOverviewUseCaseTests
     }
 
     [Fact]
+    public async Task HandleAsync_DescribesEveryOfferedRange()
+    {
+        var result = await OverviewAsync(3);
+
+        result.Value.Ranges.Should().Equal(
+            new RangeOption(3, new RangeSpan(RangeUnit.Month, 3)),
+            new RangeOption(6, new RangeSpan(RangeUnit.Month, 6)),
+            new RangeOption(12, new RangeSpan(RangeUnit.Year, 1)));
+    }
+
+    [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenInsightsCannotBeRead()
     {
         var failure = new ResultError("insights-unavailable", "Insights are unavailable.");
