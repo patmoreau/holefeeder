@@ -20,13 +20,13 @@ A good test arranges realistic, varied data with builders, covers the happy path
 edge cases (empty/zero values, exclusions, error handling), and asserts precise expected
 values rather than merely checking that a result exists.
 
-## Target architecture — Holefeeder.Service
+## Architecture — Holefeeder.Service
 
-Most of the backend predates agent-assisted work and is **legacy** (see *Legacy
-architecture* below). New code follows the target here. The first feature built this
-way, the store items search (`src/Holefeeder.Service/StoreItems/`), is the reference
-implementation; every legacy endpoint has since moved over. The steps are in
-`../docs/plans/backend-service.md` and `../docs/plans/backend-legacy-removal.md`.
+The backend is one ASP.NET Core 10 minimal API. The store items search
+(`src/Holefeeder.Service/StoreItems/`) is the reference implementation. The legacy
+layered projects (`Holefeeder.Domain`, `.Application`, `.Infrastructure`) it replaced are
+gone; how they were retired is in `../docs/plans/backend-service.md` and
+`../docs/plans/backend-legacy-removal.md`.
 
 The `/backend:add-api-endpoint` playbook carries the procedure for a new endpoint
 (`../docs/contributing/tasks/backend/`).
@@ -35,7 +35,7 @@ The `/backend:add-api-endpoint` playbook carries the procedure for a new endpoin
   `tests/Holefeeder.ServiceTests`. No new class libraries.
 - **Feature/ring layout** from `../docs/contributing/architecture-principles.md`, in
   PascalCase so folders match namespaces. Features sit directly under the project root,
-  next to the legacy host folders (`Extensions/`, `ErrorHandling/`):
+  next to the host folders (`Extensions/`, `ErrorHandling/`):
   ```
   src/Holefeeder.Service/
     <FeaturePlural>/
@@ -58,17 +58,16 @@ The `/backend:add-api-endpoint` playbook carries the procedure for a new endpoin
   The same goes for every ring — name it for its role, not its library.
 - **Cross-cutting modules.** `Shared` and `Support` are not features. Any feature may
   depend on them; they never depend on a feature. `Support` holds the request's user
-  (`User`, `IdentityObjectId`, `UserContextAccessor`) and the middleware that resolves
-  it.
-- **No legacy from new code.** Code in features, `Shared/` and `Support/` never uses
-  `Holefeeder.Domain`, `Holefeeder.Application`, `Holefeeder.Infrastructure` or the
-  `DrifterApps.Seeds.Application`/`.Domain`/`.Infrastructure`/`.Testing` packages. Only
-  host wiring in `Program.cs` touches both. When new code needs something legacy has,
-  write it again in the feature.
+  (`User`, `IdentityObjectId`, `UserContextAccessor`), the middleware that resolves
+  it, and the schema migrations (`Support/Persistence/Schema/`).
+- **No legacy dependencies.** `ArchitectureRules` fails if code in features, `Shared/` or
+  `Support/` uses the namespaces of the deleted legacy projects or of the
+  `DrifterApps.Seeds.Application`/`.Domain`/`.Infrastructure`/`.Testing` packages.
 - **Dapper with hand-written SQL.** No EF Core in new code. The persistence ring owns
   the SQL and its row models and maps them to core types. Schema changes are DbUp
-  scripts in `src/Holefeeder.Service/Support/Persistence/Schema/Scripts/` (see
-  *Decisions* in the plan).
+  scripts in `src/Holefeeder.Service/Support/Persistence/Schema/Scripts/`, numbered;
+  they keep their `Holefeeder.Infrastructure.Scripts.` resource names (see *Schema
+  migrations* in `../docs/plans/backend-service.md`).
 - **One upsert per port.** Writes go through a single `SaveAsync` (`INSERT ... ON
   CONFLICT (id) DO UPDATE` guarded on the owner), never separate create and modify
   methods; use cases load, change, then save.
@@ -178,40 +177,7 @@ project directly on the runner, not in Docker, so Testcontainers can reach the
 runner's Docker.
 The Dockerfile only builds the published image.
 
-## Legacy architecture
-
-Describes the existing projects. Do not extend this layout: new code goes in
-`Holefeeder.Service` (see *Target architecture*).
-
-### Layer Structure
-
-```
-Domain → Application → Infrastructure → Service
-```
-
-- **Domain** (`src/Holefeeder.Domain`): Aggregate roots, value objects, domain events. No dependencies on outer layers.
-- **Application** (`src/Holefeeder.Application`): Use cases, CQRS queries/commands, application DTOs, authorization. References Domain only.
-- **Infrastructure** (`src/Holefeeder.Infrastructure`): PostgreSQL via Dapper + EF Core, DbUp migrations, Hangfire background jobs. Implements interfaces from Application.
-- **Service** (`src/Holefeeder.Service`, formerly `Holefeeder.Api`): ASP.NET Core 10 minimal API. It no longer delegates to Application; see *Target architecture*.
-
-### Feature Organization
-
-Both Domain and Application are organized into **vertical feature slices** by business domain:
-
-- Application features: `Accounts`, `MyData`, `StoreItems`, `Transactions`, `Users`
-- Domain features: `Accounts`, `Categories`, `StoreItem`, `Transactions`, `Users`
-
-Application no longer maps any route: every endpoint is in `Holefeeder.Service`. The
-host no longer uses anything from the three projects; step 7 of
-`../docs/plans/backend-legacy-removal.md` deletes them.
-
-### Key Patterns
-
-- **Strongly typed IDs**: Entity identifiers are custom value objects (not raw `Guid`/`int`) — see `Domain/ValueObjects/`.
-- **Result pattern**: FluentResults is used for error handling rather than exceptions in use cases.
-- **SmartEnum**: Enumerations are strongly typed via the SmartEnum pattern — see `Domain/Enumerations/`.
-- **PowerSync**: the mobile app's upload endpoint, `POST api/v2/sync/powersync`, now lives in
-  `Holefeeder.Service/Sync/`, not in the legacy projects.
+## Platform
 
 ### Technology Stack
 
@@ -220,19 +186,19 @@ host no longer uses anything from the three projects; step 7 of
 | Runtime | .NET 10 |
 | API routing | Minimal APIs |
 | Database | PostgreSQL 18 |
-| ORM | Dapper; EF Core in legacy code only, not for new code |
+| Data access | Dapper with hand-written SQL; no EF Core |
 | DB migrations | DbUp |
 | Authentication | Auth0 via JWT + `Microsoft.Identity.Web` |
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | React + MUI in `frontend/apps/holefeeder-web`, served by nginx from its own image |
-| Unit testing | xUnit + AwesomeAssertions (no mocks — NSubstitute is legacy, being phased out) |
-| Coverage | Coverlet (Cobertura) + Stryker mutation testing |
+| Testing | xUnit v3 + AwesomeAssertions + FluentScenario, Testcontainers PostgreSQL (no mocks — NSubstitute is legacy, being phased out) |
+| Coverage | `dotnet test --coverage --coverage-output-format cobertura` (Microsoft.Testing.Platform), as CI runs it |
 
 ### Code Quality Enforcement
 
 - `TreatWarningsAsErrors=true` — all compiler warnings are errors
-- Roslyn analyzers + StyleCop run in CI (`AnalysisMode=All`)
+- Roslyn analyzers run on every build (`AnalysisMode=All`)
 - Nullable reference types enabled everywhere
 - Central package version management via `Directory.Packages.props`
 - `tests/Directory.Build.props` enables Coverlet coverage output to `/coverage/`
@@ -261,7 +227,7 @@ The local dev stack (profile `local`) includes: **Traefik** (reverse proxy with 
 ### Strongly typed primitives
 
 Wrap primitives in typed value objects so a `Code` can only be used as a `Code`. In new
-code they follow the always-valid pattern (*Target architecture*); `Code` in
+code they follow the always-valid pattern (*Architecture*); `Code` in
 `src/Holefeeder.Service/StoreItems/Core/Code.cs` is the example. Use `.Value` to reach
 the underlying primitive.
 

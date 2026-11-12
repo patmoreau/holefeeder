@@ -1,6 +1,6 @@
 # Remove the legacy backend projects
 
-Status: **steps 1–7 done**, step 8 next, recorded 2026-11-12. Finishes step 7 of
+Status: **done**, recorded and closed 2026-11-12. Finishes step 7 of
 [backend-service.md](backend-service.md).
 
 ## Context
@@ -117,6 +117,9 @@ Each step leaves `main` deployable and every suite green.
    existing journal.
 8. **Docs.** Remove *Legacy architecture* from `backend/AGENTS.md` and make *Target
    architecture* the only one; close step 7 in `backend-service.md`.
+   Done. The root `AGENTS.md` and the `add-api-endpoint` playbook lost their legacy
+   mentions too, and the guide's stack table no longer claims StyleCop, Stryker or
+   EF Core.
 
 ## Decisions
 

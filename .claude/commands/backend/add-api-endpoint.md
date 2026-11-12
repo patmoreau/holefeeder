@@ -9,8 +9,7 @@ description: Add a REST endpoint to Holefeeder.Service as a Pokeball feature (Co
 > **Audience:** contributors *working on* this repository. Not a published document — see `AGENTS.md` at the repository root.
 
 New endpoints live in `backend/src/Holefeeder.Service`, in the feature/ring layout of
-`docs/contributing/architecture-principles.md`. Never add one to the legacy slices in
-`Holefeeder.Application/Features/`.
+`docs/contributing/architecture-principles.md`.
 
 **The reference is the store items search**, `GET api/v2/store-items`
 (`src/Holefeeder.Service/StoreItems/`). When this playbook and that code disagree, the
@@ -347,7 +346,7 @@ workspace (`frontend/`, see `frontend/AGENTS.md`) needs the call, and whether
 
 ## Never
 
-- Add an endpoint to `Holefeeder.Application/Features/`.
+- Add a class library; everything goes in `Holefeeder.Service`.
 - Reference a ring, ASP.NET Core or Npgsql from `Core`, or another feature's folders
   from anywhere.
 - Throw for an expected failure; return a `ResultError`.

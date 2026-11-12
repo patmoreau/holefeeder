@@ -1,6 +1,6 @@
 # Consolidate the backend into Holefeeder.Service
 
-Status: **steps 1–6 done**, step 7 next, recorded 2026-11-09.
+Status: **done**, recorded 2026-11-09, closed 2026-11-12.
 
 ## Context
 
@@ -54,7 +54,7 @@ is approved. Every step leaves `main` deployable.
    review pass over the feature (error codes, naming, `ApiResult`, `UnexpectedError`):
    `add-api-endpoint` rewritten in `bd2de714`, `migrate-api-endpoint` added in
    `2111e6cb` for step 7, and `backend/AGENTS.md` updated with the settled conventions.
-7. **Migrate legacy features one at a time** (separate plan), following the
+7. ✅ **Migrate legacy features one at a time** (separate plan), following the
    `migrate-api-endpoint` playbook. Each move deletes the legacy route and handler it
    replaces, keeps the request types the legacy tests build on, and leaves those tests
    unchanged and passing. When the last user is gone: drop EF Core, the remaining
@@ -74,7 +74,9 @@ is approved. Every step leaves `main` deployable.
    the `Jobs` ring. `Holefeeder.Application` serves no route any more, and the code
    nothing used is deleted, legacy unit tests and user context middleware included.
    The rest, and the order to remove it in, is planned in
-   [backend-legacy-removal.md](backend-legacy-removal.md).
+   [backend-legacy-removal.md](backend-legacy-removal.md). Done: the legacy projects,
+   their tests and EF Core are gone (`65a4f722`), the DbUp scripts kept their journal
+   names, and `Holefeeder.Service` with `Holefeeder.ServiceTests` is the whole backend.
 
 ## Decisions
 
