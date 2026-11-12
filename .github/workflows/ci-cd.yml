@@ -103,7 +103,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Service' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=${{ matrix.target == 'api' && './backend/src/Holefeeder.Service/Dockerfile' || './frontend/apps/holefeeder-web/Dockerfile' }}" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6
@@ -117,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           load: true
-          context: ${{ matrix.target == 'web' && '.' || './backend' }}
+          context: ${{ matrix.target == 'web' && './frontend' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
           build-args: |
             BUILD_VERSION=${{ env.VERSION }}
@@ -330,7 +330,7 @@ jobs:
 
       - name: Set Dockerfile path
         id: dockerfile-path
-        run: echo "DOCKERFILE_PATH=./backend/src/Holefeeder.${{ matrix.target == 'api' && 'Service' || 'Web' }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_PATH=${{ matrix.target == 'api' && './backend/src/Holefeeder.Service/Dockerfile' || './frontend/apps/holefeeder-web/Dockerfile' }}" >> $GITHUB_ENV
 
       - name: Restore Docker cache for ${{ matrix.target }}
         uses: actions/cache@v6
@@ -343,7 +343,7 @@ jobs:
       - name: Publish ${{ matrix.target }} container
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.target == 'web' && '.' || './backend' }}
+          context: ${{ matrix.target == 'web' && './frontend' || './backend' }}
           file: ${{ env.DOCKERFILE_PATH }}
           target: final
           build-args: |

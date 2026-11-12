@@ -33,8 +33,7 @@ Two playbooks carry the procedure: `/backend:add-api-endpoint` for a new endpoin
 (`../docs/contributing/tasks/backend/`).
 
 - **One project.** `src/Holefeeder.Service` (the API host, formerly `Holefeeder.Api`) and
-  `tests/Holefeeder.ServiceTests`. No new class libraries. `Holefeeder.Web` stays a
-  separate host for the SPAs.
+  `tests/Holefeeder.ServiceTests`. No new class libraries.
 - **Feature/ring layout** from `../docs/contributing/architecture-principles.md`, in
   PascalCase so folders match namespaces. Features sit directly under the project root,
   next to the legacy host folders (`Extensions/`, `ErrorHandling/`):
@@ -136,9 +135,6 @@ dotnet test tests/Holefeeder.UnitTests/Holefeeder.UnitTests.csproj -- --filter-c
 ```bash
 # C#
 dotnet format --severity error --verbosity diagnostic
-
-# TypeScript (Angular frontend)
-cd src/Holefeeder.Web/ClientApp && pnpm lint
 ```
 
 ### Code Coverage
@@ -197,22 +193,13 @@ Describes the existing projects. Do not extend this layout: new code goes in
 ### Layer Structure
 
 ```
-Domain → Application → Infrastructure → Service / Web
+Domain → Application → Infrastructure → Service
 ```
 
 - **Domain** (`src/Holefeeder.Domain`): Aggregate roots, value objects, domain events. No dependencies on outer layers.
 - **Application** (`src/Holefeeder.Application`): Use cases, CQRS queries/commands, application DTOs, authorization. References Domain only.
 - **Infrastructure** (`src/Holefeeder.Infrastructure`): PostgreSQL via Dapper + EF Core, DbUp migrations, Hangfire background jobs. Implements interfaces from Application.
 - **Service** (`src/Holefeeder.Service`, formerly `Holefeeder.Api`): ASP.NET Core 10 minimal API using the **Carter** framework for route modules. Thin layer — delegates to Application.
-- **Web** (`src/Holefeeder.Web`): ASP.NET Core host serving two SPAs from one image —
-  the React app (`frontend/apps/holefeeder-web`) at `/`, and the legacy Angular app
-  (`ClientApp/`, base href `/angular/`) under `/angular/`. `Program.cs` has one fallback
-  per app. The image builds from the **repository root** (see `/.dockerignore`) so the
-  Dockerfile reaches `frontend/`; the React build's public Auth0 values are Dockerfile
-  `ARG`s, and its API base is the relative `/gateway`. `/ngsw-worker.js` at the root is
-  Angular's safety worker: it unregisters the service worker Angular used to install at
-  `/`. Keep the Angular app until it is explicitly retired; the retirement steps
-  (including dropping .NET from this image) are in `docs/plans/angular-decommission.md`.
 
 ### Feature Organization
 
@@ -243,7 +230,7 @@ Each Application feature folder contains `Commands/` and `Queries/` subdirectori
 | Authentication | Auth0 via JWT + `Microsoft.Identity.Web` |
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
-| Frontend | React + MUI at `/`, legacy Angular at `/angular/`, both served by `Holefeeder.Web` |
+| Frontend | React + MUI in `frontend/apps/holefeeder-web`, served by nginx from its own image |
 | Unit testing | xUnit + AwesomeAssertions (no mocks — NSubstitute is legacy, being phased out) |
 | BDD/Functional tests | SpecFlow + Respawn + WireMock.Net |
 | Coverage | Coverlet (Cobertura) + Stryker mutation testing |

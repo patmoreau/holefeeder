@@ -41,7 +41,7 @@ Monorepo with two independent sub-projects, each with its own authoritative agen
 
 | Path | Contents | Guide |
 |---|---|---|
-| `backend/` | .NET 10 solution — `Holefeeder.Service` (the API host), `.Application`, `.Domain`, `.Infrastructure`, plus the Angular SPA in `src/Holefeeder.Web/ClientApp` | `backend/AGENTS.md` |
+| `backend/` | .NET 10 solution — `Holefeeder.Service` (the API host), `.Application`, `.Domain`, `.Infrastructure` | `backend/AGENTS.md` |
 | `frontend/` | pnpm + Turborepo workspace — Expo/React Native mobile app, React web app, shared `@holefeeder/shared` | `frontend/AGENTS.md`, and `frontend/apps/holefeeder-mobile/AGENTS.md` for the mobile app |
 | `docs/business-rules/` | Language-agnostic business rules shared by both sub-projects — consult when implementing or validating domain logic in either; a change to domain logic usually belongs there too. | — |
 | `docs/design/`, `docs/plans/` | Design notes and work plans | — |

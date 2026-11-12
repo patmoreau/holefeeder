@@ -344,8 +344,7 @@ socket (see `backend/AGENTS.md`). One class:
 ## 9. Then the clients
 
 An endpoint is not shipped until something calls it. Check whether the frontend
-workspace (`frontend/`, see `frontend/AGENTS.md`) or the Angular SPA
-(`backend/src/Holefeeder.Web/ClientApp`) needs the call, and whether
+workspace (`frontend/`, see `frontend/AGENTS.md`) needs the call, and whether
 `docs/business-rules/` describes behavior the endpoint now implements.
 
 ## Never

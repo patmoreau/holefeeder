@@ -26,48 +26,6 @@ jobs:
     with:
       file_patterns: ${{ vars.LINTER_CODE_FILE_PATTERNS }}
 
-  typescript:
-    runs-on: ubuntu-latest
-    needs: check_changes
-    if: ${{ needs.check_changes.outputs.code_was_changed == 'true' }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Install Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24.x'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        working-directory: backend/src/Holefeeder.Web/ClientApp
-        run: pnpm install --dangerously-allow-all-builds
-
-      - name: Lint code with ESLint
-        id: lint
-        working-directory: backend/src/Holefeeder.Web/ClientApp
-        run: pnpm lint --format stylish --output-file ./eslint-report.txt
-
-      - name: Print ESLint report
-        if: always()
-        working-directory: backend/src/Holefeeder.Web/ClientApp
-        run: cat ./eslint-report.txt
-
-      - name: Upload ESLint report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ESLint report
-          path: backend/src/Holefeeder.Web/ClientApp/eslint-report.txt
-
-      - name: Check for errors
-        if: ${{ steps.lint.outcome != 'success' }}
-        run: echo "::error::eslint found issues in the code. Please fix them."
-
   csharp:
     runs-on: ubuntu-latest
     needs: check_changes

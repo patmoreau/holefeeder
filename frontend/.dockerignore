@@ -1,0 +1,20 @@
+# Build context for the web image (apps/holefeeder-web/Dockerfile).
+# Everything is excluded, then only what that Dockerfile copies is let back in.
+**
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.json
+!packages/shared/package.json
+!packages/shared/tsconfig.json
+!packages/shared/src
+!packages/shared/src/**
+!apps/holefeeder-mobile/package.json
+!apps/holefeeder-web
+!apps/holefeeder-web/**
+apps/holefeeder-web/node_modules
+apps/holefeeder-web/dist
+apps/holefeeder-web/test-results
+apps/holefeeder-web/.env*
+!apps/holefeeder-web/.env.example

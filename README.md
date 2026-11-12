@@ -21,7 +21,7 @@ Here are the key concepts which drive my thinking today:
 
 This is a monorepo containing both the backend and the clients:
 
-- **`backend/`** — the .NET solution (API, domain, application, infrastructure) plus the Angular web app served by it, tests, and Docker Compose orchestration. See [`backend/AGENTS.md`](backend/AGENTS.md).
+- **`backend/`** — the .NET solution (API, domain, application, infrastructure), tests, and Docker Compose orchestration. See [`backend/AGENTS.md`](backend/AGENTS.md).
 - **`frontend/`** — the pnpm + Turborepo workspace: Expo/React Native mobile app, React web app, and shared packages. See [`frontend/AGENTS.md`](frontend/AGENTS.md).
 - **`docs/business-rules/`** — the canonical, language-agnostic business rules shared by the backend and the clients.
 - **`docs/contributing/`** — engineering principles, git workflow and task playbooks. Start with [`AGENTS.md`](AGENTS.md).

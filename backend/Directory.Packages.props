@@ -25,7 +25,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.14" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.14" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.9.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
@@ -52,7 +51,6 @@
     <PackageVersion Include="Refit" Version="16.4.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.7" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
-    <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.4" />

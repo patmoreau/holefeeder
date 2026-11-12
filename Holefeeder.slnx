@@ -34,13 +34,6 @@
       <Build Solution="Staging|*" Project="false" />
     </Project>
   </Folder>
-  <Folder Name="/src/Web/">
-    <Project Path="backend/src/Holefeeder.Web/Holefeeder.Web.csproj">
-      <BuildType Solution="Staging|*" Project="?" />
-      <Platform Solution="Staging|*" Project="?" />
-      <Build Solution="Staging|*" Project="false" />
-    </Project>
-  </Folder>
   <Folder Name="/tests/">
     <File Path="backend/tests/.editorconfig" />
     <File Path="backend/tests/Directory.Build.props" />

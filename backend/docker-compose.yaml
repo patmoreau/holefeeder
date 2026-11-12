@@ -168,11 +168,6 @@ services:
       - api
     expose:
       - 80
-    environment:
-      - ASPNETCORE_ENVIRONMENT=${ENV}
-      - ASPNETCORE_HOSTINGSTARTUPASSEMBLIES=Microsoft.AspNetCore.SpaProxy
-      - ASPNETCORE_URLS=http://+
-      - AngularSettings__RedirectUrl=https://holefeeder.${DOMAIN}
 
 networks:
   default:

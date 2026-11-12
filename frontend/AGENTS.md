@@ -160,11 +160,14 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   `window.__E2E_AUTH__` and read `window.__E2E_LOGIN_CALLS__` (helpers in
   `e2e/support/auth.ts`). `E2eConfig.isEnabled()` also requires a non-production build,
   so the bypass never ships. Vitest (`pnpm test`) only scans `src/`.
-- Deployment: the `Holefeeder.Web` image builds and serves this app at `/` (staging
-  `holefeeder.localtest.me`, production `holefeeder.drifterapps.app`), with the legacy
-  Angular app under `/angular/` — the drawer's Legacy item opens it in a new tab. See
-  `backend/AGENTS.md` → Web.
-- Version label below Legacy: `<version> · <commit>` from `VITE_APP_VERSION` /
+- Deployment: `Dockerfile` builds this app from `frontend/` (see `frontend/.dockerignore`)
+  into the `holefeeder-web` image, where nginx (`nginx.conf`) serves it with an
+  `index.html` fallback and a `/healthz` check (staging `holefeeder.localtest.me`,
+  production `holefeeder.drifterapps.app`). The public Auth0 values are Dockerfile
+  `ARG`s and the API base is the relative `/gateway`. `public/ngsw-worker.js` is the
+  retired Angular app's safety worker: it unregisters the service worker Angular used
+  to install at `/`.
+- Version label at the bottom of the drawer: `<version> · <commit>` from `VITE_APP_VERSION` /
   `VITE_APP_COMMIT`, set by the Dockerfile from the `BUILD_VERSION` (GitVersion in
   ci-cd, also the image and git tag) and `GIT_COMMIT` build args. Without a version
   it reads `dev`. Unlike mobile there is no committed version file: CI owns it.

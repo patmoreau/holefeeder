@@ -370,11 +370,9 @@ data/
 .run/Docker compose.run.xml
 .run/Holefeeder.run.xml
 tags.json
-**/.angular/
 **/.DS_Store
 linter-report/
 .certs/
-src/Web/Holefeeder.Web/ClientApp/eslint-report.md
 **/.meteor/generated/*.json
 **/coverage/
 **/.meteor/

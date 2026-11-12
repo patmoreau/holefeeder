@@ -36,19 +36,6 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/package.json"],
-      "matchPackageNames": ["typescript"],
-      "allowedVersions": "<5.5.0"
-    },
-    {
-      "matchManagers": ["npm"],
-      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/**"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "Angular minor and patch updates",
-      "groupSlug": "angular-minor-patch-updates"
-    },
-    {
-      "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "Frontend minor and patch updates",
@@ -72,11 +59,6 @@
     {
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
-    },
-    {
-      "matchFileNames": ["backend/src/Holefeeder.Web/ClientApp/**"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
     }
   ]
 }

@@ -72,8 +72,8 @@ services:
 
   web:
     build:
-      context: ..
-      dockerfile: ./backend/src/Holefeeder.Web/Dockerfile
+      context: ../frontend
+      dockerfile: ./apps/holefeeder-web/Dockerfile
       args:
         BUILD_VERSION: ${VERSION:-}
         GIT_COMMIT: ${GIT_COMMIT:-}
@@ -83,7 +83,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
       - "traefik.http.routers.web-router.entrypoints=websecure"
-      - "traefik.http.routers.web-router.rule=(Host(`holefeeder.${DOMAIN}`) && !PathPrefix(`/gateway`)) || (Host(`holefeeder-admin.${DOMAIN}`) && PathPrefix(`/hc-ui`))"
+      - "traefik.http.routers.web-router.rule=(Host(`holefeeder.${DOMAIN}`) && !PathPrefix(`/gateway`))"
       - "traefik.http.routers.web-router.tls=true"
       - "traefik.http.routers.web-router.tls.certresolver=acme_certresolver"
       - "traefik.http.services.web-service.loadbalancer.server.port=80"
