@@ -27,13 +27,12 @@ internal sealed class GetDashboardSummaryUseCase(IDashboard dashboard)
         }
 
         var current = Period.Containing(request.Today, settingsResult.Value);
-        var periods = PeriodsAnchoredOn(current, settingsResult.Value);
-        var expenses = TotalsByPeriod(totalsResult.Value, CategoryType.Expense, periods);
-        var gains = TotalsByPeriod(totalsResult.Value, CategoryType.Gain, periods);
+        var expenses = TotalsByPeriod(totalsResult.Value, CategoryType.Expense, current, settingsResult.Value);
+        var gains = TotalsByPeriod(totalsResult.Value, CategoryType.Gain, current, settingsResult.Value);
 
         var currentExpenses = expenses.GetValueOrDefault(current);
         var currentGains = gains.GetValueOrDefault(current);
-        var averageExpenses = expenses.Count == 0 ? 0 : Math.Round(expenses.Values.Sum() / expenses.Count, 2);
+        var averageExpenses = PeriodTotals.AverageOf(expenses);
         var expenseVariation = currentExpenses - averageExpenses;
         var expenseVariationPercentage = averageExpenses == 0 ? 0 : Math.Round(expenseVariation / averageExpenses * 100, 2);
         var netFlow = currentGains - currentExpenses;
@@ -49,14 +48,10 @@ internal sealed class GetDashboardSummaryUseCase(IDashboard dashboard)
             projectedNetFlow);
     }
 
-    private static PeriodSettings PeriodsAnchoredOn(Period current, PeriodSettings settings) =>
-        settings.IntervalType == IntervalType.OneTime
-            ? PeriodSettings.Valid(current.Start, IntervalType.Daily, 1)
-            : PeriodSettings.Valid(current.Start, settings.IntervalType, settings.Frequency);
-
-    private static Dictionary<Period, decimal> TotalsByPeriod(IEnumerable<DailyTotal> totals, CategoryType categoryType, PeriodSettings periods) =>
-        totals
-            .Where(total => total.CategoryType == categoryType)
-            .GroupBy(total => Period.Containing(total.Date, periods))
-            .ToDictionary(group => group.Key, group => group.Sum(total => total.Total));
+    private static Dictionary<Period, decimal> TotalsByPeriod(
+        IEnumerable<DailyTotal> totals, CategoryType categoryType, Period current, PeriodSettings settings) =>
+        PeriodTotals.ByPeriod(
+            totals.Where(total => total.CategoryType == categoryType).Select(total => (total.Date, total.Total)),
+            current,
+            settings);
 }
