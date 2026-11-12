@@ -113,6 +113,12 @@ spending against its average, by category and by tag. The backend mirror of
 - **Tags** — split, trimmed and averaged as in [Tag Spending](#tag-spending-mobile-insight);
   a tag seen only in previous periods is listed with amount 0. Same ordering.
 
+## Income Breakdown (backend — insights)
+
+`GET api/v2/insights/income` — the web Insights income page. Same shape and rules as
+the [Spending Breakdown](#spending-breakdown-backend--insights), over **non-system,
+gain** categories, so transfers in are excluded. Income above the average is good.
+
 ---
 
 ## Category Spending (mobile insight)

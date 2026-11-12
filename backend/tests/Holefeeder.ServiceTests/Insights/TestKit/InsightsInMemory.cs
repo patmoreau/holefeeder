@@ -36,5 +36,8 @@ internal sealed class InsightsInMemory : IInsights
     public void Spend(InsightCategory category, DateOnly date, decimal amount, string tags = "") =>
         _entries.Add((CategoryType.Expense, new InsightEntry(date, category.Id, amount, tags)));
 
+    public void Earn(InsightCategory category, DateOnly date, decimal amount, string tags = "") =>
+        _entries.Add((CategoryType.Gain, new InsightEntry(date, category.Id, amount, tags)));
+
     public void FailWith(ResultError error) => _failure = error;
 }
