@@ -1,5 +1,4 @@
-import { type CategoryType, DateOnly } from '@holefeeder/shared/core';
-import type { BudgetIntervalType } from './budget-settings';
+import { type CategoryType, type DateIntervalType, DateOnly } from '@holefeeder/shared/core';
 
 export type Cashflow = {
   id: string;
@@ -11,7 +10,7 @@ export type Cashflow = {
   categoryType: CategoryType;
   accountName: string;
   amount: number;
-  intervalType: BudgetIntervalType;
+  intervalType: DateIntervalType;
   frequency: number;
   effectiveDate: DateOnly;
   nextDate: DateOnly | null;
@@ -28,7 +27,7 @@ const valid = (value: Record<string, unknown>): Cashflow => ({
   categoryType: value.categoryType as CategoryType,
   accountName: value.accountName as string,
   amount: value.amount as number,
-  intervalType: value.intervalType as BudgetIntervalType,
+  intervalType: value.intervalType as DateIntervalType,
   frequency: value.frequency as number,
   effectiveDate: DateOnly.valid(value.effectiveDate as string),
   nextDate: value.nextDate === null ? null : DateOnly.valid(value.nextDate as string),

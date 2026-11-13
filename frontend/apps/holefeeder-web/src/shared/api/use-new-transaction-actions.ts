@@ -1,6 +1,7 @@
+import type { DateIntervalType } from '@holefeeder/shared/core';
 import { useApiCommand } from '@/shared/api/use-api-command';
 
-export type RepeatIntervalType = 'daily' | 'weekly' | 'monthly' | 'yearly';
+export type RepeatIntervalType = Exclude<DateIntervalType, 'oneTime'>;
 
 export type RepeatInput = { startDate: string; intervalType: RepeatIntervalType; frequency: number };
 

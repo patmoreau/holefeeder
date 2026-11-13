@@ -6,13 +6,13 @@ import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
 import type { Notify } from '@/shared/presentation/DashboardToast';
 import { useSaveBudgetSettings } from '../api/use-save-budget-settings';
-import type { BudgetIntervalType, BudgetSettings } from '../domain/budget-settings';
+import type { BudgetSettings } from '../domain/budget-settings';
 
 const testID = 'budget-settings';
 
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
 
-const repeatingIntervals: BudgetIntervalType[] = ['daily', 'weekly', 'monthly', 'yearly'];
+const repeatingIntervals: DateIntervalType[] = ['daily', 'weekly', 'monthly', 'yearly'];
 
 const isWholeFrequency = (frequency: string) => /^[1-9]\d*$/.test(frequency);
 
@@ -62,7 +62,7 @@ const BudgetSettingsForm = ({ initial, onClose, notify }: BudgetSettingsFormProp
           select
           label={translate(tk.purchase.cashflowSection.intervalType)}
           value={intervalType}
-          onChange={(event) => setIntervalType(event.target.value as BudgetIntervalType)}
+          onChange={(event) => setIntervalType(event.target.value as DateIntervalType)}
           slotProps={{ select: { SelectDisplayProps: { 'data-testid': `${testID}-interval` } as object } }}
         >
           {intervals.map((interval) => (
