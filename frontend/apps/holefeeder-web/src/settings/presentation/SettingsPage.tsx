@@ -1,4 +1,4 @@
-import { type AsyncResult, LanguageType, tk } from '@holefeeder/shared/core';
+import { LanguageResolver, type AsyncResult, LanguageType, tk } from '@holefeeder/shared/core';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -108,10 +108,10 @@ const themeOptions: SelectOption<ThemeMode>[] = [
   { value: 'dark', label: translate(tk.displaySection.dark) },
 ];
 
-const languageOptions: SelectOption<LanguageType>[] = [
-  { value: LanguageType.en, label: translate(tk.displaySection.english) },
-  { value: LanguageType.fr, label: translate(tk.displaySection.french) },
-];
+const languageOptions: SelectOption<LanguageType>[] = Object.values(LanguageType).map((language) => ({
+  value: language,
+  label: translate(LanguageResolver.labelKey[language]),
+}));
 
 const chooseLanguage = (language: LanguageType) => {
   Language.choose(language);

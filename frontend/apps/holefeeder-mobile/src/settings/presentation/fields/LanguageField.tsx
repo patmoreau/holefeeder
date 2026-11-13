@@ -1,4 +1,4 @@
-import { LanguageType } from '@holefeeder/shared/core';
+import { LanguageResolver, LanguageType } from '@holefeeder/shared/core';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
@@ -6,11 +6,6 @@ import { useLanguage } from '@/shared/language/core/use-language';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppPicker, PickerOption } from '@/shared/presentation/components/native/AppPicker';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
-
-const tkTypes: Record<LanguageType, string> = {
-  [LanguageType.en]: tk.displaySection.english,
-  [LanguageType.fr]: tk.displaySection.french,
-};
 
 type LanguageOption = PickerOption & {
   value: LanguageType;
@@ -36,7 +31,7 @@ export const LanguageField = () => {
         options={options}
         selectedOption={selectedOption}
         onSelectOption={(option) => setLanguage(option.value)}
-        onOptionLabel={(option) => t(tkTypes[option.value])}
+        onOptionLabel={(option) => t(LanguageResolver.labelKey[option.value])}
       />
     </AppField>
   );

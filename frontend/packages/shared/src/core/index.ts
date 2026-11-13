@@ -30,6 +30,7 @@ export * from './auth/authentication-state';
 export * from './auth/token-info';
 export * from './auth/user';
 export * from './language/language-type';
+export * from './language/language-resolver';
 export * from './translations/translations';
 export { en } from './translations/locales/en-CA/translations';
 export { fr } from './translations/locales/fr-CA/translations';
