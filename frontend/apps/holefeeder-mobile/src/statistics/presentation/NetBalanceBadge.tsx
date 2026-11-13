@@ -14,7 +14,7 @@ export const NetBalanceBadge = ({ balance }: { balance: NetBalanceResult }) => {
       return (
         <TrendBadge
           text={t(tk.insights.net.saved, {
-            percentage: new Intl.NumberFormat(currentLocale, { style: 'percent' }).format(balance.percentage / 100),
+            percentage: LocalFormatter.percent(balance.percentage, currentLocale),
           })}
           tone="positive"
           icon={AppIconMap.trendUp}

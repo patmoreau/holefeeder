@@ -1,17 +1,17 @@
-import { type NetBalanceKind, AmountTone, tk } from '@holefeeder/shared/core';
+import { LocalFormatter, type NetBalanceKind, AmountTone, tk } from '@holefeeder/shared/core';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import SouthEastIcon from '@mui/icons-material/SouthEast';
 import { Alert, Box, ListItemButton, Skeleton, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useOverview } from '../api/use-overview';
 import type { Overview } from '../domain/overview';
 import { IncomeExpenseChart } from './IncomeExpenseChart';
-import { percent } from './percent';
 import { useInsightsRange } from './use-insights-range';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
@@ -21,7 +21,7 @@ const outcomeTone: Record<NetBalanceKind, AmountTone> = { none: 'neutral', saved
 const outcomeText = (overview: Overview) => {
   switch (overview.outcome) {
     case 'saved':
-      return translate(tk.insights.net.saved, { percentage: percent(overview.savedPercentage) });
+      return translate(tk.insights.net.saved, { percentage: LocalFormatter.percent(overview.savedPercentage, Language.locale()) });
     case 'overspent':
       return translate(tk.insights.net.overspent, { amount: unsignedCurrency(overview.net) });
     default:

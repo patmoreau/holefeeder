@@ -3,6 +3,20 @@ import { LocalFormatter } from './local-formatter';
 import { withDate } from './with-date';
 
 describe('LocalFormatter', () => {
+  describe('percent', () => {
+    it('should format a whole percentage for the locale', () => {
+      expect(LocalFormatter.percent(26, 'en-CA')).toBe('26%');
+    });
+
+    it('should round to a whole percentage', () => {
+      expect(LocalFormatter.percent(26.6, 'en-CA')).toBe('27%');
+    });
+
+    it('should follow the locale spacing and sign placement', () => {
+      expect(LocalFormatter.percent(26, 'fr-CA')).toBe('26\u00a0%');
+    });
+  });
+
   describe('currency', () => {
     it('should format amount with locale and currency code', () => {
       const formatted = LocalFormatter.currency(1234.56, 'en-US', 'USD');

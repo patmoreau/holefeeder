@@ -7,6 +7,9 @@ type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
 const percentage = (val: number): string => `${val.toFixed(2)}%`;
 
+const percent = (value: number, locale: string): string =>
+  new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 }).format(value / 100);
+
 const currency = (
   amount: number,
   locale: string,
@@ -85,6 +88,7 @@ const date = (dateValue: DateOnly, anchorDate: DateOnly, locale: string, t: Tran
 
 export const LocalFormatter = {
   percentage,
+  percent,
   currency,
   currencySymbol,
   date,

@@ -1,14 +1,14 @@
-import { AmountTone, tk } from '@holefeeder/shared/core';
+import { LocalFormatter, AmountTone, tk } from '@holefeeder/shared/core';
 import { type AsyncResult } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, Box, FormControlLabel, IconButton, ListItem, Skeleton, Stack, Switch, Typography } from '@mui/material';
 import { createContext, type ReactNode, useContext, useState } from 'react';
 import { Link } from 'react-router';
+import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, toneColor } from '@/shared/presentation/tone';
 import { type Breakdown, type BudgetStatus, type CategoryBreakdown, type TagBreakdown } from '../domain/breakdown';
-import { percent } from './percent';
 
 export type BreakdownKind = {
   testID: string;
@@ -118,7 +118,7 @@ const Budget = ({ category }: { category: CategoryBreakdown }) => {
         {translate(tk.insights.categoryBreakdown.overBudget)}
       </Footnote>
     );
-  return <Footnote testID={`${kind.testID}-category-budget`}>{percent(category.budgetPercentage)}</Footnote>;
+  return <Footnote testID={`${kind.testID}-category-budget`}>{LocalFormatter.percent(category.budgetPercentage, Language.locale())}</Footnote>;
 };
 
 const Name = ({ testID, size = 17, children }: { testID: string; size?: number; children: ReactNode }) => (
