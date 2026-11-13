@@ -1,10 +1,9 @@
 import { FetchRequest } from './fetch-for-test';
-
-const aSuffix = () => Math.random().toString(36).slice(2, 10);
+import { aString, aUrl } from './string-for-test';
 
 const defaultFetchRequest = (): FetchRequest => ({
-  url: `https://${aSuffix()}.example.com`,
-  headers: { Authorization: `Bearer ${aSuffix()}` },
+  url: aUrl(),
+  headers: { Authorization: `Bearer ${aString()}` },
   matchHeaders: true,
   matchUrl: (url: string, testUrl: string) => url === testUrl,
 });

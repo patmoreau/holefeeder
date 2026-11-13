@@ -1,4 +1,5 @@
 import { CategoryTypes, DateIntervalTypes, DateOnly, Logger, loggerFactoryForNoop, today, User, withDate } from '@holefeeder/shared/core';
+import { aUser } from '@holefeeder/shared/testkit';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { AppState, AppStateStatus } from 'react-native';
@@ -11,7 +12,6 @@ import { useScheduleBillsDueBadge } from '@/flows/presentation/bills-due-badge/u
 import { AppStorageInMemory } from '@/shared/__tests__/app-storage-in-memory';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
 import { AuthenticationContextForTest } from '@/shared/auth/__tests__/AuthenticationContextForTest';
-import { aUser } from '@/shared/auth/__tests__/user-for-test';
 import { NotificationPermissionInMemory } from '@/shared/bills-due-badge/__tests__/notification-permission-in-memory';
 import { NotificationPermissionStatuses } from '@/shared/bills-due-badge/core/notification-permission';
 import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';

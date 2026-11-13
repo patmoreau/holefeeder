@@ -1,8 +1,6 @@
 import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
+import { aPastDate, aRecentDate, anAmount, anId } from '@holefeeder/shared/testkit';
 import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
-import { aPastDate, aRecentDate } from '@/shared/__tests__/date-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { anId } from '@/shared/__tests__/string-for-test';
 
 describe('PayFlowCommand', () => {
   let form: Record<string, unknown>;

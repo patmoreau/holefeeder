@@ -1,11 +1,11 @@
 import type { AsyncResult } from '@holefeeder/shared/core';
+import { anId } from '@holefeeder/shared/testkit';
 import { waitFor } from '@testing-library/react-native';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { CategoriesRepositoryErrors } from '@/flows/core/categories/categories-repository';
 import { Category } from '@/flows/core/categories/category';
 import { aCreateCategoryCommand } from '@/flows/core/categories/create/__tests__/create-category-command-for-test';
 import { anUpdateCategoryCommand } from '@/flows/core/categories/update/__tests__/update-category-command-for-test';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { System } from '@/shared/core/system';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { CategoriesRepositoryInPowersync } from './categories-repository-in-powersync';

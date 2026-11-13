@@ -1,10 +1,8 @@
 import { ApiErrors } from '@holefeeder/shared/api';
 import { buildUrl } from '@holefeeder/shared/core';
-import { FetchForTest, aFetchRequest, aFetchResponse } from '@holefeeder/shared/testkit';
+import { FetchForTest, aFetchRequest, aFetchResponse, anAuthenticationState, aTokenInfo } from '@holefeeder/shared/testkit';
 import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
 import { usersApi } from '@/shared/api/users-api';
-import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
-import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';
 
 describe('users-api', () => {
   const apiConfig = anApiConfig();

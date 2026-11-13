@@ -1,4 +1,4 @@
-import { aUrl } from '@/shared/__tests__/string-for-test';
+import { aUrl } from '@holefeeder/shared/testkit';
 import { ApiConfig } from '@/shared/api/api-config';
 
 const defaultApiConfig = (): ApiConfig => ({

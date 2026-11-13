@@ -1,6 +1,6 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { DeleteTransactionUseCase } from '@/flows/core/flows/delete-transaction/delete-transaction-use-case';
-import { anId } from '@/shared/__tests__/string-for-test';
 
 describe('DeleteTransactionUseCase', () => {
   let repository: FlowsRepositoryInMemory;

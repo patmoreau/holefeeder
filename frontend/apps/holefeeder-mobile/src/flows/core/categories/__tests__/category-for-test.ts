@@ -1,8 +1,7 @@
 import { Favorite, Money } from '@holefeeder/shared/core';
+import { aCategoryType, aColor, anId, aString } from '@holefeeder/shared/testkit';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { Category } from '@/flows/core/categories/category';
-import { aCategoryType } from '@/shared/__tests__/enum-for-test';
-import { aColor, anId, aString } from '@/shared/__tests__/string-for-test';
 import { System } from '@/shared/core/system';
 
 export type CategoryForTest = Category & {

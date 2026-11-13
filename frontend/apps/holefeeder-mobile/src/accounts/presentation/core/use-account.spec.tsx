@@ -1,9 +1,9 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
 import { useAccount } from '@/accounts/presentation/core/use-account';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 
 describe('useAccount', () => {

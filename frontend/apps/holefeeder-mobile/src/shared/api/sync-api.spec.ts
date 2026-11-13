@@ -1,11 +1,9 @@
 import { ApiErrors } from '@holefeeder/shared/api';
 import { buildUrl } from '@holefeeder/shared/core';
-import { FetchForTest, aFetchRequest, aFetchResponse } from '@holefeeder/shared/testkit';
+import { FetchForTest, aFetchRequest, aFetchResponse, anAuthenticationState, aTokenInfo } from '@holefeeder/shared/testkit';
 import { type CrudEntry } from '@powersync/common';
 import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
 import { syncApi } from '@/shared/api/sync-api';
-import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
-import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';
 
 describe('sync-api', () => {
   const apiConfig = anApiConfig();

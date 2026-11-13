@@ -85,8 +85,10 @@ one of them:
 - `@holefeeder/shared/theme` — colour tokens both apps paint with: `Palettes.light` /
   `Palettes.dark` (the `Palette` type) and `BrandColors`. Mobile's `Theme.colors` and
   web's MUI palette both read from them; change a colour here, not in an app.
-- `@holefeeder/shared/testkit` — test-only helpers and builders (Jest `Result` matchers,
-  `FetchForTest` with `aFetchRequest` / `aFetchResponse`)
+- `@holefeeder/shared/testkit` — Jest-only test helpers: the `Result` matchers, faker
+  builders for shared types (`aString`, `anId`, `anAmount`, `aPastDate`, `aDateInterval`,
+  `anAccountType`, `aUser`, `aTokenInfo`, `anAuthenticationState`, …) and `FetchForTest`
+  with `aFetchRequest` / `aFetchResponse`. App-specific builders stay in the app.
 
 **`/core` exports:**
 

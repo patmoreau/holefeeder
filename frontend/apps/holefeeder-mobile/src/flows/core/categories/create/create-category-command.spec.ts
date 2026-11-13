@@ -1,9 +1,7 @@
 import { CategoryTypeErrors, CategoryTypes, FavoriteErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
+import { aBoolean, anAmount, aColor, aString } from '@holefeeder/shared/testkit';
 import { CategoryErrors } from '@/flows/core/categories/category';
 import { CreateCategoryCommand } from '@/flows/core/categories/create/create-category-command';
-import { aBoolean } from '@/shared/__tests__/boolean-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { aColor, aString } from '@/shared/__tests__/string-for-test';
 
 describe('CreateCategoryCommand', () => {
   let form: Record<string, unknown>;

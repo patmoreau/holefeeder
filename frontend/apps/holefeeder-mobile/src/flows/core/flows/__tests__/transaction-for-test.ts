@@ -1,11 +1,8 @@
 import { Money } from '@holefeeder/shared/core';
+import { aPastDate, aCategoryType, anAmount, anId, aString } from '@holefeeder/shared/testkit';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { Transaction } from '@/flows/core/flows/transaction';
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aCategoryType } from '@/shared/__tests__/enum-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { anId, aString } from '@/shared/__tests__/string-for-test';
 
 export type TransactionForTest = Transaction & {
   times: (count: number) => TransactionForTest[];

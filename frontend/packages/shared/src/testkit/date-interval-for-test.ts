@@ -1,5 +1,5 @@
-import { DateInterval } from '@holefeeder/shared/core';
-import { aPastDate, aRecentDate } from '@/shared/__tests__/date-for-test';
+import { DateInterval } from '../core';
+import { aPastDate, aRecentDate } from './date-for-test';
 
 const defaultDateInterval = (): DateInterval => ({
   start: aPastDate(),

@@ -1,9 +1,7 @@
 import { DateIntervalTypes } from '@holefeeder/shared/core';
+import { aRecentDate, anAmount, anId, aString, aWord } from '@holefeeder/shared/testkit';
 import { ModifyCashflowCommand } from '@/flows/core/flows/modify-cashflow/modify-cashflow-command';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { aRecentDate } from '@/shared/__tests__/date-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { anId, aString, aWord } from '@/shared/__tests__/string-for-test';
 
 const defaultModifyCashflowCommand = (): ModifyCashflowCommand => ({
   id: anId(),

@@ -1,5 +1,5 @@
 import { AuthenticationState } from '@holefeeder/shared/core';
-import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
+import { anAuthenticationState } from '@holefeeder/shared/testkit';
 import { AuthenticationContext } from '@/shared/auth/presentation/AuthenticationProvider';
 
 export const AuthenticationContextForTest = ({

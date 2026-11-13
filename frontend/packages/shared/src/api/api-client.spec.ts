@@ -1,9 +1,10 @@
 import { buildUrl } from '../core';
+import { anAuthenticationState } from '../testkit/authentication-state-for-test';
 import { FetchForTest } from '../testkit/fetch-for-test';
 import { aFetchRequest } from '../testkit/fetch-request-for-test';
 import { aFetchResponse } from '../testkit/fetch-response-for-test';
+import { aTokenInfo } from '../testkit/token-info-for-test';
 import { anApiClientConfig } from './__tests__/api-client-config-for-test';
-import { aTokenInfo, anAuthenticationState } from './__tests__/authentication-state-for-test';
 import { ApiClient } from './api-client';
 import { ApiErrors } from './api-errors';
 

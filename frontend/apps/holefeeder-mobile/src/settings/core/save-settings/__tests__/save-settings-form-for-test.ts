@@ -1,6 +1,4 @@
-import { aRecentDate } from '@/shared/__tests__/date-for-test';
-import { aDateIntervalType } from '@/shared/__tests__/enum-for-test';
-import { aCount } from '@/shared/__tests__/number-for-test';
+import { aRecentDate, aDateIntervalType, aCount } from '@holefeeder/shared/testkit';
 
 const defaultSaveSettingsForm = (): Record<string, unknown> => ({
   effectiveDate: aRecentDate(),

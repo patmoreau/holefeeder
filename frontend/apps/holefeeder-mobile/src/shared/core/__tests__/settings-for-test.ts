@@ -1,6 +1,4 @@
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aDateIntervalType } from '@/shared/__tests__/enum-for-test';
-import { aCount } from '@/shared/__tests__/number-for-test';
+import { aPastDate, aDateIntervalType, aCount } from '@holefeeder/shared/testkit';
 import { Settings } from '@/shared/core/settings';
 
 const defaultSettings = (): Settings => ({

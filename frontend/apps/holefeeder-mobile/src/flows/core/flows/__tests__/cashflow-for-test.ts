@@ -1,12 +1,9 @@
 import { Inactive, Money } from '@holefeeder/shared/core';
+import { aPastDate, aCategoryType, aDateIntervalType, anAmount, aPositiveCount, anId, aString } from '@holefeeder/shared/testkit';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { Cashflow } from '@/flows/core/flows/cashflow';
 import { TagList } from '@/flows/core/flows/tag-list';
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aCategoryType, aDateIntervalType } from '@/shared/__tests__/enum-for-test';
-import { anAmount, aPositiveCount } from '@/shared/__tests__/number-for-test';
-import { anId, aString } from '@/shared/__tests__/string-for-test';
 
 export type CashflowForTest = Cashflow & {
   times: (count: number) => CashflowForTest[];

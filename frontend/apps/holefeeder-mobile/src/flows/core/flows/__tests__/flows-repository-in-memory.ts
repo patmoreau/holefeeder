@@ -1,4 +1,5 @@
 import { type AsyncResult, Id, Result } from '@holefeeder/shared/core';
+import { anId } from '@holefeeder/shared/testkit';
 import { AccountVariation } from '@/flows/core/flows/account-variation';
 import { Cashflow } from '@/flows/core/flows/cashflow';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
@@ -10,7 +11,6 @@ import { PayFlowCommand } from '@/flows/core/flows/pay/pay-flow-command';
 import { Tag } from '@/flows/core/flows/tag';
 import { Transaction } from '@/flows/core/flows/transaction';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
-import { anId } from '@/shared/__tests__/string-for-test';
 
 export type FlowsRepositoryInMemory = FlowsRepository & {
   addAccountVariations: (...items: AccountVariation[]) => void;

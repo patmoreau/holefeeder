@@ -1,6 +1,5 @@
 import { Money } from '@holefeeder/shared/core';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { aColor, anId, aString } from '@/shared/__tests__/string-for-test';
+import { anAmount, aColor, anId, aString } from '@holefeeder/shared/testkit';
 import { CategoryIncome } from '@/statistics/core/category-income';
 
 const defaultCategoryIncome = (): CategoryIncome => ({

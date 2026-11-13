@@ -1,7 +1,8 @@
 import { FetchResponse } from './fetch-for-test';
+import { aString } from './string-for-test';
 
 const defaultFetchResponse = (): FetchResponse => ({
-  body: Math.random().toString(36).slice(2, 10),
+  body: aString(),
   status: 200,
   ok: true,
   statusText: 'OK',

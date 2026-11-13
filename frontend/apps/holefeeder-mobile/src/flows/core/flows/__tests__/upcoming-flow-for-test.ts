@@ -1,9 +1,7 @@
 import { CategoryTypes } from '@holefeeder/shared/core';
+import { aFutureDate, anAmount, anId, aString } from '@holefeeder/shared/testkit';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
-import { aFutureDate } from '@/shared/__tests__/date-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
-import { anId, aString } from '@/shared/__tests__/string-for-test';
 
 const defaultUpcomingFlow = (): UpcomingFlow => ({
   id: anId(),

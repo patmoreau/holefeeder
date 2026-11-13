@@ -6,8 +6,9 @@ const config: Config = {
   moduleFileExtensions: ['ts', 'js'],
   testMatch: ['**/*.spec.ts'],
   transform: {
-    '^.+\\.ts$': ['ts-jest', { tsconfig: './tsconfig.test.json' }],
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: './tsconfig.test.json' }],
   },
+  transformIgnorePatterns: ['node_modules/(?!(\\.pnpm/[^/]+/node_modules/)?@faker-js/)'],
   setupFilesAfterEnv: ['<rootDir>/src/testkit/result-matcher.ts'],
 };
 

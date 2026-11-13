@@ -1,9 +1,9 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { useAccountTransactions } from '@/accounts/presentation/core/use-account-transactions';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { aTransaction, toTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 
 describe('useAccountTransactions', () => {

@@ -1,8 +1,6 @@
 import { AccountTypes, Favorite } from '@holefeeder/shared/core';
+import { aPastDate, aVariation, aString } from '@holefeeder/shared/testkit';
 import { CreateAccountCommand } from '@/accounts/core/create/create-account-command';
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aVariation } from '@/shared/__tests__/number-for-test';
-import { aString } from '@/shared/__tests__/string-for-test';
 
 const defaultCommand = (): CreateAccountCommand => ({
   type: AccountTypes.checking,

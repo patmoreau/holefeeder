@@ -1,8 +1,6 @@
 import { AccountTypes, Favorite, Inactive } from '@holefeeder/shared/core';
+import { aPastDate, aVariation, anId, aString } from '@holefeeder/shared/testkit';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aVariation } from '@/shared/__tests__/number-for-test';
-import { anId, aString } from '@/shared/__tests__/string-for-test';
 
 const defaultCommand = (): UpdateAccountCommand => ({
   id: anId(),

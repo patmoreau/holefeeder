@@ -1,9 +1,6 @@
+import { aPastDate, aCategoryType, aDateIntervalType, aCount, anAmount, anId, aString } from '@holefeeder/shared/testkit';
 import { aTagList } from '@/flows/core/flows/__tests__/tag-list-for-test';
 import { CashflowVariation } from '@/flows/core/flows/cashflow-variation';
-import { aPastDate } from '@/shared/__tests__/date-for-test';
-import { aCategoryType, aDateIntervalType } from '@/shared/__tests__/enum-for-test';
-import { aCount, anAmount } from '@/shared/__tests__/number-for-test';
-import { anId, aString } from '@/shared/__tests__/string-for-test';
 
 const defaultCashflowVariation = (): CashflowVariation => ({
   id: anId(),

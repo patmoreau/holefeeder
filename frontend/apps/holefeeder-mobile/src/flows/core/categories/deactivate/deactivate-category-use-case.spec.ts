@@ -1,5 +1,5 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { CategoriesRepositoryInMemory } from '@/flows/core/categories/__tests__/categories-repository-for-test';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { DeactivateCategoryUseCase } from './deactivate-category-use-case';
 
 describe('DeactivateCategoryUseCase', () => {

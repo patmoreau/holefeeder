@@ -1,6 +1,4 @@
-import { aBoolean } from '@/shared/__tests__/boolean-for-test';
-import { aPositiveCount } from '@/shared/__tests__/number-for-test';
-import { aUrl } from '@/shared/__tests__/string-for-test';
+import { aBoolean, aPositiveCount, aUrl } from '@holefeeder/shared/testkit';
 import { ApiConfig, ApiConfigEnvVariableNames } from '@/shared/api/api-config';
 
 describe('ApiConfig', () => {

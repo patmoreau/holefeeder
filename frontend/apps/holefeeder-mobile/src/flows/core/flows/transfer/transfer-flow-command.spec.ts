@@ -1,6 +1,6 @@
 import { DateOnly, DateOnlyErrors, Id, IdErrors, Money, MoneyErrors } from '@holefeeder/shared/core';
+import { aString } from '@holefeeder/shared/testkit';
 import { TransferFlowCommand } from '@/flows/core/flows/transfer/transfer-flow-command';
-import { aString } from '@/shared/__tests__/string-for-test';
 
 describe('TransferFlowCommand', () => {
   const transfer = {

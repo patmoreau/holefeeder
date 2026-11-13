@@ -1,6 +1,6 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { DeactivateUpcomingFlowUseCase } from '@/flows/core/flows/deactivate-upcoming/deactivate-upcoming-flow-use-case';
-import { anId } from '@/shared/__tests__/string-for-test';
 
 describe('DeactivateUpcomingFlowUseCase', () => {
   let repository: FlowsRepositoryInMemory;

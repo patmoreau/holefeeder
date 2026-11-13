@@ -1,6 +1,4 @@
-import { aRecentDate } from '@/shared/__tests__/date-for-test';
-import { aCategoryType } from '@/shared/__tests__/enum-for-test';
-import { anAmount } from '@/shared/__tests__/number-for-test';
+import { aRecentDate, aCategoryType, anAmount } from '@holefeeder/shared/testkit';
 import { SummaryData } from '@/summary/core/summary-data';
 
 const defaultSummaryData = (): SummaryData => ({

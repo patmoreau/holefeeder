@@ -1,7 +1,7 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { act, renderHook, RenderHookResult } from '@testing-library/react-native';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { Tag } from '@/flows/core/flows/tag';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { useTagList } from './use-tag-list';
 
 const categoryId = anId();

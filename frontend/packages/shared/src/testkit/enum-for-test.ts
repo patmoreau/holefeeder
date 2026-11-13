@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { CategoryType, CategoryTypes, AccountType, AccountTypes, DateIntervalType, DateIntervalTypes } from '@holefeeder/shared/core';
+import { CategoryType, CategoryTypes, AccountType, AccountTypes, DateIntervalType, DateIntervalTypes } from '../core';
 
 export const anAccountType = (): AccountType => faker.helpers.arrayElement(Object.values(AccountTypes)) as AccountType;
 

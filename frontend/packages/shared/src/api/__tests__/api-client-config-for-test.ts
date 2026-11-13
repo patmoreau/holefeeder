@@ -1,4 +1,4 @@
-import { aUrl } from '../../core/__tests__/helpers/string-for-test';
+import { aUrl } from '../../testkit/string-for-test';
 import { ApiClientConfig } from '../api-client';
 
 const defaultApiClientConfig = (): ApiClientConfig => ({

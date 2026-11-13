@@ -1,9 +1,9 @@
+import { anId } from '@holefeeder/shared/testkit';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import React, { useState } from 'react';
 import { aTag } from '@/flows/core/flows/__tests__/tag-for-test';
 import { Tag } from '@/flows/core/flows/tag';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
-import { anId } from '@/shared/__tests__/string-for-test';
 import { aLightThemeState } from '@/shared/theme/__tests__/theme-state-for-test';
 import { ThemeProviderForTest } from '@/shared/theme/__tests__/ThemeProviderForTest';
 
