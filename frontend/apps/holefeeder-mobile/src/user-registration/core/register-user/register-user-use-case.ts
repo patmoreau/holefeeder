@@ -1,5 +1,5 @@
+import { ApiErrors } from '@holefeeder/shared/api';
 import { Result } from '@holefeeder/shared/core';
-import { ApiErrors } from '@/shared/api/api-errors';
 import { UsersApi } from '@/shared/api/users-api';
 
 export const RegisterUserUseCase = (usersApi: UsersApi) => {

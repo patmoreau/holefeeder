@@ -1,15 +1,21 @@
-import { AuthenticationState, buildUrl, Logger, Result } from '@holefeeder/shared/core';
-import { ApiConfig } from '@/shared/api/api-config';
-import { apiErrorForStatus } from '@/shared/api/api-errors';
+import { AuthenticationState, buildUrl, Logger, Result } from '../core';
+import { apiErrorForStatus } from './api-errors';
 
 const logger = Logger.create('api-client');
+
+export type ApiClientConfig = {
+  url: string;
+  timeout: number;
+  logRequests: boolean;
+  simulateNetworkDelay: number;
+};
 
 export type ApiClient = {
   get: <TOutput>(endpoint: string, req?: RequestInit) => Promise<Result<TOutput>>;
   post: <TInput, TOutput>(endpoint: string, data?: TInput, req?: RequestInit) => Promise<Result<TOutput>>;
 };
 
-export const ApiClient = (authenticationState: AuthenticationState, apiConfig: ApiConfig): ApiClient => {
+export const ApiClient = (authenticationState: AuthenticationState, apiConfig: ApiClientConfig): ApiClient => {
   const executeFetch = async (endpoint: string, init: RequestInit): Promise<Response> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), apiConfig.timeout);

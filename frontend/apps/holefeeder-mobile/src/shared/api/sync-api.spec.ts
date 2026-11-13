@@ -1,10 +1,8 @@
+import { ApiErrors } from '@holefeeder/shared/api';
 import { buildUrl } from '@holefeeder/shared/core';
+import { FetchForTest, aFetchRequest, aFetchResponse } from '@holefeeder/shared/testkit';
 import { type CrudEntry } from '@powersync/common';
 import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
-import { FetchForTest } from '@/shared/api/__tests__/fetch-for-test';
-import { aFetchRequest } from '@/shared/api/__tests__/fetch-request-for-test';
-import { aFetchResponse } from '@/shared/api/__tests__/fetch-response-for-test';
-import { ApiErrors } from '@/shared/api/api-errors';
 import { syncApi } from '@/shared/api/sync-api';
 import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
 import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';

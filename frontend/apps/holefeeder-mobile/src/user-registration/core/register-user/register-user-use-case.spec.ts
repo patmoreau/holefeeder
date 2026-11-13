@@ -1,5 +1,5 @@
+import { ApiErrors } from '@holefeeder/shared/api';
 import { Result } from '@holefeeder/shared/core';
-import { ApiErrors } from '@/shared/api/api-errors';
 import { aUsersApi } from '@/user-registration/core/__tests__/users-api-for-test';
 import { RegisterUserUseCase } from '@/user-registration/core/register-user/register-user-use-case';
 

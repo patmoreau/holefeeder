@@ -1,15 +1,14 @@
-import { buildUrl } from '@holefeeder/shared/core';
-import { anApiConfig } from '@/shared/api/__tests__/api-config-for-test';
-import { FetchForTest } from '@/shared/api/__tests__/fetch-for-test';
-import { aFetchRequest } from '@/shared/api/__tests__/fetch-request-for-test';
-import { aFetchResponse } from '@/shared/api/__tests__/fetch-response-for-test';
-import { ApiClient } from '@/shared/api/api-client';
-import { ApiErrors } from '@/shared/api/api-errors';
-import { anAuthenticationState } from '@/shared/auth/__tests__/authentication-state-for-test';
-import { aTokenInfo } from '@/shared/auth/__tests__/token-info-for-test';
+import { buildUrl } from '../core';
+import { FetchForTest } from '../testkit/fetch-for-test';
+import { aFetchRequest } from '../testkit/fetch-request-for-test';
+import { aFetchResponse } from '../testkit/fetch-response-for-test';
+import { anApiClientConfig } from './__tests__/api-client-config-for-test';
+import { aTokenInfo, anAuthenticationState } from './__tests__/authentication-state-for-test';
+import { ApiClient } from './api-client';
+import { ApiErrors } from './api-errors';
 
 describe('ApiClient', () => {
-  const apiConfig = anApiConfig();
+  const apiConfig = anApiClientConfig();
   const endpoint = '/test-endpoint';
   const url = buildUrl(apiConfig.url, endpoint);
 

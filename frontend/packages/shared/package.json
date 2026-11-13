@@ -7,6 +7,10 @@
       "import": "./dist/core/index.js",
       "types": "./dist/core/index.d.ts"
     },
+    "./api": {
+      "import": "./dist/api/index.js",
+      "types": "./dist/api/index.d.ts"
+    },
     "./theme": {
       "import": "./dist/theme/index.js",
       "types": "./dist/theme/index.d.ts"

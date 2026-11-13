@@ -1,5 +1,5 @@
+import { ApiClient } from '@holefeeder/shared/api';
 import { AuthenticationState, Result } from '@holefeeder/shared/core';
-import { ApiClient } from '@/shared/api/api-client';
 import { ApiConfig } from '@/shared/api/api-config';
 
 export type CurrentUser = {

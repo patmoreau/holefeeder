@@ -79,10 +79,14 @@ There is **no root export** — the package exposes only subpaths, so always imp
 one of them:
 
 - `@holefeeder/shared/core` — everything listed below
+- `@holefeeder/shared/api` — `ApiClient` (fetch with timeout and Bearer token, returning
+  `Result`), its `ApiClientConfig`, and `ApiErrors` / `apiErrorForStatus`. Each app reads
+  its own config from its environment and passes it in.
 - `@holefeeder/shared/theme` — colour tokens both apps paint with: `Palettes.light` /
   `Palettes.dark` (the `Palette` type) and `BrandColors`. Mobile's `Theme.colors` and
   web's MUI palette both read from them; change a colour here, not in an app.
-- `@holefeeder/shared/testkit` — test-only helpers and builders
+- `@holefeeder/shared/testkit` — test-only helpers and builders (Jest `Result` matchers,
+  `FetchForTest` with `aFetchRequest` / `aFetchResponse`)
 
 **`/core` exports:**
 
