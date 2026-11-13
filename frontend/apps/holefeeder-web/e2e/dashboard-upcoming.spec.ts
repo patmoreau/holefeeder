@@ -152,6 +152,7 @@ test.describe('Dashboard upcoming', () => {
     await page.goto('/');
 
     await expect(page.getByTestId('dashboard-upcoming-error')).toHaveRole('alert');
+    await expect(page.getByTestId('dashboard-upcoming-error')).toHaveText('server-error');
     await expect(page.getByTestId('dashboard-upcoming-row')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-upcoming-skeleton')).toHaveCount(0);
   });

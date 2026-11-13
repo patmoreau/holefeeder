@@ -1,4 +1,4 @@
-import { ApiClient } from '@/shared/api/api-client';
+import { ApiClient } from '@holefeeder/shared/api';
 import { apiConfig } from '@/shared/api/api-config';
 import { useAuthentication } from '@/shared/auth/authentication-context';
 

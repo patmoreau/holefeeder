@@ -1,6 +1,6 @@
+import { ApiClient } from '@holefeeder/shared/api';
 import { type AsyncResult, Result } from '@holefeeder/shared/core';
 import { useEffect, useState } from 'react';
-import { ApiClient } from '@/shared/api/api-client';
 import { apiConfig } from '@/shared/api/api-config';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { useAuthentication } from '@/shared/auth/authentication-context';

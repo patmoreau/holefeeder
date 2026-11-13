@@ -1,5 +1,5 @@
+import { ApiClient } from '@holefeeder/shared/api';
 import { useAuthentication } from '@/shared/auth/authentication-context';
-import { ApiClient } from './api-client';
 import { apiConfig } from './api-config';
 
 export const useApiCommand = () => {
