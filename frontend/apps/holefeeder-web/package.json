@@ -20,13 +20,13 @@
     "@holefeeder/shared": "workspace:*",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-router": "^7.4.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
-    "@types/react": "^19.0.0",
+    "@types/react": "catalog:",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "catalog:",

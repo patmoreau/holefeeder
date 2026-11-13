@@ -18,6 +18,6 @@ export default defineConfig([
     ...reactHooks.configs.flat['recommended-latest'],
   },
   {
-    settings: { react: { version: '19.2.3' } },
+    settings: { react: { version: '19.3.0' } },
   },
 ]);
