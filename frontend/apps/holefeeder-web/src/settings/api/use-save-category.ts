@@ -1,5 +1,5 @@
+import { type CategoryType } from '@holefeeder/shared/core';
 import { useApiCommand } from '@/shared/api/use-api-command';
-import type { CategoryType } from '../domain/category';
 
 export type CategoryChanges = { name: string; type: CategoryType; color: string; budgetAmount: number; favorite: boolean };
 

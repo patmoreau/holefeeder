@@ -1,6 +1,5 @@
-import { Money } from '@holefeeder/shared/core';
+import { CategoryType, Money } from '@holefeeder/shared/core';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
-import { CategoryType } from '@/shared/core/category-type';
 import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 export const projectedNetFlow = (summary: ComputedSummary, upcomingFlows: UpcomingFlow[]): number => {

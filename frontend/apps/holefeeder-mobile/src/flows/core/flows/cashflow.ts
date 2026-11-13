@@ -1,5 +1,4 @@
-import { DateIntervalType, DateOnly, Id, Inactive, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
-import { CategoryType } from '@/shared/core/category-type';
+import { CategoryType, DateIntervalType, DateOnly, Id, Inactive, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { TagList } from './tag-list';
 
 export type Cashflow = {

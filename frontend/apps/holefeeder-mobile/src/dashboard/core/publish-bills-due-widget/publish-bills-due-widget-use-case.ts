@@ -1,7 +1,6 @@
-import { DateOnly, Money, Result, withDate } from '@holefeeder/shared/core';
+import { CategoryType, CategoryTypes, DateOnly, Money, Result, withDate } from '@holefeeder/shared/core';
 import { projectedNetFlow } from '@/dashboard/core/projected-net-flow/projected-net-flow';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
-import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { BillsDueEntry, BillsDueTotal } from './bills-due-summary';
 import { BillsDueWidgetPublisher } from './bills-due-widget-publisher';

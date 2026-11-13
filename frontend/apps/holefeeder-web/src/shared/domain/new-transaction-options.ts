@@ -1,6 +1,7 @@
+import type { CategoryType } from '@holefeeder/shared/core';
 export type TransactionAccountOption = { id: string; name: string };
 
-export type TransactionCategoryOption = { id: string; name: string; color: string; type: 'expense' | 'gain' };
+export type TransactionCategoryOption = { id: string; name: string; color: string; type: CategoryType };
 
 export type NewTransactionOptions = { accounts: TransactionAccountOption[]; categories: TransactionCategoryOption[] };
 
@@ -10,7 +11,7 @@ const valid = (value: Record<string, unknown>): NewTransactionOptions => ({
     id: category.id as string,
     name: category.name as string,
     color: category.color as string,
-    type: category.type as 'expense' | 'gain',
+    type: category.type as CategoryType,
   })),
 });
 

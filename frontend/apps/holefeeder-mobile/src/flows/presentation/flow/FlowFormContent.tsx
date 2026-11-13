@@ -1,3 +1,4 @@
+import { CategoryTypes, AmountTone } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
@@ -8,9 +9,7 @@ import { FlowTypeSection } from '@/flows/presentation/flow/FlowTypeSection';
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
-import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
@@ -43,7 +42,7 @@ export const FlowFormContent = ({ accounts, categories, tags }: FlowFormProps) =
       autoFocus
       amount={formData.amount}
       onAmountChange={(amount) => updateFormField('amount', amount)}
-      tone={amountToneFor(formData.flowType)}
+      tone={AmountTone.ofCategoryType(formData.flowType)}
     >
       <AppFieldSection>
         <DateField

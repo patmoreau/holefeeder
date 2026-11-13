@@ -1,6 +1,5 @@
-import { DateIntervalTypes, DateOnly, Money, today, withDate } from '@holefeeder/shared/core';
+import { CategoryType, CategoryTypes, DateIntervalTypes, DateOnly, Money, today, withDate } from '@holefeeder/shared/core';
 import { startOfMonth } from 'date-fns';
-import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { calculateSummary } from './calculate-summary';
 import { SummaryData } from './summary-data';
 

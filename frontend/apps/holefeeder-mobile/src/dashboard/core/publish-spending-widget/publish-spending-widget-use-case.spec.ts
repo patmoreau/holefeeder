@@ -1,8 +1,7 @@
-import { Money } from '@holefeeder/shared/core';
+import { CategoryTypes, Money } from '@holefeeder/shared/core';
 import { SpendingWidgetPublisherInMemory } from '@/dashboard/core/__tests__/spending-widget-publisher-in-memory';
 import { PublishSpendingWidgetUseCase } from '@/dashboard/core/publish-spending-widget/publish-spending-widget-use-case';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 describe('PublishSpendingWidgetUseCase', () => {

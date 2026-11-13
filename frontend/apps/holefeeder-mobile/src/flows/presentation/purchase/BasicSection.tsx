@@ -1,3 +1,4 @@
+import { CategoryTypes } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
@@ -8,7 +9,6 @@ import { AccountField } from '@/flows/presentation/shared/components/AccountFiel
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
 import { tk } from '@/i18n/translations';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
 import { DescriptionField } from '@/shared/presentation/components/fields/DescriptionField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';

@@ -1,4 +1,4 @@
-import { CategoryType, CategoryTypeErrors, CategoryTypes } from '@/shared/core/category-type';
+import { CategoryType, CategoryTypeErrors, CategoryTypes } from './category-type';
 
 describe('CategoryType', () => {
   describe('create', () => {

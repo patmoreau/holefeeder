@@ -1,4 +1,4 @@
-export type CategoryType = 'expense' | 'gain';
+import type { CategoryType } from '@holefeeder/shared/core';
 
 export type Category = {
   id: string;

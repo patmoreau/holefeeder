@@ -1,5 +1,4 @@
-import { DateIntervalType, DateOnly, Money } from '@holefeeder/shared/core';
-import { CategoryTypes } from '@/shared/core/category-type';
+import { CategoryTypes, DateIntervalType, DateOnly, Money } from '@holefeeder/shared/core';
 import { Settings } from '@/shared/core/settings';
 import { SummaryData } from './summary-data';
 

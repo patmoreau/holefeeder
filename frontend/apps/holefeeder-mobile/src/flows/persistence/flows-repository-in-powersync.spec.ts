@@ -1,4 +1,4 @@
-import { type AsyncResult, DateOnly, Id, Inactive, Money } from '@holefeeder/shared/core';
+import { CategoryTypes, type AsyncResult, DateOnly, Id, Inactive, Money } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
@@ -21,7 +21,6 @@ import { aPastDate } from '@/shared/__tests__/date-for-test';
 import { aDateIntervalType } from '@/shared/__tests__/enum-for-test';
 import { aCount } from '@/shared/__tests__/number-for-test';
 import { anId } from '@/shared/__tests__/string-for-test';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { WatchQueryErrors } from '@/shared/persistence/watch-query';
 import { FlowsRepositoryInPowersync } from './flows-repository-in-powersync';

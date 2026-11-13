@@ -1,12 +1,11 @@
+import { CategoryType, AmountTone } from '@holefeeder/shared/core';
 import { useNavigation } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePayUpcomingForm } from '@/flows/presentation/pay-upcoming/core/use-pay-upcoming-form';
 import { PayUpcomingFormContent } from '@/flows/presentation/pay-upcoming/PayUpcomingFormContent';
-import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
-import { CategoryType } from '@/shared/core/category-type';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
@@ -37,7 +36,7 @@ export const PayUpcomingForm = ({ description, categoryType }: { description: st
       caption={t(tk.purchase.basicSection.amount)}
       amount={formData.amount}
       onAmountChange={(amount) => updateFormField('amount', amount)}
-      tone={amountToneFor(categoryType)}
+      tone={AmountTone.ofCategoryType(categoryType)}
     >
       <AppColumn spacing={8}>
         <PayUpcomingFormContent />

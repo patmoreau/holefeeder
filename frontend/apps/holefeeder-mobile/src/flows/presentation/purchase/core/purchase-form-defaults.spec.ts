@@ -1,9 +1,8 @@
-import { Result, today } from '@holefeeder/shared/core';
+import { CategoryTypes, Result, today } from '@holefeeder/shared/core';
 import { anAccount, toAccount } from '@/accounts/core/__tests__/account-for-test';
 import { aCategory, toCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
 import { PurchaseFormDefaults, PurchaseFormDefaultsErrors } from '@/flows/presentation/purchase/core/purchase-form-defaults';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { System } from '@/shared/core/system';
 
 const accounts = () => anAccount().times(3).map(toAccount);

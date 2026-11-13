@@ -1,8 +1,7 @@
-import { DateOnly, Money, withDate } from '@holefeeder/shared/core';
+import { CategoryTypes, DateOnly, Money, withDate } from '@holefeeder/shared/core';
 import { BillsDueWidgetPublisherInMemory } from '@/dashboard/core/__tests__/bills-due-widget-publisher-in-memory';
 import { PublishBillsDueWidgetUseCase } from '@/dashboard/core/publish-bills-due-widget/publish-bills-due-widget-use-case';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 const today = DateOnly.valid('2026-11-10');

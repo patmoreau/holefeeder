@@ -1,10 +1,10 @@
-import { tk } from '@holefeeder/shared/core';
+import { AmountTone, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Divider, Drawer, FormControlLabel, IconButton, InputBase, Stack, Switch, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { translate } from '@/shared/i18n/translate';
 import { isAmountInput } from '@/shared/presentation/amount-input';
-import { currency, mediumDate } from '@/shared/presentation/tone';
+import { currency, mediumDate, toneColor } from '@/shared/presentation/tone';
 import type { PayChanges } from '../api/use-upcoming-actions';
 import type { DashboardUpcomingFlow } from '../domain/dashboard-upcoming-flow';
 
@@ -25,7 +25,7 @@ const PayForm = ({ flow, busy, onClose, onPay }: PayFormProps) => {
   const validAmount = isAmountInput(amount);
   const paid = validAmount ? Number(amount) : flow.amount;
   const changed = validAmount && paid !== flow.amount;
-  const amountColor = flow.categoryType === 'gain' ? 'success.main' : 'error.main';
+  const amountColor = toneColor[AmountTone.ofCategoryType(flow.categoryType)];
 
   return (
     <Stack sx={{ height: '100%' }}>

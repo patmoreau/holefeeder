@@ -1,3 +1,4 @@
+import { AmountTone } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
@@ -8,7 +9,6 @@ import { PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-d
 import { usePurchaseForm } from '@/flows/presentation/purchase/core/use-purchase-form';
 import { PurchaseTransferSection } from '@/flows/presentation/purchase/PurchaseTransferSection';
 import { TransferSection } from '@/flows/presentation/purchase/TransferSection';
-import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 
@@ -34,7 +34,7 @@ export const PurchaseFormContent = ({ accounts, categories, tags }: PurchaseForm
       autoFocus
       amount={formData.amount}
       onAmountChange={(amount) => updateFormField('amount', amount)}
-      tone={amountToneFor(formData.purchaseType)}
+      tone={AmountTone.ofCategoryType(formData.purchaseType)}
     >
       {formData.purchaseType !== PurchaseType.transfer && (
         <>

@@ -1,5 +1,4 @@
-import { Id } from '@holefeeder/shared/core';
-import { CategoryType } from '@/shared/core/category-type';
+import { CategoryType, Id } from '@holefeeder/shared/core';
 
 export type CategoryFormData = {
   id: Id | null;

@@ -1,4 +1,5 @@
-import { Result, Validate, Validator } from '@holefeeder/shared/core';
+import { Result } from './result';
+import { Validate, Validator } from './validate';
 
 export const CategoryTypes = {
   expense: 'expense',

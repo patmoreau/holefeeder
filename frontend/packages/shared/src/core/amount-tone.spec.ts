@@ -46,4 +46,18 @@ describe('AmountTone', () => {
       expect(AmountTone.display(-0.001)).toEqual({ amount: 0, tone: 'neutral' });
     });
   });
+
+  describe('ofCategoryType', () => {
+    it('is negative for an expense', () => {
+      expect(AmountTone.ofCategoryType('expense')).toBe('negative');
+    });
+
+    it('is positive for a gain', () => {
+      expect(AmountTone.ofCategoryType('gain')).toBe('positive');
+    });
+
+    it('is neutral for anything else, such as a transfer', () => {
+      expect(AmountTone.ofCategoryType('transfer')).toBe('neutral');
+    });
+  });
 });

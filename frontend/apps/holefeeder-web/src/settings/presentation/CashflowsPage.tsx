@@ -1,4 +1,4 @@
-import { type AsyncResult, tk } from '@holefeeder/shared/core';
+import { type CategoryType, type AsyncResult, tk } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, Box, ButtonBase, IconButton, ListItem, Skeleton, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -15,7 +15,6 @@ import { currency } from '@/shared/presentation/tone';
 import { useCancelCashflow } from '../api/use-cancel-cashflow';
 import { useCashflows } from '../api/use-cashflows';
 import type { Cashflow } from '../domain/cashflow';
-import type { CategoryType } from '../domain/category';
 import { scheduleOf } from './cashflow-schedule';
 import { CashflowFlyout } from './CashflowFlyout';
 

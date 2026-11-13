@@ -1,8 +1,7 @@
-import { type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/shared/core';
+import { CategoryTypes, type AsyncResult, DateIntervalTypes, Money, today, withDate } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { aSettings } from '@/shared/core/__tests__/settings-for-test';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { aSummaryData } from '@/summary/__tests__/summary-data-for-test';
 import { SummaryRepositoryInMemory } from '@/summary/__tests__/summary-repository-in-memory';
 import { ComputedSummary, WatchSummaryUseCase } from '@/summary/core/watch-summary/watch-summary-use-case';

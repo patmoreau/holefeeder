@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { AmountTone, type CategoryType, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Box, Drawer, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -13,7 +13,8 @@ import { isAmountInput } from './amount-input';
 import type { Notify } from './DashboardToast';
 import { ListSkeleton } from './ListSkeleton';
 import { TagsField } from './TagsField';
-import { AccountSelect, AmountField, CategorySelect, type CategoryType, FlyoutFooter, TransactionTypeToggle } from './TransactionFields';
+import { toneColor } from './tone';
+import { AccountSelect, AmountField, CategorySelect, FlyoutFooter, TransactionTypeToggle } from './TransactionFields';
 
 const testID = 'edit-transaction';
 
@@ -41,7 +42,7 @@ const EditTransactionForm = ({ transaction, options, onClose, notify }: EditTran
 
   const categories = categoriesOf(type);
   const valid = isAmountInput(amount) && date !== '' && categoryId !== '';
-  const amountColor = type === 'expense' ? 'error.main' : 'success.main';
+  const amountColor = toneColor[AmountTone.ofCategoryType(type)];
 
   const changeType = (next: CategoryType) => {
     setType(next);

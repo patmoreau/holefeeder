@@ -1,6 +1,5 @@
-import { type AsyncResult, DateInterval, DateIntervalType, DateOnly, Id, Money } from '@holefeeder/shared/core';
+import { CategoryType, CategoryTypes, type AsyncResult, DateInterval, DateIntervalType, DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { AbstractPowerSyncDatabase } from '@powersync/common';
-import { CategoryType, CategoryTypes } from '@/shared/core/category-type';
 import { Settings } from '@/shared/core/settings';
 import { watchQuery } from '@/shared/persistence/watch-query';
 import { CategoryIncome } from '../core/category-income';

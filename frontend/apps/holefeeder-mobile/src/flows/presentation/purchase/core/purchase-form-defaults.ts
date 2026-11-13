@@ -1,8 +1,7 @@
-import { Id, Result, today } from '@holefeeder/shared/core';
+import { CategoryTypes, Id, Result, today } from '@holefeeder/shared/core';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
 import { PurchaseFormData, PurchaseType } from '@/flows/presentation/purchase/core/purchase-form-data';
-import { CategoryTypes } from '@/shared/core/category-type';
 
 export const PurchaseFormDefaultsErrors = {
   missingAccount: 'missing-account',

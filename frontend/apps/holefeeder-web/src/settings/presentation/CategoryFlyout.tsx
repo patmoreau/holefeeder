@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { type CategoryType, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Alert,
@@ -20,7 +20,7 @@ import { isAmountInput } from '@/shared/presentation/amount-input';
 import type { Notify } from '@/shared/presentation/DashboardToast';
 import { FlyoutFooter, TransactionTypeToggle } from '@/shared/presentation/TransactionFields';
 import { useSaveCategory } from '../api/use-save-category';
-import type { Category, CategoryType } from '../domain/category';
+import type { Category } from '../domain/category';
 
 const testID = 'category';
 

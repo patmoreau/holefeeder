@@ -1,4 +1,4 @@
-import { DateOnly } from '@holefeeder/shared/core';
+import { type CategoryType, DateOnly } from '@holefeeder/shared/core';
 
 export type DashboardUpcomingFlow = {
   cashflowId: string;
@@ -8,7 +8,7 @@ export type DashboardUpcomingFlow = {
   categoryColor: string;
   tags: string[];
   amount: number;
-  categoryType: 'expense' | 'gain';
+  categoryType: CategoryType;
 };
 
 const valid = (value: Record<string, unknown>): DashboardUpcomingFlow => ({
@@ -19,7 +19,7 @@ const valid = (value: Record<string, unknown>): DashboardUpcomingFlow => ({
   categoryColor: value.categoryColor as string,
   tags: value.tags as string[],
   amount: value.amount as number,
-  categoryType: value.categoryType as 'expense' | 'gain',
+  categoryType: value.categoryType as CategoryType,
 });
 
 const validList = (values: Record<string, unknown>[]): DashboardUpcomingFlow[] => values.map(valid);

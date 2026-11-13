@@ -1,5 +1,4 @@
-import { Favorite, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
-import { CategoryType } from '@/shared/core/category-type';
+import { CategoryType, Favorite, Id, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { System } from '@/shared/core/system';
 
 export type Category = {

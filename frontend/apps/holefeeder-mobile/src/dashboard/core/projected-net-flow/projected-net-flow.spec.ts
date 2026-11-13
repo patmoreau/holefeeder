@@ -1,7 +1,6 @@
-import { Money } from '@holefeeder/shared/core';
+import { CategoryTypes, Money } from '@holefeeder/shared/core';
 import { projectedNetFlow } from '@/dashboard/core/projected-net-flow/projected-net-flow';
 import { aUpcomingFlow } from '@/flows/core/flows/__tests__/upcoming-flow-for-test';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 
 const withNetFlow = (amount: number, isOver: boolean) => ({ ...NO_SUMMARY, netFlow: { amount: amount, isOver: isOver } });

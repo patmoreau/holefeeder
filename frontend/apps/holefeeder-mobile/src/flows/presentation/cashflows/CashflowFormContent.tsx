@@ -1,3 +1,4 @@
+import { AmountTone } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { Account } from '@/accounts/core/account';
 import { Category } from '@/flows/core/categories/category';
@@ -6,7 +7,6 @@ import { useCashflowForm } from '@/flows/presentation/cashflows/core/use-cashflo
 import { AccountField } from '@/flows/presentation/shared/components/AccountField';
 import { CategoryField } from '@/flows/presentation/shared/components/CategoryField';
 import { TagList } from '@/flows/presentation/shared/components/TagList';
-import { amountToneFor } from '@/flows/presentation/shared/core/amount-tone';
 import { tk } from '@/i18n/translations';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { DateField } from '@/shared/presentation/components/fields/DateField';
@@ -31,7 +31,7 @@ export const CashflowFormContent = ({ accounts, categories, tags }: Props) => {
       caption={t(tk.purchase.basicSection.amount)}
       amount={formData.amount}
       onAmountChange={(amount) => updateFormField('amount', amount)}
-      tone={amountToneFor(formData.category.type)}
+      tone={AmountTone.ofCategoryType(formData.category.type)}
     >
       <AppFieldSection>
         <AccountField

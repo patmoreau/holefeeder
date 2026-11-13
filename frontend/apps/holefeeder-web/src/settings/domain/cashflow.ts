@@ -1,6 +1,5 @@
-import { DateOnly } from '@holefeeder/shared/core';
+import { type CategoryType, DateOnly } from '@holefeeder/shared/core';
 import type { BudgetIntervalType } from './budget-settings';
-import type { CategoryType } from './category';
 
 export type Cashflow = {
   id: string;

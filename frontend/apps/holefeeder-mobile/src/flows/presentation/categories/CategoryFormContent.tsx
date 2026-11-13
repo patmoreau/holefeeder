@@ -1,8 +1,8 @@
+import { CategoryTypes } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { CategoryColorField } from '@/flows/presentation/categories/CategoryColorField';
 import { useCategoryForm } from '@/flows/presentation/categories/core/use-category-form';
 import { tk } from '@/i18n/translations';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';
 import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';

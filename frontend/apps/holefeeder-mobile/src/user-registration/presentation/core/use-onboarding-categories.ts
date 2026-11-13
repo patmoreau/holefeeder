@@ -1,10 +1,9 @@
-import { Money } from '@holefeeder/shared/core';
+import { CategoryTypes, Money } from '@holefeeder/shared/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CreateCategoryCommand } from '@/flows/core/categories/create/create-category-command';
 import { CreateCategoryUseCase } from '@/flows/core/categories/create/create-category-use-case';
 import { tk } from '@/i18n/translations';
-import { CategoryTypes } from '@/shared/core/category-type';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { SuggestedCategoryColors, SuggestedCategoryKey, SuggestedCategoryKeys } from '@/user-registration/core/suggested-categories';
 import { useRegistration } from '@/user-registration/presentation/RegistrationProvider';

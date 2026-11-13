@@ -1,6 +1,5 @@
-import { Favorite, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
+import { CategoryType, Favorite, Money, Result, Validate, Validator } from '@holefeeder/shared/core';
 import { CategoryErrors } from '@/flows/core/categories/category';
-import { CategoryType } from '@/shared/core/category-type';
 
 export type CreateCategoryCommand = {
   name: string;

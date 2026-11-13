@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { type CategoryType, tk } from '@holefeeder/shared/core';
 import { Box, Button, Divider, InputBase, MenuItem, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import type { TransactionAccountOption, TransactionCategoryOption } from '@/shared/domain/new-transaction-options';
 import { translate } from '@/shared/i18n/translate';
@@ -6,8 +6,6 @@ import { translate } from '@/shared/i18n/translate';
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
 
 const typeButton = { textTransform: 'none', fontSize: 15 };
-
-export type CategoryType = TransactionCategoryOption['type'];
 
 export type TransactionType = CategoryType | 'transfer';
 

@@ -1,5 +1,4 @@
-import { DateOnly, Id, Money } from '@holefeeder/shared/core';
-import { CategoryType } from '@/shared/core/category-type';
+import { CategoryType, DateOnly, Id, Money } from '@holefeeder/shared/core';
 import { TagList } from './tag-list';
 
 export type Transaction = {

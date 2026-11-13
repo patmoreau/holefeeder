@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { type CategoryType, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Box, Drawer, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -13,15 +13,7 @@ import { EmptyList } from './EmptyList';
 import { ListSkeleton } from './ListSkeleton';
 import { isRepeatDraftValid, type RepeatDraft, RepeatField } from './RepeatField';
 import { TagsField } from './TagsField';
-import {
-  AccountSelect,
-  AmountField,
-  CategorySelect,
-  type CategoryType,
-  FlyoutFooter,
-  type TransactionType,
-  TransactionTypeToggle,
-} from './TransactionFields';
+import { AccountSelect, AmountField, CategorySelect, FlyoutFooter, type TransactionType, TransactionTypeToggle } from './TransactionFields';
 
 const today = () => new Date().toLocaleDateString('en-CA');
 
