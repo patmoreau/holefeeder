@@ -1,6 +1,7 @@
 export type FetchRequest = {
   url: string;
   headers?: Record<string, string>;
+  method?: string;
   matchHeaders: boolean;
   matchUrl: (url: string, testUrl: string) => boolean;
 };
@@ -29,6 +30,10 @@ export const FetchForTest = (): FetchForTest => {
     expect(matched).toBeDefined();
 
     const matchedPair = matched!;
+
+    if (matchedPair.request.method) {
+      expect(options?.method).toBe(matchedPair.request.method);
+    }
 
     if (matchedPair.request.matchHeaders) {
       expect(options?.headers).toEqual(matchedPair.request.headers);

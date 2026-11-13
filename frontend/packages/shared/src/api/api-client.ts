@@ -10,9 +10,13 @@ export type ApiClientConfig = {
   simulateNetworkDelay: number;
 };
 
+export type Page<T> = { items: T[]; total: number };
+
 export type ApiClient = {
   get: <TOutput>(endpoint: string, req?: RequestInit) => Promise<Result<TOutput>>;
+  getPage: <TItem>(endpoint: string, req?: RequestInit) => Promise<Result<Page<TItem>>>;
   post: <TInput, TOutput>(endpoint: string, data?: TInput, req?: RequestInit) => Promise<Result<TOutput>>;
+  delete: (endpoint: string, req?: RequestInit) => Promise<Result<void>>;
 };
 
 const problemCodeOf = async (response: Response): Promise<string[]> => {
@@ -36,7 +40,11 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
     }
   };
 
-  const callApi = async <T>(endpoint: string, options: RequestInit = {}): Promise<Result<T>> => {
+  const callApi = async <T>(
+    endpoint: string,
+    options: RequestInit = {},
+    read?: (response: Response, data: unknown) => T
+  ): Promise<Result<T>> => {
     try {
       const token = await authenticationState.getToken();
       const headers = {
@@ -90,7 +98,7 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
       const hasBody = contentLength === null ? true : parseInt(contentLength, 10) > 0;
       const hasJsonBody = hasBody && contentType.includes('application/json');
       const data = hasJsonBody ? await response.json() : undefined;
-      return Result.success(data as T);
+      return Result.success(read ? read(response, data) : (data as T));
     } catch (error) {
       const apiError = error as Error;
       return Result.failure([apiError.message]);
@@ -105,8 +113,18 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
     return callApi<TOutput>(endpoint, { ...req, method: 'POST', body });
   };
 
+  const getPage = async <TItem>(endpoint: string, req?: RequestInit): Promise<Result<Page<TItem>>> =>
+    callApi<Page<TItem>>(endpoint, { ...req, method: 'GET' }, (response, data) => ({
+      items: (data as TItem[] | undefined) ?? [],
+      total: Number(response.headers.get('x-total-count') ?? 0),
+    }));
+
+  const remove = async (endpoint: string, req?: RequestInit): Promise<Result<void>> => callApi<void>(endpoint, { ...req, method: 'DELETE' });
+
   return {
     get: get,
+    getPage: getPage,
     post: post,
+    delete: remove,
   };
 };

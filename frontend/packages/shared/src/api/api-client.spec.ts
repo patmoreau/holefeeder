@@ -235,4 +235,82 @@ describe('ApiClient', () => {
       expect(result).toBeFailureWithErrors([ApiErrors.serverError]);
     });
   });
+
+  describe('getPage', () => {
+    it('should return the items with the total count from the response header', async () => {
+      const apiClient = ApiClient(anAuthenticationState(), apiConfig);
+      const items = [{ id: 'first' }, { id: 'second' }];
+
+      fetchForTest.simulate({
+        request: aFetchRequest({ url, method: 'GET', matchHeaders: false }),
+        response: aFetchResponse({
+          headers: new Headers({ 'Content-Type': 'application/json', 'X-Total-Count': '12' }),
+          body: items,
+        }),
+      });
+
+      const result = await apiClient.getPage(endpoint);
+
+      expect(result).toBeSuccessWithValue({ items: items, total: 12 });
+    });
+
+    it('should return an empty page when the response has no body', async () => {
+      const apiClient = ApiClient(anAuthenticationState(), apiConfig);
+
+      fetchForTest.simulate({
+        request: aFetchRequest({ url, matchHeaders: false }),
+        response: aFetchResponse({ status: 204, statusText: 'No Content', headers: new Headers({ 'Content-Length': '0' }) }),
+      });
+
+      const result = await apiClient.getPage(endpoint);
+
+      expect(result).toBeSuccessWithValue({ items: [], total: 0 });
+    });
+
+    it('should report a failed page request', async () => {
+      const apiClient = ApiClient(anAuthenticationState(), apiConfig);
+
+      fetchForTest.simulate({
+        request: aFetchRequest({ url, matchHeaders: false }),
+        response: aFetchResponse({ status: 500, ok: false, statusText: 'Internal Server Error', body: {} }),
+      });
+
+      const result = await apiClient.getPage(endpoint);
+
+      expect(result).toBeFailureWithErrors([ApiErrors.serverError]);
+    });
+  });
+
+  describe('delete', () => {
+    it('should send a DELETE request with the bearer token', async () => {
+      const tokenInfo = aTokenInfo();
+      const apiClient = ApiClient(anAuthenticationState({ getToken: () => Promise.resolve(tokenInfo) }), apiConfig);
+
+      fetchForTest.simulate({
+        request: aFetchRequest({
+          url,
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tokenInfo.token}` },
+        }),
+        response: aFetchResponse({ status: 204, statusText: 'No Content', headers: new Headers({ 'Content-Length': '0' }) }),
+      });
+
+      const result = await apiClient.delete(endpoint);
+
+      expect(result).toBeSuccessWithValue(undefined);
+    });
+
+    it('should report a missing resource as not found', async () => {
+      const apiClient = ApiClient(anAuthenticationState(), apiConfig);
+
+      fetchForTest.simulate({
+        request: aFetchRequest({ url, matchHeaders: false }),
+        response: aFetchResponse({ status: 404, ok: false, statusText: 'Not Found', body: {} }),
+      });
+
+      const result = await apiClient.delete(endpoint);
+
+      expect(result).toBeFailureWithErrors([ApiErrors.notFound]);
+    });
+  });
 });
