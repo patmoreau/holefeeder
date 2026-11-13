@@ -186,6 +186,18 @@ needs a value the API lacks, add it to the backend; never derive it in the web a
   reload. Moving sign-in to the backend is planned in
   `docs/plans/web-backend-for-frontend-auth.md`.
 
+## Shared tooling
+
+- **Versions**: a dependency more than one package declares lives in the `catalog:` of
+  `pnpm-workspace.yaml` (TypeScript, React, Jest, faker, date-fns, …) and each
+  `package.json` says `"catalog:"`. Bump it there, once.
+- **TypeScript**: `tsconfig.base.json` holds the options shared and web share; mobile
+  extends Expo's base. Every app maps `@holefeeder/shared/*` to
+  `packages/shared/src/*/index.ts` with one wildcard (tsconfig, Jest, Vite).
+- **Formatting and lint**: Prettier options live in `.prettierrc.json`, enforced through
+  the root `eslint.config.mjs`. Mobile and web each extend it with the React and React
+  Hooks rules (web pins the React version, since ESLint 10 breaks version detection).
+
 ## Dependency Graph
 
 ```text
