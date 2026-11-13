@@ -15,9 +15,7 @@
     "skipLibCheck": true,
     "types": ["vite/client"],
     "paths": {
-      "@holefeeder/shared/core": ["../../packages/shared/src/core/index.ts"],
-      "@holefeeder/shared/api": ["../../packages/shared/src/api/index.ts"],
-      "@holefeeder/shared/theme": ["../../packages/shared/src/theme/index.ts"],
+      "@holefeeder/shared/*": ["../../packages/shared/src/*/index.ts"],
       "@/*": ["./src/*"]
     }
   },

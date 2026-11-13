@@ -32,10 +32,7 @@ const config: Config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/__tests__/', '\\.test\\.', '\\.spec\\.', '\\.integration\\.'],
   coverageDirectory: 'coverage/unit',
   moduleNameMapper: {
-    '^@holefeeder/shared/core$': '<rootDir>/../../packages/shared/src/core/index.ts',
-    '^@holefeeder/shared/api$': '<rootDir>/../../packages/shared/src/api/index.ts',
-    '^@holefeeder/shared/theme$': '<rootDir>/../../packages/shared/src/theme/index.ts',
-    '^@holefeeder/shared/testkit$': '<rootDir>/../../packages/shared/src/testkit/index.ts',
+    '^@holefeeder/shared/(.*)$': '<rootDir>/../../packages/shared/src/$1/index.ts',
     '^@/modules/(.*)$': '<rootDir>/modules/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
