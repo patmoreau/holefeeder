@@ -28,12 +28,12 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "date-fns": "4.1.0"
+    "date-fns": "catalog:"
   },
   "devDependencies": {
     "@faker-js/faker": "catalog:",
     "@types/jest": "catalog:",
-    "@types/node": "22.15.21",
+    "@types/node": "catalog:",
     "jest": "catalog:",
     "ts-jest": "catalog:",
     "typescript": "catalog:"
