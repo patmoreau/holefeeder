@@ -1,3 +1,4 @@
+import { Palettes } from '@holefeeder/shared/theme';
 import { createBaseStyles } from '@/types/theme/base-styles';
 import { fontSize, fontWeight, lineHeight } from '@/types/theme/design-tokens';
 import { Theme } from '@/types/theme/theme';
@@ -41,35 +42,7 @@ const typography = {
   },
 } as const;
 
-// Color palette
-const colors = {
-  primary: '#7B42F6',
-  secondary: '#FF8C42',
-  background: '#FFFFFF',
-  secondaryBackground: '#F2F2F7',
-  text: '#1C1C1E',
-  primaryText: '#FFFFFF',
-  secondaryText: '#6C6C70',
-  destructive: '#E53B3B',
-  error: '#FF3B30',
-  tint: '#7B42F6',
-  icon: '#6C6C70',
-  tabIconDefault: '#687076',
-  tabIconSelected: '#7B42F6',
-  separator: '#C6C6C8',
-  opaqueSeparator: '#C6C6C8',
-  link: '#7B42F6',
-  dashboard: '#F0E6F7',
-  accounts: '#FFF5EB',
-  settings: '#F2F2F7',
-  positive: '#2E7D32',
-  positiveBackground: '#E6F7ED',
-  negative: '#D32F2F',
-  negativeBackground: '#FFF2F2',
-  amountNeutral: '#1C1C1E',
-  chartIncome: '#2E7D32',
-  chartExpenses: '#FF8C42',
-} as const;
+const colors = Palettes.light;
 
 export const lightTheme: Theme = {
   colors,

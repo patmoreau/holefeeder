@@ -1,29 +1,21 @@
+import { type Palette, Palettes } from '@holefeeder/shared/theme';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import type { ReactNode } from 'react';
+
+const muiPalette = (palette: Palette) => ({
+  primary: { main: palette.primary, contrastText: palette.primaryText },
+  success: { main: palette.positive, light: palette.positiveBackground },
+  error: { main: palette.negative, light: palette.negativeBackground },
+  background: { default: palette.background, paper: palette.secondaryBackground },
+  text: { primary: palette.text, secondary: palette.secondaryText },
+  divider: palette.separator,
+});
 
 const theme = createTheme({
   cssVariables: { colorSchemeSelector: 'class' },
   colorSchemes: {
-    light: {
-      palette: {
-        primary: { main: '#7B42F6', contrastText: '#FFFFFF' },
-        success: { main: '#2E7D32', light: '#E6F7ED' },
-        error: { main: '#D32F2F', light: '#FFF2F2' },
-        background: { default: '#FFFFFF', paper: '#F2F2F7' },
-        text: { primary: '#1C1C1E', secondary: '#6C6C70' },
-        divider: '#C6C6C8',
-      },
-    },
-    dark: {
-      palette: {
-        primary: { main: '#9D6DE6', contrastText: '#F2F2F7' },
-        success: { main: '#7CB342', light: '#1E3A2E' },
-        error: { main: '#FF6F42', light: '#3A1E1E' },
-        background: { default: '#000000', paper: '#1C1C1E' },
-        text: { primary: '#F2F2F7', secondary: '#8E8E93' },
-        divider: '#38383A',
-      },
-    },
+    light: { palette: muiPalette(Palettes.light) },
+    dark: { palette: muiPalette(Palettes.dark) },
   },
   shape: { borderRadius: 8 },
   typography: {

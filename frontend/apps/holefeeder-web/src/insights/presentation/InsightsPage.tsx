@@ -1,4 +1,5 @@
 import { LocalFormatter, type NetBalanceKind, AmountTone, tk } from '@holefeeder/shared/core';
+import { Palettes } from '@holefeeder/shared/theme';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import SouthEastIcon from '@mui/icons-material/SouthEast';
@@ -157,7 +158,7 @@ const Content = () => {
             to="/insights/spending"
             label={translate(tk.insights.spending.link)}
             value={overview.value.spending}
-            tile="#FF8C42"
+            tile={Palettes.light.chartExpenses}
             icon={<SouthEastIcon />}
             testID="insights-spending-link"
           />

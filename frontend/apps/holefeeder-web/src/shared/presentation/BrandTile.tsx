@@ -1,11 +1,10 @@
+import { BrandColors } from '@holefeeder/shared/theme';
 import { Box, useColorScheme } from '@mui/material';
 
 type BrandTileProps = {
   size: number;
   testID?: string;
 };
-
-const brandOrange = '#FF8D28';
 
 export const BrandTile = ({ size, testID }: BrandTileProps) => {
   const { mode, systemMode } = useColorScheme();
@@ -24,7 +23,7 @@ export const BrandTile = ({ size, testID }: BrandTileProps) => {
         borderRadius: `${Math.round(size * 0.225)}px`,
         display: 'grid',
         placeItems: 'center',
-        background: isDark ? `linear-gradient(to bottom, ${brandOrange}, #4A2A10)` : brandOrange,
+        background: isDark ? `linear-gradient(to bottom, ${BrandColors.orange}, #4A2A10)` : BrandColors.orange,
         boxShadow: size >= 64 ? `0 0 ${Math.round(size * 0.2)}px rgba(255, 141, 40, 0.45)` : 'none',
       }}
     >

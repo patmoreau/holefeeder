@@ -1,3 +1,4 @@
+import { Palette } from '@holefeeder/shared/theme';
 import { TextStyle } from 'react-native';
 import { createBaseStyles } from '@/types/theme/base-styles';
 
@@ -12,43 +13,7 @@ export type ThemeMode = (typeof ThemeMode)[keyof typeof ThemeMode];
 export type Typography = 'default' | 'title';
 
 export interface Theme {
-  colors: {
-    primary: string;
-    secondary: string;
-    background: string;
-    secondaryBackground: string;
-    text: string;
-    primaryText: string;
-    secondaryText: string;
-    destructive: string;
-    error: string;
-
-    tint: string;
-    icon: string;
-    tabIconDefault: string;
-    tabIconSelected: string;
-
-    // separators
-    separator: string;
-    opaqueSeparator: string;
-
-    // others
-    link: string;
-
-    // tabs
-    dashboard: string;
-    accounts: string;
-    settings: string;
-
-    // amounts
-    positive: string;
-    positiveBackground: string;
-    negative: string;
-    negativeBackground: string;
-    amountNeutral: string;
-    chartIncome: string;
-    chartExpenses: string;
-  };
+  colors: Palette;
   typography: {
     display: TextStyle;
     largeTitle: TextStyle;

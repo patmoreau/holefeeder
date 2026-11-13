@@ -75,10 +75,13 @@ simulator, so they are not part of `pnpm test` or CI. See that app's `CLAUDE.md`
 
 Pure TypeScript library. No React Native, no Expo, no browser-only APIs.
 
-There is **no root export** — the package exposes exactly two subpaths, so always import from
+There is **no root export** — the package exposes only subpaths, so always import from
 one of them:
 
 - `@holefeeder/shared/core` — everything listed below
+- `@holefeeder/shared/theme` — colour tokens both apps paint with: `Palettes.light` /
+  `Palettes.dark` (the `Palette` type) and `BrandColors`. Mobile's `Theme.colors` and
+  web's MUI palette both read from them; change a colour here, not in an app.
 - `@holefeeder/shared/testkit` — test-only helpers and builders
 
 **`/core` exports:**
@@ -111,7 +114,7 @@ Id.setGenerator(Crypto.randomUUID);
 pnpm --filter @holefeeder/shared build   # tsc --build (composite project reference)
 ```
 
-Both subpath exports resolve to `dist/`, so the package has to be built before apps resolve
+Every subpath export resolves to `dist/`, so the package has to be built before apps resolve
 it. Turbo's `dependsOn: ["^build"]` handles that for `build`/`test`/`lint`/`typecheck`. The
 mobile Metro config adds `packages/shared` to `watchFolders` for hot reload during dev.
 

@@ -1,4 +1,5 @@
 import { type PeriodSpan, AmountTone, type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
+import { Palettes } from '@holefeeder/shared/theme';
 import { Box, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
 import { Language } from '@/shared/i18n/language';
@@ -22,15 +23,15 @@ const height = 260;
 const padding = { top: 8, right: 12, bottom: 28, left: 48 };
 
 const colors = {
-  '--chart-income': '#2E7D32',
-  '--chart-expenses': '#FF8C42',
-  '--chart-deficit': '#D32F2F',
+  '--chart-income': Palettes.light.chartIncome,
+  '--chart-expenses': Palettes.light.chartExpenses,
+  '--chart-deficit': Palettes.light.negative,
 };
 
 const darkColors = {
-  '--chart-income': '#26A69A',
-  '--chart-expenses': '#D96F26',
-  '--chart-deficit': '#FF453A',
+  '--chart-income': Palettes.dark.chartIncome,
+  '--chart-expenses': Palettes.dark.chartExpenses,
+  '--chart-deficit': Palettes.dark.error,
 };
 
 const daysIn = (period: Period) => (Date.parse(period.end) - Date.parse(period.start)) / 86_400_000 + 1;
