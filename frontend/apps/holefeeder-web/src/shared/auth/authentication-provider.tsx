@@ -1,6 +1,7 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { type AuthenticationState, type TokenInfo } from '@holefeeder/shared/core';
 import { type ReactNode } from 'react';
+import { AccessToken } from './access-token';
 import { AuthenticationContext } from './authentication-context';
 import { AuthorizationParams } from './authorization-params';
 
@@ -9,9 +10,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
 
   const getToken = async (): Promise<TokenInfo | undefined> => {
     try {
-      const token = await getAccessTokenSilently();
-      const payload = JSON.parse(atob(token.split('.')[1])) as { exp: number };
-      return { token, expiresAt: payload.exp };
+      return AccessToken.info(await getAccessTokenSilently());
     } catch {
       return undefined;
     }
