@@ -1,4 +1,4 @@
-import { DateOnly, tk } from '@holefeeder/shared/core';
+import { DateIntervalType, DateOnly, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Button, Divider, Drawer, IconButton, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ import { translate } from '@/shared/i18n/translate';
 import type { Notify } from '@/shared/presentation/DashboardToast';
 import { useSaveBudgetSettings } from '../api/use-save-budget-settings';
 import type { BudgetIntervalType, BudgetSettings } from '../domain/budget-settings';
-import { intervalLabelKey } from './budget-summary';
 
 const testID = 'budget-settings';
 
@@ -68,7 +67,7 @@ const BudgetSettingsForm = ({ initial, onClose, notify }: BudgetSettingsFormProp
         >
           {intervals.map((interval) => (
             <MenuItem key={interval} value={interval}>
-              {translate(intervalLabelKey[interval])}
+              {translate(DateIntervalType.labelKey[interval])}
             </MenuItem>
           ))}
         </TextField>

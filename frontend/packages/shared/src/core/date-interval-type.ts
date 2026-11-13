@@ -1,5 +1,6 @@
 import { DateOnly } from './date-only';
 import { Result } from './result';
+import { tk } from './translations/translations';
 import { Validate, Validator } from './validate';
 import { withDate } from './with-date';
 
@@ -203,6 +204,28 @@ const datesInRange = (
   return dates;
 };
 
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
+const labelKey: Record<DateIntervalType, string> = {
+  daily: tk.dateIntervalTypePicker.daily,
+  weekly: tk.dateIntervalTypePicker.weekly,
+  monthly: tk.dateIntervalTypePicker.monthly,
+  yearly: tk.dateIntervalTypePicker.yearly,
+  oneTime: tk.dateIntervalTypePicker.oneTime,
+};
+
+const unitKey: Partial<Record<DateIntervalType, string>> = {
+  daily: tk.newTransaction.units.daily,
+  weekly: tk.newTransaction.units.weekly,
+  monthly: tk.newTransaction.units.monthly,
+  yearly: tk.newTransaction.units.yearly,
+};
+
+const cadence = (intervalType: DateIntervalType, frequency: number, t: TranslateFn): string => {
+  const unit = unitKey[intervalType];
+  return frequency === 1 || !unit ? t(labelKey[intervalType]) : t(tk.budgetSettings.every, { count: frequency, unit: t(unit) });
+};
+
 export const DateIntervalType = {
   create: create,
   valid: valid,
@@ -210,4 +233,6 @@ export const DateIntervalType = {
   interval: interval,
   datesInRange: datesInRange,
   previousPeriods: previousPeriods,
+  labelKey: labelKey,
+  cadence: cadence,
 };

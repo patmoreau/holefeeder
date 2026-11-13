@@ -1,4 +1,4 @@
-import { DateIntervalType, DateIntervalTypes, LocalFormatter } from '@holefeeder/shared/core';
+import { DateIntervalType, LocalFormatter } from '@holefeeder/shared/core';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Cashflow } from '@/flows/core/flows/cashflow';
@@ -16,14 +16,6 @@ import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 
-const tkIntervalTypes: Record<DateIntervalType, string> = {
-  [DateIntervalTypes.daily]: tk.dateIntervalTypePicker.daily,
-  [DateIntervalTypes.weekly]: tk.dateIntervalTypePicker.weekly,
-  [DateIntervalTypes.monthly]: tk.dateIntervalTypePicker.monthly,
-  [DateIntervalTypes.yearly]: tk.dateIntervalTypePicker.yearly,
-  [DateIntervalTypes.oneTime]: tk.dateIntervalTypePicker.oneTime,
-};
-
 export type CashflowCardProps = {
   cashflow: Cashflow;
   categoryName: string;
@@ -37,7 +29,7 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
 
   const title = cashflow.description.length > 0 ? cashflow.description : categoryName;
 
-  const intervalLabel = t(tkIntervalTypes[cashflow.intervalType]);
+  const intervalLabel = t(DateIntervalType.labelKey[cashflow.intervalType]);
   const cadence = cashflow.frequency > 1 ? `${cashflow.frequency} × ${intervalLabel}` : intervalLabel;
 
   // Full-swipe delete: soft-deletes immediately (sets the inactive flag). Removal is

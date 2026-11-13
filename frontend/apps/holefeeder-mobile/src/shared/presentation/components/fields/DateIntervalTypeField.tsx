@@ -6,14 +6,6 @@ import { AppField } from '@/shared/presentation/components/native/AppField';
 import { AppPicker, PickerOption } from '@/shared/presentation/components/native/AppPicker';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 
-const tkTypes: Record<DateIntervalType, string> = {
-  [DateIntervalTypes.daily]: tk.dateIntervalTypePicker.daily,
-  [DateIntervalTypes.weekly]: tk.dateIntervalTypePicker.weekly,
-  [DateIntervalTypes.monthly]: tk.dateIntervalTypePicker.monthly,
-  [DateIntervalTypes.yearly]: tk.dateIntervalTypePicker.yearly,
-  [DateIntervalTypes.oneTime]: tk.dateIntervalTypePicker.oneTime,
-};
-
 type DateIntervalTypeOption = PickerOption & {
   value: DateIntervalType;
 };
@@ -42,7 +34,7 @@ export function DateIntervalTypeField({ selectedDateIntervalType, onSelectDateIn
         options={options}
         selectedOption={selectedOption}
         onSelectOption={(option) => onSelectDateIntervalType(option.value)}
-        onOptionLabel={(option) => t(tkTypes[option.value])}
+        onOptionLabel={(option) => t(DateIntervalType.labelKey[option.value])}
       />
     </AppField>
   );

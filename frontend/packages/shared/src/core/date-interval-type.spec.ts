@@ -1,5 +1,6 @@
 import { DateIntervalType, DateIntervalTypeErrors, DateIntervalTypes } from './date-interval-type';
 import { DateOnly } from './date-only';
+import { tk } from './translations/translations';
 import { withDate } from './with-date';
 
 describe('DateIntervalType', () => {
@@ -341,6 +342,32 @@ describe('DateIntervalType', () => {
         const result = DateIntervalType.datesInRange(effectiveDate, fromDate, toDate, frequency, intervalType);
         expect(result).toEqual(expected);
       });
+    });
+  });
+});
+
+describe('DateIntervalType labels', () => {
+  const t = (key: string, options?: Record<string, unknown>) => (options ? `${key}(${JSON.stringify(options)})` : key);
+
+  describe('labelKey', () => {
+    it.each(Object.values(DateIntervalTypes))('names %s with its picker key', (type) => {
+      expect(DateIntervalType.labelKey[type]).toBe(tk.dateIntervalTypePicker[type]);
+    });
+  });
+
+  describe('cadence', () => {
+    it('names a single period by its interval', () => {
+      expect(DateIntervalType.cadence(DateIntervalTypes.weekly, 1, t)).toBe(tk.dateIntervalTypePicker.weekly);
+    });
+
+    it('counts several periods in units', () => {
+      expect(DateIntervalType.cadence(DateIntervalTypes.weekly, 2, t)).toBe(
+        `${tk.budgetSettings.every}(${JSON.stringify({ count: 2, unit: tk.newTransaction.units.weekly })})`
+      );
+    });
+
+    it('names a one-time interval whatever its frequency', () => {
+      expect(DateIntervalType.cadence(DateIntervalTypes.oneTime, 3, t)).toBe(tk.dateIntervalTypePicker.oneTime);
     });
   });
 });
