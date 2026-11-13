@@ -1,6 +1,5 @@
-import { DateOnly } from '@holefeeder/shared/core';
+import { type BalanceCaption, DateOnly } from '@holefeeder/shared/core';
 import type { AccountType } from '@/shared/domain/account-type';
-import type { BalanceCaption } from '@/shared/domain/balance-caption';
 
 export type AccountDetail = {
   id: string;

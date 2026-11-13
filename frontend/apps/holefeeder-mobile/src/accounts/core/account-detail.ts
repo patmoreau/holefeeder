@@ -1,5 +1,4 @@
-import { DateOnly, Id, Variation } from '@holefeeder/shared/core';
-import { AccountType } from '@/accounts/core/account-type';
+import { AccountType, BalanceCaption, DateOnly, Id, Variation } from '@holefeeder/shared/core';
 
 export type AccountDetail = {
   id: Id;
@@ -26,8 +25,6 @@ const upcomingChange = (detail: AccountDetail): Variation => Variation.multiply(
 const isUpcomingFavourable = (detail: AccountDetail): boolean => detail.upcomingVariation >= 0;
 
 const ownedBalance = (detail: AccountDetail): Variation => Variation.multiply(detail.balance, AccountType.multiplier[detail.type]);
-
-export type BalanceCaption = 'availableBalance' | 'amountDue' | 'creditBalance';
 
 const balanceCaption = (detail: AccountDetail): BalanceCaption => {
   const isAsset = AccountType.multiplier[detail.type] > 0;

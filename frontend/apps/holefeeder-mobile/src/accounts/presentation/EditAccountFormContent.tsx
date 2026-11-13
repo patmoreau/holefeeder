@@ -1,6 +1,6 @@
+import { AccountTypes } from '@holefeeder/shared/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AccountTypes } from '@/accounts/core/account-type';
 import { useEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
 import { tk } from '@/i18n/translations';
 import { AmountHeroForm } from '@/shared/presentation/components/fields/AmountHeroForm';

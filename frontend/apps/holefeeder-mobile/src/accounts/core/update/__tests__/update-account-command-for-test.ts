@@ -1,5 +1,4 @@
-import { Favorite, Inactive } from '@holefeeder/shared/core';
-import { AccountTypes } from '@/accounts/core/account-type';
+import { AccountTypes, Favorite, Inactive } from '@holefeeder/shared/core';
 import { UpdateAccountCommand } from '@/accounts/core/update/update-account-command';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
 import { aVariation } from '@/shared/__tests__/number-for-test';

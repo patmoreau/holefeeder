@@ -1,12 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
-
-export const BalanceCaptions = {
-  availableBalance: 'availableBalance',
-  amountDue: 'amountDue',
-  creditBalance: 'creditBalance',
-} as const;
-
-export type BalanceCaption = (typeof BalanceCaptions)[keyof typeof BalanceCaptions];
+import { type BalanceCaption, tk } from '@holefeeder/shared/core';
 
 export const balanceCaptionKey: Record<BalanceCaption, string> = {
   availableBalance: tk.accountCard.availableBalance,

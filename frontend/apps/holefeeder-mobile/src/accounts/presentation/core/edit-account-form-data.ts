@@ -1,5 +1,4 @@
-import { DateOnly, Id, today } from '@holefeeder/shared/core';
-import { AccountType, AccountTypes } from '@/accounts/core/account-type';
+import { AccountType, AccountTypes, DateOnly, Id, today } from '@holefeeder/shared/core';
 
 export type EditAccountFormData = {
   // null means the account does not exist yet, the way the category form says it.

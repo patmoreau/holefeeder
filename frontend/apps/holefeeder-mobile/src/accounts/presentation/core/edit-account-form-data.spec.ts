@@ -1,5 +1,4 @@
-import { DateOnly, today } from '@holefeeder/shared/core';
-import { AccountTypes } from '@/accounts/core/account-type';
+import { AccountTypes, DateOnly, today } from '@holefeeder/shared/core';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';
 
 describe('EditAccountFormData', () => {

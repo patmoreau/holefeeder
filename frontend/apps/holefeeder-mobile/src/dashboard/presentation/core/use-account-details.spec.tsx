@@ -1,8 +1,7 @@
-import { DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/shared/core';
+import { AccountTypes, DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/shared/core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
-import { AccountTypes } from '@/accounts/core/account-type';
 import { useAccountDetails } from '@/dashboard/presentation/core/use-account-details';
 import { aCategory } from '@/flows/core/categories/__tests__/category-for-test';
 import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';

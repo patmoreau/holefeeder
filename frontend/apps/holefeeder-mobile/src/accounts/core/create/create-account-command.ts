@@ -1,6 +1,5 @@
-import { DateOnly, Favorite, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
+import { AccountType, DateOnly, Favorite, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
 import { AccountErrors } from '@/accounts/core/account';
-import { AccountType } from '@/accounts/core/account-type';
 
 // No id: the repository mints one. No inactive either — an account is not created
 // switched off.

@@ -1,6 +1,5 @@
-import { DateOnly, Favorite, Id, Inactive, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
+import { AccountType, DateOnly, Favorite, Id, Inactive, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
 import { AccountErrors } from '@/accounts/core/account';
-import { AccountType } from '@/accounts/core/account-type';
 
 export type UpdateAccountCommand = {
   id: Id;

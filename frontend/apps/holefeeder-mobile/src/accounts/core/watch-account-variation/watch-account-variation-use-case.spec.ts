@@ -1,9 +1,8 @@
-import { type AsyncResult, DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/shared/core';
+import { AccountTypes, type AsyncResult, DateIntervalTypes, DateOnly, Money, Variation } from '@holefeeder/shared/core';
 import { waitFor } from '@testing-library/react-native';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
 import { AccountDetail } from '@/accounts/core/account-detail';
-import { AccountTypes } from '@/accounts/core/account-type';
 import {
   WatchAccountVariationErrors,
   WatchAccountVariationUseCase,

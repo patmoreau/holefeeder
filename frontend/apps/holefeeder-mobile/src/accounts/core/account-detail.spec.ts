@@ -1,6 +1,5 @@
-import { DateOnly, Id, Variation } from '@holefeeder/shared/core';
+import { AccountType, AccountTypes, DateOnly, Id, Variation } from '@holefeeder/shared/core';
 import { AccountDetail } from '@/accounts/core/account-detail';
-import { AccountType, AccountTypes } from '@/accounts/core/account-type';
 
 const anAccountDetail = (type: AccountType, upcomingVariation: number): AccountDetail =>
   AccountDetail.valid({

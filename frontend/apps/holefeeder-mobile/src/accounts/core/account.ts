@@ -1,5 +1,4 @@
-import { DateOnly, Favorite, Id, Inactive, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
-import { AccountType } from '@/accounts/core/account-type';
+import { AccountType, DateOnly, Favorite, Id, Inactive, Result, Validate, Validator, Variation } from '@holefeeder/shared/core';
 
 export type Account = {
   id: Id;

@@ -6,6 +6,8 @@ export * from './validate';
 export * from './id';
 export * from './money';
 export * from './amount-tone';
+export * from './account-type';
+export * from './balance-caption';
 export * from './local-formatter';
 export * from './variation';
 export * from './date-only';

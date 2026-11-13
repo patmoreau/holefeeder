@@ -1,6 +1,5 @@
-import { DateOnly, DateOnlyErrors, Variation } from '@holefeeder/shared/core';
+import { AccountType, AccountTypeErrors, DateOnly, DateOnlyErrors, Variation } from '@holefeeder/shared/core';
 import { AccountErrors } from '@/accounts/core/account';
-import { AccountType, AccountTypeErrors } from '@/accounts/core/account-type';
 import { aCreateAccountCommand } from '@/accounts/core/create/__tests__/create-account-command-for-test';
 import { CreateAccountCommand } from '@/accounts/core/create/create-account-command';
 

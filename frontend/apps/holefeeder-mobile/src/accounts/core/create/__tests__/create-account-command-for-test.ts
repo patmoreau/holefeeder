@@ -1,5 +1,4 @@
-import { Favorite } from '@holefeeder/shared/core';
-import { AccountTypes } from '@/accounts/core/account-type';
+import { AccountTypes, Favorite } from '@holefeeder/shared/core';
 import { CreateAccountCommand } from '@/accounts/core/create/create-account-command';
 import { aPastDate } from '@/shared/__tests__/date-for-test';
 import { aVariation } from '@/shared/__tests__/number-for-test';

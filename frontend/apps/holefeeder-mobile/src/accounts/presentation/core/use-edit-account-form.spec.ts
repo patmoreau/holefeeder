@@ -1,7 +1,6 @@
-import { DateOnly, DateOnlyErrors, Id, Variation } from '@holefeeder/shared/core';
+import { AccountTypes, DateOnly, DateOnlyErrors, Id, Variation } from '@holefeeder/shared/core';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
 import { AccountsRepositoryInMemory } from '@/accounts/core/__tests__/accounts-repository-for-test';
-import { AccountTypes } from '@/accounts/core/account-type';
 import { EditAccountFormData } from '@/accounts/presentation/core/edit-account-form-data';
 import { EditAccountFormError, saveAccount, validateEditAccountForm } from '@/accounts/presentation/core/use-edit-account-form';
 import { aRepositoriesState } from '@/shared/repositories/__tests__/repositories-state-for-test';
