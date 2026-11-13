@@ -1,4 +1,4 @@
-import { Result, TokenInfo, User } from '@holefeeder/shared/core';
+import { Jwt, Result, TokenInfo, User } from '@holefeeder/shared/core';
 
 export const E2eSessionErrors = {
   invalidLink: 'invalid-link',
@@ -12,8 +12,6 @@ export const E2eSessionErrors = {
 export type E2eSessionData = TokenInfo & { user: User };
 
 const E2E_TOKEN_PARAM = 'e2e-auth-token';
-
-type JwtPayload = { sub?: unknown; exp?: unknown };
 
 // Hand-rolled rather than using URL: React Native's URL has no searchParams, and
 // Buffer does not exist there either, so both would pass in Jest and crash on device.
@@ -29,20 +27,6 @@ const parseQuery = (query: string): Record<string, string> => {
   return params;
 };
 
-const decodePayload = (token: string): Result<JwtPayload> => {
-  const segments = token.split('.');
-  if (segments.length !== 3) return Result.failure([E2eSessionErrors.invalidToken]);
-
-  try {
-    const normalized = segments[1].replace(/-/g, '+').replace(/_/g, '/');
-    const payload: unknown = JSON.parse(atob(normalized));
-    if (typeof payload !== 'object' || payload === null) return Result.failure([E2eSessionErrors.invalidToken]);
-    return Result.success(payload as JwtPayload);
-  } catch {
-    return Result.failure([E2eSessionErrors.invalidToken]);
-  }
-};
-
 // Accepts holefeeder://?e2e-auth-token=<jwt>[&email=…][&name=…]. The link targets the
 // root deliberately: expo-router turns any other host into a route, and an unknown
 // route crashes the render. The expiry and the subject come from the token itself, so
@@ -56,7 +40,7 @@ const parseLink = (link: string): Result<E2eSessionData> => {
   const token = params[E2E_TOKEN_PARAM];
   if (!token) return Result.failure([E2eSessionErrors.missingToken]);
 
-  const payloadResult = decodePayload(token);
+  const payloadResult = Jwt.payload(token);
   if (payloadResult.isFailure) return Result.failure(payloadResult.errors);
 
   const { sub, exp } = payloadResult.value;

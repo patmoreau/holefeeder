@@ -28,6 +28,7 @@ export * from './logger/logger';
 export * from './logger/logger-factory-for-noop';
 export * from './auth/authentication-state';
 export * from './auth/token-info';
+export * from './auth/jwt';
 export * from './auth/user';
 export * from './language/language-type';
 export * from './language/language-resolver';
