@@ -1,4 +1,4 @@
-import { AmountTone, tk } from '@holefeeder/shared/core';
+import { type NetBalanceKind, AmountTone, tk } from '@holefeeder/shared/core';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import SouthEastIcon from '@mui/icons-material/SouthEast';
@@ -9,14 +9,14 @@ import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
 import { currency, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useOverview } from '../api/use-overview';
-import type { NetOutcome, Overview } from '../domain/overview';
+import type { Overview } from '../domain/overview';
 import { IncomeExpenseChart } from './IncomeExpenseChart';
 import { percent } from './percent';
 import { useInsightsRange } from './use-insights-range';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
-const outcomeTone: Record<NetOutcome, AmountTone> = { none: 'neutral', saved: 'positive', overspent: 'negative', brokeEven: 'neutral' };
+const outcomeTone: Record<NetBalanceKind, AmountTone> = { none: 'neutral', saved: 'positive', overspent: 'negative', brokeEven: 'neutral' };
 
 const outcomeText = (overview: Overview) => {
   switch (overview.outcome) {

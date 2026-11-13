@@ -1,9 +1,10 @@
-import { DateIntervalTypes } from '@holefeeder/shared/core';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
-import { PeriodRange } from '@/summary/core/period-range';
+import { DateIntervalTypes } from './date-interval-type';
+import { PeriodRange } from './period-range';
 
-const settingsOf = (intervalType: (typeof DateIntervalTypes)[keyof typeof DateIntervalTypes], frequency: number) =>
-  aSettings({ intervalType, frequency });
+const settingsOf = (intervalType: (typeof DateIntervalTypes)[keyof typeof DateIntervalTypes], frequency: number) => ({
+  intervalType,
+  frequency,
+});
 
 describe('PeriodRange', () => {
   describe('span', () => {

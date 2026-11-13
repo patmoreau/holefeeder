@@ -1,7 +1,7 @@
+import { NetBalance } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { tk } from '@/i18n/translations';
-import { NetBalance } from '@/summary/core/net-balance';
 import { NO_SUMMARY } from '@/summary/core/watch-summary/watch-summary-use-case';
 import { useSummary } from '@/summary/presentation/core/use-summary';
 import { InsightsPeriodHeader } from './InsightsPeriodHeader';
@@ -12,7 +12,7 @@ export const NetPeriodHeader = () => {
   const summaryResult = useSummary();
 
   const summary = summaryResult.isSuccess ? summaryResult.value : NO_SUMMARY;
-  const balance = NetBalance.of(summary);
+  const balance = NetBalance.between(summary.totalIncome, summary.currentSpending);
 
   return (
     <View testID="insights-net-header">

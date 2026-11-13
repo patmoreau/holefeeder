@@ -1,10 +1,10 @@
-import { AmountTone, type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
+import { type PeriodSpan, AmountTone, type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
 import { Box, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
 import { currency, toneColor } from '@/shared/presentation/tone';
-import type { Overview, Period, PeriodFlow, Range, RangeOption } from '../domain/overview';
+import type { Overview, Period, PeriodFlow, RangeOption } from '../domain/overview';
 
 const visuallyHidden = {
   position: 'absolute',
@@ -182,7 +182,8 @@ const Tooltip = ({ flow, left, width }: { flow: PeriodFlow; left: number; width:
   </Stack>
 );
 
-const rangeLabel = (range: Range) => translate(`insights.range.${range.unit}_${range.amount === 1 ? 'one' : 'other'}`, { count: range.amount });
+const rangeLabel = (range: PeriodSpan) =>
+  translate(`insights.range.${range.unit}_${range.amount === 1 ? 'one' : 'other'}`, { count: range.amount });
 
 const RangeSwitch = ({ ranges, periods, onChange }: { ranges: RangeOption[]; periods: number; onChange: (periods: number) => void }) => (
   <ToggleButtonGroup

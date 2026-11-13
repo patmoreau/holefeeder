@@ -1,10 +1,9 @@
-import { LocalFormatter } from '@holefeeder/shared/core';
+import { NetBalanceKinds, NetBalanceResult, LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
 import { TrendBadge } from '@/shared/presentation/components/TrendBadge';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
-import { NetBalanceKinds, NetBalanceResult } from '@/summary/core/net-balance';
 
 export const NetBalanceBadge = ({ balance }: { balance: NetBalanceResult }) => {
   const { t } = useTranslation();

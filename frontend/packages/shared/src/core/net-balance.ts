@@ -1,5 +1,3 @@
-import { ComputedSummary } from '@/summary/core/watch-summary/watch-summary-use-case';
-
 export const NetBalanceKinds = {
   saved: 'saved',
   overspent: 'overspent',
@@ -29,9 +27,6 @@ const between = (income: number, spending: number): NetBalanceResult => {
   return { kind: NetBalanceKinds.saved, amount: netCents / 100, percentage: Math.round((netCents / incomeCents) * 100) };
 };
 
-const of = (summary: ComputedSummary): NetBalanceResult => between(summary.totalIncome, summary.currentSpending);
-
 export const NetBalance = {
-  of: of,
   between: between,
 };

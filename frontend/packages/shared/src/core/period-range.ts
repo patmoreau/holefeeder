@@ -1,5 +1,6 @@
-import { DateIntervalTypes } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { type DateIntervalType, DateIntervalTypes } from './date-interval-type';
+
+export type PeriodRangeSettings = { intervalType: DateIntervalType; frequency: number };
 
 export const PeriodRangeUnits = {
   day: 'day',
@@ -15,7 +16,7 @@ export type PeriodSpan = { unit: PeriodRangeUnit; amount: number };
 const inYearsWhenWhole = (amount: number, perYear: number, unit: PeriodRangeUnit): PeriodSpan =>
   amount % perYear === 0 ? { unit: PeriodRangeUnits.year, amount: amount / perYear } : { unit, amount };
 
-const span = (count: number, settings: Settings): PeriodSpan => {
+const span = (count: number, settings: PeriodRangeSettings): PeriodSpan => {
   const amount = count * settings.frequency;
 
   switch (settings.intervalType) {
