@@ -31,11 +31,11 @@
     "date-fns": "4.1.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "10.6.0",
-    "@types/jest": "30.0.0",
+    "@faker-js/faker": "catalog:",
+    "@types/jest": "catalog:",
     "@types/node": "22.15.21",
-    "jest": "30.5.2",
-    "ts-jest": "29.4.15",
+    "jest": "catalog:",
+    "ts-jest": "catalog:",
     "typescript": "5.9.3"
   }
 }
