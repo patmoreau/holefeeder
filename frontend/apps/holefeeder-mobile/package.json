@@ -102,7 +102,7 @@
     "ts-jest": "catalog:",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
-    "typescript": "6.0.3"
+    "typescript": "catalog:"
   },
   "private": true,
   "pnpm": {

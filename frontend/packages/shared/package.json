@@ -36,6 +36,6 @@
     "@types/node": "22.15.21",
     "jest": "catalog:",
     "ts-jest": "catalog:",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   }
 }
