@@ -29,8 +29,7 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
 
   const title = cashflow.description.length > 0 ? cashflow.description : categoryName;
 
-  const intervalLabel = t(DateIntervalType.labelKey[cashflow.intervalType]);
-  const cadence = cashflow.frequency > 1 ? `${cashflow.frequency} × ${intervalLabel}` : intervalLabel;
+  const cadence = DateIntervalType.cadence(cashflow.intervalType, cashflow.frequency, t);
 
   // Full-swipe delete: soft-deletes immediately (sets the inactive flag). Removal is
   // data-driven via the cashflows watch, so it matches iOS's optimistic full-swipe
