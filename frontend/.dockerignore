@@ -6,6 +6,7 @@
 !pnpm-lock.yaml
 !pnpm-workspace.yaml
 !tsconfig.json
+!tsconfig.base.json
 !packages/shared/package.json
 !packages/shared/tsconfig.json
 !packages/shared/src

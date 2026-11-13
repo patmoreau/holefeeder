@@ -7,7 +7,7 @@ FROM node:24-slim AS build
 WORKDIR /frontend
 RUN corepack enable
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/holefeeder-web/package.json apps/holefeeder-web/
 COPY apps/holefeeder-mobile/package.json apps/holefeeder-mobile/
