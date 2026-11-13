@@ -1,6 +1,5 @@
-import { Result } from '@holefeeder/shared/core';
+import { type AccountType, Result } from '@holefeeder/shared/core';
 import { useApiCommand } from '@/shared/api/use-api-command';
-import type { AccountType } from '@/shared/domain/account-type';
 
 export type NewAccountInput = {
   type: AccountType;

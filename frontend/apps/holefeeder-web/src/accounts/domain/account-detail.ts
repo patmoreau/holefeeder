@@ -1,5 +1,4 @@
-import { type BalanceCaption, DateOnly } from '@holefeeder/shared/core';
-import type { AccountType } from '@/shared/domain/account-type';
+import { AccountType, type BalanceCaption, DateOnly } from '@holefeeder/shared/core';
 
 export type AccountDetail = {
   id: string;
@@ -20,7 +19,7 @@ export type AccountDetail = {
 const valid = (value: Record<string, unknown>): AccountDetail => ({
   id: value.id as string,
   name: value.name as string,
-  type: value.type as AccountType,
+  type: AccountType.valid(value.type),
   description: (value.description as string | null) ?? '',
   openBalance: value.openBalance as number,
   openDate: DateOnly.valid(value.openDate),

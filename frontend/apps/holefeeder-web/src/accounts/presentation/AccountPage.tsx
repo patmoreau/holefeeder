@@ -8,7 +8,6 @@ import type {} from '@mui/material/themeCssVarsAugmentation';
 import { type ReactNode, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApiRefreshProvider } from '@/shared/api/ApiRefreshProvider';
-import { accountTypeKey } from '@/shared/domain/account-type';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
@@ -54,7 +53,7 @@ const HeroPill = ({ label, testID, tone, children }: { label: string; testID: st
 const formatDate = (date: DateOnly) => LocalFormatter.date(date, today(), Language.locale(), translate);
 
 const subtitleOf = (account: AccountDetail) =>
-  [account.description, translate(accountTypeKey[account.type])].filter((part) => part.trim() !== '').join(' · ');
+  [account.description, translate(tk.accountEdit.accountTypes[account.type])].filter((part) => part.trim() !== '').join(' · ');
 
 const Hero = ({ account }: { account: AccountDetail }) => (
   <Stack

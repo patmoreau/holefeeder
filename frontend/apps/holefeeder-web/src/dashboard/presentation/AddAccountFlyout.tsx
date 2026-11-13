@@ -1,6 +1,5 @@
-import { tk } from '@holefeeder/shared/core';
+import { AccountTypes, tk } from '@holefeeder/shared/core';
 import { useApiRefresh } from '@/shared/api/api-refresh';
-import { AccountTypes } from '@/shared/domain/account-type';
 import { translate } from '@/shared/i18n/translate';
 import { AccountFlyout } from '@/shared/presentation/AccountFlyout';
 import type { Notify } from '@/shared/presentation/DashboardToast';

@@ -94,7 +94,7 @@ test.describe('Account edit', () => {
 
     await expect(page.getByTestId('dashboard-toast')).toHaveText('Account saved');
     expect(modified).toEqual([
-      { id: accountId, name: 'Everyday', type: 'Savings', openDate: '2020-06-15', openBalance: '750.25', description: '' },
+      { id: accountId, name: 'Everyday', type: 'savings', openDate: '2020-06-15', openBalance: '750.25', description: '' },
     ]);
     expect(favorites).toEqual([]);
     expect(closed).toEqual([]);

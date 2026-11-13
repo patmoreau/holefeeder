@@ -76,7 +76,7 @@ test.describe('Dashboard add account', () => {
 
     await expect(page.getByTestId('dashboard-toast')).toHaveText('Account added');
     expect(bodies).toEqual([
-      { type: 'Savings', name: 'Travel Savings', openDate: '2026-01-04', openBalance: '250.75', description: 'Trip to Japan' },
+      { type: 'savings', name: 'Travel Savings', openDate: '2026-01-04', openBalance: '250.75', description: 'Trip to Japan' },
     ]);
     expect(favorites).toEqual([]);
     await expect(page.getByTestId('add-account')).toHaveCount(0);

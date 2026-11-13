@@ -1,4 +1,4 @@
-import { type Result, tk } from '@holefeeder/shared/core';
+import { type AccountType, AccountTypes, type Result, tk } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Alert,
@@ -16,9 +16,18 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { type AccountType, AccountTypes, accountTypeKey } from '@/shared/domain/account-type';
 import { translate } from '@/shared/i18n/translate';
 import { isAmountInput } from './amount-input';
+
+const accountTypeOrder: AccountType[] = [
+  AccountTypes.checking,
+  AccountTypes.savings,
+  AccountTypes.investment,
+  AccountTypes.creditCard,
+  AccountTypes.creditLine,
+  AccountTypes.loan,
+  AccountTypes.mortgage,
+];
 
 const footerButton = { py: 1.25, borderRadius: 2.5, fontSize: 15, fontWeight: 600, textTransform: 'none' };
 
@@ -149,9 +158,9 @@ const AccountForm = ({ testID, showInactive, submitLabel, initial, onSubmit, onS
           onChange={(event) => setType(event.target.value as AccountType)}
           slotProps={{ select: { SelectDisplayProps: { 'data-testid': `${testID}-type` } as object } }}
         >
-          {Object.values(AccountTypes).map((accountType) => (
+          {accountTypeOrder.map((accountType) => (
             <MenuItem key={accountType} value={accountType}>
-              {translate(accountTypeKey[accountType])}
+              {translate(tk.accountEdit.accountTypes[accountType])}
             </MenuItem>
           ))}
         </TextField>
