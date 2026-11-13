@@ -1,6 +1,6 @@
 import { ApiClient } from '@holefeeder/shared/api';
 import { type AsyncResult, Result } from '@holefeeder/shared/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { apiConfig } from '@/shared/api/api-config';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { useAuthentication } from '@/shared/auth/authentication-context';
@@ -15,53 +15,61 @@ export type AccountTransactions = {
   loadMore: () => void;
 };
 
+type Loaded = { key: string; transactions: Result<AccountTransaction[]>; total: number };
+
 export const useAccountTransactions = (accountId: string): AccountTransactions => {
   const auth = useAuthentication();
   const { version } = useApiRefresh();
-  const [transactions, setTransactions] = useState<AsyncResult<AccountTransaction[]>>(Result.loading());
-  const [total, setTotal] = useState(0);
+  const [loaded, setLoaded] = useState<Loaded>();
   const [loadingMore, setLoadingMore] = useState(false);
   const signedIn = !!auth.user && !auth.isLoading;
+  const key = `${version}:${accountId}`;
 
   const fetchPage = (offset: number) =>
     ApiClient(auth, apiConfig).getPage<Record<string, unknown>>(
       `/api/v2/accounts/${accountId}/transactions?offset=${offset}&limit=${pageSize}`
     );
 
+  const fetchFirstPage = useEffectEvent(() => fetchPage(0));
+
   useEffect(() => {
     if (!signedIn) return;
 
     let current = true;
-    setTransactions((previous) => (previous.isSuccess ? previous : Result.loading()));
-    void fetchPage(0).then((response) => {
+    void fetchFirstPage().then((response) => {
       if (!current) return;
-      if (!response.isSuccess) {
-        setTransactions(response);
-        return;
-      }
-      setTotal(response.value.total);
-      setTransactions(Result.success(AccountTransaction.validList(response.value.items)));
+      setLoaded((previous) =>
+        response.isSuccess
+          ? { key: key, transactions: Result.success(AccountTransaction.validList(response.value.items)), total: response.value.total }
+          : { key: key, transactions: response, total: previous?.total ?? 0 }
+      );
     });
 
     return () => {
       current = false;
     };
-  }, [accountId, signedIn, version]);
+  }, [key, signedIn]);
 
-  const loaded = transactions.isSuccess ? transactions.value : [];
+  const transactions: AsyncResult<AccountTransaction[]> =
+    !loaded || (loaded.key !== key && !loaded.transactions.isSuccess) ? Result.loading() : loaded.transactions;
+  const items = transactions.isSuccess ? transactions.value : [];
+  const total = loaded?.total ?? 0;
 
   const loadMore = () => {
     setLoadingMore(true);
-    void fetchPage(loaded.length).then((response) => {
+    void fetchPage(items.length).then((response) => {
       setLoadingMore(false);
-      if (!response.isSuccess) {
-        setTransactions(response);
-        return;
-      }
-      setTotal(response.value.total);
-      setTransactions(Result.success([...loaded, ...AccountTransaction.validList(response.value.items)]));
+      setLoaded(
+        response.isSuccess
+          ? {
+              key: key,
+              transactions: Result.success([...items, ...AccountTransaction.validList(response.value.items)]),
+              total: response.value.total,
+            }
+          : { key: key, transactions: response, total: total }
+      );
     });
   };
 
-  return { transactions: transactions, hasMore: loaded.length < total, loadingMore: loadingMore, loadMore: loadMore };
+  return { transactions: transactions, hasMore: items.length < total, loadingMore: loadingMore, loadMore: loadMore };
 };

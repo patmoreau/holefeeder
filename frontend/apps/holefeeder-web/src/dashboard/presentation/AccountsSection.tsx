@@ -2,7 +2,7 @@ import { AmountTone, LocalFormatter, tk, today } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
-import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { Language } from '@/shared/i18n/language';
@@ -34,19 +34,14 @@ const fade = (overflow: Overflow) => {
 const useRowOverflow = (row: RefObject<HTMLDivElement | null>, itemCount: number) => {
   const [overflow, setOverflow] = useState<Overflow>(noOverflow);
 
-  const measure = useCallback(() => {
-    const element = row.current;
-    if (!element) return;
-    setOverflow({
-      before: element.scrollLeft > 1,
-      after: element.scrollLeft + element.clientWidth < element.scrollWidth - 1,
-    });
-  }, [row]);
-
   useEffect(() => {
     const element = row.current;
     if (!element) return;
-    measure();
+    const measure = () =>
+      setOverflow({
+        before: element.scrollLeft > 1,
+        after: element.scrollLeft + element.clientWidth < element.scrollWidth - 1,
+      });
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     element.addEventListener('scroll', measure, { passive: true });
@@ -54,7 +49,7 @@ const useRowOverflow = (row: RefObject<HTMLDivElement | null>, itemCount: number
       observer.disconnect();
       element.removeEventListener('scroll', measure);
     };
-  }, [row, measure, itemCount]);
+  }, [row, itemCount]);
 
   return overflow;
 };
