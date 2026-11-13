@@ -50,16 +50,7 @@ export default defineConfig([
     ...eslintPluginPrettierRecommended,
     rules: {
       ...eslintPluginPrettierRecommended.rules,
-      'prettier/prettier': [
-        'error',
-        {
-          semi: true,
-          trailingComma: 'es5',
-          singleQuote: true,
-          printWidth: 144,
-          tabWidth: 2,
-        },
-      ],
+      'prettier/prettier': 'error',
     },
   },
 ]);
