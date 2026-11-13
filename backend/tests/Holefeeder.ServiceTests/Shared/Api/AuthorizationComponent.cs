@@ -27,7 +27,6 @@ public class AuthorizationComponent(ServerForTest server, ITestOutputHelper test
     [
         "/",
         "/healthz",
-        "/hangfire/{**path}",
         "/openapi/{documentName}.json",
         "/scalar/{documentName?}",
         "/scalar/favicon.svg",
@@ -45,6 +44,14 @@ public class AuthorizationComponent(ServerForTest server, ITestOutputHelper test
             .Given("the running service", () => { })
             .When("its routes are listed", RoutesNeitherProtectedNorPublic)
             .Then<IReadOnlyList<string>>("none is left unprotected by mistake", NoRouteIsListed)
+            .PlayAsync();
+
+    [Fact]
+    public Task WhenTheJobDashboardIsRequested() =>
+        ScenarioRunner.Create("Requesting the background job dashboard", _scenarioOutput)
+            .Given("the running service", () => { })
+            .When("the job dashboard is requested without a token", RequestingTheJobDashboard)
+            .Then<HttpResponseMessage>("it is not found", TheJobDashboardIsNotFound)
             .PlayAsync();
 
     [Fact]
@@ -73,6 +80,18 @@ public class AuthorizationComponent(ServerForTest server, ITestOutputHelper test
 
     private async Task ARegisteredUser() =>
         _user = await AUser().SavedInDbAsync(server.Database);
+
+    private async Task<HttpResponseMessage> RequestingTheJobDashboard()
+    {
+        using var client = server.CreateClient();
+        return await client.GetAsync(new Uri("/hangfire", UriKind.Relative));
+    }
+
+    private static void TheJobDashboardIsNotFound(Ensure<HttpResponseMessage> response)
+    {
+        response.Should().BeValid();
+        response.Value.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
 
     private IReadOnlyList<string> RoutesNeitherProtectedNorPublic() =>
         MappedRoutes()

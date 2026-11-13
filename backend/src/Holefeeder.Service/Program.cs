@@ -133,7 +133,6 @@ app
     .MapMyDataEndpoints()
     .MapHomeEndpoints();
 
-app.UseHangfire(builder.Configuration);
 app.UseHealthChecks();
 app.MigrateDb(DatabaseConnection.StringFrom(app.Services));
 
