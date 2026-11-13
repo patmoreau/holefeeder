@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { AmountTone, tk } from '@holefeeder/shared/core';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import SouthEastIcon from '@mui/icons-material/SouthEast';
@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
-import { currency, type Tone, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
+import { currency, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useOverview } from '../api/use-overview';
 import type { NetOutcome, Overview } from '../domain/overview';
 import { IncomeExpenseChart } from './IncomeExpenseChart';
@@ -16,7 +16,7 @@ import { useInsightsRange } from './use-insights-range';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
-const outcomeTone: Record<NetOutcome, Tone> = { none: 'neutral', saved: 'positive', overspent: 'negative', brokeEven: 'neutral' };
+const outcomeTone: Record<NetOutcome, AmountTone> = { none: 'neutral', saved: 'positive', overspent: 'negative', brokeEven: 'neutral' };
 
 const outcomeText = (overview: Overview) => {
   switch (overview.outcome) {

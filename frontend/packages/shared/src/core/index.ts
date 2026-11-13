@@ -5,6 +5,7 @@ export * from './result';
 export * from './validate';
 export * from './id';
 export * from './money';
+export * from './amount-tone';
 export * from './local-formatter';
 export * from './variation';
 export * from './date-only';

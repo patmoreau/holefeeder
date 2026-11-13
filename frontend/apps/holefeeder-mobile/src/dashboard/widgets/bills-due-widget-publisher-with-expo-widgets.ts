@@ -1,8 +1,7 @@
-import { Logger, Money, Result, withDate } from '@holefeeder/shared/core';
+import { AmountTone, Logger, Money, Result, withDate } from '@holefeeder/shared/core';
 import { BillsDueEntry, BillsDuePeriod, BillsDueTotal } from '@/dashboard/core/publish-bills-due-widget/bills-due-summary';
 import { BillsDueWidgetPublisher, BillsDueWidgetPublisherErrors } from '@/dashboard/core/publish-bills-due-widget/bills-due-widget-publisher';
 import BillsDueWidget, { BillsDueAmountProps, BillsDueTotalProps, BillsDueWidgetProps } from '@/dashboard/widgets/BillsDueWidget';
-import { displayAmount } from '@/shared/presentation/core/display-amount';
 
 export type BillsDueWidgetDisplay = {
   formatAmount: (amount: number) => string;
@@ -27,7 +26,7 @@ export const BillsDueWidgetPublisherWithExpoWidgets = (display: BillsDueWidgetDi
   });
 
   const entryProps = (entry: BillsDueEntry, period: BillsDuePeriod): BillsDueWidgetProps => {
-    const projected = displayAmount(period.projected);
+    const projected = AmountTone.display(period.projected);
     return {
       state: 'ready',
       logo: display.logo,

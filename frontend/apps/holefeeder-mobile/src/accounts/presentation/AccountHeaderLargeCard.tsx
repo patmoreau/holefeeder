@@ -1,10 +1,9 @@
-import { LocalFormatter, today } from '@holefeeder/shared/core';
+import { AmountTone, LocalFormatter, today } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { AccountDetail } from '@/accounts/core/account-detail';
 import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
-import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { borderRadius, fontSize, fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -76,8 +75,8 @@ export const AccountHeaderLargeCard = ({ account }: { account: AccountDetail }) 
 
   const upcomingChange = AccountDetail.upcomingChange(account);
   const upcomingTone: Tone = upcomingChange === 0 ? 'neutral' : AccountDetail.isUpcomingFavourable(account) ? 'positive' : 'negative';
-  const balance = displayAmount(AccountDetail.ownedBalance(account));
-  const projected = displayAmount(AccountDetail.ownedProjectedBalance(account));
+  const balance = AmountTone.display(AccountDetail.ownedBalance(account));
+  const projected = AmountTone.display(AccountDetail.ownedProjectedBalance(account));
 
   const pillStyle = { positive: styles.positivePill, negative: styles.negativePill, neutral: styles.neutralPill };
   const textStyle = { positive: styles.positiveText, negative: styles.negativeText, neutral: styles.neutralText };

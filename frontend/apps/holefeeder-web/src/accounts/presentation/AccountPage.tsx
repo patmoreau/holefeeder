@@ -1,4 +1,4 @@
-import { type AsyncResult, type DateOnly, LocalFormatter, tk, today } from '@holefeeder/shared/core';
+import { AmountTone, type AsyncResult, type DateOnly, LocalFormatter, tk, today } from '@holefeeder/shared/core';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -16,7 +16,7 @@ import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToas
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { ListSkeleton } from '@/shared/presentation/ListSkeleton';
 import { NewTransactionFlyout } from '@/shared/presentation/NewTransactionFlyout';
-import { type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
+import { toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { TransactionList } from '@/shared/presentation/TransactionList';
 import { useAccountDetail } from '../api/use-account-detail';
 import { useAccountTransactions } from '../api/use-account-transactions';
@@ -25,9 +25,9 @@ import { EditAccountFlyout } from './EditAccountFlyout';
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
-const toneBackground: Record<Exclude<Tone, 'neutral'>, string> = { positive: 'success.light', negative: 'error.light' };
+const toneBackground: Record<Exclude<AmountTone, 'neutral'>, string> = { positive: 'success.light', negative: 'error.light' };
 
-const pillSx = (tone: Tone) => ({
+const pillSx = (tone: AmountTone) => ({
   px: 1.25,
   py: 0.5,
   borderRadius: 9999,
@@ -42,7 +42,7 @@ const pillSx = (tone: Tone) => ({
     : { color: toneColor[tone], bgcolor: toneBackground[tone] }),
 });
 
-const HeroPill = ({ label, testID, tone, children }: { label: string; testID: string; tone: Tone; children: ReactNode }) => (
+const HeroPill = ({ label, testID, tone, children }: { label: string; testID: string; tone: AmountTone; children: ReactNode }) => (
   <Stack spacing={0.75} alignItems="center" data-testid={testID}>
     <Typography sx={heroText}>{label}</Typography>
     <Typography data-testid={`${testID}-amount`} sx={pillSx(tone)}>
@@ -94,10 +94,10 @@ const Hero = ({ account }: { account: AccountDetail }) => (
         <HeroPill label={translate(tk.accountCard.updated)} testID="account-updated" tone="neutral">
           {formatDate(account.updated)}
         </HeroPill>
-        <HeroPill label={translate(tk.accountCard.upcoming)} testID="account-upcoming" tone={toneOf(account.upcoming)}>
+        <HeroPill label={translate(tk.accountCard.upcoming)} testID="account-upcoming" tone={AmountTone.of(account.upcoming)}>
           {unsignedCurrency(account.upcoming)}
         </HeroPill>
-        <HeroPill label={translate(tk.accountCard.projected)} testID="account-projected" tone={toneOf(account.projectedBalance)}>
+        <HeroPill label={translate(tk.accountCard.projected)} testID="account-projected" tone={AmountTone.of(account.projectedBalance)}>
           {unsignedCurrency(account.projectedBalance)}
         </HeroPill>
       </Stack>

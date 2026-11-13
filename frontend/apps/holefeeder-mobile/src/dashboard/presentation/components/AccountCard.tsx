@@ -1,4 +1,4 @@
-import { Id, LocalFormatter, today } from '@holefeeder/shared/core';
+import { AmountTone, Id, LocalFormatter, today } from '@holefeeder/shared/core';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View, type ViewInstance, type ViewProps } from 'react-native';
@@ -10,7 +10,6 @@ import { tk } from '@/i18n/translations';
 import { AppCard } from '@/shared/presentation/components/AppCard';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { AppLoadingIndicator } from '@/shared/presentation/components/native/AppLoadingIndicator';
-import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { fontWeight, spacing } from '@/types/theme/design-tokens';
@@ -118,8 +117,8 @@ export const AccountCard = ({ account, width = 300, minHeight, onMeasure, style,
           {variationResult.isSuccess &&
             (() => {
               const detail = variationResult.value;
-              const balance = displayAmount(AccountDetail.ownedBalance(detail));
-              const projected = displayAmount(AccountDetail.ownedProjectedBalance(detail));
+              const balance = AmountTone.display(AccountDetail.ownedBalance(detail));
+              const projected = AmountTone.display(AccountDetail.ownedProjectedBalance(detail));
               const toneStyle = { positive: styles.positiveAmount, negative: styles.negativeAmount, neutral: undefined };
               return (
                 <>

@@ -1,8 +1,7 @@
-import { Logger, Result } from '@holefeeder/shared/core';
+import { AmountTone, Logger, Result } from '@holefeeder/shared/core';
 import { SpendingSnapshot } from '@/dashboard/core/publish-spending-widget/spending-snapshot';
 import { SpendingWidgetPublisher, SpendingWidgetPublisherErrors } from '@/dashboard/core/publish-spending-widget/spending-widget-publisher';
 import SpendingWidget, { SpendingWidgetProps } from '@/dashboard/widgets/SpendingWidget';
-import { displayAmount } from '@/shared/presentation/core/display-amount';
 
 export type SpendingWidgetDisplay = {
   formatAmount: (amount: number) => string;
@@ -15,7 +14,7 @@ const logger = Logger.create('SpendingWidgetPublisherWithExpoWidgets');
 
 export const SpendingWidgetPublisherWithExpoWidgets = (display: SpendingWidgetDisplay): SpendingWidgetPublisher => {
   const snapshotProps = (snapshot: SpendingSnapshot): SpendingWidgetProps => {
-    const projected = displayAmount(snapshot.projected);
+    const projected = AmountTone.display(snapshot.projected);
     return {
       state: 'ready',
       logo: display.logo,

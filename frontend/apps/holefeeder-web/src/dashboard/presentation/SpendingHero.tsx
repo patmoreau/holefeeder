@@ -1,21 +1,21 @@
-import { tk } from '@holefeeder/shared/core';
+import { AmountTone, tk } from '@holefeeder/shared/core';
 import { Alert, Box, Skeleton, Stack, Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { translate } from '@/shared/i18n/translate';
-import { currency, roundsToZero, type Tone, toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
+import { currency, toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardSummary } from '../api/use-dashboard-summary';
 import type { DashboardSummary } from '../domain/dashboard-summary';
 
-const toneBackground: Record<Tone, string> = { positive: 'success.light', negative: 'error.light', neutral: 'background.paper' };
+const toneBackground: Record<AmountTone, string> = { positive: 'success.light', negative: 'error.light', neutral: 'background.paper' };
 
-const toneChannel = (theme: Theme, tone: Tone) =>
+const toneChannel = (theme: Theme, tone: AmountTone) =>
   tone === 'positive' ? theme.vars!.palette.success.lightChannel : theme.vars!.palette.error.lightChannel;
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
 const TrendBadge = ({ summary }: { summary: DashboardSummary }) => {
-  const tone: Tone = summary.expenseVariation > 0 ? 'negative' : 'positive';
+  const tone: AmountTone = summary.expenseVariation > 0 ? 'negative' : 'positive';
   return (
     <Stack
       direction="row"
@@ -44,7 +44,7 @@ const TrendBadge = ({ summary }: { summary: DashboardSummary }) => {
 };
 
 const TotalPill = ({ label, value, testID }: { label: string; value: number; testID: string }) => {
-  const tone = toneOf(value);
+  const tone = AmountTone.of(value);
   return (
     <Stack spacing={0.75} alignItems="center">
       <Typography sx={heroText}>{label}</Typography>
@@ -75,7 +75,7 @@ const Hero = ({ summary }: { summary: DashboardSummary }) => (
       >
         {currency(summary.currentExpenses)}
       </Typography>
-      {!roundsToZero(summary.averageExpenses) && <TrendBadge summary={summary} />}
+      {!AmountTone.roundsToZero(summary.averageExpenses) && <TrendBadge summary={summary} />}
     </Stack>
     <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} useFlexGap sx={{ gap: { xs: 2.5, md: 5 } }}>
       <Box

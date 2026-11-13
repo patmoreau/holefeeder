@@ -1,4 +1,4 @@
-import { type AsyncResult, tk } from '@holefeeder/shared/core';
+import { AmountTone, type AsyncResult, tk } from '@holefeeder/shared/core';
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -13,7 +13,7 @@ import { DeleteDialog } from '@/shared/presentation/DeleteDialog';
 import { EmptyList } from '@/shared/presentation/EmptyList';
 import { RowActionsMenu } from '@/shared/presentation/RowActionsMenu';
 import { Rows, Section } from '@/shared/presentation/Section';
-import { currency, roundsToZero } from '@/shared/presentation/tone';
+import { currency } from '@/shared/presentation/tone';
 import { useCategories } from '../api/use-categories';
 import { useDeleteCategory } from '../api/use-delete-category';
 import type { Category } from '../domain/category';
@@ -32,7 +32,7 @@ const CategoryDetails = ({ category }: { category: Category }) => (
     )}
     <Box sx={{ flexGrow: 1 }} />
     {category.system && <Typography sx={secondaryText}>{translate(tk.categories.system)}</Typography>}
-    {!category.system && !roundsToZero(category.budgetAmount) && (
+    {!category.system && !AmountTone.roundsToZero(category.budgetAmount) && (
       <Typography data-testid="categories-row-budget" sx={secondaryText}>
         {currency(category.budgetAmount)}
       </Typography>

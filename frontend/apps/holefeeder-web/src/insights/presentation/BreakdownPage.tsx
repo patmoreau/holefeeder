@@ -1,4 +1,4 @@
-import { tk } from '@holefeeder/shared/core';
+import { AmountTone, tk } from '@holefeeder/shared/core';
 import { type AsyncResult } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Alert, Box, FormControlLabel, IconButton, ListItem, Skeleton, Stack, Switch, Typography } from '@mui/material';
@@ -6,7 +6,7 @@ import { createContext, type ReactNode, useContext, useState } from 'react';
 import { Link } from 'react-router';
 import { translate } from '@/shared/i18n/translate';
 import { Rows, Section } from '@/shared/presentation/Section';
-import { currency, roundsToZero, type Tone, toneColor } from '@/shared/presentation/tone';
+import { currency, toneColor } from '@/shared/presentation/tone';
 import { type Breakdown, type BudgetStatus, type CategoryBreakdown, type TagBreakdown } from '../domain/breakdown';
 import { percent } from './percent';
 
@@ -29,7 +29,7 @@ const useKind = () => useContext(KindContext)!;
 
 const heroText = { fontSize: 15, color: 'primary.contrastText' };
 
-const budgetTone: Record<BudgetStatus, Tone> = { none: 'neutral', under: 'positive', over: 'negative' };
+const budgetTone: Record<BudgetStatus, AmountTone> = { none: 'neutral', under: 'positive', over: 'negative' };
 
 const TrendBadge = ({ breakdown }: { breakdown: Breakdown }) => {
   const kind = useKind();
@@ -76,7 +76,7 @@ const Hero = ({ breakdown }: { breakdown: Breakdown }) => {
         >
           {currency(breakdown.current)}
         </Typography>
-        {!roundsToZero(breakdown.average) && <TrendBadge breakdown={breakdown} />}
+        {!AmountTone.roundsToZero(breakdown.average) && <TrendBadge breakdown={breakdown} />}
       </Stack>
       <Stack spacing={0.5} alignItems="flex-start">
         <Typography sx={heroText}>{translate(tk.insights.average)}</Typography>
@@ -105,7 +105,7 @@ const Footnote = ({ testID, color, children }: { testID: string; color?: string;
 );
 
 const Average = ({ testID, average }: { testID: string; average: number }) =>
-  roundsToZero(average) ? null : (
+  AmountTone.roundsToZero(average) ? null : (
     <Footnote testID={testID}>{translate(tk.insights.categoryBreakdown.avgPerPeriod, { amount: currency(average) })}</Footnote>
   );
 

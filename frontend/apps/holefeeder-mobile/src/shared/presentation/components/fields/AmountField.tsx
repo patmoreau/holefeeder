@@ -1,4 +1,4 @@
-import { LocalFormatter } from '@holefeeder/shared/core';
+import { AmountTone, LocalFormatter } from '@holefeeder/shared/core';
 import { useEffect, useMemo } from 'react';
 import { TextInput } from 'react-native';
 import { useAmountInput } from '@/shared/presentation/components/fields/use-amount-input';
@@ -12,8 +12,6 @@ import { fontWeight } from '@/types/theme';
 
 const AMOUNT_FONT_SIZE = 48;
 const SYMBOL_FONT_SIZE = 28;
-
-export type AmountTone = 'negative' | 'positive' | 'neutral';
 
 export type AmountFieldProps = {
   amount: number;

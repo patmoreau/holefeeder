@@ -1,9 +1,9 @@
-import { type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
+import { AmountTone, type BandPoint, SurplusBands, tk } from '@holefeeder/shared/core';
 import { Box, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
-import { currency, toneColor, toneOf } from '@/shared/presentation/tone';
+import { currency, toneColor } from '@/shared/presentation/tone';
 import type { Overview, Period, PeriodFlow, Range, RangeOption } from '../domain/overview';
 
 const visuallyHidden = {
@@ -109,8 +109,8 @@ const Legend = () => (
 );
 
 const netText = (net: number) => {
-  if (toneOf(net) === 'positive') return translate(tk.insights.chart.tooltipSaved, { amount: currency(net) });
-  if (toneOf(net) === 'negative') return translate(tk.insights.net.overspent, { amount: currency(Math.abs(net)) });
+  if (AmountTone.of(net) === 'positive') return translate(tk.insights.chart.tooltipSaved, { amount: currency(net) });
+  if (AmountTone.of(net) === 'negative') return translate(tk.insights.net.overspent, { amount: currency(Math.abs(net)) });
   return translate(tk.insights.net.brokeEven);
 };
 
@@ -176,7 +176,7 @@ const Tooltip = ({ flow, left, width }: { flow: PeriodFlow; left: number; width:
       dashed
       testID="insights-chart-tooltip-expenses"
     />
-    <Typography data-testid="insights-chart-tooltip-net" sx={{ fontSize: 13, fontWeight: 600, color: toneColor[toneOf(flow.net)] }}>
+    <Typography data-testid="insights-chart-tooltip-net" sx={{ fontSize: 13, fontWeight: 600, color: toneColor[AmountTone.of(flow.net)] }}>
       {netText(flow.net)}
     </Typography>
   </Stack>
@@ -430,7 +430,7 @@ export const IncomeExpenseChart = ({
         label={translate(tk.insights.chart.net)}
         value={overview.totalNet}
         testID="insights-total-net"
-        color={toneColor[toneOf(overview.totalNet)]}
+        color={toneColor[AmountTone.of(overview.totalNet)]}
       />
     </Stack>
     <Typography data-testid="insights-chart-footnote" sx={{ fontSize: 13, color: 'text.secondary' }}>

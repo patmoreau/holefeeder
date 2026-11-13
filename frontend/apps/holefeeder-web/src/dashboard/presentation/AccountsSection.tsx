@@ -1,4 +1,4 @@
-import { LocalFormatter, tk, today } from '@holefeeder/shared/core';
+import { AmountTone, LocalFormatter, tk, today } from '@holefeeder/shared/core';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Alert, Box, Button, Divider, IconButton, Paper, Skeleton, Stack, Typography } from '@mui/material';
@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import { balanceCaptionKey } from '@/shared/domain/balance-caption';
 import { Language } from '@/shared/i18n/language';
 import { translate } from '@/shared/i18n/translate';
-import { toneColor, toneOf, unsignedCurrency } from '@/shared/presentation/tone';
+import { toneColor, unsignedCurrency } from '@/shared/presentation/tone';
 import { useDashboardAccounts } from '../api/use-dashboard-accounts';
 import type { DashboardAccount } from '../domain/dashboard-account';
 
@@ -18,7 +18,7 @@ const lineHeight = 1.2;
 
 const smallLabel = { fontSize: 11, lineHeight: lineHeight, color: 'text.secondary' };
 
-const amountText = (value: number) => ({ fontSize: 20, fontWeight: 600, lineHeight: lineHeight, color: toneColor[toneOf(value)] });
+const amountText = (value: number) => ({ fontSize: 20, fontWeight: 600, lineHeight: lineHeight, color: toneColor[AmountTone.of(value)] });
 
 type Overflow = { before: boolean; after: boolean };
 

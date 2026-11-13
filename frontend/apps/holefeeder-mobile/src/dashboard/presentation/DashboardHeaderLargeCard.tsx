@@ -1,4 +1,4 @@
-import { LocalFormatter } from '@holefeeder/shared/core';
+import { AmountTone, LocalFormatter } from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { projectedNetFlow } from '@/dashboard/core/projected-net-flow/projected-net-flow';
@@ -6,9 +6,7 @@ import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { tk } from '@/i18n/translations';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { ExpenseTrendBadge } from '@/shared/presentation/components/ExpenseTrendBadge';
-import { AmountTone } from '@/shared/presentation/components/fields/AmountField';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';
-import { displayAmount } from '@/shared/presentation/core/display-amount';
 import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { useTheme } from '@/shared/theme/core/use-theme';
@@ -77,9 +75,9 @@ export const DashboardHeaderLargeCard = ({ summary, upcomingFlows = [] }: { summ
   const styles = useStyles(createStyles);
 
   const baseNetFlow = summary.netFlow.isOver ? summary.netFlow.amount : -summary.netFlow.amount;
-  const netFlow = displayAmount(baseNetFlow);
+  const netFlow = AmountTone.display(baseNetFlow);
 
-  const projected = displayAmount(projectedNetFlow(summary, upcomingFlows));
+  const projected = AmountTone.display(projectedNetFlow(summary, upcomingFlows));
 
   const pillBackground: Record<AmountTone, { backgroundColor: string }> = {
     positive: { backgroundColor: theme.colors.positiveBackground },
