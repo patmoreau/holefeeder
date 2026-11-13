@@ -1,15 +1,13 @@
+import { InsightsRange } from '@holefeeder/shared/core';
 import { useState } from 'react';
 
 const storageKey = 'holefeeder.insights.periods';
-const offered = [3, 6, 12];
-const fallback = 6;
 
 const stored = (): number => {
   try {
-    const value = Number(localStorage.getItem(storageKey));
-    return offered.includes(value) ? value : fallback;
+    return InsightsRange.restore(localStorage.getItem(storageKey));
   } catch {
-    return fallback;
+    return InsightsRange.fallback;
   }
 };
 
