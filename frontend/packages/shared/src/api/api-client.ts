@@ -15,6 +15,12 @@ export type ApiClient = {
   post: <TInput, TOutput>(endpoint: string, data?: TInput, req?: RequestInit) => Promise<Result<TOutput>>;
 };
 
+const problemCodeOf = async (response: Response): Promise<string[]> => {
+  if (!(response.headers.get('content-type') ?? '').includes('json')) return [];
+  const problem = (await response.json().catch(() => undefined)) as { code?: unknown } | undefined;
+  return typeof problem?.code === 'string' ? [problem.code] : [];
+};
+
 export const ApiClient = (authenticationState: AuthenticationState, apiConfig: ApiClientConfig): ApiClient => {
   const executeFetch = async (endpoint: string, init: RequestInit): Promise<Response> => {
     const controller = new AbortController();
@@ -76,7 +82,7 @@ export const ApiClient = (authenticationState: AuthenticationState, apiConfig: A
       }
 
       if (!response.ok) {
-        return Result.failure([apiErrorForStatus(response.status)]);
+        return Result.failure([...(await problemCodeOf(response)), apiErrorForStatus(response.status)]);
       }
 
       const contentLength = response.headers.get('content-length');

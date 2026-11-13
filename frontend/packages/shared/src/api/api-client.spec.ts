@@ -119,6 +119,26 @@ describe('ApiClient', () => {
       expect(result).toBeFailureWithErrors([ApiErrors.unauthorized]);
     });
 
+    it('should report the problem code ahead of the status error', async () => {
+      const authState = anAuthenticationState();
+      const apiClient = ApiClient(authState, apiConfig);
+
+      fetchForTest.simulate({
+        request: aFetchRequest({ url, matchHeaders: false }),
+        response: aFetchResponse({
+          status: 409,
+          ok: false,
+          statusText: 'Conflict',
+          headers: new Headers({ 'Content-Type': 'application/problem+json' }),
+          body: { code: 'category-name-taken' },
+        }),
+      });
+
+      const result = await apiClient.post(endpoint);
+
+      expect(result).toBeFailureWithErrors(['category-name-taken', ApiErrors.conflict]);
+    });
+
     it('should return failure when fetch throws an error', async () => {
       const authState = anAuthenticationState();
       const apiClient = ApiClient(authState, apiConfig);
