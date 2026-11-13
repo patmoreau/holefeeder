@@ -5,15 +5,6 @@
     <NoWarn>$(NoWarn);CA1515;CA1822;S2094;S2325</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <CollectCoverage>true</CollectCoverage>
-    <CoverletOutput>$(MSBuildThisFileDirectory)../coverage/</CoverletOutput>
-    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
-    <!-- <CoverletExclude>**/Migrations/**</CoverletExclude> -->
-    <!-- <CoverletInclude>$(CoverletInclude)</CoverletInclude> -->
-    <CoverletRunSettings>$(MSBuildThisFileDirectory)coverlet.runsettings</CoverletRunSettings>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.OpenApi" NoWarn="NU1605" />
   </ItemGroup>

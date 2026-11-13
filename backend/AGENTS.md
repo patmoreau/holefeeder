@@ -132,8 +132,10 @@ dotnet format --severity error --verbosity diagnostic
 
 ### Code Coverage
 ```bash
-dotnet test tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj
-dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:coverage -filefilters:-*.g.cs
+dotnet test --project tests/Holefeeder.ServiceTests/Holefeeder.ServiceTests.csproj \
+  --coverage --coverage-output-format cobertura \
+  --coverage-output coverage.cobertura.xml --results-directory coverage
+dotnet reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:coverage '-filefilters:-*.g.cs'
 ```
 
 ### Docker (local dev)
@@ -201,7 +203,6 @@ The Dockerfile only builds the published image.
 - Roslyn analyzers run on every build (`AnalysisMode=All`)
 - Nullable reference types enabled everywhere
 - Central package version management via `Directory.Packages.props`
-- `tests/Directory.Build.props` enables Coverlet coverage output to `/coverage/`
 
 ### Local Infrastructure (docker-compose.yaml)
 
