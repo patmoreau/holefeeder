@@ -4,16 +4,24 @@ using Holefeeder.ServiceTests.Support.TestKit;
 
 using Microsoft.AspNetCore.Http;
 
-using NSubstitute;
-
 namespace Holefeeder.ServiceTests.Support.Api;
 
 public class UserMiddlewareTests
 {
-    private static readonly RequestDelegate RequestDelegate = Substitute.For<RequestDelegate>();
-    private readonly UserMiddleware _middleware = new(RequestDelegate);
     private readonly UserContextAccessor _contextAccessor = new();
     private readonly UsersInMemory _users = new();
+    private readonly UserMiddleware _middleware;
+
+    private HttpContext? _contextPassedToNext;
+    private User? _userSeenByNext;
+
+    public UserMiddlewareTests() =>
+        _middleware = new UserMiddleware(httpContext =>
+        {
+            _contextPassedToNext = httpContext;
+            _userSeenByNext = _contextAccessor.Current;
+            return Task.CompletedTask;
+        });
 
     [Fact]
     public async Task Invoke_SetsNoUser_WhenNoUserInContext()
@@ -22,8 +30,8 @@ public class UserMiddlewareTests
 
         await _middleware.InvokeAsync(httpContext, _contextAccessor, _users);
 
-        _contextAccessor.Current.Should().Be(User.NoUser);
-        await RequestDelegate.Received().Invoke(httpContext);
+        _contextPassedToNext.Should().BeSameAs(httpContext);
+        _userSeenByNext.Should().Be(User.NoUser);
     }
 
     [Fact]
@@ -33,8 +41,8 @@ public class UserMiddlewareTests
 
         await _middleware.InvokeAsync(httpContext, _contextAccessor, _users);
 
-        _contextAccessor.Current.Should().Be(User.NoUser);
-        await RequestDelegate.Received().Invoke(httpContext);
+        _contextPassedToNext.Should().BeSameAs(httpContext);
+        _userSeenByNext.Should().Be(User.NoUser);
     }
 
     [Fact]
@@ -46,7 +54,7 @@ public class UserMiddlewareTests
 
         await _middleware.InvokeAsync(httpContext, _contextAccessor, _users);
 
-        _contextAccessor.Current.Should().Be(user);
-        await RequestDelegate.Received().Invoke(httpContext);
+        _contextPassedToNext.Should().BeSameAs(httpContext);
+        _userSeenByNext.Should().Be(user);
     }
 }

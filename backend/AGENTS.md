@@ -192,7 +192,7 @@ The Dockerfile only builds the published image.
 | Logging | Serilog → stdout (compact JSON; Loki/Grafana in prod) |
 | Background jobs | Hangfire (PostgreSQL storage) |
 | Frontend | React + MUI in `frontend/apps/holefeeder-web`, served by nginx from its own image |
-| Testing | xUnit v3 + AwesomeAssertions + FluentScenario, Testcontainers PostgreSQL (no mocks — NSubstitute is legacy, being phased out) |
+| Testing | xUnit v3 + AwesomeAssertions + FluentScenario, Testcontainers PostgreSQL; no mocking library |
 | Coverage | `dotnet test --coverage --coverage-output-format cobertura` (Microsoft.Testing.Platform), as CI runs it |
 
 ### Code Quality Enforcement
