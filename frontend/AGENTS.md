@@ -85,12 +85,14 @@ one of them:
 
 - **Branded value objects**: `Money`, `Variation`, `Id`, `DateOnly`
 - **Result pattern**: `Result<T>`, `AsyncResult<T>` (`Success | Failure | Loading`)
-- **Domain helpers**: `DateInterval`, `DateIntervalType`, `withDate`, `buildUrl`, `combineWatchers`
+- **Domain helpers**: `DateInterval`, `DateIntervalType` (with `labelKey` and `cadence`), `withDate`, `buildUrl`, `combineWatchers`
+- **Domain types shared by both apps**: `AccountType`, `BalanceCaption`, `CategoryType`, `NetBalance`, `PeriodRange`, `InsightsRange`
+- **Display helpers**: `AmountTone` (tone of an amount or category type), `LocalFormatter` (incl. `percent`), `AppVersion.label`
 - **Repository interfaces**: `StoreItem`, `StoreItemsRepository`
 - **Use-case base types**: `Command`, `Query`
 - **Logger**: `Logger` singleton + `loggerFactoryForNoop`
-- **Auth types**: `AuthenticationState`, `TokenInfo`, `User`
-- **Language type**: `LanguageType`
+- **Auth**: `AuthenticationState`, `TokenInfo`, `User`, `Jwt.payload` (base64url-safe JWT claims)
+- **Language**: `LanguageType`, `LanguageResolver` (`resolve`, `localeOf`, `labelKey`)
 - **Translations**: `en`, `fr` locale objects + `tk` key-path helper + `TranslationStructure`
 
 **`Id` dependency injection** — `expo-crypto` is NOT imported by `@holefeeder/shared`. Each app must call

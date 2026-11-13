@@ -68,7 +68,7 @@ src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
   auth/         ← Auth state and logic
   core/         ← Shared domain primitives + kernel value objects shared by 3+ slices
-                  (Money, Id, Result; plus CategoryType, Settings, inactive, system)
+                  (Money, Id, Result; plus Settings, inactive, system)
   hooks/        ← Cross-cutting React hooks
   bills-due-badge/ ← Bills due badge switch state, provider and notification permission (settings + flows)
   language/     ← Language selection state and provider
