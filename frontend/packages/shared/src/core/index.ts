@@ -6,6 +6,7 @@ export * from './validate';
 export * from './id';
 export * from './money';
 export * from './amount-tone';
+export * from './app-version';
 export * from './account-type';
 export * from './balance-caption';
 export * from './category-type';
