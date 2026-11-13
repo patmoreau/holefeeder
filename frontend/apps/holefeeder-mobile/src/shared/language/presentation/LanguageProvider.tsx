@@ -1,4 +1,4 @@
-import { LanguageType, Logger } from '@holefeeder/shared/core';
+import { LanguageResolver, LanguageType, Logger } from '@holefeeder/shared/core';
 import React, { createContext, useEffect, useState } from 'react';
 import { getI18nInstance, initI18n } from '@/i18n';
 import { LanguageState } from '@/shared/language/core/language-state';
@@ -16,9 +16,7 @@ const availableLanguages = [
 export const LanguageContext = createContext<LanguageState | undefined>(undefined);
 
 export const LanguageProvider = ({ children, storage }: { children: React.ReactNode; storage: AppStorage }) => {
-  const [language, setLanguage] = useState<LanguageType>(
-    () => (storage.getString(APP_SETTINGS_LANGUAGE_KEY) as LanguageType) || LanguageType.en
-  );
+  const [language, setLanguage] = useState<LanguageType>(() => LanguageResolver.resolve(storage.getString(APP_SETTINGS_LANGUAGE_KEY), []));
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
