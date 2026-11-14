@@ -29,12 +29,6 @@
       ]
     },
     {
-      "description": "Microsoft.AspNetCore.OpenApi 10.0.x pins Microsoft.OpenApi to [2.12.0, 3.0.0). 3.x only becomes usable with .NET 11.",
-      "matchManagers": ["nuget"],
-      "matchPackageNames": ["Microsoft.OpenApi"],
-      "allowedVersions": "<3.0.0"
-    },
-    {
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
