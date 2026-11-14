@@ -1,6 +1,6 @@
 import { CategoryTypes, type AsyncResult, DateIntervalTypes, DateOnly, Money } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { waitFor } from '@testing-library/react-native';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { aSummaryData } from '@/summary/__tests__/summary-data-for-test';
 import { SummaryRepositoryInMemory } from '@/summary/__tests__/summary-repository-in-memory';
 import { PeriodTotals } from '@/summary/core/period-series';

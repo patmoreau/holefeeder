@@ -67,8 +67,8 @@ src/[feature]/            ← Feature modules (e.g. accounts/, flows/, settings/
 src/shared/               ← Cross-cutting shared modules
   api/          ← API service layer
   auth/         ← Auth state and logic
-  core/         ← Shared domain primitives + kernel value objects shared by 3+ slices
-                  (Money, Id, Result; plus Settings, inactive, system)
+  core/         ← App-local kernel shared by 3+ slices (system, env, logger, error keys);
+                  Money, Id, Result and Settings come from @holefeeder/shared/core
   hooks/        ← Cross-cutting React hooks
   bills-due-badge/ ← Bills due badge switch state, provider and notification permission (settings + flows)
   language/     ← Language selection state and provider
@@ -97,8 +97,7 @@ is one such read-model slice (current-period spending) consumed one-way by both 
 Branded value objects, Result pattern, logger, auth types, and locale strings live in
 `packages/shared` and are published as `@holefeeder/shared`. The package has no root export —
 import from `@holefeeder/shared/core` (or `@holefeeder/shared/testkit` in tests). App-local
-modules under `src/shared/core/` and the stubs in `src/i18n/` build on it while preserving the
-`@/shared/core/...` import paths.
+modules under `src/shared/core/` and the i18next setup in `src/i18n/` build on it.
 
 At app bootstrap (`src/app/_layout.tsx`) the UUID generator and logger factory must be injected:
 

@@ -1,11 +1,11 @@
 import { type AsyncResult, DateIntervalTypes, today, withDate } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { waitFor } from '@testing-library/react-native';
 import { startOfMonth } from 'date-fns';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
 import { UpcomingFlow } from '@/flows/core/flows/upcoming-flow';
 import { WatchUpcomingFlowsUseCase } from '@/flows/core/flows/watch-upcoming/watch-upcoming-flows-use-case';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 
 describe('WatchUpcomingFlowsUseCase', () => {
   const asOfDate = withDate(startOfMonth(today())).toDateOnly();

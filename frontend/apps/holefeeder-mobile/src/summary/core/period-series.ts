@@ -1,5 +1,4 @@
-import { CategoryTypes, DateIntervalType, DateOnly, Money } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { CategoryTypes, DateIntervalType, DateOnly, Money, Settings } from '@holefeeder/shared/core';
 import { SummaryData } from './summary-data';
 
 export type PeriodTotals = {

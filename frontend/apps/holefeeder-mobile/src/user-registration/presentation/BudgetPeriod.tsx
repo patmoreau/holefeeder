@@ -1,3 +1,4 @@
+import { DefaultSettings } from '@holefeeder/shared/core';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -5,7 +6,6 @@ import { tk } from '@/i18n/translations';
 import { SettingsFormData } from '@/settings/core/settings-form-data';
 import { BudgetSettingsFormContent } from '@/settings/presentation/budget/BudgetSettingsFormContent';
 import { SettingsFormProvider, validateSettingsForm } from '@/settings/presentation/core/use-settings-form';
-import { DefaultSettings } from '@/shared/core/settings';
 import { AppScreen } from '@/shared/presentation/AppScreen';
 import { AppPinnedActions } from '@/shared/presentation/components/native/AppPinnedActions';
 import { useOnboardingBudgetPeriod } from '@/user-registration/presentation/core/use-onboarding-budget-period';

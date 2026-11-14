@@ -1,6 +1,6 @@
 import { type AsyncResult, today } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { waitFor } from '@testing-library/react-native';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { aCategoryIncome } from '@/statistics/__tests__/category-income-for-test';
 import { InsightsRepositoryInMemory } from '@/statistics/__tests__/insights-repository-in-memory';
 import { CategoryIncome } from '@/statistics/core/category-income';

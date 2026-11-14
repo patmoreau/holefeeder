@@ -1,5 +1,5 @@
 import { type AsyncResult, DateOnly } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { Settings } from '@holefeeder/shared/core';
 import { InsightsRepository } from '../insights-repository';
 import { TagSpending } from '../tag-spending';
 

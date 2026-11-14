@@ -1,5 +1,4 @@
-import { DateIntervalTypes, DateOnly, LocalFormatter } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { DateIntervalTypes, DateOnly, LocalFormatter, Settings } from '@holefeeder/shared/core';
 import { PeriodTotals } from './period-series';
 
 const format = (date: DateOnly, locale: string, options: Intl.DateTimeFormatOptions) =>

@@ -1,5 +1,5 @@
 import { type AsyncResult, Result, StoreItem, StoreItemsRepository, StoreItemsRepositoryErrors } from '@holefeeder/shared/core';
-import { DefaultSettings, Settings, SETTINGS_CODE } from '@/shared/core/settings';
+import { DefaultSettings, Settings, SETTINGS_CODE } from '@holefeeder/shared/core';
 
 export const GetSettingsUseCase = (repository: StoreItemsRepository) => {
   const watchForCode = (onDataChange: (result: AsyncResult<Settings>) => void) =>

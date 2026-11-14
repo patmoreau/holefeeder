@@ -1,5 +1,5 @@
 import { CategoryTypes, DateIntervalTypes, DateOnly, Money } from '@holefeeder/shared/core';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { aSummaryData } from '@/summary/__tests__/summary-data-for-test';
 import { PeriodSeries } from '@/summary/core/period-series';
 

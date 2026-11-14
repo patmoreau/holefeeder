@@ -1,4 +1,8 @@
-import { DateIntervalType, DateIntervalTypes, DateOnly, Result, today, Validate, Validator } from '@holefeeder/shared/core';
+import { DateIntervalType, DateIntervalTypes } from './date-interval-type';
+import { DateOnly } from './date-only';
+import { Result } from './result';
+import { Validate, Validator } from './validate';
+import { today } from './with-date';
 
 export const SETTINGS_CODE = 'settings';
 

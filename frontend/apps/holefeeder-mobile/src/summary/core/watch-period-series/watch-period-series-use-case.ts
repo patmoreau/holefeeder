@@ -1,5 +1,5 @@
 import { type AsyncResult, DateOnly, Result } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { Settings } from '@holefeeder/shared/core';
 import { PeriodSeries, PeriodTotals } from '../period-series';
 import { SummaryData } from '../summary-data';
 import { SummaryRepository } from '../summary-repository';

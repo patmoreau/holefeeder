@@ -11,3 +11,4 @@ export * from './enum-for-test';
 export * from './user-for-test';
 export * from './token-info-for-test';
 export * from './authentication-state-for-test';
+export * from './settings-for-test';

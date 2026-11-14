@@ -1,6 +1,6 @@
 import { type AsyncResult, Result } from '@holefeeder/shared/core';
+import { DefaultSettings } from '@holefeeder/shared/core';
 import { useEffect, useMemo, useState } from 'react';
-import { DefaultSettings } from '@/shared/core/settings';
 import { useSettings } from '@/shared/presentation/core/use-settings';
 import { useRepositories } from '@/shared/repositories/core/use-repositories';
 import { ComputedSummary, WatchSummaryUseCase } from '@/summary/core/watch-summary/watch-summary-use-case';

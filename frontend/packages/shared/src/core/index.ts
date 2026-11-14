@@ -13,6 +13,7 @@ export * from './category-type';
 export * from './insights-range';
 export * from './net-balance';
 export * from './period-range';
+export * from './settings';
 export * from './local-formatter';
 export * from './variation';
 export * from './date-only';

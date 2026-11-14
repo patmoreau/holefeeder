@@ -1,7 +1,7 @@
 import { Money, Result } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 import { aCategorySpending } from '@/statistics/__tests__/category-spending-for-test';
 import { aCategoryTagSpending } from '@/statistics/__tests__/category-tag-spending-for-test';

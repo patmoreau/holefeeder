@@ -87,7 +87,7 @@ one of them:
   web's MUI palette both read from them; change a colour here, not in an app.
 - `@holefeeder/shared/testkit` — Jest-only test helpers: the `Result` matchers, faker
   builders for shared types (`aString`, `anId`, `anAmount`, `aPastDate`, `aDateInterval`,
-  `anAccountType`, `aUser`, `aTokenInfo`, `anAuthenticationState`, …) and `FetchForTest`
+  `anAccountType`, `aSettings`, `aUser`, `aTokenInfo`, `anAuthenticationState`, …) and `FetchForTest`
   with `aFetchRequest` / `aFetchResponse`. App-specific builders stay in the app.
 
 **`/core` exports:**
@@ -95,7 +95,7 @@ one of them:
 - **Branded value objects**: `Money`, `Variation`, `Id`, `DateOnly`
 - **Result pattern**: `Result<T>`, `AsyncResult<T>` (`Success | Failure | Loading`)
 - **Domain helpers**: `DateInterval`, `DateIntervalType` (with `labelKey` and `cadence`), `withDate`, `buildUrl`, `combineWatchers`
-- **Domain types shared by both apps**: `AccountType`, `BalanceCaption`, `CategoryType`, `NetBalance`, `PeriodRange`, `InsightsRange`
+- **Domain types shared by both apps**: `AccountType`, `BalanceCaption`, `CategoryType`, `NetBalance`, `PeriodRange`, `InsightsRange`, `Settings` (the budget period)
 - **Display helpers**: `AmountTone` (tone of an amount or category type), `LocalFormatter` (incl. `percent`), `AppVersion.label`
 - **Repository interfaces**: `StoreItem`, `StoreItemsRepository`
 - **Use-case base types**: `Command`, `Query`

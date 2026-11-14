@@ -1,10 +1,9 @@
-import { DateInterval, LocalFormatter, today } from '@holefeeder/shared/core';
+import { DateInterval, LocalFormatter, today, DefaultSettings } from '@holefeeder/shared/core';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { tk } from '@/i18n/translations';
-import { DefaultSettings } from '@/shared/core/settings';
 import { AppText } from '@/shared/presentation/components/AppText';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppNative } from '@/shared/presentation/components/native/AppNative';

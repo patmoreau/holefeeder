@@ -1,7 +1,7 @@
 import { Result } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 import { InsightsRepositoryInMemory } from '@/statistics/__tests__/insights-repository-in-memory';
 import { aTagSpending } from '@/statistics/__tests__/tag-spending-for-test';

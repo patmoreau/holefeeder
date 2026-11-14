@@ -1,7 +1,15 @@
-import { NetBalance, NetBalanceKinds, NetBalanceResult, PeriodRange, LocalFormatter, Money, SurplusBands } from '@holefeeder/shared/core';
+import {
+  NetBalance,
+  NetBalanceKinds,
+  NetBalanceResult,
+  PeriodRange,
+  LocalFormatter,
+  Money,
+  SurplusBands,
+  DefaultSettings,
+} from '@holefeeder/shared/core';
 import { useTranslation } from 'react-i18next';
 import { tk } from '@/i18n/translations';
-import { DefaultSettings } from '@/shared/core/settings';
 import { AppColumn } from '@/shared/presentation/components/native/AppColumn';
 import { AppFieldSection } from '@/shared/presentation/components/native/AppFieldSection';
 import { AppListSectionTitle } from '@/shared/presentation/components/native/AppListSectionTitle';

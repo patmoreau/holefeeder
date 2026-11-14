@@ -1,5 +1,5 @@
 import { type AsyncResult, DateInterval, Money, Result, today } from '@holefeeder/shared/core';
-import { Settings } from '@/shared/core/settings';
+import { Settings } from '@holefeeder/shared/core';
 import { calculateSummary, SummaryResult } from '../calculate-summary';
 import { SummaryData } from '../summary-data';
 import { SummaryRepository } from '../summary-repository';

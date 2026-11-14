@@ -1,5 +1,7 @@
-import { aPastDate, aDateIntervalType, aCount } from '@holefeeder/shared/testkit';
-import { Settings } from '@/shared/core/settings';
+import { Settings } from '../core';
+import { aPastDate } from './date-for-test';
+import { aDateIntervalType } from './enum-for-test';
+import { aCount } from './number-for-test';
 
 const defaultSettings = (): Settings => ({
   effectiveDate: aPastDate(),

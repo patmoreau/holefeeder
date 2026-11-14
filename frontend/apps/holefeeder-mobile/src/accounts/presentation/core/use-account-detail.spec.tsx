@@ -1,4 +1,5 @@
 import { Result } from '@holefeeder/shared/core';
+import { aSettings } from '@holefeeder/shared/testkit';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import { anAccount } from '@/accounts/core/__tests__/account-for-test';
@@ -7,7 +8,6 @@ import { useAccountDetail } from '@/accounts/presentation/core/use-account-detai
 import { anAccountVariation } from '@/flows/core/flows/__tests__/account-variation-for-test';
 import { aCashflowVariation } from '@/flows/core/flows/__tests__/cashflow-variation-for-test';
 import { FlowsRepositoryInMemory } from '@/flows/core/flows/__tests__/flows-repository-in-memory';
-import { aSettings } from '@/shared/core/__tests__/settings-for-test';
 import { RepositoryContextForTest } from '@/shared/repositories/__tests__/RepositoryContextForTest';
 
 const mockUseSettings = jest.fn();
