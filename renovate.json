@@ -66,9 +66,44 @@
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["major"],
-      "dependencyDashboardApproval": true,
-      "groupName": "Frontend major updates",
-      "groupSlug": "frontend-major-updates"
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Majors that must move together.",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": ["i18next", "react-i18next"],
+      "groupName": "i18next major updates",
+      "groupSlug": "i18next-major-updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": ["/^@mui\\//"],
+      "groupName": "MUI major updates",
+      "groupSlug": "mui-major-updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": ["vite", "vitest", "@vitejs/plugin-react"],
+      "groupName": "Vite major updates",
+      "groupSlug": "vite-major-updates"
+    },
+    {
+      "description": "Peers cap these majors: typescript-eslint and ts-jest for typescript, @powersync/react-native for op-sqlite, and the community CLI follows the React Native version of the Expo SDK.",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": [
+        "typescript",
+        "@op-engineering/op-sqlite",
+        "@react-native-community/cli"
+      ],
+      "enabled": false
     },
     {
       "matchUpdateTypes": ["major"],
