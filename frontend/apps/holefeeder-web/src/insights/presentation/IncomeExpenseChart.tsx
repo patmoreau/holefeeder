@@ -31,7 +31,7 @@ const colors = {
 const darkColors = {
   '--chart-income': Palettes.dark.chartIncome,
   '--chart-expenses': Palettes.dark.chartExpenses,
-  '--chart-deficit': Palettes.dark.error,
+  '--chart-deficit': Palettes.dark.negative,
 };
 
 const daysIn = (period: Period) => (Date.parse(period.end) - Date.parse(period.start)) / 86_400_000 + 1;

@@ -169,6 +169,15 @@ test.describe('Insights', () => {
     ]);
   });
 
+  test('ShouldShadeTheDeficitInTheNegativeTone_InDarkMode', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await withOverview(page);
+
+    await page.goto('/insights');
+
+    await expect(page.locator('[data-testid="insights-chart-band"][data-kind="deficit"]')).toHaveCSS('fill', 'rgb(255, 111, 66)');
+  });
+
   test('ShouldDrawFlatLines_WhenNothingHappened', async ({ page }) => {
     await withOverview(
       page,
