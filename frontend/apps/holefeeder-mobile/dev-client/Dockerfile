@@ -1,9 +1,9 @@
-FROM node:24-slim AS base
+FROM node:26-slim AS base
 
 # Install pnpm and build dependencies
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN npm install -g corepack@0.36.0 && corepack enable
 
 RUN apt-get update && apt-get install -y \
     python3 \

@@ -3,9 +3,9 @@
 ###################################
 # Built from the frontend monorepo; the image builds from frontend/ so the shared
 # package is in context (see frontend/.dockerignore).
-FROM node:24-slim AS build
+FROM node:26-slim AS build
 WORKDIR /frontend
-RUN corepack enable
+RUN npm install -g corepack@0.36.0 && corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
