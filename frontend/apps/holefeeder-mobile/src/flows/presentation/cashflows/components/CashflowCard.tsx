@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Cashflow } from '@/flows/core/flows/cashflow';
 import { DeactivateUpcomingFlowUseCase } from '@/flows/core/flows/deactivate-upcoming/deactivate-upcoming-flow-use-case';
+import { FlowTitle } from '@/flows/core/flows/flow-title';
 import { tk } from '@/i18n/translations';
 import { AppButton } from '@/shared/presentation/components/native/AppButton';
 import { AppChip } from '@/shared/presentation/components/native/AppChip';
@@ -27,7 +28,7 @@ export const CashflowCard = ({ cashflow, categoryName, color }: CashflowCardProp
   const { currentLocale, currencyCode } = useLocaleFormatter();
   const { flowRepository } = useRepositories();
 
-  const title = cashflow.description.length > 0 ? cashflow.description : categoryName;
+  const title = FlowTitle.title({ description: cashflow.description, categoryName: categoryName });
 
   const cadence = DateIntervalType.cadence(cashflow.intervalType, cashflow.frequency, t);
 
