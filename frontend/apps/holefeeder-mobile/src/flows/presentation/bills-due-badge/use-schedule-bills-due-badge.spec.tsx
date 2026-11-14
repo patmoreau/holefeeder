@@ -1,14 +1,4 @@
-import {
-  CategoryTypes,
-  DateIntervalTypes,
-  DateOnly,
-  Logger,
-  loggerFactoryForNoop,
-  today,
-  User,
-  withDate,
-  SETTINGS_CODE,
-} from '@holefeeder/shared/core';
+import { CategoryTypes, DateIntervalTypes, DateOnly, Logger, loggerFactoryForNoop, today, User, withDate } from '@holefeeder/shared/core';
 import { aUser, aSettings } from '@holefeeder/shared/testkit';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
@@ -26,6 +16,7 @@ import { NotificationPermissionInMemory } from '@/shared/bills-due-badge/__tests
 import { NotificationPermissionStatuses } from '@/shared/bills-due-badge/core/notification-permission';
 import { useBillsDueBadge } from '@/shared/bills-due-badge/core/use-bills-due-badge';
 import { BillsDueBadgeProvider } from '@/shared/bills-due-badge/presentation/BillsDueBadgeProvider';
+import { SETTINGS_CODE } from '@/shared/core/settings-code';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { PowerSyncProviderForTest } from '@/shared/persistence/__tests__/PowerSyncProviderForTest';
 

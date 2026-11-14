@@ -8,7 +8,6 @@ import {
   today,
   User,
   withDate,
-  SETTINGS_CODE,
 } from '@holefeeder/shared/core';
 import { aUser, aSettings } from '@holefeeder/shared/testkit';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
@@ -22,6 +21,7 @@ import { aCashflow } from '@/flows/core/flows/__tests__/cashflow-for-test';
 import { aTransaction } from '@/flows/core/flows/__tests__/transaction-for-test';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
 import { AuthenticationContextForTest } from '@/shared/auth/__tests__/AuthenticationContextForTest';
+import { SETTINGS_CODE } from '@/shared/core/settings-code';
 import { DatabaseForTest, setupDatabaseForTest } from '@/shared/persistence/__tests__/database-for-test';
 import { PowerSyncProviderForTest } from '@/shared/persistence/__tests__/PowerSyncProviderForTest';
 

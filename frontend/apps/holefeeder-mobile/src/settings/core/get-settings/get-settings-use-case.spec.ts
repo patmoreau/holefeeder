@@ -1,9 +1,10 @@
 import type { AsyncResult } from '@holefeeder/shared/core';
-import { DefaultSettings, Settings, SETTINGS_CODE } from '@holefeeder/shared/core';
+import { DefaultSettings, Settings } from '@holefeeder/shared/core';
 import { aSettings } from '@holefeeder/shared/testkit';
 import { waitFor } from '@testing-library/react-native';
 import { aStoreItem } from '@/shared/__tests__/store-item-for-test';
 import { StoreItemsRepositoryInMemory } from '@/shared/__tests__/store-items-repository-for-test';
+import { SETTINGS_CODE } from '@/shared/core/settings-code';
 import { GetSettingsUseCase } from './get-settings-use-case';
 
 describe('GetSettingsUseCase', () => {

@@ -4,8 +4,6 @@ import { Result } from './result';
 import { Validate, Validator } from './validate';
 import { today } from './with-date';
 
-export const SETTINGS_CODE = 'settings';
-
 export type Settings = {
   effectiveDate: DateOnly;
   intervalType: DateIntervalType;
@@ -31,9 +29,6 @@ const create = (value: Record<string, unknown>): Result<Settings> =>
     frequency: Validate.validate(isValidFrequency, value.frequency, [SettingsErrors.invalid]),
   });
 
-const toStoreItemData = (settings: Settings): string => JSON.stringify(settings);
-
 export const Settings = {
   create: create,
-  toStoreItemData: toStoreItemData,
 };

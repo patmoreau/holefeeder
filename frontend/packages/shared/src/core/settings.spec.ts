@@ -1,4 +1,3 @@
-import { aSettings } from '../testkit/settings-for-test';
 import { DateIntervalTypeErrors, DateIntervalTypes } from './date-interval-type';
 import { DateOnlyErrors } from './date-only';
 import { Settings, SettingsErrors } from './settings';
@@ -53,13 +52,5 @@ describe('Settings', () => {
     const result = Settings.create(jsonString);
 
     expect(result).toBeFailureWithErrors([SettingsErrors.invalid]);
-  });
-
-  describe('toStoreItemData', () => {
-    it('returns valid JSON', () => {
-      const settings = aSettings();
-      const result = Settings.toStoreItemData(settings);
-      expect(result).toBe(JSON.stringify(settings));
-    });
   });
 });
