@@ -16,12 +16,9 @@ import { useTags } from '../api/use-tags';
 import type { Tag } from '../domain/tag';
 import { TagRenameDialog } from './TagRenameDialog';
 
-const counted = (count: number, one: string, other: string) => (count === 0 ? [] : [translate(count === 1 ? one : other, { count: count })]);
+const counted = (count: number, key: string) => (count === 0 ? [] : [translate(key, { count: count })]);
 
-const usagesOf = (tag: Tag) => [
-  ...counted(tag.transactionCount, tk.tags.transactionOne, tk.tags.transactionOther),
-  ...counted(tag.activeCashflowCount, tk.tags.cashflowOne, tk.tags.cashflowOther),
-];
+const usagesOf = (tag: Tag) => [...counted(tag.transactionCount, tk.tags.transaction), ...counted(tag.activeCashflowCount, tk.tags.cashflow)];
 
 const usageOf = (tag: Tag) => usagesOf(tag).join(' · ');
 
