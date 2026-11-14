@@ -10,7 +10,11 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
 
   const getToken = async (): Promise<TokenInfo | undefined> => {
     try {
-      return AccessToken.info(await getAccessTokenSilently());
+      const token = await getAccessTokenSilently();
+      if (token) {
+        return AccessToken.info(token);
+      }
+      return undefined;
     } catch {
       return undefined;
     }
