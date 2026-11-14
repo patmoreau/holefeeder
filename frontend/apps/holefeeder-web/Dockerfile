@@ -3,7 +3,7 @@
 ###################################
 # Built from the frontend monorepo; the image builds from frontend/ so the shared
 # package is in context (see frontend/.dockerignore).
-FROM node:24-slim AS build
+FROM node:26-slim AS build
 WORKDIR /frontend
 RUN corepack enable
 

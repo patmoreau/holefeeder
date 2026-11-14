@@ -1,4 +1,4 @@
-FROM node:24-slim AS base
+FROM node:26-slim AS base
 
 # Install pnpm and build dependencies
 ENV PNPM_HOME="/pnpm"
