@@ -69,6 +69,12 @@
       "dependencyDashboardApproval": true
     },
     {
+      "description": "pnpm is pinned twice: packageManager in frontend/package.json and frontend/mise.toml.",
+      "matchPackageNames": ["pnpm"],
+      "groupName": "pnpm",
+      "groupSlug": "pnpm"
+    },
+    {
       "description": "Majors that must move together.",
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
