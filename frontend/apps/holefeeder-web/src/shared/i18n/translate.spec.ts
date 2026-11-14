@@ -19,6 +19,14 @@ describe('translate', () => {
     expect(translate(tk.dashboard.largeHeader.variation)).toBe('{{variation}} vs Average');
   });
 
+  it('ShouldPickTheSingularFormForACountOfOne', () => {
+    expect(translate(tk.insights.range.month, { count: 1 })).toBe('1 month');
+  });
+
+  it('ShouldPickThePluralFormForOtherCounts', () => {
+    expect(translate(tk.insights.range.month, { count: 6 })).toBe('6 months');
+  });
+
   it('ShouldReturnTheKeyWhenMissing', () => {
     expect(translate('dashboard.unknown')).toBe('dashboard.unknown');
   });

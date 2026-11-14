@@ -183,8 +183,7 @@ const Tooltip = ({ flow, left, width }: { flow: PeriodFlow; left: number; width:
   </Stack>
 );
 
-const rangeLabel = (range: PeriodSpan) =>
-  translate(`insights.range.${range.unit}_${range.amount === 1 ? 'one' : 'other'}`, { count: range.amount });
+const rangeLabel = (range: PeriodSpan) => translate(tk.insights.range[range.unit], { count: range.amount });
 
 const RangeSwitch = ({ ranges, periods, onChange }: { ranges: RangeOption[]; periods: number; onChange: (periods: number) => void }) => (
   <ToggleButtonGroup
