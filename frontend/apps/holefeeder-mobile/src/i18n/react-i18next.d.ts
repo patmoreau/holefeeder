@@ -1,5 +1,5 @@
+import type { en } from '@holefeeder/shared/core';
 import 'react-i18next';
-import { en } from './locales/en-CA/translations';
 
 // Tell react-i18next the shape of our resources
 declare module 'react-i18next' {

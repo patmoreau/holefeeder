@@ -131,7 +131,7 @@ Locale strings live in `packages/shared/src/core/translations/locales/`. Add key
 - `packages/shared/src/core/translations/locales/en-CA/translations.ts`
 - `packages/shared/src/core/translations/locales/fr-CA/translations.ts`
 
-The mobile app re-exports everything from `@holefeeder/shared/core` via stubs in `src/i18n/locales/*/`.
+The mobile app hands those `en` / `fr` objects from `@holefeeder/shared/core` to i18next in `src/i18n/i18n.ts`.
 
 ## `apps/holefeeder-web`
 

@@ -1,9 +1,7 @@
-import { Logger } from '@holefeeder/shared/core';
+import { en, fr, Logger } from '@holefeeder/shared/core';
 import * as Localization from 'expo-localization';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { en } from './locales/en-CA/translations';
-import { fr } from './locales/fr-CA/translations';
 
 const log = Logger.create('i18n');
 

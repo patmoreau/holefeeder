@@ -78,7 +78,7 @@ src/shared/               ← Cross-cutting shared modules
   theme/        ← Design system styling and tokens
 src/app/                  ← expo-router route files only
 src/config/config.ts      ← All env-var config (never read process.env directly elsewhere)
-src/i18n/                 ← i18next, en-CA and fr-CA locales
+src/i18n/                 ← i18next setup over the shared en-CA and fr-CA locales
 src/types/icons.ts        ← AppIcons (SF Symbols) + AppIconsMapping (→ Material Icons)
 ```
 
@@ -303,8 +303,8 @@ for these entries, and remove a workaround only after the bug stops reproducing 
 ## i18n
 
 All user-facing strings must use `useTranslation()` from react-i18next. Add keys to both locale files
-in **`packages/shared/src/core/translations/locales/`** (en-CA and fr-CA) — the files in `src/i18n/locales/`
-are thin re-export stubs that point to `@holefeeder/shared/core`.
+in **`packages/shared/src/core/translations/locales/`** (en-CA and fr-CA); `src/i18n/i18n.ts` loads them
+from `@holefeeder/shared/core`.
 
 ## Database Schema (PowerSync)
 
