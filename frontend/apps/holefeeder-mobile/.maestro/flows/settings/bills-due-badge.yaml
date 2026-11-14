@@ -21,6 +21,7 @@ tags:
     element:
       id: 'settings-bills-due-badge-toggle'
     direction: DOWN
+    centerElement: true
     timeout: 20000
 - assertVisible:
     id: 'settings-bills-due-badge-toggle'
