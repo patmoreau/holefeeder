@@ -29,6 +29,26 @@
       ]
     },
     {
+      "description": "The Expo SDK pins these; they move only with an SDK upgrade via expo install --fix.",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-native",
+        "react-native-web",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "react-native-worklets",
+        "react-native-screens",
+        "react-native-safe-area-context",
+        "@shopify/flash-list",
+        "@react-native-async-storage/async-storage",
+        "@react-native-picker/picker"
+      ],
+      "enabled": false
+    },
+    {
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
