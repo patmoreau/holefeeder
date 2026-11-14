@@ -36,23 +36,28 @@ public class GetAccountDetailUseCaseTests
             BalanceCaption.AvailableBalance, Balance: 1986.41m, Upcoming: 0m, ProjectedBalance: 1986.41m, Updated: new DateOnly(2026, 11, 8)));
     }
 
+    public static TheoryData<string, decimal, decimal, decimal, string, decimal> Balances => new()
+    {
+        { "Checking", 0m, 0m, 508.11m, "AmountDue", -508.11m },
+        { "CreditCard", 0m, 100m, 223.45m, "AmountDue", -123.45m },
+        { "CreditCard", 30m, 50m, 0m, "CreditBalance", 20m },
+        { "Savings", 0m, 0.004m, 0m, "AvailableBalance", 0.004m },
+        { "Mortgage", 0m, 0.004m, 0m, "AmountDue", 0.004m }
+    };
+
     [Theory]
-    [InlineData("Checking", 0, 0, 508.11, "AmountDue", -508.11)]
-    [InlineData("CreditCard", 0, 100, 223.45, "AmountDue", -123.45)]
-    [InlineData("CreditCard", 30, 50, 0, "CreditBalance", 20)]
-    [InlineData("Savings", 0, 0.004, 0, "AvailableBalance", 0.004)]
-    [InlineData("Mortgage", 0, 0.004, 0, "AmountDue", 0.004)]
+    [MemberData(nameof(Balances))]
     public async Task HandleAsync_NamesTheBalanceFromTheOwnersPointOfView(
-        string type, double openBalance, double gains, double expenses, string caption, double balance)
+        string type, decimal openBalance, decimal gains, decimal expenses, string caption, decimal balance)
     {
         var user = AUser();
-        var account = AnAccount("Account", AccountType.Valid(type), (decimal)openBalance, (decimal)gains, (decimal)expenses);
+        var account = AnAccount("Account", AccountType.Valid(type), openBalance, gains, expenses);
         _accounts.Add(user, account);
 
         var result = await _useCase.HandleAsync(new GetAccountDetailRequest(user, account.Id, Today), CancellationToken.None);
 
         result.Should().BeSuccessful();
-        result.Value.Should().BeEquivalentTo(new { Caption = Enum.Parse<BalanceCaption>(caption), Balance = (decimal)balance });
+        result.Value.Should().BeEquivalentTo(new { Caption = Enum.Parse<BalanceCaption>(caption), Balance = balance });
     }
 
     [Fact]

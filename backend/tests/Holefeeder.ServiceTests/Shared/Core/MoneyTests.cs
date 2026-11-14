@@ -4,10 +4,15 @@ namespace Holefeeder.ServiceTests.Shared.Core;
 
 public class MoneyTests
 {
+    public static TheoryData<string, decimal> Amounts => new()
+    {
+        { "0", 0m },
+        { "1450", 1450m },
+        { "88.40", 88.40m }
+    };
+
     [Theory]
-    [InlineData("0", 0)]
-    [InlineData("1450", 1450)]
-    [InlineData("88.40", 88.40)]
+    [MemberData(nameof(Amounts))]
     public void Create_Succeeds_WhenValueIsAnAmount(string value, decimal amount) =>
         Money.Create(value).Should().BeSuccessful().And.WithValue(Money.Valid(amount));
 
