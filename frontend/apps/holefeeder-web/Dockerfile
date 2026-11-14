@@ -36,7 +36,7 @@ RUN pnpm --filter "holefeeder-web..." run build
 ###################################
 # Final stage
 ###################################
-FROM nginx:1.29-alpine AS final
+FROM nginx:1.31-alpine AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 

@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:v3.7.17
+    image: traefik:v3.7.19
     container_name: reverse-proxy
     profiles: ["local"]
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       - no-new-privileges:true
 
   powersync:
-    image: journeyapps/powersync-service:1.27.2
+    image: journeyapps/powersync-service:1.28.3
     container_name: holefeeder_powersync
     restart: unless-stopped
     security_opt:
@@ -138,7 +138,7 @@ services:
     command: ["bash", "/migrator.sh"]
 
   adminer:
-    image: adminer:6.2.0
+    image: adminer:6.3.0
     container_name: adminer
     profiles: ["local"]
     restart: unless-stopped
