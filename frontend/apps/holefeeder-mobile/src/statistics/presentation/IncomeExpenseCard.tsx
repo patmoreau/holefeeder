@@ -31,7 +31,7 @@ export const IncomeExpenseCard = () => {
   const rangeOptions = options.map((count) => ({ id: String(count), count }));
   const rangeLabel = ({ count }: { count: number }) => {
     const { unit, amount } = PeriodRange.span(count, settings);
-    return t(`insights.range.${unit}`, { count: amount });
+    return t(tk.insights.range[unit], { count: amount });
   };
   const series = seriesResult.value;
   const labels = PeriodLabel.forSeries(series, settings, currentLocale, 6);

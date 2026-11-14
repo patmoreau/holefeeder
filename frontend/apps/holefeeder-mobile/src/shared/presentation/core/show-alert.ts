@@ -46,8 +46,10 @@ export const showAlert = (t: (key: string, options?: Record<string, unknown>) =>
       .map(([key, value]) => `${key}: ${value}`)
       .join('\n');
     Alert.alert(
-      t('alert.formError.title', { count: errorCount }),
-      __DEV__ ? `${t('alert.formError.message', { count: errorCount })}\n\n${errorsList}` : t('alert.formError.message', { count: errorCount }),
+      t(tk.alert.formError.title, { count: errorCount }),
+      __DEV__
+        ? `${t(tk.alert.formError.message, { count: errorCount })}\n\n${errorsList}`
+        : t(tk.alert.formError.message, { count: errorCount }),
       [
         {
           text: t(tk.alert.formError.dismissText),

@@ -20,6 +20,11 @@ describe('translations', () => {
       expect(tk.errors.noInternetConnection.message).toBe('errors.noInternetConnection.message');
     });
 
+    it('should expose the base key of a plural group without its suffix', () => {
+      expect(tk.insights.range.month).toBe('insights.range.month');
+      expect(tk.alert.formError.title).toBe('alert.formError.title');
+    });
+
     it('should preserve the structure of the original translation object', () => {
       expect(typeof tk.common).toBe('object');
       expect(typeof tk.alert).toBe('object');
@@ -176,15 +181,10 @@ describe('translations', () => {
       collectPaths(tk as Record<string, unknown>);
 
       const countStrings = (obj: Record<string, unknown>): number => {
-        let count = 0;
+        const names = Object.keys(obj).filter((key) => typeof obj[key] === 'string');
+        let count = new Set(names.map((key) => key.replace(pluralSuffixRegex, ''))).size;
         for (const key in obj) {
-          if (pluralSuffixRegex.test(key)) {
-            continue;
-          }
-
-          if (typeof obj[key] === 'string') {
-            count++;
-          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
             count += countStrings(obj[key] as Record<string, unknown>);
           }
         }

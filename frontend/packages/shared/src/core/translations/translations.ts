@@ -6,14 +6,16 @@ type RecursiveRecord<T> = {
 
 export type TranslationStructure = RecursiveRecord<typeof en>;
 
+type PluralSuffix = 'one' | 'other' | 'zero' | 'few' | 'many';
+
+type BaseKey<K> = K extends `${infer Base}_${PluralSuffix}` ? Base : K;
+
 type BuildLangObject<T, Path extends string = ''> = {
-  [K in keyof T]: T[K] extends `${string}_${'one' | 'other' | 'zero' | 'few' | 'many'}`
-    ? never
-    : T[K] extends string
-      ? Path extends ''
-        ? K
-        : `${Path}.${K & string}`
-      : BuildLangObject<T[K], Path extends '' ? K & string : `${Path}.${K & string}`>;
+  [K in keyof T as BaseKey<K>]: T[K] extends string
+    ? Path extends ''
+      ? BaseKey<K>
+      : `${Path}.${BaseKey<K> & string}`
+    : BuildLangObject<T[K], Path extends '' ? K & string : `${Path}.${K & string}`>;
 };
 
 function createLangObject<T extends Record<string, unknown>>(obj: T, prefix = ''): Record<string, unknown> {
@@ -21,16 +23,13 @@ function createLangObject<T extends Record<string, unknown>>(obj: T, prefix = ''
   const pluralSuffixRegex = /_(one|other|zero|few|many)$/;
 
   for (const key in obj) {
-    if (pluralSuffixRegex.test(key)) {
-      continue;
-    }
-
-    const path = prefix ? `${prefix}.${key}` : key;
+    const name = key.replace(pluralSuffixRegex, '');
+    const path = prefix ? `${prefix}.${name}` : name;
 
     if (typeof obj[key] === 'string') {
-      result[key] = path;
+      result[name] = path;
     } else {
-      result[key] = createLangObject(obj[key] as Record<string, unknown>, path);
+      result[name] = createLangObject(obj[key] as Record<string, unknown>, path);
     }
   }
 
