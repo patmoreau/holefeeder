@@ -1,4 +1,5 @@
 import { DateIntervalType, DateOnly, tk } from '@holefeeder/shared/core';
+import type { Settings } from '@holefeeder/shared/core';
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Button, Divider, Drawer, IconButton, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
@@ -6,7 +7,6 @@ import { useApiRefresh } from '@/shared/api/api-refresh';
 import { translate } from '@/shared/i18n/translate';
 import type { Notify } from '@/shared/presentation/DashboardToast';
 import { useSaveBudgetSettings } from '../api/use-save-budget-settings';
-import type { BudgetSettings } from '../domain/budget-settings';
 
 const testID = 'budget-settings';
 
@@ -16,7 +16,7 @@ const repeatingIntervals: DateIntervalType[] = ['daily', 'weekly', 'monthly', 'y
 
 const isWholeFrequency = (frequency: string) => /^[1-9]\d*$/.test(frequency);
 
-type BudgetSettingsFormProps = { initial: BudgetSettings; onClose: () => void; notify: Notify };
+type BudgetSettingsFormProps = { initial: Settings; onClose: () => void; notify: Notify };
 
 const BudgetSettingsForm = ({ initial, onClose, notify }: BudgetSettingsFormProps) => {
   const saveBudgetSettings = useSaveBudgetSettings();
@@ -112,7 +112,7 @@ const BudgetSettingsForm = ({ initial, onClose, notify }: BudgetSettingsFormProp
   );
 };
 
-type BudgetSettingsFlyoutProps = { open: boolean; settings: BudgetSettings; onClose: () => void; notify: Notify };
+type BudgetSettingsFlyoutProps = { open: boolean; settings: Settings; onClose: () => void; notify: Notify };
 
 export const BudgetSettingsFlyout = ({ open, settings, onClose, notify }: BudgetSettingsFlyoutProps) => (
   <Drawer

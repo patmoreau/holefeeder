@@ -1,4 +1,4 @@
-import { LanguageResolver, type AsyncResult, LanguageType, tk } from '@holefeeder/shared/core';
+import { LanguageResolver, type AsyncResult, LanguageType, tk, Settings } from '@holefeeder/shared/core';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -32,7 +32,6 @@ import { translate } from '@/shared/i18n/translate';
 import { DashboardToast, type Notify } from '@/shared/presentation/DashboardToast';
 import { Rows, Section } from '@/shared/presentation/Section';
 import { useBudgetSettings } from '../api/use-budget-settings';
-import type { BudgetSettings } from '../domain/budget-settings';
 import { budgetSummary } from './budget-summary';
 import { BudgetSettingsFlyout } from './BudgetSettingsFlyout';
 
@@ -184,7 +183,7 @@ const ProfileSection = () => {
 
 const budgetValueSx = { fontSize: 15, color: 'text.secondary', textAlign: 'right' };
 
-const BudgetValue = ({ settings }: { settings: AsyncResult<BudgetSettings> }) => {
+const BudgetValue = ({ settings }: { settings: AsyncResult<Settings> }) => {
   if (settings.isLoading) return <Skeleton data-testid="settings-budget-summary" width={160} />;
 
   return (

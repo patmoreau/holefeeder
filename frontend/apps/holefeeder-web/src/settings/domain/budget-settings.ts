@@ -1,12 +1,6 @@
-import { type DateIntervalType, DateOnly } from '@holefeeder/shared/core';
+import { type DateIntervalType, DateOnly, type Settings } from '@holefeeder/shared/core';
 
-export type BudgetSettings = {
-  effectiveDate: DateOnly;
-  intervalType: DateIntervalType;
-  frequency: number;
-};
-
-const valid = (value: Record<string, unknown>): BudgetSettings => ({
+const valid = (value: Record<string, unknown>): Settings => ({
   effectiveDate: DateOnly.valid(value.effectiveDate),
   intervalType: value.intervalType as DateIntervalType,
   frequency: value.frequency as number,
