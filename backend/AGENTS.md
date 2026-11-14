@@ -22,7 +22,7 @@ values rather than merely checking that a result exists.
 
 ## Architecture — Holefeeder.Service
 
-The backend is one ASP.NET Core 10 minimal API. The store items search
+The backend is one ASP.NET Core 11 minimal API. The store items search
 (`src/Holefeeder.Service/StoreItems/`) is the reference implementation. The legacy
 layered projects (`Holefeeder.Domain`, `.Application`, `.Infrastructure`) it replaced are
 gone; how they were retired is in `../docs/plans/backend-service.md` and
@@ -185,7 +185,7 @@ The Dockerfile only builds the published image.
 
 | Concern | Technology |
 |---|---|
-| Runtime | .NET 10 |
+| Runtime | .NET 11 |
 | API routing | Minimal APIs |
 | Database | PostgreSQL 18 |
 | Data access | Dapper with hand-written SQL; no EF Core |

@@ -1,7 +1,7 @@
 ###################################
 # Restore stage
 ###################################
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:11.0 AS restore
 WORKDIR /source
 
 COPY *.slnx .
@@ -32,7 +32,7 @@ RUN dotnet publish /property:Version=${VERSION} -c Release -o /app --no-restore
 ###################################
 # Final stage
 ###################################
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS final
 LABEL author="Drifter Apps Inc."
 EXPOSE 80
 EXPOSE 443

@@ -31,7 +31,7 @@ This is a monorepo containing both the backend and the clients:
 You will need the following:
 
 1. [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
-1. [.NET 10](https://dotnet.microsoft.com/en-us/download)
+1. [.NET 11](https://dotnet.microsoft.com/en-us/download)
 1. [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) 11, for `frontend/`
 1. [Xcode](https://developer.apple.com/xcode/), for the iOS mobile app
 
