@@ -124,6 +124,7 @@ test.describe('Dashboard transactions', () => {
     await page.goto('/');
 
     await expect(page.getByTestId('dashboard-transactions-error')).toHaveRole('alert');
+    await expect(page.getByTestId('dashboard-transactions-error')).toHaveText('Recent transactions could not be loaded.');
     await expect(page.getByTestId('dashboard-transaction-row')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-transactions-skeleton')).toHaveCount(0);
   });

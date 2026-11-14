@@ -118,6 +118,7 @@ test.describe('Dashboard spending', () => {
     await page.goto('/');
 
     await expect(page.getByTestId('dashboard-spending-error')).toHaveRole('alert');
+    await expect(page.getByTestId('dashboard-spending-error')).toHaveText('Your spending could not be loaded.');
     await expect(page.getByTestId('dashboard-spending-hero')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-spending-skeleton')).toHaveCount(0);
   });

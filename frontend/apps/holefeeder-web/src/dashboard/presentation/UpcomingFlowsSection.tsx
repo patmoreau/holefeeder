@@ -113,7 +113,7 @@ const UpcomingContent = ({ notify }: { notify: Notify }) => {
   if (flows.isFailure) {
     return (
       <Alert severity="error" data-testid="dashboard-upcoming-error">
-        {flows.errors.join(', ')}
+        {translate(tk.dashboard.upcomingLoadFailed)}
       </Alert>
     );
   }

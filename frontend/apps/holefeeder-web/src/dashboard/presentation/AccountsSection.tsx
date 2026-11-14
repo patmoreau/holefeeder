@@ -246,7 +246,7 @@ const AccountsContent = ({ onAddAccount }: { onAddAccount: () => void }) => {
       <>
         <SectionHeader />
         <Alert severity="error" data-testid="dashboard-accounts-error">
-          {accounts.errors.join(', ')}
+          {translate(tk.dashboard.accountsLoadFailed)}
         </Alert>
       </>
     );

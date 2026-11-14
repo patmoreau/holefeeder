@@ -197,6 +197,10 @@ export const en = {
     newTransaction: 'New transaction',
     previousAccounts: 'Previous accounts',
     nextAccounts: 'Next accounts',
+    accountsLoadFailed: 'Your accounts could not be loaded.',
+    spendingLoadFailed: 'Your spending could not be loaded.',
+    upcomingLoadFailed: 'Upcoming payments could not be loaded.',
+    transactionsLoadFailed: 'Recent transactions could not be loaded.',
     largeHeader: {
       avgSpending: 'Avg. Spending',
       netFlow: 'Net Flow',
@@ -560,6 +564,8 @@ export const en = {
   },
   accountDetail: {
     loadMore: 'Load More',
+    loadFailed: 'The account could not be loaded.',
+    transactionsLoadFailed: 'The transactions could not be loaded.',
   },
   settings: {
     title: 'Settings',

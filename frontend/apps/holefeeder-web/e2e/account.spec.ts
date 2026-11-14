@@ -168,7 +168,7 @@ test.describe('Account', () => {
 
     await page.goto(`/accounts/${accountId}`);
 
-    await expect(page.getByTestId('account-error')).toBeVisible();
+    await expect(page.getByTestId('account-error')).toHaveText('The account could not be loaded.');
   });
 
   test('ShouldListTheTransactionsOfTheAccount', async ({ page }) => {
@@ -208,7 +208,7 @@ test.describe('Account', () => {
 
     await page.goto(`/accounts/${accountId}`);
 
-    await expect(page.getByTestId('account-transactions-error')).toBeVisible();
+    await expect(page.getByTestId('account-transactions-error')).toHaveText('The transactions could not be loaded.');
   });
 
   test('ShouldInviteToAddAnExpense_WhenTheAccountHasNoTransactions', async ({ page }) => {

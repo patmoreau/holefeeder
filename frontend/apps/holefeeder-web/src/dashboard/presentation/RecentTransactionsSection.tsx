@@ -17,7 +17,7 @@ const TransactionsContent = ({ notify }: { notify: Notify }) => {
   if (transactions.isFailure) {
     return (
       <Alert severity="error" data-testid="dashboard-transactions-error">
-        {transactions.errors.join(', ')}
+        {translate(tk.dashboard.transactionsLoadFailed)}
       </Alert>
     );
   }

@@ -222,6 +222,7 @@ test.describe('Dashboard accounts', () => {
     await page.goto('/');
 
     await expect(page.getByTestId('dashboard-accounts-error')).toHaveRole('alert');
+    await expect(page.getByTestId('dashboard-accounts-error')).toHaveText('Your accounts could not be loaded.');
     await expect(page.getByTestId('dashboard-account-card')).toHaveCount(0);
     await expect(page.getByTestId('dashboard-account-skeleton')).toHaveCount(0);
   });

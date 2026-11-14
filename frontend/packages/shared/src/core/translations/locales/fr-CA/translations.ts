@@ -199,6 +199,10 @@ export const fr: TranslationStructure = {
     newTransaction: 'Nouvelle transaction',
     previousAccounts: 'Comptes précédents',
     nextAccounts: 'Comptes suivants',
+    accountsLoadFailed: "Vos comptes n'ont pas pu être chargés.",
+    spendingLoadFailed: "Vos dépenses n'ont pas pu être chargées.",
+    upcomingLoadFailed: "Les paiements à venir n'ont pas pu être chargés.",
+    transactionsLoadFailed: "Les transactions récentes n'ont pas pu être chargées.",
     largeHeader: {
       avgSpending: 'Dép. moy.',
       netFlow: 'Flux net',
@@ -564,6 +568,8 @@ export const fr: TranslationStructure = {
   },
   accountDetail: {
     loadMore: 'Charger plus',
+    loadFailed: "Le compte n'a pas pu être chargé.",
+    transactionsLoadFailed: "Les transactions n'ont pas pu être chargées.",
   },
   settings: {
     title: 'Paramètres',

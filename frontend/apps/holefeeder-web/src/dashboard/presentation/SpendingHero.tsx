@@ -103,7 +103,7 @@ export const SpendingHero = () => {
   if (summary.isFailure) {
     return (
       <Alert severity="error" data-testid="dashboard-spending-error">
-        {summary.errors.join(', ')}
+        {translate(tk.dashboard.spendingLoadFailed)}
       </Alert>
     );
   }

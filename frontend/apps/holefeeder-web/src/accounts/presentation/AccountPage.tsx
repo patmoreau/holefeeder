@@ -169,7 +169,7 @@ const AccountSummary = ({ account }: { account: AsyncResult<AccountDetail> }) =>
   if (account.isFailure)
     return (
       <Alert severity="error" data-testid="account-error">
-        {account.errors.join(', ')}
+        {translate(tk.accountDetail.loadFailed)}
       </Alert>
     );
 
@@ -194,7 +194,7 @@ const TransactionsContent = ({
   if (transactions.isFailure)
     return (
       <Alert severity="error" data-testid="account-transactions-error">
-        {transactions.errors.join(', ')}
+        {translate(tk.accountDetail.transactionsLoadFailed)}
       </Alert>
     );
 
