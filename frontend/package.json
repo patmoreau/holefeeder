@@ -2,7 +2,7 @@
   "name": "holefeeder-ui",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@11.28.11",
+  "packageManager": "pnpm@12.18.0",
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
