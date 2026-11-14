@@ -1,6 +1,6 @@
 import { DateOnly } from '@holefeeder/shared/core';
 
-export type AccountTransaction = {
+export type TransactionSummary = {
   id: string;
   title: string;
   category: string | null;
@@ -10,7 +10,7 @@ export type AccountTransaction = {
   date: DateOnly;
 };
 
-const valid = (value: Record<string, unknown>): AccountTransaction => ({
+const valid = (value: Record<string, unknown>): TransactionSummary => ({
   id: value.id as string,
   title: value.title as string,
   category: (value.category as string | null) ?? null,
@@ -20,6 +20,6 @@ const valid = (value: Record<string, unknown>): AccountTransaction => ({
   date: DateOnly.valid(value.date),
 });
 
-const validList = (values: Record<string, unknown>[]): AccountTransaction[] => values.map(valid);
+const validList = (values: Record<string, unknown>[]): TransactionSummary[] => values.map(valid);
 
-export const AccountTransaction = { valid: valid, validList: validList };
+export const TransactionSummary = { valid: valid, validList: validList };

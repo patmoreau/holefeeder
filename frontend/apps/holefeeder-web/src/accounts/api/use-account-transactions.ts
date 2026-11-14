@@ -4,18 +4,18 @@ import { useEffect, useEffectEvent, useState } from 'react';
 import { apiConfig } from '@/shared/api/api-config';
 import { useApiRefresh } from '@/shared/api/api-refresh';
 import { useAuthentication } from '@/shared/auth/authentication-context';
-import { AccountTransaction } from '../domain/account-transaction';
+import { TransactionSummary } from '@/shared/domain/transaction-summary';
 
 const pageSize = 20;
 
 export type AccountTransactions = {
-  transactions: AsyncResult<AccountTransaction[]>;
+  transactions: AsyncResult<TransactionSummary[]>;
   hasMore: boolean;
   loadingMore: boolean;
   loadMore: () => void;
 };
 
-type Loaded = { key: string; transactions: Result<AccountTransaction[]>; total: number };
+type Loaded = { key: string; transactions: Result<TransactionSummary[]>; total: number };
 
 export const useAccountTransactions = (accountId: string): AccountTransactions => {
   const auth = useAuthentication();
@@ -40,7 +40,7 @@ export const useAccountTransactions = (accountId: string): AccountTransactions =
       if (!current) return;
       setLoaded((previous) =>
         response.isSuccess
-          ? { key: key, transactions: Result.success(AccountTransaction.validList(response.value.items)), total: response.value.total }
+          ? { key: key, transactions: Result.success(TransactionSummary.validList(response.value.items)), total: response.value.total }
           : { key: key, transactions: response, total: previous?.total ?? 0 }
       );
     });
@@ -50,7 +50,7 @@ export const useAccountTransactions = (accountId: string): AccountTransactions =
     };
   }, [key, signedIn]);
 
-  const transactions: AsyncResult<AccountTransaction[]> =
+  const transactions: AsyncResult<TransactionSummary[]> =
     !loaded || (loaded.key !== key && !loaded.transactions.isSuccess) ? Result.loading() : loaded.transactions;
   const items = transactions.isSuccess ? transactions.value : [];
   const total = loaded?.total ?? 0;
@@ -63,7 +63,7 @@ export const useAccountTransactions = (accountId: string): AccountTransactions =
         response.isSuccess
           ? {
               key: key,
-              transactions: Result.success([...items, ...AccountTransaction.validList(response.value.items)]),
+              transactions: Result.success([...items, ...TransactionSummary.validList(response.value.items)]),
               total: response.value.total,
             }
           : { key: key, transactions: response, total: total }
