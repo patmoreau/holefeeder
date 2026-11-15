@@ -204,7 +204,7 @@ const datesInRange = (
   return dates;
 };
 
-type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+type TranslateFn = { (key: string): string; (key: string, options: Record<string, unknown>): string };
 
 const labelKey: Record<DateIntervalType, string> = {
   daily: tk.dateIntervalTypePicker.daily,
