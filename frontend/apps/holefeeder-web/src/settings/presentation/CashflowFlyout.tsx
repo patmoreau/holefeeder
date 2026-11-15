@@ -108,7 +108,7 @@ export const CashflowFlyout = ({ cashflow, onClose, notify }: CashflowFlyoutProp
   >
     {cashflow !== null && (
       <Stack sx={{ height: '100%' }}>
-        <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 3, pt: 3, pb: 2 }}>
+        <Stack direction="row" spacing={2} sx={{ alignItems: 'center', px: 3, pt: 3, pb: 2 }}>
           <Typography component="h2" sx={{ flexGrow: 1, fontSize: 22, fontWeight: 700 }}>
             {translate(tk.cashflows.editTitle)}
           </Typography>

@@ -156,14 +156,14 @@ const AccountCard = ({ account }: { account: DashboardAccount }) => (
       </Typography>
     </Stack>
     <Divider />
-    <Stack direction="row" alignItems="flex-end" justifyContent="space-between">
+    <Stack direction="row" sx={{ alignItems: 'flex-end', justifyContent: 'space-between' }}>
       <Stack data-testid="dashboard-account-updated">
         <Typography sx={smallLabel}>{translate(tk.accountCard.updated)}</Typography>
         <Typography sx={{ fontSize: 17, lineHeight: lineHeight }}>
           {LocalFormatter.date(account.updated, today(), Language.locale(), translate)}
         </Typography>
       </Stack>
-      <Stack data-testid="dashboard-account-projected" alignItems="flex-end">
+      <Stack data-testid="dashboard-account-projected" sx={{ alignItems: 'flex-end' }}>
         <Typography sx={smallLabel}>{translate(tk.accountCard.projected)}</Typography>
         <Typography data-testid="dashboard-account-projected-amount" sx={amountText(account.projectedBalance)}>
           {unsignedCurrency(account.projectedBalance)}
@@ -202,7 +202,7 @@ const AddAccountTile = ({ onClick }: { onClick: () => void }) => (
 const sectionLabel = { fontSize: 15, color: 'text.secondary' };
 
 const SectionHeader = ({ arrows }: { arrows?: ReactNode }) => (
-  <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minHeight: 30 }}>
+  <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', minHeight: 30 }}>
     <Typography sx={sectionLabel}>{translate(tk.tabs.accounts)}</Typography>
     {arrows}
   </Stack>

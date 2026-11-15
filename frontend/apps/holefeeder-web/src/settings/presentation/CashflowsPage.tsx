@@ -33,7 +33,7 @@ const CashflowDetails = ({ cashflow }: { cashflow: Cashflow }) => (
         {`${cashflow.categoryName} · ${cashflow.accountName}`}
       </Typography>
     </Stack>
-    <Stack alignItems="flex-end" sx={{ minWidth: 0, flexShrink: 1, textAlign: 'right' }}>
+    <Stack sx={{ alignItems: 'flex-end', minWidth: 0, flexShrink: 1, textAlign: 'right' }}>
       <Typography data-testid="cashflows-row-amount" sx={{ fontSize: 15, fontWeight: 600, color: amountColor[cashflow.categoryType] }}>
         {currency(cashflow.amount)}
       </Typography>
@@ -125,7 +125,7 @@ const CashflowsContent = ({ notify }: { notify: Notify }) => {
 
   return (
     <Stack spacing={3.5} data-testid="cashflows-page" sx={{ maxWidth: 720 }}>
-      <Stack direction="row" alignItems="center" spacing={1.5}>
+      <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1.5}>
         <IconButton
           component={Link}
           to="/settings"

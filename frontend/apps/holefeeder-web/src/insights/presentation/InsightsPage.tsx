@@ -60,13 +60,19 @@ const Total = ({ label, value, testID }: { label: string; value: number; testID:
 const Hero = ({ overview }: { overview: Overview }) => (
   <Stack
     direction={{ xs: 'column', md: 'row' }}
-    alignItems={{ xs: 'stretch', md: 'center' }}
-    justifyContent="space-between"
     useFlexGap
     data-testid="insights-hero"
-    sx={{ p: { xs: 3, md: 4 }, gap: { xs: 2.5, md: 5 }, borderRadius: 4, bgcolor: 'primary.main', minWidth: 0 }}
+    sx={{
+      alignItems: { xs: 'stretch', md: 'center' },
+      justifyContent: 'space-between',
+      p: { xs: 3, md: 4 },
+      gap: { xs: 2.5, md: 5 },
+      borderRadius: 4,
+      bgcolor: 'primary.main',
+      minWidth: 0,
+    }}
   >
-    <Stack spacing={1} alignItems="flex-start" sx={{ minWidth: 0 }}>
+    <Stack spacing={1} sx={{ alignItems: 'flex-start', minWidth: 0 }}>
       <Typography sx={heroText}>{translate(tk.insights.net.title)}</Typography>
       <Typography
         data-testid="insights-net"

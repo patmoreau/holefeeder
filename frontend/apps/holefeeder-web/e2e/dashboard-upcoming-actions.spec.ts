@@ -174,7 +174,7 @@ test.describe('Dashboard upcoming actions', () => {
     await flyout.getByTestId('pay-flyout-amount').fill('1500');
     await flyout.getByTestId('pay-flyout-date').fill('2026-11-14');
     await expect(flyout.getByTestId('pay-flyout-scheduled')).toHaveText('Scheduled $1,450.00');
-    const updateRecurring = flyout.getByRole('checkbox', { name: 'Update recurring amount to $1,500.00 going forward' });
+    const updateRecurring = flyout.getByRole('switch', { name: 'Update recurring amount to $1,500.00 going forward' });
     await expect(updateRecurring).not.toBeChecked();
     await updateRecurring.check();
     await flyout.getByTestId('pay-flyout-pay').click();
@@ -196,7 +196,7 @@ test.describe('Dashboard upcoming actions', () => {
 
     const flyout = page.getByTestId('pay-flyout');
     await flyout.getByTestId('pay-flyout-amount').fill('1500');
-    await flyout.getByRole('checkbox').check();
+    await flyout.getByRole('switch').check();
     await flyout.getByTestId('pay-flyout-amount').fill('1450');
     await flyout.getByTestId('pay-flyout-pay').click();
 

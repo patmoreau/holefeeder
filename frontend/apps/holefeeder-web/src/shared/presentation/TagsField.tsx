@@ -37,16 +37,19 @@ export const TagsField = ({ testID, categoryId, tags, onChange }: TagsFieldProps
       <Stack
         direction="row"
         useFlexGap
-        alignItems="center"
-        sx={{ flexWrap: 'wrap', gap: 0.75, px: 1.25, py: 1, border: 1, borderColor: 'divider', borderRadius: 2.5 }}
+        sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.75, px: 1.25, py: 1, border: 1, borderColor: 'divider', borderRadius: 2.5 }}
       >
         {tags.map((tag) => (
           <Stack
             key={tag}
             direction="row"
-            alignItems="center"
             spacing={0.5}
-            sx={{ ...chipSx, color: 'primary.main', bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.mainChannel} / 0.15)` }}
+            sx={{
+              alignItems: 'center',
+              ...chipSx,
+              color: 'primary.main',
+              bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.mainChannel} / 0.15)`,
+            }}
           >
             <Box component="span" data-testid={`${testID}-tag`}>
               {tag}

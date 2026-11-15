@@ -20,9 +20,9 @@ const TrendBadge = ({ summary }: { summary: DashboardSummary }) => {
     <Stack
       direction="row"
       spacing={0.75}
-      alignItems="center"
       data-testid="dashboard-spending-trend"
       sx={{
+        alignItems: 'center',
         py: 0.75,
         pl: 1.25,
         pr: 1.5,
@@ -46,7 +46,7 @@ const TrendBadge = ({ summary }: { summary: DashboardSummary }) => {
 const TotalPill = ({ label, value, testID }: { label: string; value: number; testID: string }) => {
   const tone = AmountTone.of(value);
   return (
-    <Stack spacing={0.75} alignItems="center">
+    <Stack spacing={0.75} sx={{ alignItems: 'center' }}>
       <Typography sx={heroText}>{label}</Typography>
       <Typography
         data-testid={testID}
@@ -61,13 +61,19 @@ const TotalPill = ({ label, value, testID }: { label: string; value: number; tes
 const Hero = ({ summary }: { summary: DashboardSummary }) => (
   <Stack
     direction={{ xs: 'column', md: 'row' }}
-    alignItems={{ xs: 'stretch', md: 'center' }}
-    justifyContent="space-between"
     useFlexGap
     data-testid="dashboard-spending-hero"
-    sx={{ p: { xs: 3, md: 4 }, gap: { xs: 2.5, md: 5 }, flexWrap: { md: 'wrap' }, borderRadius: 4, bgcolor: 'primary.main' }}
+    sx={{
+      alignItems: { xs: 'stretch', md: 'center' },
+      justifyContent: 'space-between',
+      p: { xs: 3, md: 4 },
+      gap: { xs: 2.5, md: 5 },
+      flexWrap: { md: 'wrap' },
+      borderRadius: 4,
+      bgcolor: 'primary.main',
+    }}
   >
-    <Stack spacing={1} alignItems="flex-start">
+    <Stack spacing={1} sx={{ alignItems: 'flex-start' }}>
       <Typography sx={heroText}>{translate(tk.dashboard.largeHeader.spendingTitle)}</Typography>
       <Typography
         data-testid="dashboard-current-spending"
@@ -77,7 +83,7 @@ const Hero = ({ summary }: { summary: DashboardSummary }) => (
       </Typography>
       {!AmountTone.roundsToZero(summary.averageExpenses) && <TrendBadge summary={summary} />}
     </Stack>
-    <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} useFlexGap sx={{ gap: { xs: 2.5, md: 5 } }}>
+    <Stack direction={{ xs: 'column', md: 'row' }} useFlexGap sx={{ alignItems: { xs: 'stretch', md: 'center' }, gap: { xs: 2.5, md: 5 } }}>
       <Box
         sx={{
           width: { md: '1px' },
@@ -85,7 +91,7 @@ const Hero = ({ summary }: { summary: DashboardSummary }) => (
           bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.contrastTextChannel} / 0.6)`,
         }}
       />
-      <Stack direction="row" alignItems="center" justifyContent="space-around" spacing={5}>
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-around' }} spacing={5}>
         <TotalPill label={translate(tk.dashboard.largeHeader.netFlow)} value={summary.netFlow} testID="dashboard-net-flow" />
         <TotalPill label={translate(tk.accountCard.projected)} value={summary.projectedNetFlow} testID="dashboard-projected" />
       </Stack>

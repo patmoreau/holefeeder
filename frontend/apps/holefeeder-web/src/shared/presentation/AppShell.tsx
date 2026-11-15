@@ -32,7 +32,7 @@ const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
 
   return (
     <>
-      <Stack direction="row" spacing={1.5} alignItems="center" sx={{ pl: 1, mb: 3 }}>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', pl: 1, mb: 3 }}>
         <BrandTile size={32} testID="nav-brand-tile" />
         <Typography sx={{ fontSize: 20, fontWeight: 700 }}>Holefeeder</Typography>
       </Stack>
@@ -56,7 +56,7 @@ const NavContent = ({ onNavigate }: { onNavigate?: () => void }) => {
               }}
             >
               <ListItemIcon sx={{ minWidth: 32, color: selected ? 'primary.main' : 'text.secondary' }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} slotProps={{ primary: { fontSize: 15, fontWeight: selected ? 600 : 400 } }} />
+              <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontSize: 15, fontWeight: selected ? 600 : 400 } } }} />
             </ListItemButton>
           );
         })}
@@ -80,9 +80,9 @@ const navSx = {
 const PhoneBar = ({ onMenu }: { onMenu: () => void }) => (
   <Stack
     direction="row"
-    alignItems="center"
     spacing={1}
     sx={{
+      alignItems: 'center',
       display: { xs: 'flex', md: 'none' },
       position: 'sticky',
       top: 0,
