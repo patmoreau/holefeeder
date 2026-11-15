@@ -29,7 +29,7 @@ const PayForm = ({ flow, busy, onClose, onPay }: PayFormProps) => {
 
   return (
     <Stack sx={{ height: '100%' }}>
-      <Stack direction="row" alignItems="flex-start" spacing={2} sx={{ px: 3, pt: 3, pb: 2 }}>
+      <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start', px: 3, pt: 3, pb: 2 }}>
         <Stack spacing={0.5} sx={{ flexGrow: 1, minWidth: 0 }}>
           <Typography component="h2" noWrap sx={{ fontSize: 22, fontWeight: 700 }}>
             {translate(tk.payUpcoming.titleFor, { title: flow.title })}

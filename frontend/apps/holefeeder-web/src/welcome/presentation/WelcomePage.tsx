@@ -23,8 +23,8 @@ export const WelcomePage = () => {
         ...theme.applyStyles('dark', { backgroundImage: wash(0.18) }),
       })}
     >
-      <Stack spacing={5} alignItems="center" sx={{ width: '100%', maxWidth: 400, mb: 5 }}>
-        <Stack spacing={1} alignItems="center" textAlign="center">
+      <Stack spacing={5} sx={{ alignItems: 'center', width: '100%', maxWidth: 400, mb: 5 }}>
+        <Stack spacing={1} sx={{ alignItems: 'center', textAlign: 'center' }}>
           <Box sx={{ mb: 2 }}>
             <BrandTile size={120} testID="welcome-brand-tile" />
           </Box>

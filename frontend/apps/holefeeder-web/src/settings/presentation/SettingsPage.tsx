@@ -36,7 +36,7 @@ import { budgetSummary } from './budget-summary';
 import { BudgetSettingsFlyout } from './BudgetSettingsFlyout';
 
 const rowIcon = { minWidth: 32, color: 'text.secondary' };
-const rowLabel = { primary: { fontSize: 17 } };
+const rowLabel = { primary: { sx: { fontSize: 17 } } };
 
 type LinkRowProps = { testID: string; icon: ReactNode; label: string; value?: ReactNode; onClick?: () => void };
 
@@ -157,7 +157,7 @@ const ProfileSection = () => {
 
   return (
     <Section title={translate(tk.profileSection.title)} testID="settings-profile">
-      <Stack direction="row" alignItems="center" spacing={1.75} sx={{ py: 2 }}>
+      <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center', py: 2 }}>
         <Avatar
           src={user?.picture}
           data-testid="settings-profile-avatar"

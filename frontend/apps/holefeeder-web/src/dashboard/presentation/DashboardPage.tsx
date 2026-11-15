@@ -19,7 +19,7 @@ export const DashboardPage = () => {
   return (
     <ApiRefreshProvider>
       <Stack spacing={3.5} data-testid="dashboard-page">
-        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }} spacing={2}>
           <Typography variant="h1" sx={{ fontSize: 28, fontWeight: 700 }}>
             {translate(tk.tabs.dashboard)}
           </Typography>

@@ -43,7 +43,7 @@ const FlowContent = ({ flow, testID }: { flow: Flow; testID: string }) => (
         {flow.title}
       </Typography>
       {(flow.category || flow.tags.length > 0) && (
-        <Stack direction="row" alignItems="center" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={0.5} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           {flow.category && (
             <Typography data-testid={`${testID}-category`} sx={{ fontSize: 13, lineHeight: lineHeight, color: 'text.secondary' }}>
               {flow.category}
@@ -55,7 +55,7 @@ const FlowContent = ({ flow, testID }: { flow: Flow; testID: string }) => (
         </Stack>
       )}
     </Stack>
-    <Stack spacing={0.25} alignItems="flex-end" sx={{ flexShrink: 0 }}>
+    <Stack spacing={0.25} sx={{ alignItems: 'flex-end', flexShrink: 0 }}>
       <Typography data-testid={`${testID}-amount`} sx={{ fontSize: 17, lineHeight: lineHeight }}>
         {currency(flow.amount)}
       </Typography>
@@ -71,10 +71,9 @@ type FlowRowProps = { flow: Flow; testID: string; action?: ReactNode; onOpen?: (
 export const FlowRow = ({ flow, testID, action, onOpen }: FlowRowProps) => (
   <Stack
     direction="row"
-    alignItems="center"
     spacing={1.5}
     data-testid={`${testID}-row`}
-    sx={{ py: onOpen ? 0.5 : 1.5, '& + &': { borderTop: 1, borderColor: 'divider' } }}
+    sx={{ alignItems: 'center', py: onOpen ? 0.5 : 1.5, '& + &': { borderTop: 1, borderColor: 'divider' } }}
   >
     {onOpen ? (
       <ButtonBase

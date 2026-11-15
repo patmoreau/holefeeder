@@ -42,7 +42,7 @@ const pillSx = (tone: AmountTone) => ({
 });
 
 const HeroPill = ({ label, testID, tone, children }: { label: string; testID: string; tone: AmountTone; children: ReactNode }) => (
-  <Stack spacing={0.75} alignItems="center" data-testid={testID}>
+  <Stack spacing={0.75} sx={{ alignItems: 'center' }} data-testid={testID}>
     <Typography sx={heroText}>{label}</Typography>
     <Typography data-testid={`${testID}-amount`} sx={pillSx(tone)}>
       {children}
@@ -58,11 +58,16 @@ const subtitleOf = (account: AccountDetail) =>
 const Hero = ({ account }: { account: AccountDetail }) => (
   <Stack
     direction={{ xs: 'column', md: 'row' }}
-    alignItems={{ xs: 'stretch', md: 'center' }}
-    justifyContent="space-between"
     useFlexGap
     data-testid="account-hero"
-    sx={{ p: { xs: 3, md: 4 }, gap: { xs: 2.5, md: 5 }, borderRadius: 4, bgcolor: 'primary.main' }}
+    sx={{
+      alignItems: { xs: 'stretch', md: 'center' },
+      justifyContent: 'space-between',
+      p: { xs: 3, md: 4 },
+      gap: { xs: 2.5, md: 5 },
+      borderRadius: 4,
+      bgcolor: 'primary.main',
+    }}
   >
     <Stack spacing={1} sx={{ minWidth: 0 }}>
       <Typography data-testid="account-caption" sx={heroText}>
@@ -81,7 +86,7 @@ const Hero = ({ account }: { account: AccountDetail }) => (
         {subtitleOf(account)}
       </Typography>
     </Stack>
-    <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} useFlexGap sx={{ gap: { xs: 2.5, md: 5 } }}>
+    <Stack direction={{ xs: 'column', md: 'row' }} useFlexGap sx={{ alignItems: { xs: 'stretch', md: 'center' }, gap: { xs: 2.5, md: 5 } }}>
       <Box
         sx={{
           width: { md: '1px' },
@@ -89,7 +94,7 @@ const Hero = ({ account }: { account: AccountDetail }) => (
           bgcolor: (theme) => `rgba(${theme.vars!.palette.primary.contrastTextChannel} / 0.6)`,
         }}
       />
-      <Stack direction="row" alignItems="center" justifyContent="space-between" useFlexGap sx={{ gap: { xs: 1, md: 5 } }}>
+      <Stack direction="row" useFlexGap sx={{ alignItems: 'center', justifyContent: 'space-between', gap: { xs: 1, md: 5 } }}>
         <HeroPill label={translate(tk.accountCard.updated)} testID="account-updated" tone="neutral">
           {formatDate(account.updated)}
         </HeroPill>
@@ -126,7 +131,7 @@ const ActionLabel = ({ children }: { children: ReactNode }) => (
 type HeaderProps = { name: ReactNode; onEdit?: () => void; onNewTransaction: () => void };
 
 const Header = ({ name, onEdit, onNewTransaction }: HeaderProps) => (
-  <Stack direction="row" alignItems="center" spacing={1.5}>
+  <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1.5}>
     <IconButton
       component={Link}
       to="/"

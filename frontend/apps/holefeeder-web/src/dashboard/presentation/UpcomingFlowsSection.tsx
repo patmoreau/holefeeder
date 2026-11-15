@@ -72,7 +72,7 @@ const UpcomingList = ({ flows, notify }: { flows: DashboardUpcomingFlow[]; notif
   };
 
   const rowActions = (flow: DashboardUpcomingFlow): ReactNode => (
-    <Stack direction="row" alignItems="center" spacing={0.5} sx={{ flexShrink: 0 }}>
+    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', flexShrink: 0 }}>
       <PayButton disabled={busy} onClick={() => void pay(flow)} />
       <UpcomingActionsMenu
         disabled={busy}

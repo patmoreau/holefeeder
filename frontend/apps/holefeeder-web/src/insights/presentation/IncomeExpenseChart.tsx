@@ -97,7 +97,7 @@ const Legend = () => (
         mark: <rect x="2" y="0" width="12" height="12" rx="2" fill="var(--chart-deficit)" fillOpacity="0.16" />,
       },
     ].map(({ label, mark }) => (
-      <Stack key={label} direction="row" alignItems="center" spacing={0.75}>
+      <Stack key={label} direction="row" sx={{ alignItems: 'center' }} spacing={0.75}>
         <svg width="16" height="12" aria-hidden>
           {mark}
         </svg>
@@ -128,7 +128,7 @@ const TooltipRow = ({
   dashed?: boolean;
   testID: string;
 }) => (
-  <Stack direction="row" alignItems="center" spacing={1} data-testid={testID}>
+  <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1} data-testid={testID}>
     <svg width="12" height="8" aria-hidden>
       <line x1="0" y1="4" x2="12" y2="4" stroke={stroke} strokeWidth="2" strokeDasharray={dashed ? '3 2' : undefined} />
     </svg>
@@ -419,7 +419,7 @@ export const IncomeExpenseChart = ({
     data-testid="insights-chart"
     sx={(theme) => ({ py: 2.5, color: 'text.primary', ...colors, ...theme.applyStyles('dark', darkColors) })}
   >
-    <Stack direction="row" alignItems="center" justifyContent="space-between" useFlexGap sx={{ gap: 1.5, flexWrap: 'wrap' }}>
+    <Stack direction="row" useFlexGap sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1.5, flexWrap: 'wrap' }}>
       <Legend />
       <RangeSwitch ranges={overview.ranges} periods={periods} onChange={onPeriodsChange} />
     </Stack>

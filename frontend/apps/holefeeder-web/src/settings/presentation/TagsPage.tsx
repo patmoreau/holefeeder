@@ -94,7 +94,7 @@ const TagsContent = ({ notify }: { notify: Notify }) => {
 
   return (
     <Stack spacing={3.5} data-testid="tags-page" sx={{ maxWidth: 720 }}>
-      <Stack direction="row" alignItems="center" spacing={1.5}>
+      <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1.5}>
         <IconButton
           component={Link}
           to="/settings"

@@ -90,7 +90,7 @@ export const CategorySelect = ({ testID, categories, value, onChange }: Category
   >
     {categories.map((category) => (
       <MenuItem key={category.id} value={category.id}>
-        <Stack direction="row" alignItems="center" spacing={1.25}>
+        <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1.25}>
           <Box aria-hidden sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: category.color, flexShrink: 0 }} />
           <span>{category.name}</span>
         </Stack>
