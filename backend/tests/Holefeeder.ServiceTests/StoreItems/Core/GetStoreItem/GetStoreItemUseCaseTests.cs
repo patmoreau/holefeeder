@@ -51,7 +51,7 @@ public class GetStoreItemUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenStoreItemsCannotBeRead()
     {
-        var failure = new ResultError("store-items-unavailable", "Store items are unavailable.");
+        var failure = new ResultError("store-items-unavailable");
         _storeItems.FailWith(failure);
 
         var result = await _useCase.HandleAsync(AGetStoreItemRequest(), CancellationToken.None);

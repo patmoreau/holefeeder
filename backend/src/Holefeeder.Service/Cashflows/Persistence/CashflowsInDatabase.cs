@@ -164,7 +164,7 @@ internal static class CashflowsErrors
     public const string CodeReadFailed = "cashflows-read-failed";
     public const string CodeWriteFailed = "cashflows-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Cashflows could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Cashflows could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

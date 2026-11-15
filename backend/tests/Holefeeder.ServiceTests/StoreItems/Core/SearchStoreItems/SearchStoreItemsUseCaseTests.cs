@@ -131,7 +131,7 @@ public class SearchStoreItemsUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsStoreError_WhenStoreFails()
     {
-        var error = new ResultError("store-failed", "Store failed.");
+        var error = new ResultError("store-failed");
         _storeItems.FailWith(error);
 
         var result = await _useCase.HandleAsync(ASearchStoreItemsRequest(), CancellationToken.None);

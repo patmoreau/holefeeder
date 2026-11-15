@@ -255,6 +255,6 @@ internal static class MyDataDatabaseErrors
     public const string CodeReadFailed = "my-data-read-failed";
     public const string CodeWriteFailed = "my-data-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "My data could not be read from the database.");
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "My data could not be written to the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

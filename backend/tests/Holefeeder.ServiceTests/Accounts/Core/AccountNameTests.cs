@@ -27,13 +27,11 @@ public class AccountNameTests
     public void Invalid_DescribesTheLengthRule()
     {
         AccountNameErrors.Invalid.Code.Should().Be("account-name-invalid");
-        AccountNameErrors.Invalid.Description.Should().Be("Account name must be between 1 and 100 characters.");
     }
 
     [Fact]
     public void AlreadyExists_DescribesTheUniquenessRule()
     {
         AccountNameErrors.AlreadyExists.Code.Should().Be("account-name-already-exists");
-        AccountNameErrors.AlreadyExists.Description.Should().Be("Account name already exists.");
     }
 }

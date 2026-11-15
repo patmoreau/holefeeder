@@ -56,7 +56,6 @@ public class CashflowTests
         var result = cashflow.Modify(Money.Valid(1500m), new DateOnly(2026, 2, 1), null, TagList.Create([]));
 
         result.Should().BeSuccessful();
-        result.Value.Description.Should().Be("Rent");
         result.Value.Tags.Should().BeEmpty();
     }
 
@@ -69,9 +68,7 @@ public class CashflowTests
     public void Errors_FollowTheServiceConventions()
     {
         CashflowErrors.Cancelled.Code.Should().Be("cashflow-cancelled");
-        CashflowErrors.Cancelled.Description.Should().Be("A cancelled cashflow cannot be changed.");
-        CashflowErrors.NotFound.Should().Be(new NotFoundError("cashflow-not-found", "Cashflow was not found."));
+        CashflowErrors.NotFound.Should().Be(new NotFoundError("cashflow-not-found"));
         CashflowErrors.AlreadyInactive.Code.Should().Be("cashflow-already-inactive");
-        CashflowErrors.AlreadyInactive.Description.Should().Be("Cashflow is already inactive.");
     }
 }

@@ -119,7 +119,7 @@ public class GetOverviewUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenInsightsCannotBeRead()
     {
-        var failure = new ResultError("insights-unavailable", "Insights are unavailable.");
+        var failure = new ResultError("insights-unavailable");
         _insights.FailWith(failure);
 
         var result = await OverviewAsync();

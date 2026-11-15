@@ -282,6 +282,6 @@ internal static class SyncDatabaseErrors
     public const string CodeReadFailed = "sync-read-failed";
     public const string CodeWriteFailed = "sync-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Sync data could not be read from the database.");
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Sync data could not be written to the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

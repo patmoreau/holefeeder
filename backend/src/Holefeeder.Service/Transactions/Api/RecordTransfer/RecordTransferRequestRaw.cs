@@ -50,7 +50,7 @@ internal static class RecordTransferRequestErrors
     public const string CodeFromAccountIdInvalid = "from-account-id-invalid";
     public const string CodeToAccountIdInvalid = "to-account-id-invalid";
 
-    public static ResultError FromAccountIdInvalid => new(CodeFromAccountIdInvalid, "From account id must be an id.");
+    public static ResultError FromAccountIdInvalid => new(CodeFromAccountIdInvalid);
 
-    public static ResultError ToAccountIdInvalid => new(CodeToAccountIdInvalid, "To account id must be an id.");
+    public static ResultError ToAccountIdInvalid => new(CodeToAccountIdInvalid);
 }

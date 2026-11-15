@@ -110,7 +110,7 @@ public class ModifyAccountUseCaseTests
         var user = AUser();
         var amex = AnAccount("Amex");
         _accounts.Add(user, amex);
-        var error = new ResultError("accounts-failed", "Accounts failed.");
+        var error = new ResultError("accounts-failed");
         _accounts.FailWith(error);
 
         var result = await _useCase.HandleAsync(

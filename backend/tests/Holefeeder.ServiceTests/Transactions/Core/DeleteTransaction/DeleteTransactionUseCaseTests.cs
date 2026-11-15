@@ -49,7 +49,7 @@ public class DeleteTransactionUseCaseTests
     [Fact]
     public async Task HandleAsync_Fails_WhenTheTransactionCannotBeDeleted()
     {
-        var error = new UnexpectedError("transactions-write-failed", "Transactions could not be written to the database.");
+        var error = new UnexpectedError("transactions-write-failed");
         _transactions.FailWith(error);
 
         var result = await _useCase.HandleAsync(new DeleteTransactionRequest(_user, _market.Id), CancellationToken.None);

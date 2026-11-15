@@ -40,7 +40,7 @@ internal static class UserErrors
     public const string CodeIdentityObjectIdRequired = "user-identity-object-id-required";
     public const string CodeNotRegistered = "user-not-registered";
 
-    public static ResultError IdRequired => new(CodeIdRequired, "Id is required.");
-    public static ResultError IdentityObjectIdRequired => new(CodeIdentityObjectIdRequired, "IdentityObjectId is required.");
-    public static ResultError NotRegistered => new(CodeNotRegistered, "User is not registered.");
+    public static ResultError IdRequired => new(CodeIdRequired);
+    public static ResultError IdentityObjectIdRequired => new(CodeIdentityObjectIdRequired);
+    public static ResultError NotRegistered => new(CodeNotRegistered);
 }

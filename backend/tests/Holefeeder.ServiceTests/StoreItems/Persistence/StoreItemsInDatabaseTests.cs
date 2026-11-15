@@ -219,6 +219,5 @@ public class StoreItemsInDatabaseTests(DatabaseForTest database, ITestOutputHelp
     public void ReadFailed_MatchesUsersReadFailed()
     {
         StoreItemsErrors.ReadFailed.Code.Should().Be("store-items-read-failed");
-        StoreItemsErrors.ReadFailed.Description.Should().Be("Store items could not be read from the database.");
     }
 }

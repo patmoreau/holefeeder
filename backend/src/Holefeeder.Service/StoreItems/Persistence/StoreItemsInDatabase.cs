@@ -142,7 +142,7 @@ internal static class StoreItemsErrors
     public const string CodeReadFailed = "store-items-read-failed";
     public const string CodeWriteFailed = "store-items-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Store items could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Store items could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

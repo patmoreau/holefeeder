@@ -45,5 +45,5 @@ internal static class SaveSettingsErrors
 {
     public const string CodeEffectiveDateInvalid = "settings-effective-date-invalid";
 
-    public static ResultError EffectiveDateInvalid => new(CodeEffectiveDateInvalid, "Effective date must be a date as YYYY-MM-DD.");
+    public static ResultError EffectiveDateInvalid => new(CodeEffectiveDateInvalid);
 }

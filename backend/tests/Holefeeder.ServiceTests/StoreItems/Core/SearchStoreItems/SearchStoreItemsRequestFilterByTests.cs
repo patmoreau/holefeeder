@@ -55,8 +55,6 @@ public class SearchStoreItemsRequestFilterByTests
     [Fact]
     public void Errors_DescribeWhatIsNotSupported()
     {
-        SearchStoreItemsRequestFilterByErrors.OperatorNotSupported.Description.Should().Be("Filter operator is not supported.");
-        SearchStoreItemsRequestFilterByErrors.FieldNotSupported.Description.Should().Be("Filter field is not supported.");
     }
 
     [Fact]

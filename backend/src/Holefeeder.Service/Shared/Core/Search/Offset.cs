@@ -31,5 +31,5 @@ internal static class OffsetErrors
 {
     public const string CodeInvalid = "offset-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Offset must be greater than or equal to zero.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

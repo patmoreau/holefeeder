@@ -1,8 +1,6 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-using DrifterApps.Seeds.FluentResult;
-
 namespace Holefeeder.ServiceTests.Shared;
 
 public partial class ErrorConventions
@@ -24,11 +22,6 @@ public partial class ErrorConventions
     public void ErrorCodesAreKebabCase(string errorClassName) =>
         CodesOf(ClassNamed(errorClassName)).Should().AllSatisfy(code => code.Should().MatchRegex(KebabCase().ToString()));
 
-    [Theory]
-    [MemberData(nameof(ErrorClassNames))]
-    public void ErrorMessagesAreSentences(string errorClassName) =>
-        ErrorsOf(ClassNamed(errorClassName)).Should().AllSatisfy(error => error.Description.Should().MatchRegex(Sentence().ToString()));
-
     [Fact]
     public void ErrorCodesAreUnique() =>
         ErrorClasses.SelectMany(CodesOf).Should().OnlyHaveUniqueItems();
@@ -40,17 +33,9 @@ public partial class ErrorConventions
             .Where(field => field is { IsLiteral: true } && field.FieldType == typeof(string))
             .Select(field => (string)field.GetRawConstantValue()!);
 
-    private static IEnumerable<ResultError> ErrorsOf(Type errorClass) =>
-        errorClass.GetProperties(BindingFlags.Public | BindingFlags.Static)
-            .Where(property => property.PropertyType.IsAssignableTo(typeof(ResultError)))
-            .Select(property => (ResultError)property.GetValue(null)!);
-
     [GeneratedRegex(@"^Holefeeder\.Service\.[^.]+\.(Api|Core|Events|Jobs|Persistence|Ui)(\.|$)")]
     private static partial Regex RingNamespace();
 
     [GeneratedRegex("^[a-z0-9]+(-[a-z0-9]+)*$")]
     private static partial Regex KebabCase();
-
-    [GeneratedRegex(@"^[A-Z].*\.$")]
-    private static partial Regex Sentence();
 }

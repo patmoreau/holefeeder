@@ -8,7 +8,7 @@ internal static class ImportDataErrors
     public const string CodeFieldInvalid = "my-data-field-invalid";
 
     public static ResultError DataEmpty =>
-        new(CodeDataEmpty, "Data must contain at least one account, category, cashflow or transaction.");
+        new(CodeDataEmpty);
 
     public static ResultError FieldInvalid(string field, string expected) => new(CodeFieldInvalid, $"{field} must be {expected}.");
 }

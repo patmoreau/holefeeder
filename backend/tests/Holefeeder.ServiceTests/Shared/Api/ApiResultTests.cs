@@ -86,37 +86,37 @@ public class ApiResultTests
     [Fact]
     public void ToProblem_ReturnsServerError_WhenErrorIsAnUnexpectedError()
     {
-        var error = new UnexpectedError("things-read-failed", "Things could not be read from the database.");
+        var error = new UnexpectedError("things-read-failed");
 
         var result = ApiResult.ToProblem(error);
 
         var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
         problem.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
-        problem.ProblemDetails.Detail.Should().Be("Things could not be read from the database.");
+        problem.ProblemDetails.Detail.Should().Be("things-read-failed");
     }
 
     [Fact]
     public void ToProblem_ReturnsNotFound_WhenErrorIsANotFoundError()
     {
-        var error = new NotFoundError("thing-not-found", "Thing was not found.");
+        var error = new NotFoundError("thing-not-found");
 
         var result = ApiResult.ToProblem(error);
 
         var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
         problem.StatusCode.Should().Be(StatusCodes.Status404NotFound);
-        problem.ProblemDetails.Detail.Should().Be("Thing was not found.");
+        problem.ProblemDetails.Detail.Should().Be("thing-not-found");
     }
 
     [Fact]
     public void ToProblem_ReturnsBadRequest_WhenErrorIsAnyOtherError()
     {
-        var error = new ResultError("thing-invalid", "Thing is invalid.");
+        var error = new ResultError("thing-invalid");
 
         var result = ApiResult.ToProblem(error);
 
         var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
         problem.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        problem.ProblemDetails.Detail.Should().Be("Thing is invalid.");
+        problem.ProblemDetails.Detail.Should().Be("thing-invalid");
     }
     [Theory]
     [InlineData("thing-invalid")]
@@ -126,9 +126,9 @@ public class ApiResultTests
     {
         ResultError error = code switch
         {
-            "thing-not-found" => new NotFoundError(code, "Thing was not found."),
-            "things-read-failed" => new UnexpectedError(code, "Things could not be read from the database."),
-            _ => new ResultError(code, "Thing is invalid.")
+            "thing-not-found" => new NotFoundError(code),
+            "things-read-failed" => new UnexpectedError(code),
+            _ => new ResultError(code)
         };
 
         var result = ApiResult.ToProblem(error);

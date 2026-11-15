@@ -63,7 +63,7 @@ public class CreateStoreItemUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenStoreItemsCannotBeWritten()
     {
-        var failure = new ResultError("store-items-unavailable", "Store items are unavailable.");
+        var failure = new ResultError("store-items-unavailable");
         _storeItems.FailWith(failure);
 
         var result = await _useCase.HandleAsync(ACreateStoreItemRequest(), CancellationToken.None);
@@ -75,13 +75,11 @@ public class CreateStoreItemUseCaseTests
     public void CodeAlreadyExists_DescribesTheUniqueCodeRule()
     {
         StoreItemErrors.CodeAlreadyExists.Code.Should().Be("store-item-code-already-exists");
-        StoreItemErrors.CodeAlreadyExists.Description.Should().Be("Store item code already exists.");
     }
 
     [Fact]
     public void UserNotRegistered_DescribesTheRegistrationRule()
     {
         UserErrors.NotRegistered.Code.Should().Be("user-not-registered");
-        UserErrors.NotRegistered.Description.Should().Be("User is not registered.");
     }
 }

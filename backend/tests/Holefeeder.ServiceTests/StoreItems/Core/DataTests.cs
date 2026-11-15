@@ -27,6 +27,5 @@ public class DataTests
     public void Invalid_DescribesTheEmptyRule()
     {
         DataErrors.Invalid.Code.Should().Be("data-invalid");
-        DataErrors.Invalid.Description.Should().Be("Data cannot be empty.");
     }
 }

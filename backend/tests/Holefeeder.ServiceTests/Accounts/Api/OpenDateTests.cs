@@ -19,6 +19,5 @@ public class OpenDateTests
     public void Invalid_DescribesTheDateRule()
     {
         OpenDateErrors.Invalid.Code.Should().Be("open-date-invalid");
-        OpenDateErrors.Invalid.Description.Should().Be("Open date must be a date as YYYY-MM-DD.");
     }
 }

@@ -24,7 +24,7 @@ internal static class TagNameErrors
     public const string CodeInvalid = "tag-name-invalid";
     public const string CodeRequired = "tag-required";
 
-    public static ResultError Invalid => new(CodeInvalid, "A tag name must not be empty or contain a comma.");
+    public static ResultError Invalid => new(CodeInvalid);
 
-    public static ResultError Required => new(CodeRequired, "A tag is required.");
+    public static ResultError Required => new(CodeRequired);
 }

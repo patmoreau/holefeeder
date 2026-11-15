@@ -77,7 +77,7 @@ public class RecordPurchaseUseCaseTests
     [Fact]
     public async Task HandleAsync_Fails_WhenThePurchaseCannotBeSaved()
     {
-        var error = new UnexpectedError("transactions-write-failed", "Transactions could not be written to the database.");
+        var error = new UnexpectedError("transactions-write-failed");
         _transactions.FailWith(error);
 
         var result = await _useCase.HandleAsync(APurchase(), CancellationToken.None);

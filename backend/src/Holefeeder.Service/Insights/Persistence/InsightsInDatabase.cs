@@ -100,7 +100,7 @@ internal static class InsightsErrors
     public const string CodeReadFailed = "insights-read-failed";
     public const string CodeSettingsInvalid = "insights-settings-invalid";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Insights could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid, "User settings could not be read.");
+    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid);
 }

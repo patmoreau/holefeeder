@@ -112,7 +112,7 @@ public class GetAccountDetailUseCaseTests
         var user = AUser();
         var account = AnAccount("Chequing", AccountType.Checking, 0m, 0m, 0m);
         _accounts.Add(user, account);
-        var error = new ResultError("accounts-failed", "Accounts failed.");
+        var error = new ResultError("accounts-failed");
         _accounts.FailWith(error);
 
         var result = await _useCase.HandleAsync(new GetAccountDetailRequest(user, account.Id, Today), CancellationToken.None);

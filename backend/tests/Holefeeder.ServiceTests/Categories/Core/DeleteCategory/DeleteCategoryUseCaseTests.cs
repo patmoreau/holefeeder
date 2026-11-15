@@ -73,7 +73,7 @@ public class DeleteCategoryUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenCategoriesCannotBeRead()
     {
-        var failure = new ResultError("categories-unavailable", "Categories are unavailable.");
+        var failure = new ResultError("categories-unavailable");
         _categories.FailWith(failure);
 
         var result = await _useCase.HandleAsync(new DeleteCategoryRequest(AUser(), AnId()), CancellationToken.None);

@@ -88,7 +88,7 @@ public class GetTagSuggestionsUseCaseTests
     [Fact]
     public async Task HandleAsync_Fails_WhenTheTagsCannotBeRead()
     {
-        var error = new UnexpectedError("transactions-read-failed", "Transactions could not be read from the database.");
+        var error = new UnexpectedError("transactions-read-failed");
         _transactions.FailWith(error);
 
         var result = await _useCase.HandleAsync(new GetTagSuggestionsRequest(AUser(), null), CancellationToken.None);

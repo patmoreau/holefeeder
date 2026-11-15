@@ -30,7 +30,7 @@ public class SyncDataUseCaseTests
     [Fact]
     public async Task HandleAsync_DoesNothing_WhenThereAreNoOperations()
     {
-        _store.FailWith(new ResultError("store-unavailable", "Store is unavailable."));
+        _store.FailWith(new ResultError("store-unavailable"));
 
         var result = await HandleAsync();
 
@@ -40,7 +40,7 @@ public class SyncDataUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenTheSessionCannotStart()
     {
-        var failure = new ResultError("store-unavailable", "Store is unavailable.");
+        var failure = new ResultError("store-unavailable");
         _store.FailWith(failure);
 
         var result = await HandleAsync(Delete(AnId(), new SyncAccountPatch()));

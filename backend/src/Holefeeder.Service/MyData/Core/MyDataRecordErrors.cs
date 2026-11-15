@@ -13,15 +13,15 @@ internal static class MyDataRecordErrors
     public const string CodeTransactionDateRequired = "my-data-transaction-date-required";
 
     public static ResultError AccountNameInvalid =>
-        new(CodeAccountNameInvalid, "Account name is required and must be at most 100 characters.");
-    public static ResultError AccountOpenDateRequired => new(CodeAccountOpenDateRequired, "Account open date is required.");
+        new(CodeAccountNameInvalid);
+    public static ResultError AccountOpenDateRequired => new(CodeAccountOpenDateRequired);
     public static ResultError CategoryNameInvalid =>
-        new(CodeCategoryNameInvalid, "Category name is required and must be at most 255 characters.");
+        new(CodeCategoryNameInvalid);
     public static ResultError CashflowEffectiveDateRequired =>
-        new(CodeCashflowEffectiveDateRequired, "Cashflow effective date is required.");
-    public static ResultError CashflowFrequencyInvalid => new(CodeCashflowFrequencyInvalid, "Cashflow frequency must be more than zero.");
-    public static ResultError CashflowRecurrenceInvalid => new(CodeCashflowRecurrenceInvalid, "Cashflow recurrence cannot be negative.");
-    public static ResultError TransactionDateRequired => new(CodeTransactionDateRequired, "Transaction date is required.");
+        new(CodeCashflowEffectiveDateRequired);
+    public static ResultError CashflowFrequencyInvalid => new(CodeCashflowFrequencyInvalid);
+    public static ResultError CashflowRecurrenceInvalid => new(CodeCashflowRecurrenceInvalid);
+    public static ResultError TransactionDateRequired => new(CodeTransactionDateRequired);
 
     public static Result<T> Validated<T>(T record, params (bool IsValid, ResultError Error)[] rules) =>
         rules.FirstOrDefault(rule => !rule.IsValid) is { Error: { } error } ? error : record;

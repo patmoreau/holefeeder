@@ -37,5 +37,5 @@ internal static class FavoriteAccountRequestErrors
 {
     public const string CodeIsFavoriteInvalid = "is-favorite-invalid";
 
-    public static ResultError IsFavoriteInvalid => new(CodeIsFavoriteInvalid, "Is favorite must be true or false.");
+    public static ResultError IsFavoriteInvalid => new(CodeIsFavoriteInvalid);
 }

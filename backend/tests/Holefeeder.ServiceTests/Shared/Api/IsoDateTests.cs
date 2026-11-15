@@ -20,8 +20,6 @@ public class IsoDateTests
     public void Errors_NameTheField()
     {
         IsoDateErrors.DateInvalid.Code.Should().Be("date-invalid");
-        IsoDateErrors.DateInvalid.Description.Should().Be("Date must be a date as YYYY-MM-DD.");
         IsoDateErrors.CashflowDateInvalid.Code.Should().Be("cashflow-date-invalid");
-        IsoDateErrors.CashflowDateInvalid.Description.Should().Be("Cashflow date must be a date as YYYY-MM-DD.");
     }
 }

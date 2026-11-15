@@ -61,5 +61,5 @@ internal static class PayCashflowRequestErrors
     public const string CodeUpdateRecurringAmountInvalid = "update-recurring-amount-invalid";
 
     public static ResultError UpdateRecurringAmountInvalid =>
-        new(CodeUpdateRecurringAmountInvalid, "Update recurring amount must be true or false.");
+        new(CodeUpdateRecurringAmountInvalid);
 }

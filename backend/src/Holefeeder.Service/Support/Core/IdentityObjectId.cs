@@ -32,5 +32,5 @@ internal static class IdentityObjectIdErrors
 {
     public const string CodeInvalid = "identity-object-id-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "IdentityObjectId is invalid.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

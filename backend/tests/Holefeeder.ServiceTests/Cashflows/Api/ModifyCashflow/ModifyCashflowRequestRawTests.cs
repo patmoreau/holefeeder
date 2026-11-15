@@ -53,7 +53,6 @@ public class ModifyCashflowRequestRawTests
     public void Errors_FollowTheServiceConventions()
     {
         ModifyCashflowRequestErrors.EffectiveDateInvalid.Code.Should().Be("cashflow-effective-date-invalid");
-        ModifyCashflowRequestErrors.EffectiveDateInvalid.Description.Should().Be("Effective date must be a date as YYYY-MM-DD.");
     }
 
     private static IReadOnlyDictionary<string, string[]> ValidationErrorsOf(Result<ModifyCashflowRequest> result)

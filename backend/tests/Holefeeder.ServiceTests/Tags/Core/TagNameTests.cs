@@ -36,8 +36,6 @@ public class TagNameTests
     public void Errors_FollowTheServiceConventions()
     {
         TagNameErrors.Invalid.Code.Should().Be("tag-name-invalid");
-        TagNameErrors.Invalid.Description.Should().Be("A tag name must not be empty or contain a comma.");
         TagNameErrors.Required.Code.Should().Be("tag-required");
-        TagNameErrors.Required.Description.Should().Be("A tag is required.");
     }
 }

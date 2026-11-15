@@ -17,7 +17,7 @@ internal static class IsoDateErrors
     public const string CodeDateInvalid = "date-invalid";
     public const string CodeCashflowDateInvalid = "cashflow-date-invalid";
 
-    public static ResultError DateInvalid => new(CodeDateInvalid, "Date must be a date as YYYY-MM-DD.");
+    public static ResultError DateInvalid => new(CodeDateInvalid);
 
-    public static ResultError CashflowDateInvalid => new(CodeCashflowDateInvalid, "Cashflow date must be a date as YYYY-MM-DD.");
+    public static ResultError CashflowDateInvalid => new(CodeCashflowDateInvalid);
 }

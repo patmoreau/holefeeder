@@ -24,5 +24,5 @@ internal static class MoneyErrors
 {
     public const string CodeInvalid = "amount-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Amount must be zero or more, with at most two decimals.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

@@ -139,7 +139,7 @@ internal static class CategoriesErrors
     public const string CodeReadFailed = "categories-read-failed";
     public const string CodeWriteFailed = "categories-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Categories could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Categories could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

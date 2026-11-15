@@ -23,5 +23,5 @@ internal static class CategoryColorErrors
 {
     public const string CodeInvalid = "category-color-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Category color must be a hex color as #RRGGBB.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

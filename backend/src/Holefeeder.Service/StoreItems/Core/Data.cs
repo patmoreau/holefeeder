@@ -18,5 +18,5 @@ internal static class DataErrors
 {
     public const string CodeInvalid = "data-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Data cannot be empty.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

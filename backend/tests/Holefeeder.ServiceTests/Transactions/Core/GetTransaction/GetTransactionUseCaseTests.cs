@@ -47,7 +47,7 @@ public class GetTransactionUseCaseTests
     [Fact]
     public async Task HandleAsync_Fails_WhenTheTransactionCannotBeRead()
     {
-        var error = new UnexpectedError("transactions-read-failed", "Transactions could not be read from the database.");
+        var error = new UnexpectedError("transactions-read-failed");
         _transactions.FailWith(error);
 
         var result = await _useCase.HandleAsync(new GetTransactionRequest(_user, _market.Id), CancellationToken.None);

@@ -39,7 +39,7 @@ public class GetCurrentUserUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenUsersCannotBeRead()
     {
-        var failure = new ResultError("users-unavailable", "Users are unavailable.");
+        var failure = new ResultError("users-unavailable");
         _users.FailWith(failure);
 
         var result = await _useCase.HandleAsync(new GetCurrentUserRequest(AnIdentityObjectId()), CancellationToken.None);

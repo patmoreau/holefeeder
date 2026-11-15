@@ -16,9 +16,9 @@ internal static class CategoryErrors
     public const string CodeNameTaken = "category-name-taken";
     public const string CodeSystem = "category-system";
 
-    public static NotFoundError NotFound => new(CodeNotFound, "Category was not found.");
+    public static NotFoundError NotFound => new(CodeNotFound);
 
-    public static ResultError NameTaken => new(CodeNameTaken, "Category name is already used.");
+    public static ResultError NameTaken => new(CodeNameTaken);
 
-    public static ResultError System => new(CodeSystem, "System categories cannot be changed.");
+    public static ResultError System => new(CodeSystem);
 }

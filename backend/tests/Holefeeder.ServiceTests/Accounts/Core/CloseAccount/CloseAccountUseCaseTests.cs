@@ -89,7 +89,7 @@ public class CloseAccountUseCaseTests
         var user = AUser();
         var amex = AnAccount();
         _accounts.Add(user, amex);
-        var error = new ResultError("accounts-failed", "Accounts failed.");
+        var error = new ResultError("accounts-failed");
         _accounts.FailWith(error);
 
         var result = await _useCase.HandleAsync(new CloseAccountRequest(user, amex.Id), CancellationToken.None);
@@ -101,14 +101,12 @@ public class CloseAccountUseCaseTests
     public void AlreadyClosed_DescribesTheClosingRule()
     {
         AccountClosingErrors.AlreadyClosed.Code.Should().Be("account-already-closed");
-        AccountClosingErrors.AlreadyClosed.Description.Should().Be("Account already closed.");
     }
 
     [Fact]
     public void HasActiveCashflows_DescribesTheClosingRule()
     {
         AccountClosingErrors.HasActiveCashflows.Code.Should().Be("account-has-active-cashflows");
-        AccountClosingErrors.HasActiveCashflows.Description.Should().Be("Account has active cashflows.");
     }
 
     private static AccountTotals AnAccount() =>

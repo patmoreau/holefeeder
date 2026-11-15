@@ -32,7 +32,7 @@ public class DeleteTagUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenTagsCannotBeWritten()
     {
-        var failure = new ResultError("tags-unavailable", "Tags are unavailable.");
+        var failure = new ResultError("tags-unavailable");
         _tags.FailWith(failure);
 
         var result = await _useCase.HandleAsync(new DeleteTagRequest(AUser(), TagName.Valid("car")), CancellationToken.None);

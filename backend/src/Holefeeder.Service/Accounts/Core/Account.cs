@@ -45,7 +45,7 @@ internal static class AccountClosingErrors
     public const string CodeAlreadyClosed = "account-already-closed";
     public const string CodeHasActiveCashflows = "account-has-active-cashflows";
 
-    public static ResultError AlreadyClosed => new(CodeAlreadyClosed, "Account already closed.");
+    public static ResultError AlreadyClosed => new(CodeAlreadyClosed);
 
-    public static ResultError HasActiveCashflows => new(CodeHasActiveCashflows, "Account has active cashflows.");
+    public static ResultError HasActiveCashflows => new(CodeHasActiveCashflows);
 }

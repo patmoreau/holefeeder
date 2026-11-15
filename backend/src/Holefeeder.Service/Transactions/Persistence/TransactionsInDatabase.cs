@@ -285,7 +285,7 @@ internal static class TransactionsErrors
 
     public const string CodeWriteFailed = "transactions-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Transactions could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Transactions could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

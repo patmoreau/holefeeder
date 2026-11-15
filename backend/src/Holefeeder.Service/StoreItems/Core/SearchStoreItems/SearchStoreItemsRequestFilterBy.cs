@@ -59,9 +59,9 @@ internal static class SearchStoreItemsRequestFilterByErrors
     public const string CodeFieldNotSupported = "search-store-items-request-filter-by-field-not-supported";
     public const string CodeInvalid = "search-store-items-request-filter-by-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Filter is invalid.");
+    public static ResultError Invalid => new(CodeInvalid);
 
-    public static ResultError OperatorNotSupported => new(CodeOperatorNotSupported, "Filter operator is not supported.");
+    public static ResultError OperatorNotSupported => new(CodeOperatorNotSupported);
 
-    public static ResultError FieldNotSupported => new(CodeFieldNotSupported, "Filter field is not supported.");
+    public static ResultError FieldNotSupported => new(CodeFieldNotSupported);
 }

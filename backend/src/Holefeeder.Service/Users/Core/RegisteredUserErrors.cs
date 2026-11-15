@@ -9,6 +9,6 @@ internal static class RegisteredUserErrors
     public const string CodeNotFound = "registered-user-not-found";
     public const string CodeAlreadyRegistered = "user-already-registered";
 
-    public static ResultError NotFound => new NotFoundError(CodeNotFound, "No registered user matches the caller.");
-    public static ResultError AlreadyRegistered => new(CodeAlreadyRegistered, "User is already registered.");
+    public static ResultError NotFound => new NotFoundError(CodeNotFound);
+    public static ResultError AlreadyRegistered => new(CodeAlreadyRegistered);
 }

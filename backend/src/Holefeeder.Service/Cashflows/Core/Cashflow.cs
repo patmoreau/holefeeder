@@ -39,9 +39,9 @@ internal static class CashflowErrors
     public const string CodeAlreadyInactive = "cashflow-already-inactive";
     public const string CodeCancelled = "cashflow-cancelled";
 
-    public static NotFoundError NotFound => new(CodeNotFound, "Cashflow was not found.");
+    public static NotFoundError NotFound => new(CodeNotFound);
 
-    public static ResultError AlreadyInactive => new(CodeAlreadyInactive, "Cashflow is already inactive.");
+    public static ResultError AlreadyInactive => new(CodeAlreadyInactive);
 
-    public static ResultError Cancelled => new(CodeCancelled, "A cancelled cashflow cannot be changed.");
+    public static ResultError Cancelled => new(CodeCancelled);
 }

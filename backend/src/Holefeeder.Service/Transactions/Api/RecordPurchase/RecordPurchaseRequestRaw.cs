@@ -66,5 +66,5 @@ internal static class RecordPurchaseRequestErrors
 {
     public const string CodeRepeatStartDateInvalid = "repeat-start-date-invalid";
 
-    public static ResultError RepeatStartDateInvalid => new(CodeRepeatStartDateInvalid, "Repeat start date must be a date as YYYY-MM-DD.");
+    public static ResultError RepeatStartDateInvalid => new(CodeRepeatStartDateInvalid);
 }

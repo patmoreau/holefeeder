@@ -17,5 +17,5 @@ internal static class OpenDateErrors
 {
     public const string CodeInvalid = "open-date-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Open date must be a date as YYYY-MM-DD.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

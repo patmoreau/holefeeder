@@ -24,27 +24,27 @@ internal static class SyncRecordErrors
     public const string CodeCashflowAccountRequired = "sync-cashflow-account-required";
     public const string CodeCashflowCategoryRequired = "sync-cashflow-category-required";
 
-    public static ResultError AccountNotFound => new NotFoundError(CodeAccountNotFound, "Account was not found.");
-    public static ResultError CategoryNotFound => new NotFoundError(CodeCategoryNotFound, "Category was not found.");
-    public static ResultError StoreItemNotFound => new NotFoundError(CodeStoreItemNotFound, "Store item was not found.");
-    public static ResultError TransactionNotFound => new NotFoundError(CodeTransactionNotFound, "Transaction was not found.");
-    public static ResultError CashflowNotFound => new NotFoundError(CodeCashflowNotFound, "Cashflow was not found.");
+    public static ResultError AccountNotFound => new NotFoundError(CodeAccountNotFound);
+    public static ResultError CategoryNotFound => new NotFoundError(CodeCategoryNotFound);
+    public static ResultError StoreItemNotFound => new NotFoundError(CodeStoreItemNotFound);
+    public static ResultError TransactionNotFound => new NotFoundError(CodeTransactionNotFound);
+    public static ResultError CashflowNotFound => new NotFoundError(CodeCashflowNotFound);
 
     public static ResultError AccountNameInvalid =>
-        new(CodeAccountNameInvalid, "Account name is required and must be at most 100 characters.");
-    public static ResultError AccountOpenDateRequired => new(CodeAccountOpenDateRequired, "Account open date is required.");
+        new(CodeAccountNameInvalid);
+    public static ResultError AccountOpenDateRequired => new(CodeAccountOpenDateRequired);
     public static ResultError CategoryNameInvalid =>
-        new(CodeCategoryNameInvalid, "Category name is required and must be at most 255 characters.");
-    public static ResultError StoreItemCodeRequired => new(CodeStoreItemCodeRequired, "Store item code is required.");
-    public static ResultError TransactionDateRequired => new(CodeTransactionDateRequired, "Transaction date is required.");
-    public static ResultError TransactionAccountRequired => new(CodeTransactionAccountRequired, "Transaction account is required.");
-    public static ResultError TransactionCategoryRequired => new(CodeTransactionCategoryRequired, "Transaction category is required.");
+        new(CodeCategoryNameInvalid);
+    public static ResultError StoreItemCodeRequired => new(CodeStoreItemCodeRequired);
+    public static ResultError TransactionDateRequired => new(CodeTransactionDateRequired);
+    public static ResultError TransactionAccountRequired => new(CodeTransactionAccountRequired);
+    public static ResultError TransactionCategoryRequired => new(CodeTransactionCategoryRequired);
     public static ResultError CashflowEffectiveDateRequired =>
-        new(CodeCashflowEffectiveDateRequired, "Cashflow effective date is required.");
-    public static ResultError CashflowFrequencyInvalid => new(CodeCashflowFrequencyInvalid, "Cashflow frequency must be more than zero.");
-    public static ResultError CashflowRecurrenceInvalid => new(CodeCashflowRecurrenceInvalid, "Cashflow recurrence must be zero or more.");
-    public static ResultError CashflowAccountRequired => new(CodeCashflowAccountRequired, "Cashflow account is required.");
-    public static ResultError CashflowCategoryRequired => new(CodeCashflowCategoryRequired, "Cashflow category is required.");
+        new(CodeCashflowEffectiveDateRequired);
+    public static ResultError CashflowFrequencyInvalid => new(CodeCashflowFrequencyInvalid);
+    public static ResultError CashflowRecurrenceInvalid => new(CodeCashflowRecurrenceInvalid);
+    public static ResultError CashflowAccountRequired => new(CodeCashflowAccountRequired);
+    public static ResultError CashflowCategoryRequired => new(CodeCashflowCategoryRequired);
 
     public static ResultError NotFound(SyncTable table) =>
         table switch

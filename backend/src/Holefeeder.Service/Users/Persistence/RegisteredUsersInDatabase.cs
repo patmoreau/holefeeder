@@ -107,6 +107,6 @@ internal static class RegisteredUsersDatabaseErrors
     public const string CodeReadFailed = "registered-users-read-failed";
     public const string CodeWriteFailed = "registered-users-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Registered user could not be read from the database.");
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Registered user could not be written to the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

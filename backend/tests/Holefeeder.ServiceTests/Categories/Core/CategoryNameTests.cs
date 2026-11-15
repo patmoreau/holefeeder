@@ -27,6 +27,5 @@ public class CategoryNameTests
     public void Invalid_DescribesTheLengthRule()
     {
         CategoryNameErrors.Invalid.Code.Should().Be("category-name-invalid");
-        CategoryNameErrors.Invalid.Description.Should().Be("Category name must be between 1 and 255 characters.");
     }
 }

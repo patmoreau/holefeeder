@@ -40,6 +40,5 @@ public class CodeTests
     public void Invalid_DescribesTheLengthRule()
     {
         CodeErrors.Invalid.Code.Should().Be("code-invalid");
-        CodeErrors.Invalid.Description.Should().Be("Code must be between 1 and 100 characters.");
     }
 }

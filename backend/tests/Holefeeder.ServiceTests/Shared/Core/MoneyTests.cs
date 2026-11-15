@@ -30,6 +30,5 @@ public class MoneyTests
     public void Invalid_DescribesTheRule()
     {
         MoneyErrors.Invalid.Code.Should().Be("amount-invalid");
-        MoneyErrors.Invalid.Description.Should().Be("Amount must be zero or more, with at most two decimals.");
     }
 }

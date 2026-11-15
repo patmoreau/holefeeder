@@ -39,6 +39,5 @@ public class FavoriteAccountRequestRawTests
     public void IsFavoriteInvalid_DescribesTheFlagRule()
     {
         FavoriteAccountRequestErrors.IsFavoriteInvalid.Code.Should().Be("is-favorite-invalid");
-        FavoriteAccountRequestErrors.IsFavoriteInvalid.Description.Should().Be("Is favorite must be true or false.");
     }
 }

@@ -104,7 +104,7 @@ internal static class TagsErrors
     public const string CodeReadFailed = "tags-read-failed";
     public const string CodeWriteFailed = "tags-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Tags could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Tags could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

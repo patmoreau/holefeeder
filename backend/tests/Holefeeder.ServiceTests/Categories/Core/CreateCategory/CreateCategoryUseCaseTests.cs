@@ -88,7 +88,7 @@ public class CreateCategoryUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenCategoriesCannotBeWritten()
     {
-        var failure = new ResultError("categories-unavailable", "Categories are unavailable.");
+        var failure = new ResultError("categories-unavailable");
         _categories.FailWith(failure);
 
         var result = await _useCase.HandleAsync(ACreateCategoryRequest(), CancellationToken.None);
@@ -100,7 +100,6 @@ public class CreateCategoryUseCaseTests
     public void NameTaken_DescribesTheUniqueNameRule()
     {
         CategoryErrors.NameTaken.Code.Should().Be("category-name-taken");
-        CategoryErrors.NameTaken.Description.Should().Be("Category name is already used.");
     }
 
     private static CreateCategoryRequest ACreateCategoryRequest(User? user = null, string? name = null) =>

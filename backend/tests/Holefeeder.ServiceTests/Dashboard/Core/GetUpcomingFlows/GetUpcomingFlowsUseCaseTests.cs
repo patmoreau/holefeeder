@@ -121,7 +121,7 @@ public class GetUpcomingFlowsUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsDashboardError_WhenDashboardFails()
     {
-        var error = new ResultError("dashboard-failed", "Dashboard failed.");
+        var error = new ResultError("dashboard-failed");
         _dashboard.FailWith(error);
 
         var result = await _useCase.HandleAsync(new GetUpcomingFlowsRequest(AUser(), Today), CancellationToken.None);

@@ -63,5 +63,5 @@ internal static class ImportStatusErrors
 {
     public const string CodeNotFound = "my-data-import-not-found";
 
-    public static ResultError NotFound => new NotFoundError(CodeNotFound, "Import was not found.");
+    public static ResultError NotFound => new NotFoundError(CodeNotFound);
 }

@@ -37,5 +37,5 @@ internal static class SearchStoreItemsRequestSortByErrors
 {
     public const string CodeInvalid = "search-store-items-request-sort-by-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Sort is invalid.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

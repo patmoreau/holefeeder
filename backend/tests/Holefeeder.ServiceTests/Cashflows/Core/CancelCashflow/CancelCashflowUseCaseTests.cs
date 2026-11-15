@@ -55,7 +55,7 @@ public class CancelCashflowUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheStoreError_WhenTheStoreFails()
     {
-        var error = new ResultError("cashflows-failed", "Cashflows failed.");
+        var error = new ResultError("cashflows-failed");
         _cashflows.FailWith(error);
 
         var result = await _useCase.HandleAsync(new CancelCashflowRequest(AUser(), AnId()), CancellationToken.None);

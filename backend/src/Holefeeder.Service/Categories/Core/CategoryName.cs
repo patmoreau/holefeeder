@@ -24,5 +24,5 @@ internal static class CategoryNameErrors
 {
     public const string CodeInvalid = "category-name-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Category name must be between 1 and 255 characters.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

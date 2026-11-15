@@ -35,5 +35,5 @@ internal static class PeriodSettingsErrors
 {
     public const string CodeFrequencyInvalid = "period-settings-frequency-invalid";
 
-    public static ResultError FrequencyInvalid => new(CodeFrequencyInvalid, "Frequency must be at least 1.");
+    public static ResultError FrequencyInvalid => new(CodeFrequencyInvalid);
 }

@@ -39,5 +39,5 @@ internal static class IntervalTypeErrors
 {
     public const string CodeInvalid = "interval-type-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Interval type is invalid.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

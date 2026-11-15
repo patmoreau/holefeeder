@@ -22,5 +22,5 @@ internal static class FrequencyErrors
 {
     public const string CodeInvalid = "frequency-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Frequency must be a whole number of 1 or more.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

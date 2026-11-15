@@ -31,7 +31,7 @@ public class ListTagsUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenTagsCannotBeRead()
     {
-        var failure = new ResultError("tags-unavailable", "Tags are unavailable.");
+        var failure = new ResultError("tags-unavailable");
         _tags.FailWith(failure);
 
         var result = await _useCase.HandleAsync(new ListTagsRequest(AUser()), CancellationToken.None);

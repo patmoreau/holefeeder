@@ -67,7 +67,6 @@ public class PayCashflowRequestRawTests
     public void Errors_FollowTheServiceConventions()
     {
         PayCashflowRequestErrors.UpdateRecurringAmountInvalid.Code.Should().Be("update-recurring-amount-invalid");
-        PayCashflowRequestErrors.UpdateRecurringAmountInvalid.Description.Should().Be("Update recurring amount must be true or false.");
     }
 
     private static IReadOnlyDictionary<string, string[]> ValidationErrorsOf(Result<PayCashflowRequest> result)

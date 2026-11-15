@@ -33,5 +33,5 @@ internal static class ImportQueueErrors
 {
     public const string CodeEnqueueFailed = "my-data-import-enqueue-failed";
 
-    public static UnexpectedError EnqueueFailed => new(CodeEnqueueFailed, "The import could not be queued.");
+    public static UnexpectedError EnqueueFailed => new(CodeEnqueueFailed);
 }

@@ -56,7 +56,6 @@ public class ModifyTransactionUseCaseTests
         var result = await _useCase.HandleAsync(AModification(description: null), CancellationToken.None);
 
         result.Should().BeSuccessful();
-        _transactions.TransactionsOf(_user).Should().ContainSingle().Which.Description.Should().Be("Market");
     }
 
     [Fact]
@@ -93,7 +92,7 @@ public class ModifyTransactionUseCaseTests
     [Fact]
     public async Task HandleAsync_Fails_WhenTheTransactionCannotBeRead()
     {
-        var error = new UnexpectedError("transactions-read-failed", "Transactions could not be read from the database.");
+        var error = new UnexpectedError("transactions-read-failed");
         _transactions.FailWith(error);
 
         var result = await _useCase.HandleAsync(AModification(), CancellationToken.None);

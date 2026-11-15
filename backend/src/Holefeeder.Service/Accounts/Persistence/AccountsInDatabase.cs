@@ -233,9 +233,9 @@ internal static class AccountsErrors
     public const string CodeSettingsInvalid = "accounts-settings-invalid";
     public const string CodeWriteFailed = "accounts-write-failed";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Accounts could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid, "User settings could not be read.");
+    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Accounts could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 }

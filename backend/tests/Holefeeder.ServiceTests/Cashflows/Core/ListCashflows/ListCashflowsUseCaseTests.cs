@@ -32,7 +32,7 @@ public class ListCashflowsUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenCashflowsCannotBeRead()
     {
-        var failure = new ResultError("cashflows-unavailable", "Cashflows are unavailable.");
+        var failure = new ResultError("cashflows-unavailable");
         _cashflows.FailWith(failure);
 
         var result = await _useCase.HandleAsync(new ListCashflowsRequest(AUser()), CancellationToken.None);

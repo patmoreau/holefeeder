@@ -181,7 +181,7 @@ internal static class DashboardErrors
     public const string CodeReadFailed = "dashboard-read-failed";
     public const string CodeSettingsInvalid = "dashboard-settings-invalid";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Dashboard could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid, "User settings could not be read.");
+    public static UnexpectedError SettingsInvalid => new(CodeSettingsInvalid);
 }

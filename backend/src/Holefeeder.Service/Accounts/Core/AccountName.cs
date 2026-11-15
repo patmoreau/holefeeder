@@ -21,7 +21,7 @@ internal static class AccountNameErrors
     public const string CodeInvalid = "account-name-invalid";
     public const string CodeAlreadyExists = "account-name-already-exists";
 
-    public static ResultError Invalid => new(CodeInvalid, "Account name must be between 1 and 100 characters.");
+    public static ResultError Invalid => new(CodeInvalid);
 
-    public static ResultError AlreadyExists => new(CodeAlreadyExists, "Account name already exists.");
+    public static ResultError AlreadyExists => new(CodeAlreadyExists);
 }

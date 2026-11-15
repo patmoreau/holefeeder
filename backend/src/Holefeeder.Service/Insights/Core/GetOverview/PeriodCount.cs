@@ -31,5 +31,5 @@ internal static class PeriodCountErrors
 {
     public const string CodeInvalid = "insights-period-count-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "The number of periods must be 3, 6 or 12.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

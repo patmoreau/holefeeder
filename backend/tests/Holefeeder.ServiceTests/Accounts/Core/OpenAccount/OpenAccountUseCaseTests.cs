@@ -65,7 +65,7 @@ public class OpenAccountUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheAccountsError_WhenTheAccountsFail()
     {
-        var error = new ResultError("accounts-failed", "Accounts failed.");
+        var error = new ResultError("accounts-failed");
         _accounts.FailWith(error);
 
         var result = await _useCase.HandleAsync(AnOpenAccountRequest(AUser(), "Chequing"), CancellationToken.None);

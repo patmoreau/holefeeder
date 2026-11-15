@@ -145,7 +145,7 @@ public class GetDashboardAccountsUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsDashboardError_WhenDashboardFails()
     {
-        var error = new ResultError("dashboard-failed", "Dashboard failed.");
+        var error = new ResultError("dashboard-failed");
         _dashboard.FailWith(error);
 
         var result = await _useCase.HandleAsync(new GetDashboardAccountsRequest(AUser(), Today), CancellationToken.None);

@@ -35,5 +35,5 @@ internal static class AccountTypeErrors
 {
     public const string CodeInvalid = "account-type-invalid";
 
-    public static ResultError Invalid => new(CodeInvalid, "Account type is invalid.");
+    public static ResultError Invalid => new(CodeInvalid);
 }

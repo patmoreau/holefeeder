@@ -25,6 +25,5 @@ public class CategoryColorTests
     public void Invalid_DescribesTheFormat()
     {
         CategoryColorErrors.Invalid.Code.Should().Be("category-color-invalid");
-        CategoryColorErrors.Invalid.Description.Should().Be("Category color must be a hex color as #RRGGBB.");
     }
 }

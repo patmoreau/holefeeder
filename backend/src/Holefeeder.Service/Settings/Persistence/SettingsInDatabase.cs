@@ -77,9 +77,9 @@ internal static class SettingsErrors
     public const string CodeWriteFailed = "settings-write-failed";
     public const string CodeInvalid = "settings-invalid";
 
-    public static UnexpectedError ReadFailed => new(CodeReadFailed, "Settings could not be read from the database.");
+    public static UnexpectedError ReadFailed => new(CodeReadFailed);
 
-    public static UnexpectedError WriteFailed => new(CodeWriteFailed, "Settings could not be written to the database.");
+    public static UnexpectedError WriteFailed => new(CodeWriteFailed);
 
-    public static UnexpectedError Invalid => new(CodeInvalid, "Stored settings could not be read.");
+    public static UnexpectedError Invalid => new(CodeInvalid);
 }

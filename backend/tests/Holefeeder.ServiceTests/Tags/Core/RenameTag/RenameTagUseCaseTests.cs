@@ -34,7 +34,7 @@ public class RenameTagUseCaseTests
     {
         var user = AUser();
         _tags.Tagged(user, "car");
-        _tags.FailWith(new ResultError("tags-unavailable", "Tags are unavailable."));
+        _tags.FailWith(new ResultError("tags-unavailable"));
 
         var result = await _useCase.HandleAsync(Renaming(user, "car", "car"), CancellationToken.None);
 
@@ -44,7 +44,7 @@ public class RenameTagUseCaseTests
     [Fact]
     public async Task HandleAsync_ReturnsTheFailure_WhenTagsCannotBeWritten()
     {
-        var failure = new ResultError("tags-unavailable", "Tags are unavailable.");
+        var failure = new ResultError("tags-unavailable");
         _tags.FailWith(failure);
 
         var result = await _useCase.HandleAsync(Renaming(AUser(), "car", "auto"), CancellationToken.None);
