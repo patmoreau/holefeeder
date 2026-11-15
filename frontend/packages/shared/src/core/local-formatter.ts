@@ -3,7 +3,7 @@ import { DateOnly } from './date-only';
 import { tk } from './translations/translations';
 import { withDate } from './with-date';
 
-type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+type TranslateFn = { (key: string): string; (key: string, options: Record<string, unknown>): string };
 
 const percentage = (val: number): string => `${val.toFixed(2)}%`;
 

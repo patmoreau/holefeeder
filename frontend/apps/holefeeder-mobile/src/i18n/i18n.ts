@@ -45,8 +45,6 @@ export const initI18n = async (savedLanguage?: string): Promise<void> => {
       interpolation: {
         escapeValue: false, // React already escapes values
       },
-
-      compatibilityJSON: 'v4', // Using v4 format as expected by react-i18next
     });
 
     isInitialized = true;
@@ -60,7 +58,6 @@ export const initI18n = async (savedLanguage?: string): Promise<void> => {
       interpolation: {
         escapeValue: false,
       },
-      compatibilityJSON: 'v4',
     });
     isInitialized = true;
   }
