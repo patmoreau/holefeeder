@@ -48,24 +48,6 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
     };
     try {
       await db.writeTransaction(async (tx) => {
-        await tx.execute(
-          `
-          INSERT INTO transactions (id, date, amount, description, account_id, category_id,
-                                    cashflow_id, cashflow_date, tags)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-          [
-            transaction.id,
-            transaction.date,
-            Money.toCents(transaction.amount),
-            transaction.description,
-            transaction.accountId,
-            transaction.categoryId,
-            cashflow ? cashflow.id : null,
-            cashflow ? cashflow.effectiveDate : null,
-            TagList.toConcatenatedString(transaction.tags),
-          ]
-        );
         if (cashflow) {
           await tx.execute(
             `
@@ -87,6 +69,24 @@ export const FlowsRepositoryInPowersync = (db: AbstractPowerSyncDatabase): Flows
             ]
           );
         }
+        await tx.execute(
+          `
+          INSERT INTO transactions (id, date, amount, description, account_id, category_id,
+                                    cashflow_id, cashflow_date, tags)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+          [
+            transaction.id,
+            transaction.date,
+            Money.toCents(transaction.amount),
+            transaction.description,
+            transaction.accountId,
+            transaction.categoryId,
+            cashflow ? cashflow.id : null,
+            cashflow ? cashflow.effectiveDate : null,
+            TagList.toConcatenatedString(transaction.tags),
+          ]
+        );
       });
 
       return Result.success(transaction.id);

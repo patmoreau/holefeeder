@@ -100,6 +100,27 @@ describe('FlowsRepository', () => {
       expect(dbResult[0].tags).toBe(TagList.toConcatenatedString(purchase.tags));
       expect(dbResult[0].inactive).toBe(0);
     });
+
+    it('inserts the cashflow before the transaction that references it', async () => {
+      const purchase: CreateFlowCommand = aCreateFlowCommand({
+        cashflow: {
+          effectiveDate: aPastDate(),
+          intervalType: aDateIntervalType(),
+          frequency: aCount(),
+        },
+      });
+
+      await db.execute('CREATE TABLE insert_order (table_name TEXT)');
+      await db.execute("CREATE TRIGGER cashflows_inserted AFTER INSERT ON cashflows BEGIN INSERT INTO insert_order VALUES ('cashflows'); END");
+      await db.execute(
+        "CREATE TRIGGER transactions_inserted AFTER INSERT ON transactions BEGIN INSERT INTO insert_order VALUES ('transactions'); END"
+      );
+
+      await repository.create(purchase);
+
+      const inserted = await db.getAll<{ table_name: string }>('SELECT table_name FROM insert_order ORDER BY rowid');
+      expect(inserted.map((row) => row.table_name)).toEqual(['cashflows', 'transactions']);
+    });
   });
 
   describe('modify', () => {
