@@ -193,6 +193,22 @@ describe('LocalFormatter', () => {
     });
   });
 
+  describe('dateTime', () => {
+    const syncedAt = new Date(2026, 10, 25, 11, 38, 25);
+
+    it('should format the date and time to the minute', () => {
+      const formatted = LocalFormatter.dateTime(syncedAt, 'en-CA');
+
+      expect(formatted.replace(/\s/g, ' ')).toBe('Nov 25, 2026, 11:38 a.m.');
+    });
+
+    it('should localize the date and time based on the provided locale', () => {
+      const formatted = LocalFormatter.dateTime(syncedAt, 'fr-CA');
+
+      expect(formatted.replace(/\s/g, ' ')).toBe('25 nov. 2026, 11 h 38');
+    });
+  });
+
   describe('percentage', () => {
     it('should format percentage with 2 decimal places', () => {
       expect(LocalFormatter.percentage(12.3456)).toBe('12.35%');

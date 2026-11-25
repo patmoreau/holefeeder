@@ -1,3 +1,4 @@
+import { LocalFormatter } from '@holefeeder/shared/core';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import { AppNative } from '@/shared/presentation/components/native/AppNative';
 import { AppSwitch } from '@/shared/presentation/components/native/AppSwitch';
 import { AppText } from '@/shared/presentation/components/native/AppText';
 import { AppIconMap } from '@/shared/presentation/core/app-icon-map';
+import { useLocaleFormatter } from '@/shared/presentation/core/use-local-formatter';
 import { useMultipleWatches, withDefault } from '@/shared/presentation/core/use-multiple-watches';
 import { useStyles } from '@/shared/theme/core/use-styles';
 import { spacing, Theme } from '@/types/theme';
@@ -36,6 +38,7 @@ const createStyles = (theme: Theme) => ({
 export function SyncSettingsContent() {
   const styles = useStyles(createStyles);
   const { t } = useTranslation();
+  const { currentLocale } = useLocaleFormatter();
   const syncInfoQuery = useSyncInfo();
 
   const { data, isLoading, errors } = useMultipleWatches({
@@ -60,8 +63,10 @@ export function SyncSettingsContent() {
           <AppField label={t(tk.settings.syncSection.connected)} icon={AppIconMap.connected}>
             <AppSwitch value={syncInfo.connected} disabled />
           </AppField>
-          <AppField label={t(tk.settings.syncSection.lastSync)} icon={AppIconMap.sync}>
-            <AppText>{syncInfo.lastSyncedAt ? syncInfo.lastSyncedAt.toLocaleString() : t(tk.settings.syncSection.never)}</AppText>
+          <AppField label={t(tk.settings.syncSection.lastSync)} icon={AppIconMap.sync} variant="large">
+            <AppText>
+              {syncInfo.lastSyncedAt ? LocalFormatter.dateTime(syncInfo.lastSyncedAt, currentLocale) : t(tk.settings.syncSection.never)}
+            </AppText>
           </AppField>
           <AppField label={t(tk.settings.syncSection.downloading)} icon={AppIconMap.download}>
             <AppSwitch value={syncInfo.dataFlowStatus.downloading} disabled />

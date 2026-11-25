@@ -86,6 +86,9 @@ const date = (dateValue: DateOnly, anchorDate: DateOnly, locale: string, t: Tran
   }
 };
 
+const dateTime = (value: Date, locale: string): string =>
+  new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(value);
+
 export const LocalFormatter = {
   percentage,
   percent,
@@ -93,4 +96,5 @@ export const LocalFormatter = {
   currencySymbol,
   date,
   dateRange,
+  dateTime,
 } as const;
