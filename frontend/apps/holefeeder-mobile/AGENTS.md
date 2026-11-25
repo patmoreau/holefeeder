@@ -268,8 +268,8 @@ props must declare `testID?: string` and forward it on every return branch. Comp
 ## Platform Workarounds
 
 Each entry below works around a bug in iOS, SwiftUI or `@expo/ui`, not in the app. Last
-checked against the release notes of `@expo/ui` 58.0.22, `expo-router` 58.0.25 and
-`expo` 58.0.17: none of them is fixed upstream. On every Expo bump, read the release notes
+checked against the release notes of `@expo/ui` 58.0.29, `expo-router` 58.0.32 and
+`expo` 58.0.26: none of them is fixed upstream. On every Expo bump, read the release notes
 for these entries, and remove a workaround only after the bug stops reproducing on a device.
 
 - **SwiftUI focus stops working after the first form.** On iOS 27, `@FocusState` stops
