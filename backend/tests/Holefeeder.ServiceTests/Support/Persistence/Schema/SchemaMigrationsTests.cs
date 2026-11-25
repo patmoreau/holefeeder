@@ -22,7 +22,8 @@ public class SchemaMigrationsTests(DatabaseForTest database, ITestOutputHelper t
         "Holefeeder.Infrastructure.Scripts.007-CreateUsersTable.sql",
         "Holefeeder.Infrastructure.Scripts.008-FixTagsToLower.sql",
         "Holefeeder.Infrastructure.Scripts.009-AddUsersForeignKeys.sql",
-        "Holefeeder.Infrastructure.Scripts.010-AddInactiveToCategories.sql"
+        "Holefeeder.Infrastructure.Scripts.010-AddInactiveToCategories.sql",
+        "Holefeeder.Infrastructure.Scripts.011-DeferTransactionCashflowForeignKey.sql"
     ];
 
     [Fact]

@@ -1,0 +1,2 @@
+ALTER TABLE transactions
+    ALTER CONSTRAINT fk_transaction_cashflow DEFERRABLE INITIALLY DEFERRED;

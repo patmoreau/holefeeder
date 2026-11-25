@@ -80,6 +80,49 @@ public class SyncInDatabaseTests(DatabaseForTest database, ITestOutputHelper tes
     }
 
     [Fact]
+    public async Task SaveAsync_StoresATransactionSavedBeforeItsCashflow_WhenBothAreCommittedTogether()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var (account, category) = (ASyncAccount(), ASyncCategory());
+        var cashflow = ASyncCashflow(account.Id, category.Id);
+        var transaction = ASyncTransaction(account.Id, category.Id) with
+        {
+            CashflowId = cashflow.Id,
+            CashflowDate = new DateOnly(2024, 3, 1)
+        };
+
+        await SaveAndCommitAsync(user, account, category, transaction, cashflow);
+
+        (await FindAsync(user, SyncTable.Transactions, transaction.Id)).Should().BeSuccessful().And.WithValue(transaction);
+        (await FindAsync(user, SyncTable.Cashflows, cashflow.Id)).Should().BeSuccessful().And.WithValue(cashflow);
+    }
+
+    [Fact]
+    public async Task CommitAsync_FailsWithWriteFailed_WhenTheTransactionCashflowWasNeverSaved()
+    {
+        var user = await AUser().SavedInDbAsync(database);
+        var (account, category) = (ASyncAccount(), ASyncCategory());
+        var transaction = ASyncTransaction(account.Id, category.Id) with
+        {
+            CashflowId = AnId(),
+            CashflowDate = new DateOnly(2024, 3, 1)
+        };
+
+        await using (var session = (await _store.BeginAsync(user, CancellationToken.None)).Value)
+        {
+            foreach (var record in new ISyncRecord[] { account, category, transaction })
+            {
+                (await session.SaveAsync(record, CancellationToken.None)).Should().BeSuccessful();
+            }
+
+            (await session.CommitAsync(CancellationToken.None)).Should().BeFailure().And.WithError(SyncDatabaseErrors.WriteFailed);
+        }
+
+        (await FindAsync(user, SyncTable.Transactions, transaction.Id)).Should().BeFailure()
+            .And.WithError(SyncRecordErrors.TransactionNotFound);
+    }
+
+    [Fact]
     public async Task SaveAsync_StoresACashflow_ThatFindAsyncReadsBack()
     {
         var user = await AUser().SavedInDbAsync(database);
